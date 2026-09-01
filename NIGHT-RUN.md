@@ -150,6 +150,45 @@ driven straight through a battle for two and a half minutes is destroyed long
 before its block closes, correctly. Throttle against brake cancels with the
 brake winning, correctly. Each time the temptation was to change the rule.
 
+## Stage 2 — done
+
+`packages/protocol`: canonical encoding, tagged hashing, census, sortition,
+payout, contracts. Six vector files under `test-vectors/protocol/`, each
+carrying what it demonstrates and the rule behind it rather than a reference
+to this code — the stage-2 criterion is that a second implementation could be
+written from them alone.
+
+The payout reproduces specification §18A.6 to the millisatoshi: pool
+2,500,000 msat, 75 qualifiers, 19 paying ranks, `sum(payouts)` equal to
+`sum(activated stakes)`.
+
+**Three places where the obvious version is wrong**, each with its reason in
+the source because each looks right:
+
+- Census entries sort by `(txid, vout)`, not by `H(pubkey)`. A pubkey can be
+  ground until its hash lands where the operator wants; a txid cannot be
+  chosen after funding.
+- An odd Merkle level **promotes** rather than duplicates. Duplicating is
+  CVE-2012-2459: two different leaf sets share a root.
+- Selection weight is **linear**. Under square root, four bonds at 1× total
+  weight 4 against one at 4× with weight 2 — splitting *doubles* the chances,
+  the opposite of the anti-whale intent.
+
+Rank weights are `3^(i-1) * 4^(K-i)` — the geometric curve with r = 3/4
+multiplied through so it is an exact integer. Written as `0.75^(i-1)` it
+would put float rounding between two nodes' payout tables.
+
+**A portability bug the tests could not find.** `TextEncoder` and
+`TextDecoder` are Web APIs, not ECMAScript, so the package failed outright in
+all three engine shells. Replaced with a UTF-8 codec the package owns. The
+better reason to keep it is strictness: `TextEncoder` silently writes U+FFFD
+for an unpaired surrogate, and two implementations disagreeing about whether
+a substitution happened is a fork. The codec also refuses overlong forms,
+encoded surrogates and out-of-range code points.
+
+`round_id` and the payout table now agree across V8, SpiderMonkey,
+JavaScriptCore and Node.
+
 ## Suggested next session
 
 1. The Unity bridge, and with it M1 — the first thing that can actually be
