@@ -68,7 +68,16 @@ Order within it:
          lines are 18 apart, permanently in gun range, and both sides are
          ground to a third in a minute; at 25 they are 50 apart and nobody
          ever fires. The spread IS the mechanism
-  c. Reinforcement and retreat
+  c. Retreat - the give-and-take is in: a unit backs off when an enemy
+     comes inside 24 m, so the stand-off is earned rather than declared.
+     Attrition is still about twice the C# army's over a minute (33-42%
+     surviving where it keeps 71-83%) and the next thing to look at is
+     lateral spread: the C# army wanders along x deliberately
+     (goalX = x + sin(phase*3)*26) while the core's units random-walk,
+     so they cluster and more of them are in range of each other than
+     should be. MEASURE the density before changing anything.
+
+  c2. Reinforcement
   d. Gunships and bombs
   e. Delete the C# army; Unity renders from core state only
 
