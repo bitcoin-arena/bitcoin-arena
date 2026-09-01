@@ -68,14 +68,35 @@ Order within it:
          lines are 18 apart, permanently in gun range, and both sides are
          ground to a third in a minute; at 25 they are 50 apart and nobody
          ever fires. The spread IS the mechanism
-  c. Retreat - the give-and-take is in: a unit backs off when an enemy
-     comes inside 24 m, so the stand-off is earned rather than declared.
-     Attrition is still about twice the C# army's over a minute (33-42%
-     surviving where it keeps 71-83%) and the next thing to look at is
-     lateral spread: the C# army wanders along x deliberately
-     (goalX = x + sin(phase*3)*26) while the core's units random-walk,
-     so they cluster and more of them are in range of each other than
-     should be. MEASURE the density before changing anything.
+  c. Retreat - IN, and measured. Units back off inside 24 m and fall
+     right back when overrun by 14 (Army.OverrunDepth). Units are held to
+     |x| < 88 as Unity holds them.
+
+     Where it stands, measured rather than guessed:
+       attrition   17-58% surviving at 60 s, C# keeps 71-83%
+       z spread    9-12 m, C# holds 20
+       in range    0.75 enemies each at t=10, then 0.3-0.4
+
+     The spread is the lever, and the attrition follows it: at spread 9
+     both armies arrive on one line at the same moment and half the armour
+     dies in the ten seconds after contact, then the survivors separate
+     and nothing more happens. C# holds a spread of 20 and gets a steady
+     trickle instead.
+
+     The overrun retreat is correctly wired but INERT on a constant
+     frontline: nothing ever pushes a unit 14 m past its own line, so it
+     never fires. In C# the frontline itself moves with the trade flow,
+     and units are dragged forward by chasing a foe's x - StepArmour moves
+     towards (foe.x, front - Dir*9) as ONE vector, so lateral chase pulls
+     them in z as well. That coupling is the next thing to port, and it is
+     the likeliest source of the missing spread.
+
+     Two sign errors cost a round each here and both had the same shape -
+     a plausible model that produces no fight at all rather than a wrong
+     one. The Bull army spawns at negative z so its side is -1 while its
+     Dir is +1; using side for the overrun test made every unit read as
+     overrun the moment it reached its own line, and the whole army sat on
+     the fall-back line without firing a shot.
 
   c2. Reinforcement
   d. Gunships and bombs
