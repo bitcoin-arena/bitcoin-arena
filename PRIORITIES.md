@@ -45,7 +45,10 @@ with a reference recording rather than by eye. `PhysxReferenceTests` is
 the pattern to copy.
 
 Order within it:
-  a. Unit movement and squads, measured against a recorded C# run
+  a. Unit movement - DONE. The C# army is recorded in
+     test/vectors/csharp-army.json and the core now closes at its pace:
+     armour 6.8 m/s, infantry 2.6, armour arriving first. Both sides hold
+     short of the seam on their own side and do not cross.
   b. Firing, damage and death
   c. Reinforcement and retreat
   d. Gunships and bombs
