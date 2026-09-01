@@ -83,13 +83,26 @@ Order within it:
      and nothing more happens. C# holds a spread of 20 and gets a steady
      trickle instead.
 
-     The overrun retreat is correctly wired but INERT on a constant
-     frontline: nothing ever pushes a unit 14 m past its own line, so it
-     never fires. In C# the frontline itself moves with the trade flow,
-     and units are dragged forward by chasing a foe's x - StepArmour moves
-     towards (foe.x, front - Dir*9) as ONE vector, so lateral chase pulls
-     them in z as well. That coupling is the next thing to port, and it is
-     the likeliest source of the missing spread.
+     The chase coupling was tried and REVERTED. Porting
+     goalX = foe.x as part of one movement vector was the obvious way to
+     get depth; measured, it made the spread worse (9-12 down to 1.9-11.7)
+     and wiped out a side on two seeds, because chasing pulls both armies
+     onto the same x and concentrates the fight.
+
+     Then the measurement that overturns all of it. The C# army fights in
+     MUCH heavier contact than any two-line model suggests:
+
+       enemies in gun range, per tank   C# 4.0-7.9    core 0.3-0.75
+       armour spread along x            C# 36-45 m
+
+     Forty-five metres of x spread across a 176 m front means the two
+     sides INTERLEAVE rather than face each other - and it still keeps
+     71-83% of its armour. So the fault is not too little contact. It is
+     too much lethality per shot, and that is the next thing to chase,
+     with numbers: how often does a C# tank actually fire, and how many
+     shooters does one tank have on it? Reload and damage were matched to
+     the C# constants and the per-hit fraction of max hp is identical, so
+     something else is limiting how often those constants are applied.
 
      Two sign errors cost a round each here and both had the same shape -
      a plausible model that produces no fight at all rather than a wrong
