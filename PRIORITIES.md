@@ -49,7 +49,25 @@ Order within it:
      test/vectors/csharp-army.json and the core now closes at its pace:
      armour 6.8 m/s, infantry 2.6, armour arriving first. Both sides hold
      short of the seam on their own side and do not cross.
-  b. Firing, damage and death
+  b. Firing, damage and death - PART DONE. Armour engages armour inside
+     46 m, reloads 1.4-3.2 s, takes 1.1-2.4 hp off a tank that has 6-10.
+     Losses now start at t=10-15 as the recording shows and neither side
+     is wiped out. Attrition over a minute is still about twice the C#
+     army's - 33-67% surviving where it keeps 71-83% - and the remaining
+     lever is the stand-off scatter, which is really step (c)'s job.
+
+     Three faults found, all of the same kind - a plausible model that
+     produces a decisive winner instead of a front:
+       - every tank started with zero reload, so all fired on tick one in
+         index order and the side holding the lower indices won every
+         exchange before the other had fired
+       - sides were assigned by a coin toss per unit, giving sixteen tanks
+         against eight; in a lethal exchange an advantage compounds and the
+         larger side lost nobody. Forces are even now
+       - one stand-off for the whole army is all or nothing: at 9 m the
+         lines are 18 apart, permanently in gun range, and both sides are
+         ground to a third in a minute; at 25 they are 50 apart and nobody
+         ever fires. The spread IS the mechanism
   c. Reinforcement and retreat
   d. Gunships and bombs
   e. Delete the C# army; Unity renders from core state only
