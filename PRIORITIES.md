@@ -387,16 +387,82 @@ round, which is why testnet comes first and why the order is stricter.
 
 ## M3.1  The chain, on regtest                      stage 5
 
-  1. **Bond verification.** Read a bond output and prove it is what it
-     claims. Nothing about a committee means anything until a bond can be
-     checked.
-  2. **Census by verification, not scanning** (section 6.1). Sorted by
-     `(txid, vout)` rather than by a hash of the pubkey, because a hash
-     can be ground and a txid cannot.
-  3. **Committee publication.** Sortition with LINEAR weight, comparing
+  1. **Bond construction** (spec 5A.3B). A P2TR output with three spend
+     paths, and the shape matters:
+
+         key path     MuSig2(node_key, arbitration_aggregate_key)
+                      cooperative release or slash - one signature,
+                      indistinguishable on chain
+         script A     node_key, after bond_maturity (CLTV) - unilateral
+         script B     k-of-m arbitration keys, before maturity - the slash
+
+     Path A is the one to get right: `bond_maturity` exists so that
+     **arbitration can never freeze a bond forever**. If arbitration
+     disappears, the node gets its money back on its own. A design where
+     someone else's silence costs you your bond is not one anybody should
+     post a bond to.
+
+  2. **Bond verification.** Read a bond output and prove it is what it
+     claims. Nothing about a committee means anything until this works.
+
+  3. **Census by verification, not scanning** (spec 6.1, 5A.2, 5A.4).
+     Sorted by `(txid, vout)`, NOT by a hash of the pubkey - a hash can be
+     ground until it sorts where you want it, a txid cannot.
+
+  4. **Eligibility** (5A.3) - objective criteria only, and the minimum
+     census size and stake ceiling (5A.10). A committee drawn from too
+     small a census is not a committee.
+
+  5. **The committee seed from a FUTURE randomness beacon** (5A.5). This
+     one closes a complete exploit and must not be simplified:
+
+         committee_seed = H(census_root_gv || census_root_settle
+                            || round_id || round_randomness)
+         round_randomness = drand.round(committee_time)
+
+     The beacon value **does not exist yet** when `round_id` is published.
+     The contract commits to WHICH beacon round will be used, never to its
+     value.
+
+     Why it cannot be done the obvious way: if the randomness is already
+     known when the creator picks `round_id`, committee selection is a
+     pure function of a value the attacker controls. Grinding round_ids
+     offline until both committees are your own nodes is trivial and
+     undetectable - and the "committee cannot be overwritten" check
+     (5A.11) passes, because nothing was overwritten.
+
+  6. **The `committee_time` window** (5A.5, 4.6.1). Between publication
+     and `start_time`, and it is not a policy choice: the preimage shares
+     are encrypted TO the settlement committee (23.1), so the committee
+     must exist before an entry can be constructed at all. Selecting at
+     `start_time` and allowing commitment before that is impossible, not
+     merely unwise.
+
+  7. **Player-node separation** (5A.13). A selected node may not sign
+     anything for a round its operator is playing in:
+
+       - every advertisement declares an `operator_id`; nodes sharing one
+         are siblings for all conflict rules
+       - a conflicted node's result signatures, payout-table signatures
+         and settlement participation are INVALID and it earns no fee
+       - signing anyway is slashable with a one-artifact proof
+       - if conflicts drop a committee below threshold, the affected
+         entries are `ENTRY_VOID` and refunded rather than settled by a
+         compromised committee
+       - the client MUST show, before commitment, whether any selected
+         node's operator is playing
+
+     Without this an operator with a moderate share of the census can
+     sign himself wins in the rounds he is selected for, and nothing else
+     in the protocol forbids it.
+
+  8. **Committee publication.** Sortition with LINEAR weight, comparing
      `ticket_a * weight_b` against `ticket_b * weight_a` - never
      dividing, because a division is a rounding rule and a rounding rule
-     is an attack surface.
+     is an attack surface. Plus 5A.11: selection cannot be overwritten.
+
+  9. **Role separation between committees** (5A.9). Game/verify and
+     settlement are drawn separately.
 
 ## M3.2  The client and the wallet                  stage 6
 
@@ -429,6 +495,34 @@ round, which is why testnet comes first and why the order is stricter.
      vectors, which is why it is comparatively low risk despite sounding
      like the hardest part.
  11. **Backends.** LND first, others after.
+
+ 12. **The node fee** (spec "Node fee"). 2% of gross round volume, split
+     1% to the seven game/verify slots and 1% to the seven settlement
+     slots, so each slot earns about 0.1429% for its role. An operator
+     selected for both earns both, because it does both jobs.
+
+     Three details that are easy to get wrong and expensive to get wrong:
+       - a slot earns its share only if it performed the contract-defined
+         minimum service - receipts, replay and signing for game/verify,
+         participation in the settlement window for settlement
+       - a conflicted node (5A.13) never qualifies
+       - unearned shares are redistributed pro rata among the other
+         eligible nodes in the SAME role pool, keeping the total at 2%
+       - remainders in millisatoshis: floor each base share, then
+         distribute the remaining msat in ascending
+         `H(round_id || node_pubkey)` order
+
+     The same shape as the player payout, and for the same reason: every
+     node must compute the identical table from the same inputs.
+
+## What is honestly not trustless
+
+Spec 5A.3B says it plainly rather than hiding it, and so should we: the
+arbitration quorum can slash a bond, and arbitration is a set of keys
+held by people. `bond_maturity` bounds the damage - arbitration can never
+freeze a bond forever - but it does not remove the trust. Anyone posting
+a bond is trusting that quorum not to collude against them within the
+window. Say so in the client, before someone posts one.
 
 ## M3 is done when
 
