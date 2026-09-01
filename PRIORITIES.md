@@ -14,19 +14,22 @@ a node that keeps its name. Four rounds of guessing, one line to see it.
 
 ---
 
-## 1. Clear the red tests  (short)
+## 1. Clear the red tests  - DONE
 
-Two are failing and they make everything after this harder to judge.
+165 green, one known flake left (`TheGogglesAnimate`, which passes alone
+and depends on a network fetch inside a two-second animation window).
 
-- `TheBlockBandIsInEnglishAndNumbered` finds no numbered mined faces.
-  First hypothesis, to be MEASURED not assumed: the same streaming swap
-  as the whitepaper - the band is wired before the model has finished
-  landing, so the plates it wires are not the plates that end up there.
-- `TheRealTransactionsReplaceTheStandIns` reports 10 where 2 is
-  expected. New, and it appeared alongside the live-histogram work.
+Both failures were mine and neither was where I first looked. Dumping
+what was on the wall settled it in one run: the band was fully populated
+with English ages and correct heights - the test was reading the caption
+STRIP, which I had deliberately blanked when the number moved onto the
+face of the block. The claim it makes is unchanged; only the place the
+number is written moved, so the test now reads the face.
 
-`TheGogglesAnimate` is a known flake - it passes alone and depends on a
-network fetch plus a two-second animation window. Leave it.
+The other was the streamed building swapping meshes under nodes that keep
+their names, so any plate size read at wiring time can describe something
+that no longer exists. Every display is re-fitted against the mesh that
+is there now.
 
 ## 2. The army into the core  (large - the rest of stage 1, and of M1)
 
@@ -48,12 +51,21 @@ Order within it:
   d. Gunships and bombs
   e. Delete the C# army; Unity renders from core state only
 
-## 3. Hover overlays  (small, and the last thing owed from the old list)
+## 3. Three post office buildings exist  (unexplained)
+
+Instrumenting the band showed FIFTEEN `mined_face_` transforms where the
+model has five. Three copies of the building are in the scene. Nothing
+looks wrong on screen, so two are presumably inactive or stacked exactly -
+but it is three times the geometry and three times the text, and it was
+not deliberate. Find out where they come from before the army port makes
+the scene harder to read.
+
+## 4. Hover overlays  (small, and the last thing owed from the old list)
 
 Transaction details on the loading ramp, and the full figure behind each
 bar on the miner's histogram.
 
-## 4. Prune the streamed bundles  (small)
+## 5. Prune the streamed bundles  (small)
 
 `ServerData/` keeps every version ever built - five post office bundles,
 40.9 MB copied into each build. Nothing serves the old ones and they are
