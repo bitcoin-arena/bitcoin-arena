@@ -257,3 +257,140 @@ They are also not independent. Nothing after M1 is worth starting while
 the core still disagrees with the game about anything: every hour spent
 on a lobby is an hour spent on top of a simulation that has not yet been
 proven to reproduce the thing it replaced.
+
+
+---
+
+# The work for M2, in order
+
+Written down now so the order is decided once rather than argued each
+time. Each entry can only start when the ones above it are done, and the
+reason is given where it is not obvious - most of these dependencies are
+not preference, they are "this cannot be tested without that".
+
+Nothing here starts while item 2 above is open.
+
+## M2.1  The node daemon                            stage 3
+
+  1. **A round on one node.** HTTP and WebSocket over `node:sqlite`: open
+     a round, accept an entry, take input batches, close it. One process,
+     one player, no verification. This is the smallest thing that can
+     hold a game and everything else attaches to it.
+  2. **Transcripts.** Every input batch stored tick-numbered and
+     idempotent, so a repeat is harmless and a gap is visible. A round
+     that cannot be replayed from its own transcript is worthless later,
+     so this comes before anything that would rely on it.
+  3. **Checkpoints.** The state hash written at agreed ticks. Cheap now,
+     and it is what makes a disagreement findable rather than merely
+     detectable - without them a divergence is "somewhere in ninety
+     seconds".
+  4. **Entry quotas.** A funded entry before the node stores a byte.
+     Comes before opening a port to anyone else, not after.
+  5. **Backpressure and reconnection.** `ws` buffers without limit; watch
+     `bufferedAmount`. Batches are tick-numbered so a reconnecting client
+     re-sends and the node ignores what it already has.
+
+## M2.2  Many players in one round                  stage 3
+
+  6. **Shared round start.** One seed, one map, one clock, agreed before
+     anyone moves. The core already takes a seed; this is about everyone
+     getting the same one and knowing when zero is.
+  7. **Ghosts.** Other players' trucks drawn from their input transcripts
+     replayed locally. This is the first real proof the core is
+     deterministic in the field: a ghost that drifts from what that
+     player actually did is a divergence you can SEE.
+  8. **Late join.** Catch up by replaying the transcript from the start
+     at speed. The core runs at 3000x realtime, so this is affordable -
+     and it is the same code path as verification, which is why it comes
+     before it.
+  9. **The leaderboard**, from scores the local core computed.
+
+## M2.3  Verification across nodes                  stage 4
+
+ 10. **A replay pool.** Worker threads, each importing `@blwp/core` once.
+     Priority: objected runs first, then top-ranked, then the rest.
+     Capacity is MEASURED, not assumed.
+ 11. **Five-of-seven finality.** Seven nodes replay a round, five must
+     agree on the result hash. Needs 10 first, obviously, and needs
+     checkpoints (3) to say WHERE they disagree.
+ 12. **Objection.** A node that disagrees says so, with the checkpoint it
+     диverged at, and the pool re-runs at priority.
+ 13. **Equivocation and no-quorum.** What happens when a node signs two
+     different results, and what happens when five cannot be found. These
+     are the cases that decide whether the system is honest under
+     pressure, and they are last because they need everything above to
+     exist before they can be provoked.
+
+## M2 is done when
+
+Seven local nodes independently replay a round played by several people
+and agree, byte for byte, on who won - and a deliberately corrupted node
+is caught by the other six.
+
+---
+
+# The work for M3, in order
+
+Money. Every step here is one where a bug costs a stake rather than a
+round, which is why testnet comes first and why the order is stricter.
+
+## M3.1  The chain, on regtest                      stage 5
+
+  1. **Bond verification.** Read a bond output and prove it is what it
+     claims. Nothing about a committee means anything until a bond can be
+     checked.
+  2. **Census by verification, not scanning** (section 6.1). Sorted by
+     `(txid, vout)` rather than by a hash of the pubkey, because a hash
+     can be ground and a txid cannot.
+  3. **Committee publication.** Sortition with LINEAR weight, comparing
+     `ticket_a * weight_b` against `ticket_b * weight_a` - never
+     dividing, because a division is a rounding rule and a rounding rule
+     is an attack surface.
+
+## M3.2  The client and the wallet                  stage 6
+
+  4. **The Unity bridge**, hardened for real sessions - it exists already
+     for single player.
+  5. **`@blwp/client`.** The session flow: enter, pay, play, settle.
+  6. **NWC wallet.** Comes after the client because the client defines
+     what the wallet is asked to do.
+
+## M3.3  Settlement                                 stage 7
+
+  7. **Hold invoices.** A stake committed without being spent. Everything
+     else in settlement assumes this works.
+  8. **The state machine** (section 9.4), persisted and crash-safe:
+
+         AWAITING_INVOICE -> HELD -> (result FINAL)
+            qualifying: CANCEL_REQUESTED -> CANCELLED -> PAYOUT_QUEUED -> PAID
+            losing:     SHARES_REQUESTED -> PREIMAGE_READY -> SETTLE_REQUESTED -> SETTLED
+            void:       EXPIRED
+
+     Every transition written to SQLite BEFORE the external call, and
+     reconciled against the backend on startup. Lightning operations must
+     be assumed to be interrupted mid-flight. The saving invariant is
+     that a repeated settle with the same preimage is harmless.
+  9. **VSS custody of the stake preimage.** No single node ever holds it.
+     After the state machine, because the machine defines when a share is
+     asked for.
+ 10. **FROST.** Threshold signatures so a payout needs several nodes and
+     no one of them can steal. Implemented against the RFC with its test
+     vectors, which is why it is comparatively low risk despite sounding
+     like the hardest part.
+ 11. **Backends.** LND first, others after.
+
+## M3 is done when
+
+A round is played for testnet sats, the stake is held rather than spent,
+the winners are paid by a threshold signature no single node could have
+produced, and a node killed mid-settlement recovers to the right state on
+restart.
+
+---
+
+# M4
+
+Bonds and arbitration move on-chain, load tests, and external review
+before it opens. Little new code and the highest stakes: a system holding
+other people's money that has only been read by the person who wrote it
+is not finished, however green its tests are.
