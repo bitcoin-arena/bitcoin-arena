@@ -31,103 +31,76 @@ their names, so any plate size read at wiring time can describe something
 that no longer exists. Every display is re-fitted against the mesh that
 is there now.
 
-## 2. The army into the core  (large - the rest of stage 1, and of M1)
+## 2. The army into the core  (in progress)
 
 The core RECEIVES the army today: Unity simulates it and sends x, z and
 kind every tick, which is why danger, collision and score are correct.
 M1 asks for enemies that come FROM the core.
 
-About 700 lines in `Army.cs`: squads and their drift, target selection,
-firing and reload, retreat when overrun, reinforcement, the gunship
-corridor, bombs. Ported to fixed point under the AST guard, the same way
-the driving was - and measured against the C# original the same way,
-with a reference recording rather than by eye. `PhysxReferenceTests` is
-the pattern to copy.
+`PhysxReferenceTests` is the pattern and `ArmyReferenceTests` is the
+recording: test/vectors/csharp-army.json.
 
-Order within it:
-  a. Unit movement - DONE. The C# army is recorded in
-     test/vectors/csharp-army.json and the core now closes at its pace:
-     armour 6.8 m/s, infantry 2.6, armour arriving first. Both sides hold
-     short of the seam on their own side and do not cross.
-  b. Firing, damage and death - PART DONE. Armour engages armour inside
-     46 m, reloads 1.4-3.2 s, takes 1.1-2.4 hp off a tank that has 6-10.
-     Losses now start at t=10-15 as the recording shows and neither side
-     is wiped out. Attrition over a minute is still about twice the C#
-     army's - 33-67% surviving where it keeps 71-83% - and the remaining
-     lever is the stand-off scatter, which is really step (c)'s job.
+  a. Movement and squads - DONE. Armour closes at 6.8 m/s, infantry at
+     2.6, armour arriving first, both within a third of a metre of the
+     recording at five seconds. Units hold a squad post rather than
+     wandering; free wandering spread them from 57 m to 87 m of standard
+     deviation where the C# army holds 36-45, and two armies that drift
+     apart sideways simply stop meeting.
 
-     Three faults found, all of the same kind - a plausible model that
-     produces a decisive winner instead of a front:
-       - every tank started with zero reload, so all fired on tick one in
-         index order and the side holding the lower indices won every
-         exchange before the other had fired
-       - sides were assigned by a coin toss per unit, giving sixteen tanks
-         against eight; in a lethal exchange an advantage compounds and the
-         larger side lost nobody. Forces are even now
-       - one stand-off for the whole army is all or nothing: at 9 m the
-         lines are 18 apart, permanently in gun range, and both sides are
-         ground to a third in a minute; at 25 they are 50 apart and nobody
-         ever fires. The spread IS the mechanism
-  c. Retreat - IN, and measured. Units back off inside 24 m and fall
-     right back when overrun by 14 (Army.OverrunDepth). Units are held to
-     |x| < 88 as Unity holds them.
+  b. Firing and death - MOSTLY. The first fifteen seconds now match:
+     83-100% of armour surviving where the recording has 79%. Over a
+     minute a gap remains - 17-67% against 71-83% - and the shooter count
+     falls to zero by t=60 where the C# army sustains 22-47.
 
-     Where it stands, measured rather than guessed:
-       attrition   17-58% surviving at 60 s, C# keeps 71-83%
-       z spread    9-12 m, C# holds 20
-       in range    0.75 enemies each at t=10, then 0.3-0.4
+  c. Retreat - IN. Back off inside 24 m, fall right back when overrun by
+     14 (Army.OverrunDepth), held to |x| < 88.
 
-     The spread is the lever, and the attrition follows it: at spread 9
-     both armies arrive on one line at the same moment and half the armour
-     dies in the ten seconds after contact, then the survivors separate
-     and nothing more happens. C# holds a spread of 20 and gets a steady
-     trickle instead.
+  d. Reinforcement, gunships and bombs - NOT STARTED.
+  e. Delete the C# army; Unity renders from core state only - NOT STARTED.
 
-     The chase coupling was tried and REVERTED. Porting
-     goalX = foe.x as part of one movement vector was the obvious way to
-     get depth; measured, it made the spread worse (9-12 down to 1.9-11.7)
-     and wiped out a side on two seeds, because chasing pulls both armies
-     onto the same x and concentrates the fight.
+### What the measurements say, and what they cost
 
-     Then the measurement that overturns all of it. The C# army fights in
-     MUCH heavier contact than any two-line model suggests:
+Four attempts went at the wrong quantity before measuring settled it, and
+the sequence is worth keeping because each step ruled something out:
 
-       enemies in gun range, per tank   C# 4.0-7.9    core 0.3-0.75
-       armour spread along x            C# 36-45 m
+  1. Assumed the units were clustering. Measured: they were DISPERSING to
+     the map edges, with not one enemy in gun range after thirty seconds.
+     The attrition that looked like a fast grind was no grind at all.
+  2. Assumed too little contact. Measured: the C# army fights with 4.0-7.9
+     enemies in range per tank against the core's 0.3-0.75 and STILL keeps
+     three quarters of its armour. That ruled out contact and left
+     lethality.
+  3. Read the code where that pointed and found it in one line:
+     `bool connects = Random01() < 0.55f` - forty-five per cent of shots
+     miss, and the core took a hit off every shot. Invisible in the
+     constants, because reload, damage and hit points all matched exactly.
+  4. Assumed fire concentration. Measured: shooters per target is 2.0-2.2
+     in the core against 1.6-3.1 in C# - fine. The difference was the
+     TOTAL number of shooters, which is contact again, which is squads.
 
-     Forty-five metres of x spread across a 176 m front means the two
-     sides INTERLEAVE rather than face each other - and it still keeps
-     71-83% of its armour. So the fault was never too little contact. It
-     was lethality per shot, and the measurement pointed straight at the
-     line responsible:
+Two sign errors and one index collision cost a round each, and all three
+had the same shape - a plausible model that produces no fight rather than
+a wrong one:
+  - the Bull army spawns at negative z, so its side is -1 while its Dir is
+    +1; using side for the overrun test put the whole army on the
+    fall-back line without a shot fired
+  - sides were assigned by a coin toss per unit, giving sixteen tanks
+    against eight, and in a lethal exchange an advantage compounds
+  - squad = index % 8 collides with side = bit two: armour is every fourth
+    index, so it fell into two squads, one per army, and the two lines
+    stood at opposite ends of the field
 
-         bool connects = Random01() < 0.55f;   // near misses
+### Next, and measure first
 
-     Forty-five per cent of shots MISS. The core took a hit off every
-     shot. Invisible in the constants, because reload, damage and hit
-     points had all been matched exactly.
+The shooter count collapsing to zero by t=60 while the x spread grows
+from 38 to 57 looks like survivorship - the middle squads are wiped out
+and the flanks live - rather than drift. Confirm that before changing
+anything: count losses per squad.
 
-     With that in, the first fifteen seconds are right: 83-100% surviving
-     where the C# army has 79%. Over a minute there is still a gap -
-     17-75% against 71-83% - and on some seeds one side is wiped out
-     entirely, which the test catches as "one side has vanished".
-
-     STILL RED, deliberately. The next quantity to measure, not guess:
-     how many shooters have the same tank as their nearest target. The C#
-     army has 24 a side against the core's 12, so its fire is spread over
-     more targets, and concentration is the obvious candidate for what is
-     left. Measure it before changing anything.
-
-     Two sign errors cost a round each here and both had the same shape -
-     a plausible model that produces no fight at all rather than a wrong
-     one. The Bull army spawns at negative z so its side is -1 while its
-     Dir is +1; using side for the overrun test made every unit read as
-     overrun the moment it reached its own line, and the whole army sat on
-     the fall-back line without firing a shot.
-
-  c2. Reinforcement
-  d. Gunships and bombs
-  e. Delete the C# army; Unity renders from core state only
+Also newly red and caused by this work: `SafeRouteScoresNearNothing`
+banks 0.077 where it wants 0.1. Squads concentrate the danger, so a run
+down the seam meets less of it than it used to. Decide whether the score
+reference or the army is the thing that moved.
 
 ## 3. Three post office buildings  - DONE, and it was the tests
 
