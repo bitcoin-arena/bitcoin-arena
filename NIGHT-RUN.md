@@ -57,6 +57,24 @@ Plain float arithmetic is fine — two million iterations of a chaotic
 integration using only `+ - * /` are bit-identical everywhere. So WASM's
 advantage is real and narrow: it compiles its own libm in.
 
+**And across CPUs, on one V8 version.** x86-64 in a container against arm64
+native, V8 13.6 both:
+
+| | x86-64 | arm64 |
+|---|---|---|
+| core, 36,000 ticks | `5d65d265…` | `5d65d265…` |
+| `sin` `cos` `tan` `atan2` `exp` `log` `pow` | ✗ | ✗ |
+| `sqrt` `cbrt` `hypot` | agree | agree |
+
+The same browser build gives different answers on Intel and on Apple silicon.
+The full acceptance also passes inside the x86-64 container: guard clean, 25
+tests, all five vectors.
+
+That closes the half of the criterion that was open. Three scripts now hold
+it: `run-engines.sh`, `run-versions.sh`, `run-arch.sh`, plus a GitHub Actions
+workflow that runs all of it natively on both architectures and fails if the
+two do not produce the same corpus hash.
+
 ## Throughput
 
 **3120× realtime** with 96 units, against the 15–30× this project expected and
@@ -95,8 +113,6 @@ test-vectors/  five golden logs with their state hashes
 
 ## What is NOT done
 
-- **The second architecture.** The acceptance asks for four engines × two
-  architectures. This machine is arm64 only. x86-64 remains unproven.
 - **The Unity bridge.** M1 needs Unity to render *from* the core instead of
   running PhysX. The core is bundled and ready; the `.jslib`, the C# component
   and the input path are not written, and could not be verified here anyway.
