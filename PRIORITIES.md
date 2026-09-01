@@ -51,14 +51,26 @@ Order within it:
   d. Gunships and bombs
   e. Delete the C# army; Unity renders from core state only
 
-## 3. Three post office buildings exist  (unexplained)
+## 3. Three post office buildings  - DONE, and it was the tests
 
-Instrumenting the band showed FIFTEEN `mined_face_` transforms where the
-model has five. Three copies of the building are in the scene. Nothing
-looks wrong on screen, so two are presumably inactive or stacked exactly -
-but it is three times the geometry and three times the text, and it was
-not deliberate. Find out where they come from before the army port makes
-the scene harder to read.
+Not a game fault. Bootstrap assembles a whole world as ROOT objects and
+[UnitySetUp] runs before EVERY test, not once per fixture - and twelve
+fixtures created worlds while two cleaned up. Dozens of complete games
+were stacked on top of each other, all stepping at once, which is why an
+instrumented count found fifteen block faces where the model has five.
+
+That was the suite's intermittent failures, all of them:
+FindFirstObjectByType picks an arbitrary copy, so a test could set up one
+truck and measure another. TestWorld.TearDown now clears the scene
+between tests, and the suite went from "one or two different failures per
+run" to 166 green, twice in a row.
+
+It also turned a flake into a finding: with one world instead of thirty,
+the truck reversing out of a crowd of tanks moved 4.6 m where the test
+wants 6, every time. The collision was summing an escape route from every
+tank at once and wedging it. The correction is capped per tick now - 0.6
+m, which has to stay above the distance a tick of travel covers at
+24 m/s, or a fast approach pushes straight through.
 
 ## 4. Hover overlays  (small, and the last thing owed from the old list)
 
