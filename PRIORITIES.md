@@ -97,12 +97,26 @@ Order within it:
 
      Forty-five metres of x spread across a 176 m front means the two
      sides INTERLEAVE rather than face each other - and it still keeps
-     71-83% of its armour. So the fault is not too little contact. It is
-     too much lethality per shot, and that is the next thing to chase,
-     with numbers: how often does a C# tank actually fire, and how many
-     shooters does one tank have on it? Reload and damage were matched to
-     the C# constants and the per-hit fraction of max hp is identical, so
-     something else is limiting how often those constants are applied.
+     71-83% of its armour. So the fault was never too little contact. It
+     was lethality per shot, and the measurement pointed straight at the
+     line responsible:
+
+         bool connects = Random01() < 0.55f;   // near misses
+
+     Forty-five per cent of shots MISS. The core took a hit off every
+     shot. Invisible in the constants, because reload, damage and hit
+     points had all been matched exactly.
+
+     With that in, the first fifteen seconds are right: 83-100% surviving
+     where the C# army has 79%. Over a minute there is still a gap -
+     17-75% against 71-83% - and on some seeds one side is wiped out
+     entirely, which the test catches as "one side has vanished".
+
+     STILL RED, deliberately. The next quantity to measure, not guess:
+     how many shooters have the same tank as their nearest target. The C#
+     army has 24 a side against the core's 12, so its fire is spread over
+     more targets, and concentration is the obvious candidate for what is
+     left. Measure it before changing anything.
 
      Two sign errors cost a round each here and both had the same shape -
      a plausible model that produces no fight at all rather than a wrong
