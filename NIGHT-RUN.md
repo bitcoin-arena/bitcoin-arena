@@ -70,6 +70,19 @@ The same browser build gives different answers on Intel and on Apple silicon.
 The full acceptance also passes inside the x86-64 container: guard clean, 25
 tests, all five vectors.
 
+**And on a big-endian machine.** s390x, emulated, Node's own build:
+
+```
+arm64 (LE)   5d65d2659dc802491073d35bc06586b5b96b93f89c9897308eea306aa6e96af1
+x64   (LE)   5d65d2659dc802491073d35bc06586b5b96b93f89c9897308eea306aa6e96af1
+s390x (BE)   5d65d2659dc802491073d35bc06586b5b96b93f89c9897308eea306aa6e96af1
+```
+
+That one matters more than it looks. Hashing the raw bytes of an Int32Array
+inherits the host's byte order, and x86-64 and arm64 are both little-endian -
+so every architecture test passed while the assumption went unexamined. s390x
+is the only way to tell a correct fix from a correctly written one.
+
 That closes the half of the criterion that was open. Three scripts now hold
 it: `run-engines.sh`, `run-versions.sh`, `run-arch.sh`, plus a GitHub Actions
 workflow that runs all of it natively on both architectures and fails if the
