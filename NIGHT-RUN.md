@@ -40,6 +40,19 @@ is worse: a player who updates Chrome could fail to replay their own earlier
 transcript, and no amount of testing on three engines would catch it. This is
 what turns the fixed-point core from cautious into necessary.
 
+**Followed up, and it has already happened.** Across four Node releases
+spanning V8 10.2 to 13.6:
+
+| | V8 10.2 | V8 11.3 | V8 12.4 | V8 13.6 |
+|---|---|---|---|---|
+| core, 36,000 ticks | `5d65d265…` | `5d65d265…` | `5d65d265…` | `5d65d265…` |
+| `Math.pow` digest | `0150334f` | `0150334f` | `0150334f` | **`a01870cd`** |
+
+V8 changed `Math.pow` between 12.4 and 13.6. The core is bit-identical across
+all four, because it calls none of them. `tools/run-versions.sh` keeps it
+true, and `test/specified.test.js` enumerates every operation the core is
+allowed to touch with the clause of the specification that pins it.
+
 Plain float arithmetic is fine — two million iterations of a chaotic
 integration using only `+ - * /` are bit-identical everywhere. So WASM's
 advantage is real and narrow: it compiles its own libm in.
