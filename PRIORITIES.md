@@ -4,6 +4,21 @@ Kept in the repo rather than in a conversation, because a plan that lives
 only in chat is re-derived from scratch every session. Top item first;
 each is finished and deployed before the next is started.
 
+Every item carries the milestone it serves. Two of them serve none: they
+are worth doing and they buy no progress towards shipping, so they wait
+until something that does is finished.
+
+    1  clear the red tests            M1   done
+    2  the army into the core         M1   in progress  <- the last one
+    3  three post office buildings    M1   done
+    4  hover overlays                 -    small
+    5  prune the streamed bundles     -    small
+
+Everything for M2 and beyond is further down, under "The milestones", and
+none of it should be started while item 2 is open. M2 needs stage 3
+(`blwp-node`) before it can begin at all, and starting a lobby on top of
+a simulation that still disagrees with the game is work built on sand.
+
 The rule that has cost the most time here, written down so it is not
 learned a fourth time: **when a number does not move across several
 attempts, stop forming hypotheses and print what the code is actually
@@ -14,7 +29,7 @@ a node that keeps its name. Four rounds of guessing, one line to see it.
 
 ---
 
-## 1. Clear the red tests  - DONE
+## 1. Clear the red tests  -  M1  -  DONE
 
 165 green, one known flake left (`TheGogglesAnimate`, which passes alone
 and depends on a network fetch inside a two-second animation window).
@@ -31,7 +46,9 @@ their names, so any plate size read at wiring time can describe something
 that no longer exists. Every display is re-fitted against the mesh that
 is there now.
 
-## 2. The army into the core  (in progress)
+## 2. The army into the core  -  M1  -  IN PROGRESS
+
+The last thing standing between here and M1.
 
 The core RECEIVES the army today: Unity simulates it and sends x, z and
 kind every tick, which is why danger, collision and score are correct.
@@ -102,7 +119,7 @@ banks 0.077 where it wants 0.1. Squads concentrate the danger, so a run
 down the seam meets less of it than it used to. Decide whether the score
 reference or the army is the thing that moved.
 
-## 3. Three post office buildings  - DONE, and it was the tests
+## 3. Three post office buildings  -  M1  -  DONE, and it was the tests
 
 Not a game fault. Bootstrap assembles a whole world as ROOT objects and
 [UnitySetUp] runs before EVERY test, not once per fixture - and twelve
@@ -123,20 +140,27 @@ tank at once and wedging it. The correction is capped per tick now - 0.6
 m, which has to stay above the distance a tick of travel covers at
 24 m/s, or a fast approach pushes straight through.
 
-## 4. Hover overlays  (small, and the last thing owed from the old list)
+## 4. Hover overlays  -  no milestone  -  small
 
 Transaction details on the loading ramp, and the full figure behind each
-bar on the miner's histogram.
+bar on the miner's histogram. Polish: it makes the live chain data
+readable, and it moves nothing towards a milestone.
 
-## 5. Prune the streamed bundles  (small)
+## 5. Prune the streamed bundles  -  no milestone  -  small
 
 `ServerData/` keeps every version ever built - five post office bundles,
 40.9 MB copied into each build. Nothing serves the old ones and they are
-uploaded on every deploy.
+uploaded on every deploy. Housekeeping, and it grows every time a model
+changes.
 
 ---
 
 # The milestones
+
+Items 1 to 5 above are the work in front of us. This is what that work is
+FOR. After item 2 closes, the next list is drawn from M2 - and its first
+entry will be stage 3, the node daemon, because nothing else in M2 can
+start without it.
 
 Four of them, and the numbers are cumulative sessions from the estimate
 in IMPLEMENTATION.md section 15. That estimate has held so far, which is
