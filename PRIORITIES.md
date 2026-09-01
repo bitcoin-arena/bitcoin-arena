@@ -292,40 +292,91 @@ Nothing here starts while item 2 above is open.
 
 ## M2.2  Many players in one round                  stage 3
 
-  6. **Shared round start.** One seed, one map, one clock, agreed before
-     anyone moves. The core already takes a seed; this is about everyone
-     getting the same one and knowing when zero is.
-  7. **Ghosts.** Other players' trucks drawn from their input transcripts
-     replayed locally. This is the first real proof the core is
-     deterministic in the field: a ghost that drifts from what that
-     player actually did is a divergence you can SEE.
-  8. **Late join.** Catch up by replaying the transcript from the start
-     at speed. The core runs at 3000x realtime, so this is affordable -
-     and it is the same code path as verification, which is why it comes
-     before it.
-  9. **The leaderboard**, from scores the local core computed.
+  6. **The Round Contract.** Map, duration `T_run`, seed, and the score
+     parameters section 18A.7 requires it to pin: `E_reference`, the
+     corridor half width, the clamps on `T`, `min_score`, `K` and `r`.
+     Agreed before anyone moves. This is NOT a shared physics state -
+     see the next item - it is a shared set of rules.
+
+  7. **A private world per player** (spec 0.10). This is the one that
+     changes the shape of everything:
+
+         financial_world(p) =
+           deterministic_sim(RoundContract, map, player_seed, player_inputs)
+
+     There is no giant synchronised physics state, and there is not meant
+     to be. Alice's physics cannot change Bob's result. Each player's
+     enemies react only to that player's own truck. This is what lets the
+     round hold sixty players without sixty trucks in one simulation.
+
+  8. **Ghosts, with NO collision** (spec 0.9). Other trucks are drawn
+     from their transcripts and are never inputs to the local
+     simulation. A player must not be able to change my odds by ramming
+     me, blocking a road, pulling enemies onto me or sacrificing
+     themselves for me. Ghost snapshots are presentation only.
+
+     They are also the first place a determinism failure becomes
+     something you can SEE rather than something a test reports: a ghost
+     that drifts from what that player actually did is a divergence in
+     the open.
+
+  9. **Late join** (spec 0.8). NOT a catch-up replay - I had this wrong
+     until reading the spec. Entry stays open while the round runs, and
+     every accepted entrant gets the same `T_run` from their own start,
+     so wall-clock starts differ by design. There is nothing to catch up
+     to, because there is no shared world to be behind in.
+
+ 10. **The leaderboard**, from signed final results. Presentation, not
+     authority (spec 0.11).
 
 ## M2.3  Verification across nodes                  stage 4
 
- 10. **A replay pool.** Worker threads, each importing `@blwp/core` once.
+ 11. **A replay pool.** Worker threads, each importing `@blwp/core` once.
      Priority: objected runs first, then top-ranked, then the rest.
      Capacity is MEASURED, not assumed.
- 11. **Five-of-seven finality.** Seven nodes replay a round, five must
-     agree on the result hash. Needs 10 first, obviously, and needs
-     checkpoints (3) to say WHERE they disagree.
- 12. **Objection.** A node that disagrees says so, with the checkpoint it
-     диverged at, and the pool re-runs at priority.
- 13. **Equivocation and no-quorum.** What happens when a node signs two
-     different results, and what happens when five cannot be found. These
-     are the cases that decide whether the system is honest under
-     pressure, and they are last because they need everything above to
-     exist before they can be provoked.
+ 12. **Five-of-seven finality on the RESULT.** Seven nodes replay a
+     player's run and five must agree. Needs the pool, and needs
+     checkpoints (3) to say WHERE they disagree rather than merely that
+     they do.
+ 13. **The payout table** (spec 20). Once entry closes, membership is
+     known and every accepted player has a FINAL result:
+
+         PayoutTable = F(RoundContract, Membership, FinalResults)
+
+     Deterministic. Nodes sign its hash and 5-of-7 makes it final. A node
+     signing a table that is not `F(...)` of its own published inputs is
+     slashable - which is only enforceable because the function is
+     deterministic, which is the whole point of the core.
+
+ 14. **Role separation** (spec 21). `--roles game_verify` stores
+     transcripts, replays, signs results and the payout table, and MOVES
+     NO FUNDS. `--roles settlement` verifies the contract and the 5-of-7
+     and moves funds. Built as separate roles from the start, because
+     retrofitting a separation of powers is how it ends up not being one.
+
+ 15. **Objection.** A node that disagrees says so, with the checkpoint it
+     diverged at, and the pool re-runs at priority.
+ 16. **Equivocation and no-quorum.** What happens when a node signs two
+     different results, and what happens when five cannot be found. Last,
+     because they cannot be provoked until everything above exists.
 
 ## M2 is done when
 
-Seven local nodes independently replay a round played by several people
-and agree, byte for byte, on who won - and a deliberately corrupted node
-is caught by the other six.
+Seven local nodes independently replay a round played by several people,
+agree byte for byte on every result AND on the payout table, and a
+deliberately corrupted node is caught by the other six.
+
+## What the spec rules out, and it is worth knowing before building
+
+  - **No house** (spec 19). No bankroll, no RTP promise, no server-funded
+    multiplier, no central balance. `payouts <= validly collected stakes`.
+    Bots may outbid humans; they cannot create liability, because there
+    is nobody to be liable.
+  - **No shared physics.** Ghosts never touch the simulation. Any design
+    that has one authoritative world with everyone in it is the wrong
+    design for this protocol, however normal it looks.
+  - **The leaderboard is not authority.** It presents signed results; it
+    does not produce them.
 
 ---
 
