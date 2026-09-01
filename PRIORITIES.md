@@ -136,9 +136,100 @@ uploaded on every deploy.
 
 ---
 
-## After M1
+# The milestones
 
-M2 cannot start before stage 3: a lobby, a shared round start and
-verification across seven nodes all need `blwp-node`, which does not
-exist yet. M2 is 23-33 sessions in total by the estimate in
-IMPLEMENTATION.md section 15, and that estimate has held so far.
+Four of them, and the numbers are cumulative sessions from the estimate
+in IMPLEMENTATION.md section 15. That estimate has held so far, which is
+some reason to trust the rest of it.
+
+Playability comes long before money. Each milestone is something you can
+put in front of a person, not an internal checkpoint.
+
+## M1 - core-driven single player          11-18 sessions
+
+**What you can do:** exactly today's game, in a browser, as it plays now.
+The difference is invisible from the outside: the truck's position, the
+damage it takes, the enemies and the delivery all come from the
+deterministic JavaScript core instead of from PhysX. No network, no
+money, no other players.
+
+**Why it is the one to steer for.** It is not merely early - it retires
+the two largest risks in the whole undertaking:
+
+  - *does determinism hold?* Four JavaScript engines, several versions of
+    each, three processor architectures. If it does not, everything
+    downstream is impossible. Stage 0 answered this: identical across V8,
+    SpiderMonkey and JavaScriptCore, across four V8 versions, and across
+    arm64, x86-64 and big-endian s390x.
+  - *does the fixed-point model still DRIVE well?* The feel behind the
+    handbrake, the grip and the camera is WheelCollider behaviour that has
+    to be derived again from scratch. That is iteration with a person at
+    the wheel, not a mechanical port - and the way it was actually done
+    was to record the PhysX truck and hold the core to the recording.
+
+**Where we are:** stages 0 and 2 are finished, stage 1 is most of the way.
+What is left is the army, which is item 2 above.
+
+## M2 - play-money multiplayer             23-33 sessions
+
+**What you can do:** the whole experience with other people, without
+sats. A lobby. Everyone starting the same round at the same time on the
+same map. Joining late and catching up. Ghosts of the other trucks on
+your screen. A leaderboard. And - the part that matters - results that
+seven independent nodes have each replayed and agreed on.
+
+**Why it is a milestone and not a feature.** This is where determinism
+stops being a claim and starts being load-bearing. Seven machines replay
+the same recorded inputs and must arrive at the same score, byte for
+byte, or the round does not settle. Everything about the core - the
+integer arithmetic, the banned float, the committed trig table, the
+draw order being part of the protocol - exists for this moment.
+
+**What has to be built first:** stage 3, `blwp-node` - an HTTP and
+WebSocket daemon over `node:sqlite` holding entries, checkpoints and
+transcripts. Then stage 4: the replay pool, five-of-seven finality,
+objection handling, what happens when a node equivocates or no quorum is
+reached. M2 cannot begin before that daemon exists.
+
+## M3 - testnet sats                       31-45 sessions
+
+**What you can do:** play for real Lightning payments, on testnet, where
+the coins are worthless and the mechanics are not.
+
+Hold invoices, so a stake can be committed without being spent. Verifiable
+secret sharing, so no single node ever holds the key that releases the
+pot. FROST threshold signatures, so a payout needs several nodes to agree
+and no one of them can steal it.
+
+**Why testnet first:** every one of those mechanisms fails in ways that
+cost money on mainnet and cost nothing here. The settlement state machine
+is the part of this project where a bug is not a bad round but a lost
+stake.
+
+**What has to be built first:** stage 5, reading bonds off the chain and
+publishing a committee from them, on regtest. Stage 6, the Unity bridge
+and a wallet. Stage 7, the settlement itself.
+
+## M4 - mainnet, lowest bracket            36-52 sessions
+
+**What you can do:** play for real sats, in the smallest stake bracket
+there is.
+
+**What is different from M3:** not much code - bonds and arbitration move
+on-chain, and there are load tests. The real difference is that it is
+reviewed by someone outside this project before it opens. A system that
+holds other people's money and has only ever been read by the person who
+wrote it is not finished, however green its tests are.
+
+---
+
+## What the milestones are NOT
+
+They are not a schedule. The session counts are effort, not calendar, and
+the two risky ones are M1 (does it drive well) and M3 (does the money
+move correctly). The rest is work, not uncertainty.
+
+They are also not independent. Nothing after M1 is worth starting while
+the core still disagrees with the game about anything: every hour spent
+on a lobby is an hour spent on top of a simulation that has not yet been
+proven to reproduce the thing it replaced.
