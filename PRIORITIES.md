@@ -3517,7 +3517,7 @@ the two largest risks in the whole undertaking:
 **Where we are:** stages 0 and 2 are finished, stage 1 is most of the way.
 What is left is the army, which is item 2 above.
 
-## M2 - play-money multiplayer             23-33 sessions
+## M2 - play-money multiplayer             29-41 sessions
 
 **What you can do:** the whole experience with other people, without
 sats. A lobby. Everyone starting the same round at the same time on the
@@ -3538,7 +3538,7 @@ transcripts. Then stage 4: the replay pool, five-of-seven finality,
 objection handling, what happens when a node equivocates or no quorum is
 reached. M2 cannot begin before that daemon exists.
 
-## M3 - testnet sats                       31-45 sessions
+## M3 - testnet sats                       38-54 sessions
 
 **What you can do:** play for real Lightning payments, on testnet, where
 the coins are worthless and the mechanics are not.
@@ -3770,6 +3770,42 @@ Nothing here starts while item 2 above is open.
      different results, and what happens when five cannot be found. Last,
      because they cannot be provoked until everything above exists.
 
+## M2.4  The screen                                  stage 4
+
+Everything above is a daemon and a protocol. **None of it is visible**,
+and the M2 description promises a lobby, ghosts and a leaderboard that
+appear nowhere in the work list. That omission is why frontend work
+wrecks estimates: it is assumed rather than planned.
+
+All of this is Unity plus the web wrapper, and all of it is new - the
+single-player build has no concept of another player.
+
+ 20. **The lobby.** Rounds open for entry, their stake, their map, how
+     many have joined, and a countdown to `committee_time`. Before that
+     moment the committee is genuinely unknown, so the lobby says
+     "committee pending" rather than showing an empty list - the wait is
+     a security property (§5A.5) and should read as one.
+
+ 21. **Ghosts.** Other trucks on your screen, interpolated from their
+     checkpoints, visibly not collidable. They must never be able to
+     affect your world - that is spec 0.10, and a ghost that pushes you
+     is not a rendering bug but a protocol violation you can see.
+
+ 22. **Joining late.** Catching up from the transcript with the world
+     already moving, without a loading screen that makes it feel broken.
+
+ 23. **The results table.** Every player's score and rank, and WHICH
+     nodes signed it. Showing the signers is not a detail: it is the only
+     moment the player sees that no single party decided the outcome.
+
+ 24. **Objection and disagreement, on screen.** When a node objects or
+     the committee cannot reach threshold, the player must see what is
+     happening and what it means for their round. Silence during a
+     dispute reads as a hang, and a hang reads as theft.
+
+ 25. **Reconnect.** The disconnect rule (spec 15) exists; the interface
+     for it does not. What the player sees while dropped, and on return.
+
 ## M2 is done when
 
 Seven local nodes independently replay a round played by several people,
@@ -3955,6 +3991,14 @@ round, which is why testnet comes first and why the order is stricter.
      with no I/O in it. That is what makes 9a's property tests possible
      at all, and it is far harder to retrofit than to start with.
 
+ 9f. **The operator UI** (27A.7.7) - a separate app, and the one place
+     the frontend touches keys. It is a client of the operator's OWN
+     node, paired by a `blwp-operator:` URI, with scoped tokens; the node
+     builds and signs and **no key ever leaves it**. Worst case of a
+     stolen token is a wrong vote, never a bond, and that property is
+     what makes a convenient web UI defensible at all - build it so that
+     stays true.
+
  9e. **Hard forks** (27A.8). The fork certificate, `network_id` as a
      chain, UPGRADE at 51/66 on 2016/2016/4320, opt-in bond
      re-affirmation, and the client walking a certificate chain back to
@@ -4094,6 +4138,34 @@ held by people. `bond_maturity` bounds the damage - arbitration can never
 freeze a bond forever - but it does not remove the trust. Anyone posting
 a bond is trusting that quorum not to collude against them within the
 window. Say so in the client, before someone posts one.
+
+## M3.4  The screen, with money                     stage 7
+
+ 16. **The entry screen.** One number the player approves, with the
+     breakdown under it: stake, node fee, donation, net to the pot. Fees
+     are INCLUSIVE (24A, 27A), so 100 sats staked is not 100 sats played,
+     and the first time a player discovers that must not be after paying.
+
+ 17. **The donation control.** The player's own choice, zero valid, cap
+     enforced (`donation_bps_max`), and every recipient shown before
+     approval. Nothing may preselect a number on their behalf.
+
+ 18. **Conflict disclosure** (5A.13). Before commitment, whether any
+     selected node declared a conflict - and what a self-declaration is
+     worth, stated plainly rather than implied by a green tick.
+
+ 19. **The payout claim.** LNURL-withdraw or the player's own BOLT11
+     invoice (24A.2), the claim window counting down, and no address
+     remembered afterwards.
+
+ 20. **Waiting for settlement.** Held stake, threshold signing, refund on
+     expiry. The player is waiting on other people's machines and must be
+     told so, with the refund path visible the whole time - that is the
+     property that makes the wait tolerable rather than frightening.
+
+ 21. **The budget screen** (24A.1). What was granted, what is left, what
+     it was spent on, and when it lapses. A budget the player cannot
+     inspect is worse than approving each round.
 
 ## M3 is done when
 
