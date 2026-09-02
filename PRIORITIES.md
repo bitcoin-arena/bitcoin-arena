@@ -13,6 +13,7 @@ until something that does is finished.
     3  three post office buildings    M1   done
     4  hover overlays                 -    small
     5  prune the streamed bundles     -    small
+    6  bundler: private name check    -    small
 
 Everything for M2 and beyond is further down, under "The milestones", and
 none of it should be started while item 2 is open. M2 needs stage 3
@@ -86,6 +87,18 @@ recording: test/vectors/csharp-army.json.
      both the GROUND line's doing and are named under "The air arm"
      below.
   e. Delete the C# army; Unity renders from core state only - NOT STARTED.
+     LAST, and deliberately: it deletes the instrument. `ArmyReferenceTests`
+     and `GunshipReferenceTests` go with `Army.cs`, and no quantity can be
+     recorded from the C# afterwards.
+
+  f. The infantry line, recorded - NOT STARTED. Half the army has never
+     been compared. See "The half that was never compared" below.
+  g. A no-air control for `measure-army.js` - NOT STARTED.
+  h. The infantry line, corrected: rifle fire and the 24 m floor - NOT
+     STARTED.
+  i. The reload stagger - NOT STARTED.
+
+  Order: f, g, h, i, then e.
 
 ### What the measurements say, and what they cost
 
@@ -335,6 +348,96 @@ first sortie stands somewhere else. `BlwpLayout.cs` and
 Nothing is wired into `Battlefield.cs`, `Army.cs` or `ArmyRenderer` -
 Unity keeps the live army until (e).
 
+### The half that was never compared
+
+(d) closed the air. Asking what item 2 still needs turned up something
+older: **the infantry has never been laid beside the recording at all.**
+72 of the 96 units a side are riflemen, and `csharp-army.json` carries
+`n`, `z` and `spread` for them and nothing else - no death causes, no
+nearest-enemy distance, no rifle fire. Every number that has been argued
+over in this file is an ARMOUR number.
+
+What the two engines do, measured (core: seed 20260901, `--seam0`;
+recording: `passes.core-size-reinforce`):
+
+                             core            recording
+    armour alive t=90        10/12, 10/12    10/12, 10/12
+    shooters t=20/40/60/90   23/13/17/14     20/15/14/12
+    armour lost / arrived    60 / 56         59 / 55
+    inRange t=60, xspread    2.80, 41.5      2.7, 38.8
+    ----------------------------------------------------
+    inf mean z t=30          -16.0 / +36.6   -11.6 / +14.7
+    inf mean z t=60          -21.9 / +18.4   -13.6 / +14.3
+    inf mean z t=90          -25.6 / +18.4   -17.9 / +11.0
+    rifle deaths per round   0, by construction   16-37
+    nearest opposing pair    24.0 m, exactly      not recorded
+
+The armour agrees. The infantry stands 5 to 12 m further off the seam and
+never fires a shot at another rifleman, and both come from the same two
+lines of core:
+
+  - `army.js` applies `BACK_OFF_RANGE` (24 m) to riflemen as well as
+    armour. The C# has no crowding rule for infantry at all - `Separate`
+    is called on `Armour` pairs only (`Army.cs:325`), and `StepInfantry`
+    walks a man to his standoff and leaves him there. C# lines
+    interpenetrate; the core's cannot come closer than 24 m.
+  - the core's rifle fire targets the COURIER only. C#
+    `Army.StepInfantry` picks `NearestEnemyInfantry` inside
+    `RifleRange` 26 m, reloads 2.5-4.5 s, connects at
+    `RifleHitChance` 0.045 for 1 hp, and only switches to the truck when
+    the courier is inside a heat-weighted reach AND closer than that foe.
+    The core fires at the truck whenever the truck is inside 26 m, and
+    never at anybody else.
+
+The second one is a TRUCK DAMAGE difference, not a decoration: it changes
+how much rifle fire the player takes, in both directions, and truck
+damage is M1's.
+
+This is also where the air arm's two unreachable numbers come from, which
+"The air arm" above had already traced to the ground line: the blast
+radius is 16 and the floor is 24, so no bomb can contain men from both
+sides. **The falsifiable prediction for (h):** removing the floor moves
+the dud share from 0.45-0.47 up into the recording's 0.50-0.58 and the
+bomb friendly-fire share from 39-59% down into its 18-42%, without one
+line changing in `air.js`. If it does not, the floor was not the cause
+and the air is.
+
+And a measurement defect (d) introduced, which is (g): `ArmyReferenceTests`
+launches no sorties, and the core has no switch for turning its air off -
+`measure-air.js` produces the no-air control by loading the core from a
+git worktree taken before the air landed. So `measure-army.js` has, since
+(d), been printing an air-ON core beside an air-OFF recording. The
+reinforcement table above predates the air and is sound; anything measured
+with that tool from here is not, until it can load a control the same way
+`measure-air.js` does.
+
+### What (e) actually has to move, found by reading the bridge
+
+(e) reads like a deletion. It is not: three outcomes still leave the core
+today, and two of them have no core rule at all.
+
+  - **Collision.** `CoreDrivenTruck.UploadArmour` pushes Unity's tank
+    positions into the core every tick (`BlwpSetArmour` -> `setArmour`
+    -> `st.armour`), and `resolveArmour` uses those. Per-tick host input
+    that is not player input: **a node replaying the round has no Unity to
+    supply it, so the round is not replayable today.** That is the sentence
+    M1 exists to delete. `threatAt` has the same shape - `sim.js:681`
+    prefers host units when they are present - and that path becomes dead
+    code with `setArmour`.
+  - **Truck damage, twice.** `Bootstrap.cs:194` wires
+    `Field.Army.CourierHit += _truckHealth.Damage`, so the C# army hurts
+    the truck; the core takes its own hits off `T_HP` (`sim.js:641`) and
+    nothing reads it back. The core's health is the ghost. Alongside it
+    `TruckHealth.OnCollisionEnter` still reads
+    `collision.relativeVelocity` while line 169 already takes the core's
+    `BlwpCore.TakeImpact()` - the PhysX-era pattern this project keeps
+    paying for.
+  - **Two rules that do not exist in the core.** `Army.RunOver` (driving
+    over riflemen kills them, above 2.5 m/s) and `Army.ClearPath`
+    (infantry pushed out of a deep overlap so nobody is left standing in
+    the cab). Both are outcomes the player produces. After (e) they either
+    vanish from the game or stay in C#, and both of those break the law.
+
 ### Found while doing (d), and NOT fixed in it
 
 `sim.js`, in the spawn path:
@@ -351,12 +454,14 @@ nobody"). C# staggers it: `reload = Rand(0f, 3f)`.
 
 Left alone on purpose. The shared spawn path was extracted bit-identical,
 including that line, so the reinforcement numbers above are one change and
-not two. It is its own item, and it moves the vectors again when it lands.
+not two. **It is item (i)**, and it moves the vectors again when it lands.
 
 Also newly red and caused by this work: `SafeRouteScoresNearNothing`
 banks 0.077 where it wants 0.1. Squads concentrate the danger, so a run
 down the seam meets less of it than it used to. Decide whether the score
-reference or the army is the thing that moved.
+reference or the army is the thing that moved - **in (e)**, against the
+numbers that hold once the exposure is computed over the core's own units,
+and not before. Nothing is deployed while it is red.
 
 Found while doing the air half, and left alone: **`tools/bundle.js`
 refuses duplicate EXPORTED names and does not look at private ones.** The
@@ -369,7 +474,7 @@ program from the modules, and only `bundle.test.js` comparing hashes would
 catch it. `terrain.js` and `cargo.js` already both declare `COLUMNS`, with
 the values 128 and 2, and escape only because neither is reachable from
 `sim.js`. The constant here was renamed `BOMB_GRAVITY`; widening the check
-to every top-level declaration is three lines and its own item.
+to every top-level declaration is three lines, and it is item 6.
 
 ## 3. Three post office buildings  -  M1  -  DONE, and it was the tests
 
@@ -404,6 +509,15 @@ readable, and it moves nothing towards a milestone.
 40.9 MB copied into each build. Nothing serves the old ones and they are
 uploaded on every deploy. Housekeeping, and it grows every time a model
 changes.
+
+## 6. Bundler: the private name check  -  no milestone  -  small
+
+`tools/bundle.js` refuses duplicate EXPORTED names and does not look at
+private ones, and the bundle is one scope. Two `const`s of the same name
+throw at bundle time, which is the loud case; two `var`s or two
+`function`s would not, and the bundle would ship a different program from
+the modules with only `bundle.test.js` hashing to catch it. Widen the
+check to every top-level declaration. Written up under item 2.
 
 ---
 
