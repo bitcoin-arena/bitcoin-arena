@@ -47,7 +47,7 @@ their names, so any plate size read at wiring time can describe something
 that no longer exists. Every display is re-fitted against the mesh that
 is there now.
 
-## 2. The army into the core  -  M1  -  IN PROGRESS (l, m, j closed; i/n/o/e open)
+## 2. The army into the core  -  M1  -  IN PROGRESS (l, m, j, i closed; n/o/e open)
 
 The last thing standing between here and M1.
 
@@ -240,7 +240,60 @@ recording: test/vectors/csharp-army.json.
      every x beyond about +81 m on a map that runs to +130 and whose
      furthest corner is 249.3 m out. That is a BLWP outcome, not an army
      number.
-  i. The reload stagger - NOT STARTED.
+  i. The reload stagger - DONE, and the reason given for it was wrong.
+     The spawn drew a staggered reload and threw it away on the next
+     line: `U_TARGET = nextBelow(rng, 180)` and then `U_TARGET = -1`. The
+     word is shared - the armour's reload counter and the rifleman's
+     squad - and the -1 cleared it before the infantry branch wrote the
+     squad in. That branch overwrites it anyway, so the clear only ever
+     cost the ARMOUR its stagger. `Army.cs:262` draws
+     `reload = Rand(0f, 3f)` and `:604` counts it down every tick; the
+     core's 0-179 ticks is the same 0-3 s. Before: -1 on every tank of
+     every seed, one distinct value. After: 22-24 distinct values.
+
+     THE FAILURE THE COMMENT NAMED DOES NOT HAPPEN. It says the clear
+     lets every tank fire on its first tick in index order - "one army
+     went from eleven to two while the other lost nobody". Measured air
+     off, seam pinned, four seeds, before the fix:
+
+       first armour shot      bull 7.80-7.88 s     bear 7.80-7.88 s
+       free shots before the
+         other side fired     bull 0-1             bear 0-2
+       bullArmour - bearArmour, t=5..30
+         core  [0,0,-1,-1,-3,-1] [0,0,0,-1,-5,-3] [0,0,0,-1,-1,0]
+               [0,0,0,2,0,-1]
+         REC   [0,0,0,-1,-1,-1]        (`core-size-reinforce`, the 12/36
+                                        pass - `attrition` is 24/72 and
+                                        is not a pair)
+
+     Both sides open within a twentieth of a second of each other, the
+     free-shot count runs to BEAR on one seed, and the asymmetry sits on
+     the recording's. The rout the comment describes belongs to an army
+     whose tanks all arrived together; they now arrive scattered and the
+     stagger has expired before anyone has a target. The divergence was
+     real, its price was about one shot.
+
+     IT IS NOT BEHAVIOUR-NEUTRAL, though, and the reasoning that it would
+     be was caught by the vectors going red rather than by argument. With
+     the seam pinned the stagger changes nothing; in the vectors, with a
+     moving seam and a driving truck, it does:
+
+       end of vector      armour alive      truck hp
+         straight           21 -> 20         92.00 -> 92.00
+         slalom             20 -> 18         91.58 -> 91.58
+         reverse            21 -> 19         88.14 -> 88.14
+         idle               20 -> 19         22.46 ->  4.26
+         practice           21 -> 20        100.00 -> 100.00
+
+     The hashes would have moved even had behaviour been identical: a
+     checkpoint covers the whole state buffer and `U_TARGET` is in it.
+
+     Everything else holds: air envelope 29/29, infantry covered 1.12x
+     and armour 1.01x, courier tank 100.00 / rifle 0.00, and (m)'s axis
+     guard still at zero disagreements. Core 47 tests 47 pass 0 fail,
+     guard 19 files clean, Unity PlayMode 174/164 pass/2 fail/8 skipped,
+     EditMode 124/123 pass/1 fail - the three failures being item 7's
+     recorded baseline.
   j. Courier fire: tanks, at 34 m - DONE, in two halves.
      The core did have tank courier fire; "none, ever" was the recording's
      ATTRIBUTION, since the recorder splits rifle from tank by the size of
@@ -293,7 +346,7 @@ recording: test/vectors/csharp-army.json.
      is NOT the same question as (l)'s 19 men under bombs, which is about
      men who ARE there.
 
-  Order: f, g, h, k, l, m, j (all done), then i, n, o, then e.
+  Order: f, g, h, k, l, m, j, i (all done), then n, o, then e.
 
 ### What the measurements say, and what they cost
 
@@ -1915,6 +1968,17 @@ nobody"). C# staggers it: `reload = Rand(0f, 3f)`.
 Left alone on purpose. The shared spawn path was extracted bit-identical,
 including that line, so the reinforcement numbers above are one change and
 not two. **It is item (i)**, and it moves the vectors again when it lands.
+
+**DONE, and the diagnosis above is CORRECTED.** The line is gone and the
+armour keeps its stagger. But "every tank can fire on its first tick of
+contact, in index order" does not produce the rout this paragraph borrows
+from: measured before the fix, both sides open within a twentieth of a
+second of each other, the free-shot count runs 0-2 and to the BEAR side on
+one seed, and the asymmetry sits on the recording's. That collapse belongs
+to an earlier army whose tanks all arrived together. What the fix is worth
+is about one shot at the seam - and, in the vectors where the seam moves,
+one or two armour and a good deal of truck damage in `idle`. The numbers
+are under (i) above.
 
 Also newly red and caused by this work: `SafeRouteScoresNearNothing`
 banks 0.077 where it wants 0.1. Squads concentrate the danger, so a run
