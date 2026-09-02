@@ -403,9 +403,69 @@ recording: test/vectors/csharp-army.json.
           about 2*3.6/12 = 0.6 s, so the expected number inside at any
           instant is 1/s * 0.6 s = 0.6 and a peak of 1 over 120 half-second
           samples is exactly right. The kills happen between samples.
-       3. Run-over. Sized at 18 men a round against a driver who aims at
-          them, and that is the number the port is accepted against - as
-          an envelope over seeds, not as a target to hit once.
+       3. DONE, inside the same brace as the clearing and above it, which
+          is Battlefield's order. The number it was to be accepted against
+          - 18 men a round - cannot be reproduced in the core, and that is
+          measured rather than worked around by loosening anything.
+
+          THE SPEED SOURCE FIRST, because that is where this rule has been
+          silenced before. `Battlefield.cs:141` still reads
+          `body.linearVelocity` as its fallback when the core is not
+          driving, and the comment above it records the cost: the truck's
+          body is kinematic, its linearVelocity is permanently zero, so
+          run-over read a stationary truck and the wheels went through men
+          standing in the road. The core has no fallback and must not grow
+          one. It uses the magnitude of its own velocity,
+          `length2(T_VX, T_VZ)` - exactly what C# consumes, since
+          `BlwpCore.Velocity` IS (T_VX, T_VZ) and `Battlefield` takes
+          `.magnitude` of it. Deliberately NOT `T_WHEEL`: that is the
+          vehicle's SIGNED forward speed, so a truck reversing at 5 m/s
+          would read -5, sit under the 2.5 m/s threshold and ride over
+          nobody. The unit test pins that with -12 m/s.
+
+          THE DRIVEN NUMBER IS ZERO. Two automatic routes, 8 seeds, 90 s,
+          truck kept alive by `practice` - which withholds damage, changes
+          nothing else, and is an input in the transcript:
+
+            chasing the nearest rifleman   a man inside 3.6 m on 757 ticks
+                                           of 43200, truck at 2.5+ m/s on
+                                           NONE; closest 1.60 m at 1.87 m/s
+            ploughing at the centroid      inside 3.6 m on 98 ticks, again
+                                           none at 2.5+; closest 2.48 m at
+                                           0.02 m/s, while the truck holds
+                                           17.89 m/s median elsewhere
+
+          Chasing is self-defeating: the bearing error grows as the truck
+          closes, it turns harder, and hard steering scrubs the speed away.
+          Ploughing keeps the speed and is stopped by ARMOUR before it
+          reaches the infantry - a consequence of port step 1, since before
+          it the truck drove through its own tanks. Neither the 2.5 m/s nor
+          the 3.6 m was touched to manufacture a kill.
+
+          The rule is proved by a unit test instead of a drive - `a truck
+          at speed rides a rifleman down, and a crawling one does not` -
+          which kills at 12 m/s, kills at -12 m/s, and spares at 2.4 m/s
+          and at 0.
+
+          FOUND ON THE WAY, and it cost two wrong reads: a unit is clamped
+          to |x| < FrontX - 4 = 88 on its first tick, and the truck starts
+          in the bay at x = -100.4. A man placed beside the truck THERE is
+          snapped 12 m away before any rule sees him; the first version of
+          the unit test reported a survivor for that reason and not because
+          the rule was wrong.
+
+          The C# side is NOT a like-for-like pair and is not offered as
+          one: `MeasureRunOverAndClearPath` gave runDown 18 on one PlayMode
+          run and 4 on another, hand-steered in a scene whose timing is not
+          the core's. Same establishment, different run.
+
+          Step 2 has not fallen back: living layer 0.000 m penetration,
+          0 man-ticks over 2 cm, `st.armour.n` 16-24. The wrecked layer is
+          untouched because run-over sits inside the same `if (T_HP > 0)`.
+
+          Counted separately: Core 48/48, guard 19 files clean, node vs
+          bundle-node identical, stage 0 PASS. EditMode 124/123/1.
+          PlayMode 176/164/2/10.
        4. The truck's health, and it needs a DECISION rather than a port.
           The two owners are on different scales: the game divides by
           `armour` 1.5 and the core does not divide at all. One of them is
