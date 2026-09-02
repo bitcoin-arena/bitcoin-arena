@@ -4006,6 +4006,16 @@ round, which is why testnet comes first and why the order is stricter.
      Needs the census, so it cannot come before M3.1. Nothing to build in
      M2: without bonds there is no weight.
 
+ 9c. **`bond_min` notice period and operator escalation** (27A.3, 5A.10B).
+     A rise takes effect only after `notice_period`; a fall immediately.
+     Affected nodes escalate at T-30d, T-14d, T-3d and T+0.
+
+     The reason it cannot be immediate is worth keeping in front of
+     whoever implements it: **a bond cannot be topped up.** It is one
+     timelocked output, so an operator warned on the day they drop a
+     bracket cannot respond for thirty days. Also allow several bond
+     outputs summing to one weight, or the warning has no answer.
+
  9d. **Config proposals and the ballot** (27A.7). The proposal object
      carrying the FULL config and its `parent` (never a diff - two diffs
      passing in one window merge into something nobody voted on),
@@ -4044,16 +4054,6 @@ round, which is why testnet comes first and why the order is stricter.
      **keeps working** for an operator who refused the fork, and a test
      that only checks the successor cannot see it.
 
- 9c. **`bond_min` notice period and operator escalation** (27A.3, 5A.10B).
-     A rise takes effect only after `notice_period`; a fall immediately.
-     Affected nodes escalate at T-30d, T-14d, T-3d and T+0.
-
-     The reason it cannot be immediate is worth keeping in front of
-     whoever implements it: **a bond cannot be topped up.** It is one
-     timelocked output, so an operator warned on the day they drop a
-     bracket cannot respond for thirty days. Also allow several bond
-     outputs summing to one weight, or the warning has no answer.
-
  9f. **The operator UI** (27A.7.7) - a separate app, and the one place
      the frontend touches keys. It is a client of the operator's OWN
      node, paired by a `blwp-operator:` URI, with scoped tokens; the node
@@ -4081,15 +4081,6 @@ round, which is why testnet comes first and why the order is stricter.
      This is the whole answer to approval fatigue, which is why 6c can be
      a prohibition rather than a trade-off.
 
-  6d. **Where a payout goes** (24A.2). The player supplies a destination
-     and the protocol keeps none: LNURL-withdraw, or a BOLT11 invoice
-     they provide at claim time. Nothing is stored between rounds and no
-     address is remembered, because a remembered payout address is a
-     resting relationship with a player and the beginning of an account.
-
-     A payout unclaimed inside `claim_window` follows the existing
-     expiry path. It does not become a balance.
-
   6b. **Donations paid, and the authority that points them** (27A.4).
      The set is a list of LNURLs with basis-point shares summing to
      10000, signed by the authority key generated back in M2.1, and each
@@ -4116,6 +4107,15 @@ round, which is why testnet comes first and why the order is stricter.
      Lightning node, an on-chain escrow costs more than a 100 sat stake,
      and slashing punishes an absent operator without returning a sat.
      6a already fixes the approval fatigue that motivated it.
+
+  6d. **Where a payout goes** (24A.2). The player supplies a destination
+     and the protocol keeps none: LNURL-withdraw, or a BOLT11 invoice
+     they provide at claim time. Nothing is stored between rounds and no
+     address is remembered, because a remembered payout address is a
+     resting relationship with a player and the beginning of an account.
+
+     A payout unclaimed inside `claim_window` follows the existing
+     expiry path. It does not become a balance.
 
 ## M3.3  Settlement                                 stage 7
 
@@ -4194,16 +4194,20 @@ restart.
 **When each piece is actually needed.** The gates above are coarse; this
 is the interleaving, and the surprise in it is that the lobby comes late.
 
+(Item numbers are MF's own, 1 to 19. The numbering inside M3.1, M3.2 and
+M3.3 overlaps because each follows its own stage in IMPLEMENTATION.md -
+left as it is rather than churned, but read section-first.)
+
 | After | Build | Because |
 |---|---|---|
 | M2.1 node daemon | *nothing* | A daemon is tested with curl and tests. No screen earns its keep yet. |
-| M2.2 many players | **28** harness, **21** ghosts | You cannot verify "several people in one round" without seeing them. Joining is a `round_id` in a URL at this stage - crude on purpose. |
-| M2.3 verification | **26** observer, **27** transcript player | This is where byte-level disagreement appears, and it is the moment a screen stops being a convenience. |
-| M2.3 verification | **20** lobby, **23** results, **22** late join, **24** objection, **25** reconnect | Now rounds exist, are joinable and have signed outcomes - so there is something to list and something to show. |
+| M2.2 many players | **9** harness, **2** ghosts | You cannot verify "several people in one round" without seeing them. Joining is a `round_id` in a URL at this stage - crude on purpose. |
+| M2.3 verification | **7** observer, **8** transcript player | This is where byte-level disagreement appears, and it is the moment a screen stops being a convenience. |
+| M2.3 verification | **1** lobby, **4** results, **3** late join, **5** objection, **6** reconnect | Now rounds exist, are joinable and have signed outcomes - so there is something to list and something to show. |
 | M3.1 chain | **9f** operator UI | Once bonds and votes exist, an operator needs to see them. Separate app. |
-| M3.2 client | **16-19, 21** money screens | After per-round settlement works. |
-| M3.3 settlement | **22** settlement inspector | Its failures are invisible from the game screen. |
-| M4 | **23-25** mobile, errors, unattended flow | Shippable, not demonstrable. |
+| M3.2 client | **10-15** money screens | After per-round settlement works. |
+| M3.3 settlement | **16** settlement inspector | Its failures are invisible from the game screen. |
+| M4 | **17-19** mobile, errors, unattended flow | Shippable, not demonstrable. |
 
 **Why the lobby is not first.** A lobby lists rounds and lets you join
 them, so it needs rounds that exist, are enterable and have outcomes -
@@ -4219,77 +4223,77 @@ M2 is a daemon and a protocol, and **none of it is visible**. These are
 the items without which "seven nodes agreed" is a log line rather than
 something anybody can check.
 
- 20. **The lobby.** Rounds open for entry, their stake, their map, how
+  1. **The lobby.** Rounds open for entry, their stake, their map, how
      many have joined, and a countdown to `committee_time`. Before that
      moment the committee is genuinely unknown, so the lobby says
      "committee pending" rather than showing an empty list - the wait is
      a security property (§5A.5) and should read as one.
 
- 21. **Ghosts.** Other trucks on your screen, interpolated from their
+  2. **Ghosts.** Other trucks on your screen, interpolated from their
      checkpoints, visibly not collidable. They must never be able to
      affect your world - that is spec 0.10, and a ghost that pushes you
      is not a rendering bug but a protocol violation you can see.
 
- 22. **Joining late.** Catching up from the transcript with the world
+  3. **Joining late.** Catching up from the transcript with the world
      already moving, without a loading screen that makes it feel broken.
 
- 23. **The results table.** Every player's score and rank, and WHICH
+  4. **The results table.** Every player's score and rank, and WHICH
      nodes signed it. Showing the signers is not a detail: it is the only
      moment the player sees that no single party decided the outcome.
 
- 24. **Objection and disagreement, on screen.** When a node objects or
+  5. **Objection and disagreement, on screen.** When a node objects or
      the committee cannot reach threshold, the player must see what is
      happening and what it means for their round. Silence during a
      dispute reads as a hang, and a hang reads as theft.
 
- 25. **Reconnect.** The disconnect rule (spec 15) exists; the interface
+  6. **Reconnect.** The disconnect rule (spec 15) exists; the interface
      for it does not. What the player sees while dropped, and on return.
 
 
- 26. **The observer view.** Watch a round from outside: every player,
+  7. **The observer view.** Watch a round from outside: every player,
      every checkpoint, every node's opinion of the score side by side.
      This is a testing instrument, not a feature, and it is the one that
      turns a byte-level disagreement into something with a location.
 
- 27. **The transcript player.** Load a recorded round and replay it in
+  8. **The transcript player.** Load a recorded round and replay it in
      the renderer at any speed, scrubbing back and forth. The core is
      deterministic precisely so this is possible; not building it means
      debugging replays by reading numbers.
 
- 28. **A local multi-client harness.** N browser clients against local
+  9. **A local multi-client harness.** N browser clients against local
      nodes in one command. Testing "many players in one round" by opening
      tabs by hand does not survive the tenth time.
 
 ## MF-b  Before M3 can be tested                    stage 7
 
- 16. **The entry screen.** One number the player approves, with the
+ 10. **The entry screen.** One number the player approves, with the
      breakdown under it: stake, node fee, donation, net to the pot. Fees
      are INCLUSIVE (24A, 27A), so 100 sats staked is not 100 sats played,
      and the first time a player discovers that must not be after paying.
 
- 17. **The donation control.** The player's own choice, zero valid, cap
+ 11. **The donation control.** The player's own choice, zero valid, cap
      enforced (`donation_bps_max`), and every recipient shown before
      approval. Nothing may preselect a number on their behalf.
 
- 18. **Conflict disclosure** (5A.13). Before commitment, whether any
+ 12. **Conflict disclosure** (5A.13). Before commitment, whether any
      selected node declared a conflict - and what a self-declaration is
      worth, stated plainly rather than implied by a green tick.
 
- 19. **The payout claim.** LNURL-withdraw or the player's own BOLT11
+ 13. **The payout claim.** LNURL-withdraw or the player's own BOLT11
      invoice (24A.2), the claim window counting down, and no address
      remembered afterwards.
 
- 20. **Waiting for settlement.** Held stake, threshold signing, refund on
+ 14. **Waiting for settlement.** Held stake, threshold signing, refund on
      expiry. The player is waiting on other people's machines and must be
      told so, with the refund path visible the whole time - that is the
      property that makes the wait tolerable rather than frightening.
 
- 21. **The budget screen** (24A.1). What was granted, what is left, what
+ 15. **The budget screen** (24A.1). What was granted, what is left, what
      it was spent on, and when it lapses. A budget the player cannot
      inspect is worse than approving each round.
 
 
- 22. **The settlement inspector.** Which state every entry is in
+ 16. **The settlement inspector.** Which state every entry is in
      (`HELD`, `SETTLE_REQUESTED`, `EXPIRED`...), which node holds which
      VSS share, and what the timers are. Settlement fails in ways that
      are invisible from the game screen, and a node killed mid-payout is
@@ -4297,16 +4301,16 @@ something anybody can check.
 
 ## MF-c  Finishing                                  stage 8
 
- 23. **Mobile.** The single-player build already runs there; nothing
+ 17. **Mobile.** The single-player build already runs there; nothing
      above assumes a phone. The lobby, the entry breakdown and the claim
      screen are the ones that will not fit.
 
- 24. **Error states, everywhere.** Node unreachable, chain source
+ 18. **Error states, everywhere.** Node unreachable, chain source
      disagreeing, budget exhausted, claim window expired, committee
      pending forever. Every one of these currently reads as a hang, and
      a hang in a money application reads as theft.
 
- 25. **The whole flow, unattended.** Someone who has never seen it opens
+ 19. **The whole flow, unattended.** Someone who has never seen it opens
      the page, joins a round, plays, is paid, and plays again - without
      being told anything. Until that works, everything else is a demo.
 
