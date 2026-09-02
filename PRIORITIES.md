@@ -106,7 +106,7 @@ recording: test/vectors/csharp-army.json.
      DONE. The air envelope is 17/17 for the first time. The line's own
      residual is named below and is (l).
   l. Why the core's riflemen kill half what the C#'s do - OPEN, on ONE
-     term, with five causes ruled OUT by measurement rather than by
+     term, with seven causes ruled OUT by measurement rather than by
      argument. Like for like, both air-on: 8-18 a round against 16-37.
      It is not the gun: air-off, the core's rifle kills land ON the
      recording (24-42 against 28-51). It is not the squad geometry: at
@@ -121,12 +121,23 @@ recording: test/vectors/csharp-army.json.
      which is `menPerEffectiveBomb`, plus a residual of 2.6-3.9 rifle
      kills a round after the recording's own bomb-death exchange rate is
      applied. The slope bridge decided that neither needs a new Unity
-     recorder pass. One named rule difference is on the board and is not
-     yet a cause: the core's riflemen all walk at one speed, so the line
-     arrives at contact as flat as it spawned, where C#'s per-man `pace`
-     has spread it to 6.5 m. See "The squads measured against Army.Spawn",
+     recorder pass.
+     And it is not the flat approach, which was the one named rule
+     difference the pass turned up: measured at the bombs, 90% of the men
+     they take are taken where the line is already 8 m deep or more, and
+     the two bombs that did land on a plank are 16 men of 350. Nor is it
+     a phase of the round - per detonation the core kills 1.39x the
+     recording early and 1.41x late, which is flat.
+     NEXT, and new: air off and divided by how well the lines met, the
+     core's rifle rate IS the recording's from w3 on (0.072 against
+     0.071) and short only in the first three windows (0.036 against
+     0.087) - and the ledger says that is not the clock, because the men
+     shoot MORE per man there. It is kills per shot, 0.0199 against the
+     roll's own 0.045. See "The squads measured against Army.Spawn",
      "What a bomb is worth, taken apart", "The depth, air-off against
-     air-off", "What a bomb finds, per detonation" and "The slope" below.
+     air-off", "What a bomb finds, per detonation", "The slope", "Where
+     the bombs land, and when" and "The rifle line divided by the
+     meeting" below.
   i. The reload stagger - NOT STARTED.
   j. Courier fire: tanks, at 34 m - NOT STARTED. Found by (f) and not
      foreseen when the order was set. 99% of what the army does to the
@@ -940,8 +951,122 @@ cover 19 men a round more than the recording's, with the lethality pinned at
 depth inside the recording's, and the bombs demonstrably not landing on
 knots. The flat approach (`RIFLE_WALK` one constant against C#'s per-man
 `pace`) is the one named, measured rule difference the whole pass turned up,
-and it is a candidate for that residual and not yet a cause. Nothing in
+and it was a candidate for that residual - **it has since been measured at
+the bombs and is NOT the cause**, under the next heading. Nothing in
 `army.js`, `air.js` or the spawn was touched to find any of this.
+
+### Where the bombs land, and when: the plank is out
+
+Two measurements against the one term (l) still has, both in
+`measure-air.js`, both core-only where the recording cannot follow, and
+neither needing a Unity pass.
+
+**The gate: the line is not a plank where the bombs land.** The plank is an
+air-OFF observation and the nineteen men is an air-ON quantity, so the
+question was asked in the condition it belongs to - at the tick each
+detonation goes off, how deep is the line it lands on? Living riflemen of
+the covered side in z, which is `measure-squads`' own population, so the
+plank's 1.0 and the recording's 6.5 are on this scale.
+
+Measured at TWO WIDTHS, because side-wide cannot answer it alone: air on
+the core replaces 84-118 riflemen a round from the edge, and a man walking
+in is a living rifleman at whatever depth the walk has him at, so the air's
+own churn can open a side-wide number without the fighting line ever
+opening. That would rule the plank out by an artefact, which is the mistake
+the depth pair already made once. LOCAL is the same sd over that side's men
+within 30 m of the bomb in x - the piece of line a 16 m blast is standing
+on.
+
+    air on, seam pinned, four seeds, 43 bombs on infantry, 350 men
+    share of the covered men taken while     side-wide   local
+      the line was flatter than sd 3          0.00        0.05
+      sd 4-8                                  0.08        0.05
+      sd 8 and deeper                         0.92        0.90
+    line sd at the first infantry-killing
+      bomb, per seed                          9.0-10.6    1.0-16.4
+    men the local window holds                n = 7-36, median 20
+
+Ninety per cent of the men the core's bombs take are taken where the line
+is already deeper than the C# line ever gets by contact, and both widths
+say it, so the churn is not what carried the number. It is not dead as a
+rule difference - two bombs did land on a local sd of 1.0 and took 8.0 men
+each, above the core's own 4.47-6.25 - but that is 16 men of 350. **The
+approach cannot be the cause of nineteen a round.**
+
+**The window: the excess is flat in time.** `csharp-gunships.json` carries
+an `air` array per pass - eighteen samples at five seconds, cumulative
+detonations and bomb deaths - and the tool had only ever read `summary`. It
+is the one cross-engine time series the air has. `insideRadius` and the dud
+split are pass totals, so `menPerEffectiveBomb` itself cannot be sliced;
+what pairs per window is kills per DETONATION, duds included, which with
+lethality at 1.000 is men per bomb with the lethality divided out. It is
+NOT the 4.47-6.25 against 3.67-4.75 pair, whose denominator is the
+effective bombs only, and is not to be quoted as it. The denominators are
+the same quantity on both sides: the recording's air-series `bombs` ends at
+its own `summary.bombs.detonated` on all four seeds (38, 35, 36, 37).
+
+    bomb deaths per detonation, air on, seam pinned, four seeds
+                                per seed      pooled   w0-w2   w3+
+    core                        2.30-2.86     2.55     2.68    3.63
+    C# recording                1.71-2.00     1.88     1.93    2.58
+    core, from its first kill   2.92-3.60     3.40
+    C# from its first kill      2.31-2.53     2.42
+
+Anchored on each engine's own first killing window as well as absolutely,
+because the sortie clock is `UnityEngine.Random` in the C# and the army
+stream in the core, so the two rounds are not in phase. The ratio is 1.39
+early, 1.41 late, 1.40 from each engine's first kill, 1.36 over the whole
+round. **Flat.** The excess is a constant multiplier on the standing line,
+not a burst - the same answer the gate gives from the other side, since an
+approach-shaped cause would be front-loaded and gone by w3.
+
+The air-off control refuses both blocks rather than printing a false pair:
+no air arm, nothing to gate, and the window WITHHELD in as many words.
+
+### The rifle line divided by the meeting, and the shots behind it
+
+`measure-infantry.js`, air off, and it is the other half of the same
+question: the air-off envelopes overlap (24-42 against 28-51) and this file
+called that four-seed scatter. `inRifleRange` is what says how well the two
+lines met and BOTH engines publish it at every sample, so it can be divided
+out - kills per man with an enemy in reach rather than kills - anchored on
+each engine's own first man in range rather than on the clock.
+
+    rifle kills per man in range, air off, seam pinned, four seeds
+                              per seed      pooled   w0-w2   w3+
+    core, clocks pinned       0.059-0.070   0.065    0.036   0.072
+    core, gunships grounded   0.064-0.078   0.071    0.039   0.078
+    C# recording (trap only)  0.053-0.091   0.074    0.087   0.071
+
+Divided by the meeting, the core's line IS the recording's from w3 on and
+is short only in the first three windows.
+
+The instrument's own artefact was measured rather than argued: the
+recording holds five-second samples and nothing between them, so its
+exposure can only be the two end points averaged, and the core's line
+arrives inside one window where the C#'s ramps over three. The core carries
+both - `mean` over every tick, `trap` over the end points - and they come
+out 0.065 against 0.064 pooled. Real, and small. Only trap against trap is
+quoted as a pair.
+
+**The shot ledger**, core only, because the recording holds deaths and not
+trigger pulls. Kills cannot separate a clock from a roll - the hit chance
+is a fixed 0.045 and a hit is fatal - but the clock word can: a man who
+fires sets `RIFLE_RELOAD_TICKS`, a man who looked and found nobody sets
+`RIFLE_LOOK_TICKS`, the bands do not meet, and nothing else writes
+`U_COOLDOWN` except a spawn, which is a refilled slot and is skipped.
+
+    air off, post-contact, pooled  shots  looks  shots/man  kills/shot
+    clocks pinned                  3309   11196  1.600      0.0408
+      w0-w2                         654    2897  1.792      0.0199
+      w3+                          2655    8299  1.559      0.0460
+    gunships grounded              3225   11636  1.632      0.0434
+
+The men are not shooting less early - they shoot MORE per man in w0-w2 - so
+the early deficit is not the clock. **It is in kills per shot: 0.0199
+against the roll's own 0.045, and that is NEW, open and not yet explained.**
+It is a candidate for the 2.6-3.9 residual under "The slope" and is the
+next thing to measure in (l).
 
 ### The truck is shot by tanks, and the core does not know it
 
