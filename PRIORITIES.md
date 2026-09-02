@@ -3994,19 +3994,27 @@ round, which is why testnet comes first and why the order is stricter.
      Do this before 6c. It is the cheap half of the problem and it costs
      no custody at all.
 
-  6c. **Session balance** (24A.2), for wallets with no budget support.
-     One payment, several rounds - and it is custody, so it ships only
-     with its bound (`session_cap <= min bond / K`), the threshold-signed
-     balance receipt after every round, withdrawal on demand inside
-     `withdraw_window`, and refund-on-expiry as the default path.
+  6c. **Session balance** (24A.2) - **specified, NOT built.** Not in M3,
+     not in M4. It is here so that the day someone asks for it, there is
+     a design with a bound and a receipt to point at instead of an
+     improvisation under deadline.
 
-     The receipt is the mechanism, not a nicety: it is what makes a
-     denied balance a one-artifact slashing proof the player already
-     holds. Never build the balance without it.
+     The reason it is not built: 6a already removes the approval fatigue,
+     which is the actual complaint, at zero cost to the trust model. What
+     is left is only wallets that cannot do budgets - a wallet feature
+     gap that will probably close by itself - and paying for a temporary
+     wallet limitation with a permanent protocol property is backwards.
 
-     Never: balances across sessions, transfers between players, yield on
-     the float, or entering a round on credit. Each of those turns a
-     convenience into a bank.
+     Under 23 the default outcome of total failure is that the player is
+     refunded by expiry. With a balance it is that the player holds a
+     claim. That is the whole difference and it is not a matter of
+     degree.
+
+     If it is ever built: the bound (`session_cap <= min bond / K`), the
+     threshold-signed receipt after every round, withdrawal inside
+     `withdraw_window`, refund on expiry, opt-in per node and visible in
+     the client. Never balances across sessions, transfers between
+     players, yield on the float, or entering a round on credit.
 
   6b. **Donations paid, and the authority that points them** (27A.4).
      The set is a list of LNURLs with basis-point shares summing to
