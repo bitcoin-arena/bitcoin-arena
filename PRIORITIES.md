@@ -3983,6 +3983,31 @@ round, which is why testnet comes first and why the order is stricter.
   6. **NWC wallet.** Comes after the client because the client defines
      what the wallet is asked to do.
 
+  6a. **Budgeted play** (24A.1). A two-minute round means a wallet
+     approval every two minutes, which is the thing that makes people
+     stop playing. An NWC budget - granted once, time-boxed - removes
+     every approval after the first while changing **nothing** about
+     settlement: each round still has its own hold invoice, its own
+     `payment_hash` and its own expiry refund, and no node holds a
+     balance because there is no balance.
+
+     Do this before 6c. It is the cheap half of the problem and it costs
+     no custody at all.
+
+  6c. **Session balance** (24A.2), for wallets with no budget support.
+     One payment, several rounds - and it is custody, so it ships only
+     with its bound (`session_cap <= min bond / K`), the threshold-signed
+     balance receipt after every round, withdrawal on demand inside
+     `withdraw_window`, and refund-on-expiry as the default path.
+
+     The receipt is the mechanism, not a nicety: it is what makes a
+     denied balance a one-artifact slashing proof the player already
+     holds. Never build the balance without it.
+
+     Never: balances across sessions, transfers between players, yield on
+     the float, or entering a round on credit. Each of those turns a
+     convenience into a bank.
+
   6b. **Donations paid, and the authority that points them** (27A.4).
      The set is a list of LNURLs with basis-point shares summing to
      10000, signed by the authority key generated back in M2.1, and each
