@@ -604,24 +604,45 @@ recording: test/vectors/csharp-army.json.
           PlayMode 174/160/4/10 - the two above plus item 7's two
           Visibility reds.
 
-     GAPS THIS STEP NAMED AND DID NOT FILL. Each is a C# rule with no core
-     counterpart; each is its own point and none belongs to step 4.
-       - No crash damage. `T_HP` is written at spawn and reduced by courier
-         fire and by nothing else, while the game wrote the truck off above
-         `crashSpeed`. The core notices the impact - `TakeImpact` reads its
-         own word - and costs it nothing.
-       - The apron does not protect. `IsInvulnerable` is a client rule; the
-         core has no radius in which fire is withheld.
-       - The army does not read `T_HP`. A burning truck stays a courier
-         target, where C# clears `Army.Courier` on a write-off.
-       - `T_HP` does not reach the driving. C# hands `condition` to the
-         controller and the handling degrades; the core's vehicle step
-         never sees its own hit points.
-       - Cargo does not raise the damage. C# scales a courier hit by
-         `(1 + Heat * 0.6)`; the core leaves the term out deliberately,
-         because every recording it was built against has Heat at zero.
-       `MeasureRunOverAndClearPath` stays as a measurement tool, not a
-       migration.
+     THE WORK LIST FOR 2e. Eight C# rules the core does not have. Short
+     lines on purpose; the measurements live in the commits.
+
+       1. Crash damage - DONE. `TruckHealth` wrote the truck off above
+          `crashSpeed = 4` and charged `rammed * 6` below it, inside a
+          `Damage` that divided by the armour. The quantity was always a
+          speed - `TakeImpact` is `T_IMPACT / ONE`, set from the truck's
+          velocity along the contact normal - so the six is points per
+          metre per second and there was no units fault to copy. Now in
+          `sim.js`, priced from this tick's impact, withheld by `practice`.
+          Guarded by `crashing into armour costs condition, and hard enough
+          writes it off`.
+       2. `T_HP` does not reach the driving. C# hands `condition` to the
+          controller and the handling degrades.
+       3. The army never reads `T_HP`. A burning truck stays a courier
+          target; C# clears `Army.Courier` on a write-off.
+       4. The apron does not protect. `IsInvulnerable` is a client rule;
+          the core has no radius in which fire is withheld.
+       5. Cargo does not raise the damage. C# scales a courier hit by
+          `(1 + Heat * 0.6)`. NOT to be touched until its share of the C#
+          damage is measured - every recording has Heat at zero.
+       6. `Army.Wrecks` / `AvoidWrecks`. A destroyed tank leaves a hulk
+          units are pushed out of. Also the missing `impact * 3f` branch
+          for hitting one.
+       7. The halt. `restFor` / `nextRest` and the gait wave, so a man
+          stops now and then and no two are in step.
+       8. Pace and height per man.
+
+     RED, EACH WITH ITS DEPENDENCY:
+       DamageIsFeltInTheDriving          -> line 2 above
+       CrashingIntoArmourWritesItOff     -> its assertion now lives in the
+         core suite and is green there; the PlayMode case cannot pass while
+         `BlwpCore` is stubbed outside WebGL, so nothing applies condition
+         in the editor. Migrate-then-delete when that is authorised.
+       RifleFireProducesAFlashAndATracer -> item 7, CombatFx
+       ArmiesAreActuallyDrawn, RoadsAreActuallyDrawn -> a graphics device;
+         `RenderTexture.Create failed` under `-nographics`
+       TheGogglesAnimate                 -> item 1's load flake; 11/11 on a
+         second run of the same tree
 
        4b. WAS: The truck's health, and it needs a DECISION rather than a port.
           The two owners are on different scales: the game divides by
