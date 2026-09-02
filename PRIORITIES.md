@@ -471,8 +471,12 @@ recording: test/vectors/csharp-army.json.
 
      What is left is presence, and it is not this item's: see "The truck's
      neighbourhood" below.
-  o. The truck's neighbourhood - the infantry half is CLOSED, one real
-     port bug is fixed, and the letter's own diagnosis was wrong twice.
+  o. The truck's neighbourhood - CLOSED. There was no missing army: the
+     recording pins its front through the parked truck and the core's tape
+     puts it 28 m away, and pinned, the recording lands inside the core's
+     envelope on damage and on presence alike. One real port bug and one
+     real movement rule came out of the letter on the way, and the
+     diagnosis was wrong four times before the pairing was.
 
      RETRACTED, TWICE, BOTH MINE.
 
@@ -736,16 +740,49 @@ recording: test/vectors/csharp-army.json.
      establishment and replacement without a courier, sits at 43-55%. The
      recording's ARMY is not concentrated; its COURIER PASS is.
 
-     That is a different question from the one this letter has been
-     asking, and it is the one left: a C# tank that shoots the courier is
-     not shooting its enemy, so armour standing near the courier stops
-     killing armour standing near the courier and builds up there. The
-     core has the same diversion rule and does not build up - 39% against
-     74%. The earlier refutation of this ("held the truck alive, bit for
-     bit identical") only proved that `T_HP` gates nothing in the army; it
-     did not test whether the core's tanks divert as OFTEN, or whether the
-     core's truck being a SOLID body pushes them back out where the C#
-     courier is a bare coordinate. Neither is measured.
+     BOTH OF THOSE SETTLED, and they close the letter.
+
+     The solid truck does not push tanks. `resolveArmour` takes the TRUCK
+     as its `v` and applies the whole accumulated push to it; the armour
+     is never moved. It keeps the truck out of the tanks, not the tanks
+     out of the truck.
+
+     The diversion rate is already right. The core fires 535 gun shots a
+     round and 63 of them at the truck; the recording lands 163 tank hits,
+     which at the gun's 0.55 roll is about 296 shots. The ratio is 4.7,
+     and the ratio of tanks in range is 12.6 to about 3, which is 4.2. Per
+     tank standing there, the two divert alike. What differs is how many
+     stand there - and that is a feedback loop, not a rule: presence feeds
+     diversion, diversion spares the tanks that would have killed each
+     other, and that feeds presence.
+
+     WHICH BRANCH OF THAT LOOP A RUN LANDS ON IS DECIDED BY THE SEAM, and
+     this comparison was never a pair. `World()` pins `FrontlineAt =
+     _ => 0f`, so the recording's front runs through the parked truck. The
+     core's is the price tape, which under a truck at (0, 0) puts it at
+     z = +28.1 m. A truck 28 m off the line is a truck almost nothing can
+     reach. That was caught for the PRESENCE columns several rounds ago
+     and never applied to the DAMAGE ones - which are the 1285.6 this
+     whole item has been about. Measured, 8 seeds, truck parked and held
+     unsaturated the way the recorder accumulates past 100:
+
+                                     damage over 90 s      tanks within 34 m
+       core, seam at +28.1 m         [242, 396]  Ø 319.5   [2.0, 4.1]  Ø  3.0
+       core, front pinned            [1012, 3357] Ø 2103.9 [8.1, 19.4] Ø 13.5
+       recording                     1285.60               8-18, Ø 12.6
+
+     Pinned, the recording falls INSIDE the core's envelope on both. The
+     letter's premise - "half as many guns as the recording" - was an
+     artefact of comparing an army holding a line at +28 m against one
+     holding a line at 0.
+
+     (o) CLOSED. Not by a rule change: by finding that the two were never
+     being run on the same front. What the letter did leave behind is
+     real and stays - the courier fire's ported `BACK_OFF` unit, the
+     armour's x-chase, and a reference that now publishes the armour's |x|
+     bands and the courier pass's denominators. And the core's pinned mean
+     is 2104 against 1286, so it is ABOVE the recording rather than short;
+     that is inside the band and is recorded here rather than smoothed.
 
   Order: f, g, h, k, l, m, j, i (all done), then n, o, then e.
 
