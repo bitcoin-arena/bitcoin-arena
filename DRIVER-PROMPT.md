@@ -94,9 +94,14 @@ These are lessons already paid for in this project. Enforce them.
 - **Run tests in the foreground.** Never backgrounded.
 - **Commit and push every finished piece**, author "claude". The user
   deploys by pulling.
-- **Deploy to `btc-logistics-core.pages.dev` only.**
+- **Daily deploy: `btc-logistics-core.pages.dev` only.**
   `btc-logistics-war.pages.dev` holds the frozen last single-player
   version and must never be overwritten.
+- **Milestone freeze:** when M1 is actually finished (green suites,
+  numbers, not on red), Wrangler-deploy to
+  `btc-logistics-core-m1.pages.dev`. Same pattern for M2 → `-m2`, etc.
+  That is a snapshot URL, not a replacement of the daily core site.
+  Do it when the milestone closes; do not wait for a second ask.
 - **Ask for numbers.** "It works now" is not a report. Want the test
   counts, the measured values, the before and after.
 
