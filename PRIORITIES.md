@@ -511,16 +511,21 @@ recording: test/vectors/csharp-army.json.
           that raw amount to the same maxHealth of 100 and did not divide,
           so its truck was half again as soft as the shipped one.
 
-          Measured on ONE hit sequence, parked at (0, 0), air off, hit
-          points held so the column does not saturate:
+          Measured on ONE hit sequence, parked at (0, 0), hit points held
+          so the column does not saturate. THESE ARE THE CORRECTED ROWS:
+          the first pair published for this step said 24.9/14.5/16.1 and
+          33.5/21.0/23.7, and both were taken with the air ON, because the
+          helper pinned `st.heliClock` and the sortie clocks are state
+          words at `O_AIR`. With the clocks actually pinned:
 
-            seed        100 points reached    150 points reached
-            20260901          24.9 s               33.5 s
-            20268820          14.5 s               21.0 s
-            20276739          16.1 s               23.7 s
+            seed        dead WITHOUT the divisor   dead WITH it
+            20260901            18.4 s                34.3 s
+            20268820            14.5 s                17.5 s
+            20276739            15.2 s                19.8 s
 
-          With the divisor in, the 100-point column now reads 33.5 / 21.0 /
-          23.7 s exactly - which is the arithmetic check, not a new claim.
+          Both columns are the same hit sequence: the divisor is in the
+          code, so the points taken are already reduced, and the undivided
+          truck spends its 100 when that reduced total reaches 66.67.
           In `measure-courier.js`, which lets the truck die, the parked
           truck goes from 24.4 s to 47.5 s: more than the factor, because a
           truck that lives longer keeps clearing and riding down men and so
@@ -1359,6 +1364,30 @@ recording: test/vectors/csharp-army.json.
      letter's premise - "half as many guns as the recording" - was an
      artefact of comparing an army holding a line at +28 m against one
      holding a line at 0.
+
+     CORRECTED LATER, AND IT IS MINE: every row this letter captioned
+     "air off" was measured with the air ON. The helper wrote
+     `st.heliClock` and `st.sortieClock`, and neither is a key on the state
+     - the sortie clocks are STATE WORDS at `O_AIR + AIR_BULL/AIR_BEAR`,
+     which is how `measure-courier.js` has always done it. The scratch
+     scripts copied the idea and not the mechanism, and
+     `tools/measure-presence.js` shipped with the same fault.
+
+     Re-measured with the clocks actually pinned, and with the truck's
+     armour divisor now in the core, the numbers below change and the
+     CONCLUSION DOES NOT:
+
+       front pinned, 8 seeds, truck held unsaturated
+         damage over 90 s     [157.3, 1562.2] mean  993.9   rec 1285.60  INSIDE
+         tanks within 34 m    [4.2, 16.1]     mean   12.8   rec Ø 12.6   INSIDE
+       front pinned, 24 seeds, riflemen within 26 m
+         t = 30 / 60 / 90 s   [0,51] [3,41] [6,40]  rec 21 / 18 / 27  ALL INSIDE
+
+     What was published before - damage mean 2103.9, and the riflemen
+     outside at t = 90 s - carried bomb damage in a comparison against a
+     recording whose pass is air "none", and predates the armour divisor.
+     The mean is now BELOW the recording rather than above it. The letter's
+     finding stands on the corrected figures; the old ones are struck.
 
      (o) CLOSED. Not by a rule change: by finding that the two were never
      being run on the same front. What the letter did leave behind is
