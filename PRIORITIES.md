@@ -99,15 +99,19 @@ recording: test/vectors/csharp-army.json.
   g. A no-air control for `measure-army.js` - DONE. `--core=DIR`, and
      every line now says `air=on` or `air=off`. Measured both ways: the
      ground line was not hiding anything. Numbers below.
-  h. The infantry line, corrected: rifle fire and the 24 m floor - NOT
-     STARTED.
+  h. The infantry line, corrected: rifle fire and the 24 m floor - DONE,
+     and it needed a third thing nobody had measured: the standoff. See
+     "What (h) moved, and what it did not" below.
+  k. The squads: three a side at random x, not eight in shared columns -
+     NOT STARTED. Found by (h) failing its own prediction, and it is the
+     measured cause of the last two air quantities.
   i. The reload stagger - NOT STARTED.
   j. Courier fire: tanks, at 34 m - NOT STARTED. Found by (f) and not
      foreseen when the order was set. 99% of what the army does to the
      truck is tank fire the core does not have. See "The truck is shot by
      tanks" below.
 
-  Order: f, g, h, j, i, then e.
+  Order: f, g, h, k, j, i, then e.
 
 ### What the measurements say, and what they cost
 
@@ -444,6 +448,82 @@ fired. Dropping the counter put them back to the digit. `Killed` and
 `Destroyed` are safe; `CourierHit` has the same shape as `Shot` and the
 courier pass listens to it anyway, because a listener is the game's own
 condition (`Bootstrap.cs:194`).
+
+### What (h) moved, and what it did not
+
+Three changes, all of them the same line, and the third was not in the
+plan:
+
+  - the 24 m crowding floor comes off the infantry. A tank is crowded
+    only by another tank now, on both sides of the test, because
+    `Army.NearestEnemy` walks the Armour list and nothing else.
+  - rifleman on rifleman, from `Army.StepInfantry`: nearest enemy
+    rifleman inside 26 m, reload 2.5-4.5 s, 4.5% to connect, one point
+    off a man who has one. He carries ten in this core and a hit takes
+    ten, and the spawn draw is C#'s own ternary - `hp = vehicle ?
+    Rand(6,10) : 1` draws NOTHING for a rifleman. Before this every unit
+    in the core spawned with a tank's hit points.
+  - the standoff, which was found by measuring after the first two landed
+    and watching the air numbers go the WRONG way. C# holds a man at
+    `Rand(4,12) + Rand(-5,5)` off the seam - 1 m past it to 17 m short,
+    piled up at 8. The core held him at a flat 0 to 8, mean 4: both lines
+    four metres too far forward and half as deep, so they stood eight
+    metres closer together than the recording's.
+
+                          before (h)   after (h)    recording
+    closest pair          24.0 exact   2.5 - 23.8   4.7 - 19.2
+    rifle kills a round   0            19 - 34      28
+    riflemen in range     none can be  3 - 57       18 - 50
+    ------------------------------------------------------------
+    dud share             0.45-0.47    0.38-0.46    0.50-0.58   OUT
+    killed by bombs       71-100       65-98        60-76       now in
+    friendly fire         39-46        34-49        11-29       OUT
+    quantities overlapping   15/17        15/17
+
+**The prediction in this file was wrong, and being wrong is what found
+(k).** It said the floor alone would carry the dud share and the friendly
+fire home. It did not: dud share moved the wrong way, and the residual
+survived the standoff correction that fixed everything else. So the floor
+was a cause and not the cause.
+
+Armour did not regress, checked against a worktree at the commit before
+(h) rather than from memory: shooters 4-23 before and 5-23 after over the
+same four seeds, and armour lost/arrived 62/58 and 64/60 against the
+recording's 59/55.
+
+### The squads, and why a bomb here kills both sides
+
+The residual has one measured cause, and it is not the air. Read off the
+two sources rather than inferred:
+
+    C#   Army.EnsureSquads: want = max(3, strength / 12), so THREE squads
+         a side at 36 riflemen. Each anchor is Rand(-80, +80), drawn per
+         side and independent of the other side's. Each man picks a squad
+         at random and sits at anchor + Rand(-9, 9). DriftSquads walks
+         every anchor by sin(Time*0.12 + i*2.4) * 3.6 * dt.
+
+    core EIGHT squads, anchored on an even ladder from -76 to +76, and
+         the anchor is a function of the squad index ALONE - so bull
+         squad k and bear squad k stand at the same x, facing each other.
+         Deliberate, from (a): unpaired squads made the two armies drift
+         apart sideways and stop meeting.
+
+Two consequences, and they are exactly the two numbers still outside:
+
+  - **friendly fire.** Aligned columns mean a bomb that catches anybody
+    catches men from both sides, so about half of what it kills is its
+    own. Unaligned knots mean a bomb on enemy ground kills mostly
+    enemies. Core 34-49 a round against the recording's 11-29.
+  - **dud share.** Three knots of twelve leave most of a 160 m front
+    empty, so a bomb thrown at random is likelier to hit nobody: the
+    recording duds 50-58% of its bombs. Eight knots spread evenly cover
+    the front, and the core duds 38-46%.
+
+The fix is to give the infantry C#'s geometry - three squads a side,
+anchors drawn at init and drifting, independent per side - and to leave
+the armour's ladder alone, because C# tanks have no squad at all and the
+core's ladder is what keeps its armies meeting. That is item (k). It adds
+state words for the anchors, so it moves the vectors again.
 
 ### The truck is shot by tanks, and the core does not know it
 
