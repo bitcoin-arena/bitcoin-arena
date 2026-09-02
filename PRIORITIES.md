@@ -106,6 +106,29 @@ recording: test/vectors/csharp-army.json.
      What is left over is presentation and has its own lines: item 7
      (CombatFx and the combat audio) and (r) the turret.
 
+     BOTH ENGINES COMPARED AGAIN AFTER THE CUTOVER, because the last one
+     predates `Separate`, the x-chase, the crash rule, condition-to-driving
+     and the layout fix - and that fix mattered most: `S_PRACTICE` had been
+     aliasing `O_UNITS`, i.e. the x of the first unit. Eight seeds, air
+     pinned through `O_AIR`, against `passes.core-size-reinforce`:
+
+       t          armour x-spread          recording   inside?
+       15s        [25.1, 48.6] mean 34.5      39.0       yes
+       30s        [26.4, 44.5] mean 38.0      38.9       yes
+       60s        [33.9, 51.1] mean 40.0      38.8       yes
+       90s        [34.2, 48.5] mean 42.9      34.8       yes
+
+       t          enemies within 46 m        recording   inside?   alive
+       15s        [3.55, 7.27] mean 5.06       3.91       yes      19-24 / 22
+       30s        [1.10, 3.05] mean 1.99       2.84       yes      19-21 / 19
+       60s        [0.50, 3.24] mean 1.64       2.70       yes      19-21 / 20
+       90s        [1.24, 2.20] mean 1.74       1.70       yes      18-21 / 20
+
+     Churn holds too: lost/arrived 57/52 against 59/55. A single-seed run
+     with the air ON read 29.7 and 26.7 for the early x-spread and looked
+     like a divergence; it was not a pair, which is the same trap this item
+     has set all along.
+
      WHO OWNS THE SCREEN, read off the player path and not off a test:
      the picture is C#. `ArmyRenderer` holds a `public Army army` and walks
      `army.Armour` and its soldier lists; it names `BlwpCore` nowhere.
