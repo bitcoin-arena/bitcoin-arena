@@ -1727,12 +1727,43 @@ The courier pass parks a truck at x=0, z=0 and leaves it there for ninety
 seconds. Cumulative, at the core's establishment:
 
                         C# recording        core
-    tank hits             163                 none, ever
+    tank hits             163                 not readable - see below
     tank damage          1271.7               -
     rifle hits              6                  every unit inside 26 m
     rifle damage           13.9                one flat point a hit
     tanks within 34 m     7 - 18 per sample
     riflemen within 26 m  0 - 36 per sample
+
+**CORRECTION, measured under (j) step 1.** "none, ever" above was wrong, and
+so was the same claim in `dfbfcaf`'s commit body. The core DOES have tank
+courier fire: `army.js:272-287` is armour-only, is called from `stepUnit`
+(`sim.js:682`) and its hit lands on `T_HP` through `r === 2` (`sim.js:758`).
+What "none" described is the RECORDING'S ATTRIBUTION - the recorder splits
+rifle from tank by the size of the hit (1.5-3.5 against 5-11) and the core
+writes only flat ones, so no core hit can be read as a tank's. Split instead by
+the clock that fired, air off, truck at (0, 0), seed 20260901, over 90 s:
+
+    core                 shots at the truck   points landed
+      tanks                     263               11.00
+      riflemen                  246               12.00
+      ambiguous ticks             -                0.00
+
+So (j) is a parameter and structure rewrite, not a missing weapon. Five things
+are wrong at once: range 26 instead of 34, the rifle's 0.045 roll instead of
+the gun's 0.55, a private 40-99 tick clock instead of the gun's 1.4-3.2 s, no
+"engaged and nearer than the foe" test, and one flat point instead of
+Rand(5, 11). In the C# the courier is not a weapon at all - it is a TARGET
+CHOICE inside the tank's existing gun, so the core's parallel weapon is to be
+deleted rather than widened.
+
+And a prediction written down BEFORE the rule changes, so the result is a
+finding either way: the shot opportunity is already about right (263 against
+the recording's implied 296 = 163 / 0.55), so roll and damage carry the whole
+of the 11 against 1271.7. But the clock moves with the fix - the core's private
+clock averages 1.16 s against the gun's 2.30 - and in the C# the foe and the
+courier share ONE clock. The tank side should therefore land somewhere near
+400-600 points, not 1271.7, with the remainder being the presence gap already
+measured: tanks within 34 m run 3-12 in the core against 8-18 in the recording.
 
 **99% of what the army does to the truck is tank fire**, from
 `Army.StepArmour`: `CourierRange` is 34 m, not the rifle's 26, and a hit
