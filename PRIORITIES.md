@@ -509,6 +509,59 @@ recording: test/vectors/csharp-army.json.
        5. Only then the deletion: `Army.cs`, the `Bootstrap` wiring, the
           reference recorders.
 
+     WHAT DIES WITH `Army.cs`, LISTED AND NOT ONLY COUNTED. All 51 tests
+     in `EditMode/ArmyTests.cs`, grouped by what they hold, against what
+     the core has today. 38 of them test a rule the core already carries
+     and are safe to lose with the file; 13 test something it does not.
+
+       COVERED (38)
+         1,2      hulls push apart, symmetrically      `separatePair`
+         3,4,5    overrun and the fall-back line       OVERRUN_DEPTH/FALL_BACK
+         6,8      advance to the line, stay on the map hold + the |x| clamp
+         9        destroyed armour leaves the field    U_STATE 0
+         10-18    both sides present, replacement,
+                  cadence, establishment, pressure,
+                  no annihilation, recovery            `reinforce`, `sideOf`
+         19-23    riflemen kill, the front holds,
+                  nobody dies out of range             the rifle rule
+         24-27    driving through kills, crawling
+                  does not, only those under the
+                  wheels, armour is not run over       `runOver`, ported now
+         28,29    nobody steps aside; deep overlap
+                  is still undone                      `clearOfTruck`
+         40,41    men clump into squads; squads drift  anchors + `driftSquads`
+         42-48    gunships enter, stand off, fly
+                  above ground, drop, blast radius,
+                  damage by distance, leave            the air arm
+
+       NOT COVERED (13), and each is work that must land BEFORE the file
+       goes, because after it no C# quantity can be recorded again:
+
+         34-37  `Army.Wrecks` and `AvoidWrecks` (`Army.cs:109`, called at
+                `:332`). A destroyed tank leaves a hulk at x, z, radius and
+                units are pushed out of it. THE CORE HAS NO SUCH RULE AT
+                ALL - `Wrecks` appears in it nowhere. This is a
+                simulation rule: it moves units, so it moves outcomes.
+                4 tests.
+         7,30-33 facing. C# turns a hull into its line of advance
+                (`LerpAngle` towards `Atan2(mvx, mvz)`), turns a falling-
+                back man round rather than reversing, and points a dug-in
+                man at the enemy. The core has ONE line for all of it:
+                `u.heading = add(u.heading, wobble)`, a random walk. Mostly
+                a render quantity - nothing in the core reads heading for
+                an outcome - but it IS in the state hash, so it is
+                protocol either way. 5 tests.
+         49,50  the halt. `StepInfantry` carries `restFor`/`nextRest` and a
+                gait wave, so a man stops now and then and no two are in
+                step. The core has zero occurrences of any of it, so its
+                infantry advances at an unbroken rate. Simulation: a man
+                who stops is somewhere else. 2 tests.
+         38,39  per-man size and pace (`height`, `pace`). Pace is
+                simulation, height is render. 2 tests.
+
+       And 51 (`AHaltedManDoesNotPlayTheWalkingAnimation`) is pure render
+       and belongs with CombatFx in item 7.
+
      WHAT THE DELETION COSTS, counted. `EditMode/ArmyTests.cs` is 51 tests
      that are about nothing but `Army` and go with it; the two reference
      recorders and the gunship one are 3 more. That is 54 gone outright.
