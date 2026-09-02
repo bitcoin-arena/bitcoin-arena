@@ -548,15 +548,64 @@ recording: test/vectors/csharp-army.json.
      and it was never a rule fault - it was a front measured in one place
      against a front pinned in another.
 
-     WHAT IS LEFT, stated exactly. Armour presence is not a level but a
-     TREND the core does not have: pinned, the core starts denser than the
-     recording (13.3 against 8) and thins to 4.5 while the recording
-     builds to 17. C# concentrates because `goalX = engaged ? foe.x : ...`
-     pulls an engaged tank onto its enemy's x, so the fight gathers; this
-     core holds a fixed ladder instead. That is exactly the coupling that
-     was ported, measured and reverted once - z spread fell from 9-12 to
-     1.9-11.7 and one side was wiped out on two seeds - so it is not a
-     free change and must be its own measured attempt, not a re-try.
+     THE ARMOUR HALF, done as its own attempt and not as a re-try.
+
+     Localised first. With the front pinned the armour's z is held 5-14 m
+     off zero, so "within 34 m" is very nearly "|x| < 31" and the question
+     is entirely about x. The core puts armour on a LADDER of its own
+     invention: eight fixed posts from -76 to +76, squad from
+     `(index >> 3) & 7`. Only TWO of the eight are inside 31 m. Measured
+     over 24 seeds at t = 90 s: 28% of tanks within 4 m of their post,
+     35% within |x| < 31 against the recording's 71%. The SPREAD was
+     already right - sd 45.7 against the C# army's 36-45 - and the SHAPE
+     was wrong: flat where the recording's is peaked.
+
+     C# is peaked because `goalX = engaged ? foe.x : v.x + sin(phase*3)*26`
+     closes an engaged tank on its enemy's x. Its spawn is uniform
+     (`Rand(-FrontX + 8, FrontX - 8)`) and the idle term is a bounded
+     oscillation with no net drift, so the chase is the only thing that
+     gathers it.
+
+     Ported IN X ONLY, which is the whole difference from the version this
+     core reverted. That one steered at `(foe.x, seam - Dir*9)` as one
+     NORMALISED vector: normalising is what spent the depth, because the z
+     component is then dragged along by the size of the x chase. Here x
+     and z stay on their own controllers - z is still the hold, clamped at
+     its own walk, and knows nothing about the foe. The ladder stays for a
+     tank with nobody to close on; it is a place to wait, not to fight
+     from.
+
+     Measured over 24 seeds, front pinned, and BOTH of the failure modes
+     that killed the reverted version are guarded, not just the number the
+     change is meant to move:
+
+       tanks within 34 m       before   after   rec  inside after?
+         t = 10 s              13.3     13.8      8  YES  (was NO)
+         t = 30 s               4.0      7.5      8  YES  (was NO)
+         t = 60 s               4.8      8.0     14  no
+         t = 90 s               4.5      7.9     17  no
+       armour z spread t=90s   31.8     31.5          the depth is KEPT
+       armour x spread t=90s   45.7     38.9          C# holds 36-45
+       armour alive t=90s      19.8     19.1
+       seeds with a side wiped  0/24     0/24
+
+     The reverted version cost the z spread (9-12 down to 1.9-11.7) and
+     two wiped seeds. Neither recurs: 31.8 -> 31.5 and 0 of 24. Two of the
+     four armour marks are now inside the envelope where none was.
+
+     REPORTED AGAINST MYSELF: the infantry half was called closed with all
+     four marks inside, and this change moved one back out. Riflemen
+     within 26 m at t = 90 s went from [0, 29] to [3, 22] against the
+     recording's 27 - the MEAN moved towards it, 9.4 to 12.4, and the top
+     of the band fell short of it. So the letter now stands at two of four
+     armour marks inside and three of four infantry, where it was zero and
+     four. That is a net gain and it is not a closure.
+
+     What is still missing is the same shape it always was: the recording
+     BUILDS to 17 of about 24 alive, 71%, while the core settles at 7.9 of
+     19.1, 41%. Two candidates and neither measured: the core holds fewer
+     armour alive than the recording does, and the chase closes on the
+     nearest foe rather than on where the fighting already is.
 
      ALSO FOUND, and not yet acted on: `sim.js:635` samples the seam once
      at the TRUCK's x for the whole army, where C# samples `FrontlineAt(v.x)`
