@@ -128,12 +128,15 @@ recording: test/vectors/csharp-army.json.
      the two bombs that did land on a plank are 16 men of 350. Nor is it
      a phase of the round - per detonation the core kills 1.39x the
      recording early and 1.41x late, which is flat.
-     NEXT, and new: air off and divided by how well the lines met, the
-     core's rifle rate IS the recording's from w3 on (0.072 against
-     0.071) and short only in the first three windows (0.036 against
-     0.087) - and the ledger says that is not the clock, because the men
-     shoot MORE per man there. It is kills per shot, 0.0199 against the
-     roll's own 0.045. See "The squads measured against Army.Spawn",
+     The early-window rifle deficit that was named here as next -
+     kills per shot 0.0199 against the roll's own 0.045 - is EXPLAINED and
+     is a rule fault, not the gun: `length2` overflows past ~181.5 m and
+     returns 0, and the rifleman's truck test (`sim.js:722`) has no axis
+     rejection, so men on the approach burn a 2.5-4.5 s reload on a truck
+     200 m away. Take those out and kills per foe shot is the roll in both
+     windows. It is therefore NOT a candidate for the slope residual. The
+     fix is a rule change and is not made yet. See "The 0.0199 was an
+     integer overflow" below, and "The squads measured against Army.Spawn",
      "What a bomb is worth, taken apart", "The depth, air-off against
      air-off", "What a bomb finds, per detonation", "The slope", "Where
      the bombs land, and when" and "The rifle line divided by the
@@ -1067,6 +1070,83 @@ the early deficit is not the clock. **It is in kills per shot: 0.0199
 against the roll's own 0.045, and that is NEW, open and not yet explained.**
 It is a candidate for the 2.6-3.9 residual under "The slope" and is the
 next thing to measure in (l).
+
+### The 0.0199 was an integer overflow, and it is a rule fault
+
+The term (l) was left standing on - air off, kills per shot 0.0199 in w0-w2
+against the roll's own fixed 0.045 - is explained, and it is not the gun,
+not the clock and not the aim. It is `length2` overflowing in the rifle's
+TRUCK test, and the codebase already had the trap written down:
+`army.js:417-421` says a unit at the far end of a 260 m map "overflows the
+sum of squares past 2^31 and comes back as a distance of zero - which reads
+as a tank standing on the truck."
+
+Measured, not argued: `length2` returns **0.00 m for any separation past
+~181.5 m**. The rifleman's truck test at `sim.js:722` takes no axis
+rejection before calling it, so a man far from the truck reads the truck as
+standing on him, takes the courier branch, and burns a 2.5-4.5 s RELOAD
+clock where a man with nothing in range should have set a 0.4-1.1 s LOOK.
+He also rolls the 0.045 at a truck 200 m away.
+
+That is an approach-shaped fault by construction. The armies spawn at
+|z| = 75.6 and the truck sits parked at (-100.4, 10.2), so the far corner
+starts 196 m out and crosses back under 181 m only as the line closes on
+the seam - which is exactly w0-w2 against w3+.
+
+    air off, seam pinned, anchored on each seed's first man-in-range
+                        reload  truck br.  of those  foe     deaths  k/shot   k/foeShot
+                        writes  (as coded) PHANTOM   shots           before   after
+    4 seeds   w0-w2        429       107        82     322      14   0.0347   0.0435
+              w3+         2906       156        97    2750     129   0.0453   0.0469
+    48 seeds  w0-w2       5152      1491       897    3661     188   0.0412   0.0514
+              w3+        33093      2753      1241   30340    1360   0.0431   0.0448
+
+Take the phantom shots out of the denominator and kills per foe shot IS the
+roll, in both windows, on both seed counts (z = -0.13, +0.48, +1.85, -0.15).
+The early deficit is gone. 17.4% of the core's early rifle clocks were being
+burned on a truck the man could not see; 3.7% of the late ones.
+
+Every input was pinned before the cause was accepted, because the number had
+already moved twice for instrument reasons:
+
+  the roll        0.045041 over 20e6 draws on a fresh stream - nominal.
+  the deaths      counted two independent ways, position-teleport and
+                  conservation over the reinforce clock (one slot per side
+                  per tick, `sim.js:406-409`). They agree to the unit:
+                  188 / 1360 / 1548.
+  the denominator counted two independent ways, the clock word written and
+                  the men whose cooldown is 0 at the top of the tick, which
+                  is the rule's own condition. They agree to the unit:
+                  5152 = 5152 early, 33093 = 33093 late.
+
+Two instrument faults were found and removed on the way, and both are real
+but small beside the overflow: the ledger counted genuine truck-branch shots
+as rifle shots, and it could not see a man who died and whose slot was
+refilled in the same tick - `RIFLE_HP` is a constant 10, so a refill is
+invisible to the `b.hp > a.hp` test every tool here uses. 43% of the early
+deaths were invisible that way at four seeds.
+
+**Not a PhysX or host value.** `sim.js:628` reads the truck from the core's
+own words, `s[T + T_X]`. This is the core's own integer arithmetic, and the
+same class of fault the collision and `threatAt` were already burned by.
+
+**Two call sites are unguarded, and a third is unchecked.** The three target
+scans are all safe - `pickRifleTarget` (`army.js:321`), `pickTarget`
+(`army.js:380`) and `threatAt` (`army.js:425`) all reject on each axis
+first, and so does the armour crowding scan at `sim.js:677`. What does not:
+
+    sim.js:722    the rifleman's truck test   - measured above
+    army.js:273   the TANK's truck test       - same shape, not measured here
+    sim.js:790    the truck against its start - not looked at, not this item
+
+**NOT FIXED, deliberately.** The fix is a rule change in `sim.js`, it moves
+the simulation, and it will move the golden vectors - so it is its own step
+with its own agreement, not a rider on a measurement. Nothing in `army.js`,
+`air.js`, `sim.js` or the spawn was touched to find any of this.
+
+What it costs (l): the early rifle deficit is this, so it is NOT a candidate
+for the 2.6-3.9 slope residual any more. It does not touch the 19 extra men
+the core's bombs cover, which remains (l)'s one open term.
 
 ### The truck is shot by tanks, and the core does not know it
 
