@@ -47,7 +47,7 @@ their names, so any plate size read at wiring time can describe something
 that no longer exists. Every display is re-fitted against the mesh that
 is there now.
 
-## 2. The army into the core  -  M1  -  IN PROGRESS (l and m closed, j/i/n/e open)
+## 2. The army into the core  -  M1  -  IN PROGRESS (l, m, j closed; i/n/o/e open)
 
 The last thing standing between here and M1.
 
@@ -87,6 +87,15 @@ recording: test/vectors/csharp-army.json.
      both the GROUND line's doing and are named under "The air arm"
      below.
   e. Delete the C# army; Unity renders from core state only - NOT STARTED.
+     CARRIES A FINDING FROM (j): truck health now has two owners that
+     disagree. The core sets `S_STATE` to 2 as soon as its own `T_HP`
+     reaches zero - measured at t=13.9 s with the truck parked in the
+     fight - while the game's truck health lives in `TruckHealth`
+     (`maxHealth` 100, `armour` 1.5) fed from the C# army at
+     `Bootstrap.cs:194`. Nothing is double-damaged: `BlwpCore.TruckHealth`
+     (`BlwpCore.cs:239`) is exposed and has no consumer at all. But the
+     core now ends a round the game does not know has ended, and that only
+     goes away when the core owns the truck outright.
      LAST, and deliberately: it deletes the instrument. `ArmyReferenceTests`
      and `GunshipReferenceTests` go with `Army.cs`, and no quantity can be
      recorded from the C# afterwards.
@@ -232,18 +241,59 @@ recording: test/vectors/csharp-army.json.
      furthest corner is 249.3 m out. That is a BLWP outcome, not an army
      number.
   i. The reload stagger - NOT STARTED.
-  j. Courier fire: tanks, at 34 m - NOT STARTED. Found by (f) and not
-     foreseen when the order was set. 99% of what the army does to the
-     truck is tank fire the core does not have. See "The truck is shot by
-     tanks" below.
-     CARRIES AN OBLIGATION FROM (m): this item rewrites the very function
-     (m) guarded, `army.js:273`. It must INHERIT the axis rejection and
-     not drop it while moving to `CourierRange` 34 m - otherwise the
-     overflow returns with a wider threshold, and the truck is shot from
-     across the map again. Measured before the guard: 5454 of 439684 live
-     tank-ticks read the truck as inside 26 m when it was not.
+  j. Courier fire: tanks, at 34 m - DONE, in two halves.
+     The core did have tank courier fire; "none, ever" was the recording's
+     ATTRIBUTION, since the recorder splits rifle from tank by the size of
+     the hit and the core wrote only flat ones. What it had was a second
+     gun bolted onto the tank - its own 40-99 tick clock, the rifle's
+     0.045 roll, 26 m and one flat point. The C# has nothing of the sort:
+     the courier is a TARGET CHOICE inside the tank's existing gun. So the
+     parallel weapon was deleted rather than widened, and `army.js:273` no
+     longer exists as a courier path at all.
+     Both weapons now follow `Army.StepArmour` and `Army.StepInfantry`: a
+     tank fires its own gun when engaged with an enemy inside 46 m and
+     takes the truck instead only when it is inside `CourierRange` 34 and
+     NEARER than that enemy, for `Rand(5, 11)`; a rifleman looks for a foe
+     FIRST, fires at nothing when he has none, and takes the truck only
+     when it is nearer than the man he picked, for `Rand(1.5, 3.5)`.
 
-  Order: f, g, h, k, l, m (all done), then j, i, n, then e.
+     measured, air off, truck parked at (0, 0), seed 20260901, 90 s
+
+                                  before    after    recording
+       tank shots at the truck       263      249    ~296 (163/0.55)
+       tank hits                    11.8     ~137          163
+       rifle shots at the truck      246       30    ~133 (6/0.045)
+       rifle hits                    ~11     ~1.3            6
+       damage dealt a round         23.0    ~1099       1285.6
+
+     That closes about 1076 of the 1262.6 points that were missing - 85%.
+     Damage is computed UNSATURATED because the core's truck holds 100
+     points and `T_HP` floors at zero: it dies at t=13.9 s and the column
+     goes blind after that, where the recorder accumulates past 100. Shots
+     and hits do not saturate and are the acceptance.
+
+     THE OBLIGATION FROM (m) IS KEPT and checked rather than assumed. The
+     axis rejection moved with each weapon's reach - 34 m in the gun block
+     (`sim.js:718`), 26 m in the rifle (`sim.js:790`) - and the tool
+     evaluates it the way the rule does, in fixed point: over 689 gun
+     shots, ZERO disagreements between the rule's reach and the true
+     distance. Before (m) it was 5454 of 439684 tank-ticks reading the
+     truck as inside 26 m when it was not.
+
+     What is left is presence, and it is not this item's: see "The truck's
+     neighbourhood" below.
+  o. The truck's neighbourhood: half as many guns as the recording -
+     NOT STARTED. What (j) could not close, measured at the courier pass
+     with the truck parked at (0, 0): tanks within 34 m are 8 in the core
+     against 17 in the recording, 3-12 against 8-18 over the round;
+     riflemen within 26 m are 13 against 27. Both weapons now follow the
+     C# rule to the constant, so the remaining 186 points of the 1285.6 -
+     14.5% - are men and tanks that are not there to fire. Whether that is
+     the squads, the reinforcement flow or the approach is unmeasured; it
+     is NOT the same question as (l)'s 19 men under bombs, which is about
+     men who ARE there.
+
+  Order: f, g, h, k, l, m, j (all done), then i, n, o, then e.
 
 ### What the measurements say, and what they cost
 
@@ -1925,7 +1975,7 @@ throw at bundle time, which is the loud case; two `var`s or two
 the modules with only `bundle.test.js` hashing to catch it. Widen the
 check to every top-level declaration. Written up under item 2.
 
-## 7. A red renderer test: the rifle flash  -  no milestone  -  small
+## 7. The red and flaky Unity tests  -  no milestone  -  small
 
 Found while running the EditMode suite in batchmode to reach (l)'s
 recorder, and NOT pulled into (l) or fixed there:
@@ -1956,6 +2006,28 @@ makes it a different battle. Same shape at `Army.cs:638` and `:737` for
 during a recording.
 
 NOT before (j). It is not on the M1 path.
+
+**Two more PlayMode failures, pre-existing and measured rather than assumed.**
+They were found while running the suites for (m) and are recorded here because
+a red that lives only in a commit body is a red nobody owns:
+
+    ArmiesAreActuallyDrawn      PlayMode, red on the unchanged tree
+    RoadsAreActuallyDrawn       PlayMode, red on the unchanged tree
+
+The baseline that proves they are not ours: the same PlayMode suite run on the
+tree with no core change gives 174 total, 163 pass, 3 fail - those two plus the
+flake below. Every run since, with (m)'s guard and both halves of (j), gives
+174 / 164 / 2 - the same two and nothing new. Both are renderer work like the
+rifle flash, and like it they wait for (e) rather than blocking M1.
+
+**And two load-dependent flakes, which are not failures at all.**
+`TheGogglesAnimate` item 1 already documents - it fails under load and passes
+alone. `HeatRaisesTheExposureRate` behaves the same way and is written down
+here so the next reader does not spend a turn on it: it came up red once during
+(j), was reported as a regression caused by the rifle rule, and a second run of
+the SAME tree and the SAME code passed it. Causation was inferred from a single
+run of a suite already known to carry flakes. Anything red in PlayMode gets a
+second run before it is called a regression.
 
 ---
 
