@@ -601,11 +601,57 @@ recording: test/vectors/csharp-army.json.
      armour marks inside and three of four infantry, where it was zero and
      four. That is a net gain and it is not a closure.
 
-     What is still missing is the same shape it always was: the recording
-     BUILDS to 17 of about 24 alive, 71%, while the core settles at 7.9 of
-     19.1, 41%. Two candidates and neither measured: the core holds fewer
-     armour alive than the recording does, and the chase closes on the
-     nearest foe rather than on where the fighting already is.
+     THE INVENTED DENOMINATOR, retracted. This entry said the recording
+     builds "to 17 of about 24 alive, 71%" against the core's "41%". The
+     courier pass publishes inTank and NOTHING ELSE - no alive count, no
+     death count - so both percentages were mine. The 24 came from
+     `Populate(12, 36)`, which is the establishment at t = 0 and not the
+     count at t = 90 s.
+
+     The denominator is measurable after all, and it was already in the
+     file: `Pass(sb, "core-size-reinforce", 12, 36, reinforce: true)` is
+     the SAME establishment and the same replacement as the courier pass.
+     Its reference row holds armour alive at 19-22, and lost/arrived at
+     t = 90 s is 59/55. The core's own run gives a tick mean of 20.2 alive
+     and lost/arrived 59/55 - identical. So the first of the two
+     candidates is CLOSED: the core holds the right number of tanks and
+     replaces them at the right rate. Nothing about the gap is
+     establishment, reinforcement or attrition.
+
+     It also makes the gap BIGGER than reported, not smaller: 17 of about
+     20 living tanks stand within 34 m of the courier point, and the core
+     puts 7.9 of 20.2 there.
+
+     THE SECOND CANDIDATE, TESTED AND REJECTED - and the numbers are kept
+     here so it is not tried again. A tank is unengaged 37.6% of the round
+     (8 seeds, 87075 samples), and in 59% of those samples its ladder post
+     lies FURTHER from the middle than the tank already stands, so the
+     ladder looked like a restoring force undoing what the chase gathers.
+     C#'s idle rule holds no absolute position at all -
+     `goalX = v.x + Sin(phase*3)*26`, a zero-mean swing about wherever the
+     tank is, which cannot drift and so is not the random walk the ladder
+     was invented against. Ported faithfully, phase from the tick and an
+     index offset standing in for `Rand(0, 6.283)`:
+
+       tanks within 34 m     ladder + chase   swing + chase
+         t = 10 s                    13.8             7.5
+         t = 30 s                     7.5             4.1
+         t = 60 s                     8.0             5.1
+         t = 90 s                     7.9             4.3
+       armour x spread             38.9            48.5   (C# holds 36-45)
+
+     Worse on every mark and the spread leaves the C# band. The ladder is
+     not only a restoring force, it is a BOUND: without it a tank that
+     chased a foe outward and then lost contact simply stays out there,
+     and the chase's excursions accumulate instead of being pulled back.
+     Reverted, not committed.
+
+     So what is left is neither of the two candidates this entry named.
+     The core has the right number of tanks, replaces them at the right
+     rate, chases in x, keeps its depth, and sits inside the C# x spread -
+     and still puts 7.9 where the recording puts 17. Nothing measured so
+     far accounts for the remainder, and it is NOT to be closed by widening
+     a range or moving a post until the count comes out.
 
      ALSO FOUND, and not yet acted on: `sim.js:635` samples the seam once
      at the TRUCK's x for the whole army, where C# samples `FrontlineAt(v.x)`
