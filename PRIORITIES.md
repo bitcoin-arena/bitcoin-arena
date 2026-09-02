@@ -91,14 +91,21 @@ recording: test/vectors/csharp-army.json.
      and `GunshipReferenceTests` go with `Army.cs`, and no quantity can be
      recorded from the C# afterwards.
 
-  f. The infantry line, recorded - NOT STARTED. Half the army has never
-     been compared. See "The half that was never compared" below.
+  f. The infantry line, recorded - DONE.
+     `test/vectors/csharp-infantry.json`, three passes in one Unity run.
+     The two line passes reproduce `csharp-army.json` to the digit, which
+     is what says it is the same run. Numbers under "The half that was
+     never compared" below.
   g. A no-air control for `measure-army.js` - NOT STARTED.
   h. The infantry line, corrected: rifle fire and the 24 m floor - NOT
      STARTED.
   i. The reload stagger - NOT STARTED.
+  j. Courier fire: tanks, at 34 m - NOT STARTED. Found by (f) and not
+     foreseen when the order was set. 99% of what the army does to the
+     truck is tank fire the core does not have. See "The truck is shot by
+     tanks" below.
 
-  Order: f, g, h, i, then e.
+  Order: f, g, h, j, i, then e.
 
 ### What the measurements say, and what they cost
 
@@ -401,6 +408,72 @@ the dud share from 0.45-0.47 up into the recording's 0.50-0.58 and the
 bomb friendly-fire share from 39-59% down into its 18-42%, without one
 line changing in `air.js`. If it does not, the floor was not the cause
 and the air is.
+
+**(f) is done, and the recording now says all of it.**
+`test/vectors/csharp-infantry.json`, three passes, one Unity run, the same
+flat seam-at-zero world and seed the army recording used:
+
+                              C# recording      core
+    nearest opposing pair     4.7 - 19.2 m      24.0, exactly, every sample
+    same at 24/72             5.5 - 16.5 m      -
+    mean nearest enemy        24.4 - 35.5 m     -
+    riflemen with a foe <26m  18 - 50 of ~70    none can be
+    rifle kills per round      28 at 12/36      0, by construction
+    same at 24/72              90               0
+    infantry alive            34 - 36 of 36     36, and only bombs take any
+
+The two line passes reproduce `csharp-army.json`'s infantry columns to the
+digit - `line` against `passes.core-size-reinforce` and `line-24-72`
+against the top-level rows. That equality is the check that this is the
+same run and not a second one that resembles it; without it the new
+columns would be a fresh measurement of an unknown thing.
+
+**A trap found while recording it, and it would have poisoned any future
+reference.** Subscribing to an `Army` event can change the simulation:
+
+    Shot?.Invoke(s, hit ? mark
+                        : new Vector2(mark.x + Rand(-3f, 3f), ...));
+
+The miss scatter is drawn INSIDE the argument, so `?.` skips two `Rand()`
+calls when nobody listens and makes them when somebody does. The first
+version of this recording carried a shot counter, and its rows walked away
+from the stored ones from t=25 - which is exactly when the first shot is
+fired. Dropping the counter put them back to the digit. `Killed` and
+`Destroyed` are safe; `CourierHit` has the same shape as `Shot` and the
+courier pass listens to it anyway, because a listener is the game's own
+condition (`Bootstrap.cs:194`).
+
+### The truck is shot by tanks, and the core does not know it
+
+The courier pass parks a truck at x=0, z=0 and leaves it there for ninety
+seconds. Cumulative, at the core's establishment:
+
+                        C# recording        core
+    tank hits             163                 none, ever
+    tank damage          1271.7               -
+    rifle hits              6                  every unit inside 26 m
+    rifle damage           13.9                one flat point a hit
+    tanks within 34 m     7 - 18 per sample
+    riflemen within 26 m  0 - 36 per sample
+
+**99% of what the army does to the truck is tank fire**, from
+`Army.StepArmour`: `CourierRange` is 34 m, not the rifle's 26, and a hit
+takes `Rand(5f, 11f)`. The core has no courier fire from armour at all.
+What it has instead is one flat point from ANY unit - tank or rifleman -
+that has the truck inside 26 m, which is the rifle rule applied to
+everybody.
+
+The second half is the selection rule, and it is why riflemen score six
+hits in ninety seconds from a truck parked in the middle of them: a man
+fires at the courier only when he already has an enemy rifleman inside 26
+m AND the truck is CLOSER than that man. In a line that interpenetrates
+there is nearly always someone nearer. The core has no such test - it
+shoots the truck whenever the truck is in range, and never at anybody
+else.
+
+Wrong source, wrong range, wrong size, and no selection rule. Truck damage
+is what M1 is: this is item (j), and it lands before (i) because it is the
+milestone's own quantity.
 
 And a measurement defect (d) introduced, which is (g): `ArmyReferenceTests`
 launches no sorties, and the core has no switch for turning its air off -
