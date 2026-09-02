@@ -64,15 +64,20 @@ recording: test/vectors/csharp-army.json.
      deviation where the C# army holds 36-45, and two armies that drift
      apart sideways simply stop meeting.
 
-  b. Firing and death - MOSTLY. The first fifteen seconds now match:
-     83-100% of armour surviving where the recording has 79%. Over a
-     minute a gap remains - 17-67% against 71-83% - and the shooter count
-     falls to zero by t=60 where the C# army sustains 22-47.
+  b. Firing and death - DONE. The gap that looked like a firing fault was
+     the reference: the C# army REPLACES its dead. Measured, both sides,
+     same seed, replacement switched off (`passes` in csharp-army.json) -
+     the C# army collapses exactly as the core does. See "What the
+     reference was actually saying" below.
 
   c. Retreat - IN. Back off inside 24 m, fall right back when overrun by
      14 (Army.OverrunDepth), held to |x| < 88.
 
-  d. Reinforcement, gunships and bombs - NOT STARTED.
+  d. Reinforcement, gunships and bombs - NOT STARTED, and reinforcement
+     is now the next thing to build. It is not a garnish on the army; it
+     is what holds the front up. Without it the first exchange decides
+     the round and the survivors stand still for the remaining sixty
+     seconds. Order within (d): reinforcement, then gunships, then bombs.
   e. Delete the C# army; Unity renders from core state only - NOT STARTED.
 
 ### What the measurements say, and what they cost
@@ -94,6 +99,16 @@ the sequence is worth keeping because each step ruled something out:
   4. Assumed fire concentration. Measured: shooters per target is 2.0-2.2
      in the core against 1.6-3.1 in C# - fine. The difference was the
      TOTAL number of shooters, which is contact again, which is squads.
+  5. Assumed the core was still too lethal, because the recording kept
+     71-83% of its armour over a minute and the core kept a third.
+     Measured the REFERENCE this time, not the core: the C# army loses
+     125 tanks in ninety seconds and buys 115 replacements. It was never
+     surviving. Nothing was wrong with firing or death.
+
+The fifth is the one to remember: four rounds went at the core because
+the reference was read as a survivor count when it was an establishment.
+A measurement of the thing being copied is worth as much as a measurement
+of the copy, and this file had never asked for one.
 
 Two sign errors and one index collision cost a round each, and all three
 had the same shape - a plausible model that produces no fight rather than
@@ -107,12 +122,84 @@ a wrong one:
     index, so it fell into two squads, one per army, and the two lines
     stood at opposite ends of the field
 
-### Next, and measure first
+### What the reference was actually saying
 
-The shooter count collapsing to zero by t=60 while the x spread grows
-from 38 to 57 looks like survivorship - the middle squads are wiped out
-and the flanks live - rather than drift. Confirm that before changing
-anything: count losses per squad.
+The question was whether the shooter count collapsing to zero by t=60 was
+survivorship or drift. It was neither, and the measurement that settled
+it also closed (b).
+
+`tools/measure-army.js` counts losses per squad, logs every armour death
+with the second and the x it fell on, and prints which squad columns each
+side still holds. Run against seed 1 it said: the middle columns are
+wiped, the survivors sit on the flanks, and from t=34 the nearest enemy
+to any living tank is 49 to 154 m away against a 46 m gun. Nobody CAN
+shoot. The board is not slow, it is over - largest movement by any living
+tank after that is 0.15 m in a second.
+
+That is a third reading, distinct from both survivorship and drift, and
+it turned the question into: why does the C# army not do this? Four
+things had to be fixed before the two could be compared at all:
+
+  - the recording is 24 armour and 72 infantry A SIDE; the core fields 12
+    and 36, because UNITS is 96 and every fourth index is a tank. The
+    percentages were being compared across two differently sized armies.
+  - the density series in the vector stopped at t=35. The claim "the C#
+    army sustains 22-47 shooters at t=60" was measured against a
+    reference that said nothing at t=60, and the vector had no shooter
+    series at all.
+  - the recording pins the seam at z=0. The core's seam is where the
+    price tape puts it - +27.3 m - so bull started 105 m from the line
+    and bear 51 m. An asymmetric fight compared against a symmetric one.
+    `measure-army.js --seam0` pins it, which is what any comparison
+    against the recording wants.
+  - squads: C# gives them to INFANTRY ONLY (`Army.Spawn`, inside
+    `if (!vehicle)`). C# tanks have no squad. The core gives squad posts
+    to armour as well, and pairs the two sides into the same column, so
+    an exchange ends with an isolated survivor holding a post.
+
+With all four settled the answer is in one line of C#: `Army.Update` ends
+with `RemoveAll(hp <= 0)` and then `Reinforce`. The C# army replaces its
+dead - one tank a side every six seconds, faster the further behind it is
+- and the comment on that cadence says it was added because a side sat at
+0-1 tanks while the other held eleven. Which is the core's failure today,
+exactly.
+
+Measured, three passes in one Unity run (`ArmyReferenceTests`, all three
+now in `csharp-army.json`):
+
+    reinforce  24/72 a side, as it ships:  125 tanks LOST over ninety
+               seconds, 115 replacements arrived, headcount 38-42 of 48
+               throughout. The "71-83% surviving" was never survival.
+    attrition  the same army, replacement off: 41 of 48 dead by t=40,
+               nine left, shooters ZERO from t=40 to the end.
+    core-size  12/36 a side, replacement off: 21 of 24 dead by t=50,
+               five left, shooters zero from t=50.
+
+Against the core at its own establishment, seam pinned, seed 20260901:
+22 alive at t=15 (C# 22), 18 shooters at t=20 (C# 18), 9 alive at t=30
+(C# 10), 8 alive at t=60 (C# 6 at t=50), contact lost from t=40 (C#
+t=50). Firing and death agree. The constants agreed all along - reload
+84-192 ticks against 1.4-3.2 s, 550/1000 against 0.55, damage 11-24
+against hit points 60-99, which is C#'s 1.1-2.4 against 6-10 at the
+ten-fold scale - and the remaining difference was a reference measured
+under conditions the core was never given.
+
+Cost of not measuring: the old note in this file, and the vector's own
+comment, both concluded "too much lethality per shot, and that is where
+to look next". Four constants would have been tuned to match an army that
+was not surviving anything.
+
+### Newly red, and it is ours
+
+`npm run guard` fails on two lines, both from this item's own work:
+
+    rules/army.js:165  operator '%' outside an arithmetic file
+    sim.js:384         operator '/' outside an arithmetic file
+
+`squad = (index >> 3) % SQUADS` and the damage roll's `/ 100 | 0`. Both
+are safe as written - a non-negative index, and a truncating divide of a
+positive int32 - but the guard is the rule that keeps the core portable
+and it is red at HEAD. It goes first, before (d).
 
 Also newly red and caused by this work: `SafeRouteScoresNearNothing`
 banks 0.077 where it wants 0.1. Squads concentrate the danger, so a run
