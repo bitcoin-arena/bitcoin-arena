@@ -297,21 +297,85 @@ recording: test/vectors/csharp-army.json.
      this file expected the work might move, was checked BY NAME and
      passes.
 
-     (2) Exact old-game scores. Unity/C# `RunScore` was correct. Core
-     `runScore` / `scoreOf` / `earning` / exposure must produce the SAME
-     score as that old path on the SAME inputs - not "looks close", not
-     a green `ScoreTests` suite that never saw the C# number. Done means:
-     like-for-like, at least the known routes (idle/straight/slalom/
-     reverse/practice and a run that goes past +81 m), Core projected
-     score equals the old-game score to the integer. Print both. If the
-     overflow fix is in and the numbers still disagree, that disagreement
-     is still this letter - instrument, do not retune a threshold, do not
-     park it on (e) or (o).
+     (2) Exact old-game scores - DONE. Seven of seven routes identical,
+     and 58342 of 58344 across the whole grid. `tools/measure-score.js`
+     prints both columns; it is the tool, not a claim:
 
-     PlayMode `ScoreTests` and Core tests named per suite. Golden
-     vectors move if the rule moves; `dist/` with them. Commit subject
-     says what is now true (the truck earns past +81 m, and the score
-     matches the old game), not `(n) closed`.
+       route      E        ticks   C      x         old    core
+       straight   214.787    824   0.700   130.0 m  1050   1050
+       slalom     201.934    849   0.700   130.0 m  1050   1050
+       handbrake    3.010   2852   0.700   -80.4 m    15     15
+       reverse    195.294    824   0.700  -130.0 m  1050   1050
+       idle         0.000   3600   0.700  -100.4 m     0      0
+       practice   214.787    824   0.700   130.0 m  1050   1050
+       past81m    204.778    735   0.700    81.2 m  1050   1050
+
+     Three separate faults, each found by measuring and each shrinking
+     the gap; none of them was a threshold:
+
+       every step truncating                48.1% disagreed
+       rounding only the last step           1.0%
+       rounding each multiply and divide     0.5%
+       carrying the 1000 from the first step 0.2%
+       pairing the inputs                    0.003%
+
+     1. THE ROUNDING MODE. `RunScore.cs:106` ends on `Mathf.RoundToInt`;
+        `scoreOf` ended on `>> 16`, which throws the fraction away. Every
+        truncation leans the same way, so they add rather than cancel and
+        the core sat exactly one point low on half of all runs. `fixed.js`
+        gained `mulRound`, `divRound`, `mulDivRound` and `toIntRound` for
+        this. `mulFast`, `div` and `toInt` are NOT touched: truncation is
+        correct for the simulation, where it is a rule applied identically
+        on every engine, and wrong only where the number is REPORTED and
+        some other implementation rounds it. The score is the only such
+        number in the core so far.
+
+     2. THE GRID. Collapsing E, T and C into one Q16.16 fraction of at
+        most 1.0 before scaling by a thousand quantises the score to
+        1000/65536 = 0.0153 points, and every surviving disagreement sat
+        inside one such step of the .5 boundary - measured, not assumed.
+        Carrying the thousand from the first step spends the headroom
+        instead (no intermediate passes 1500 ONE, none passes 2^53) and
+        the grid becomes 1/65536 of a point. `exposureFactor` and
+        `timeFactor` remain as the readable statement of the rule and
+        remain the tested ones, but `scoreOf` no longer forms either on
+        its own. The time clamp moved onto the TICKS - T = 3900/ticks held
+        to [0.25, 1.5] is exactly ticks held to [2600, 15600] - which says
+        the identical thing without a factor, and gives an instant run its
+        1.5 without a separate branch.
+
+     3. THE PAIRING, and it was mine. The sweep fed the old formula the
+        decimal 0.4 and the core the Q16.16 26214/65536, which are not the
+        same cargo. That is the not-a-pair trap this item has now set
+        seven times. Handed the numbers the core actually holds, the
+        residual fell from 142 to 2.
+
+     The two are one value: E = 171, ticks = 3600, C = 0.5 and the same
+     figure again at ticks = 7200, C = 1. Both are 1000 * 171/190 *
+     3900/3600 * 1/2 = 975/2 = 487.5 EXACTLY, checked as a rational, not
+     as a float. A true half-point tie has no right answer available to
+     fixed point; the core says 488. .NET's `Math.Round` under
+     `Mathf.RoundToInt` breaks a tie to even, which is also 488, but the
+     C# product is float32 and may not land exactly on the tie, so this
+     is recorded as a tie and NOT claimed as agreement.
+
+     One state word moved and it was the right one: index 21 =
+     `O_SCORE + S_DELIVERED`, 1049 -> 1050, on straight/slalom/reverse/
+     practice. `handbrake` and `idle` deliver nothing and did not move.
+     Checked word by word against a pre-change copy of `src/` before the
+     vectors were regenerated, so "only the score moved" is measured.
+     The first attempt at that check compared `st.length`, which is
+     `undefined` on a `{u8, i32}` state, so the loop never ran and
+     reported "0 words differ" for every vector - a vacuous pass, caught
+     because it contradicted the red hashes.
+
+     Golden vectors regenerated on purpose (rule change) and `dist/
+     blwp-core.js` with them. Core 47/47, guard 19 files clean, node vs
+     bundle-node identical, stage 0 acceptance PASS; cross-version and
+     cross-arch SKIPPED as always in this loop (one runtime, no docker).
+     PlayMode `ScoreTests` 9/9 - the first run showed
+     `HeatRaisesTheExposureRate` red and the second run of the identical
+     tree was green, which is item 7's recorded flake and its rule.
   i. The reload stagger - DONE, and the reason given for it was wrong.
      The spawn drew a staggered reload and threw it away on the next
      line: `U_TARGET = nextBelow(rng, 180)` and then `U_TARGET = -1`. The
