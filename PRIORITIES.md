@@ -105,8 +105,16 @@ recording: test/vectors/csharp-army.json.
   k. The squads: three a side at random x, not eight in shared columns -
      DONE. The air envelope is 17/17 for the first time. The line's own
      residual is named below and is (l).
-  l. Why the core's riflemen kill half what the C#'s do - NOT STARTED.
-     Like for like, both air-on: 8-18 a round against 16-37.
+  l. Why the core's riflemen kill half what the C#'s do - OPEN, and three
+     causes ruled OUT by measurement rather than by argument. Like for
+     like, both air-on: 8-18 a round against 16-37. It is not the gun:
+     air-off, the core's rifle kills land ON the recording (24-42 against
+     28-51). It is not the squad geometry: at t=0 every geometry quantity
+     overlaps, both engines, four seeds. And it is not the blast being
+     more lethal - the lethality inside the radius is 1.000 in BOTH
+     engines, so the air's own excess is men covered and nothing else.
+     See "The squads measured against Army.Spawn" and "What a bomb is
+     worth, taken apart" below.
   i. The reload stagger - NOT STARTED.
   j. Courier fire: tanks, at 34 m - NOT STARTED. Found by (f) and not
      foreseen when the order was set. 99% of what the army does to the
@@ -572,6 +580,181 @@ is exactly what cost this file four rounds on the armour. It is a
 question, not a diagnosis, and the first thing (l) does is measure which
 way the causation runs: hold the bomb kills down and see whether the rifle
 kills come up, or hold the contact up and see whether anything moves.
+
+### The squads measured against Army.Spawn, and what that rules out
+
+The standing story for (l) was a chain: denser men under the blast, so more
+bomb dead, so more replacement churn, so less time in contact, so half the
+rifle kills. Every link of it is a claim about GEOMETRY, and geometry is
+measurable on both engines at once.
+
+`tools/measure-squads.js`. The core is stepped; the C# side is REPLAYED -
+`System.Random` seeded is a fully specified subtractive sequence and
+`Army.Populate` draws from it in a fixed order, so the spawn can be
+reproduced exactly. That is not taken on trust. The recording's t=0 row is
+sampled BEFORE the first `Update`, so it is a pure function of the spawn,
+and the replay is checked against it on every seed before one geometry
+number is printed: n, mean z, spread, nearestPair, meanNearest,
+inRifleRange, to the stored digit, on all four seeds AND on the 24/72 pass
+with its six squads. Five for five. A seed that does not reproduce prints
+REPLAY FAILED and reports no C# geometry.
+
+What that buys: **t=0 is exact on both engines.** Both armies stand ON
+their posts the tick they spawn - `unit.x = clamp(squads[squad] + offsetX)`
+is the last line of `Spawn`, and the core does the same - so the whole x
+geometry is formed up at t=0 and is measured, not modelled.
+
+    at t=0, four seeds, seam pinned      core          recording
+    men per knot                         7 - 17        4 - 19
+    knot width (sd about its own mean)   3.3 - 6.1     4.2 - 6.7
+    knot trail (mean x - anchor)         1.7 - 4.5     1.8 - 3.0
+    nearest bull anchor to bear anchor   2.0 - 11.0    0.0 - 15.7
+    front covered by a blast             0.70 - 0.97   0.72 - 0.98
+    front a bomb duds on                 0.03 - 0.30   0.02 - 0.28
+    front covering BOTH sides            0.24 - 0.44   0.18 - 0.61
+    men within a blast of a random x     12.2 - 13.1   12.2 - 13.1
+
+**Not one of them wanders.** The chain's first link is the density under
+the blast, and it is 12.2-13.1 in both engines to the tenth. Over the round
+the core's is 10.2-13.1 - LOWER, because its men are dead and awaiting
+replacement, which is the opposite of what the chain needs. So (k) did not
+leave a geometry fault behind, and (l) is not a squad-shape bug.
+
+Three things the tool can say and one it cannot:
+
+  - **The anchors are exact on both engines at every t**, not just at t=0.
+    `DriftSquads` is a closed form in `Time` alone, clamped, and nothing
+    else touches an anchor. Both engines merge a bull anchor with the bear
+    anchor of the same index once both have been held at the same edge -
+    the clamp eats the difference and it never comes back. That is C#'s
+    own behaviour, reproduced, not a core fault.
+  - **The line's depth is a real comparison over the round.** The recording
+    carries a z spread at every sample, so it is the one shape number that
+    can be laid engine to engine after t=0: core 1.1-31.1 against the
+    recording's 3.5-25.7. The core's line goes both flatter and deeper than
+    the C#'s ever does. That number is outside, and it is the next thread.
+  - **The core's knots go lopsided over the round**: occupancy 1-21 where a
+    knot nominally holds twelve, and a knot width that collapses to 0.0 -
+    one man left on an anchor. Measured in the core only.
+  - **What it cannot say is whether the C# does the same.** The recording
+    holds no anchor, no squad and no offset after t=0, so the C# column
+    over the round is marked PROJ - the drifted anchors carrying the spawn
+    membership, nobody dying. PROJ's width is constant by construction and
+    is therefore not evidence about the core's. It is a drift check and
+    nothing more, and it is never quoted as the C#'s answer.
+
+And the no-air control that settled (h) is **not available here**: the
+squads landed in (k), which is after the air, so there is no build of this
+core that has squads and no bombs. The pre-air worktree has no anchors to
+measure.
+
+**So is a fix needed in (l)? Not in the squad geometry - the numbers say
+no.** Two candidates are left and both are measurable before anything is
+changed: the knot occupancy swing (1-21), which needs a C# recorder pass to
+be a comparison rather than an observation, and the z spread (1.1-31.1
+against 3.5-25.7), which is already a comparison and is already outside.
+`Army.cs` is still here - (e) has not deleted it - so the occupancy pass
+can still be recorded, and recording it is the instrument this measurement
+asks for.
+
+### What a bomb is worth, taken apart
+
+The air's own number was still a product: `infantryPerEffectiveBomb`, core
+4.47-6.25 against the recording's 3.67-4.75. A product cannot say which of
+its factors moved, and the two candidates are opposites - either more men
+stand under a bomb, or more of the men under it die.
+
+Split, and both halves are measurable on both engines, because the
+recording publishes `summary.infantry.insideRadius` per pass and not only
+the ratio:
+
+    perEffectiveBomb = menPerEffectiveBomb x lethalityInRadius
+
+`tools/measure-air.js` writes the DISTANCE of every man under every
+detonation now - what a bomb covers, band by band, and what it takes. No
+rule was touched, no vector moved, no C# pass was recorded: the previous
+version of the tool was run beside the new one on the same four seeds and
+every line it printed before prints identically after.
+
+    four seeds, seam pinned, air on      core            recording
+    effective bombs                      16 - 18         16 - 18
+    men under those bombs                76 - 100        60 - 76
+    menPerEffectiveBomb                  4.47 - 6.25     3.67 - 4.75
+    lethalityInRadius                    1.000           1.000
+    perEffectiveBomb                     4.47 - 6.25     3.67 - 4.75
+
+**The lethality is exactly one, in both engines, on every seed, and it is
+not a fit.** The recording's `insideRadius` EQUALS its `killedByBombs` on
+all four air-on passes (76/76, 60/60, 72/72, 66/66) and the core's does
+too (84/84, 90/90, 100/100, 76/76), because both `Army.Detonate` and
+`sim.js`'s `detonate` clear the circle rather than wounding across it. So
+one factor is pinned at 1.000 and cannot carry anything: **the whole of
+the air's excess is men covered.** The effective count is the same on both
+engines - it is not that the core lands more bombs on people, it is that
+the people it lands them on are more.
+
+**Nothing is happening at the rim, either.** The ring is 14.67 m, which is
+where the armour falloff (120 at the centre, `12 * (1 - d/16)` on the C#
+scale) drops to the ten points a rifleman holds - so it is the armour
+line's own counter-check, "could this bomb alone have killed him",
+evaluated for infantry. It splits the circle into the disc a falloff rule
+would take and the 16% of the area it would leave standing:
+
+    share of the covered men outside 14.67 m   0.08 - 0.18
+    the same share for men spread evenly       0.16
+    men a bomb alone could not have killed     7 - 18 a round
+
+Band by band the covered men track an even field to within the noise of
+four seeds, so the core is not killing at a rim the recording cannot
+reach, and a falloff rule would remove the same eighth from both. The band
+shape is core-only - the recording holds no distances - and is marked so.
+
+Two attribution checks came back clean, which matters because both were
+ways the core's tally could have been inflated by the TOOL rather than by
+the core:
+
+  - **no double claims at all.** A body inside two circles in one tick
+    would be counted twice; 0 on every seed, so `killedByBombs` is a
+    headcount of distinct men. The recording's own `doubleFire.infantry`
+    is 0 as well.
+  - **`inf` never differs from `infIn` on a single blast.** The two are
+    counted from different sets - everyone alive at the top of the tick
+    inside the radius, and everyone who died anywhere and fell inside it -
+    and they agree bomb for bomb.
+
+**And one bound that is left open, deliberately.** 20-69% of the men a
+bomb claims had an enemy rifleman inside 26 m at the top of that tick, and
+from outside the core a rifle death and a bomb death in the same tick look
+identical - the rifle fires in the unit loop, the bomb in the air phase
+after it. That is a "could have", not a finding, and the arithmetic says
+it is small: rifle kills are 8-18 over 5400 ticks and only 33-36 of those
+ticks hold a detonation, so at most 0.12 of a man a round can be a rifle
+kill wearing a bomb's name. It is not what halves the rifle line.
+
+**So the causal chain is still open, and this is what it now has to
+explain.** The core's air kills more because more men stand under a bomb,
+not because its bombs are worse to stand under - and `measure-squads`
+already said the men-per-blast at a random x is 12.2-13.1 on both engines
+at t=0, and LOWER in the core over the round. The two facts only fit
+together if the men under a bomb are gathered somewhere the x geometry
+cannot see, which points at the one shape number still outside: the line's
+depth, core 1.1-31.1 against the recording's 3.5-25.7. That is the next
+thread and it is not pulled here.
+
+The air-off control, measured with `--sorties=off|grounded` rather than
+quoted, because it is the column this whole item is read against:
+
+    rifle kills a round, seam pinned   air off   air on   ratio
+    core (squads), clocks pinned       24 - 42   8 - 18   0.43
+    core (squads), gunships grounded   25 - 42   8 - 18   0.41
+    C# recording                       28 - 51   16 - 37  0.66
+
+    bomb kills a round                 air off   air on
+    core                               0         76 - 100
+    C# recording                       0         60 - 76
+
+Air off, the core's rifle line IS the recording's. Air on, both lines fall
+and the core's falls twice as far. (l) stays open on exactly that.
 
 ### The truck is shot by tanks, and the core does not know it
 
