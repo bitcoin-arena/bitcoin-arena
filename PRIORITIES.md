@@ -4006,23 +4006,33 @@ round, which is why testnet comes first and why the order is stricter.
      Needs the census, so it cannot come before M3.1. Nothing to build in
      M2: without bonds there is no weight.
 
- 9d. **Config proposals and the ballot** (27A.7). The proposal object with
-     the full config and its `parent`, `OP_RETURN` votes signed by the
-     bond key, the chain-state tally, the DESIGN and MONEY classes, the
-     1008/1440/2016 schedule, activation, and `config_hash` on the Round
-     Contract so a running round keeps its own rules.
+ 9d. **Config proposals and the ballot** (27A.7). The proposal object
+     carrying the FULL config and its `parent` (never a diff - two diffs
+     passing in one window merge into something nobody voted on),
+     `OP_RETURN` votes signed by the bond key, the chain-state tally,
+     activation, and `config_hash` on the Round Contract so a running
+     round keeps its own rules to the end.
+
+     Every number, so the spec does not have to be open to build it:
+
+         class     turnout  approval  review  voting  cooldown
+         DESIGN      30%      >50%     1008    1440    2016
+         MONEY       40%      >=66%    1008    1440    2016
+         UPGRADE     51%      >=66%    2016    2016    4320
+
+     Turnout is of ALL bonded capital; approval is of the weight that did
+     not abstain. All of it comes from `genesis_parameters`, so regtest
+     runs 1/6/1 and a full cycle takes under a minute.
+
+     **Repeal** is part of this item, not a later one: review 0, voting
+     720, cooldown 0, and only for a config byte-identical to a live
+     ancestor. It can go back, never forward - which is what stops it
+     being a fast path for new changes. A mechanism with no exercised
+     undo is a mechanism whose undo does not work.
 
      Build the tally as a **pure function of (chain height) -> result**
      with no I/O in it. That is what makes 9a's property tests possible
      at all, and it is far harder to retrofit than to start with.
-
- 9f. **The operator UI** (27A.7.7) - a separate app, and the one place
-     the frontend touches keys. It is a client of the operator's OWN
-     node, paired by a `blwp-operator:` URI, with scoped tokens; the node
-     builds and signs and **no key ever leaves it**. Worst case of a
-     stolen token is a wrong vote, never a bond, and that property is
-     what makes a convenient web UI defensible at all - build it so that
-     stays true.
 
  9e. **Hard forks** (27A.8). The fork certificate, `network_id` as a
      chain, UPGRADE at 51/66 on 2016/2016/4320, opt-in bond
@@ -4043,6 +4053,14 @@ round, which is why testnet comes first and why the order is stricter.
      timelocked output, so an operator warned on the day they drop a
      bracket cannot respond for thirty days. Also allow several bond
      outputs summing to one weight, or the warning has no answer.
+
+ 9f. **The operator UI** (27A.7.7) - a separate app, and the one place
+     the frontend touches keys. It is a client of the operator's OWN
+     node, paired by a `blwp-operator:` URI, with scoped tokens; the node
+     builds and signs and **no key ever leaves it**. Worst case of a
+     stolen token is a wrong vote, never a bond, and that property is
+     what makes a convenient web UI defensible at all - build it so that
+     stays true.
 
 ## M3.2  The client and the wallet                  stage 6
 
