@@ -1684,73 +1684,77 @@ localised the last term) sitting unused all along. So the file was enumerated
 rather than remembered, and every remaining published field wired in. Thirteen
 had never been compared.
 
-**These are the numbers AFTER (m).** Air on, seam pinned, the recording's own
+**These are the numbers AFTER (j).** Air on, seam pinned, the recording's own
 four seeds. Every right-hand column is a field `csharp-gunships.json`
 publishes; none is derived for the comparison. Overlapping ranges, not
 containment, which is this item's standard throughout.
 
-    sortiesPerRound               [10, 11]            [11, 12]            OVERLAPS
+    sortiesPerRound               [10, 12]            [11, 12]            OVERLAPS
     sortiesPerSide                [5, 6]              [5, 6]              OVERLAPS
-    onStationShare                [0.71, 0.89]        [0.69, 0.93]        OVERLAPS
+    onStationShare                [0.67, 0.92]        [0.69, 0.93]        OVERLAPS
     peakAirborne                  [2, 2]              [2, 2]              OVERLAPS
-    bombsPerRound                 [34, 35]            [35, 38]            OVERLAPS
-    bombsPerSortie                [3.09, 3.50]        [3.00, 3.18]        OVERLAPS
-    offFieldShare                 [0.31, 0.38]        [0.26, 0.42]        OVERLAPS
-    dudShare                      [0.51, 0.54]        [0.50, 0.58]        OVERLAPS
-    infantryKilledByBombs         [71, 100]           [60, 76]            OVERLAPS
-    infantryFriendlyFire          [31, 66]            [11, 29]            OUTSIDE
-    infantryPerEffectiveBomb      [4.24, 5.88]        [3.67, 4.75]        OVERLAPS
-    armourDestroyedByBombs        [5, 11]             [9, 12]             OVERLAPS
-    armourBombShare               [0.08, 0.17]        [0.15, 0.22]        OVERLAPS
-    firstKillingBombAt            [8.6, 21.6]         [16.7, 26.4]        OVERLAPS
-    maxAbsLandingX                [148.9, 154.1]      [148.0, 153.8]      OVERLAPS
-    armourLostWithAir             [61, 64]            [55, 63]            OVERLAPS
-    infantryAliveWithAir          [35, 36]            [32, 36]            OVERLAPS
-    infantryInsideRadius          [71, 100]           [60, 76]            OVERLAPS
-    armourInsideRadius            [18, 27]            [19, 32]            OVERLAPS
+    bombsPerRound                 [32, 40]            [35, 38]            OVERLAPS
+    bombsPerSortie                [3.09, 3.33]        [3.00, 3.18]        OVERLAPS
+    offFieldShare                 [0.32, 0.38]        [0.26, 0.42]        OVERLAPS
+    dudShare                      [0.47, 0.63]        [0.50, 0.58]        OVERLAPS
+    infantryKilledByBombs         [58, 109]           [60, 76]            OVERLAPS
+    infantryFriendlyFire          [25, 52]            [11, 29]            OVERLAPS
+    infantryPerEffectiveBomb      [3.05, 9.08]        [3.67, 4.75]        OVERLAPS
+    armourDestroyedByBombs        [5, 17]             [9, 12]             OVERLAPS
+    armourBombShare               [0.08, 0.27]        [0.15, 0.22]        OVERLAPS
+    firstKillingBombAt            [18.3, 22.0]        [16.7, 26.4]        OVERLAPS
+    maxAbsLandingX                [150.3, 153.1]      [148.0, 153.8]      OVERLAPS
+    armourLostWithAir             [59, 64]            [55, 63]            OVERLAPS
+    infantryAliveWithAir          [34, 36]            [32, 36]            OVERLAPS
+    infantryInsideRadius          [58, 109]           [60, 76]            OVERLAPS
+    armourInsideRadius            [19, 35]            [19, 32]            OVERLAPS
     bombsThatKilledArmour         [5, 10]             [5, 9]              OVERLAPS
-    armourDestroyedByShell        [52, 57]            [43, 52]            OVERLAPS
-    infantryKilledByRifle         [18, 22]            [16, 37]            OVERLAPS
-    bombsOwnGround                [7, 11]             [5, 11]             OVERLAPS
-    bombsEnemyGround              [12, 14]            [14, 17]            OVERLAPS
+    armourDestroyedByShell        [47, 58]            [43, 52]            OVERLAPS
+    infantryKilledByRifle         [12, 33]            [16, 37]            OVERLAPS
+    bombsOwnGround                [9, 12]             [5, 11]             OVERLAPS
+    bombsEnemyGround              [9, 16]             [14, 17]            OVERLAPS
     bombsStillFlyingAtEnd         [0, 1]              [1, 1]              OVERLAPS
-    bombsInAirSeconds             [49.8, 58.5]        [48.0, 61.4]        OVERLAPS
-    infantryKilledByBombsPerSide  [27, 53]            [19, 47]            OVERLAPS
+    bombsInAirSeconds             [47.4, 58.0]        [48.0, 61.4]        OVERLAPS
+    infantryKilledByBombsPerSide  [22, 63]            [19, 47]            OVERLAPS
     doubleFireInfantry            [0, 0]              [0, 0]              OVERLAPS
     doubleFireArmour              [0, 0]              [0, 0]              OVERLAPS
 
-**28/29, and the one that falls out is `infantryFriendlyFire` - which is NOT a
-regression and must not be tuned green.** Before (m) this table read 29/29 with
-that row at core [19, 56] against rec [11, 29], overlapping by its edge alone:
-19 <= 29. After (m) it reads [31, 66] and the edge is gone. Measured over
-SIXTEEN seeds rather than four, before against after: [19, 70] mean 35.2 ->
-[12, 66] mean 32.1 - the mean FALLS, the value rose on only 7 of 16 seeds, and
-the bands overlap almost completely. The four seeds the recording happens to
-hold rolled high. It is the weakest row in the envelope, because the core sits
-above the recording on it whatever the fix does, and reading 29/29 as a hard
-pass was always generous. Repairing it would be tuning a test green.
+**29/29 again after (j), which is the second time that row has moved.**
+`infantryFriendlyFire` fell OUTSIDE after (m) at core [31, 66] against
+rec [11, 29]; after (j) it is back inside. Over SIXTEEN seeds before and after
+(m) it read [19, 70] mean 35.2 -> [12, 66] mean 32.1 - the mean FALLING and the
+value rising on only 7 of 16 - so it was called resampling rather than a
+regression, and this is that reading confirmed a second time. It stays the
+weakest row in the envelope: the core sits high on it whatever the rules do,
+and a 29/29 that turns on its edge is not a hard pass.
 
-**(l)'s residual, restated in post-(m) numbers.** (l) stays CLOSED; only its
-figures are brought current, because (m) moved the draw order and every one of
-them had been measured on the unguarded core:
+**(l)'s residual, restated in post-(j) numbers.** (l) stays CLOSED; only its
+figures are brought current, because (j) moved the draw order again and every
+one of them was measured on an earlier army:
 
-    a round, four seeds          before (m)     after (m)     recording
-    menPerEffectiveBomb          4.47 - 6.25    4.24 - 5.88   3.67 - 4.75
-    men covered a round          87.5           81.5          68.5
-    the excess this item names   19.0           13.0          -
-    infantry covered / recording 1.28x          1.19x
-    armour covered / recording   0.96x          0.89x
+    a round, four seeds        after (m)     after (j)     recording
+    menPerEffectiveBomb        4.24 - 5.88   3.05 - 9.08   3.67 - 4.75
+    men covered a round        81.5          76.8          68.5
+    the excess this item names 13.0          8.3           -
+    infantry covered / rec     1.19x         1.12x
+    armour covered / rec       0.89x         1.01x
 
-The discriminator survives and reads a little sharper: the core covers 19 per
-cent more MEN than the recording while covering 11 per cent FEWER tanks. The
-ground its bombs find is not busier - it is the infantry, which is where (l)
-left it. The term shrank by six men a round because the fix gave the rifle line
-its clocks back, not because anything about the bombs changed.
+The term has shrunk twice without ever being worked on: 19.0 men a round before
+(m), 13.0 after it, 8.3 after (j). Both times for the same reason - a rule
+fault elsewhere was taking clocks and shots away from the ground fight, and
+giving them back changed how many men stand under a bomb. The armour control
+has walked to 1.01x, so the discriminator that localised (l) - more men, the
+same tanks - now reads more men (1.12x) against tanks that match exactly. What
+(l) says is what it said; the number is smaller and the control is tighter.
+
+The band widened to [3.05, 9.08], which is four seeds of a livelier fight, not
+a new finding. Anything read off it wants more seeds than the recording holds.
 
 **Superseded, kept because it is how the work went.** The pre-(m) table read
 29/29 with `infantryPerEffectiveBomb` at [4.47, 6.25], `infantryKilledByRifle`
-at [8, 18] and the tank ratio at 1.28x / 0.96x. Those are the unguarded core
-and no tool reproduces them now.
+at [8, 18] and the tank ratio at 1.28x / 0.96x - the unguarded core. The
+post-(m) table read 28/29 with those at [4.24, 5.88], [18, 22] and
+1.19x / 0.89x. No tool reproduces either now.
 
 **One field is published and deliberately NOT compared, and the reason is the
 discipline this item was built on.** `summary.doubleFire.ambiguousBombMatch`
