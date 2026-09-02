@@ -1267,6 +1267,46 @@ thing.
 > depth: the bomb's position along the front is worth nothing. With the x
 > geometry equal at t=0 and lower over the round, and knots ruled out, the
 > whole term has to live in the DEPTH the bombs land at.
+>
+> **Three things were then measured off that, and the last one moves it.**
+>
+> **The several-squad reach is not walk-in contamination.** 48 seeds: of the
+> 3946 men the core's bombs cover, **3946 are in contact** (|z| < 30) and not
+> one is a replacement still marching in from |z| = 79. The bombs land at
+> |z| median 6.3, p90 12.0, max 21.1 - at the seam, nowhere near the edge. The
+> reach survives its own falsification.
+>
+> **The release rule is identical, constant for constant.** Read, not guessed:
+> `vz = sign(front - z) * Rand(10,22)`, `vx = 30`, gravity 9.81
+> (`BOMB_GRAVITY` 642908 / 65536 = 9.8100), entry height 19, standoff 26, and
+> the gunship WEAVES on both axes - `26 + sin(t*0.6)*9` and `19 + sin(t*0.9)*3`
+> in `Army.cs:481-484`, `WEAVE_Z`/`WEAVE_Y` 9 and 3 at rates 0.6 and 0.9 in
+> `air.js:57-73`. There is no difference in where the bombs are let go or how
+> they fly. `Where()` (`GunshipReferenceTests.cs:246`) only classifies the SIGN
+> of the landing z, and on that the two agree.
+>
+> **The discriminator, on two fields the recording has always published and no
+> check had ever used** - `summary.armour.insideRadius` and
+> `summary.armour.bombsThatKilledArmour`. The same question asked of a
+> different population standing on the same ground at the same moment:
+>
+>     four seeds, air on, seam pinned    core        recording   ratio
+>     infantry inside the radius         350         274         1.28x
+>     armour inside the radius            98         102         0.96x
+>     bombs that killed armour            36          28
+>     detonations                        137         146
+>
+> **The core's bombs cover the recording's number of TANKS - slightly fewer -
+> while covering 28% more MEN, from FEWER detonations.** The ground the bombs
+> find is not busier. Whatever the term is, it is in how the INFANTRY are
+> arranged, and it is not the squad depth, not the squad x, not knots, not the
+> approach and not the release. Both are now checked every run, under `TANKS`
+> in `measure-air.js`.
+>
+> The next unmeasured thing on that axis is the SQUAD ANCHORS: three a side at
+> random x, which is (k)'s work, and the anchors are the one part of the
+> infantry's arrangement that has not been read against `EnsureSquads`. Not
+> started.
 
 The one term (l) was left standing on has a measured cause, and it is a named
 rule difference that was read out of `Army.cs` rather than guessed.
