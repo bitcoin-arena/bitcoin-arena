@@ -1295,6 +1295,70 @@ are not on knots (a smear is not a lump), the x concentration is 1.00-1.19
 (nothing) while the z concentration is 1.11-1.87 (the overlap), and the
 friendly-fire SHARE is equal (.37 against .33) because both sides smear alike.
 
+**The finding was then given three chances to break, and it survived two and
+a half.**
+
+**(C) more infantry-hitting detonations? NO**, on fields both engines publish:
+
+    pooled, four seeds     core          recording
+    detonated              137           146
+    effective              68            68
+    bombs on men           43            not published separately
+
+The core detonates FEWER bombs and has exactly the same effective count. The
+excess cannot be bomb events; it is men per bomb. ("Bombs on men" is core-only
+- the recording publishes `effective`, which includes armour-only blasts, and
+`bombsThatKilledArmour`, but no infantry-hitting count. Not invented for it.)
+
+**(A)/(B) where the extra men sit:**
+
+    a round            core   recording   the +19.0 splits
+    men under bombs    87.5   68.5
+      of them friendly 32.8   22.8        friendly  +10.0
+      of them enemy    54.8   45.8        enemy     + 9.0
+    friendly share     .374   .332        of the excess: .526
+
+The excess is friendlier than either engine's average, which at four seeds
+looked like it might break the finding - per seed the excess's friendly share
+runs -0.5, .27, .96, .90. Widened to 48 seeds, core only, it is the finding:
+
+    squads reached   bombs   men   men/bomb   friendly share
+                1      332  1735     5.23      0.367
+                2      152  1423     9.36      0.514
+                3       43   681    15.84      0.430
+                4        6   107    17.83      0.393
+      one squad 0.367 (332 bombs)   several 0.482 (201 bombs)   REC 0.332
+
+Bombs that reach several squads ARE friendlier, by a wide margin and on a
+sample that can be read. The excess's friendly skew is the interpenetration,
+not a second cause.
+
+**The seam, and it is NOT the too-strict cap.** Capping at one squad removed
+26.1 men where the excess is 19.0. The tight version holds the bombs, the
+squads and each squad's mean z exactly where they are and only RE-LAYS each
+man at `squadMeanZ + offset` over [-5,5], the way `Army.Spawn` draws
+`squadOffsetZ`, deterministically off the slot index as `riflePost` already
+does for x:
+
+    a round        core 87.5   re-laid 55.3   recording 68.5
+    perEffective   5.15        3.45           4.03
+
+Re-laying removes 32.3 men a round - MORE than the 19.0 excess - and lands the
+core 13.2 BELOW the recording. That was checked for being an artefact of
+moving the men while leaving the bombs where they had been aimed, and it is
+not: at 12 seeds and 130 bombs, the re-lay costs the real bomb point and a
+random x at the same depth the SAME fraction (0.600 against 0.598). It is a
+density change, and the bombs were never aimed at the men anyway - a random
+point at the same depth finds 7.41 where the real bomb finds 7.40.
+
+**So the within-squad depth over-explains the term, and a second term of about
+13 men a round runs the other way and is not identified.** The honest bound on
+this instrument: the re-lay is not the C# army, it is the core's army with its
+squads compressed, holding the core's own squad means fixed. Whether the -13.2
+is a real opposite term or an artefact of holding those means cannot be decided
+without giving the core a squad depth and re-running - which is the rule change,
+and is the next step rather than this one.
+
 **Not fixed.** Giving a rifleman a squad depth is a rule change in the spawn
 and in `riflePost`, it moves the golden vectors, and it is its own step.
 
