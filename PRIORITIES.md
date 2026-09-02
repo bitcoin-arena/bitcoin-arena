@@ -646,12 +646,54 @@ recording: test/vectors/csharp-army.json.
      and the chase's excursions accumulate instead of being pulled back.
      Reverted, not committed.
 
-     So what is left is neither of the two candidates this entry named.
-     The core has the right number of tanks, replaces them at the right
-     rate, chases in x, keeps its depth, and sits inside the C# x spread -
-     and still puts 7.9 where the recording puts 17. Nothing measured so
-     far accounts for the remainder, and it is NOT to be closed by widening
-     a range or moving a post until the count comes out.
+     A THIRD CANDIDATE, ALSO REJECTED. The C# `Courier` is a point that
+     cannot die, and a tank shooting AT it is not shooting at its enemy -
+     so it is a fire sink, and armour standing in one stops killing armour
+     standing in it. The core's truck holds 100 points and dies at
+     t = 20.4 s, which is exactly where the two curves part. Held alive
+     from outside the rules over 24 seeds, every mark came back bit for
+     bit identical. The reason is in `sim.js`: `T_HP` is written at spawn,
+     decremented by courier damage and read by the GATE, and by nothing in
+     the army. A core tank goes on firing at a truck with no points left,
+     so the sink is exactly as permanent here. Refuted, and I had waved it
+     away once before on the grounds that `Courier` is absent from the
+     movement code - true of movement, false of fire, and fire decides who
+     is still standing there.
+
+     WHERE THIS LETTER NOW STANDS, and it is a sharper place than it
+     sounds. Against `passes.core-size-reinforce`, which is the reference
+     at this exact establishment and replacement, the core matches on
+     EVERY quantity that pass publishes:
+
+       t = 90 s      core            reference
+       inRange       2.00            1.70
+       xSpread       35.8            34.8
+       shooters      13              12
+       tanksAlive    20              20
+       lost/arrived  59/55           59/55
+
+     The one measure that does not agree is `inTank`, and it is the only
+     published quantity that is about a POSITION relative to a point
+     rather than about shape. A standard deviation cannot tell the two
+     apart: 17 of 20 tanks inside |x| < 31 with three stragglers at +-90
+     gives sd 35, and so does a flat spread over +-60. Measured, the
+     core's |x| at t = 90 s over 24 seeds is nearly flat -
+
+       <10 16%   <20 21%   <31 18%   <45 12%   <60 18%   <80 11%   80+ 4%
+       54% inside |x| < 31, mean -9.2, sd 39.4
+
+     - against a recording that puts about 85% inside. The ladder is eight
+     posts across +-76 m, and a flat spread over that range has sd 43.9 by
+     construction. So the core reproduces the reference's SUMMARY
+     STATISTIC without its cause, which is the same fault as reading a
+     survivor count as an establishment, one level up.
+
+     That is the whole of the remainder and it is not to be closed by
+     moving the span or the post count until `inTank` comes out - that
+     would be fitting the statistic a second time. It needs a mechanism
+     that bounds the armour without spreading it, and the two obvious ones
+     are already measured and rejected above: no bound at all (the swing)
+     spreads worse, and the full 2-D chase takes the front's depth.
 
      ALSO FOUND, and not yet acted on: `sim.js:635` samples the seam once
      at the TRUCK's x for the whole army, where C# samples `FrontlineAt(v.x)`
