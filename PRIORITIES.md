@@ -3991,16 +3991,17 @@ round, which is why testnet comes first and why the order is stricter.
      `payment_hash` and its own expiry refund, and no node holds a
      balance because there is no balance.
 
-     Do this before 6c. It is the cheap half of the problem and it costs
-     no custody at all.
+     This is the whole answer to approval fatigue, which is why 6c can be
+     a prohibition rather than a trade-off.
 
-  6c. **No session balances, ever** (24A.3). Specified once and removed.
-     If it comes back as a request: money is in flight during a round and
-     nowhere else. A resting balance has no unilateral exit at these
-     sizes - once a deposit settles the sats are in someone else's
-     Lightning node, an on-chain escrow costs more than a 100 sat stake,
-     and slashing punishes an absent operator without returning a sat.
-     6a already fixes the approval fatigue that motivated it.
+  6d. **Where a payout goes** (24A.2). The player supplies a destination
+     and the protocol keeps none: LNURL-withdraw, or a BOLT11 invoice
+     they provide at claim time. Nothing is stored between rounds and no
+     address is remembered, because a remembered payout address is a
+     resting relationship with a player and the beginning of an account.
+
+     A payout unclaimed inside `claim_window` follows the existing
+     expiry path. It does not become a balance.
 
   6b. **Donations paid, and the authority that points them** (27A.4).
      The set is a list of LNURLs with basis-point shares summing to
@@ -4020,6 +4021,14 @@ round, which is why testnet comes first and why the order is stricter.
      Rotation via the cold recovery key is part of this task, not a later
      one: a key with no exercised revocation path is a key whose
      revocation does not work.
+
+  6c. **No session balances, ever** (24A.3). Specified once and removed.
+     If it comes back as a request: money is in flight during a round and
+     nowhere else. A resting balance has no unilateral exit at these
+     sizes - once a deposit settles the sats are in someone else's
+     Lightning node, an on-chain escrow costs more than a 100 sat stake,
+     and slashing punishes an absent operator without returning a sat.
+     6a already fixes the approval fatigue that motivated it.
 
 ## M3.3  Settlement                                 stage 7
 
@@ -4068,7 +4077,8 @@ round, which is why testnet comes first and why the order is stricter.
          participation in the settlement window for settlement
        - a conflicted node (5A.13) never qualifies
        - unearned shares are redistributed pro rata among the other
-         eligible nodes in the SAME role pool, keeping the total at 2%
+         eligible nodes in the SAME role pool, keeping the total at
+         `node_fee_bps` - the pool never shrinks and never grows
        - remainders in millisatoshis: floor each base share, then
          distribute the remaining msat in ascending
          `H(round_id || node_pubkey)` order
