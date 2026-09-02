@@ -1231,6 +1231,43 @@ thing.
 
 ### The 19 men: the squads have no depth, so they interpenetrate
 
+> **CORRECTION, and it takes the cause out of this section.** The claim below
+> that the core has no squad depth is WRONG, and the number it rests on was
+> not a pair. `army.js:41-58` already documents the C# rule and `army.js:137`
+> and `142-143` already implement it: `scatter2 = (hash >>> 8) & 1023` is an
+> independent slice of the same hash, and `RIFLE_SQUAD_Z` turns it into a
+> per-man -5..+5 m offset added to the standoff, exactly as
+> `goalZ = front - Dir * (standoff + squadOffsetZ)` (`Army.cs:652`) requires.
+> Measured over the 72 rifle slots:
+>
+>     per-man squad z offset   core -4.84..4.99, sd 2.851   C# Rand(-5,5), sd 2.887
+>     standoff + offset        core -0.34..15.69, sd 3.852  C# 4..12 + -5..5, sd 3.697
+>     distinct values          69 of 72 slots
+>
+> The 16.8 m below was a whole SIDE's living riflemen including the
+> replacements walking in from |z| = 79, which the C# has too and which the
+> recording publishes nothing about. Restricted to men in contact (|z| < 30)
+> the core's within-squad depth is 3.90-4.72 m against the 3.85 its own rule
+> intends. A measured, walk-in-contaminated core number was set against a
+> drawn C# constant - the same "not a pair" fault as the depth pair, the seed
+> pairing and `replacementsArrived`, and this time it was mine.
+>
+> The re-lay counterfactual falls with it: compressing every man to
+> `squadMeanZ +- 5` mostly DELETED the approach rather than reproducing C#
+> geometry, so the -32.3 men and the "-13.2 opposite term" do not stand.
+>
+> **What survives**, being core-only arithmetic that never used the C# column:
+> a third of the bombs reach 2-4 squads and carry 54% of the covered men;
+> those bombs are friendlier (.482 against .367 over 201 and 332 bombs); and
+> (C) is still no - 137 detonations against 146 at the same effective count,
+> 68 against 68. What does NOT survive is why. **The 19 men are OPEN again.**
+>
+> One measured fact narrows where the cause can be. At 12 seeds and 130 bombs
+> a bomb finds 7.40 men at its own point and 7.41 at a RANDOM x on the same
+> depth: the bomb's position along the front is worth nothing. With the x
+> geometry equal at t=0 and lower over the round, and knots ruled out, the
+> whole term has to live in the DEPTH the bombs land at.
+
 The one term (l) was left standing on has a measured cause, and it is a named
 rule difference that was read out of `Army.cs` rather than guessed.
 
