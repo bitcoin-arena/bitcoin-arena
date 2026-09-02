@@ -4010,7 +4010,11 @@ round, which is why testnet comes first and why the order is stricter.
      claim. That is the whole difference and it is not a matter of
      degree.
 
-     If it is ever built: the bound (`session_cap <= min bond / K`), the
+     If it is ever built: the per-node float cap (`sum of open balances
+     <= bond / K`, which is the one that binds - per-session capping
+     alone lets a popular node hold many multiples of its bond), the
+     session committee drawn by sortition and **never chosen by the
+     player**, the
      threshold-signed receipt after every round, withdrawal inside
      `withdraw_window`, refund on expiry, opt-in per node and visible in
      the client. Never balances across sessions, transfers between
