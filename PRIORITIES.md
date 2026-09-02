@@ -4010,6 +4010,17 @@ round, which is why testnet comes first and why the order is stricter.
      claim. That is the whole difference and it is not a matter of
      degree.
 
+     The part with no fix: there is **no unilateral exit** at this size.
+     Once the deposit settles, the sats are inside the committee's
+     Lightning node, not in a script a timelock can open. An on-chain
+     escrow would give a real one, and its closing fee exceeds a 100 sat
+     stake - the construction that fixes it is unaffordable at exactly
+     the size that wants it. So a player whose committee goes dark waits,
+     and slashing punishes the operator without returning a sat.
+
+     A `k`-of-`m` session committee does make one node going offline a
+     non-event, and that much must be built if it is ever built at all.
+
      If it is ever built: the per-node float cap (`sum of open balances
      <= bond / K`, which is the one that binds - per-session capping
      alone lets a popular node hold many multiples of its bond), the
