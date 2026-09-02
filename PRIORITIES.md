@@ -442,6 +442,38 @@ recording: test/vectors/csharp-army.json.
           it the truck drove through its own tanks. Neither the 2.5 m/s nor
           the 3.6 m was touched to manufacture a kill.
 
+          THAT LAST SENTENCE WAS AN INFERENCE WHEN IT WAS FIRST WRITTEN,
+          and checking it produced a wrong refutation before it produced a
+          proof. The check measured tank-to-truck-CENTRE distance and found
+          6.04-10.16 m at every one of the 98 encounters, which reads as
+          "armour was nowhere near" - but `resolveArmour` tests the truck's
+          TWO BODY CIRCLES, at +2.0 m and -1.8 m along the nose, not its
+          centre. Measured against the circles the rule actually uses, on
+          the episode all 98 ticks come from:
+
+            tick 4826   v 12.71   nearest tank 4.69 m from a circle   free
+            tick 4827   v 12.74                4.45 m                 free
+            tick 4828   v  2.17                4.24 m             CONTACT
+            tick 4829   v  1.96                4.24 m             CONTACT
+
+          Contact is 4.27 m. The truck is doing 12.74 m/s one tick and
+          2.17 m/s the next, at the moment a tank enters its front circle.
+          Armour is what stops it, the claim stands, and it now stands on a
+          measurement instead of on a plausible reading. It was the fifth
+          time in this letter that measuring a different quantity than the
+          rule uses produced a confident wrong answer.
+
+          AND A FINDING THAT FELL OUT OF IT, worth keeping: at tick 4828
+          `T_WHEEL` still read 12.78 while the velocity words already read
+          2.17. `resolveArmour` and `resolveSolids` correct `v.vx`/`v.vz`
+          and do NOT touch `v.speed`, so the wheel word carries the speed
+          the truck had BEFORE it hit something. Nothing in the simulation
+          reads it - it feeds the steering lock and the host's HUD - but it
+          is why choosing `length2(T_VX, T_VZ)` for run-over is right on
+          measured grounds and not only on the grounds that C# reads the
+          same pair: `T_WHEEL` would have ridden a man down with a truck
+          that had just been stopped dead by a tank.
+
           The rule is proved by a unit test instead of a drive - `a truck
           at speed rides a rifleman down, and a crawling one does not` -
           which kills at 12 m/s, kills at -12 m/s, and spares at 2.4 m/s
