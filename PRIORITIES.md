@@ -234,12 +234,34 @@ recording: test/vectors/csharp-army.json.
      and now draws one when nothing is in range. `dist/blwp-core.js` went
      with them or `bundle matches modules` stays red. No new state word.
      `sim.js:790` was NOT touched - that is (n).
-  n. The same overflow in the SCORING path - NOT STARTED, and it is not
-     (m)'s twin. `sim.js:790` reads `fromStart` through the same
-     unguarded `length2`, so the truck reads as standing on its start for
-     every x beyond about +81 m on a map that runs to +130 and whose
-     furthest corner is 249.3 m out. That is a BLWP outcome, not an army
-     number.
+  n. The scoring path vs the old game - NOT STARTED. Two halves, one
+     letter, and it is not done until BOTH are measured.
+
+     (1) The overflow. `earning` / `fromStart` still goes through
+     unguarded `length2` (named at `sim.js:790` when found; the call now
+     sits at the score step that feeds `earning()`). Past ~181.5 m the
+     sum of squares wraps and returns 0, so the truck reads as standing
+     on its start for every x beyond about +81 m on a map that runs to
+     +130 (furthest corner 249.3 m from the apron). The eastern third of
+     the field is inside the fault. That is a BLWP outcome, not an army
+     number. Axes-before-length2 is the same guard (m) put on the truck
+     tests. Host-`st.units` danger stays (e); do not drag it in.
+
+     (2) Exact old-game scores. Unity/C# `RunScore` was correct. Core
+     `runScore` / `scoreOf` / `earning` / exposure must produce the SAME
+     score as that old path on the SAME inputs - not "looks close", not
+     a green `ScoreTests` suite that never saw the C# number. Done means:
+     like-for-like, at least the known routes (idle/straight/slalom/
+     reverse/practice and a run that goes past +81 m), Core projected
+     score equals the old-game score to the integer. Print both. If the
+     overflow fix is in and the numbers still disagree, that disagreement
+     is still this letter - instrument, do not retune a threshold, do not
+     park it on (e) or (o).
+
+     PlayMode `ScoreTests` and Core tests named per suite. Golden
+     vectors move if the rule moves; `dist/` with them. Commit subject
+     says what is now true (the truck earns past +81 m, and the score
+     matches the old game), not `(n) closed`.
   i. The reload stagger - DONE, and the reason given for it was wrong.
      The spawn drew a staggered reload and threw it away on the next
      line: `U_TARGET = nextBelow(rng, 180)` and then `U_TARGET = -1`. The
