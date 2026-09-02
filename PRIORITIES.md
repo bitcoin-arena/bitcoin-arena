@@ -175,12 +175,17 @@ recording: test/vectors/csharp-army.json.
 
      Driving AT the infantry for a round: 18 men run down, the corridor
      holding up to 13 men and 0.92 on average, and never more than ONE man
-     inside the 3.6 m kill radius at a sample. So the two rules are not the
-     same size. `RunOver` is worth about 18 men - a tenth of the 180 on the
-     map - to a player who aims at them. `ClearPath` is what keeps that
-     number as low as 18: thirteen men can be in the corridor while at most
-     one is ever close enough to be killed, which is the rule easing them
-     out working, not the truck missing.
+     inside the 3.6 m kill radius at a sample. `RunOver` is worth about 18
+     men - a tenth of the 180 on the map - to a player who aims at them.
+
+     CORRECTED IN STEP 2 OF THE PORT: this entry went on to say that
+     `ClearPath` "is what keeps that number as low as 18", easing thirteen
+     men out of the corridor. It eases nobody out of anything. Its
+     corridor branch never runs - the only call is
+     `YieldTo(u, 0f, 0.9f, false, 1.6f)`, `stepsAside` false and `rate`
+     zero - so `halfWidth` 7.5 and `ahead` 26 are dead parameters in the
+     game they sit in. Why at most one man was ever inside 3.6 m is
+     unexplained by that rule and stays unexplained here.
 
      It took three runs to get a number, and the two failures are the same
      failure this project keeps finding. The first drove with
@@ -301,11 +306,50 @@ recording: test/vectors/csharp-army.json.
           after it are new. `setArmour` and `setUnits` go with it, and
           `UploadArmour` with them; that is the per-tick host input gone
           and the round replayable, which is the sentence M1 exists for.
-       2. Path-clearing. BEFORE run-over, and that order is measured, not
-          aesthetic: up to 13 men stand in the corridor while at most one
-          is ever inside the 3.6 m kill radius. Port run-over first and
-          those thirteen become kills, so the game would get a slaughter
-          this one never had, and it would look like the port working.
+       2. DONE. Path-clearing, and it is a smaller rule than this list
+          thought. `ClearPath` looks like a corridor rule and is not: its
+          anticipatory branch is never called, so what it does is push a
+          rifleman back out to 1.6 m if he is inside it, and nothing else.
+          The corridor was NOT ported - porting a branch the old game never
+          executes would move an envelope for no reason anybody could
+          defend later.
+
+          Measured, 8 seeds, truck driven AT the nearest living rifleman
+          for 90 s each - straight ahead is z ~ 10 and meets nobody, which
+          is how step 2's first PlayMode run got a tidy zero:
+
+                                    before        after      C# recording
+            penetration, total      1773.3 m      0.000 m       0.000 m
+            deepest single          1.590 m       0.000 m       0.000 m
+            man-ticks over 2 cm     3253          0             0
+
+          The core and the C# game now agree exactly on the quantity this
+          rule owns, and they agree at zero. The depth is the honest
+          measure and a count is not: the push lands a man ON the 1.6 m
+          boundary and fixed point rounds him a hair inside it, so "men
+          within 1.6 m" only fell 3340 to 2770 and would have read as a
+          rule that half works.
+
+          Placed after the whole army step, which is where `Battlefield`
+          calls it - `Army.Update` at :105, `RunOver` at :144, `ClearPath`
+          at :153. Run-over goes immediately above it in step 3; clearing
+          first would move the men out of the wheels before the wheels
+          were asked who was under them. Infantry only, as in C#, and for
+          C#'s own reason: `resolveArmour` already pushes the TRUCK out of
+          the tanks, and two systems arguing over one overlap have no
+          radius that satisfies both. The radius is derived, not typed -
+          16 ONE over 10 - and no PhysX quantity is read: the truck's own
+          position is the only input, never `linearVelocity`, which is
+          permanently zero on a kinematic body and is the trap that made
+          run-over silent once already.
+
+          Only `handbrake` moved of the six vectors, which is the only one
+          that ends among infantry. `st.armour.n` stays 15-24, so the
+          truck still does not drive through its own tanks.
+
+          Counted separately: Core 47/47, guard 19 files clean, node vs
+          bundle-node identical, stage 0 PASS. EditMode 124/123/1.
+          PlayMode 176/164/2/10.
        3. Run-over. Sized at 18 men a round against a driver who aims at
           them, and that is the number the port is accepted against - as
           an envelope over seeds, not as a target to hit once.
@@ -2766,12 +2810,36 @@ rifle flash, and like it they wait for (e) rather than blocking M1.
 
 **And two load-dependent flakes, which are not failures at all.**
 `TheGogglesAnimate` item 1 already documents - it fails under load and passes
-alone. `HeatRaisesTheExposureRate` behaves the same way and is written down
-here so the next reader does not spend a turn on it: it came up red once during
+alone. `HeatRaisesTheExposureRate` behaved the same way and was written down
+here so the next reader did not spend a turn on it: it came up red once during
 (j), was reported as a regression caused by the rifle rule, and a second run of
 the SAME tree and the SAME code passed it. Causation was inferred from a single
 run of a suite already known to carry flakes. Anything red in PlayMode gets a
 second run before it is called a regression.
+
+**`HeatRaisesTheExposureRate` is no longer allowed to sit here as a flake, and
+it is now instrumented rather than excused.** A flake is a thing nobody has
+measured. The test drives the truck along the seam for 1.5 s of WALL time, one
+iteration per frame, sampling `_score.Rate`, so the obvious suspicion was that
+a loaded run gets fewer and larger steps. It prints `HEATRATE` now, and the
+suspicion is wrong:
+
+    run           hot     frames   mean delta
+    alone         1.148     335      0.0045
+    full suite    1.708     312      0.0048
+
+Nearly the same frame count, and the peak is HIGHER under load, not lower.
+Both are clear of the threshold of 1. It cannot be reproduced with the
+instrument in place; the numbers are recorded so that a future red has
+something to be compared against instead of being called a flake a third time.
+
+**The two Visibility reds now have their reason printed, and it is not ours.**
+`ArmiesAreActuallyDrawn` fails on `Unhandled log message: '[Error]
+RenderTexture.Create failed'` and `RoadsAreActuallyDrawn` on "die Strassen
+veraendern nur 0.00% des Bildes" - both are a batch run with `-nographics`
+having no graphics device to render into. The dependency is a graphics device,
+not a code change: they cannot pass in this loop and they are not evidence of
+anything about the core. Listed here by name, with cause, as required.
 
 ---
 
