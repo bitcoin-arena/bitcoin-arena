@@ -202,6 +202,54 @@ recording: test/vectors/csharp-army.json.
      before the deletion: `st.armour` built in `step()`, run-over, and
      path-clearing.
 
+     STEP 3 - the port order, and it is dictated by the measurements
+     rather than by taste. Each step is a rule change, so each moves the
+     golden vectors and `dist/` with them, and each is its own commit.
+
+       1. `st.armour` inside `step()`. Today it is 0 at every tick of
+          every vector and the truck drives through twenty-four of its own
+          tanks. FIRST because it is the only one the game currently gets
+          from Unity - porting it is restoring a behaviour, and the two
+          after it are new. `setArmour` and `setUnits` go with it, and
+          `UploadArmour` with them; that is the per-tick host input gone
+          and the round replayable, which is the sentence M1 exists for.
+       2. Path-clearing. BEFORE run-over, and that order is measured, not
+          aesthetic: up to 13 men stand in the corridor while at most one
+          is ever inside the 3.6 m kill radius. Port run-over first and
+          those thirteen become kills, so the game would get a slaughter
+          this one never had, and it would look like the port working.
+       3. Run-over. Sized at 18 men a round against a driver who aims at
+          them, and that is the number the port is accepted against - as
+          an envelope over seeds, not as a target to hit once.
+       4. The truck's health, and it needs a DECISION rather than a port.
+          The two owners are on different scales: the game divides by
+          `armour` 1.5 and the core does not divide at all. One of them is
+          wrong and this file does not get to pick silently. Whichever
+          way it goes, `T_HP` becomes the only copy and `TruckHealth`
+          reads it, `Bootstrap.cs:194` stops feeding `Damage` from
+          `CourierHit`, and `BlwpCore.TruckHealth` gets its first
+          consumer.
+       5. Only then the deletion: `Army.cs`, the `Bootstrap` wiring, the
+          reference recorders.
+
+     WHAT THE DELETION COSTS, counted. `EditMode/ArmyTests.cs` is 51 tests
+     that are about nothing but `Army` and go with it; the two reference
+     recorders and the gunship one are 3 more. That is 54 gone outright.
+     Six further files hold 99 tests that touch `.Army` while being about
+     something else - VehicleTests 18, CombatFxTests 24, BlwpBridgeTests
+     28, TruckHealthTests 15, FeatureTests 12, VisibilityTests 2 - and
+     those need auditing one by one, not deleting.
+
+     AND THE PART WITH NO ROUTE YET, named rather than discovered later:
+     after step 5 there is no way to record a C# quantity again, and there
+     is also no way to run the core in the editor - `BlwpCore` is stubbed
+     outside WebGL. So from step 5 on, PlayMode can only test a game whose
+     outcomes come from a core it cannot see, and the core's only guard is
+     the node suite and the vectors. Every C# number this project will
+     ever want must be recorded BEFORE step 5. Steps 0-2 took the three
+     that were named; whether that is all of them is not established, and
+     that question belongs before step 1 of the port, not after.
+
   f. The infantry line, recorded - DONE.
      `test/vectors/csharp-infantry.json`, three passes in one Unity run.
      The two line passes reproduce `csharp-army.json` to the digit, which
