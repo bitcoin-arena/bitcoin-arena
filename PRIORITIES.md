@@ -661,24 +661,32 @@ recording: test/vectors/csharp-army.json.
        7. The halt. `restFor` / `nextRest` and the gait wave, so a man
           stops now and then and no two are in step.
        8. Pace and height per man.
-       9. OPEN DEFECT, found while auditing the crash rule and not
-          explained. `T_IMPACT` is a max-accumulator written only at
-          `sim.js:656` and cleared only by the host, and over a 60 s
-          full-throttle run it reaches 178-201 m/s - about ten times the
-          truck's own top speed. Its successive record-highs rise in steps
-          of at most 0.59 m/s, so the escalation is gradual rather than one
-          bad tick. Synthetic contact does NOT reproduce it: one tank
-          head-on gives exactly the truck's speed at every separation from
-          4 m down to 1 mm, and a 45-degree normal gives 7.07 for a truck
-          at 10. Suspect, unverified: `resolveArmour` rewrites `v.vx`/
-          `v.vz` inside its own loop, so a second contact in the same tick
-          works from an already-corrected velocity, and the normal is
-          `div(dx, d)`, which is not a unit vector once `d` is small.
-          It matters because the crash rule reads the per-tick `v.impact`:
-          in those runs the truck loses 24-31 points to contact in a
-          minute and is never written off, so nothing observed is wrong
-          yet - but a rule that prices a speed is being handed numbers
-          that are not the truck's speed.
+       9. STATE-LAYOUT DEFECT, FOUND: `T_IMPACT` and `S_EXPOSURE` are the
+          SAME WORD. `O_TRUCK` is 5 and its fields run 0..12 - thirteen
+          words - while the block is declared as twelve and `O_SCORE`
+          starts at 17. So `O_TRUCK + T_IMPACT` and `O_SCORE + S_EXPOSURE`
+          are both word 17, and `sim.js:656`'s
+          `if (v.impact > s[T + T_IMPACT]) s[T + T_IMPACT] = v.impact`
+          overwrites the run's EXPOSURE whenever a contact exceeds it.
+          `accrue` then carries on from the clobbered value, and the host's
+          `TakeImpact` and `BlwpCore.Exposure` read whichever was written
+          last. This is a score corruption, not a cosmetic overlap, and it
+          predates this session.
+
+          It is what the 178-201 m/s reading was: exposure, which climbs
+          steadily, not an impact, which cannot exceed the truck's own
+          speed. The crash rule is NOT affected - it prices the local
+          `v.impact` and never the word - and that was measured rather than
+          argued: clamping the impact to `|v|` changes the damage by
+          nothing at all, 18.5 / 28.4 / 24.3 points in sixty seconds either
+          way, with no write-off in either. The inflated word carries 0 of
+          those 18.5-28.4 crash points.
+
+          NOT PATCHED HERE. The fix is to give the truck its thirteenth
+          word, which moves `O_SCORE`, `O_UNITS` and everything after it -
+          every golden vector, `dist/`, and the `BlwpCore.Layout` mirror on
+          the Unity side. That is a protocol change and it wants its own
+          go.
 
      RED, EACH WITH ITS DEPENDENCY:
        DamageIsFeltInTheDriving          -> line 2 above
