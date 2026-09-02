@@ -264,6 +264,55 @@ recording: test/vectors/csharp-army.json.
      `DeliveryGate` on the core's own run state. Deployable is still NO,
      because nothing draws or sounds a shot - that is item 7.
 
+     BOTH ENGINES COMPARED AGAIN ON THE CLOSING TREE, because everything
+     above is one round and the last army comparison predates `restart`,
+     the delivery edge, the write-off and the missed block. `rules/` and
+     `test-vectors/` are untouched since then and the golden vectors are
+     green, so the stepping is byte-identical to the recording's core - but
+     that is a reading, so it was measured. `measure-army.js` now has a real
+     `--airoff` (the sortie clocks pinned through `O_AIR`, the way the state
+     actually holds them) instead of only being able to load a pre-air core
+     and call the difference "the air". Eight seeds, seam0:
+
+       t          Panzer-x-Streuung        Aufz.   drin?
+       15s        [25.5, 39.9] Ø 32.3       39.0    ja
+       30s        [31.6, 42.1] Ø 38.1       38.9    ja
+       60s        [29.2, 52.7] Ø 42.1       38.8    ja
+       90s        [33.9, 49.6] Ø 40.0       34.8    ja
+
+       t          Feinde in 46 m           Aufz.   drin?   lebend Core / Aufz.
+       15s        [3.89, 6.67] Ø 4.74       3.91    ja      [18, 23] / 22
+       30s        [1.70, 4.00] Ø 2.60       2.84    ja      [19, 21] / 19
+       60s        [1.58, 4.10] Ø 2.48       2.70    ja      [19, 21] / 20
+       90s        [1.58, 3.11] Ø 2.46       1.70    ja      [18, 21] / 20
+
+     Churn at t=90: lost [57, 62] mean 59.1, arrived [51, 57] mean 54.6
+     against the recording's 59/55 - both inside. Score, separately: 7 of 7
+     routes identical, 58342 of 58344 combinations agree, worst gap 1 point.
+
+     AND A SWEEP OF THE PLAYER PATH: no `new Army(` anywhere, `Army.Update`
+     has no caller, the C# army is never built.
+
+     THREE PRESENTATION READERS ARE FED BY A DEAD PHYSX VALUE. Not outcomes,
+     so not 2e, but a measured consequence of the cutover and not to be left
+     silent: the truck's body is kinematic in every sample, so
+     `_rb.linearVelocity` is 0 for good, and
+
+       GameAudio.cs:91    revs follow `_body.linearVelocity` - the engine note
+                          now rises with the throttle alone, never with road
+                          speed
+       GameAudio.cs:105   the skid needs `truck.Slip`, which is 0
+       ChaseCamera.cs:279 the camera's lead is `targetBody.linearVelocity`, so
+                          it always takes the "below walking pace" branch and
+                          never leads the truck
+       DriveHud.cs:1069   the diagnostics panel prints Tempo and Drift off the
+                          same body - the MAIN readout is fine, it reads
+                          `BlwpCore.TruckSpeed`
+
+     The core already publishes what all four want: `BlwpCore.TruckSpeed`.
+     One-line source swaps, and they belong with item 7, which owns the
+     sound and the effects.
+
      NEW ITEM, NOT PART OF 2e - THE CARGO NEVER REACHES THE CORE. Found
      while answering whether `RunScore` filters a core quantity. It does
      not: `Exposure` and `Projected` read the core unconditionally. But the
