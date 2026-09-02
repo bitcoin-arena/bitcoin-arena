@@ -60,7 +60,7 @@ their names, so any plate size read at wiring time can describe something
 that no longer exists. Every display is re-fitted against the mesh that
 is there now.
 
-## 2. The army into the core  -  M1  -  IN PROGRESS (l, m, j, i, n, o, e closed; p, q, r open)
+## 2. The army into the core  -  M1  -  IN PROGRESS (l, m, j, i, n, o, e closed; q, then p, then r open)
 
 The last thing standing between here and M1.
 
@@ -1297,60 +1297,47 @@ recording: test/vectors/csharp-army.json.
      that were named; whether that is all of them is not established, and
      that question belongs before step 1 of the port, not after.
 
-  p. `Army.Wrecks` / `AvoidWrecks` in the core - NOT STARTED, AND THE
-     RECORDING CANNOT VALIDATE IT. `ArmyReferenceTests` builds no
-     `CombatFx`, and `Army.Wrecks` is filled ONLY by
-     `CombatFx.ClaimWreckSlot` - so `AvoidWrecks` returned on its first
-     line at every tick of every recorded pass. Porting it moves the core
-     AWAY from a recording that currently sits inside the envelope on
-     armour x-spread, density, alive and churn, not toward it.
+  q. The infantry's halt and pace per man - NEXT, AND IT IS THE WHOLE OF
+     THE REMAINING GAP. `restFor` / `nextRest` and the gait wave.
 
-     Re-measured on this tree, `tools/measure-wrecks.js`, 8 seeds, air
-     pinned, seam0. The old note said "4.67 units within 3 m", which is
-     neither of C#'s two reaches: `AvoidWrecks` pushes armour out with size
-     3.2 and infantry with 0.6 against a 4.2 m hull, so the reaches are 7.4
-     and 4.8 m, and a hull lives 25 s (`CombatFx` piece life).
+     Infantry z-spread, eight seeds, air pinned, seam0, both sides, against
+     `core-size-reinforce`:
 
-       wrecks in 90 s                     [55, 60]      mean 56.6
-       living unit-ticks inside a hull    [9.0, 14.6]%  mean 12.5%
+       t          core                      recording      inside?
+       15s        [0.90, 1.20]  mean 1.09    4.3 / 4.4      NO
+       30s        [3.00, 17.40] mean 9.47   11.7 / 13.7     yes
+       60s        [10.00, 21.50] mean 16.27 13.6 / 14.2     yes
+       90s        [4.70, 21.20] mean 12.25   6.7 / 20.6     yes
 
-     So the rule could move about an eighth of the army's unit-ticks - it
-     is not marginal - but that is its REACH, not a share of any measured
-     gap. Against the recording its share is zero, because the recording
-     never ran it.
+     One mark. The men march in lockstep through the first fifteen seconds
+     at about a quarter of the recorded spread, and spread decides who is
+     inside a 16 m blast. Armour x-spread, density, alive and churn are
+     inside the envelope at all four marks, so this is the entire distance
+     left between the core's army and the recording. The old 1.04 / 1.04 /
+     33.41 / 25.36 predates `Separate`, the x-chase, the crash rule and the
+     layout fix and does not hold on this tree.
 
-     The hull impact, read from the code rather than the note: the literal
-     `impact * 3f` never existed in C#. `TruckHealth.OnCollisionEnter`,
-     deleted in `d7a3002`, charged a `BurntOutHull`
-     `relativeVelocity.magnitude * 3f` and never a write-off, against
-     `* 6f` with one for a live tank. Driven bound, same 8 seeds, full
-     throttle, 90 s: 3 to 15 hull contacts a run, peak closing speeds to
-     15.0 m/s, and at C#'s price 11.6 to 141.0 points against a 100-point
-     truck. Material for the truck, not for the army - and an UPPER bound,
-     because it assumes the truck's path is unchanged when a hull it can
-     now drive through would deflect it.
-  q. The infantry's halt and pace per man - NOT STARTED, AND IT IS THE
-     WHOLE OF THE MEASURED GAP. `restFor` / `nextRest` and the gait wave.
+  p. `Army.Wrecks` / `AvoidWrecks` in the core - NOT STARTED, AND ITS
+     SHARE OF THE MEASURED GAP IS ZERO. `Army.Wrecks` is filled only by
+     `CombatFx.ClaimWreckSlot`, and `ArmyReferenceTests` builds no
+     `CombatFx` - so `AvoidWrecks` returned on its first line at every tick
+     of every recorded pass. Porting it would push armour x-spread,
+     density, alive and churn OUT of an envelope they sit inside.
 
-     The old numbers - 1.04 / 1.04 / 33.41 / 25.36 against 4.33 / 11.66 /
-     14.22 / 20.55 - predate `Separate`, the x-chase, the crash rule and
-     the layout fix, and no longer hold. Re-measured on this tree, 8 seeds,
-     air pinned, seam0, both sides, against `core-size-reinforce`:
+     Its reach, for when it is taken up as a rule of the live game rather
+     than as a distance to the recording: 55-60 hulls in ninety seconds,
+     and 9.0-14.6% (mean 12.5%) of living unit-ticks standing inside one.
+     C#'s reaches are 7.4 m for armour and 4.8 m for infantry against a
+     4.2 m hull that lives 25 s - not the 3 m an earlier note used.
 
-       t          Core-Huelle            Aufzeichnung     drin?
-       15s        [0.90, 1.20]  Ø 1.09    4.3 / 4.4       NEIN
-       30s        [3.00, 17.40] Ø 9.47   11.7 / 13.7      ja
-       60s        [10.00, 21.50] Ø 16.27 13.6 / 14.2      ja
-       90s        [4.70, 21.20] Ø 12.25   6.7 / 20.6      ja
-
-     The over-spread later is GONE - the envelope covers the recording at
-     30, 60 and 90 s. What is left is one mark: the men still march in
-     lockstep through the first fifteen seconds, at about a quarter of the
-     recorded spread, and spread decides who is inside a 16 m blast.
-
-     THAT ONE MARK IS THE ENTIRE REMAINING DISTANCE between the core's army
-     and the recording. Everything else - armour x-spread, density, alive,
-     churn - is inside the envelope at all four marks.
+     The hull impact belongs with it and is the half that costs something.
+     `TruckHealth.OnCollisionEnter`, deleted in `d7a3002`, charged a
+     `BurntOutHull` `relativeVelocity.magnitude * 3f` and never a
+     write-off, against `* 6f` with one for a live tank; the literal
+     `impact * 3f` never existed in any .cs file. Driven, eight seeds: 3 to
+     15 contacts a run, 11.6 to 141.0 points against a 100-point truck - an
+     upper bound, because a hull that deflects is not a hull driven
+     through. A truck cost, not an army gap.
 
   r. The tank's turret has no aim in the core - NOT STARTED. `StepArmour`
      traverses `turretYaw` in world space, independent of the hull. The core
@@ -2065,7 +2052,9 @@ recording: test/vectors/csharp-army.json.
      is 2104 against 1286, so it is ABOVE the recording rather than short;
      that is inside the band and is recorded here rather than smoothed.
 
-  Order: f, g, h, k, l, m, j, i (all done), then n, o, then e.
+  Order: f, g, h, k, l, m, j, i (all done), then n, o, then e (all done),
+  then q, then p, then r. The measurement set that order, not the letters:
+  (q) is the whole remaining gap and (p)'s share of it is zero.
 
 ### What the measurements say, and what they cost
 
