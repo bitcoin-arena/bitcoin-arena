@@ -186,7 +186,18 @@ recording: test/vectors/csharp-army.json.
           point and it is the PRICE of this step, stated rather than
           hidden: no muzzle flashes, no tracers, no corpses until the core
           reports its shots.
-       5. `Army.cs` is NOT deleted here. It stops being built and stops
+       5. VERIFIED AFTER THE CUTOVER, because it would have been expensive
+          to find out later: the three reference recorders still run and
+          still reproduce the stored recordings to the digit -
+          `MeasureTheArmy`, `MeasureTheInfantry`, `MeasureTheGunships`,
+          3 of 3 green, and every field that existed before came back
+          unchanged in all 19 `core-size-reinforce` rows and all 18 courier
+          rows. They build their own `Army`, so `Bootstrap` no longer doing
+          it costs them nothing. The tape is reachable and what the C#
+          army DOES is untouched; only who builds, ticks and draws it
+          changed.
+
+          `Army.cs` is NOT deleted here. It stops being built and stops
           being ticked in the player scene, and survives as the reference
           recorders' subject - every C# number the project will ever want
           has to be on tape before the file goes.
