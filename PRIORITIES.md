@@ -86,7 +86,47 @@ recording: test/vectors/csharp-army.json.
      seventeen published quantities overlap; the two that do not are
      both the GROUND line's doing and are named under "The air arm"
      below.
-  e. Delete the C# army; Unity renders from core state only - NOT STARTED.
+  e. Delete the C# army; Unity renders from core state only - MEASURED,
+     not started as a cutover.
+
+     WHO OWNS THE SCREEN, read off the player path and not off a test:
+     the picture is C#. `ArmyRenderer` holds a `public Army army` and walks
+     `army.Armour` and its soldier lists; it names `BlwpCore` nowhere.
+     `BlwpCore.UnitAt(i)` exists and has NO caller - the only readers of
+     `BlwpCore.State` are `CoreDrivenTruck` for the truck's transform and
+     `DriveHud` for a diagnostics panel. And `Battlefield.Update` calls
+     `Army.Update(dt)` unconditionally whenever `Army != null`, with no
+     gate on whether the core is driving.
+
+     So two armies run and neither can see the other. Since `c6cc689` took
+     `UploadArmour` out, the C# army feeds the core nothing at all: the
+     player watches an army that decides no outcome, while the truck is
+     shot at and blocked by an army nobody draws. The cutover is therefore
+     RENDERER PLUS OFF-SWITCH - point `ArmyRenderer` at core state and stop
+     stepping `Army` - and not a rules port.
+
+     WHAT IS STILL MISSING FROM THE DRAWN ARMY, each with its own number
+     and split by whether it moves an outcome:
+       - `Army.Wrecks` / `AvoidWrecks` - OUTCOME, and large. 54 tank
+         wrecks in ninety seconds, with 4.67 living units per tick standing
+         within 3 m of one. Every one of those would be pushed out.
+       - The halt and pace per man - OUTCOME, and this corrects an earlier
+         reading of mine that called them texture. Infantry z-spread,
+         core against the recording: 1.04 / 1.04 / 33.41 / 25.36 against
+         4.33 / 11.66 / 14.22 / 20.55 at 15 / 30 / 60 / 90 s. The core
+         marches in lockstep for the first half-minute and over-spreads
+         later. Spread decides who is inside a 16 m blast.
+       - Facing - RENDER. Nothing in the core reads a heading for an
+         outcome, though it is in the state hash and so is protocol.
+       - The apron protection - NOTHING. A truck parked in the bay takes
+         zero damage over thirty seconds on three seeds; the army never
+         reaches it. `IsInvulnerable` guards against something the core
+         does not do.
+     Left alone as instructed: the army reading `T_HP`, and the Heat
+     scaling.
+
+     CARRIES A FINDING FROM (j) - CLOSED. Truck health had two owners; it
+     has one now, the core, since `d7a3002`.
      CARRIES A FINDING FROM (j): truck health now has two owners that
      disagree. The core sets `S_STATE` to 2 as soon as its own `T_HP`
      reaches zero - measured at t=13.9 s with the truck parked in the
