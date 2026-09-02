@@ -20,6 +20,19 @@ none of it should be started while item 2 is open. M2 needs stage 3
 (`blwp-node`) before it can begin at all, and starting a lobby on top of
 a simulation that still disagrees with the game is work built on sand.
 
+**Governance code is tested to 100%, and it is the only thing here that
+is.** Everything to do with voting, consensus and forks - proposals, the
+tally, thresholds, turnout, schedules, bond re-affirmation, the fork
+certificate chain - must have full branch coverage before it ships, with
+the adversarial cases written as tests and not as comments.
+
+The reason it is singled out: **a governance bug cannot be fixed by
+shipping a fix.** A wrong tally that activates a config is not a crash you
+patch and redeploy - the network has already moved, the change is live,
+and the mechanism you would use to undo it is the one that just proved it
+does not work. Every other bug in this repo costs a session. A miscounted
+threshold costs the network. Details in M3.1B.
+
 The rule that has cost the most time here, written down so it is not
 learned a fourth time: **when a number does not move across several
 attempts, stop forming hypotheses and print what the code is actually
@@ -3840,10 +3853,42 @@ round, which is why testnet comes first and why the order is stricter.
 
 ## M3.1B  Governance                                stage 5
 
- 9b. **Bond-weighted median for the scalars** (spec 27A.2): node fee and
-     its role split, `bond_min` per bracket, the bracket table, and the
-     difficulty defaults - `E_reference`, corridor width, the `T` clamps,
-     `min_score`, `K`, `r`.
+ 9a. **100% coverage is the entry condition for this whole section**, not
+     a follow-up task. Nothing in M3.1B ships on partial coverage, and
+     "it works on regtest" is not evidence - regtest is two nodes that
+     agree, which is the case that never fails.
+
+     Full branch coverage on: the median, the tally, turnout and approval
+     arithmetic, every phase boundary, proposal validation, `parent`
+     chaining, deposit and its cap, re-affirmation, and certificate-chain
+     walking.
+
+     The adversarial cases are tests, each one named for what it prevents:
+
+     - a vote arriving one block after the window closes
+     - a vote from a bond created after `vote_census_height`
+     - two votes from one bond in the same block (lower txid wins)
+     - a changed vote at the last height (last wins)
+     - abstentions counting for turnout and not for approval
+     - turnout met, approval missed, and the reverse
+     - exactly on each threshold, and one weight either side of it
+     - two proposals with the same `parent`, both passing
+     - a proposal activating with a stale `parent`
+     - `activation_height` before the cooldown ends
+     - a repeal whose config is not byte-identical to an ancestor
+     - a fork certificate with a vote proof that is not in a block
+     - a certificate chain that does not reach the client's built-in root
+     - a bond that never re-affirmed, counted in the successor census
+
+     Property tests where the shape allows it: the tally is a pure
+     function of chain state, so the same height must always give the
+     same result, and no ordering of the same votes may change it.
+
+ 9b. **Bond-weighted median for the self-binding scalars** (spec 27A.2):
+     `bond_min` per bracket and `proposal_deposit_sats`. **Not** the node
+     fee and not the bracket set - those moved to the ballot in v4.6.2,
+     because a fee paid by players and declared by its recipients is a
+     take rate, not a discovered price.
 
      No proposals, no voting window, no quorum, no tally. Each node
      declares its preference in its advertisement and the value in force
@@ -3852,6 +3897,26 @@ round, which is why testnet comes first and why the order is stricter.
 
      Needs the census, so it cannot come before M3.1. Nothing to build in
      M2: without bonds there is no weight.
+
+ 9d. **Config proposals and the ballot** (27A.7). The proposal object with
+     the full config and its `parent`, `OP_RETURN` votes signed by the
+     bond key, the chain-state tally, the DESIGN and MONEY classes, the
+     1008/1440/2016 schedule, activation, and `config_hash` on the Round
+     Contract so a running round keeps its own rules.
+
+     Build the tally as a **pure function of (chain height) -> result**
+     with no I/O in it. That is what makes 9a's property tests possible
+     at all, and it is far harder to retrofit than to start with.
+
+ 9e. **Hard forks** (27A.8). The fork certificate, `network_id` as a
+     chain, UPGRADE at 51/66 on 2016/2016/4320, opt-in bond
+     re-affirmation, and the client walking a certificate chain back to
+     its compiled-in root.
+
+     Do this on regtest with two networks, ancestor and successor, both
+     running - because the property that matters is that the ancestor
+     **keeps working** for an operator who refused the fork, and a test
+     that only checks the successor cannot see it.
 
  9c. **`bond_min` notice period and operator escalation** (27A.3, 5A.10B).
      A rise takes effect only after `notice_period`; a fall immediately.
