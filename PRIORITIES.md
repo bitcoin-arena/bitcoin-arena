@@ -99,8 +99,12 @@ recording: test/vectors/csharp-army.json.
      seventeen published quantities overlap; the two that do not are
      both the GROUND line's doing and are named under "The air arm"
      below.
-  e. Delete the C# army; Unity renders from core state only - MEASURED,
-     not started as a cutover.
+  e. Delete the C# army; Unity renders from core state only - DONE.
+     The C# army is not built, not stepped and not drawn. Position,
+     damage, enemies and delivery all come FROM the core, each with a named
+     reader, and the picture was proved in a browser rather than argued.
+     What is left over is presentation and has its own lines: item 7
+     (CombatFx and the combat audio) and (r) the turret.
 
      WHO OWNS THE SCREEN, read off the player path and not off a test:
      the picture is C#. `ArmyRenderer` holds a `public Army army` and walks
@@ -1049,6 +1053,11 @@ recording: test/vectors/csharp-army.json.
      11.66 / 14.22 / 20.55 at 15 / 30 / 60 / 90 s - the core marches in
      lockstep for half a minute and over-spreads later, and spread decides
      who is inside a 16 m blast. Outcome, not texture.
+
+  r. The tank's turret has no aim in the core - NOT STARTED. `StepArmour`
+     traverses `turretYaw` in world space, independent of the hull. The core
+     carries no turret, so after the cutover a turret follows its hull -
+     true, but not what the game did. Presentation, like item 7's flashes.
 
   f. The infantry line, recorded - DONE.
      `test/vectors/csharp-infantry.json`, three passes in one Unity run.
@@ -3456,6 +3465,15 @@ the modules with only `bundle.test.js` hashing to catch it. Widen the
 check to every top-level declaration. Written up under item 2.
 
 ## 7. The red and flaky Unity tests  -  no milestone  -  small
+
+**And since (e), the combat audio hangs on the same hook.** `Bootstrap` wired
+the cannon, the rifle, the destroyed hull and the hit to `Fired`, `Shot`,
+`Destroyed`, `Killed` and `Bombed` - events of the C# army, which no longer
+runs. The core raises none of them, so a shot is neither drawn nor heard. That
+is one dependency, not two: whatever lets CombatFx see the core's shots lets
+the audio hear them. It is the reason (e) is closed and the game is still not
+deployable.
+
 
 Found while running the EditMode suite in batchmode to reach (l)'s
 recorder, and NOT pulled into (l) or fixed there:
