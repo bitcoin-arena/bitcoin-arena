@@ -661,17 +661,31 @@ recording: test/vectors/csharp-army.json.
        7. The halt. `restFor` / `nextRest` and the gait wave, so a man
           stops now and then and no two are in step.
        8. Pace and height per man.
-       9. STATE-LAYOUT DEFECT, FOUND: `T_IMPACT` and `S_EXPOSURE` are the
-          SAME WORD. `O_TRUCK` is 5 and its fields run 0..12 - thirteen
-          words - while the block is declared as twelve and `O_SCORE`
-          starts at 17. So `O_TRUCK + T_IMPACT` and `O_SCORE + S_EXPOSURE`
-          are both word 17, and `sim.js:656`'s
-          `if (v.impact > s[T + T_IMPACT]) s[T + T_IMPACT] = v.impact`
-          overwrites the run's EXPOSURE whenever a contact exceeds it.
-          `accrue` then carries on from the clobbered value, and the host's
-          `TakeImpact` and `BlwpCore.Exposure` read whichever was written
-          last. This is a score corruption, not a cosmetic overlap, and it
-          predates this session.
+       9. STATE-LAYOUT DEFECT - FIXED. `T_IMPACT` and `S_EXPOSURE` were
+          the same word: `O_TRUCK` is 5 with fields running 0..12 while the
+          block was declared as twelve, so both landed on word 17 and every
+          contact that beat the exposure so far overwrote the run's score
+          with a collision speed. The offsets are DERIVED from the block
+          sizes now, and `no two blocks share a word` walks them - which
+          immediately found a second one, `S_PRACTICE` as field 6 of a
+          six-word score block. Truck 5-17, score 18-24, units from 25.
+          `BlwpLayout.cs` is generated from `state.js`, so both mirrors
+          moved together, and nine hand-typed copies of the offsets in the
+          test file are imports now.
+
+          After: `T_IMPACT` reads 0.00 where nothing was hit and
+          `S_EXPOSURE` reads 205.0 / 187.8 / 179.1 - exactly what used to
+          be read out of word 17 and reported as an impact of 178-201 m/s.
+          The score against the old game is unmoved: 7 of 7 routes
+          identical, 58342 of 58344 swept.
+
+          CORRECTED WITH IT, and it was mine: the previous entry said
+          clamping the impact changed nothing across "18.5 / 28.4 / 24.3
+          crash points". Those are not crash points. `T_IMPACT` is 0 at
+          every tick of those runs - a truck driving straight out of the
+          bay never gets a CLOSING contact - so the crash rule never fired
+          and the A/B compared two runs in which it could not. The points
+          are gunfire. The rule's guard is the unit test, which does fire.
 
           It is what the 178-201 m/s reading was: exposure, which climbs
           steadily, not an impact, which cannot exceed the truck's own
@@ -689,7 +703,8 @@ recording: test/vectors/csharp-army.json.
           go.
 
      RED, EACH WITH ITS DEPENDENCY:
-       DamageIsFeltInTheDriving          -> line 2 above
+       DamageIsFeltInTheDriving          -> the rule is in the core now;
+         red because PlayMode has no core to read condition from
        CrashingIntoArmourWritesItOff     -> its assertion now lives in the
          core suite and is green there; the PlayMode case cannot pass while
          `BlwpCore` is stubbed outside WebGL, so nothing applies condition
