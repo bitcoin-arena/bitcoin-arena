@@ -3667,15 +3667,37 @@ Nothing here starts while item 2 above is open.
          contract.
        - `required_protocol_version`, against the
          `supported_protocol_versions` already in the advertisement.
+       - **`config_hash`** (27A.7.5). The `game_config` the round runs
+         under, so a round created before an activation keeps its own
+         rules to the end. Nothing uses it until M3.1B and it cannot be
+         added afterwards.
 
-     > **Generate the donation authority and recovery keypairs before the
-     > first daemon runs, and put the recovery key in cold storage then.**
+     > **Decide `genesis_parameters` and generate the donation authority
+     > and recovery keypairs before the first daemon runs, and put the
+     > recovery key in cold storage the same day.**
      >
-     > `network_id = H(genesis || authority_pubkey || recovery_pubkey)`,
-     > so introducing the keys later changes the network identity - and
+     > ```
+     > network_id = H( genesis_parameters
+     >              || authority_pubkey || recovery_pubkey
+     >              || predecessor            // 0 at genesis
+     >              || fork_certificate_hash ) // 0 at genesis
+     > ```
+     >
+     > Introducing any of it later changes the network identity - and
      > every bond posted before that becomes worthless, its capital
-     > timelocked and its census entry void. The keys are not used until
-     > M3.2. They must exist in M2.1.
+     > timelocked and its census entry void. None of it is *used* before
+     > M3. All of it must *exist* in M2.1.
+
+     `genesis_parameters` is a block, not a word (27A.6), and settling it
+     means settling all of: `chain`, committee slots and thresholds per
+     role, `census_min_nodes`, `census_confirmations`, `bond_maturity`,
+     `notice_period`, the bracket table, `bond_marker`,
+     `randomness_source`, and `genesis_config_hash` - the opening
+     `game_config` with its damage table, timings and `node_fee_bps`.
+
+     That last one is the trap: the network's opening fee and opening
+     difficulty are part of its identity, so "we will tune it later" means
+     "we will fork later". Tune it in M2, where nothing is committed yet.
 
      This is exactly the kind of thing discovered in month four.
 
@@ -3730,15 +3752,16 @@ Nothing here starts while item 2 above is open.
 
          PayoutTable = F(RoundContract, Membership, FinalResults)
 
-     Deterministic. Nodes sign its hash and 5-of-7 makes it final. A node
+     Deterministic. Nodes sign its hash and the role's threshold makes it
+     final - `genesis_parameters`, not the literal 5-of-7 (M3.1 item 0). A node
      signing a table that is not `F(...)` of its own published inputs is
      slashable - which is only enforceable because the function is
      deterministic, which is the whole point of the core.
 
  14. **Role separation** (spec 21). `--roles game_verify` stores
      transcripts, replays, signs results and the payout table, and MOVES
-     NO FUNDS. `--roles settlement` verifies the contract and the 5-of-7
-     and moves funds. Built as separate roles from the start, because
+     NO FUNDS. `--roles settlement` verifies the contract and the
+     settlement threshold and moves funds. Built as separate roles from the start, because
      retrofitting a separation of powers is how it ends up not being one.
 
  15. **Objection.** A node that disagrees says so, with the checkpoint it
@@ -3773,6 +3796,30 @@ Money. Every step here is one where a bug costs a stake rather than a
 round, which is why testnet comes first and why the order is stricter.
 
 ## M3.1  The chain, on regtest                      stage 5
+
+  0. **Network parameters first** (27A.6). Everything below depends on
+     which network it is running on, so `genesis_parameters` is loaded
+     before anything else and **nothing in this section reads a literal**
+     for committee slots, thresholds, minimum census, confirmation depth,
+     `bond_maturity`, `notice_period` or the governance schedule.
+
+     Regtest is 2 slots and 2-of-2 with one confirmation and a 100-block
+     maturity, which is what makes the whole of M3 runnable on a laptop.
+     Mainnet is 7 and 5-of-7 with 6 confirmations and 30 days. A hardcoded
+     7 anywhere means the section cannot be tested at all.
+
+     The safety property is worth knowing while writing it: the committee
+     shape lives in `genesis_parameters`, which `network_id` commits to,
+     so a 2-of-2 network **cannot** be mistaken for mainnet - a mainnet
+     client rejects the contract because it names another network, not
+     because a flag was checked. There is no threshold switch to set
+     wrongly in production, and there must never be one.
+
+     And what regtest does not prove, so a green run is not over-read:
+     at 2-of-2 one node down is no quorum, so it fails where mainnet
+     would not; the 13B overlap argument is vacuous with one possible
+     subset; and 5A.13 voids entries the moment either operator plays.
+     All three are correct behaviour, not bugs to configure away.
 
   1. **Bond construction** (spec 5A.3B). A P2TR output with three spend
      paths, and the shape matters:
@@ -3947,6 +3994,9 @@ round, which is why testnet comes first and why the order is stricter.
          redirect other people's money.
        - nothing but the player's own choice decides the percentage, and
          zero is valid. No node, lobby or creator may rewrite it.
+       - the donation is **inclusive** in the round amount, exactly like
+         the node fee: it comes out of the stake, never on top of it, and
+         the player approves one number with the split shown.
 
      Rotation via the cold recovery key is part of this task, not a later
      one: a key with no exercised revocation path is a key whose
@@ -3976,10 +4026,22 @@ round, which is why testnet comes first and why the order is stricter.
      like the hardest part.
  11. **Backends.** LND first, others after.
 
- 12. **The node fee** (spec "Node fee"). 2% of gross round volume, split
-     1% to the seven game/verify slots and 1% to the seven settlement
-     slots, so each slot earns about 0.1429% for its role. An operator
-     selected for both earns both, because it does both jobs.
+ 12. **The node fee** (spec "Node fee", 27A.7). `node_fee_bps` - opening
+     value 200, so 2% - split evenly between the game/verify and the
+     settlement pool, each slot earning its role's half divided by the
+     slot count. An operator selected for both earns both, because it
+     does both jobs.
+
+     Two things that were true in an earlier draft and are not now:
+       - the fee is **INCLUSIVE** in the round amount, not charged on top
+         of it. 100 sats staked with a 2% fee and a 2% donation is 96 sats
+         reaching the pot, and the player is shown that breakdown before
+         approving.
+       - it is **not a constant and not a median**. It is a MONEY-class
+         ballot value (27A.2, 27A.7) starting from `genesis_config_hash`,
+         so read it from the round's `config_hash` and never from a
+         literal. The slot counts likewise come from `genesis_parameters`
+         - hardcoding seven means the code cannot run on regtest.
 
      Three details that are easy to get wrong and expensive to get wrong:
        - a slot earns its share only if it performed the contract-defined
