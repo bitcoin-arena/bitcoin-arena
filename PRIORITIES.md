@@ -177,6 +177,39 @@ recording: test/vectors/csharp-army.json.
      speed 3.2 m/s · pos -16.0, 4.1 · practice off`, and the card shows
      BANKED 1,050 from one delivery rather than a loop.
 
+     AND THE LAST C# VETO IS GONE. `TruckHealth.WriteOff` returned early on
+     `IsInvulnerable`, so C# could refuse a write-off the core had already
+     made. Measured twice with the same injection - run 0 -> 2 and `T_HP`
+     100 -> 0 forced in the core, nothing else touched:
+
+       before   road: WASTED, truck burning     apron, bay open: intact, run continues
+       after    road: WASTED, truck burning     apron, bay open: WASTED, truck burning
+
+     Removing it needed the same lesson the delivery gate had just learned:
+     RUN_WRECKED latches, and `IsDestroyed` is the BURN TIMER rather than
+     the condition, so a level read would have exploded the truck again
+     every time the respawn cleared the timer. `ApplySnapshot` now applies
+     the core's verdict once per write-off and clears on the core going
+     live, which happens only in `restart`.
+
+     Two more PhysX-era lines went with it: the respawn handed the body back
+     to PhysX (`isKinematic = false`) although the core drives and writes the
+     transform, so after the first write-off the truck was a dynamic body
+     being teleported sixty times a second for the rest of the session.
+
+     Driven, not injected: standing in the fire took the truck 100.0 -> 57.6
+     and stalled - the men shooting it get shot themselves - so the
+     condition was shortened to 8 and the CORE's own fire finished it:
+     8.0 -> 0.5 -> 0.0, S_STATE 2 at tick 672, x -46.8, WASTED on screen.
+     The round after it started clean at tick 8, x -100.40, S_STATE 0,
+     condition 100.0, and ran to a delivery. Three live-fire rounds in one
+     session: delivered at 83.0 / 87.9 / 93.4 condition, drawn equal to
+     alive in all 173 samples, three resets.
+
+     The three tests that pinned the veto were re-pointed, not loosened.
+     What they were named for - choosing freight is not a way to die - is
+     asserted in `packages/core` now, where damage lives.
+
      WHO OWNS THE SCREEN, read off the player path and not off a test:
      the picture is C#. `ArmyRenderer` holds a `public Army army` and walks
      `army.Armour` and its soldier lists; it names `BlwpCore` nowhere.
@@ -923,8 +956,20 @@ recording: test/vectors/csharp-army.json.
           130.0: the throttle cut costs time, not the crossing.
        3. The army never reads `T_HP`. A burning truck stays a courier
           target; C# clears `Army.Courier` on a write-off.
-       4. The apron does not protect. `IsInvulnerable` is a client rule;
-          the core has no radius in which fire is withheld.
+       4. The apron does not protect. The core has no radius in which fire
+          is withheld, and `IsInvulnerable` is no longer a second one:
+          C# refusing a write-off the core had made was a veto over an M1
+          outcome and is gone. WHICH MAKES THIS GAP REACHABLE, and the old
+          reading of it - "zero damage in the bay over thirty seconds on
+          three seeds" - NO LONGER HOLDS. Re-measured after `Separate`, the
+          x-chase and the crash rule: parked at START with live fire, seed
+          5eed1234 and abcdef01 stay at 100.0, but seed 13572468 starts
+          losing condition at tick 812 and ends thirty seconds at 96.2,
+          impact 0.00 - gunfire, not a crash. So on some seeds a rifleman
+          does reach the apron. Practice still shields completely: full
+          throttle across the whole field, three seeds, 100.0 each, and
+          `packages/core` now holds that as a test. An apron rule belongs
+          in `sim.js` and is not invented here.
        5. Cargo does not raise the damage. C# scales a courier hit by
           `(1 + Heat * 0.6)`. NOT to be touched until its share of the C#
           damage is measured - every recording has Heat at zero.
