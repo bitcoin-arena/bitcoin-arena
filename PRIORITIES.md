@@ -202,10 +202,64 @@ recording: test/vectors/csharp-army.json.
      before the deletion: `st.armour` built in `step()`, run-over, and
      path-clearing.
 
+     THE AUDIT FOUND ONE, AND IT WAS MY OWN DAMAGE. `Army.Update` opens
+     with `Separate(Armour[i], Armour[j])` over every pair, before
+     anything moves, holding 8.5 m between friends and 7.5 m between
+     enemies. The core had no such rule - `Separate` appeared in it only
+     in comments explaining that the infantry has none - and nothing
+     recorded it, because in C# it is true by construction and a recording
+     of a constant is not worth taking.
+
+     It was tolerable until e5dabe8 gave an engaged tank its enemy's x to
+     close on. That is what C# does, but C# does it WITH the separation;
+     two tanks closing on the same enemy converge on bitwise the same x,
+     and with nothing to push them apart they end up occupying one point.
+     Found by looking at an actual pair: units 52 and 68, both alive, both
+     Bear, x identical to the last bit and 0.018 m apart in z.
+
+       8 seeds, sampled every second        too close  nearest median  closest ever  bitwise x
+       before the chase (6398783)              2.16%         3.61 m        0.00 m       0.03%
+       chase, no Separate (d1e84ec)            7.25%         0.03 m        0.00 m      10.51%
+       chase + Separate (now)                  4.18%         8.22 m        7.46 m       2.01%
+       C#, by construction                     0.00%       >= 7.50 m     >= 7.50 m         n/a
+
+     The number that matters is the last-but-one: the closest two tanks in
+     eight rounds went from ON TOP OF EACH OTHER to 7.46 m, four
+     centimetres inside the 7.5 m the rule allows. The "too close" column
+     rising from 2.16% to 4.18% is not a regression and should not be read
+     as one: before the chase the armour was spread on a ladder and rarely
+     near anything, and now it is packed at about 8 m, so many pairs sit
+     just under 8.5 m while NONE overlaps. The bitwise-x residual is the
+     same story - the separation runs at the top of a tick and the chase
+     re-aligns x at the bottom of it, which is exactly C#'s own ordering.
+
+     Ported with its own units, not with a leftover number: `push` is
+     `(min - d) / 2`, a distance, halved with `>> 1` which is exact in
+     Q16.16; the normal is dimensionless; and C#'s `d2 <= 1e-4f` is a
+     separation of 0.01 m, which is 655. Nothing was scaled to make a
+     column match. It is called at the top of the army's step because that
+     is where `Army.Update` calls it - a separation applied afterwards
+     would resolve last tick's overlap against this tick's positions.
+     Alive is `U_STATE` rather than `U_HP`, which is what `reinforce`
+     counts and what the crowding scan skips on; C# never has to ask,
+     since it removes its dead from `Armour` before this runs.
+
+     The army balance is unmoved: at t = 90 s inRange 2.00 against the
+     reference's 1.70, xspread 37.4 against 34.8, alive 19 against 20.
+     Vectors regenerated and `dist/` with them, core 47/47, guard 19 files
+     clean, node vs bundle-node identical, stage 0 PASS. PlayMode is NOT
+     re-run for this and that is deliberate: it only ever exercised the C#
+     path, `BlwpCore` is stubbed outside WebGL, and this round moved core
+     JS, the vectors and `dist/` - none of which PlayMode can see.
+
      STEP 3 - the port order, and it is dictated by the measurements
      rather than by taste. Each step is a rule change, so each moves the
      golden vectors and `dist/` with them, and each is its own commit.
 
+       0. DONE ALREADY, because the chase had made it urgent: `Separate`.
+          It is listed here so the order reads correctly for anyone
+          following it - tank-on-tank spacing had to land before anything
+          else touched armour positions.
        1. `st.armour` inside `step()`. Today it is 0 at every tick of
           every vector and the truck drives through twenty-four of its own
           tanks. FIRST because it is the only one the game currently gets
