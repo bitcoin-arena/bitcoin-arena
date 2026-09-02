@@ -703,42 +703,49 @@ recording: test/vectors/csharp-army.json.
      `Rand(-88, +88)` where C# `Spawn` uses `Rand(-FrontX + 8, FrontX - 8)`
      = +-84, so the arrival is already the same.
 
-     WHY THIS CANNOT BE TAKEN FURTHER FROM THE RECORDINGS THAT EXIST, and
-     it is the letter's real block. The disagreement is a SHAPE, and the
-     army reference publishes exactly one shape statistic - `xSpread`, a
-     standard deviation - which by construction cannot separate a peak
-     with stragglers from a spread. The courier pass publishes `inTank`,
-     which sees the shape but only through one 34 m circle at one point,
-     and publishes no denominator with it. Every other published quantity
-     already agrees.
+     THE REFERENCE WAS EXTENDED AND IT OVERTURNED THE DIAGNOSIS ABOVE.
+     `ArmyReferenceTests.cs` now publishes, for every pass, the armour's
+     |x| in the same bands the core is measured in, and the courier pass
+     publishes `tanksAlive` and `menAlive` beside `inTank` and `inRifle`.
+     Both are counters over lists those loops already walk and neither
+     draws a random number - which is the whole risk, since `Shot?.Invoke`
+     and `CourierHit?.Invoke` build their arguments inside the `?.` and
+     subscribing to them makes a different battle. Proved rather than
+     asserted: both recorders were re-run and EVERY field that existed
+     before came back identical, all 19 density rows and all 18 courier
+     rows.
 
-     So the next step is a measurement of the REFERENCE, not of the copy,
-     which is this file's own lesson from item 5 and the one it keeps
-     having to relearn: `ArmyReferenceTests.cs` should publish the armour's
-     |x| distribution - the same bands the core is measured in - for
-     `core-size-reinforce`, and an alive count beside `inTank` in the
-     courier pass so the share stops being inferred. That means editing a
-     C# reference recorder and RE-RECORDING `csharp-army.json`, which the
-     core's own tests are held against, so it is not started without a
-     Go. Nothing about it moves simulation back into C#: it adds printed
-     counters to a test that already walks those lists, and it draws no
-     random numbers, which is the trap `?.Invoke` sets two passes over.
+     What the bands say, core against reference, share within |x| < 31 at
+     the marks the tool prints:
 
-     Until then (o) stands at: infantry three of four marks inside, armour
-     two of four, every published reference quantity matched but one, and
-     the remainder localised to the peakedness of the armour's x.
+       t     30    40    50    60    75    90
+       core  79%   30%   26%   26%   42%   50%
+       REC   43%   37%   43%   55%   45%   55%
 
-     ALSO FOUND, and not yet acted on: `sim.js:635` samples the seam once
-     at the TRUCK's x for the whole army, where C# samples `FrontlineAt(v.x)`
-     per unit in both `StepArmour` (`Army.cs:557`) and `StepInfantry`
-     (`:651`). With a front that varies 69.7 m across x that is a real
-     difference in the front's shape, not a rounding. Named here so it is
-     not lost.
+     The same range, oscillating, one core seed against one reference run.
+     So "the core's x is flat where the recording's is peaked" is WRONG
+     and is withdrawn. It came from putting the core's courier-pass shape
+     beside a share read off `inTank` with a denominator I had invented.
+     The core's armour shape matches the reference on the pass that
+     actually publishes shape.
 
-     Golden vectors regenerated on purpose - the back-off is a rule - and
-     `dist/blwp-core.js` with them. Core 47/47, guard 19 files clean,
-     node vs bundle-node identical, stage 0 acceptance PASS.
-     `tools/measure-presence.js` prints every number above.
+     THE DENOMINATOR, MEASURED AT LAST, and it moves the target rather
+     than the core: the courier pass holds 20-23 tanks alive, and 17 of 23
+     stand within 34 m at t = 90 s - 74%, not the 71% or 85% this entry
+     has carried at different times. But its own plain-pass twin, the same
+     establishment and replacement without a courier, sits at 43-55%. The
+     recording's ARMY is not concentrated; its COURIER PASS is.
+
+     That is a different question from the one this letter has been
+     asking, and it is the one left: a C# tank that shoots the courier is
+     not shooting its enemy, so armour standing near the courier stops
+     killing armour standing near the courier and builds up there. The
+     core has the same diversion rule and does not build up - 39% against
+     74%. The earlier refutation of this ("held the truck alive, bit for
+     bit identical") only proved that `T_HP` gates nothing in the army; it
+     did not test whether the core's tanks divert as OFTEN, or whether the
+     core's truck being a SOLID body pushes them back out where the C#
+     courier is a bare coordinate. Neither is measured.
 
   Order: f, g, h, k, l, m, j, i (all done), then n, o, then e.
 
