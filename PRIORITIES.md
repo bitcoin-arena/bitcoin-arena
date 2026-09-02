@@ -695,6 +695,39 @@ recording: test/vectors/csharp-army.json.
      are already measured and rejected above: no bound at all (the swing)
      spreads worse, and the full 2-D chase takes the front's depth.
 
+     TWO MORE SHAPES RULED OUT, so the next attempt does not start where
+     the last three did. Single-link clustering on x at the gun's own 46 m
+     puts the core's armour in 1.2 groups with the largest holding 96% of
+     it: this is ONE battle that is too wide, not several battles. And
+     replacement is not seeding the width - the core spawns a tank at
+     `Rand(-88, +88)` where C# `Spawn` uses `Rand(-FrontX + 8, FrontX - 8)`
+     = +-84, so the arrival is already the same.
+
+     WHY THIS CANNOT BE TAKEN FURTHER FROM THE RECORDINGS THAT EXIST, and
+     it is the letter's real block. The disagreement is a SHAPE, and the
+     army reference publishes exactly one shape statistic - `xSpread`, a
+     standard deviation - which by construction cannot separate a peak
+     with stragglers from a spread. The courier pass publishes `inTank`,
+     which sees the shape but only through one 34 m circle at one point,
+     and publishes no denominator with it. Every other published quantity
+     already agrees.
+
+     So the next step is a measurement of the REFERENCE, not of the copy,
+     which is this file's own lesson from item 5 and the one it keeps
+     having to relearn: `ArmyReferenceTests.cs` should publish the armour's
+     |x| distribution - the same bands the core is measured in - for
+     `core-size-reinforce`, and an alive count beside `inTank` in the
+     courier pass so the share stops being inferred. That means editing a
+     C# reference recorder and RE-RECORDING `csharp-army.json`, which the
+     core's own tests are held against, so it is not started without a
+     Go. Nothing about it moves simulation back into C#: it adds printed
+     counters to a test that already walks those lists, and it draws no
+     random numbers, which is the trap `?.Invoke` sets two passes over.
+
+     Until then (o) stands at: infantry three of four marks inside, armour
+     two of four, every published reference quantity matched but one, and
+     the remainder localised to the peakedness of the armour's x.
+
      ALSO FOUND, and not yet acted on: `sim.js:635` samples the seam once
      at the TRUCK's x for the whole army, where C# samples `FrontlineAt(v.x)`
      per unit in both `StepArmour` (`Army.cs:557`) and `StepInfantry`
