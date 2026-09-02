@@ -498,7 +498,68 @@ recording: test/vectors/csharp-army.json.
           Counted separately: Core 48/48, guard 19 files clean, node vs
           bundle-node identical, stage 0 PASS. EditMode 124/123/1.
           PlayMode 176/164/2/10.
-       4. The truck's health, and it needs a DECISION rather than a port.
+       4. IN PROGRESS. The choice is made and the CORE HALF IS DONE; the
+          Unity half runs into a wall this letter already measured.
+
+          THE LINE: the core divides, because the reduction was never in
+          it. Read first, not assumed - `CourierHit?.Invoke(Rand(5f, 11f))`
+          carries the RAW shell, `TruckHealth.Damage`'s own summary says
+          "Amount is before armour", and `armour = 1.5` is tooltipped
+          "Incoming damage is divided by this. The van is soft but not
+          paper." A deliberate dimensionless toughness knob, not a units
+          confusion and not the leftover of a formula. The core applied
+          that raw amount to the same maxHealth of 100 and did not divide,
+          so its truck was half again as soft as the shipped one.
+
+          Measured on ONE hit sequence, parked at (0, 0), air off, hit
+          points held so the column does not saturate:
+
+            seed        100 points reached    150 points reached
+            20260901          24.9 s               33.5 s
+            20268820          14.5 s               21.0 s
+            20276739          16.1 s               23.7 s
+
+          With the divisor in, the 100-point column now reads 33.5 / 21.0 /
+          23.7 s exactly - which is the arithmetic check, not a new claim.
+          In `measure-courier.js`, which lets the truck die, the parked
+          truck goes from 24.4 s to 47.5 s: more than the factor, because a
+          truck that lives longer keeps clearing and riding down men and so
+          changes the fight around it.
+
+          The (j)-era reference of 13.9 s is NOT the number any more and is
+          not quoted as one: the same tool reads 24.4 s today, because
+          courier fire, separation, clearing and run-over have all landed
+          since it was taken.
+
+          A divisor on the HIT and not a bigger pool, because that is the
+          rule's shape: C# applies `/armour` to every `Damage()` call it
+          makes, the crash path included.
+
+          NOTED, NOT DONE: the core has no crash damage at all. `T_HP` is
+          written at spawn and reduced by courier fire, and by nothing
+          else, while `TruckHealth.OnCollisionEnter` writes the truck off
+          above `crashSpeed`. That is another missing simulation rule for
+          the list beside wrecks, the halt and pace.
+
+          THE WALL ON THE UNITY HALF, and it is the fact step 1 measured:
+          there is no core in the editor. `BlwpCore` is stubbed unless
+          `UNITY_WEBGL && !UNITY_EDITOR`, so if `TruckHealth` becomes a
+          display of `T_HP`/`S_STATE` then in PlayMode it displays zero and
+          the eight tests that hurt the truck have nothing to hurt. They
+          assert game-side consequences - `Fraction < 1`, `IsDestroyed`,
+          and that a wreck stops being a Courier target - and every one of
+          them injects damage with `Field.Army.CourierHit.Invoke(...)`.
+
+          There are exactly two ways through and they are not equivalent:
+          move those eight subjects into the core suite, where damage
+          actually lives and can be tested; or leave `TruckHealth` a
+          settable value that the core writes and a test can also write,
+          which is a second owner in all but name and is the thing this
+          step exists to remove. The first deletes eight PlayMode tests and
+          is not reversible by a revert of one commit, so it is not being
+          done on my own judgement.
+
+       4b. WAS: The truck's health, and it needs a DECISION rather than a port.
           The two owners are on different scales: the game divides by
           `armour` 1.5 and the core does not divide at all. One of them is
           wrong and this file does not get to pick silently. Whichever
