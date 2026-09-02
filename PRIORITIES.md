@@ -4145,6 +4145,28 @@ restart.
 
 # The work for MF, in order
 
+**When each piece is actually needed.** The gates above are coarse; this
+is the interleaving, and the surprise in it is that the lobby comes late.
+
+| After | Build | Because |
+|---|---|---|
+| M2.1 node daemon | *nothing* | A daemon is tested with curl and tests. No screen earns its keep yet. |
+| M2.2 many players | **28** harness, **21** ghosts | You cannot verify "several people in one round" without seeing them. Joining is a `round_id` in a URL at this stage - crude on purpose. |
+| M2.3 verification | **26** observer, **27** transcript player | This is where byte-level disagreement appears, and it is the moment a screen stops being a convenience. |
+| M2.3 verification | **20** lobby, **23** results, **22** late join, **24** objection, **25** reconnect | Now rounds exist, are joinable and have signed outcomes - so there is something to list and something to show. |
+| M3.1 chain | **9f** operator UI | Once bonds and votes exist, an operator needs to see them. Separate app. |
+| M3.2 client | **16-19, 21** money screens | After per-round settlement works. |
+| M3.3 settlement | **22** settlement inspector | Its failures are invisible from the game screen. |
+| M4 | **23-25** mobile, errors, unattended flow | Shippable, not demonstrable. |
+
+**Why the lobby is not first.** A lobby lists rounds and lets you join
+them, so it needs rounds that exist, are enterable and have outcomes -
+all of M2.2 and most of M2.3. Building it earlier means building a list
+of nothing, then rebuilding it when entry, committees and results arrive.
+The crude `round_id` URL is not a shortcut being paid for later; it is
+the right interface until there is more than one round to choose from.
+
+
 ## MF-a  Before M2 can be tested                    stage 4
 
 M2 is a daemon and a protocol, and **none of it is visible**. These are
