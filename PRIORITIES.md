@@ -471,16 +471,88 @@ recording: test/vectors/csharp-army.json.
 
      What is left is presence, and it is not this item's: see "The truck's
      neighbourhood" below.
-  o. The truck's neighbourhood: half as many guns as the recording -
-     NOT STARTED. What (j) could not close, measured at the courier pass
-     with the truck parked at (0, 0): tanks within 34 m are 8 in the core
-     against 17 in the recording, 3-12 against 8-18 over the round;
-     riflemen within 26 m are 13 against 27. Both weapons now follow the
-     C# rule to the constant, so the remaining 186 points of the 1285.6 -
-     14.5% - are men and tanks that are not there to fire. Whether that is
-     the squads, the reinforcement flow or the approach is unmeasured; it
-     is NOT the same question as (l)'s 19 men under bombs, which is about
-     men who ARE there.
+  o. The truck's neighbourhood - LOCALISED to the armour's standoff, and
+     the letter's own core figures were wrong.
+
+     RETRACTED FIRST. This entry used to read "tanks within 34 m are 8 in
+     the core against 17, 3-12 against 8-18 over the round; riflemen
+     within 26 m are 13 against 27". The recording's column is right; the
+     CORE's is not. `measure-courier.js` prints 2 tanks and 0 riflemen at
+     t = 90 s, and 0-6 tanks over the round. Checked four ways before
+     saying so: today's tool on today's rules, today's tool on the rules
+     as of ad93d7a, and the tool as of ad93d7a on its own rules - all
+     three give 2 and 0. I wrote a core column I had not read.
+
+     NOT A PAIR, SECOND. The C# `Courier` is a `Vector2?`, a coordinate
+     (`Army.cs:145`). There is no truck there, no hit points and no death.
+     The core's truck holds 100 and dies at t = 20.4 s, so its damage
+     column saturates from a fifth of the way in. This does not spoil the
+     PRESENCE columns - `Courier` appears nowhere in either army's
+     movement, only in the firing code at `Army.cs:616` and `:721`, so
+     neither army walks towards it and the count does not depend on it
+     being alive - but it does mean damage past t = 20 s is not
+     comparable, and the letter should never have implied it was.
+
+     ESTABLISHMENT IS NOT THE FAULT. Counted on the whole map, not in the
+     neighbourhood, at the recording's own five-second marks:
+
+       tick 1     core: armour 12 + 12,   infantry 36 + 36  = 96 alive
+       recording: `Courier(sb, "courier", 12, 36)`, reinforce=on
+                  armour 12 per side, infantry 36 per side
+
+     Identical, and equal per side by construction rather than by luck:
+     `sideOf(i) = ((i >> 2) & 1)` derives the side from the slot index, so
+     a replacement always refills the side and the arm that lost the unit
+     (`sim.js:266-277`). Over the round the core holds 19-24 armour and
+     61-72 infantry. Neither the spawn nor the reinforcement flow is
+     short, so the thin neighbourhood is about WHERE the units stand.
+
+     ONE SEED IS NOT A COMPARISON, and that was the letter's real error.
+     Both armies place three squad anchors a side uniformly across the
+     field - C# `Rand(-FrontX + 12, FrontX - 12)` with `FrontX = 92`, the
+     core `nextBelow(rng, 161) - 80`, the same interval - and neither
+     walks towards the truck, so "within 34 m of (0, 0)" is decided by
+     where THIS seed's anchors fell. Over 24 core seeds, air off, truck
+     parked, against the recording's single pass:
+
+       t     tanks within 34 m        recording   inside?
+       10s   [5, 10] mean 7.1                 8   YES
+       30s   [0,  3] mean 1.3                 8   NO
+       60s   [1,  4] mean 2.1                14   NO
+       90s   [0,  3] mean 2.2                17   NO
+
+       t     riflemen within 26 m     recording   inside?
+       10s   [0,  0] mean 0.0                 0   YES
+       30s   [0, 36] mean 8.1                21   YES
+       60s   [0, 19] mean 5.7                18   YES
+       90s   [0, 21] mean 8.3                27   NO
+
+     The INFANTRY half is all but closed: three of four marks are inside
+     the envelope and the fourth misses by 6 of 27. It is not 13 against
+     27 and it is not a rule fault. What is left is ARMOUR, and it is a
+     trend and not a level: both armies start the round with about eight
+     tanks at the truck and agree there, and then one fills to 17 while
+     the other empties to 2.
+
+     WHERE IT GOES. `StepArmour` (`Army.cs:557-576`) sends an unengaged
+     tank to `front - Dir * 9`, holds an engaged one at `z - Dir * 6` at a
+     third speed inside 24 m, and only sends it to `front - Dir * 34` when
+     it is OVERRUN. So C# armour lives about 9 m off its line. Measured
+     against the core's own seam rather than against z = 0, three seeds:
+
+       |z - seam|        t = 10 s              t = 90 s
+       median            22.5 / 23.9 / 29.2    29.2 / 28.1 / 45.2
+       p75               38.5 / 49.6 / 49.1    81.0 / 55.7 / 69.2
+
+     The core's armour stands at or past the C#'s RETREAT distance while
+     not retreating, and drifts further out as the round runs - which is
+     exactly the shape of a neighbourhood that agrees at t = 10 s and is
+     empty by t = 90 s. That is the quantity to fix, and it is armour
+     movement, not squads and not reinforcement.
+
+     Not started, and deliberately not: this was a measuring round. No
+     rule moved, no vector regenerated. It remains NOT (l)'s 19 men under
+     bombs, which is about men who ARE there.
 
   Order: f, g, h, k, l, m, j, i (all done), then n, o, then e.
 
