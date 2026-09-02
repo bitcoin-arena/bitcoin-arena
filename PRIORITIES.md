@@ -347,9 +347,62 @@ recording: test/vectors/csharp-army.json.
           that ends among infantry. `st.armour.n` stays 15-24, so the
           truck still does not drive through its own tanks.
 
-          Counted separately: Core 47/47, guard 19 files clean, node vs
-          bundle-node identical, stage 0 PASS. EditMode 124/123/1.
-          PlayMode 176/164/2/10.
+          A WRECK CLEARS NOBODY - the hole this step was closed on, and it
+          was found by reading the C# call site for the ordering question
+          rather than by a test. `Battlefield` wraps the whole block in
+          `if (courier != null && (health == null || !health.IsDestroyed))`,
+          so once the truck is written off C# stops BOTH running men down
+          and pushing them out. The first port had no such guard and went
+          on shoving riflemen out of a hulk the game considers gone.
+
+          The core's quantity for "written off" is `T_HP`, and NOT
+          `S_STATE`: the state word is recomputed in the score section,
+          after this, so here it still holds last tick's value and would
+          let a wreck clear for one more tick. `T_HP` is current at this
+          point because the courier damage has already come off it. It is
+          not `TruckHealth` and not its `armour` divisor - that is the
+          two-owner question, and it is NOT decided here. Run-over goes
+          inside the same brace when it is ported, because it shares this
+          `if` in the game rather than merely sitting next to it.
+
+          Measured on the same 8 seeds and the same 90 s drive, split into
+          the two layers the guard makes:
+
+            truck ALIVE          ticks   penetration   deepest  over 2 cm
+              unguarded          16409     0.011 m     0.000 m      0
+              guarded            16409     0.011 m     0.000 m      0
+
+            truck WRITTEN OFF    ticks   penetration   deepest  over 2 cm
+              unguarded          26791     0.013 m     0.000 m      0
+              guarded            26791   976.721 m     1.579 m   1794
+
+          The living layer did not move a millimetre - 1773.3 -> 0.000 has
+          not fallen back. The wrecked layer is the guard DOING its work,
+          and the number is reported the right way up: with the guard in,
+          men stand inside the hulk, because that is what C# does. All
+          26791 of those ticks are `S_STATE = 2`, so the run is over
+          throughout and no score, delivery or outcome depends on any of
+          it. The truck was written off on 8 of 8 seeds in this scenario,
+          which drives AT the infantry and is the harshest one this file
+          has.
+
+          NAMED, NOT DECIDED: C# never shows that hulk because
+          `WastedSequence` respawns the truck; the core has no round-end
+          handling for the wreck at all, so its truck sits where it died
+          for the rest of the round with men pushed into it. That belongs
+          to step 4 with the two owners of the truck's condition and is not
+          being touched here.
+
+          Counted separately, all three measured on this tree: Core 47/47,
+          guard 19 files clean, node vs bundle-node identical, stage 0
+          PASS. EditMode 124/123/1. PlayMode 176/164/2/10.
+
+          The 3.6 m peak from the step 2 sizing is a SAMPLING ARTEFACT of
+          my own instrument and 0% of the open M1 gap - no investigation.
+          18 men fell in about 18 s at 10-14 m/s; a man is inside 3.6 m for
+          about 2*3.6/12 = 0.6 s, so the expected number inside at any
+          instant is 1/s * 0.6 s = 0.6 and a peak of 1 over 120 half-second
+          samples is exactly right. The kills happen between samples.
        3. Run-over. Sized at 18 men a round against a driver who aims at
           them, and that is the number the port is accepted against - as
           an envelope over seeds, not as a target to hit once.
