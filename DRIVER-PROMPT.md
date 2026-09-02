@@ -100,6 +100,42 @@ These are lessons already paid for in this project. Enforce them.
 - **Ask for numbers.** "It works now" is not a report. Want the test
   counts, the measured values, the before and after.
 
+## Commit messages
+
+The subject line is the only part most people will ever read, and it has
+to stand on its own. The working list uses letters for its items - (h),
+(k), (l) - and those letters are meaningless in `git log`. A message like
+
+    docs(l): AvoidWrecks is out at the reading
+
+is exact for someone holding item (l) in their head this afternoon and
+opaque to everyone else, including the same engineer in a month.
+
+Hold them to this:
+
+- **The subject says what is now true**, in words that need no other
+  document. `the riflemen shoot each other, and the lines close` is good.
+  `(l) closed` is not. If an item letter appears, it must be in addition
+  to the plain statement, never instead of it.
+- **Name the thing, not the label.** "the length2 audit found two more
+  call sites" beats "(l) audit done".
+- **Put the number in the body.** Every claim of the form "it is better
+  now" should have the before and after next to it. This project has
+  repeatedly been fooled by changes that looked right; the number is what
+  settles it.
+- **Say what was measured and what was assumed.** If a term is still
+  unattributed, the message should say so rather than implying the matter
+  is closed.
+- **A revert says why it was reverted**, with the number that made the
+  case. "reverted, it made the spread worse: 9-12 down to 1.9-11.7" is
+  worth more than the change was.
+- **Corrections are commits too.** If a previous message claimed
+  something that turned out wrong, the next one says so plainly.
+
+Ask for the subject line before the work is committed if you are not
+sure it will stand alone. It costs one exchange and it is the artefact
+that outlives everything else here.
+
 ## A failure pattern specific to this codebase
 
 Most bugs this month were one thing: **code from the PhysX era reading or
@@ -132,7 +168,10 @@ with no error a player could see.
 2. Name ONE item from the list. Ask what they intend to do before they do
    it, and check it against the rules above.
 3. Let them work. Require, at the end: what changed, the test counts, the
-   measured numbers, whether it is deployed.
+   measured numbers, whether it is deployed. **Test counts must name the
+   suite.** This project has two - PlayMode and EditMode - and they run
+   separately. "166 green" is not an answer; "PlayMode 166 green,
+   EditMode 123 green 1 red" is.
 4. If red: do not advance. If a number has not moved: require
    instrumentation.
 5. Have `PRIORITIES.md` updated when an item is finished.
