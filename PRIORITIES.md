@@ -170,11 +170,14 @@ recording: test/vectors/csharp-army.json.
               VehicleTests.ArmourBlocksTheTruck,
               VehicleTests.TheTruckCanDriveOnAfterHittingTheArmy,
               VehicleTests.UnitsDoNotShoveEachOtherWithPhysics
-            `field.Army` is null now -
-              TruckHealthTests.TheTruckIsProtectedOnTheApron,
-              TruckHealthTests.TheArmiesLeaveAWreckAlone,
-              FeatureTests.ValuableFreightMakesTheTruckATarget,
-              FeatureTests.AnEmptyTruckIsLeftAlone
+            `field.Army` is null - RESOLVED. Three were re-sourced and are
+              green: `TheTruckIsProtectedOnTheApron` needs no army to say a
+              protected truck refuses to be written off, and the two
+              FeatureTests keep the half of their claim that still has a
+              subject, the BAY's own heat. The army half is core gap 5.
+              `TheArmiesLeaveAWreckAlone` is REMOVED - it asserted the C#
+              army stops shooting a burning van and the core has no such
+              rule, so there was nothing to move it to. Core gap 3.
             already listed - DamageIsFeltInTheDriving,
               CrashingIntoArmourWritesItOff, RoadsAreActuallyDrawn
           Two new tests are green: the player path runs no C# army, and the
