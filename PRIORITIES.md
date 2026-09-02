@@ -210,6 +210,93 @@ recording: test/vectors/csharp-army.json.
      What they were named for - choosing freight is not a way to die - is
      asserted in `packages/core` now, where damage lives.
 
+     THE BODY AFTER A WRECK, MEASURED RATHER THAN INFERRED. The round after
+     a write-off running to a delivery does not answer it: the core writes
+     the transform every frame, so a body PhysX had taken back would sag and
+     jitter between writes rather than drive away, and the debug overlay
+     prints `BlwpCore.TruckPosition`, so it agrees with the core by
+     construction. So the TRANSFORM was printed beside the core's own x in
+     the same frame, with the flag:
+
+       vor dem Wrack, ganze Runde     groesster Abstand 0.000 m   kinematic True
+       waehrend des Brennens          -16.933 / -15.486 / -9.127 / -6.955,
+                                      Transform gleich auf 3 Stellen, kinematic True
+       nach dem Respawn               -100.400 -> -100.400        kinematic True
+       Runde danach, ganze Runde      groesster Abstand 0.000 m   kinematic True
+
+     Height at matched core x, before against after: 0.529 / 0.497 / 0.015 /
+     0.057 m - the two large ones are sampled 1.1 m and 1.7 m apart in x on
+     a slope and the residual tracks that gap, so it is ground rather than
+     sag. No PhysX leak.
+
+     TWO MORE READERS OF THE SAME SHAPE, CLOSED.
+
+     `DeliveryGate` read `health.IsDestroyed` as a LEVEL in front of the
+     core's verdict, so a C# flag could swallow a delivery the core had
+     made. It could not fire in sequence - a burning truck carries no
+     freight - but it is the shape this letter has now removed three times.
+     It has moved into the fallback, where there is no core to ask.
+
+     `RUN_MISSED` had no reader at all. `Bootstrap` wired
+     `clock.BlockClosed` straight to `MissTheBlock`, so the third outcome
+     was a Unity stopwatch. The two clocks do not measure the same thing:
+     the core counts 9000 ticks from ROLL-OUT, `BlockClock` closes on wall
+     time for everybody at once, so a run starting ten seconds before the
+     block closes has missed it in C# and has 140 s left in the core.
+     Measured: with the core's own clock wound to 8900 and the core left to
+     decide, S_STATE went to 3 at exactly S_ELAPSED 9000, the card read
+     BLOCK MINED WITHOUT YOU and the bed was thrown away - while the Unity
+     block clock still showed 2:17 left. The next round then ran to a
+     delivery. The decision is read; `MissTheBlock` was not rebuilt.
+
+     Worth writing down while measuring it: the core is stepped once per
+     Unity FRAME. In this headless browser that is about twelve ticks a
+     second, so BLOCK_TICKS - "150 s at 60 Hz" - was twelve minutes of wall
+     clock here. Determinism is unharmed, the tick stream is the input
+     stream, but a round's LENGTH IN SECONDS depends on the frame rate of
+     the machine playing it. Not this letter's to fix; listed.
+
+     2e IS CLOSED. The C# army is dead, the picture and the enemies come
+     from the core, and every one of M1's four quantities has a named core
+     reader with no C# gate in front of it: position `CoreDrivenTruck`,
+     damage and the write-off `TruckHealth.ApplySnapshot`, enemies
+     `ArmyRenderer` over `Layout.UNITS`, delivery and the missed block
+     `DeliveryGate` on the core's own run state. Deployable is still NO,
+     because nothing draws or sounds a shot - that is item 7.
+
+     NEW ITEM, NOT PART OF 2e - THE CARGO NEVER REACHES THE CORE. Found
+     while answering whether `RunScore` filters a core quantity. It does
+     not: `Exposure` and `Projected` read the core unconditionally. But the
+     breakdown card does not add up, and the reason is worse than the card.
+     One delivery, read both sides:
+
+       card   load 0.86  x  danger 1.00  x  speed 1.50  x  1000   SCORE +1,050
+       core   E 1.001                      T 3900/817 ticks clamped = 1.500
+
+     Danger and the time factor agree. But 0.86 x 1.00 x 1.50 x 1000 is
+     1290, and the score banked is 1050 - which is 0.70 x 1.00 x 1.50 x
+     1000. `S_CARGO` and `T_CARGO` are written once, in `sim.js:248/250`,
+     to 45875 - 0.7 of a bed - and NOTHING ever writes them again. There is
+     no cargo call in the jslib or in `BlwpCore`. So what the player loads
+     reaches neither the score (`sim.js:1056`) nor the danger
+     (`sim.js:1045`): every run is priced as a 70% bed, and the card prints
+     the C# bed fill beside a number that ignored it.
+
+     This is a MISSING HOST-TO-CORE INPUT, not a veto - which is why it is
+     not 2e - but it changes what a run pays, so it is not cosmetic either.
+     Both halves are needed: a call that hands the bed to the core, and the
+     card then reading the core's cargo rather than `bay.Fill`. Also
+     related: the time factor agreed only because both sides were sitting
+     on the 1.5 clamp; a run slower than 65 s would be needed to tell them
+     apart, and that has not been measured.
+
+     ALSO LISTED WHILE MEASURING: the core is stepped once per Unity frame,
+     so a round's length in SECONDS follows the frame rate. Twelve ticks a
+     second in a headless browser made BLOCK_TICKS - "150 s at 60 Hz" -
+     twelve minutes of wall clock. Determinism is untouched, the tick
+     stream is the input stream, but the clock the player feels is not the
+     clock the rule was written against.
+
      WHO OWNS THE SCREEN, read off the player path and not off a test:
      the picture is C#. `ArmyRenderer` holds a `public Army army` and walks
      `army.Armour` and its soldier lists; it names `BlwpCore` nowhere.
@@ -292,8 +379,11 @@ recording: test/vectors/csharp-army.json.
               VehicleTests.TheTruckCanDriveOnAfterHittingTheArmy,
               VehicleTests.UnitsDoNotShoveEachOtherWithPhysics
             `field.Army` is null - RESOLVED. Three were re-sourced and are
-              green: `TheTruckIsProtectedOnTheApron` needs no army to say a
-              protected truck refuses to be written off, and the two
+              green: `TheTruckIsProtectedOnTheApron` needed no army to say a
+              protected truck refuses to be written off - AND THAT SENTENCE
+              IS NOW WRONG. The refusal WAS the veto. The test is
+              `TheApronDoesNotOverruleTheCore` and asserts the opposite: a
+              write-off the core has made is shown, apron or not. The two
               FeatureTests keep the half of their claim that still has a
               subject, the BAY's own heat. The army half is core gap 5.
               `TheArmiesLeaveAWreckAlone` is REMOVED - it asserted the C#
