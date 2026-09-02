@@ -562,6 +562,49 @@ recording: test/vectors/csharp-army.json.
        And 51 (`AHaltedManDoesNotPlayTheWalkingAnimation`) is pure render
        and belongs with CombatFx in item 7.
 
+     AND THE OTHER SIX FILES, LISTED TOO. This entry said "99 tests that
+     touch `.Army` while being about something else" - that is the FILE
+     totals and it overstates it badly. Counted by test body rather than by
+     file, only 22 tests touch `Army` at all, and every one of them hangs
+     on exactly one of four dependencies. None of them dies; all of them
+     need re-sourcing, and none can be re-sourced before its dependency.
+
+       READ THE CORE'S UNITS INSTEAD OF `field.Army` (6). Needs no new
+       rule - `BlwpCore.State` and `UnitHealth(i)` already expose them.
+         VehicleTests: BothArmiesAreOnTheFieldAndOnTheGround,
+           ArmiesFightNearTheSeamRatherThanWanderingOff, ArmourBlocksTheTruck,
+           UnitsDoNotShoveEachOtherWithPhysics,
+           TheTruckCanDriveOnAfterHittingTheArmy
+         VisibilityTests: ArmiesAreActuallyDrawn
+       Two of those now describe the CORE's rule rather than PhysX's, since
+       port step 1 made its tanks solid, and `UnitsDoNotShoveEachOtherWith
+       Physics` becomes trivially true once no PhysX army exists.
+
+       COMBATFX SOURCED FROM THE CORE (3). Item 7's own point, and one of
+       these is the standing EditMode red.
+         CombatFxTests: RifleFireProducesAFlashAndATracer,
+           TankFireProducesABlast, EffectsRetireInsteadOfPilingUp
+
+       THE TRUCK'S DAMAGE OWNER, i.e. step 4's decision (8). Every one of
+       these hurts the truck with `Field.Army.CourierHit.Invoke(...)`,
+       which is precisely the wiring step 4 has to cut.
+         TruckHealthTests: MeasureRunOverAndClearPath,
+           TheTruckIsProtectedOnTheApron, IncomingFireCostsCondition,
+           EnoughFireWrecksIt, TheArmiesLeaveAWreckAlone
+         FeatureTests: ValuableFreightMakesTheTruckATarget,
+           AnEmptyTruckIsLeftAlone, DamageIsFeltInTheDriving
+
+       A HOME FOR THREE CONSTANTS (5). `Army.AirCorridorX`, `Army.FrontX`
+       and `Army.HalfDepth` are read as plain numbers; the core has its own
+       and they have to be pointed at it.
+         BlwpBridgeTests: TheCorridorStopsShortOfBothDepots,
+           AGunshipNeverLeavesTheCorridor, EveryUnitArrivesAtTheEdgeOfThe
+           Field, EachSideArrivesOnItsOwnSide, AndThenTheyWalkToTheFront
+
+     So no test in these six is "not on the critical path" and none is
+     safe to drop: 22 need work, gated on four things, three of which are
+     already named elsewhere in this letter.
+
      WHAT THE DELETION COSTS, counted. `EditMode/ArmyTests.cs` is 51 tests
      that are about nothing but `Army` and go with it; the two reference
      recorders and the gunship one are 3 more. That is 54 gone outright.
