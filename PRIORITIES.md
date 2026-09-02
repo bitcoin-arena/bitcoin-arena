@@ -47,7 +47,7 @@ their names, so any plate size read at wiring time can describe something
 that no longer exists. Every display is re-fitted against the mesh that
 is there now.
 
-## 2. The army into the core  -  M1  -  IN PROGRESS (l closed, m/j/i/n/e open)
+## 2. The army into the core  -  M1  -  IN PROGRESS (l and m closed, j/i/n/e open)
 
 The last thing standing between here and M1.
 
@@ -163,8 +163,13 @@ recording: test/vectors/csharp-army.json.
      returns 0, and the rifleman's truck test (`sim.js:722`) has no axis
      rejection, so men on the approach burn a 2.5-4.5 s reload on a truck
      200 m away. Take those out and kills per foe shot is the roll in both
-     windows. It is therefore NOT a candidate for the slope residual. The
-     fix is a rule change and is not made yet. See "The 0.0199 was an
+     windows. It is therefore NOT a candidate for the slope residual.
+     EVERY PHANTOM FIGURE IN (l) AND IN THE SECTIONS BELOW IS THE STATE
+     BEFORE (m) - the 0.0199, the 19-21% of early reload writes, the
+     ladder from 0.0186 to 0.0435. (m) has since guarded both truck tests
+     and the phantom share is 0.7% / 0.7%; the tools no longer reproduce
+     those numbers, and they are kept because they are how the fault was
+     found, not as a current reading. See "The 0.0199 was an
      integer overflow" below, and "The squads measured against Army.Spawn",
      "What a bomb is worth, taken apart", "The depth, air-off against
      air-off", "What a bomb finds, per detonation", "The slope", "Where
@@ -181,13 +186,45 @@ recording: test/vectors/csharp-army.json.
      residual and NOT as "close enough". Attributing it needs air-on
      positions, which only a new Unity recorder pass can publish, and
      that pass has now been declined three times.
-  m. The `length2` overflow at the two truck tests - NOT STARTED. Named
-     and measured under (l): `length2` returns 0 for any separation past
-     ~181.5 m, and neither `sim.js:722` (the rifleman's truck test) nor
-     `army.js:273` (the tank's) rejects on the axes first, where all
-     three target scans and both collision scans do. Costs the rifle line
-     ~0.4 kills a round air-on and burns 19-21% of the approach's rifle
-     clocks. A rule change: it moves the golden vectors.
+  m. The `length2` overflow at the two truck tests - DONE. Both truck
+     tests now reject on each axis BEFORE calling `length2`, so it no
+     longer reads the truck as zero metres away past ~181.5 m. That is
+     the guard `pickRifleTarget` (`army.js:320`), `pickTarget` (`:379`),
+     `threatAt` (`:423`), the armour crowding scan (`sim.js:676`) and the
+     solids scan (`solids.js:56-66`) already had, and the trap was
+     written down at `army.js:417-421` all along.
+     It was not only a wasted clock. Both branches fire and hit: a
+     rifleman took a 2.5-4.5 s reload and a 0.045 roll at the truck
+     (`sim.js:722`), a tank a 40-99 tick clock and the same roll
+     (`army.js:273`), and the hits landed on `T_HP`. Damage is an M1
+     quantity, so this was a wrong OUTCOME, not a cosmetic one.
+
+     measured, before -> after
+       phantom orphan share of reload writes   15.0% / 3.6% -> 0.7% / 0.7%
+         (w0-w2 / w3+; what is left is the already-measured "the foe died
+          in this tick" class, not an overflow)
+       legitimate truck shots, the control      594 / 1512  -> 599 / 1503
+       tank-ticks reading the truck inside 26 m
+         when it is not                    5454 of 439684  -> 0
+       truck damage over the six vectors                13  -> 5
+       air-on rifle kills, 16 seeds                  O15.7  -> O16.9
+
+     Suites, counted separately and in the foreground: core 47 tests, 47
+     pass, 0 fail; determinism guard 19 files clean; Unity PlayMode 174
+     total, 164 pass, 2 fail, 8 skipped; Unity EditMode 124 total, 123
+     pass, 1 fail. Every failure is PRE-EXISTING and was measured rather
+     than assumed - the same PlayMode suite on the unchanged tree gives
+     163 pass / 3 fail: `ArmiesAreActuallyDrawn`, `RoadsAreActuallyDrawn`
+     and `TheGogglesAnimate`, the last being the load-dependent flake item
+     1 already documents. The change made nothing red; it happened to
+     catch the flake green. EditMode's `RifleFireProducesAFlashAndATracer`
+     is item 7.
+
+     Golden vectors deliberately regenerated, because the fix moves the
+     draw order: a man who used to take the truck branch drew two numbers
+     and now draws one when nothing is in range. `dist/blwp-core.js` went
+     with them or `bundle matches modules` stays red. No new state word.
+     `sim.js:790` was NOT touched - that is (n).
   n. The same overflow in the SCORING path - NOT STARTED, and it is not
      (m)'s twin. `sim.js:790` reads `fromStart` through the same
      unguarded `length2`, so the truck reads as standing on its start for
@@ -199,8 +236,14 @@ recording: test/vectors/csharp-army.json.
      foreseen when the order was set. 99% of what the army does to the
      truck is tank fire the core does not have. See "The truck is shot by
      tanks" below.
+     CARRIES AN OBLIGATION FROM (m): this item rewrites the very function
+     (m) guarded, `army.js:273`. It must INHERIT the axis rejection and
+     not drop it while moving to `CourierRange` 34 m - otherwise the
+     overflow returns with a wider threshold, and the truck is shot from
+     across the map again. Measured before the guard: 5454 of 439684 live
+     tank-ticks read the truck as inside 26 m when it was not.
 
-  Order: f, g, h, k, l (all done), then m, j, i, n, then e.
+  Order: f, g, h, k, l, m (all done), then j, i, n, then e.
 
 ### What the measurements say, and what they cost
 
