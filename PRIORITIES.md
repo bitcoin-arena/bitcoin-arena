@@ -2978,25 +2978,42 @@ Nothing here starts while item 2 above is open.
      `bufferedAmount`. Batches are tick-numbered so a reconnecting client
      re-sends and the node ignores what it already has.
 
-  5b. **Nostr discovery** (spec 25.1). A node publishes its
-     NodeAdvertisement as a parameterized replaceable event and rounds as
-     announcements; a client reads several relays and merges. Comes after
-     the daemon exists, because before that there is nothing to announce.
+  5b. **Discovery: read it off the chain** (spec 25.1). A node's address
+     is in its own bond funding transaction, so there is no directory to
+     run and nothing to keep alive. Two parts:
 
-     Safe here for one stateable reason: **a relay can withhold, it
-     cannot lie.** The census is chain state and the body is committed to
-     by hash, so nothing a relay serves is believed on its own account -
-     the `bond_outpoint` tag is mandatory precisely so the client can
-     check it against the chain before it means anything.
+       - **`BOND_MARKER`.** Every bond pays a dust output to one fixed
+         protocol address. Without it the census is unfindable in
+         practice - a P2TR output is a 32-byte key like any other, and
+         BIP158 filters exclude `OP_RETURN` - so nothing would be
+         searchable. One marked output makes every bond findable by any
+         light client.
+       - **The advertisement in the witness** of the same transaction, so
+         the transaction that proves the bond also carries the endpoint.
 
-     Two things to hold the implementation to:
-       - nothing time-critical and nothing security-bearing goes over it.
-         Input batches, checkpoints, result signatures, payout tables and
-         committee selection all stay on the direct WebSocket.
-       - it does NOT solve bootstrap, and the write-up should not claim
-         it does. "One website must exist" becomes "one of a set must
-         exist, and the set can be extended without permission". Better,
-         not solved.
+  5c. **The chain source: our own mempool.space, verified not trusted.**
+
+     Run our own instances - that buys availability, and only that. For a
+     stranger, an API we operate is worth exactly what our website is
+     worth, so it is redundancy and not a security argument.
+
+     The security comes from verifying, and it is ONE task with the
+     above, not a later hardening pass:
+
+         block headers      from several independent sources, most work
+                            wins. 80 bytes a block, under 4 MB for all of
+                            history, far less from a checkpoint
+         bond transaction   plus a merkle proof, from the API
+         verify             proof against header, H(advertisement)
+                            against the bond output's commitment
+
+     Then the API can **omit** but not **forge**, and omission is answered
+     by asking another. Without it, whoever controls the API controls
+     which census the client sees and therefore which committee it
+     believes legitimate.
+
+     Built in from the start deliberately. Retrofitted it never happens:
+     by then it works, and nobody touches something that works.
 
 ## M2.2  Many players in one round                  stage 3
 
