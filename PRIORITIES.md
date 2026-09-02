@@ -471,88 +471,104 @@ recording: test/vectors/csharp-army.json.
 
      What is left is presence, and it is not this item's: see "The truck's
      neighbourhood" below.
-  o. The truck's neighbourhood - LOCALISED to the armour's standoff, and
-     the letter's own core figures were wrong.
+  o. The truck's neighbourhood - the infantry half is CLOSED, one real
+     port bug is fixed, and the letter's own diagnosis was wrong twice.
 
-     RETRACTED FIRST. This entry used to read "tanks within 34 m are 8 in
-     the core against 17, 3-12 against 8-18 over the round; riflemen
-     within 26 m are 13 against 27". The recording's column is right; the
-     CORE's is not. `measure-courier.js` prints 2 tanks and 0 riflemen at
-     t = 90 s, and 0-6 tanks over the round. Checked four ways before
-     saying so: today's tool on today's rules, today's tool on the rules
-     as of ad93d7a, and the tool as of ad93d7a on its own rules - all
-     three give 2 and 0. I wrote a core column I had not read.
+     RETRACTED, TWICE, BOTH MINE.
 
-     NOT A PAIR, SECOND. The C# `Courier` is a `Vector2?`, a coordinate
-     (`Army.cs:145`). There is no truck there, no hit points and no death.
-     The core's truck holds 100 and dies at t = 20.4 s, so its damage
-     column saturates from a fifth of the way in. This does not spoil the
-     PRESENCE columns - `Courier` appears nowhere in either army's
-     movement, only in the firing code at `Army.cs:616` and `:721`, so
-     neither army walks towards it and the count does not depend on it
-     being alive - but it does mean damage past t = 20 s is not
-     comparable, and the letter should never have implied it was.
+     First: this entry once read "tanks within 34 m are 8 in the core
+     against 17, 3-12 over the round; riflemen 13 against 27". The
+     recording's column is right, the core's was never read - the tool
+     prints 2 and 0. Checked on today's tool and rules, today's tool on
+     ad93d7a's rules, and ad93d7a's tool on its own rules; all give 2 / 0.
 
-     ESTABLISHMENT IS NOT THE FAULT. Counted on the whole map, not in the
-     neighbourhood, at the recording's own five-second marks:
+     Second, and worse because it was acted on: 287ae29 said the gap was
+     "the armour's standoff", with the armour a median 30-42 m behind its
+     own line and 11% of it overrun. That was measured with
+     `frontlineZ(tape, THE UNIT's x)`. `sim.js:635` samples the seam ONCE
+     at the TRUCK's x and hands the one value to every unit. Against the
+     line the simulation actually uses:
 
-       tick 1     core: armour 12 + 12,   infantry 36 + 36  = 96 alive
-       recording: `Courier(sb, "courier", 12, 36)`, reinforce=on
-                  armour 12 per side, infantry 36 per side
+       overrun               0% of armour ticks, not 11%
+       |z - its own hold|    median 0.1-1.0 m, p75 26-31 m
+       past                  -5.1 to -14.1 m, every tank on its own side
 
-     Identical, and equal per side by construction rather than by luck:
-     `sideOf(i) = ((i >> 2) & 1)` derives the side from the slot index, so
-     a replacement always refills the side and the arm that lost the unit
-     (`sim.js:266-277`). Over the round the core holds 19-24 armour and
-     61-72 infantry. Neither the spawn nor the reinforcement flow is
-     short, so the thin neighbourhood is about WHERE the units stand.
+     The armour holds its line to within a metre. It was never the fault.
+     Three measurements of mine in this letter were not pairs - the wrong
+     column, the wrong half-extents (92/92 for a 130 x 85 field), and the
+     wrong seam - which is the same trap the whole item keeps setting.
 
-     ONE SEED IS NOT A COMPARISON, and that was the letter's real error.
-     Both armies place three squad anchors a side uniformly across the
-     field - C# `Rand(-FrontX + 12, FrontX - 12)` with `FrontX = 92`, the
-     core `nextBelow(rng, 161) - 80`, the same interval - and neither
-     walks towards the truck, so "within 34 m of (0, 0)" is decided by
-     where THIS seed's anchors fell. Over 24 core seeds, air off, truck
-     parked, against the recording's single pass:
+     THE ONE REAL FAULT, and it is a port bug. `StepArmour` reads
+     `goalZ = v.z - v.Dir * 6f` and then `speed *= 0.35f`: the six is a
+     GOAL six metres back, the rate is the walk cut to a third. This core
+     had `BACK_OFF = 6 * ONE` spent as `dz = BACK_OFF * side * dt` - the
+     six read as a SPEED, six metres a second for as long as the crowding
+     lasted, and squarely in z. Wrong unit and wrong component in one
+     line.
 
-       t     tanks within 34 m        recording   inside?
-       10s   [5, 10] mean 7.1                 8   YES
-       30s   [0,  3] mean 1.3                 8   NO
-       60s   [1,  4] mean 2.1                14   NO
-       90s   [0,  3] mean 2.2                17   NO
+     Fixed in the core's own terms rather than by copying the magnitude
+     C# is left holding. C#'s backward rate is `0.35 * speed * 6/gl`, a
+     leftover of steering at `foe.x` and at the seam as one vector, and
+     that coupling was ported here once, measured, and reverted. So: a
+     crowded tank's HOLD moves six metres further back, it walks there at
+     a third of its speed, and it stops. Bounded, in metres, no coupling,
+     and unlike a velocity it cannot accumulate over a round.
 
-       t     riflemen within 26 m     recording   inside?
-       10s   [0,  0] mean 0.0                 0   YES
-       30s   [0, 36] mean 8.1                21   YES
-       60s   [0, 19] mean 5.7                18   YES
-       90s   [0, 21] mean 8.3                27   NO
+     Measured before and after, 24 seeds, same marks:
 
-     The INFANTRY half is all but closed: three of four marks are inside
-     the envelope and the fourth misses by 6 of 27. It is not 13 against
-     27 and it is not a rule fault. What is left is ARMOUR, and it is a
-     trend and not a level: both armies start the round with about eight
-     tanks at the truck and agree there, and then one fills to 17 while
-     the other empties to 2.
+       tanks within 34 m      before          after
+         t = 10 s             [5, 10] Ø 7.1   [5, 10] Ø 7.1
+         t = 30 s             [0,  3] Ø 1.3   [0,  5] Ø 2.3
+         t = 60 s             [1,  4] Ø 2.1   [0,  4] Ø 2.5
+         t = 90 s             [0,  3] Ø 2.2   [0,  3] Ø 1.8
+       |z - hold| at t = 90 s median 0.91     median 0.69
 
-     WHERE IT GOES. `StepArmour` (`Army.cs:557-576`) sends an unengaged
-     tank to `front - Dir * 9`, holds an engaged one at `z - Dir * 6` at a
-     third speed inside 24 m, and only sends it to `front - Dir * 34` when
-     it is OVERRUN. So C# armour lives about 9 m off its line. Measured
-     against the core's own seam rather than against z = 0, three seeds:
+     It barely moves the neighbourhood, and that is reported rather than
+     hidden: the crowded branch is only 10-11% of armour ticks and the
+     hold was already being met. It is fixed because it is wrong, not
+     because it moves a number.
 
-       |z - seam|        t = 10 s              t = 90 s
-       median            22.5 / 23.9 / 29.2    29.2 / 28.1 / 45.2
-       p75               38.5 / 49.6 / 49.1    81.0 / 55.7 / 69.2
+     WHAT THE GAP ACTUALLY WAS. The recording's courier pass pins
+     `FrontlineAt = _ => 0f` - a flat front running exactly through the
+     parked truck. The core's front is the price tape, and under a truck
+     at (0, 0) it sits at z = +28.1 m and runs from -41.6 to +28.1 across
+     x, a 69.7 m spread, static all round. Tanks holding 5-14 m short of
+     THAT line are 14-42 m from the truck by construction. `frontlineZ`
+     returns 0 for a tape of zero span (`rules/frontline.js:32`), so a
+     flat tape is C#'s `_ => 0f` exactly. Held flat, 24 seeds:
 
-     The core's armour stands at or past the C#'s RETREAT distance while
-     not retreating, and drifts further out as the round runs - which is
-     exactly the shape of a neighbourhood that agrees at t = 10 s and is
-     empty by t = 90 s. That is the quantity to fix, and it is armour
-     movement, not squads and not reinforcement.
+       t     tanks within 34 m   rec  in?   riflemen within 26 m  rec  in?
+       10s   [10, 17] Ø 13.3       8   NO   [0,  0] Ø  0.0          0  YES
+       30s   [ 2,  7] Ø  4.0       8   NO   [0, 51] Ø 15.8         21  YES
+       60s   [ 3,  7] Ø  4.8      14   NO   [0, 41] Ø 14.8         18  YES
+       90s   [ 2,  7] Ø  4.5      17   NO   [0, 29] Ø  9.4         27  YES
 
-     Not started, and deliberately not: this was a measuring round. No
-     rule moved, no vector regenerated. It remains NOT (l)'s 19 men under
-     bombs, which is about men who ARE there.
+     The INFANTRY half is CLOSED: all four marks inside the envelope,
+     including the 27 that was outside before. It was never 13 against 27
+     and it was never a rule fault - it was a front measured in one place
+     against a front pinned in another.
+
+     WHAT IS LEFT, stated exactly. Armour presence is not a level but a
+     TREND the core does not have: pinned, the core starts denser than the
+     recording (13.3 against 8) and thins to 4.5 while the recording
+     builds to 17. C# concentrates because `goalX = engaged ? foe.x : ...`
+     pulls an engaged tank onto its enemy's x, so the fight gathers; this
+     core holds a fixed ladder instead. That is exactly the coupling that
+     was ported, measured and reverted once - z spread fell from 9-12 to
+     1.9-11.7 and one side was wiped out on two seeds - so it is not a
+     free change and must be its own measured attempt, not a re-try.
+
+     ALSO FOUND, and not yet acted on: `sim.js:635` samples the seam once
+     at the TRUCK's x for the whole army, where C# samples `FrontlineAt(v.x)`
+     per unit in both `StepArmour` (`Army.cs:557`) and `StepInfantry`
+     (`:651`). With a front that varies 69.7 m across x that is a real
+     difference in the front's shape, not a rounding. Named here so it is
+     not lost.
+
+     Golden vectors regenerated on purpose - the back-off is a rule - and
+     `dist/blwp-core.js` with them. Core 47/47, guard 19 files clean,
+     node vs bundle-node identical, stage 0 acceptance PASS.
+     `tools/measure-presence.js` prints every number above.
 
   Order: f, g, h, k, l, m, j, i (all done), then n, o, then e.
 
