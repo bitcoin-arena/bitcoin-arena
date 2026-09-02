@@ -3820,6 +3820,20 @@ deliberately corrupted node is caught by the other six.
     design for this protocol, however normal it looks.
   - **The leaderboard is not authority.** It presents signed results; it
     does not produce them.
+  - **No node holds player funds between rounds** (spec 30.9, 24A.3).
+    Money is in flight during a round and nowhere else. Session balances,
+    deposits, stored payout addresses, credit and any other resting float
+    are out of scope permanently - not deferred, not optional, not behind
+    a flag. The design was written out once and removed; 24A.3 keeps it so
+    it is not reinvented as a fresh idea.
+  - **Governance changes numbers, never funds.** Even a hard fork at
+    51/66 reaches the rules and nothing else: in-flight rounds bind to the
+    `network_id` and `config_hash` they were created under, stakes settle
+    against a committee whose keys a successor does not hold, and bonds
+    are timelocked outputs a fork does not rewrite (27A.8.5).
+  - **No pause button, anywhere.** Not for the admin key, not for a
+    broken config, not for a bad fork. The recovery path is always that
+    nodes decline to serve and rounds find no committee (27A.7.6).
 
 ---
 
@@ -3890,6 +3904,15 @@ round, which is why testnet comes first and why the order is stricter.
      The beacon value **does not exist yet** when `round_id` is published.
      The contract commits to WHICH beacon round will be used, never to its
      value.
+
+     `randomness_source` is a genesis parameter (27A.6), so read the
+     beacon from it and never call drand directly. Regtest uses
+     `mock:<seed>` with `H(seed || committee_time)`: drand's whole value
+     is being unpredictable, which is worth nothing in a test and costly
+     as a dependency - an external service every run must reach, and a
+     seed nobody can fix, so no test can select a known committee twice.
+     With a mock a test asserts WHICH nodes were selected rather than
+     only that selection terminated.
 
      Why it cannot be done the obvious way: if the randomness is already
      known when the creator picks `round_id`, committee selection is a
@@ -3965,7 +3988,12 @@ round, which is why testnet comes first and why the order is stricter.
      same result, and no ordering of the same votes may change it.
 
  9b. **Bond-weighted median for the self-binding scalars** (spec 27A.2):
-     `bond_min` per bracket and `proposal_deposit_sats`. **Not** the node
+     `bond_min` per bracket and `proposal_deposit_sats` - the latter
+     **capped** at `bond_min(lowest bracket) / 100` (27A.7.2), because
+     the median is bond-weighted and without a cap the largest holders
+     set the price of proposing: a million sats is nothing to them and
+     total exclusion for a small operator. The cap makes the right to
+     propose follow from the right to participate. **Not** the node
      fee and not the bracket set - those moved to the ballot in v4.6.2,
      because a fee paid by players and declared by its recipients is a
      take rate, not a discovered price.
