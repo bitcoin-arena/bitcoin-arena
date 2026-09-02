@@ -3639,6 +3639,33 @@ Nothing here starts while item 2 above is open.
 
 ## M2.2  Many players in one round                  stage 3
 
+  5d. **`network_id`, and the fields that must exist before they are
+     used** (spec 27A.4). Cheap now, a breaking change later.
+
+     Anything the Round Contract carries has to be in its FIRST version,
+     because adding a field to something signed is a format break. Three
+     of them are not needed until M3 and must be there from the start:
+
+       - `network_id` itself. Contracts carry it, nodes reject foreign
+         ones, and it is what makes a fork that changes the donation
+         addresses a different network rather than a theft.
+       - the donation set field. It may be empty for all of M2 - there is
+         no Lightning yet - but the field and its hash must be in the
+         contract.
+       - `required_protocol_version`, against the
+         `supported_protocol_versions` already in the advertisement.
+
+     > **Generate the donation authority and recovery keypairs before the
+     > first daemon runs, and put the recovery key in cold storage then.**
+     >
+     > `network_id = H(genesis || authority_pubkey || recovery_pubkey)`,
+     > so introducing the keys later changes the network identity - and
+     > every bond posted before that becomes worthless, its capital
+     > timelocked and its census entry void. The keys are not used until
+     > M3.2. They must exist in M2.1.
+
+     This is exactly the kind of thing discovered in month four.
+
   6. **The Round Contract.** Map, duration `T_run`, seed, and the score
      parameters section 18A.7 requires it to pin: `E_reference`, the
      corridor half width, the clamps on `T`, `min_score`, `K` and `r`.
@@ -3811,6 +3838,31 @@ round, which is why testnet comes first and why the order is stricter.
   9. **Role separation between committees** (5A.9). Game/verify and
      settlement are drawn separately.
 
+## M3.1B  Governance                                stage 5
+
+ 9b. **Bond-weighted median for the scalars** (spec 27A.2): node fee and
+     its role split, `bond_min` per bracket, the bracket table, and the
+     difficulty defaults - `E_reference`, corridor width, the `T` clamps,
+     `min_score`, `K`, `r`.
+
+     No proposals, no voting window, no quorum, no tally. Each node
+     declares its preference in its advertisement and the value in force
+     is the median over the census, weighted by bond. A pure function of
+     chain state, so every participant computes the same one.
+
+     Needs the census, so it cannot come before M3.1. Nothing to build in
+     M2: without bonds there is no weight.
+
+ 9c. **`bond_min` notice period and operator escalation** (27A.3, 5A.10B).
+     A rise takes effect only after `notice_period`; a fall immediately.
+     Affected nodes escalate at T-30d, T-14d, T-3d and T+0.
+
+     The reason it cannot be immediate is worth keeping in front of
+     whoever implements it: **a bond cannot be topped up.** It is one
+     timelocked output, so an operator warned on the day they drop a
+     bracket cannot respond for thirty days. Also allow several bond
+     outputs summing to one weight, or the warning has no answer.
+
 ## M3.2  The client and the wallet                  stage 6
 
   4. **The Unity bridge**, hardened for real sessions - it exists already
@@ -3818,6 +3870,22 @@ round, which is why testnet comes first and why the order is stricter.
   5. **`@blwp/client`.** The session flow: enter, pay, play, settle.
   6. **NWC wallet.** Comes after the client because the client defines
      what the wallet is asked to do.
+
+  6b. **Donations paid, and the authority that points them** (27A.4).
+     The set is a list of LNURLs with basis-point shares summing to
+     10000, signed by the authority key generated back in M2.1, and each
+     recipient is paid its share as a separate Lightning payment.
+
+     Two rules that will be tempting to break:
+       - a failed payment to one recipient MUST NOT be redistributed to
+         the others. An unreachable endpoint would otherwise quietly
+         redirect other people's money.
+       - nothing but the player's own choice decides the percentage, and
+         zero is valid. No node, lobby or creator may rewrite it.
+
+     Rotation via the cold recovery key is part of this task, not a later
+     one: a key with no exercised revocation path is a key whose
+     revocation does not work.
 
 ## M3.3  Settlement                                 stage 7
 
