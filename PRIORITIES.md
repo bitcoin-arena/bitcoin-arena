@@ -129,6 +129,54 @@ recording: test/vectors/csharp-army.json.
      like a divergence; it was not a pair, which is the same trap this item
      has set all along.
 
+     TWO MORE HOLES, FOUND BY PLAYING A SECOND ROUND. Everything above is
+     about one round. A session has more than one, and the second one was
+     broken in two separate ways - neither visible to any suite, both
+     measured in a browser.
+
+     1. THE CORE NEVER STARTED A SECOND ROUND. `outcome` latches: once a
+        run leaves RUN_LIVE nothing brings it back, and only `init` does.
+        `BlwpCore.Init` ran once, in `Start`. All three endings - delivered,
+        written off, block missed - go through `TruckController.Respawn`,
+        which calls `teleport`, and `teleport` moves the truck and clears
+        its momentum and touches no score word. Round two against a fresh
+        `init(0x5eed1234)`, same words, read out of the browser:
+
+          S_STATE      0    ->  1          Armee lebend  96 -> 91
+          S_EXPOSURE   0    ->  214.5      Armee tot      0 ->  5
+          S_ELAPSED    0    ->  0.020      Nachschub  [0,0] -> [89640, 48144]
+          S_BESTX   -100.4  ->  114.1      Luft       [0,0] -> [581454, 525784]
+          S_DELIVERED  0    ->  1050       T_X     -100.400 -> -100.337
+          S_PRACTICE   0    ->  1          tick        0    -> 1440
+
+        Twelve of thirty words. `S_STATE` alone withholds damage, danger,
+        delivery and score, all of which are gated on RUN_LIVE - so round
+        two was unplayable and looked normal. Fixed by `restart` IN THE
+        CORE, reached at roll-out (`LoadoutPanel.Confirm`) because the score
+        card is read out of the core after a run ends. The uploaded relief
+        and solids are round SETUP and are carried across. After the fix,
+        round two at tick 40 is word-identical to a local `init(seed)`
+        stepped 40 idle ticks - all four RNG words and both sortie clocks
+        included.
+
+     2. THE GATE BANKED A LEVEL, NOT AN EDGE. `RunState == RUN_DELIVERED`
+        stays true after the arrival, so `DeliveryGate` re-banked the same
+        run on the first frame the bed held anything. Instrumented: AUTO
+        took 8 parcels, fill 0.86, loaded True - and the next frame showed
+        0 parcels, NOTHING LOADED, the truck back in the bay and the camera
+        flying the arrival again. The player could load but never roll out,
+        so the reset in (1) could not be reached at all. The gate now banks
+        the transition into delivered and waits for the core to be live.
+
+     ROUND TWO, MEASURED AFTER BOTH FIXES. Live fire, `?practice=0`:
+     starts at tick 16, x -100.40, z 10.20 - the core's own START, not a
+     leftover pose - S_STATE 0, condition 100.0, danger 0.0, 96 alive and
+     96 drawn. Drives to x -18.4, danger 68.7, condition 100.0 -> 0.0,
+     S_STATE 2. Drawn equals alive at every sample of both rounds. Unity's
+     own debug overlay in round two reads `core DRIVING · tick 640 ·
+     speed 3.2 m/s · pos -16.0, 4.1 · practice off`, and the card shows
+     BANKED 1,050 from one delivery rather than a loop.
+
      WHO OWNS THE SCREEN, read off the player path and not off a test:
      the picture is C#. `ArmyRenderer` holds a `public Army army` and walks
      `army.Armour` and its soldier lists; it names `BlwpCore` nowhere.
