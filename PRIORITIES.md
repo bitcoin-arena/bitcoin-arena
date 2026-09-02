@@ -103,15 +103,17 @@ recording: test/vectors/csharp-army.json.
      and it needed a third thing nobody had measured: the standoff. See
      "What (h) moved, and what it did not" below.
   k. The squads: three a side at random x, not eight in shared columns -
-     NOT STARTED. Found by (h) failing its own prediction, and it is the
-     measured cause of the last two air quantities.
+     DONE. The air envelope is 17/17 for the first time. The line's own
+     residual is named below and is (l).
+  l. Why the core's riflemen kill half what the C#'s do - NOT STARTED.
+     Like for like, both air-on: 8-18 a round against 16-37.
   i. The reload stagger - NOT STARTED.
   j. Courier fire: tanks, at 34 m - NOT STARTED. Found by (f) and not
      foreseen when the order was set. 99% of what the army does to the
      truck is tank fire the core does not have. See "The truck is shot by
      tanks" below.
 
-  Order: f, g, h, k, j, i, then e.
+  Order: f, g, h, k, l, j, i, then e.
 
 ### What the measurements say, and what they cost
 
@@ -524,6 +526,52 @@ anchors drawn at init and drifting, independent per side - and to leave
 the armour's ladder alone, because C# tanks have no squad at all and the
 core's ladder is what keeps its armies meeting. That is item (k). It adds
 state words for the anchors, so it moves the vectors again.
+
+### What (k) closed, and the one it left open
+
+The infantry got `Army`'s own geometry: three anchors a side, drawn at
+`Rand(-80, 80)` per side and independent of the other side's, walking by
+`sin(Time * 0.12 + i * 2.4) * 3.6` a second and clamped. Armour keeps the
+even ladder, because C# tanks have no squad at all and the ladder is what
+stops the core's two armies drifting apart sideways.
+
+The anchors are STATE, six words appended after the bombs. A clamped
+integral is path-dependent - once an anchor has been held at the edge it
+has lost the excursion - so no closed form in the tick can stand in for
+it.
+
+                       before (h)   after (h)   after (k)   recording
+    dud share          0.45-0.47    0.38-0.46   0.48-0.54   0.50-0.58
+    friendly fire      39-46        34-49       19-56       11-29
+    killed by bombs    71-100       65-98       76-100      60-76
+    quantities in      15/17        15/17       17/17
+
+**Seventeen of seventeen.** The two the port has never reached - the ones
+(d) traced to the ground line and left there, correctly - are in, and not
+one line of `air.js` was touched to do it.
+
+`csharp-infantry.json` now carries four seeds. The line turned out to be
+seed-sensitive: three anchors a side drawn at random sometimes land far
+apart, and then the two lines barely meet. A one-seed reference cannot
+tell that from a fault, and this file has already paid four rounds once
+for reading a reference as something it was not. Seed 20260901's rows are
+unchanged by the recorder edit - asserted when the vector was rebuilt,
+not assumed.
+
+**And the residual, which is (l).** Like for like - both air-on, both at
+12 armour and 36 infantry a side, the same four seeds:
+
+    rifle kills a round      core 8 - 18     C# 16 - 37
+    riflemen lost to bombs   core 76 - 100   C# 60 - 76
+
+The core's riflemen kill about half what the C#'s do, and the core's air
+kills about a third more of them than the C#'s does. The obvious reading
+is that the two are the same fact - a line that is being rebuilt from the
+edge all round is a line that is not in contact - and the obvious reading
+is exactly what cost this file four rounds on the armour. It is a
+question, not a diagnosis, and the first thing (l) does is measure which
+way the causation runs: hold the bomb kills down and see whether the rifle
+kills come up, or hold the contact up and see whether anything moves.
 
 ### The truck is shot by tanks, and the core does not know it
 
