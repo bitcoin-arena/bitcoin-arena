@@ -234,18 +234,68 @@ recording: test/vectors/csharp-army.json.
      and now draws one when nothing is in range. `dist/blwp-core.js` went
      with them or `bundle matches modules` stays red. No new state word.
      `sim.js:790` was NOT touched - that is (n).
-  n. The scoring path vs the old game - NOT STARTED. Two halves, one
-     letter, and it is not done until BOTH are measured.
+  n. The scoring path vs the old game - HALF (1) DONE, half (2) NOT
+     STARTED. Two halves, one letter, and it is not done until BOTH are
+     measured.
 
-     (1) The overflow. `earning` / `fromStart` still goes through
+     (1) The overflow - DONE in `fix(score)`. `earning` / `fromStart` still goes through
      unguarded `length2` (named at `sim.js:790` when found; the call now
      sits at the score step that feeds `earning()`). Past ~181.5 m the
      sum of squares wraps and returns 0, so the truck reads as standing
      on its start for every x beyond about +81 m on a map that runs to
      +130 (furthest corner 249.3 m from the apron). The eastern third of
      the field is inside the fault. That is a BLWP outcome, not an army
-     number. Axes-before-length2 is the same guard (m) put on the truck
-     tests. Host-`st.units` danger stays (e); do not drag it in.
+     number. Host-`st.units` danger stays (e); it was not dragged in.
+
+     IT IS NOT THE SAME GUARD (m) PUT ON THE TRUCK TESTS - it is its
+     mirror, and this is the part to carry to the next `length2` found
+     anywhere. The army's tests ask whether a point is INSIDE a radius,
+     where a large axis RULES THE ANSWER OUT and may be rejected. This
+     asks whether it is OUTSIDE one, where a large axis PROVES it and
+     must be ACCEPTED. Copying (m)'s rejection unchanged would have kept
+     the bug intact. The guard now lives in the rule, not the call site:
+     `earning` takes the two components instead of a distance, because
+     the distance is the thing that cannot be trusted, the way
+     `pickRifleTarget`, `pickTarget`, `threatAt` and the solids scan each
+     own theirs. It had no test coverage, so nothing was loosened.
+
+     golden vectors, before -> after
+
+                     overflow   ticks that     ground gained    final
+                       ticks    should have    and never paid   exposure
+                                earned
+       straight      2867 -> 0    90 -> 0     33.53 -> 0.00 m  200.1 -> 214.8
+       slalom        2847 -> 0    95 -> 0     33.37 -> 0.00 m  187.9 -> 201.9
+       reverse       1221 -> 0    90 -> 0     33.53 -> 0.00 m  186.1 -> 195.3
+       handbrake        0 -> 0     0 -> 0      0.00 -> 0.00 m    3.0 ->   3.0
+       idle             0 -> 0     0 -> 0      0.00 -> 0.00 m    0.0 ->   0.0
+
+     The ground it stopped paying for is the RUN-IN, from x = 80.4 to the
+     eastern edge - where the danger is highest and what the exposure
+     exists to price. Accrual ran from d = 24.9 m, where the truck leaves
+     the apron, to d = 180.82 m, and stopped dead at the boundary. The
+     score column does not move in these six because none carries cargo,
+     so `scoreOf` is zero either way - which is exactly why half (2)
+     below is a separate measurement and not a corollary of this one.
+
+     The loss was permanent within a run: `fromStart` had one reader, but
+     `S_BESTX` advances whether or not a tick earned (`sim.js:882`), so
+     ground crossed during the overflow raised the high-water mark
+     without ever being paid and could not be earned back.
+
+     Two measurements of mine were wrong on the way and were caught by
+     instrumenting rather than by argument. The first pass reported 43
+     denied ticks and 16.05 m because it gated on `S_STATE === 1`;
+     `RUN_LIVE` is 0 (`rules/gate.js:17`) and the state going to 1 at
+     t = 13.73 s is the run ENDING. And I read the exposure as accruing
+     after that transition, which would have made the loss total; it
+     accrues before it.
+
+     Air envelope still 29/29, infantry covered 1.12x, armour 1.01x. Core
+     47/47, guard 19 files clean, PlayMode 174/164/2/8, EditMode
+     124/123/1 - item 7's baseline. `SafeRouteScoresNearNothing`, which
+     this file expected the work might move, was checked BY NAME and
+     passes.
 
      (2) Exact old-game scores. Unity/C# `RunScore` was correct. Core
      `runScore` / `scoreOf` / `earning` / exposure must produce the SAME
