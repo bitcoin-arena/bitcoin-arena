@@ -1303,10 +1303,60 @@ thing.
 > approach and not the release. Both are now checked every run, under `TANKS`
 > in `measure-air.js`.
 >
-> The next unmeasured thing on that axis is the SQUAD ANCHORS: three a side at
-> random x, which is (k)'s work, and the anchors are the one part of the
-> infantry's arrangement that has not been read against `EnsureSquads`. Not
-> started.
+> **The squad anchors have now been read and measured, and they are not it.**
+> Rule against rule, both columns read from source and marked as such:
+>
+>     count       C# want = max(3, strength/12) = 3 at 36    core SQUADS_PER_SIDE = 3
+>     init        C# Rand(-FrontX+12, FrontX-12), FrontX=92  core nextBelow(161)-80
+>                 = continuous [-80, 80)                      = integer -80..80
+>     drift       C# Sin(Time*0.12 + i*2.4) * 3.6 * dt        core angle 1252/60 per tick
+>                                                             (0.12 rad/s), phase k*25032
+>                                                             (2.4 rad), step 3932 (0.06 m)
+>     clamp       C# +-(FrontX-12) = +-80                     core +-80
+>     per side    independent draws, same drift both sides    same
+>
+> Every constant matches. Two differences and neither can carry the term: the
+> core quantises the initial anchor to whole metres, which is nothing against a
+> 16 m blast, and `nextBelow(161)-80` can return exactly +80 where
+> `Rand(-80,80)` cannot - 1 in 161 a draw.
+>
+> `Rand` is `_rng.NextDouble()` (`Army.cs:181`), the seeded army stream and NOT
+> `UnityEngine.Random`, so a C# anchor replay is possible if one is ever needed.
+> It was not needed here.
+>
+> **The internal control, core-only and marked so**, because air-on there is no
+> published position to pair with: the tanks, in the same run at the same
+> ticks, which are already tied to the recording at 0.96x. 12 seeds, t >= 25,
+> men in contact:
+>
+>     riflemen a side   n 23.2   x-sd 33.95 m   nearest neighbour in x 1.46 m
+>     tanks a side      n  7.1   x-sd 44.78 m   nearest neighbour in x 15.73 m
+>     ratio rifle/tank          x-sd 0.758      nearest neighbour 0.093
+>
+>     anchor gaps, same side     45.0 m mean (0.3-156.3), 40 expected for 3 on +-80
+>     anchor gaps, side vs side  54.7 m mean, 18.2% of opposing pairs within 16 m
+>
+> Riflemen stand ten times closer together than tanks, which is what three 18 m
+> columns against twelve freely placed hulls must produce, and the same
+> arithmetic holds in the C# rule. Nothing here is anomalous. **The term did not
+> move.**
+>
+> One thing the anchors DO hold, in both engines equally, printed rather than
+> argued: the +-80 clamp is a RATCHET. The drift's integral has a 60 m range
+> (3.6/0.12), so an anchor drawn near the edge is pinned, loses its headroom and
+> is then dragged inward. On seed 20260901 the bear's first anchor is drawn at
+> exactly +80.0 and is 49.1 m further in by t=45, while the bull's first anchor
+> moves +10.9 over the same span. `Mathf.Clamp(list[i] + drift, ...)` does the
+> same, so it is faithful - but it means anchor independence decays over a
+> round in both engines, and any anchor statistic quoted at t=0 is not the one
+> the bombs see.
+>
+> So the 19 men remain OPEN with the anchors ruled out. What is left unread in
+> the infantry's arrangement is small and named: C# gives each man a lifelong
+> `drift = Rand(-1,1)` applied as `s.x += toward + s.drift * 0.7f * dt`
+> (`Army.cs:681`) which the core does not have - but `toward` snaps him onto
+> his post each tick, so the equilibrium offset is `drift * 0.7 / 60` <= 0.012 m
+> and it cannot carry 19 men. It is recorded here as read, not as a candidate.
 
 The one term (l) was left standing on has a measured cause, and it is a named
 rule difference that was read out of `Army.cs` rather than guessed.
