@@ -127,6 +127,49 @@ recording: test/vectors/csharp-army.json.
 
      CARRIES A FINDING FROM (j) - CLOSED. Truck health had two owners; it
      has one now, the core, since `d7a3002`.
+
+     THE CUTOVER, IN NAMED STEPS. Not started; this is the plan.
+
+       1. The mirror must be able to describe a unit. `UNITS` (96) lives in
+          `sim.js` and `ARMOUR_MASK` (3) is private there, and
+          `BlwpLayout.cs` is generated from `state.js` - so neither
+          reaches C#. A drawer would iterate `MAX_UNITS` 256 and hand-copy
+          the kind rule, which is the drift the generator exists to
+          prevent. Move both into `state.js`, regenerate the mirror, and
+          add accessors beside `UnitPosition`/`UnitHealth`: `UnitSide`,
+          `UnitAlive` (`U_STATE != 0`), `UnitIsArmour` (`(i & ARMOUR_MASK)
+          == 0`), `UnitHeading` (`U_HEADING` is mirrored already). Facing
+          is bound here because the hash already carries it.
+       2. Stop the parallel simulation. `Battlefield.Update:105`'s
+          `Army.Update(Time.deltaTime)` goes, and with it the `Army.Flow`,
+          `Army.Courier` and `Army.Heat` feeds above it and the
+          `Battlefield.Army` property at :41. `Bootstrap.cs:604` stops
+          constructing one.
+       3. Point the drawer at the core. `ArmyRenderer.army` at :20 goes;
+          its pools are already sided, so the fit and place loops count
+          from `Layout.UNITS` and read the accessors from step 1 instead
+          of `army.Armour` and the soldier lists.
+       4. `CombatFx.army` at :22 is NOT this brief. It lives on `Fired`,
+          `Shot`, `Killed` and `Destroyed`, which the core raises nowhere,
+          so the cutover leaves it without a source. That is item 7's
+          point and it is the PRICE of this step, stated rather than
+          hidden: no muzzle flashes, no tracers, no corpses until the core
+          reports its shots.
+       5. `Army.cs` is NOT deleted here. It stops being built and stops
+          being ticked in the player scene, and survives as the reference
+          recorders' subject - every C# number the project will ever want
+          has to be on tape before the file goes.
+       6. Tests, counted separately. New: a PlayMode test that the player
+          path does not tick the C# army, and one that the drawer places a
+          transform where the core says a unit is. The second can only
+          assert the WIRING - PlayMode has no core - so the picture itself
+          is a WebGL check and nothing else.
+       7. Done, in a sentence a player can see: the tanks and men on
+          screen are the ones that shoot the truck, and driving into a
+          tank you can see stops you.
+       8. Deployable: NO until a WebGL run in a browser. `BlwpCore` is
+          stubbed outside WebGL, so two of the four reds cannot go green
+          in PlayMode and the picture cannot be checked there at all.
      CARRIES A FINDING FROM (j): truck health now has two owners that
      disagree. The core sets `S_STATE` to 2 as soon as its own `T_HP`
      reaches zero - measured at t=13.9 s with the truck parked in the
@@ -879,6 +922,18 @@ recording: test/vectors/csharp-army.json.
      ever want must be recorded BEFORE step 5. Steps 0-2 took the three
      that were named; whether that is all of them is not established, and
      that question belongs before step 1 of the port, not after.
+
+  p. `Army.Wrecks` / `AvoidWrecks` in the core - NOT STARTED. A destroyed
+     tank leaves a hulk units are pushed out of. Measured: 54 tank wrecks
+     in ninety seconds, 4.67 living units per tick standing within 3 m of
+     one. Outcome, not texture. Also the missing `impact * 3f` branch for
+     driving into a hull.
+  q. The infantry's halt and pace per man - NOT STARTED. `restFor` /
+     `nextRest` and the gait wave. Measured: infantry z-spread, core
+     against the recording, 1.04 / 1.04 / 33.41 / 25.36 against 4.33 /
+     11.66 / 14.22 / 20.55 at 15 / 30 / 60 / 90 s - the core marches in
+     lockstep for half a minute and over-spreads later, and spread decides
+     who is inside a 16 m blast. Outcome, not texture.
 
   f. The infantry line, recorded - DONE.
      `test/vectors/csharp-infantry.json`, three passes in one Unity run.
