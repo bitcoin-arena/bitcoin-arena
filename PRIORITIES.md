@@ -47,7 +47,7 @@ their names, so any plate size read at wiring time can describe something
 that no longer exists. Every display is re-fitted against the mesh that
 is there now.
 
-## 2. The army into the core  -  M1  -  IN PROGRESS
+## 2. The army into the core  -  M1  -  IN PROGRESS (l closed, m/j/i/n/e open)
 
 The last thing standing between here and M1.
 
@@ -105,9 +105,11 @@ recording: test/vectors/csharp-army.json.
   k. The squads: three a side at random x, not eight in shared columns -
      DONE. The air envelope is 17/17 for the first time. The line's own
      residual is named below and is (l).
-  l. Why the core's riflemen kill half what the C#'s do - OPEN, on ONE
-     term, with seven causes ruled OUT by measurement rather than by
-     argument. Like for like, both air-on: 8-18 a round against 16-37.
+  l. Why the core's riflemen kill half what the C#'s do - DONE as a
+     DIAGNOSIS, with one term measured and left unattributed, and the
+     reason it stays unattributed is a limit of the recording rather
+     than a gap in the work. Causes ruled OUT by measurement or by
+     reading C#, not by argument. Like for like, both air-on: 8-18 a round against 16-37.
      It is not the gun: air-off, the core's rifle kills land ON the
      recording (24-42 against 28-51). It is not the squad geometry: at
      t=0 every geometry quantity overlaps, both engines, four seeds. It
@@ -122,14 +124,33 @@ recording: test/vectors/csharp-army.json.
      kills a round after the recording's own bomb-death exchange rate is
      applied. The slope bridge decided that neither needs a new Unity
      recorder pass.
-     The 19 men now have a MEASURED CAUSE and it is a named rule
-     difference: `Army.Spawn` draws a squadOffsetZ = Rand(-5,5) per man
-     and the core's `riflePost` returns an X offset only, so the core's
-     squads are 58 m deep where C#'s are 10, they interpenetrate, and a
-     third of the core's bombs reach 2-4 squads at once and carry 54% of
-     the covered men. Capping a bomb at one squad removes 26.1 men a
-     round where the excess is 19.0. See "The 19 men" below. NOT fixed:
-     that is a spawn rule change and its own step.
+     The squad-depth reading of the 19 men is RETRACTED and the
+     correction is under "The 19 men" below: `riflePost` already carries
+     the z offset (`RIFLE_SQUAD_Z`, per man -4.84..4.99, sd 2.851 against
+     the C# draw's 2.887), and the 16.8 m that looked like a difference
+     was a whole side including the men still walking in. In contact the
+     core is 3.90-4.72 m against the 3.85 its own rule intends.
+     What DID survive is core-only description, not a cause: a third of
+     the bombs reach 2-4 squads and carry 54% of the covered men, and
+     those bombs are friendlier (.482 against .367 over 201 and 332
+     bombs). Also read and ruled out: the squad ANCHORS, constant for
+     constant (count 3, init +-80, drift 0.12 rad/s at phase 2.4 rad and
+     0.06 m a tick, clamp +-80); the release rule, constant for constant
+     (vz = sign(front-z)*Rand(10,22), vx 30, gravity 9.8100, entry 19,
+     standoff 26 weaving +-9 and height +-3); the counting definitions,
+     word for word (`hit = infKilled>0 || armourKilled>0 || armourIn>0`);
+     and `AvoidWrecks`, whose upper bound is ZERO because the recording
+     ran with `Wrecks.Count == 0`.
+     The discriminator that localises what is left: the core's bombs
+     cover the recording's tanks (98 against 102, 0.96x) while covering
+     28% more men (350 against 274, 1.28x), from FEWER detonations (137
+     against 146) at the same effective count (68 against 68). The ground
+     the bombs find is not busier; it is the infantry. Air-OFF the
+     infantry density measures already sit on the recording (`meanNearest`
+     20.8-40.2 against 20.87-42.3), so the difference is made by the air -
+     and air-on the recording publishes no position, no spread and no
+     headcount over time. The stock of unread infantry rules in `Army.cs`
+     is exhausted.
      And it is not the flat approach, which was the one named rule
      difference the pass turned up: measured at the bombs, 90% of the men
      they take are taken where the line is already 8 m deep or more, and
@@ -149,13 +170,37 @@ recording: test/vectors/csharp-army.json.
      air-off", "What a bomb finds, per detonation", "The slope", "Where
      the bombs land, and when" and "The rifle line divided by the
      meeting" below.
+     CLOSED ON THIS: `menPerEffectiveBomb` is core 4.47-6.25 against the
+     recording's 3.67-4.75. By this item's own standard - overlapping
+     envelopes, not containment, because four seeds of a different army
+     cannot reproduce four seeds of the C# one - that quantity OVERLAPS,
+     and the tool prints it as OVERLAPS. The 19 men are the difference of
+     the POOLED means (5.15 against 4.03), the core is above on all four
+     seeds, and the armour control at 0.96x makes it a directed signal
+     rather than scatter. It is recorded as a measured, unattributed
+     residual and NOT as "close enough". Attributing it needs air-on
+     positions, which only a new Unity recorder pass can publish, and
+     that pass has now been declined three times.
+  m. The `length2` overflow at the two truck tests - NOT STARTED. Named
+     and measured under (l): `length2` returns 0 for any separation past
+     ~181.5 m, and neither `sim.js:722` (the rifleman's truck test) nor
+     `army.js:273` (the tank's) rejects on the axes first, where all
+     three target scans and both collision scans do. Costs the rifle line
+     ~0.4 kills a round air-on and burns 19-21% of the approach's rifle
+     clocks. A rule change: it moves the golden vectors.
+  n. The same overflow in the SCORING path - NOT STARTED, and it is not
+     (m)'s twin. `sim.js:790` reads `fromStart` through the same
+     unguarded `length2`, so the truck reads as standing on its start for
+     every x beyond about +81 m on a map that runs to +130 and whose
+     furthest corner is 249.3 m out. That is a BLWP outcome, not an army
+     number.
   i. The reload stagger - NOT STARTED.
   j. Courier fire: tanks, at 34 m - NOT STARTED. Found by (f) and not
      foreseen when the order was set. 99% of what the army does to the
      truck is tank fire the core does not have. See "The truck is shot by
      tanks" below.
 
-  Order: f, g, h, k, l, j, i, then e.
+  Order: f, g, h, k, l (all done), then m, j, i, n, then e.
 
 ### What the measurements say, and what they cost
 
@@ -1709,11 +1754,43 @@ throw at bundle time, which is the loud case; two `var`s or two
 the modules with only `bundle.test.js` hashing to catch it. Widen the
 check to every top-level declaration. Written up under item 2.
 
+## 7. A red renderer test: the rifle flash  -  no milestone  -  small
+
+Found while running the EditMode suite in batchmode to reach (l)'s
+recorder, and NOT pulled into (l) or fixed there:
+
+    CombatFxTests.RifleFireProducesAFlashAndATracer
+      es wird geschossen, aber nichts ist zu sehen
+      Expected: greater than 0
+      But was:  0
+
+The suite is 124 tests, 123 green, this one red. It is renderer work, not
+army work: `CombatFx` draws the flash and the tracer off the army's
+`Shot` event. Two reasons it is written down here rather than left in a
+log.
+
+It bears on (e). `CombatFx` is also the only thing that fills
+`army.Wrecks` (`CombatFx.cs:882`, released at `:206`) - a RENDERER file
+writing positions the simulation then reads. Harmless while the C# army
+IS the simulator; after (e) the core is, and nothing may feed it from
+`CombatFx`.
+
+And it bears on the `Shot` event itself, which is a trap the recorder
+work had to route around: `Army.cs:731` invokes it as
+`Shot?.Invoke(s, hit ? mark : new Vector2(mark.x + Rand(-3,3), mark.y +
+Rand(-3,3)))`. `?.Invoke` evaluates its arguments only when something is
+subscribed, so attaching a listener draws two extra numbers per miss and
+makes it a different battle. Same shape at `Army.cs:638` and `:737` for
+`CourierHit`. Anything touching this test must not subscribe to `Shot`
+during a recording.
+
+NOT before (j). It is not on the M1 path.
+
 ---
 
 # The milestones
 
-Items 1 to 5 above are the work in front of us. This is what that work is
+Items 1 to 7 above are the work in front of us. This is what that work is
 FOR. After item 2 closes, the next list is drawn from M2 - and its first
 entry will be stage 3, the node daemon, because nothing else in M2 can
 start without it.
