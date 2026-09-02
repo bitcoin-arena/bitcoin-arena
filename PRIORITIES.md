@@ -96,7 +96,9 @@ recording: test/vectors/csharp-army.json.
      The two line passes reproduce `csharp-army.json` to the digit, which
      is what says it is the same run. Numbers under "The half that was
      never compared" below.
-  g. A no-air control for `measure-army.js` - NOT STARTED.
+  g. A no-air control for `measure-army.js` - DONE. `--core=DIR`, and
+     every line now says `air=on` or `air=off`. Measured both ways: the
+     ground line was not hiding anything. Numbers below.
   h. The infantry line, corrected: rifle fire and the 24 m floor - NOT
      STARTED.
   i. The reload stagger - NOT STARTED.
@@ -481,8 +483,32 @@ launches no sorties, and the core has no switch for turning its air off -
 git worktree taken before the air landed. So `measure-army.js` has, since
 (d), been printing an air-ON core beside an air-OFF recording. The
 reinforcement table above predates the air and is sound; anything measured
-with that tool from here is not, until it can load a control the same way
-`measure-air.js` does.
+with that tool after it was not.
+
+**(g) is done.** `measure-army.js` takes `--core=DIR` the way
+`measure-air.js` does, and every line it prints now carries `air=on` or
+`air=off` - a comparison that does not say which condition it was made
+under is not a comparison. The control is the pre-air worktree:
+
+    git worktree add /tmp/noair 98a8ee6      # the commit before air.js
+    node tools/measure-army.js 20260901 --seam0 --quiet \
+      --core=/tmp/noair/packages/core/src
+
+Four seeds, seam pinned, laid out both ways:
+
+                       core, air off   core, air on   recording (air off)
+    armour lost        53 - 61         60 - 64        59
+    replacements       51 - 57         56 - 60        55
+    shooters t=90      14 - 18         12 - 14        12
+    contact lost       never           never          never
+
+The control lands on the recording and the air-on run sits just above it,
+by about the six to ten tanks a round the bombs take - which is the same
+gap the C# shows between its own air-on and air-off passes (60-64 against
+53-61 in `csharp-gunships.json`). So the defect was a reporting fault and
+not a hidden divergence: nothing measured under it has to be redone. It
+would have become one the moment a number moved, and the tool would have
+had no way to say which arm moved it.
 
 ### What (e) actually has to move, found by reading the bridge
 
