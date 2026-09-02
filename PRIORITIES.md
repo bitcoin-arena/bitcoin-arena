@@ -260,7 +260,41 @@ recording: test/vectors/csharp-army.json.
           It is listed here so the order reads correctly for anyone
           following it - tank-on-tank spacing had to land before anything
           else touched armour positions.
-       1. `st.armour` inside `step()`. Today it is 0 at every tick of
+       1. DONE. `st.armour` inside `step()`, and the host chain out with
+          it. `fillArmour` runs at the TOP of the step, before the vehicle
+          moves, so it reads the positions the army finished last tick
+          with - deliberately the same one-frame staleness Unity had, and
+          the thing `resolveArmour`'s own comment relies on. Measured:
+          `st.armour.n` was 0 at every tick of every golden vector and is
+          now 17-24 in all six. Removed with it, and NO C# FILE WAS
+          DELETED - three members were: `setArmour` and `setUnits` from
+          `sim.js`, the `setArmour` line from `bundle.js`, `BlwpSetArmour`
+          from `blwp.jslib`, `SetArmour` from `BlwpCore.cs`, and
+          `UploadArmour` plus its buffer from `CoreDrivenTruck.cs`. The
+          dead host branch of the score's danger went too; `setUnits` had
+          had no caller anywhere for some time.
+
+          Four core tests moved with it and none was weakened.
+          `clearTheField` empties the slots but `reinforce` refills them
+          within seconds, which was harmless until the core's own armour
+          became solid - so the three fixtures that are about the VEHICLE
+          or the SCORE now hold the field clear every tick instead of
+          clearing it once. And `armour blocks the truck and infantry does
+          not` used to get its obstacle by handing a position list in from
+          outside; it now places a real core unit and pins it, which is
+          also what finally makes its infantry half a real case instead of
+          the note it carried - "infantry is never uploaded, so an empty
+          armour list IS the infantry case", which asserted nothing about
+          infantry at all.
+
+          Core 47/47, guard 19 files clean, node vs bundle-node identical,
+          stage 0 PASS, vectors and `dist/` regenerated. PlayMode 176 /
+          163 / 3 / 10 - the two Visibility reds are item 7's baseline and
+          `HeatRaisesTheExposureRate` was green on its second run, which is
+          item 7's rule. The totals moved from 174/8 because this letter
+          added two `[Explicit]` measurements.
+
+       1b. WAS `st.armour` inside `step()`. Today it is 0 at every tick of
           every vector and the truck drives through twenty-four of its own
           tanks. FIRST because it is the only one the game currently gets
           from Unity - porting it is restoring a behaviour, and the two
