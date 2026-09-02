@@ -140,15 +140,46 @@ recording: test/vectors/csharp-army.json.
           `UnitAlive` (`U_STATE != 0`), `UnitIsArmour` (`(i & ARMOUR_MASK)
           == 0`), `UnitHeading` (`U_HEADING` is mirrored already). Facing
           is bound here because the hash already carries it.
-       2. Stop the parallel simulation. `Battlefield.Update:105`'s
-          `Army.Update(Time.deltaTime)` goes, and with it the `Army.Flow`,
-          `Army.Courier` and `Army.Heat` feeds above it and the
-          `Battlefield.Army` property at :41. `Bootstrap.cs:604` stops
-          constructing one.
-       3. Point the drawer at the core. `ArmyRenderer.army` at :20 goes;
-          its pools are already sided, so the fit and place loops count
-          from `Layout.UNITS` and read the accessors from step 1 instead
-          of `army.Armour` and the soldier lists.
+       2. DONE, with 3, because they cannot be separated without a broken
+          build. `Battlefield.Update` no longer feeds Flow, Courier or Heat
+          and no longer calls `Army.Update`; `Battlefield.LaunchSorties` is
+          gone with it, the core running its own on the same schedule.
+          `Bootstrap` builds and populates no army, binds none to CombatFx,
+          and hangs no audio off its events. `Battlefield.Army` is still
+          DECLARED and never assigned - removing it means re-sourcing
+          fourteen test methods across four files, which is its own step -
+          and nothing in the product reads it.
+       3. DONE. `ArmyRenderer` has no `army` field. Units come from
+          `UnitPosition`, `UnitSide`, `UnitAlive`, `UnitIsArmour` and
+          `UnitHeading` over `Layout.UNITS`; gunships from `HeliAlive`,
+          `HeliSide`, `HeliDir`, `HeliPosition`; bombs from `BombAlive`,
+          `BombPosition`, `BombVelocity`. `DriveHud`'s counts read the core
+          too. NOT BUILT, and named rather than discovered later: the
+          turret follows the hull, helicopter yaw and bank are derived from
+          `H_DIR` in the renderer, a man is one size and always walking -
+          height and the halt are (q) - and the bob comes off the tick.
+
+          THE PRICE, in reds. PlayMode 176 / 151 / 15 / 10, up from four
+          reds, and none of them softened:
+            no core in the editor, so nothing is drawn to look at -
+              ImportedModelTests.SoldiersStandOnTheGroundAndAreAnimated,
+              ImportedModelTests.TanksStandOnTheGroundRatherThanInIt,
+              VisibilityTests.ArmiesAreActuallyDrawn,
+              VehicleTests.BothArmiesAreOnTheFieldAndOnTheGround,
+              VehicleTests.ArmiesFightNearTheSeamRatherThanWanderingOff,
+              VehicleTests.ArmourBlocksTheTruck,
+              VehicleTests.TheTruckCanDriveOnAfterHittingTheArmy,
+              VehicleTests.UnitsDoNotShoveEachOtherWithPhysics
+            `field.Army` is null now -
+              TruckHealthTests.TheTruckIsProtectedOnTheApron,
+              TruckHealthTests.TheArmiesLeaveAWreckAlone,
+              FeatureTests.ValuableFreightMakesTheTruckATarget,
+              FeatureTests.AnEmptyTruckIsLeftAlone
+            already listed - DamageIsFeltInTheDriving,
+              CrashingIntoArmourWritesItOff, RoadsAreActuallyDrawn
+          Two new tests are green: the player path runs no C# army, and the
+          drawer has no `Army` field to read from. Both assert WIRING; the
+          picture is a browser run against a WebGL build and nothing else.
        4. `CombatFx.army` at :22 is NOT this brief. It lives on `Fired`,
           `Shot`, `Killed` and `Destroyed`, which the core raises nowhere,
           so the cutover leaves it without a source. That is item 7's
