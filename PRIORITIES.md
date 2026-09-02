@@ -2876,6 +2876,26 @@ Nothing here starts while item 2 above is open.
      `bufferedAmount`. Batches are tick-numbered so a reconnecting client
      re-sends and the node ignores what it already has.
 
+  5b. **Nostr discovery** (spec 25.1). A node publishes its
+     NodeAdvertisement as a parameterized replaceable event and rounds as
+     announcements; a client reads several relays and merges. Comes after
+     the daemon exists, because before that there is nothing to announce.
+
+     Safe here for one stateable reason: **a relay can withhold, it
+     cannot lie.** The census is chain state and the body is committed to
+     by hash, so nothing a relay serves is believed on its own account -
+     the `bond_outpoint` tag is mandatory precisely so the client can
+     check it against the chain before it means anything.
+
+     Two things to hold the implementation to:
+       - nothing time-critical and nothing security-bearing goes over it.
+         Input batches, checkpoints, result signatures, payout tables and
+         committee selection all stay on the direct WebSocket.
+       - it does NOT solve bootstrap, and the write-up should not claim
+         it does. "One website must exist" becomes "one of a set must
+         exist, and the set can be extended without permission". Better,
+         not solved.
+
 ## M2.2  Many players in one round                  stage 3
 
   6. **The Round Contract.** Map, duration `T_run`, seed, and the score
