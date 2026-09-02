@@ -3485,9 +3485,16 @@ FOR. After item 2 closes, the next list is drawn from M2 - and its first
 entry will be stage 3, the node daemon, because nothing else in M2 can
 start without it.
 
-Four of them, and the numbers are cumulative sessions from the estimate
+Five of them, and the numbers are cumulative sessions from the estimate
 in IMPLEMENTATION.md section 15. That estimate has held so far, which is
-some reason to trust the rest of it.
+some reason to trust the rest of it - with one correction: it never
+carried the frontend at all, which is why MF is now counted separately
+instead of being absorbed silently into whichever milestone happened to
+need a screen.
+
+**MF is the odd one.** M1 to M4 are sequential; MF is gated and runs
+alongside them, because a protocol nobody can watch is a protocol nobody
+can debug. Its gates say which milestone each part unblocks.
 
 Playability comes long before money. Each milestone is something you can
 put in front of a person, not an internal checkpoint.
@@ -3517,7 +3524,33 @@ the two largest risks in the whole undertaking:
 **Where we are:** stages 0 and 2 are finished, stage 1 is most of the way.
 What is left is the army, which is item 2 above.
 
-## M2 - play-money multiplayer             29-41 sessions
+## MF - the client                          14-20 sessions
+
+**What you can do:** see, test and finish everything the other milestones
+build. MF is not a phase that happens after them - it is the milestone
+whose absence makes them unverifiable.
+
+**Why it is separate.** The frontend was invisible in this plan: M2's
+description promised a lobby, ghosts and a leaderboard while M2's work
+list contained none of them, and one sentence about the Unity bridge was
+the only screen work anywhere. Assumed work is unestimated work.
+
+**Why it is not simply last.** A protocol you cannot watch is a protocol
+you cannot debug. Seven nodes disagreeing byte-for-byte is a log line;
+seven nodes disagreeing where you can SEE which truck went where is a
+bug you can fix in an afternoon. So MF is gated, not sequential:
+
+    MF-a   before M2 can be tested at all
+    MF-b   before M3 can be tested at all
+    MF-c   finishing - what makes it shippable rather than demonstrable
+
+Build each gate when the milestone it unblocks begins, and track the
+whole thing as one milestone so it stays estimated.
+
+**All of it is new.** The single-player build has no concept of another
+player, of money, or of an outcome somebody else decided.
+
+## M2 - play-money multiplayer             23-33 sessions
 
 **What you can do:** the whole experience with other people, without
 sats. A lobby. Everyone starting the same round at the same time on the
@@ -3538,7 +3571,7 @@ transcripts. Then stage 4: the replay pool, five-of-seven finality,
 objection handling, what happens when a node equivocates or no quorum is
 reached. M2 cannot begin before that daemon exists.
 
-## M3 - testnet sats                       38-54 sessions
+## M3 - testnet sats                       31-45 sessions
 
 **What you can do:** play for real Lightning payments, on testnet, where
 the coins are worthless and the mechanics are not.
@@ -3769,42 +3802,6 @@ Nothing here starts while item 2 above is open.
  16. **Equivocation and no-quorum.** What happens when a node signs two
      different results, and what happens when five cannot be found. Last,
      because they cannot be provoked until everything above exists.
-
-## M2.4  The screen                                  stage 4
-
-Everything above is a daemon and a protocol. **None of it is visible**,
-and the M2 description promises a lobby, ghosts and a leaderboard that
-appear nowhere in the work list. That omission is why frontend work
-wrecks estimates: it is assumed rather than planned.
-
-All of this is Unity plus the web wrapper, and all of it is new - the
-single-player build has no concept of another player.
-
- 20. **The lobby.** Rounds open for entry, their stake, their map, how
-     many have joined, and a countdown to `committee_time`. Before that
-     moment the committee is genuinely unknown, so the lobby says
-     "committee pending" rather than showing an empty list - the wait is
-     a security property (§5A.5) and should read as one.
-
- 21. **Ghosts.** Other trucks on your screen, interpolated from their
-     checkpoints, visibly not collidable. They must never be able to
-     affect your world - that is spec 0.10, and a ghost that pushes you
-     is not a rendering bug but a protocol violation you can see.
-
- 22. **Joining late.** Catching up from the transcript with the world
-     already moving, without a loading screen that makes it feel broken.
-
- 23. **The results table.** Every player's score and rank, and WHICH
-     nodes signed it. Showing the signers is not a detail: it is the only
-     moment the player sees that no single party decided the outcome.
-
- 24. **Objection and disagreement, on screen.** When a node objects or
-     the committee cannot reach threshold, the player must see what is
-     happening and what it means for their round. Silence during a
-     dispute reads as a hang, and a hang reads as theft.
-
- 25. **Reconnect.** The disconnect rule (spec 15) exists; the interface
-     for it does not. What the player sees while dropped, and on return.
 
 ## M2 is done when
 
@@ -4139,7 +4136,63 @@ freeze a bond forever - but it does not remove the trust. Anyone posting
 a bond is trusting that quorum not to collude against them within the
 window. Say so in the client, before someone posts one.
 
-## M3.4  The screen, with money                     stage 7
+## M3 is done when
+
+A round is played for testnet sats, the stake is held rather than spent,
+the winners are paid by a threshold signature no single node could have
+produced, and a node killed mid-settlement recovers to the right state on
+restart.
+
+# The work for MF, in order
+
+## MF-a  Before M2 can be tested                    stage 4
+
+M2 is a daemon and a protocol, and **none of it is visible**. These are
+the items without which "seven nodes agreed" is a log line rather than
+something anybody can check.
+
+ 20. **The lobby.** Rounds open for entry, their stake, their map, how
+     many have joined, and a countdown to `committee_time`. Before that
+     moment the committee is genuinely unknown, so the lobby says
+     "committee pending" rather than showing an empty list - the wait is
+     a security property (§5A.5) and should read as one.
+
+ 21. **Ghosts.** Other trucks on your screen, interpolated from their
+     checkpoints, visibly not collidable. They must never be able to
+     affect your world - that is spec 0.10, and a ghost that pushes you
+     is not a rendering bug but a protocol violation you can see.
+
+ 22. **Joining late.** Catching up from the transcript with the world
+     already moving, without a loading screen that makes it feel broken.
+
+ 23. **The results table.** Every player's score and rank, and WHICH
+     nodes signed it. Showing the signers is not a detail: it is the only
+     moment the player sees that no single party decided the outcome.
+
+ 24. **Objection and disagreement, on screen.** When a node objects or
+     the committee cannot reach threshold, the player must see what is
+     happening and what it means for their round. Silence during a
+     dispute reads as a hang, and a hang reads as theft.
+
+ 25. **Reconnect.** The disconnect rule (spec 15) exists; the interface
+     for it does not. What the player sees while dropped, and on return.
+
+
+ 26. **The observer view.** Watch a round from outside: every player,
+     every checkpoint, every node's opinion of the score side by side.
+     This is a testing instrument, not a feature, and it is the one that
+     turns a byte-level disagreement into something with a location.
+
+ 27. **The transcript player.** Load a recorded round and replay it in
+     the renderer at any speed, scrubbing back and forth. The core is
+     deterministic precisely so this is possible; not building it means
+     debugging replays by reading numbers.
+
+ 28. **A local multi-client harness.** N browser clients against local
+     nodes in one command. Testing "many players in one round" by opening
+     tabs by hand does not survive the tenth time.
+
+## MF-b  Before M3 can be tested                    stage 7
 
  16. **The entry screen.** One number the player approves, with the
      breakdown under it: stake, node fee, donation, net to the pot. Fees
@@ -4167,12 +4220,34 @@ window. Say so in the client, before someone posts one.
      it was spent on, and when it lapses. A budget the player cannot
      inspect is worse than approving each round.
 
-## M3 is done when
 
-A round is played for testnet sats, the stake is held rather than spent,
-the winners are paid by a threshold signature no single node could have
-produced, and a node killed mid-settlement recovers to the right state on
-restart.
+ 22. **The settlement inspector.** Which state every entry is in
+     (`HELD`, `SETTLE_REQUESTED`, `EXPIRED`...), which node holds which
+     VSS share, and what the timers are. Settlement fails in ways that
+     are invisible from the game screen, and a node killed mid-payout is
+     a state machine question that a UI answers in seconds.
+
+## MF-c  Finishing                                  stage 8
+
+ 23. **Mobile.** The single-player build already runs there; nothing
+     above assumes a phone. The lobby, the entry breakdown and the claim
+     screen are the ones that will not fit.
+
+ 24. **Error states, everywhere.** Node unreachable, chain source
+     disagreeing, budget exhausted, claim window expired, committee
+     pending forever. Every one of these currently reads as a hang, and
+     a hang in a money application reads as theft.
+
+ 25. **The whole flow, unattended.** Someone who has never seen it opens
+     the page, joins a round, plays, is paid, and plays again - without
+     being told anything. Until that works, everything else is a demo.
+
+## MF is done when
+
+A person who did not build it can play a paid round on a phone, see who
+signed their result, and be paid - and a developer can take a
+disagreement between two nodes and find where the trucks diverged without
+reading a transcript by hand.
 
 ---
 
