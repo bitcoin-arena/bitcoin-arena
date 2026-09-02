@@ -225,6 +225,35 @@ recording: test/vectors/csharp-army.json.
        7. Done, in a sentence a player can see: the tanks and men on
           screen are the ones that shoot the truck, and driving into a
           tank you can see stops you.
+       9. THE OWNERSHIP AUDIT, and it found two C# owners left. Both are
+          closed.
+
+          DELIVERY was decided twice. The core has
+          `arrived(x, z) => x >= GATE_X && |z| <= HALF_MOUTH` and sets
+          `RUN_DELIVERED`, and `DeliveryGate` ran the same test again in C#
+          off the truck's transform. `RUN_DELIVERED` had NO reader at all -
+          only `RunState == 2` was ever looked at, for the wreck. The gate
+          now takes the core's verdict when a core is answering and keeps
+          its geometry only for the editor, where `BlwpCore` is stubbed.
+          Proved in the browser: with the truck at x = -96.9 m, 211 m short
+          of the gate, setting `S_STATE` to 1 in the core's buffer and
+          nothing else banked the run - "DELIVERED 5,926 sat to the
+          miners", 1 run.
+
+          THE DANGER was computed twice. `RunScore.Exposure` already read
+          the core, but `Rate` - the meter on screen - called `RateNow`,
+          which walks `army.Armour` and `army.Infantry`; with no C# army
+          left it fell through to a geometry fallback, so the player was
+          shown a different danger from the one the round settles on. The
+          core integrates `exposure += rate * gained`, so the rate is read
+          back as exposure gained per metre of new ground rather than
+          recomputed.
+
+          Clean after the audit: no `Army.Update` anywhere, no `new Army(`
+          in the product, no `RunOver`/`ClearPath` caller, no
+          `Rigidbody.linearVelocity` deciding anything, and `Projected`
+          already on the core.
+
        8. DONE - THE BROWSER RAN, AND IT FOUND THE THING NO EDITOR TEST
           COULD. `BlwpCore._state` was sized `O_UNITS + MAX_UNITS *
           U_WORDS` = 2073, which is exactly `O_ARMY`: the buffer ended
