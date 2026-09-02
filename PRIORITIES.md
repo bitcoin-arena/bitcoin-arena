@@ -1628,72 +1628,98 @@ and in `riflePost`, it moves the golden vectors, and it is its own step.
 
 (l) closed on a decomposition, and a decomposition is only worth what its
 comparison covers. The envelope advertised 17/17 - against a file that
-publishes about thirty comparable quantities. That is not a pass mark, it is
-a sample, and this item found `armour.insideRadius` (the discriminator that
+publishes about thirty comparable quantities. That is not a pass mark, it is a
+sample, and this item found `armour.insideRadius` (the discriminator that
 localised the last term) sitting unused all along. So the file was enumerated
-rather than remembered, and every remaining published field was wired in.
+rather than remembered, and every remaining published field wired in. Thirteen
+had never been compared.
 
-Air on, seam pinned, the recording's own four seeds. Every right-hand column
-is a field `csharp-gunships.json` publishes; none is derived for the
-comparison. Overlapping ranges, not containment, which is this item's standard
-throughout.
+**These are the numbers AFTER (m).** Air on, seam pinned, the recording's own
+four seeds. Every right-hand column is a field `csharp-gunships.json`
+publishes; none is derived for the comparison. Overlapping ranges, not
+containment, which is this item's standard throughout.
 
-    sortiesPerRound               [11, 12]            [11, 12]            OVERLAPS
+    sortiesPerRound               [10, 11]            [11, 12]            OVERLAPS
     sortiesPerSide                [5, 6]              [5, 6]              OVERLAPS
-    onStationShare                [0.70, 0.79]        [0.69, 0.93]        OVERLAPS
+    onStationShare                [0.71, 0.89]        [0.69, 0.93]        OVERLAPS
     peakAirborne                  [2, 2]              [2, 2]              OVERLAPS
-    bombsPerRound                 [33, 36]            [35, 38]            OVERLAPS
-    bombsPerSortie                [2.75, 3.00]        [3.00, 3.18]        OVERLAPS
-    offFieldShare                 [0.30, 0.39]        [0.26, 0.42]        OVERLAPS
-    dudShare                      [0.48, 0.54]        [0.50, 0.58]        OVERLAPS
-    infantryKilledByBombs         [76, 100]           [60, 76]            OVERLAPS
-    infantryFriendlyFire          [19, 56]            [11, 29]            OVERLAPS
-    infantryPerEffectiveBomb      [4.47, 6.25]        [3.67, 4.75]        OVERLAPS
-    armourDestroyedByBombs        [9, 13]             [9, 12]             OVERLAPS
-    armourBombShare               [0.15, 0.21]        [0.15, 0.22]        OVERLAPS
-    firstKillingBombAt            [18.1, 21.6]        [16.7, 26.4]        OVERLAPS
-    maxAbsLandingX                [136.9, 154.4]      [148.0, 153.8]      OVERLAPS
-    armourLostWithAir             [60, 65]            [55, 63]            OVERLAPS
-    infantryAliveWithAir          [32, 36]            [32, 36]            OVERLAPS
-    infantryInsideRadius          [76, 100]           [60, 76]            OVERLAPS
-    armourInsideRadius            [20, 30]            [19, 32]            OVERLAPS
-    bombsThatKilledArmour         [8, 10]             [5, 9]              OVERLAPS
-    armourDestroyedByShell        [49, 55]            [43, 52]            OVERLAPS
-    infantryKilledByRifle         [8, 18]             [16, 37]            OVERLAPS
-    bombsOwnGround                [5, 10]             [5, 11]             OVERLAPS
-    bombsEnemyGround              [13, 17]            [14, 17]            OVERLAPS
+    bombsPerRound                 [34, 35]            [35, 38]            OVERLAPS
+    bombsPerSortie                [3.09, 3.50]        [3.00, 3.18]        OVERLAPS
+    offFieldShare                 [0.31, 0.38]        [0.26, 0.42]        OVERLAPS
+    dudShare                      [0.51, 0.54]        [0.50, 0.58]        OVERLAPS
+    infantryKilledByBombs         [71, 100]           [60, 76]            OVERLAPS
+    infantryFriendlyFire          [31, 66]            [11, 29]            OUTSIDE
+    infantryPerEffectiveBomb      [4.24, 5.88]        [3.67, 4.75]        OVERLAPS
+    armourDestroyedByBombs        [5, 11]             [9, 12]             OVERLAPS
+    armourBombShare               [0.08, 0.17]        [0.15, 0.22]        OVERLAPS
+    firstKillingBombAt            [8.6, 21.6]         [16.7, 26.4]        OVERLAPS
+    maxAbsLandingX                [148.9, 154.1]      [148.0, 153.8]      OVERLAPS
+    armourLostWithAir             [61, 64]            [55, 63]            OVERLAPS
+    infantryAliveWithAir          [35, 36]            [32, 36]            OVERLAPS
+    infantryInsideRadius          [71, 100]           [60, 76]            OVERLAPS
+    armourInsideRadius            [18, 27]            [19, 32]            OVERLAPS
+    bombsThatKilledArmour         [5, 10]             [5, 9]              OVERLAPS
+    armourDestroyedByShell        [52, 57]            [43, 52]            OVERLAPS
+    infantryKilledByRifle         [18, 22]            [16, 37]            OVERLAPS
+    bombsOwnGround                [7, 11]             [5, 11]             OVERLAPS
+    bombsEnemyGround              [12, 14]            [14, 17]            OVERLAPS
     bombsStillFlyingAtEnd         [0, 1]              [1, 1]              OVERLAPS
-    bombsInAirSeconds             [46.0, 52.4]        [48.0, 61.4]        OVERLAPS
-    infantryKilledByBombsPerSide  [29, 55]            [19, 47]            OVERLAPS
+    bombsInAirSeconds             [49.8, 58.5]        [48.0, 61.4]        OVERLAPS
+    infantryKilledByBombsPerSide  [27, 53]            [19, 47]            OVERLAPS
     doubleFireInfantry            [0, 0]              [0, 0]              OVERLAPS
     doubleFireArmour              [0, 0]              [0, 0]              OVERLAPS
 
-**29/29.** Thirteen of these had never been compared: `infantryInsideRadius`,
-`armourInsideRadius`, `bombsThatKilledArmour`, `armourDestroyedByShell`,
-`infantryKilledByRifle`, `bombsOwnGround`, `bombsEnemyGround`,
-`bombsStillFlyingAtEnd`, `bombsInAirSeconds`, `infantryKilledByBombsPerSide`,
-`doubleFireInfantry`, `doubleFireArmour`. All overlap. **(l) stays DONE**, and
-its residual is unchanged: the 19 men are the difference of the pooled means
-inside an overlapping envelope.
+**28/29, and the one that falls out is `infantryFriendlyFire` - which is NOT a
+regression and must not be tuned green.** Before (m) this table read 29/29 with
+that row at core [19, 56] against rec [11, 29], overlapping by its edge alone:
+19 <= 29. After (m) it reads [31, 66] and the edge is gone. Measured over
+SIXTEEN seeds rather than four, before against after: [19, 70] mean 35.2 ->
+[12, 66] mean 32.1 - the mean FALLS, the value rose on only 7 of 16 seeds, and
+the bands overlap almost completely. The four seeds the recording happens to
+hold rolled high. It is the weakest row in the envelope, because the core sits
+above the recording on it whatever the fix does, and reading 29/29 as a hard
+pass was always generous. Repairing it would be tuning a test green.
+
+**(l)'s residual, restated in post-(m) numbers.** (l) stays CLOSED; only its
+figures are brought current, because (m) moved the draw order and every one of
+them had been measured on the unguarded core:
+
+    a round, four seeds          before (m)     after (m)     recording
+    menPerEffectiveBomb          4.47 - 6.25    4.24 - 5.88   3.67 - 4.75
+    men covered a round          87.5           81.5          68.5
+    the excess this item names   19.0           13.0          -
+    infantry covered / recording 1.28x          1.19x
+    armour covered / recording   0.96x          0.89x
+
+The discriminator survives and reads a little sharper: the core covers 19 per
+cent more MEN than the recording while covering 11 per cent FEWER tanks. The
+ground its bombs find is not busier - it is the infantry, which is where (l)
+left it. The term shrank by six men a round because the fix gave the rifle line
+its clocks back, not because anything about the bombs changed.
+
+**Superseded, kept because it is how the work went.** The pre-(m) table read
+29/29 with `infantryPerEffectiveBomb` at [4.47, 6.25], `infantryKilledByRifle`
+at [8, 18] and the tank ratio at 1.28x / 0.96x. Those are the unguarded core
+and no tool reproduces them now.
 
 **One field is published and deliberately NOT compared, and the reason is the
 discipline this item was built on.** `summary.doubleFire.ambiguousBombMatch`
 looks like a pair for `measure-air.js`'s `ambiguous`. It is not. The recording
 counts detonations it could not tie to exactly ONE bomb by comparing positions
 (`GunshipReferenceTests.cs:120`) - a property of floating point and of how a
-recorder identifies a bomb. The tool's `ambiguous` counts SLOTS REFILLED IN
-THE TICK THEY DIED, which is what it prints it as. Two unrelated quantities
-sharing a word. Paired once during this pass it read core [2, 3] against
-rec [0, 0] and came out as the one OUTSIDE in thirty - a not-a-pair caught by
-the check rather than by argument, and the fifth in this item after the depth
-pair, the seed pairing, `replacementsArrived` and the squad depth. The core
-has no counterpart at all: it identifies a bomb by its slot, never by matching
-a position. The tool now prints that under NOT COMPARED so it is not re-added.
+recorder identifies a bomb. The tool's `ambiguous` counts SLOTS REFILLED IN THE
+TICK THEY DIED, which is what it prints it as. Two unrelated quantities sharing
+a word. Paired once during this pass it read core [2, 3] against rec [0, 0] and
+came out as the one OUTSIDE in thirty - a not-a-pair caught by the check rather
+than by argument, and the fifth in this item after the depth pair, the seed
+pairing, `replacementsArrived` and the squad depth. The core has no counterpart
+at all: it identifies a bomb by its slot, never by matching a position. The
+tool prints that under NOT COMPARED so it is not re-added.
 
-Also corrected here, in the tool rather than only in this file: the SQUAD
-REACH block printed the retracted claim that the core has no squad depth on
-every run. It now carries the correction and stands as a core-only
-description with no cause attached.
+Also corrected in the tool rather than only in this file: the SQUAD REACH block
+printed the retracted claim that the core has no squad depth on every run. It
+now carries the correction and stands as a core-only description with no cause
+attached.
 
 ### The truck is shot by tanks, and the core does not know it
 
