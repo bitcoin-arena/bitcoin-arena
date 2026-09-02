@@ -100,6 +100,41 @@ recording: test/vectors/csharp-army.json.
      and `GunshipReferenceTests` go with `Army.cs`, and no quantity can be
      recorded from the C# afterwards.
 
+     STEP 0 DONE - the bridge, measured rather than read.
+     `tools/measure-bridge.js` prints all of it.
+
+     Three uploads run in `CoreDrivenTruck.Update()`, and only one of them
+     is per-tick host input. `UploadGround` returns early unless
+     `terrain.Revision` moved; `UploadSolids` returns unless a second has
+     passed AND the box count changed. `UploadArmour` is guarded by
+     nothing: every frame, straight out of `field.Army`. And `setUnits`
+     has NO caller anywhere - not Unity, not the tools, not the tests - so
+     the host branch of the score's danger at `sim.js:881` is dead code
+     today and the score already reads the core's own army. That is one of
+     the three worries in "What (e) actually has to move" answered: it is
+     not a preference to remove, it is a setter to delete.
+
+     The collision is worse than that entry says, and this is the finding.
+     It is not that `resolveArmour` PREFERS the host's tanks - it is that
+     the core has no armour of its own to give it. Nothing inside `step()`
+     ever writes `st.armour`; only `setArmour` and `setUnits` do, and
+     neither is called in a headless round. Measured over all six golden
+     vectors, `st.armour.n` is 0 at every tick of every one. The core
+     simulates twenty-four tanks and the truck can drive through all of
+     them.
+
+     And the round really is not replayable today, which was an argument
+     and is now a number. Feeding one host tank at the truck's own
+     position from t=600 of `straight`:
+
+       no host                      hash 32e819e7...  ends x = +130.0
+       host tank on the truck       hash 7d961a75...  ends x = -130.0
+
+     So (e)'s collision work is an ADDITION, not a deletion: `st.armour`
+     has to be built inside `step()` from the core's own armour, and only
+     then can `setArmour` go. Doing it the other way round removes a
+     collision the game currently has.
+
   f. The infantry line, recorded - DONE.
      `test/vectors/csharp-infantry.json`, three passes in one Unity run.
      The two line passes reproduce `csharp-army.json` to the digit, which
