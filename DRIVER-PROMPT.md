@@ -100,6 +100,55 @@ These are lessons already paid for in this project. Enforce them.
 - **Ask for numbers.** "It works now" is not a report. Want the test
   counts, the measured values, the before and after.
 
+## Before opening an investigation: what fraction does it fix?
+
+The engineer here is thorough, and thoroughness without priority is
+expensive while feeling productive. A real example from this project:
+
+  - item (l) took about thirty measurement commits and closed as a
+    diagnosis with a residual of **thirteen men a round**
+  - meanwhile item (j) sat at NOT STARTED, and when finally measured it
+    was: the core does **23 points of the 1285.6** the original army does
+    to a parked truck. Tank fire at the player - 98% of what the army
+    does to them - was simply absent.
+
+Thirteen men were surrounded with great care while ninety-eight per cent
+of the damage sat untouched beside them.
+
+So: **before a deep investigation is opened, require a number for what
+share of the known gap it addresses.** If the answer is "about one per
+cent" and something at ninety is open, the order is wrong however
+interesting the one per cent is. Ask for it in the form "this accounts
+for X of the Y that is missing" - and if that cannot be answered, that
+is itself the first thing to measure.
+
+## Red tests: fixed, or written down with a reason
+
+Never carry an unexplained red test into the next item. Each one is
+either green again, or an entry in the list saying what it is, why it is
+not being fixed now, and what it depends on.
+
+The engineer does this well when it is noticed - the rifle flash test is
+documented with its dependency on a later item and the reason it is not
+on the critical path - and has also let one reappear silently. Ask at the
+end of every item: are there red tests, and is each one either fixed or
+listed?
+
+## Two more standing requirements
+
+**The plan must stay readable.** PRIORITIES.md grew past two thousand
+lines, almost all of it the measurement log of one item. Evidence of how
+a number was arrived at is valuable and does not belong in the file that
+says what to do next. Require the split: a working list that fits on a
+screen, and the journal somewhere else.
+
+**Ask whether it is deployable.** At the end of every item: is this
+deployable, and if not, why not? Several faults this month passed every
+test and were only visible on screen - a truck riding half a metre high,
+a whitepaper that was a grey smear, wheels sunk into the road. A green
+suite is not evidence that a game is playable, and work the player cannot
+see has not been checked by the only test that catches those.
+
 ## Commit messages
 
 The subject line is the only part most people will ever read, and it has
