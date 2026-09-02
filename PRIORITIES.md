@@ -616,8 +616,38 @@ recording: test/vectors/csharp-army.json.
           `sim.js`, priced from this tick's impact, withheld by `practice`.
           Guarded by `crashing into armour costs condition, and hard enough
           writes it off`.
-       2. `T_HP` does not reach the driving. C# hands `condition` to the
-          controller and the handling degrades.
+       2. `T_HP` does not reach the driving - BUILT, MEASURED, AND HELD
+          BACK on a protocol conflict. `TruckController` scales the
+          throttle by `Lerp(1, 0.55, hurt)` above `hurt > 0.02` and adds a
+          steering pull of `pull * hurt * 0.35`. It reads `condition`, and
+          the block below it reads `_rb.linearVelocity` - which is zero on
+          the kinematic body the core drives, so that rule was ALREADY
+          DEAD where the core is in charge. Porting it into the client
+          would have been copying a PhysX-era corpse; it belongs in
+          `vehicleStep`.
+
+          Worth having: over three seeds the truck is under 98 hit points
+          for 91.4% of the ticks of a full-throttle run and 90.5% of a
+          parked one, mean `hurt` 0.205 and 0.847 - so the rule is most of
+          a round, not a corner.
+
+          Written and then reverted, because it breaks `a practice run and
+          a live run field the same army, word for word`. Nothing in the
+          army reads the practice flag and the DRAW ORDER stays identical,
+          which is what the vectors' own note claims - but a shielded truck
+          keeps its condition, drives differently, and so clears and rides
+          down different men. The army diverges through the truck's
+          POSITION. That is faithful to the old game and stronger than the
+          spec sentence, and the test is a protocol test, so it is not
+          being rewritten on my judgement. The call is whether that test
+          means "nothing in the army reads the flag" or bit-equality.
+
+          Measured while it was in: full throttle, 60 s, three seeds. With
+          the pull left uncorrected the truck ends at 26.9 / -96.4 / -130.0
+          instead of 130.0 / 130.0 / 130.0 - a constant bias of about a
+          tenth of full lock that an unattended driver rides into a circle.
+          With a driver holding the heading, all three still cross to
+          130.0: the throttle cut costs time, not the crossing.
        3. The army never reads `T_HP`. A burning truck stays a courier
           target; C# clears `Army.Courier` on a write-off.
        4. The apron does not protect. `IsInvulnerable` is a client rule;
