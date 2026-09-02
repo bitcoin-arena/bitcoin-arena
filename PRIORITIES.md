@@ -1190,9 +1190,36 @@ the simulation, and it will move the golden vectors - so it is its own step
 with its own agreement, not a rider on a measurement. Nothing in `army.js`,
 `air.js`, `sim.js` or the spawn was touched to find any of this.
 
-What it costs (l): the early rifle deficit is this, so it is NOT a candidate
-for the 2.6-3.9 slope residual any more. It does not touch the 19 extra men
-the core's bombs cover, which remains (l)'s one open term.
+**What it costs (l), measured rather than asserted.** The fault is real and
+it wrecked the INSTRUMENT - 19-21% of the early reload writes - but its cost
+in actual rifle kills is small, because most phantoms fire while the man has
+nothing to shoot at anyway. Only 37 of seed 20260901's 187 phantom shots had
+an enemy inside 26 m at all. Following each phantom shooter through the
+window his stolen clock covers, and counting only the ticks he sat locked
+WITH a foe in reach:
+
+    lost rifle kills a round      air off   air on
+    20260901                        1.88     1.47
+    20260902                        0.22     0.09
+    20260903                        0.00     0.00   (this seed has no phantoms)
+    20260904                        0.00     0.00
+    mean of the four                0.52     0.39
+    the loose bound, ignoring
+      whether a foe was there       2.20     2.43
+
+So it is worth about 0.4 rifle kills a round air-on, a seventh of the 2.6-3.9
+residual under "The slope", and it is NOT that residual's cause. The seed
+that loses most to it, 20260901, is also the seed on which the core
+OUT-kills the recording air-off (42 against 28), which is the other way
+round from a deficit. It does not touch the 19 extra men the core's bombs
+cover, which remains (l)'s one open term.
+
+Two things it does change. The phantom does not stop at contact - the last
+one lands at t=87-90 s on every seed that has any - so it is not only an
+approach effect, and any air-off baseline (l) is quoted against carries it.
+And it is wildly seed-dependent: 0, 29, 51 and 168 phantoms on the four
+seeds air-off. A four-seed envelope that straddles that is not measuring one
+thing.
 
 ### The truck is shot by tanks, and the core does not know it
 
