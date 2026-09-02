@@ -1139,6 +1139,52 @@ first, and so does the armour crowding scan at `sim.js:677`. What does not:
     army.js:273   the TANK's truck test       - same shape, not measured here
     sim.js:790    the truck against its start - not looked at, not this item
 
+**The ladder, one correction at a time, on the tool's own four seeds and in
+BOTH air-off holds.** (1) is `measure-infantry.js`'s own rule - its death
+test, every reload write in the denominator - and it lands on the 0.0199
+this file had named. Each further column removes one thing that is not a
+rifle shot at a rifleman:
+
+    air off, seam pinned, 4 seeds     (1) tool  (2) +deaths  (3) -realTruck  (4) -PHANTOM   z vs .045
+    clocks pinned   w0-w2               0.0186     0.0326        0.0347        0.0435        -0.13
+                    w3+                 0.0437     0.0444        0.0453        0.0469        +0.48
+    gunships grounded w0-w2             0.0162     0.0300        0.0318        0.0406        -0.38
+                    w3+                 0.0471     0.0482        0.0492        0.0511        +1.52
+
+    phantom share of the reload writes  w0-w2 19.1% / 20.6%   w3+ 3.3% / 3.6%
+
+Both holds tell the same story and the choice of hold did not decide it. The
+early column is not short of the roll once the phantoms are out; what looked
+like a halved gun was a fifth of the approach's clocks spent on a truck
+nobody could see.
+
+**The audit of every `length2` call site in the core is finished.** Three of
+the four target scans and both collision scans reject on each axis first -
+`solids.js:56-66` carries the same trap written down a second time, from the
+day the truck was ejected from scenery it was nowhere near. What is
+unguarded:
+
+    site            what it measures         measured here
+    sim.js:722      rifleman -> truck        19-21% of early reload writes
+    army.js:273     tank -> truck            5454 of 439684 live tank-ticks
+                                             (1.2%) read the truck as inside
+                                             26 m when it is not
+    sim.js:790      truck -> its own START   reads 0 for any true distance
+                                             past ~181 m
+
+`sim.js:790` is the one that leaves the army entirely: `fromStart` feeds
+`earning()`, so the truck reads as STANDING ON ITS START for every x beyond
+about +81 m. The map runs to +130 and its furthest corner is 249.3 m from
+the apron, so the eastern third of the field is inside the fault. That is a
+scoring outcome, which is BLWP's own ground, and it is not (l)'s to fix.
+
+**And one host value, found beside it and NOT touched.** `sim.js:795-800`
+computes the score's danger from `st.units` - the units the HOST sends -
+with its own comment saying the core's own units are read by nothing. The
+rifle path this item measured is core-only end to end (`sim.js:628` reads
+the truck from `s[T + T_X]`), but the score's danger term is not, and that
+is exactly item (e)'s business. Named here so it is not lost; not started.
+
 **NOT FIXED, deliberately.** The fix is a rule change in `sim.js`, it moves
 the simulation, and it will move the golden vectors - so it is its own step
 with its own agreement, not a rider on a measurement. Nothing in `army.js`,
