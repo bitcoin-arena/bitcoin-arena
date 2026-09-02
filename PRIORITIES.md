@@ -135,6 +135,39 @@ recording: test/vectors/csharp-army.json.
      then can `setArmour` go. Doing it the other way round removes a
      collision the game currently has.
 
+     STEP 1 - the truck's two owners. Half measurable here, and the half
+     that is not is the important half.
+
+     What IS established. The two are not merely separate, they are on
+     different SCALES: `TruckHealth.Damage` takes `amount / armour` with
+     `armour = 1.5` (`TruckHealth.cs:121`), and the core takes the shell's
+     full amount off `T_HP` with no divisor at all (`sim.js:829`). Same
+     maxHealth of 100, same hits, and the core spends them half again as
+     fast - which is why its truck dies at t=15-20 s in the courier pass.
+     And `BlwpCore.TruckHealth` (`BlwpCore.cs:239`) really does have no
+     consumer: grepped, the only references in the whole project are the
+     two lines of the measurement below. The core's health is a ghost, as
+     this entry said.
+
+     What is NOT measurable in this loop, and it is a fact about the
+     project rather than about the truck: THERE IS NO CORE IN THE EDITOR.
+     `BlwpCore` compiles every call to a stub unless
+     `UNITY_WEBGL && !UNITY_EDITOR`, so in the editor, in PlayMode tests
+     and in a standalone build `Available` is false and `_state` stays
+     zeroed. The measurement was written, run, and came back
+     `core=0.00 game=100.00 tick=0` at every one of 120 samples with the
+     truck never leaving x = -100.4. Its own guard caught that, which is
+     what the guard is for.
+
+     Two consequences worth having in writing. The two owners cannot be
+     shown to disagree anywhere but in a browser, so `MeasureTheTwoTruck
+     Healths` is `[Explicit]` and waits for a WebGL run. And every PlayMode
+     figure this file quotes as a guard - 174/164/2/8 included - is a
+     measurement of the C# path, NOT of the core: it can prove the game
+     still works, and it can never prove the core does. The core's own
+     guard is the 47 node tests and the golden vectors, which is the split
+     the class doc calls deliberate.
+
   f. The infantry line, recorded - DONE.
      `test/vectors/csharp-infantry.json`, three passes in one Unity run.
      The two line passes reproduce `csharp-army.json` to the digit, which
