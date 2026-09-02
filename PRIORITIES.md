@@ -225,21 +225,49 @@ recording: test/vectors/csharp-army.json.
        7. Done, in a sentence a player can see: the tanks and men on
           screen are the ones that shoot the truck, and driving into a
           tank you can see stops you.
-       8. Deployable: NO until a WebGL run in a browser. `BlwpCore` is
-          stubbed outside WebGL, so two of the four reds cannot go green
-          in PlayMode and the picture cannot be checked there at all.
-     CARRIES A FINDING FROM (j): truck health now has two owners that
-     disagree. The core sets `S_STATE` to 2 as soon as its own `T_HP`
-     reaches zero - measured at t=13.9 s with the truck parked in the
-     fight - while the game's truck health lives in `TruckHealth`
-     (`maxHealth` 100, `armour` 1.5) fed from the C# army at
-     `Bootstrap.cs:194`. Nothing is double-damaged: `BlwpCore.TruckHealth`
-     (`BlwpCore.cs:239`) is exposed and has no consumer at all. But the
-     core now ends a round the game does not know has ended, and that only
-     goes away when the core owns the truck outright.
-     LAST, and deliberately: it deletes the instrument. `ArmyReferenceTests`
-     and `GunshipReferenceTests` go with `Army.cs`, and no quantity can be
-     recorded from the C# afterwards.
+       8. DONE - THE BROWSER RAN, AND IT FOUND THE THING NO EDITOR TEST
+          COULD. `BlwpCore._state` was sized `O_UNITS + MAX_UNITS *
+          U_WORDS` = 2073, which is exactly `O_ARMY`: the buffer ended
+          where the replacement clocks, the air and the squads begin, 108
+          words short of the core's 2181. `Init`'s own guard caught the
+          mismatch and refused, so `Available` was FALSE in every browser
+          build ever made - the truck fell back to PhysX and nothing of M1
+          ran on a screen. `BlwpBridgeTests.TheStateBufferIsTheSizeThe
+          LayoutImplies` was green throughout because it asserted the same
+          wrong formula; it asserts `Layout.WORDS` now, which is what its
+          own name says.
+
+          THE PICTURE, proved by a count and not by pixels. Three
+          screenshot comparisons proved nothing: running, 500 ms of
+          ordinary motion moved 53019 pixels against the 42094 that killing
+          every unit moved, and freezing the core still left 44042 moving,
+          because rotors, HUD and camera do not stop. The scene animates
+          more than the army does. So `ArmyRenderer` says what it drew, and
+          the browser console carries it:
+
+            core alive 96 -> 0 (killed in the core's own buffer from the
+            page, simulation frozen first so replacement cannot refill)
+            renderer   "drew 96 units from the core" -> "drew 0 units"
+
+          And the screenshots agree once the game is actually STARTED: the
+          first pair showed the title screen, because nobody had pressed
+          PLAY - the count was still right, `Submit` runs behind the
+          splash, but a caption claiming an army was wrong. Played, loaded
+          and driven out: red and green tanks with infantry behind them,
+          then the same spot with the field empty.
+
+          PLAYMODE 175 / 154 / 11 / 10, EDITMODE 124 / 123 / 1, Core 52/52,
+          guard 19 files clean, stage 0 PASS. The eleven:
+            no core in the editor, so nothing is drawn to look at (8) -
+              ImportedModelTests.SoldiersStandOnTheGroundAndAreAnimated,
+              ImportedModelTests.TanksStandOnTheGroundRatherThanInIt,
+              VisibilityTests.ArmiesAreActuallyDrawn, and the five
+              VehicleTests, which also WRITE to the army and so cannot be
+              re-sourced at all
+            already listed (2) - DamageIsFeltInTheDriving,
+              CrashingIntoArmourWritesItOff
+            a graphics device (1) - RoadsAreActuallyDrawn
+
 
      STEP 0 DONE - the bridge, measured rather than read.
      `tools/measure-bridge.js` prints all of it.
