@@ -168,6 +168,40 @@ recording: test/vectors/csharp-army.json.
      guard is the 47 node tests and the golden vectors, which is the split
      the class doc calls deliberate.
 
+     STEP 2 DONE - what `RunOver` and `ClearPath` are worth, sized before
+     the file that holds them is deleted. `MeasureRunOverAndClearPath`,
+     PlayMode, `[Explicit]`. It runs on the C# path deliberately: these are
+     C#-only rules and the editor has no core anyway.
+
+     Driving AT the infantry for a round: 18 men run down, the corridor
+     holding up to 13 men and 0.92 on average, and never more than ONE man
+     inside the 3.6 m kill radius at a sample. So the two rules are not the
+     same size. `RunOver` is worth about 18 men - a tenth of the 180 on the
+     map - to a player who aims at them. `ClearPath` is what keeps that
+     number as low as 18: thirteen men can be in the corridor while at most
+     one is ever close enough to be killed, which is the rule easing them
+     out working, not the truck missing.
+
+     It took three runs to get a number, and the two failures are the same
+     failure this project keeps finding. The first drove with
+     `externalThrottle` alone and never moved - `useExternalInput` has to
+     be set or the control path ignores it - and reported a tidy zero. The
+     second drove the full width of the map at 20 m/s with `corridor` at
+     ZERO the whole way, because straight ahead from the bay is z ~ 10 and
+     the infantry are not there. Both are null results from a test that
+     could not have fired, and neither is evidence that the rule is
+     cheap. The measurement now steers at the nearest living rifleman,
+     which is the upper bound a port has to cover.
+
+     WHAT THIS MEANS FOR (e). Neither rule can simply go. `RunOver` is a
+     tenth of the infantry a round on a route that seeks them; `ClearPath`
+     is load-bearing for `RunOver`'s own size and for not leaving a man
+     standing in the cab. Both are outcomes the player produces, so both
+     have to exist in the core before `Army.cs` goes - which, with the
+     collision from step 0, makes THREE core additions that must land
+     before the deletion: `st.armour` built in `step()`, run-over, and
+     path-clearing.
+
   f. The infantry line, recorded - DONE.
      `test/vectors/csharp-infantry.json`, three passes in one Unity run.
      The two line passes reproduce `csharp-army.json` to the digit, which
