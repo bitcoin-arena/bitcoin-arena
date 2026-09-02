@@ -122,6 +122,14 @@ recording: test/vectors/csharp-army.json.
      kills a round after the recording's own bomb-death exchange rate is
      applied. The slope bridge decided that neither needs a new Unity
      recorder pass.
+     The 19 men now have a MEASURED CAUSE and it is a named rule
+     difference: `Army.Spawn` draws a squadOffsetZ = Rand(-5,5) per man
+     and the core's `riflePost` returns an X offset only, so the core's
+     squads are 58 m deep where C#'s are 10, they interpenetrate, and a
+     third of the core's bombs reach 2-4 squads at once and carry 54% of
+     the covered men. Capping a bomb at one squad removes 26.1 men a
+     round where the excess is 19.0. See "The 19 men" below. NOT fixed:
+     that is a spawn rule change and its own step.
      And it is not the flat approach, which was the one named rule
      difference the pass turned up: measured at the bombs, 90% of the men
      they take are taken where the line is already 8 m deep or more, and
@@ -1220,6 +1228,81 @@ approach effect, and any air-off baseline (l) is quoted against carries it.
 And it is wildly seed-dependent: 0, 29, 51 and 168 phantoms on the four
 seeds air-off. A four-seed envelope that straddles that is not measuring one
 thing.
+
+### The 19 men: the squads have no depth, so they interpenetrate
+
+The one term (l) was left standing on has a measured cause, and it is a named
+rule difference that was read out of `Army.cs` rather than guessed.
+
+**The denominator was checked first and it is not the fault.** The C#
+recorder's effective test is `b.infKilled > 0 || b.armourKilled > 0 ||
+b.armourIn > 0` (`GunshipReferenceTests.cs:273`), word for word the core's.
+So is the numerator: `insideRadius` iterates the infantry, skips `hp <= 0`,
+and takes `dx*dx + dz*dz <= r2` at the moment `Bombed` fires, before
+`Detonate` removes anyone (`Army.cs:505-519`). Radius, both sides, infantry
+against armour, the alive test - all the same. `Reinforce` is the same shape
+too, deficit-scaled clock and one man per side per firing
+(`Army.cs:347-377`), and `Spawn` puts a replacement on the same edge in z
+that the core does. None of it is a counting mismatch.
+
+**What is different is the squad's DEPTH.** `Army.Spawn` draws TWO offsets
+per man - `squadOffsetX = Rand(-9,9)` and `squadOffsetZ = Rand(-5,5)`
+(`Army.cs:274-276`) - and the man carries both for life. `riflePost`
+(`army.js:306`) returns an X offset only. The core has no squad depth at all,
+so a rifleman's z is wherever walking and retreat leave him.
+
+Measured, air on, seam pinned, four seeds, t >= 25:
+
+    within-SQUAD spread        core        the C# draw
+    x, sd                      5.0 m       5.196 m   (Rand(-9,9))
+    z, sd                      16.8 m      2.887 m   (Rand(-5,5))
+    what a squad occupies      17 x 58 m   18 x 10 m
+
+The x geometry is right to the second digit. Only z is loose, and it is loose
+by six times. **This is why every earlier measurement missed it**: the plank
+check read a whole SIDE's z-spread and found the core inside the recording's,
+but a side can be 8 m deep because its three squads sit at different depths
+while each squad is a razor line - or, as here, because the squads have
+smeared into each other. The side's number cannot see the squad's.
+
+A C# squad is 18 x 10 m, SMALLER than the 32 m a blast spans, so a bomb on
+one takes that squad and stops. A core squad is 58 m deep, so squads overlap
+and one blast reaches several:
+
+    squads reached   bombs   men   men/bomb   share of the covered men
+                1       28   160      5.71    0.46
+                2       10    88      8.80    0.25
+                3        3    54     18.00    0.15
+                4        2    48     24.00    0.14
+
+A third of the core's bombs reach more than one squad and they carry 54% of
+all the men covered. The counterfactual is built from the core's OWN
+single-squad mean, so nothing is imported from the other engine:
+
+    men a round        core 87.5   capped at one squad 61.4   recording 68.5
+    perEffectiveBomb   core 5.15   capped 3.61                recording 4.03
+
+The cap removes 26.1 men a round where the excess is 19.0, so it OVERSHOOTS -
+which is expected, because capping at exactly one squad is stricter than C#'s
+own geometry allows (two C# squads sitting within 16 m share a bomb too). It
+is an upper bound, not an estimate. **Interpenetration is more than sufficient
+to carry the whole 19.**
+
+It also fits every earlier finding rather than competing with them: the men
+per blast at a random x is equal at t=0 and LOWER over the round (the same
+men spread over more depth is a lower density anywhere you point), the bombs
+are not on knots (a smear is not a lump), the x concentration is 1.00-1.19
+(nothing) while the z concentration is 1.11-1.87 (the overlap), and the
+friendly-fire SHARE is equal (.37 against .33) because both sides smear alike.
+
+**Not fixed.** Giving a rifleman a squad depth is a rule change in the spawn
+and in `riflePost`, it moves the golden vectors, and it is its own step.
+
+    seed          core perEff   capped   recording perEff
+    20260901         4.94        4.53        4.75
+    20260902         5.00        2.22        3.75
+    20260903         6.25        3.54        4.00
+    20260904         4.47        3.79        3.67
 
 ### The truck is shot by tanks, and the core does not know it
 
