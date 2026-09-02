@@ -1351,12 +1351,53 @@ thing.
 > round in both engines, and any anchor statistic quoted at t=0 is not the one
 > the bombs see.
 >
+> **`AvoidWrecks` is out, at the reading, for nothing.** It was the last
+> air-coupled, infantry-only rule the core does not have: `Army.cs:332` calls
+> `AvoidWrecks()` every Update and `Army.cs:533-552` pushes units out of a
+> wreck's radius, infantry at size 0.6 and armour at 3.2. The core has no such
+> rule - one grep for "wreck" in `packages/core/src/` returns a comment in
+> `gate.js` about the gate, nothing in the army.
+>
+> But `Wrecks` is a PUBLIC list that `Army.cs` never adds to - four uses, no
+> `Wrecks.Add` among them. It is filled from outside, by `CombatFx.cs:882`
+> (radius 4.2, released to radius 0 at `CombatFx.cs:206` when the hull fades),
+> which is the renderer's effects layer. **Neither recorder touches it**:
+> `GunshipReferenceTests.cs` and `ArmyReferenceTests.cs` never mention
+> `Wrecks`, and the only file that fills one is `ArmyTests.cs`, the unit test
+> of `AvoidWrecks` itself.
+>
+> So the recording ran with `Wrecks.Count == 0` and `AvoidWrecks` returned on
+> its first line. The upper bound on what it could move is ZERO, and the core's
+> not having it is not a difference for the comparison this item is measured
+> against. No measurement was needed and none was made.
+>
+> Worth carrying to (e) and not to (l): `CombatFx` - a RENDERER file - writes
+> positions into the army the simulation then reads. That is a host value
+> reaching into the simulation. It is harmless while the C# army IS the
+> simulator; after (e) the core is, and nothing may feed it from `CombatFx`.
+>
 > So the 19 men remain OPEN with the anchors ruled out. What is left unread in
 > the infantry's arrangement is small and named: C# gives each man a lifelong
 > `drift = Rand(-1,1)` applied as `s.x += toward + s.drift * 0.7f * dt`
 > (`Army.cs:681`) which the core does not have - but `toward` snaps him onto
 > his post each tick, so the equilibrium offset is `drift * 0.7 / 60` <= 0.012 m
 > and it cannot carry 19 men. It is recorded here as read, not as a candidate.
+>
+> **WHERE THIS ITEM NOW STANDS, and it is a limit rather than a gap.** Ruled
+> out by measurement or by reading, each with its numbers above: the counting
+> definitions, the release rule, the squad depth, the squad x, the anchors and
+> their drift, knots, the approach, the bomb's x, the phase of the round, the
+> detonation count, and the ground itself (armour covered 0.96x). The stock of
+> unread infantry rules in `Army.cs` is exhausted.
+>
+> What remains is one measured, unattributed term: **the core's bombs cover 19
+> more men a round**, air-on, with everything the recording publishes about
+> those bombs agreeing. Air-OFF the infantry density measures already match the
+> recording (`meanNearest` 20.8-40.2 against 20.87-42.3), so the difference is
+> made by the air - and air-on the recording publishes no position, no spread
+> and no headcount over time. There is nothing left to pair it against without
+> a new Unity recorder pass that publishes positions air-on, which is the thing
+> this item has twice decided not to spend.
 
 The one term (l) was left standing on has a measured cause, and it is a named
 rule difference that was read out of `Army.cs` rather than guessed.
