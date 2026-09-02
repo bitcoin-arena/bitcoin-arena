@@ -564,6 +564,65 @@ recording: test/vectors/csharp-army.json.
           is not reversible by a revert of one commit, so it is not being
           done on my own judgement.
 
+          THE UNITY HALF IS DONE. One pool, and it is the core's.
+          `TruckHealth.Damage` is gone with its `amount / armour`, and with
+          it `Bootstrap.cs:194` - the C# army no longer hurts the truck.
+          `Health` and `IsDestroyed` come from `ApplySnapshot`, which
+          `TruckHealth.Update` fills every frame from `BlwpCore.TruckHealth`
+          and `RunState` whenever a core is answering. Where none is - the
+          editor, PlayMode, a standalone build - nothing is read and a test
+          calls `ApplySnapshot` itself, which stubs the view's INPUT rather
+          than giving the view a second pool.
+
+          `OnCollisionEnter` is deleted. The file's own comment already said
+          it could not fire, the truck's body being kinematic with the core
+          writing its transform - and it was the last place a PhysX
+          quantity decided condition, costing a crash from
+          `collision.relativeVelocity`. Nothing on the health path reads a
+          PhysX value now; the one `linearVelocity` left is a WRITE that
+          stops a wreck moving.
+
+          `maxHealth` and `armour` stay as fields: the view needs a full
+          scale to draw a fraction against, and the core's divisor is
+          written against the same 1.5. Neither works out what a hit costs.
+
+          Two PlayMode tests migrated first and were only then deleted -
+          `IncomingFireCostsCondition` and `EnoughFireWrecksIt` are now
+          `incoming fire costs the truck condition` and `enough fire writes
+          the truck off` in the core suite, on the three seeds, with the air
+          pinned through `O_AIR`. Two more assert a protected truck refuses
+          to be WRITTEN OFF and no longer need a damage API to say it.
+
+          TWO NEW REDS, both caused by removing the second simulation and
+          neither loosened:
+            FeatureTests.DamageIsFeltInTheDriving - depends on the core
+              gap "T_HP does not reach the driving" below.
+            TruckHealthTests.CrashingIntoArmourWritesItOff - depends on the
+              core gap "no crash damage" below.
+
+          Counts: Core 50/50, guard 19 files clean. EditMode 124/123/1.
+          PlayMode 174/160/4/10 - the two above plus item 7's two
+          Visibility reds.
+
+     GAPS THIS STEP NAMED AND DID NOT FILL. Each is a C# rule with no core
+     counterpart; each is its own point and none belongs to step 4.
+       - No crash damage. `T_HP` is written at spawn and reduced by courier
+         fire and by nothing else, while the game wrote the truck off above
+         `crashSpeed`. The core notices the impact - `TakeImpact` reads its
+         own word - and costs it nothing.
+       - The apron does not protect. `IsInvulnerable` is a client rule; the
+         core has no radius in which fire is withheld.
+       - The army does not read `T_HP`. A burning truck stays a courier
+         target, where C# clears `Army.Courier` on a write-off.
+       - `T_HP` does not reach the driving. C# hands `condition` to the
+         controller and the handling degrades; the core's vehicle step
+         never sees its own hit points.
+       - Cargo does not raise the damage. C# scales a courier hit by
+         `(1 + Heat * 0.6)`; the core leaves the term out deliberately,
+         because every recording it was built against has Heat at zero.
+       `MeasureRunOverAndClearPath` stays as a measurement tool, not a
+       migration.
+
        4b. WAS: The truck's health, and it needs a DECISION rather than a port.
           The two owners are on different scales: the game divides by
           `armour` 1.5 and the core does not divide at all. One of them is
