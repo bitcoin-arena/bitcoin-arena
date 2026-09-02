@@ -73,11 +73,12 @@ recording: test/vectors/csharp-army.json.
   c. Retreat - IN. Back off inside 24 m, fall right back when overrun by
      14 (Army.OverrunDepth), held to |x| < 88.
 
-  d. Reinforcement, gunships and bombs - NOT STARTED, and reinforcement
-     is now the next thing to build. It is not a garnish on the army; it
-     is what holds the front up. Without it the first exchange decides
-     the round and the survivors stand still for the remaining sixty
-     seconds. Order within (d): reinforcement, then gunships, then bombs.
+  d. Reinforcement - DONE. Gunships and bombs - NOT STARTED, and they
+     are next. Replacement was not a garnish on the army; it is what
+     holds the front up. Without it the first exchange decided the round
+     and the survivors stood still for the remaining sixty seconds; with
+     it both armies are still fighting at t=90 on every seed. Numbers
+     under "Reinforcement, and what it cost the golden vectors" below.
   e. Delete the C# army; Unity renders from core state only - NOT STARTED.
 
 ### What the measurements say, and what they cost
@@ -189,17 +190,71 @@ comment, both concluded "too much lethality per shot, and that is where
 to look next". Four constants would have been tuned to match an army that
 was not surviving anything.
 
-### Newly red, and it is ours
+### The guard - CLEARED
 
-`npm run guard` fails on two lines, both from this item's own work:
+`% SQUADS` became a mask written as `SQUADS - 1`, and the damage roll's
+`/ 100 | 0` became `idiv`, a new helper in fixed.js for dividing plain
+integers rather than Q16.16 values. Behaviour identical, and measured
+rather than asserted: four seeds by ninety seconds, 339 lines of
+positions, losses, shooter counts and death times, the same to the digit
+before and after. `npm run guard`: 18 files clean.
 
-    rules/army.js:165  operator '%' outside an arithmetic file
-    sim.js:384         operator '/' outside an arithmetic file
+### Reinforcement, and what it cost the golden vectors
 
-`squad = (index >> 3) % SQUADS` and the damage roll's `/ 100 | 0`. Both
-are safe as written - a non-negative index, and a truncating divide of a
-positive int32 - but the guard is the rule that keeps the core portable
-and it is red at HEAD. It goes first, before (d).
+(d)'s first part is in. The core replaces its dead the way C# does - the
+clock only runs while a side is short, and `timer -= dt * deficit` brings
+the next one faster the further behind it is.
+
+Measured against `passes.core-size-reinforce`, the C# army at the core's
+own establishment with replacement running, four seeds, seam pinned:
+
+                          core (4 seeds)        recording
+    armour alive t=30     19-20 of 24           19
+    armour alive t=90     19-22 of 24           20
+    shooters t=60         12-16                 14
+    shooters t=90         13-17                 12
+    lost / arrived        54-60 / 49-56         59 / 55
+    contact lost          never, any seed       never
+
+The shooter count is the line that matters. It was zero from t=34 to the
+end of the round before this, on every seed.
+
+**The golden vectors were regenerated deliberately.** All six diverged at
+the first checkpoint, which is what `vectors.test.js` says must happen for
+a rule change rather than be quietly accepted:
+
+    straight   2bc86958... -> 7dce8ee6...
+    slalom     9a8499be... -> d79d5034...
+    handbrake  fb3502fc... -> 9a6ff1c3...
+    reverse    ef05e257... -> 5fd481a3...
+    idle       568ceef0... -> 869835d8...
+    practice   beab4634... -> 75cef4a8...
+
+The state grew by four words for the replacement clocks (`O_ARMY`,
+appended after the units so every existing offset stayed put), but the
+hashes would have moved without a single new word: the checkpoints cover
+the whole buffer, all ninety-six unit positions included. `BlwpLayout.cs`
+and `dist/blwp-core.js` are generated from the layout and were regenerated
+with it - stale generated content has already cost this project two bugs
+that looked like something else.
+
+### Found while doing (d), and NOT fixed in it
+
+`sim.js`, in the spawn path:
+
+    s[b + U_TARGET] = nextBelow(rng, 180);   // "Staggered reload"
+    s[b + U_COOLDOWN] = nextBelow(rng, 120);
+    s[b + U_TARGET] = -1;                    // undoes the line above
+
+`U_TARGET` is the reload counter. The stagger is written and overwritten
+one line later, so every tank can fire on its first tick of contact, in
+index order - which is the exact failure the comment above it describes
+as fixed ("one army went from eleven to two while the other lost
+nobody"). C# staggers it: `reload = Rand(0f, 3f)`.
+
+Left alone on purpose. The shared spawn path was extracted bit-identical,
+including that line, so the reinforcement numbers above are one change and
+not two. It is its own item, and it moves the vectors again when it lands.
 
 Also newly red and caused by this work: `SafeRouteScoresNearNothing`
 banks 0.077 where it wants 0.1. Squads concentrate the danger, so a run
