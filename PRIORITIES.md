@@ -3994,42 +3994,13 @@ round, which is why testnet comes first and why the order is stricter.
      Do this before 6c. It is the cheap half of the problem and it costs
      no custody at all.
 
-  6c. **Session balance** (24A.2) - **specified, NOT built.** Not in M3,
-     not in M4. It is here so that the day someone asks for it, there is
-     a design with a bound and a receipt to point at instead of an
-     improvisation under deadline.
-
-     The reason it is not built: 6a already removes the approval fatigue,
-     which is the actual complaint, at zero cost to the trust model. What
-     is left is only wallets that cannot do budgets - a wallet feature
-     gap that will probably close by itself - and paying for a temporary
-     wallet limitation with a permanent protocol property is backwards.
-
-     Under 23 the default outcome of total failure is that the player is
-     refunded by expiry. With a balance it is that the player holds a
-     claim. That is the whole difference and it is not a matter of
-     degree.
-
-     The part with no fix: there is **no unilateral exit** at this size.
-     Once the deposit settles, the sats are inside the committee's
-     Lightning node, not in a script a timelock can open. An on-chain
-     escrow would give a real one, and its closing fee exceeds a 100 sat
-     stake - the construction that fixes it is unaffordable at exactly
-     the size that wants it. So a player whose committee goes dark waits,
-     and slashing punishes the operator without returning a sat.
-
-     A `k`-of-`m` session committee does make one node going offline a
-     non-event, and that much must be built if it is ever built at all.
-
-     If it is ever built: the per-node float cap (`sum of open balances
-     <= bond / K`, which is the one that binds - per-session capping
-     alone lets a popular node hold many multiples of its bond), the
-     session committee drawn by sortition and **never chosen by the
-     player**, the
-     threshold-signed receipt after every round, withdrawal inside
-     `withdraw_window`, refund on expiry, opt-in per node and visible in
-     the client. Never balances across sessions, transfers between
-     players, yield on the float, or entering a round on credit.
+  6c. **No session balances, ever** (24A.3). Specified once and removed.
+     If it comes back as a request: money is in flight during a round and
+     nowhere else. A resting balance has no unilateral exit at these
+     sizes - once a deposit settles the sats are in someone else's
+     Lightning node, an on-chain escrow costs more than a 100 sat stake,
+     and slashing punishes an absent operator without returning a sat.
+     6a already fixes the approval fatigue that motivated it.
 
   6b. **Donations paid, and the authority that points them** (27A.4).
      The set is a list of LNURLs with basis-point shares summing to
