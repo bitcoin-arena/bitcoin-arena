@@ -73,12 +73,18 @@ recording: test/vectors/csharp-army.json.
   c. Retreat - IN. Back off inside 24 m, fall right back when overrun by
      14 (Army.OverrunDepth), held to |x| < 88.
 
-  d. Reinforcement - DONE. Gunships and bombs - NOT STARTED, and they
-     are next. Replacement was not a garnish on the army; it is what
-     holds the front up. Without it the first exchange decided the round
-     and the survivors stood still for the remaining sixty seconds; with
-     it both armies are still fighting at t=90 on every seed. Numbers
-     under "Reinforcement, and what it cost the golden vectors" below.
+  d. Reinforcement - DONE. Replacement was not a garnish on the army; it
+     is what holds the front up. Without it the first exchange decided
+     the round and the survivors stood still for the remaining sixty
+     seconds; with it both armies are still fighting at t=90 on every
+     seed. Numbers under "Reinforcement, and what it cost the golden
+     vectors" below.
+     Gunships and bombs - DONE. Sorties, gunships, ballistic bombs and
+     the blast are in `rules/air.js`, and the core's air war replays
+     from the seed, which the C# one cannot. Fifteen of the recording's
+     seventeen published quantities overlap; the two that do not are
+     both the GROUND line's doing and are named under "The air arm"
+     below.
   e. Delete the C# army; Unity renders from core state only - NOT STARTED.
 
 ### What the measurements say, and what they cost
@@ -238,6 +244,97 @@ and `dist/blwp-core.js` are generated from the layout and were regenerated
 with it - stale generated content has already cost this project two bugs
 that looked like something else.
 
+### The air arm, and the two numbers it does not reach
+
+(d)'s second part is in. `src/rules/air.js` holds the sortie clocks, the
+gunships, the ballistic bomb and the blast; `sim.js` runs them in C#'s own
+order - the unit loop, then helicopters, then bombs, then replacements,
+then the sortie clocks, which is `Army.Update` followed by
+`Battlefield.LaunchSorties`.
+
+Ported against `test/vectors/csharp-gunships.json` rather than against the
+C# read out loud, and `tools/measure-air.js` prints the whole envelope
+beside it. Four seeds, ninety seconds, seam pinned at zero, which is the
+condition the recording was made under:
+
+                             core (4 seeds)      recording
+    sorties per round        10-12               11-12
+    on-station share         0.72-0.90           0.69-0.93
+    peak airborne            2                   2
+    bombs per round          34-38               35-38
+    off-field share          0.32-0.38           0.26-0.42
+    furthest landing |x|     149.9-154.1         148.0-153.8
+    first killing bomb       20.8-23.0 s         16.7-26.4 s
+    infantry killed by bombs 71-100              60-76
+    armour killed by bombs   10-16               9-12
+    armour bomb share        0.16-0.27           0.15-0.22
+    armour lost, air on      60-64               55-63
+    armour lost, air off     53-61               54-60
+
+Three behaviours the recording calls findings were COPIED, not corrected,
+and each would have been a tempting one-line "fix":
+
+  - the release gate is on where a bomb is LET GO, not where it lands. A
+    bomb inherits 30 m/s along the gunship's track and falls from 19 m, so
+    it is thrown sixty metres downrange and reaches |x| = 154 against a
+    field that ends at 92. A third of every load hits nobody. Narrowing
+    the gate would have deleted a third of the air war.
+  - both sortie clocks start at zero, so two gunships launch on tick one
+    and both are wasted - the armies are still at |z| = 79 and the
+    gunships fly the seam between them.
+  - `Detonate` has no hp check on its armour loop. Latent, measured 0/0 on
+    all four seeds, and invisible in this core anyway: taking damage off a
+    corpse leaves a corpse. Not guarded.
+
+`Detonate` also has no `CourierHit`. A bomb cannot hurt the truck in the
+C#, however squarely it lands, so the core does not invent it - pinned by
+a test that plants a bomb on the cab.
+
+**Two quantities do not reach the recording, and the air arm is not why.**
+Friendly fire is 39-59% of a bomb's infantry victims against the
+recording's 18-42%, and the dud share is 0.45-0.47 against 0.50-0.58.
+Where the bombs LAND matches on every published figure, and the blast rule
+is copied to the metre, so the difference is where the men STAND:
+
+    the nearest pair of opposing riflemen in the core is 24.0 m apart,
+    exactly, at every sample of every seed.
+
+That is `BACK_OFF_RANGE` - army.js backs a unit off whenever an enemy
+comes within 24 m, and applies it to riflemen as well as armour. The blast
+radius is 16. **No bomb in this core can ever contain men from both
+sides**, so which army a bomb kills is decided purely by which side of the
+seam it fell on, and that comes out near an even split. The C# has no such
+floor at all: `StepInfantry` walks a man to his standoff and leaves him
+there, with no crowding rule and a rifle that reaches 26 m, so the two
+lines interpenetrate. That is (c)'s line, not the air's, and it is left
+alone here and pinned by a test.
+
+The related second-order fact: the core's riflemen never shoot each other
+either - rifle fire targets the courier only - so infantry deaths in the
+core are bomb deaths and nothing else, where the recording has 16-37 a
+round to rifles.
+
+**The golden vectors were regenerated deliberately, a second time.** All
+six diverged at the first checkpoint:
+
+    straight   7dce8ee6... -> 34e5ff81...
+    slalom     d79d5034... -> 7316919a...
+    handbrake  9a6ff1c3... -> 4ae836b0...
+    reverse    5fd481a3... -> b712aaf0...
+    idle       869835d8... -> 869c5408...
+    practice   75cef4a8... -> 6a012447...
+
+The state grew by ninety-eight words - two sortie clocks, four gunship
+slots and eight bomb racks, appended after the replacement clocks so every
+existing offset stayed put (`O_ARMY` is still 2072; `WORDS` went 2076 ->
+2174). The hashes would have moved without a new word regardless: the air
+draws from the same stream the ground fight uses, so every unit after the
+first sortie stands somewhere else. `BlwpLayout.cs` and
+`dist/blwp-core.js` were regenerated with it.
+
+Nothing is wired into `Battlefield.cs`, `Army.cs` or `ArmyRenderer` -
+Unity keeps the live army until (e).
+
 ### Found while doing (d), and NOT fixed in it
 
 `sim.js`, in the spawn path:
@@ -260,6 +357,19 @@ Also newly red and caused by this work: `SafeRouteScoresNearNothing`
 banks 0.077 where it wants 0.1. Squads concentrate the danger, so a run
 down the seam meets less of it than it used to. Decide whether the score
 reference or the army is the thing that moved.
+
+Found while doing the air half, and left alone: **`tools/bundle.js`
+refuses duplicate EXPORTED names and does not look at private ones.** The
+bundler concatenates every rule module into one scope, so two files
+declaring the same private constant collide there. `air.js` did exactly
+that - a private `GRAVITY` against the one in `vehicle.js` - and it threw,
+because both are `const` and a redeclaration is a SyntaxError. `var` or
+`function` would not throw; the bundle would quietly ship a different
+program from the modules, and only `bundle.test.js` comparing hashes would
+catch it. `terrain.js` and `cargo.js` already both declare `COLUMNS`, with
+the values 128 and 2, and escape only because neither is reachable from
+`sim.js`. The constant here was renamed `BOMB_GRAVITY`; widening the check
+to every top-level declaration is three lines and its own item.
 
 ## 3. Three post office buildings  -  M1  -  DONE, and it was the tests
 
