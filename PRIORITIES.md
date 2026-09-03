@@ -60,7 +60,7 @@ their names, so any plate size read at wiring time can describe something
 that no longer exists. Every display is re-fitted against the mesh that
 is there now.
 
-## 2. The army into the core  -  M1  -  IN PROGRESS (l, m, j, i, n, o, e closed; q, then p, then r open)
+## 2. The army into the core  -  M1  -  IN PROGRESS (l, m, j, i, n, o, e, q, p closed; r open, s later)
 
 The last thing standing between here and M1.
 
@@ -1335,61 +1335,16 @@ recording: test/vectors/csharp-army.json.
      90 s, and so do the armour's mean z and z-spread. Twenty comparisons,
      twenty overlaps.
 
-     THE HALT'S SHARE IS NOT ZERO, AND THIS CORRECTS WHAT WAS WRITTEN HERE.
-     It is zero on the four SPREAD marks. It is not zero on the infantry's
-     MEAN POSITION: at t=15 the core holds [38.40, 40.10] m from the seam
-     against the recording's 41.40 - the men are one to three metres too
-     far advanced, on sixteen seeds. That was outside before `pace` too
-     ([38.10, 39.00], measured against a worktree at 817aeb3), so it is not
-     a pace effect; it is the halt's footprint. C# walks 3.4 * 0.82 = 2.788
-     m/s and stands still 13.6% of the time, an effective 2.409; this core
-     walks 2.6 and never stops.
-
-     AND IT CANNOT BE FOLDED INTO THE CONSTANT. Measured, not assumed: with
-     `RIFLE_WALK` set to the derived 2.4094 m/s, t=15 mean z comes inside
-     at [41.20, 42.90] and TWO other marks go out - t=15 z-spread 4.40
-     against [3.30, 4.30] and t=30 mean z 14.70 against [10.40, 14.20]. A
-     slower constant lowers the mean and the spread together; a halt lowers
-     the mean while ADDING spread. One miss traded for two is not a fix.
-
-     So the halt is the one thing left, it is worth 1.3 m at one mark of
-     seventy-eight, and it costs a layout word: `restFor` and `nextRest`
-     are per-unit state and all eight U_ words are taken, so it means
-     `U_WORDS` 8 -> 9 and every offset after it, every golden vector, the
-     generated `BlwpLayout.cs` and the C# state buffer. That is a protocol
-     change and wants its own go. The gait wave stays parked on its own
-     merits: over ten cycles in fifteen seconds it averages out and moves
-     no mark.
-
-     What was true and stays true: all four spread marks are inside without
-     either of them, and This is `AvoidWrecks` again - a
-     C# rule that carries nothing the recording can show - and copying an
-     rule that moves no measured number would only put an envelope at risk
-     that currently holds. C# is intent in the right units, not an
-     instruction to port everything in it. If a future measurement needs
-     them, the open question is where their draws come from: C#'s happen
-     DURING the step (`Army.cs:664-665`), interleaved with the firing
-     draws, so the stream would move mid-round while a hash would not.
+     THE HALT'S SHARE WAS NOT ZERO, AND THIS CORRECTS WHAT STOOD HERE. It
+     is zero on the four SPREAD marks above. It is not zero on the
+     infantry's MEAN POSITION, and that is now item (s) with its number and
+     its price. The gait wave stays parked beside it, with no number of its
+     own: over ten cycles in fifteen seconds it averages out and moves no
+     mark.
 
      Suites at the close: Core 54/54, guard 19 files clean, EditMode
      124/123/1, PlayMode 175/154/11/10.
 
-     Infantry z-spread, eight seeds, air pinned, seam0, both sides, against
-     `core-size-reinforce`:
-
-       t          core                      recording      inside?
-       15s        [0.90, 1.20]  mean 1.09    4.3 / 4.4      NO
-       30s        [3.00, 17.40] mean 9.47   11.7 / 13.7     yes
-       60s        [10.00, 21.50] mean 16.27 13.6 / 14.2     yes
-       90s        [4.70, 21.20] mean 12.25   6.7 / 20.6     yes
-
-     One mark. The men march in lockstep through the first fifteen seconds
-     at about a quarter of the recorded spread, and spread decides who is
-     inside a 16 m blast. Armour x-spread, density, alive and churn are
-     inside the envelope at all four marks, so this is the entire distance
-     left between the core's army and the recording. The old 1.04 / 1.04 /
-     33.41 / 25.36 predates `Separate`, the x-chase, the crash rule and the
-     layout fix and does not hold on this tree.
 
   p. `Army.Wrecks` / `AvoidWrecks` in the core - CLOSED FOR M1, NOTHING TO
      PORT. Its share of the measured gap is zero, and that is a code fact
@@ -1437,6 +1392,36 @@ recording: test/vectors/csharp-army.json.
      traverses `turretYaw` in world space, independent of the hull. The core
      carries no turret, so after the cutover a turret follows its hull -
      true, but not what the game did. Presentation, like item 7's flashes.
+
+  s. The infantryman's halt - NOT STARTED, NOT M1-BLOCKING, AND IT NEEDS A
+     LAYOUT WORD. `restFor` / `nextRest` at `Army.cs:658-666`: a man stops
+     0.4-1.8 s every 3-11 s, which is 13.6% of his time.
+
+     THE NUMBER IT EXPLAINS IS ONE MARK OF SEVENTY-EIGHT. At sixteen seeds,
+     air pinned, seam0, the recording lies inside the core's envelope on 77
+     of the 78 quantities it publishes. The miss is the infantry's mean z
+     at t=15: core [38.40, 40.10] m from the seam against 41.40 - one to
+     three metres too far advanced. C# walks 3.4 * 0.82 = 2.788 m/s and
+     stands still 13.6% of the time, an effective 2.409; this core walks
+     2.6 and never stops. It was outside before `pace` as well ([38.10,
+     39.00] against a worktree at 817aeb3), so it is the halt's footprint
+     and nothing else's.
+
+     NOT THE CONSTANT. Measured rather than assumed: `RIFLE_WALK` at the
+     derived 2.4094 m/s brings t=15 mean z inside at [41.20, 42.90] and
+     puts TWO marks out - t=15 z-spread 4.40 against [3.30, 4.30], t=30
+     mean z 14.70 against [10.40, 14.20]. A slower constant lowers mean and
+     spread together; a halt lowers the mean while ADDING spread. That is
+     the wrong number, not the rule.
+
+     THE PRICE. `restFor` and `nextRest` are per-unit state and all eight
+     U_ words are taken, so it is `U_WORDS` 8 -> 9 and every offset after
+     it, every golden vector, the generated `BlwpLayout.cs` and the C#
+     state buffer - a protocol change, which this tree gives its own go.
+     One mark of seventy-eight does not jump that queue. Open when it is
+     taken up: C#'s draws happen DURING the step, interleaved with the
+     firing draws, so the stream would move mid-round while a hash would
+     not.
 
   f. The infantry line, recorded - DONE.
      `test/vectors/csharp-infantry.json`, three passes in one Unity run.
@@ -2147,8 +2132,10 @@ recording: test/vectors/csharp-army.json.
      that is inside the band and is recorded here rather than smoothed.
 
   Order: f, g, h, k, l, m, j, i (all done), then n, o, then e (all done),
-  then q, then p, then r. The measurement set that order, not the letters:
-  (q) is the whole remaining gap and (p)'s share of it is zero.
+  then q, then p (both done), then r. The measurement set that order, not
+  the letters: (q) was the whole remaining gap and (p)'s share of it is
+  zero. (s), the halt, comes after (r): it explains 1 of 78 comparisons and
+  costs a layout word, which is not the share that overtakes a queue.
 
 ### What the measurements say, and what they cost
 
