@@ -1366,12 +1366,32 @@ recording: test/vectors/csharp-army.json.
      33.41 / 25.36 predates `Separate`, the x-chase, the crash rule and the
      layout fix and does not hold on this tree.
 
-  p. `Army.Wrecks` / `AvoidWrecks` in the core - NOT STARTED, AND ITS
-     SHARE OF THE MEASURED GAP IS ZERO. `Army.Wrecks` is filled only by
-     `CombatFx.ClaimWreckSlot`, and `ArmyReferenceTests` builds no
-     `CombatFx` - so `AvoidWrecks` returned on its first line at every tick
-     of every recorded pass. Porting it would push armour x-spread,
-     density, alive and churn OUT of an envelope they sit inside.
+  p. `Army.Wrecks` / `AvoidWrecks` in the core - CLOSED FOR M1, NOTHING TO
+     PORT. Its share of the measured gap is zero, and that is a code fact
+     rather than a sample: `Wrecks` is written in exactly two places, both
+     in `CombatFx.cs`, and `ArmyReferenceTests` names neither `CombatFx`
+     nor `Wrecks` once - so `AvoidWrecks` returned on its first line at
+     every tick of every recorded pass. Porting it would push armour
+     x-spread, density, alive and churn OUT of an envelope they sit inside,
+     to chase a difference the recording cannot show. Same call as the halt
+     in (q), for the same reason.
+
+     AND Y IS COMPLETE, not partial. `shooters`, `perTarget`, `worst` and
+     the x-bands had never been compared, and the recording's own
+     `perTarget` and `worst` were not even printed. At eight seeds three
+     sat just outside - `perTarget` 1.67 against [1.86, 5.00] and `worst` 3
+     against [4, 8] at t=30, the `<31` band 25% against [0, 21] at t=90. At
+     sixteen seeds all three are inside: [1.60, 5.00], [3, 8], [0, 53]. And
+     `worst` was outside at eight seeds BEFORE `pace` too, measured against
+     a worktree at 817aeb3, so none of it is a rule effect. The recording is
+     a single realisation and eight seeds is too narrow for the noisiest
+     quantities - one tank is five per cent of a band. Everything else
+     holds at eight.
+
+     WHAT SURVIVES IS A LIVE-GAME RULE, on its own line rather than dying
+     with the letter, and it depends on ITEM 7: nothing draws a wreck
+     today, and a core that pushes units around hulls the player cannot see
+     is effect without picture - the fault already holding the deploy.
 
      Its reach, for when it is taken up as a rule of the live game rather
      than as a distance to the recording: 55-60 hulls in ninety seconds,
