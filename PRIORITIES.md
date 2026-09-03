@@ -10,6 +10,8 @@ until something that does is finished.
 
     1  clear the red tests            M1   done
     2  the army into the core         M1   in progress  <- the last one
+                                                 only (s) is left in it, and
+                                                 (s) is marked later
     3  three post office buildings    M1   done
     4  hover overlays                 -    small
     5  prune the streamed bundles     -    small
@@ -60,7 +62,7 @@ their names, so any plate size read at wiring time can describe something
 that no longer exists. Every display is re-fitted against the mesh that
 is there now.
 
-## 2. The army into the core  -  M1  -  IN PROGRESS (l, m, j, i, n, o, e, q, p, r closed; s later)
+## 2. The army into the core  -  M1  -  IN PROGRESS (l, m, j, i, n, o, e, q, p, r and item 7 closed; only s open, and it is later)
 
 The last thing standing between here and M1.
 
@@ -177,20 +179,18 @@ recording: test/vectors/csharp-army.json.
      again. Two callers copying one effect is how they drifted in the first
      place.
 
-     ITEM 7 IS CLOSED. What was left over is presentation with no combat in
-     it, and it gets its own non-M1 lines rather than being carried quietly
-     here:
+     ITEM 7 IS DONE. Player build, one drive, before against after: pieces
+     drawn 0 -> peak 65, shots 0 -> 160, hits 48, deaths 16, combat sounds
+     0 -> 233, rotor calls 0 -> 176, and the engine note off
+     `coreSpeed 23.54` where PhysX read 0.00. Core 54/54, guard 19 files
+     clean, EditMode 124/123/1, PlayMode 175/154/11/10 - the twelve reds
+     all still listed with their reason and dependency, none loosened.
+     NOT DEPLOYABLE, and the reason has changed: it is no longer that
+     nothing is drawn or heard, it is that the suites are not green.
+     Nothing goes to btc-logistics-war.pages.dev.
 
-       - the skid wants `truck.Slip`, a PhysX lateral velocity that reads
-         0.00 under the core, and the core publishes no slip word. Not
-         invented here.
-       - `ChaseCamera` takes its lead from `linearVelocity` and so never
-         leads. `BlwpCore.TruckSpeed` is what it wants.
-       - `DriveHud`'s diagnostics panel prints the same zeroes. Its main
-         readout is correct - it already reads the core.
-       - `Impact` gets its knock as `Vector2.zero`, because the core
-         publishes no direction for a hit. The spark sits right; it just
-         does not fly anywhere.
+     What was left over has no combat in it and is on lines (t) to (w),
+     not carried here.
 
      `CombatFxTests.RifleFireProducesAFlashAndATracer` stays red for its
      own reason and it is not this one: it drives the RETIRED C# army
@@ -1565,6 +1565,27 @@ recording: test/vectors/csharp-army.json.
      taken up: C#'s draws happen DURING the step, interleaved with the
      firing draws, so the stream would move mid-round while a hash would
      not.
+
+  PRESENTATION READING A DEAD PHYSX VALUE. Four lines, none of them M1 and
+  none of them item 7, because there is no combat in any of them. Named with
+  their reason rather than carried under a closed item.
+
+  t. The skid has no source - NOT STARTED. `GameAudio` wants `truck.Slip`, a
+     PhysX lateral velocity that reads 0.00 while the core drives a
+     kinematic body, and the core publishes no slip word. Deriving one in C#
+     from `T_VX` and `T_VZ` would be inventing a quantity the core does not
+     keep, so the tyres stay silent until it has one.
+  u. `ChaseCamera` never leads - NOT STARTED. Its lead is
+     `targetBody.linearVelocity`, which is 0 for good, so it always takes
+     the "below walking pace" branch. `BlwpCore.TruckSpeed` is what it
+     wants; one line.
+  v. `DriveHud`'s diagnostics panel - NOT STARTED. It prints Tempo and Drift
+     off the same dead body. Its MAIN readout is correct: it already reads
+     `BlwpCore.TruckSpeed`.
+  w. `Impact` takes its knock as `Vector2.zero` - NOT A DEFECT, LISTED SO
+     THE ABSENCE IS ON THE RECORD. The core publishes no direction for a
+     hit, and `Bind` drew no spark at zero knock either, so the two paths
+     agree. It becomes work only if the core ever carries a knock.
 
   f. The infantry line, recorded - DONE.
      `test/vectors/csharp-infantry.json`, three passes in one Unity run.
