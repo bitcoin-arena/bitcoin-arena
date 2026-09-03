@@ -4006,11 +4006,21 @@ second source, no core. The unit is spelled out ONCE for the row rather
 than twenty-four times, which is the panel's own rule read sensibly.
 
 Measured, not authored: 24 labels for 24 bars, bar pitch 3.800 in screen
-space, each figure 2.790 tall and 3.496 wide - 92% of the pitch, by
-construction - against the transaction rows' 3.8. Legible in the player
-build at 172 m from the board: "0.6 0.5 0.5 0.5 0.5 0.4 ... 0.3" and one
-"sat/vB". So every bar gets its number and the quarters fallback was not
+space, each figure 2.790 tall and 3.496 wide - 92% of the pitch, which is
+where the size comes from - against the transaction rows' 3.8. Every bar
+gets its number, so the fallback to labelling only the quarters was not
 needed.
+
+AND THE FIRST VERSION OVERLAPPED THE ROWS, which the first photograph did
+not show and the arithmetic did. The scale is trimmed to the market, so the
+tallest bars sit near `maxBar` whatever the mempool is doing: measured
+`barTop -6.02` at `scaleY 0.816` against `maxBar 0.82`, and the lowest
+transaction row's bottom edge at `-5.40`. A figure riding the bar top would
+start at -5.62 and reach -2.83 - straight through that row. The figure now
+rides its bar until the bar would push it into the rows and then stops,
+with the ceiling taken from the row's own transform rather than from the
+authored -6. Photographed after: "1.7 1.21 1.21 1.10 1.01 1.01 1.0 ... 0.90
+0.80" clear of the rows.
 
 Core 54/54 and guard 19 files clean, untouched. EditMode 124/123/1,
 PlayMode 175/154/11/10, unchanged. Still not deployable, for the standing
