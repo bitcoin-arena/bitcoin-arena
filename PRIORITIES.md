@@ -1649,9 +1649,40 @@ recording: test/vectors/csharp-army.json.
      and what is left of the goal-following residual - 2.56% of ticks, of
      which give-ground is 1.35 - is named below. Neither is new work.
 
-  z. Liquidation bombers / fallout - IN PROGRESS. Step 1 of 6 done: the
-     submitter and the protocol trace. The strike, the crater, the paths,
-     the irradiation and the drawing are still to come.
+  z. Liquidation bombers / fallout - IN PROGRESS. Steps 1 and 2 of 6 done:
+     the submitter with its protocol trace, and the strike. The crater,
+     the paths around it, the irradiation and the drawing are still to
+     come.
+
+     STEP 2, THE STRIKE. One accepted liquidation arms exactly one strike,
+     in the tick it is consumed, at the densest knot of living units within
+     40 m of the front at their own x. Both sides count: a liquidation is
+     the market hitting the battlefield, not a side's weapon. Index order,
+     ties to the lower index; with nobody alive near the line it falls on
+     the front at x = 0, which is a place and not a draw.
+
+     Deliberately NOT the gunship's `aimPoint`: that searches around where
+     a falling bomb is already going, because the aircraft's inherited
+     `vx` has decided the landing x. A strike has no aircraft, so the whole
+     field is open and the only question is where the fighting is.
+
+     Measured, 32 seeds:
+
+       one liquidation            1 strike, load 3.00 M as submitted
+       next tick, none submitted  armed 0, serial unchanged
+       distance to the front      mean 9.2 m, p95 16.5, max 26.8 (band 40)
+       living units within 16 m   24.8 at the strike, 8.6 anywhere else
+                                  on the same front - a factor of 2.9
+       load against size          1, 10 and 1000 M carried through 1:1
+       size 0                     refused, no strike, serial 0
+       replay                     same digest, same impact point
+       two in one frame           load 9.00 M, liquidation serial 2,
+                                  strike serial 1
+
+     NOT IN THIS STEP, and named rather than implied: the strike does no
+     damage yet, moves no ground and irradiates nothing. It is a place, a
+     load and a serial. `WORDS` 2184 -> 2189, so the golden digests are
+     rewritten again.
 
      THERE IS NOTHING TO PORT. `MarketFeed.cs:15` opens
      `!forceOrder@arr` and `:125-144` builds a `Liquidation` from
