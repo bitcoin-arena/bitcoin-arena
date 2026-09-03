@@ -9,9 +9,7 @@ are worth doing and they buy no progress towards shipping, so they wait
 until something that does is finished.
 
     1  clear the red tests            M1   done
-    2  the army into the core         M1   in progress  <- the last one
-                                                 only (s) is left in it, and
-                                                 (s) is marked later
+    2  the army into the core         M1   done
     3  three post office buildings    M1   done
     4  hover overlays                 -    done
     5  prune the streamed bundles     -    done
@@ -62,7 +60,7 @@ their names, so any plate size read at wiring time can describe something
 that no longer exists. Every display is re-fitted against the mesh that
 is there now.
 
-## 2. The army into the core  -  M1  -  IN PROGRESS (l, m, j, i, n, o, e, q, p, r and item 7 closed; only s open, and it is later)
+## 2. The army into the core  -  M1  -  DONE (l, m, j, i, n, o, e, q, p, r and item 7 closed; s is later and not M1-blocking)
 
 The last thing standing between here and M1.
 
@@ -4187,8 +4185,17 @@ the two largest risks in the whole undertaking:
     the wheel, not a mechanical port - and the way it was actually done
     was to record the PhysX truck and hold the core to the recording.
 
-**Where we are:** stages 0 and 2 are finished, stage 1 is most of the way.
-What is left is the army, which is item 2 above.
+**Where we are:** M1 IS CLOSED. Stages 0, 1 and 2 are finished, and the
+army - item 2 above - is in the core with the picture proved in a browser
+rather than argued: the truck's position, the damage it takes, the enemies
+and the delivery all have a named core reader with no C# gate in front of
+it, and the recording lies inside the core's envelope on 77 of the 78
+quantities it publishes.
+
+What is NOT in it, and is not M1: (s), the infantryman's halt, which is the
+one comparison of the seventy-eight still outside and costs a layout word
+to close - one mark against `U_WORDS` 8 -> 9, every offset after it, every
+golden vector and `BlwpLayout.cs`. It stays NOT STARTED and later.
 
 ## MF - the client                          14-20 sessions
 
