@@ -15,6 +15,47 @@ until something that does is finished.
     5  prune the streamed bundles     -    done
     6  bundler: private name check    -    small
 
+THE TWELVE RED TESTS, ONE LINE EACH. Measured at f103f71. Not one is on the
+deploy path: eleven reach for the C# army that (e) does not build, and the
+twelfth needs a graphics device this machine has not got. None can go green
+here, and none may be loosened.
+
+    EditMode   1 of 124 red
+      CombatFxTests.RifleFireProducesAFlashAndATracer
+        builds `new Army(3)` and steps the RETIRED C# army for 20 s. Its
+        sibling TankFireProducesABlast has the same shape and passes, so it
+        is the C# rifle path, not the harness. Depends on: reviving the C#
+        army, which is forbidden.
+
+    PlayMode  11 of 175 red, 10 skipped
+      VehicleTests.BothArmiesAreOnTheFieldAndOnTheGround   "keine Armeen"
+      VehicleTests.ArmourBlocksTheTruck                    null armour
+      VehicleTests.TheTruckCanDriveOnAfterHittingTheArmy   null armour
+      VehicleTests.UnitsDoNotShoveEachOtherWithPhysics     "kein Panzerrumpf"
+      VehicleTests.ArmiesFightNearTheSeamRatherThanWanderingOff
+                                        NRE at VehicleTests.cs:442, field.Army
+      FeatureTests.DamageIsFeltInTheDriving
+                                        NRE at FeatureTests.cs:168, field.Army
+      TruckHealthTests.CrashingIntoArmourWritesItOff       no armour to hit
+      VisibilityTests.ArmiesAreActuallyDrawn               "keine Armee"
+      ImportedModelTests.SoldiersStandOnTheGroundAndAreAnimated   0 soldiers
+      ImportedModelTests.TanksStandOnTheGroundRatherThanInIt      0 hulls
+        All ten: they read `Battlefield.Army`, which (e) does not build, does
+        not step and does not draw, and there is no core in the Editor to put
+        in its place - `BlwpCore` is stubbed outside UNITY_WEBGL. Depends on:
+        the same forbidden revival.
+      VisibilityTests.RoadsAreActuallyDrawn
+        `RenderTexture.Create failed` under -batchmode -nographics. Tried:
+        without -nographics Unity does not start, "Error opening default X
+        display", and there is no Xvfb here. Depends on: a graphics device.
+        The claim itself is photographed in every browser run.
+
+    Rotating twelfth, one of the two, never both in a run:
+      PostOfficeTests.TheGogglesAnimate  and
+      RampReadyTests.TheRealTransactionsReplaceTheStandInsWhileNothingIsLoaded
+        item 1's load flake; which one appears changes between runs of the
+        same tree. Depends on: the suite's own load, not on any code here.
+
 Everything for M2 and beyond is further down, under "The milestones", and
 none of it should be started while item 2 is open. M2 needs stage 3
 (`blwp-node`) before it can begin at all, and starting a lobby on top of
@@ -1752,6 +1793,14 @@ recording: test/vectors/csharp-army.json.
      The 191 remaining ticks sit at 32-39 m against R = 40 - the rim, not
      the bowl. `separatePair` runs after the push and is a candidate, not
      a cause; under a hundredth of a per mille, not chased.
+
+     The dead-centre guard is C#'s own and does what C#'s does - it returns,
+     to keep the divide off a zero. It briefly carried a push of mine so a
+     unit standing exactly on the centre could not be left in the bowl;
+     measured, that never happens - 0 of 345,600 unit-ticks - because the
+     push runs after the step and a step is 0.04 to 0.11 m, always past the
+     hundredth of a metre. A rule C# has not got, guarding a case that
+     cannot arise, so it is gone rather than kept as decoration.
 
      AND THE RING HOLDS THE TRUCK, which is measured behaviour and not a
      regression to be voted away. Escape from the centre at full throttle,
