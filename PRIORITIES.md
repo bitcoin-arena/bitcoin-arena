@@ -60,7 +60,7 @@ their names, so any plate size read at wiring time can describe something
 that no longer exists. Every display is re-fitted against the mesh that
 is there now.
 
-## 2. The army into the core  -  M1  -  IN PROGRESS (l, m, j, i, n, o, e, q, p closed; r open, s later)
+## 2. The army into the core  -  M1  -  IN PROGRESS (l, m, j, i, n, o, e, q, p, r closed; s later)
 
 The last thing standing between here and M1.
 
@@ -1388,10 +1388,47 @@ recording: test/vectors/csharp-army.json.
      upper bound, because a hull that deflects is not a hull driven
      through. A truck cost, not an army gap.
 
-  r. The tank's turret has no aim in the core - NOT STARTED. `StepArmour`
-     traverses `turretYaw` in world space, independent of the hull. The core
-     carries no turret, so after the cutover a turret follows its hull -
-     true, but not what the game did. Presentation, like item 7's flashes.
+  r. The tank's turret - DONE, AND IT STAYED OUT OF THE CORE. `StepArmour`
+     traverses `turretYaw` in world space, and after the cutover the barrel
+     was glued to the hull.
+
+     NO COMBAT SHARE, PICTURE ONLY, and that is a code fact: `turretYaw` has
+     one writer (`Army.cs:601`) and NO reader anywhere in the simulation. A
+     shot is `Random01() < 0.55f` and the target is chosen by distance and
+     heat, so the barrel's angle decides nothing. No recording carries a
+     turret either - zero matches for "turret" or "yaw" in all three vector
+     files. Its share of the 78 comparisons is 0, by construction.
+
+     So it did NOT get a state word. That would have been `U_WORDS` 8 -> 9
+     with every offset after it, every golden vector, `BlwpLayout.cs` and
+     the C# buffer - the same wall (s) hit at 1 of 78, for 0 of 78 here.
+     Unread state does not belong in a hashed core. The renderer derives the
+     aim from state the core already publishes and smooths it locally, the
+     same class as the infantry's bob off `BlwpCore.Tick` and the running
+     gear. Nothing is written back and nothing is hashed.
+
+     ONE SUBSTITUTION, named rather than hidden: engaged is C#'s rule
+     exactly - the nearest enemy TANK inside 46 m, which is what
+     `NearestEnemy` walks. Not engaged, C# sweeps about a point on the
+     frontline, and the renderer has no frontline: the seam is derived
+     inside the core from the price tape each tick and is not a state word.
+     The sweep is taken about the hull's own heading instead, over the same
+     14 m of lateral wander at the distance of the nearest enemy tank.
+
+     Measured, same derivation on core state, eight seeds, air pinned,
+     seam0 - the angle between barrel and hull, which was 0.0 at every mark
+     by construction while it was glued:
+
+       t          mean        largest     tanks with a target inside 46 m
+       15s        78.0 deg    179.0       18.3 of 20.9
+       30s        65.5 deg    178.1       13.6 of 19.6
+       60s        60.1 deg    179.8       14.1 of 20.0
+       90s        60.8 deg    177.0       13.6 of 19.3
+
+     Both draw paths carry it - the prefab's child turret (the hull's own
+     rotation taken off the world aim, or the two would add) and the
+     primitive pool. It does not touch item 7: flashes and audio are THAT a
+     shot happens, this is where the barrel points.
 
   s. The infantryman's halt - NOT STARTED, NOT M1-BLOCKING, AND IT NEEDS A
      LAYOUT WORD. `restFor` / `nextRest` at `Army.cs:658-666`: a man stops
