@@ -1836,6 +1836,30 @@ recording: test/vectors/csharp-army.json.
      nothing here: the mark is drawn at the crater's own world position and
      the warning is a position test, neither of which reads the terrain.
 
+     AND THE ARM HAD NO CALLER, which the close-out question found and the
+     six steps did not. `BlwpCore.Liquidation` was written in step 1 and
+     nothing ever called it: `MarketFeed.OnLiquidation` still had no
+     subscriber, so in the player build no liquidation ever reached the
+     core and the whole arm was built, measured and unreachable.
+
+     `Bootstrap` subscribes it now, and carries the simulation clock the
+     contract asks for. Both numbers are the feed's own rather than
+     invented: `MarketFeed` drops a liquidation at `Age > 90f`, so ninety
+     seconds is what that feed calls a while ago, and it is both the
+     silence that starts the clock and the interval it ticks at. The size
+     is drawn over the span the core's crater rule is defined on, one
+     million to a thousand million. It goes through the SAME
+     `BlwpCore.Liquidation` the live feed does, which is why a simulated
+     strike and a real one cannot look different - the core is handed one
+     input and cannot tell which sent it. `Bootstrap.Simulated` says which,
+     for the HUD's mark, and nothing else reads it.
+
+     Proved in the running build without anything injected: liquidation
+     serial 0, strike 0 and craters 0 at 30, 60 and 95 seconds, then 1, 1
+     and 1 at about 130. Photographed with the truck in the hole: the
+     warning, both trefoils, the atom on the crater, and under it
+     "SIM - no liquidation on the feed".
+
      STEP 4, THE PATHS. `Army.AvoidWrecks` (`Army.cs:533-552`) already has
      the rule and it is not the wrecks: a radial push of `(r + size) - d`,
      3.2 m for a tank and 0.6 m for a man. Plain metres, no PhysX, no nav
