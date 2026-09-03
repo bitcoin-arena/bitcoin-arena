@@ -9,7 +9,7 @@ are worth doing and they buy no progress towards shipping, so they wait
 until something that does is finished.
 
     1  clear the red tests            M1   done
-    2  the army into the core         M1   in progress  (y measured; z: liquidation bombers)
+    2  the army into the core         M1   in progress  (z open: liquidation bombers)
     3  three post office buildings    M1   done
     4  hover overlays                 -    done
     5  prune the streamed bundles     -    done
@@ -60,7 +60,7 @@ their names, so any plate size read at wiring time can describe something
 that no longer exists. Every display is re-fitted against the mesh that
 is there now.
 
-## 2. The army into the core  -  M1  -  IN PROGRESS (y open: real goals; z open: liquidation bombers)
+## 2. The army into the core  -  M1  -  IN PROGRESS (z open: liquidation bombers)
 
 The last thing standing between here and M1.
 
@@ -1627,46 +1627,27 @@ recording: test/vectors/csharp-army.json.
      where a hull has just been spawned - and node already separates the
      drive at 0.3 degrees. No further instrumentation.
 
-  y. Tanks and soldiers pursue a real goal - MEASURED, ALREADY TRUE. M1.
-     The player's rule: each unit has a job and walks toward it - close on
-     the front, hold the line, engage a foe, fall back if overrun. Not a
-     random walk, not milling, not a parking lot on their own rear.
+  y. Tanks and soldiers pursue a real goal - DONE. M1. Each unit has a
+     job and walks toward it: close on the front, hold the line, engage a
+     foe, fall back if overrun. Measured per axis, eight seeds, 90 s -
+     97.44% of unit-ticks step toward their named job, infantry at 100.0
+     on both axes. No random walk, no milling, no parking lot.
 
-     Measured per axis, only where the axis has ground to make up, eight
-     seeds, 90 s. The axes are separately controlled on purpose - the 2-D
-     coupling was measured and reverted - so a 2-D cone is the wrong
-     ruler and reads a tank that has arrived in z as a failure:
+     A tank now drives where its hull points at EVERY speed. The
+     projection sat inside the turn floor, so under 0.4 m/s a tank
+     travelled along its raw controller output instead: hull against the
+     step actually taken was 88.50 degrees below the floor and is 0.08.
+     See y-6.
 
-       job              share of ticks   x to goal   z to goal
-       soldier front         77.7%         100.0%      100.0%
-       armour front           8.2%          93.7%       96.1%
-       armour engage          6.7%          86.4%       90.1%
-       armour give ground     7.4%          87.3%       76.1%
-       armour fall back       0.0%             -           -
+     Gunships fly their own side of the front, their nose follows their
+     travel (23.60 -> 2.91 degrees off, y-3) and their bombs take a living
+     clump near the front instead of a clock (y-5).
 
-     97.44% of unit-ticks step toward a named goal; infantry is at 100.0
-     on both axes. There is no random walk, no milling and no parking lot:
-     y-1 withdrew the parking lot with numbers, and the four jobs are C#'s
-     own. Gunships are y-3 and y-5.
-
-     THE 2.56% THAT DOES NOT, and where it sits: give-ground 1.35 points
-     (53%), engage 0.79 (31%), close 0.42 (16%), infantry 0.00. Measuring
-     the controllers and the delivered step separately in the same tick
-     says which: for close, engage and fall back the controllers want the
-     right direction 98.5 / 99.9 / 100.0% of the time and the heading
-     constraint from (x) costs 6.5 / 14.2 / 37.7 points - that is turn
-     lag at C#'s own 2.2 per second rate, not a missing goal. Only
-     give-ground loses on its own account, 3.0 points to the heading and
-     the rest to its own dead band, and it is 1.35% of all ticks. Not dug
-     into: it is the ~1% case while nothing larger is open.
-
-     ALSO LISTED, NOT FIXED: the fall-back job is reachable but almost
-     never entered - 0.0% of ticks, and the overrun depth peaks at 16.4 m
-     against its 14 m threshold. C# reaches it because `StepArmour`
-     normalises one goal vector and can drag a tank over the seam; this
-     core keeps x and z apart by a decision that was measured and kept, so
-     the job is nearly unreachable BY THAT DECISION rather than by
-     oversight. Reopening it would reopen the coupling.
+     Core against the recording, all three envelopes, freshly measured:
+     68/72 with the air off, 67/72 with it on, 29/29 in the air table.
+     What is still outside is named in y-4 with its miss and its cause,
+     and what is left of the goal-following residual - 2.56% of ticks, of
+     which give-ground is 1.35 - is named below. Neither is new work.
 
   z. Liquidation bombers / fallout - NOT STARTED. M1. Live Binance
      futures liquidations (`!forceOrder@arr`) scramble a bomber with an
@@ -1874,7 +1855,7 @@ recording: test/vectors/csharp-army.json.
      was a leftover of drawing the truck on a hill, and it is not
      reproduced.
 
-  y. The front line was a price chart, not a line - FIXED.
+  y-7. The front line was a price chart, not a line - FIXED.
      `rules/frontline.js` lays the tape across the map at one sample every
      4.13 m and took it raw, so the "front" ran +29.1, +2.6, +37.6, +5.8,
      +28.1, -8.6, +8.8, -40.5, -28.4 at 22 m steps. A man walking nine
@@ -1975,7 +1956,7 @@ recording: test/vectors/csharp-army.json.
      The residual is the easing, which is C#'s own, and the bank tops out
      at C#'s own clamp of 0.8 rad = 45.8 deg.
 
-  y-4. The envelope reads 68/72 air off and 65/72 air on - EVERY LINE
+  y-4. The envelope reads 68/72 air off and 67/72 air on - EVERY LINE
      NAMED WITH ITS MISS AND ITS CAUSE. No rule gap among them, so no code
      changed. Seeds 1..32, pinned; pass `core-size-reinforce`, which is the
      only pass at the core's own establishment.
@@ -2002,12 +1983,15 @@ recording: test/vectors/csharp-army.json.
      the offset is real - it is simply 1.6% of an approach, and it is
      gone by t=30.
 
-     AIR ON, the same three plus four more, all `bear`, all t=60 or t=90:
+     AIR ON, the same three plus two more, both `bear`, both t=90:
 
-       t=60 bear armour sd    1.22 of a  9.79 range
-       t=60 bear inf z        2.27 of a 41.62 range
-       t=90 bear inf z        4.20 of a 35.34 range
-       t=90 bear inf sd       5.89 of a 14.51 range
+       t=90 bear inf z        core [12.36, 45.69]  rec 11.00
+       t=90 bear inf sd       core [ 9.04, 28.51]  rec  6.65
+
+     There were four here. `t=60 bear armour sd` and `t=60 bear inf z`
+     came back inside when y-6 stopped tanks sliding below the turn floor,
+     which is why the air-on count reads 67/72 and not the 65/72 this
+     entry first carried.
 
      These are the air's own doing and they are not comparable in the
      direction they point: the recording was taken with NO AIR, so a core
@@ -2112,7 +2096,7 @@ recording: test/vectors/csharp-army.json.
      turning faster than C# or coupling the axes again, and both are
      already decided against.
 
-  y-1. "The + wing never arrives" - WITHDRAWN.  y-1. "The + wing never arrives" - WITHDRAWN. It was my measurement, not
+  y-1. "The + wing never arrives" - WITHDRAWN. It was my measurement, not
      the core. Two faults in the instrument, both found by measuring again
      rather than by arguing:
 
@@ -2200,7 +2184,9 @@ recording: test/vectors/csharp-army.json.
        armourDestroyedByShell   before core [51, 57]  rec [43, 52]  OVERLAPS
                                  after core [53, 60]  rec [43, 52]  OUTSIDE
 
-     so 29/29 -> 28/29, missing by one. The cause: a deeper front brings
+     so 29/29 -> 28/29, missing by one - AND IT IS BACK INSIDE SINCE y-6,
+     at [51, 59] against [43, 52]. What is below stands as the record of
+     why it left, not as an open line. The cause: a deeper front brings
      the two lines into the 46 m gun more often, so shells kill more
      armour. It was already at the edge - the old overlap was 51-52 alone.
      It is a GROUND figure carried in the air table as a control; it
