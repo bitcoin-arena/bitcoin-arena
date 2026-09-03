@@ -14,7 +14,7 @@ until something that does is finished.
                                                  (s) is marked later
     3  three post office buildings    M1   done
     4  hover overlays                 -    done
-    5  prune the streamed bundles     -    small
+    5  prune the streamed bundles     -    done
     6  bundler: private name check    -    small
 
 Everything for M2 and beyond is further down, under "The milestones", and
@@ -4026,12 +4026,25 @@ Core 54/54 and guard 19 files clean, untouched. EditMode 124/123/1,
 PlayMode 175/154/11/10, unchanged. Still not deployable, for the standing
 reason: the suites are not green.
 
-## 5. Prune the streamed bundles  -  no milestone  -  small
+## 5. Prune the streamed bundles  -  no milestone  -  DONE
 
-`ServerData/` keeps every version ever built - five post office bundles,
-40.9 MB copied into each build. Nothing serves the old ones and they are
-uploaded on every deploy. Housekeeping, and it grows every time a model
-changes.
+The claim here was "five post office bundles, 40.9 MB". Measured:
+`unity-proto/ServerData/WebGL/` held SEVEN bundles, 10,399,842 bytes, one
+per model, zero duplicates - and the folder is gitignored, so it was never
+repo content. The state was clean; the MECHANISM was not.
+
+`SetupAddressables.BuildContent` ran `BuildPlayerContent` with no clean, and
+that build is incremental and names every bundle by a hash of its contents:
+change a model and the new name is written beside the old one, which then
+ships in every deploy. `BuildWebGL.CopyStreamedContent` already mirrors the
+build OUTPUT - delete, then re-copy - but the source it copies from had no
+such rule, and the source is what grows.
+
+The run now empties the folder before it writes, with the path evaluated
+from the profile so it cleans exactly where the build is about to write.
+Measured after: "cleared 7 files (9.9 MB) before building", then seven
+bundles and 10,399,842 bytes again - the same seven names, byte for byte,
+so the guard costs a full rebuild and changes nothing that is served.
 
 ## 6. Bundler: the private name check  -  no milestone  -  small
 
