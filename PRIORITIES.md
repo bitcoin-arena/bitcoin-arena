@@ -1867,6 +1867,30 @@ recording: test/vectors/csharp-army.json.
      truck's. Core 54/54 and the guard 19 files clean after the golden
      vectors and `dist/blwp-core.js` were regenerated together.
 
+     AND THE DRAWER WAS LEFT LYING, which the first pass missed. Smoothing
+     the line the units stand on while `TerritoryMap.cs:102` still painted
+     the raw one puts the picture 22.04 m from the men on average and
+     49.14 m at worst - at x=68 the core had the front at -8.3 m and the
+     drawing at -57.4. Five C# call sites read it and four go through one
+     funnel, `Battlefield.FrontlineZ`: TerritoryMap:102, RunScore:268,
+     DriveHud:1115 and RoadNetwork:74.
+
+     Fixed by ASKING the core, not by copying the filter into C# - a second
+     copy of a rule is how two numbers drift. `sim.js` exports `frontAt`,
+     `blwp.jslib` carries `BlwpFrontlineZ`, `BlwpCore.FrontlineZ(x)` reads
+     it, and `Battlefield.FrontlineZ` takes it when a core answers and
+     keeps `PriceHistory` for the Editor, where there is no core.
+
+     Proved on the running build, read out of the live page through the
+     same `frontAt` the bridge calls:
+
+       x     -88   -66   -44   -22     0    22    44    66    88
+       raw  +29.1  +2.6 +37.6  +5.8 +28.1  -8.6  +8.8 -40.5 -28.4
+       now   -3.6  +2.3  +4.7  +3.6  -0.9  -8.9 -20.4  -9.6  +2.6
+
+     Photographed: the territory boundary is one smooth line with an army
+     on each side of it.
+
      Two things measured here and deliberately NOT folded into it: (y-1)
      and (y-2) below.
 
