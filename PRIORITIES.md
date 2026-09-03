@@ -159,6 +159,24 @@ recording: test/vectors/csharp-army.json.
      0.002 when the sky is clear. The combat sounds and the drawn pieces
      did not fall back - 143 and a peak of 58.
 
+     AND THE TWO PATHS WERE LAID SIDE BY SIDE, effect by effect, rather
+     than trusted. `Bind` and the core-driven poll did NOT draw the same
+     thing - the new one was quietly smaller in three places:
+
+       tank shot     Bind: flash 1.6, tracer 0.3/0.16, Blast(impact, 4.5)
+                     was:  flash 0.9, tracer 0.14/0.06, no blast at all
+       corpse        Bind: Body at Ground + 0.9 when there is no body model
+                     was:  Body at Ground, a proxy box sunk into the floor
+       bomb          Bind: flipbook, else 9 fireballs; then smoke, 22 sparks
+                           and debris, and a shockwave
+                     was:  flipbook, else ONE fireball, and nothing after it
+
+     Fixed by giving each effect ONE copy and two callers -
+     `DrawRifleShot`, `DrawTankShot`, `DrawCorpse`, `DrawBombBurst` - so the
+     retired army's events and the core's transitions cannot drift apart
+     again. Two callers copying one effect is how they drifted in the first
+     place.
+
      ITEM 7 IS CLOSED. What was left over is presentation with no combat in
      it, and it gets its own non-M1 lines rather than being carried quietly
      here:
