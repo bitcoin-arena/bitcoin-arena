@@ -9,7 +9,7 @@ are worth doing and they buy no progress towards shipping, so they wait
 until something that does is finished.
 
     1  clear the red tests            M1   done
-    2  the army into the core         M1   in progress  (y: real goals; z: liquidation bombers)
+    2  the army into the core         M1   in progress  (y measured; z: liquidation bombers)
     3  three post office buildings    M1   done
     4  hover overlays                 -    done
     5  prune the streamed bundles     -    done
@@ -1627,20 +1627,46 @@ recording: test/vectors/csharp-army.json.
      where a hull has just been spawned - and node already separates the
      drive at 0.3 degrees. No further instrumentation.
 
-  y. Tanks and soldiers pursue a real goal - NOT STARTED. M1. The player's
-     rule: they act tactically. Each unit has a job and walks toward it —
-     close on the front, hold the line, engage a foe, fall back if overrun.
-     Not a random walk, not milling, not a parking lot on their own rear.
-     Infantry as well as armour. Gunships too: they fly their own side of
-     the front and always aim a target or a cluster near the front — not
-     a timer-drop on whatever happens to be under the track. Wherever
-     the front is (left or right), that is where the units are.
+  y. Tanks and soldiers pursue a real goal - MEASURED, ALREADY TRUE. M1.
+     The player's rule: each unit has a job and walks toward it - close on
+     the front, hold the line, engage a foe, fall back if overrun. Not a
+     random walk, not milling, not a parking lot on their own rear.
 
-     C# already names the goals: StepArmour `goalZ = front - Dir*9` unless
-     close-engaged; StepInfantry walks the line. Measure: is each unit's
-     step toward a named goal, or drifting? Fix in Core. Do not copy a
-     units fault. Do not reopen 2-D coupling that was measured and reverted.
-     Deploy to btc-logistics-core-m1 only when this is true on screen.
+     Measured per axis, only where the axis has ground to make up, eight
+     seeds, 90 s. The axes are separately controlled on purpose - the 2-D
+     coupling was measured and reverted - so a 2-D cone is the wrong
+     ruler and reads a tank that has arrived in z as a failure:
+
+       job              share of ticks   x to goal   z to goal
+       soldier front         77.7%         100.0%      100.0%
+       armour front           8.2%          93.7%       96.1%
+       armour engage          6.7%          86.4%       90.1%
+       armour give ground     7.4%          87.3%       76.1%
+       armour fall back       0.0%             -           -
+
+     97.44% of unit-ticks step toward a named goal; infantry is at 100.0
+     on both axes. There is no random walk, no milling and no parking lot:
+     y-1 withdrew the parking lot with numbers, and the four jobs are C#'s
+     own. Gunships are y-3 and y-5.
+
+     THE 2.56% THAT DOES NOT, and where it sits: give-ground 1.35 points
+     (53%), engage 0.79 (31%), close 0.42 (16%), infantry 0.00. Measuring
+     the controllers and the delivered step separately in the same tick
+     says which: for close, engage and fall back the controllers want the
+     right direction 98.5 / 99.9 / 100.0% of the time and the heading
+     constraint from (x) costs 6.5 / 14.2 / 37.7 points - that is turn
+     lag at C#'s own 2.2 per second rate, not a missing goal. Only
+     give-ground loses on its own account, 3.0 points to the heading and
+     the rest to its own dead band, and it is 1.35% of all ticks. Not dug
+     into: it is the ~1% case while nothing larger is open.
+
+     ALSO LISTED, NOT FIXED: the fall-back job is reachable but almost
+     never entered - 0.0% of ticks, and the overrun depth peaks at 16.4 m
+     against its 14 m threshold. C# reaches it because `StepArmour`
+     normalises one goal vector and can drag a tank over the seam; this
+     core keeps x and z apart by a decision that was measured and kept, so
+     the job is nearly unreachable BY THAT DECISION rather than by
+     oversight. Reopening it would reopen the coupling.
 
   z. Liquidation bombers / fallout - NOT STARTED. M1. Live Binance
      futures liquidations (`!forceOrder@arr`) scramble a bomber with an
