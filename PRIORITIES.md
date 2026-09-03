@@ -2038,22 +2038,55 @@ recording: test/vectors/csharp-army.json.
      bundled.hash(b), entry.final)` - against a recorded final hash, the
      same stale transcript as the six `vector:` reds.
 
-  y-1. The + wing never arrives, and it is not the front rule - OPEN,
-     MEASURED. After (y) the - wing sits on its line (infantry -10.7,
-     sd 9.5; armour -12.9, sd 7.9 at t=90) and the + wing does not
-     (infantry +32.8, armour +23.7 at t=30). The residual is OLDER than
-     the smoothing: it was +36.5 before it and +32.8 after, so the filter
-     did not cause it and does not cure it.
+  y-1. "The + wing never arrives" - WITHDRAWN. It was my measurement, not
+     the core. Two faults in the instrument, both found by measuring again
+     rather than by arguing:
 
-     What the trace shows: with the front smooth a man closes steadily -
-     78.9 m to 15.4 m of remaining distance in 36 seconds - and then dies
-     and restarts the walk from the map edge. The + wing is a permanent
-     marching column. Losses over 90 s: + side 85 (57 of them infantry)
-     against - side 69 (37 infantry), 54% more infantry dead. That is
-     combat and the length of the walk back, not where the line is.
+       - I compared each unit's z against a FIXED standoff of 8 m from the
+         front. The standoff is `Rand(4, 12) + Rand(-5, 5)` - 3 to 17 m,
+         drawn per man and identical in both engines - so a man standing
+         exactly on his own goal could read as 9 m adrift.
+       - I took the MEAN of a whole wing. One wing's offsets are negative,
+         so |mean| readings were never comparable between them.
 
-     Not dug into in this letter by decision. Its share of the known gap
-     goes here as soon as it has a number.
+     Measured against each unit's OWN goal, seeds 1..32, t=60, both wings:
+
+                              +  wing        -  wing
+       infantry still walking  544 (33.4%)   506 (31.1%)
+       median age               16.7 s        15.5 s
+       median distance to go   +33.6 m       -32.5 m
+       armour still walking     79 (4.8%)     91 (5.6%)
+       median distance to go   +13.0 m       -12.5 m
+
+     Same magnitude, opposite sign. The wings are symmetric.
+
+     WHAT THE NON-ARRIVERS ACTUALLY ARE, which is the question that was
+     asked: 63% of them are simply still walking, median 16.7 seconds old
+     with 33.6 m to go. They are replacements. Reinforcements enter at the
+     map edge - the core spawns at +-(79 - Rand(0,3)) and `Army.cs:17`
+     has `HalfDepth = 79f` with the same draw, so the walk is C#'s own -
+     and the recording does the same thing: 37 lost and 33 arrived by t=60
+     in its own pass. 13.7% are stopped by the halt (s) put in. 13.8% of
+     armour is held by `abstand` or `feind`, both C# jobs. 0.1% step away
+     from their goal and 0.2% are stalled.
+
+     And in the recording's own condition - seam pinned at 0, air off,
+     seeds 1..32 - all EIGHTEEN t=60 quantities overlap, both wings:
+     bull inf z [-27.87, -7.93] against -13.55, bear inf z [8.51, 22.35]
+     against 14.34, bull armour z [-30.96, -13.32] against -18.09, bear
+     armour z [12.08, 35.17] against 22.13.
+
+     Two things I also claimed and withdraw: the losses (85 against 69)
+     are not the cause, because both wings show the same marching share;
+     and the front does NOT sit off centre in play - averaged over the map
+     it is at +1.04 m in all 32 seeds, so the two approaches differ by
+     2.1 m, 3%, 0.9 seconds. Neither can carry a 32 m residual.
+
+     ONE ASYMMETRY IS REAL AND IS NOT EXPLAINED: the + wing has 118 men
+     stopped by the halt at t=60 against the - wing's 54, 2.2 times as
+     many, on the same seeds. It is 7.2% against 3.3% of the wing. No
+     cause is claimed. It is small beside the marching share and it does
+     not move the envelope, so it is listed rather than chased.
 
   y-2. The core's front is 7.4% shallower than C#'s - OPEN, MEASURED.
      Same tape, same function: the largest disagreement is 11.03 m, at the
