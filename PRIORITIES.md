@@ -60,7 +60,7 @@ their names, so any plate size read at wiring time can describe something
 that no longer exists. Every display is re-fitted against the mesh that
 is there now.
 
-## 2. The army into the core  -  M1  -  DONE (l, m, j, i, n, o, e, q, p, r and item 7 closed; s is later and not M1-blocking)
+## 2. The army into the core  -  M1  -  DONE (all of l, m, j, i, n, o, e, q, p, r, s and item 7 closed; 78 of 78 against the recording)
 
 The last thing standing between here and M1.
 
@@ -1534,35 +1534,47 @@ recording: test/vectors/csharp-army.json.
      primitive pool. It does not touch item 7: flashes and audio are THAT a
      shot happens, this is where the barrel points.
 
-  s. The infantryman's halt - NOT STARTED, NOT M1-BLOCKING, AND IT NEEDS A
-     LAYOUT WORD. `restFor` / `nextRest` at `Army.cs:658-666`: a man stops
-     0.4-1.8 s every 3-11 s, which is 13.6% of his time.
+  s. The infantryman's halt - DONE, and the last of the seventy-eight is in.
+     `restFor` / `nextRest` at `Army.cs:658-666`: a man stops 0.4-1.8 s every
+     3-11 s, about 13.6% of his time.
 
-     THE NUMBER IT EXPLAINS IS ONE MARK OF SEVENTY-EIGHT. At sixteen seeds,
-     air pinned, seam0, the recording lies inside the core's envelope on 77
-     of the 78 quantities it publishes. The miss is the infantry's mean z
-     at t=15: core [38.40, 40.10] m from the seam against 41.40 - one to
-     three metres too far advanced. C# walks 3.4 * 0.82 = 2.788 m/s and
-     stands still 13.6% of the time, an effective 2.409; this core walks
-     2.6 and never stops. It was outside before `pace` as well ([38.10,
-     39.00] against a worktree at 817aeb3), so it is the halt's footprint
-     and nothing else's.
+     NO LAYOUT WORD, NO DRAW. The list priced this at `U_WORDS` 8 -> 9 and
+     that price was wrong. The halt is derived from a hash of (index, CYCLE)
+     - the k-th interval and the k-th stop of one man - and the cycle a tick
+     falls in is found by summing from zero, about eleven steps at ninety
+     seconds. Drawing once per MAN instead, `tick % P < R`, was tried first
+     and fails: it locks each man to one duty cycle for ever, so the spread
+     never settles. Measured against the C# process itself:
 
-     NOT THE CONSTANT. Measured rather than assumed: `RIFLE_WALK` at the
-     derived 2.4094 m/s brings t=15 mean z inside at [41.20, 42.90] and
-     puts TWO marks out - t=15 z-spread 4.40 against [3.30, 4.30], t=30
-     mean z 14.70 against [10.40, 14.20]. A slower constant lowers mean and
-     spread together; a halt lowers the mean while ADDING spread. That is
-     the wrong number, not the rule.
+       window     C#                        per man            per cycle
+       15 s       12.09%, sd 4.79           14.67%, sd 7.20    11.84%, sd 4.75
+       90 s       13.60%, sd 1.84           14.67%, sd 6.64    13.23%, sd 1.75
 
-     THE PRICE. `restFor` and `nextRest` are per-unit state and all eight
-     U_ words are taken, so it is `U_WORDS` 8 -> 9 and every offset after
-     it, every golden vector, the generated `BlwpLayout.cs` and the C#
-     state buffer - a protocol change, which this tree gives its own go.
-     One mark of seventy-eight does not jump that queue. Open when it is
-     taken up: C#'s draws happen DURING the step, interleaved with the
-     firing draws, so the stream would move mid-round while a hash would
-     not.
+     C# is intent, not the draw order: its `Rand` calls happen mid-step,
+     interleaved with the firing draws, so taking them from the stream would
+     have moved every quantity in the army.
+
+     AND `RIFLE_WALK` WAS AN EFFECTIVE SPEED. 2.6 m/s already had the halt
+     baked into it, so the rule on top counted it twice: measured, 2.214 m/s
+     against C#'s 2.409, and the infantry's mean z at t=15 overshot from
+     1.3 m short to 3.3 m long. It is 2.788 now = 3.4 * 0.82 from
+     `Army.cs:672` - the walk times the gait wave's own mean, the wave not
+     being ported because it moves no mark. The 0.82 in the wave and the one
+     opening `Rand(0.82f, 1.18f)` are two different numbers that happen to be
+     equal; folding the wrong one counts `pace` twice, and 3.4 raw was
+     measured at 2.895 m/s with the mark 7-9 m through. Effective now
+     2.374 against 2.409.
+
+     THE RESULT, thirty-two seeds, air pinned, seam0: 78 of 78. The mark this
+     item exists for came in - infantry mean z at t=15, [40.40, 42.20]
+     against the recording's 41.40, from [38.40, 40.10] - and nothing else
+     left. At sixteen seeds two quantities looked like regressions,
+     `worst` at t=30 and the 46 m density at t=90; both are inside at
+     thirty-two, which is the same sample width that fooled this file once
+     before.
+
+     Golden vectors and `dist/` regenerated together. Core 54/54, guard 19
+     files clean, EditMode 124/123/1, PlayMode 175/154/11/10.
 
   PRESENTATION READING A DEAD PHYSX VALUE. Four lines, none of them M1 and
   none of them item 7, because there is no combat in any of them. Named with
