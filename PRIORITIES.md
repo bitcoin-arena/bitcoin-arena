@@ -1706,6 +1706,44 @@ recording: test/vectors/csharp-army.json.
      Not measured separately: the lean and the lens, which read the same
      vector through `speed01` and `Dot(v, forward)` and so follow from the
      same swap rather than from their own run.
+
+     WHERE THE BRANCH POINTS, which the run above did not check. That the
+     Atan2 branch is taken says nothing about the direction it produces:
+     if the core's axes ran the other way from Unity's, the camera would
+     take the branch and sit in FRONT of the truck. Measured, same build:
+
+       straight, 8 samples above 6 m/s
+         `wanted` 90.00, nose 90.00, core heading 90.00; delta 0.00 deg
+         in every sample. No flip, no offset.
+
+       corner, 6 samples above 6 m/s - `wanted` against the CORE heading,
+       beside `asin(slip / |v|)`, the drift angle worked out from (t)'s
+       quantity and never fed to the camera:
+
+         wanted   core heading   apart    asin(slip/|v|)
+          90.10       90.53       0.43        0.43
+         104.79      111.25       6.46        6.46
+         135.42      143.77       8.35        8.35
+         169.22      177.81       8.59        8.59
+         202.88      211.25       8.37        8.36
+         236.02      244.30       8.28        8.28
+
+       Largest disagreement 0.01 deg. The camera looks down the direction
+       of TRAVEL, off by exactly the angle the truck is sliding - which is
+       what the file's own header says it is for, and it is (t)'s slip
+       arriving independently in (u)'s reading.
+
+     One thing the same table exposes, and it is not the camera: the nose
+     read off `target.eulerAngles.y` trails `BlwpCore.TruckHeading` by up
+     to 0.63 deg in a hard corner - the transform is one frame behind the
+     core that wrote it. That is render lag, not a camera defect, and it
+     is why `wanted` had to be compared against the core heading rather
+     than against the transform.
+
+     Not testable in a suite: there is no core in the Editor
+     (`BlwpCore` is stubbed unless `UNITY_WEBGL && !UNITY_EDITOR`), so a
+     PlayMode test could only assert the `linearVelocity` fallback - the
+     branch that is NOT the fix. The proof is the browser run above.
   v. `DriveHud`'s diagnostics panel - NOT STARTED. It prints Tempo and Drift
      off the same dead body. Its MAIN readout is correct: it already reads
      `BlwpCore.TruckSpeed`.
