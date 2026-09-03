@@ -1407,23 +1407,38 @@ recording: test/vectors/csharp-army.json.
      same class as the infantry's bob off `BlwpCore.Tick` and the running
      gear. Nothing is written back and nothing is hashed.
 
-     ONE SUBSTITUTION, named rather than hidden: engaged is C#'s rule
-     exactly - the nearest enemy TANK inside 46 m, which is what
-     `NearestEnemy` walks. Not engaged, C# sweeps about a point on the
-     frontline, and the renderer has no frontline: the seam is derived
-     inside the core from the price tape each tick and is not a state word.
-     The sweep is taken about the hull's own heading instead, over the same
-     14 m of lateral wander at the distance of the nearest enemy tank.
+     ONE SUBSTITUTION, named rather than hidden, AND MEASURED AGAINST THE
+     C# RULE RATHER THAN ASSERTED. Engaged is C#'s rule exactly - the
+     nearest enemy TANK inside 46 m, which is what `NearestEnemy` walks.
+     Not engaged, C# sweeps about a point on the frontline, and the
+     renderer has no frontline: the seam is derived inside the core from
+     the price tape each tick and is not a state word.
 
-     Measured, same derivation on core state, eight seeds, air pinned,
-     seam0 - the angle between barrel and hull, which was 0.0 at every mark
-     by construction while it was glued:
+     The first version swept about the hull's own heading, and comparing it
+     with C#'s own centre showed that was wrong - only the not-engaged
+     tanks, 21 to 48 of them across eight seeds and four marks:
+
+       centre against C#'s      hull heading      nearest enemy
+       t=15                     mean 83, max 162  mean 24, max 79
+       t=30                     mean 77, max 172  mean 24, max 74
+       t=60                     mean 77, max 176  mean 27, max 81
+       t=90                     mean 84, max 172  mean 22, max 74
+
+     A tank not in contact is manoeuvring, and where its hull points is not
+     where the enemy line is. So the sweep centres on the direction to the
+     nearest enemy tank at any distance. The WIDTH was right either way -
+     C# 12.6 to 13.9 degrees mean against 11.9 to 12.5 - so only the centre
+     moved.
+
+     The angle between barrel and hull, same derivation on core state,
+     eight seeds, air pinned, seam0. It was 0.0 at every mark by
+     construction while the barrel was glued:
 
        t          mean        largest     tanks with a target inside 46 m
-       15s        78.0 deg    179.0       18.3 of 20.9
-       30s        65.5 deg    178.1       13.6 of 19.6
-       60s        60.1 deg    179.8       14.1 of 20.0
-       90s        60.8 deg    177.0       13.6 of 19.3
+       15s        87.3 deg    179.0       18.3 of 20.9
+       30s        87.9 deg    178.7       13.6 of 19.6
+       60s        81.7 deg    179.8       14.1 of 20.0
+       90s        83.4 deg    178.9       13.6 of 19.3
 
      Both draw paths carry it - the prefab's child turret (the hull's own
      rotation taken off the world aim, or the two would add) and the
