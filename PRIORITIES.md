@@ -1297,8 +1297,44 @@ recording: test/vectors/csharp-army.json.
      that were named; whether that is all of them is not established, and
      that question belongs before step 1 of the port, not after.
 
-  q. The infantry's halt and pace per man - NEXT, AND IT IS THE WHOLE OF
-     THE REMAINING GAP. `restFor` / `nextRest` and the gait wave.
+  q. The infantry's halt and pace per man - PACE DONE, HALT AND GAIT WAVE
+     NOT STARTED. Every rifleman walked at exactly `RIFLE_WALK`, 2.6 m/s,
+     so a squad that set off together arrived together. `pace` is now his
+     own: a dimensionless 0.82-1.18 factor on that speed, as
+     `Army.cs:278`'s `Rand(0.82f, 1.18f)` is a factor on the C#'s 3.4 m/s.
+
+     FROM THE INDEX, NOT FROM THE STREAM. `standoff` and `squadOffsetZ` are
+     already derived from a hash of the index, and a spawn draw is protocol
+     - inserting one shifts every draw after it for every unit of every
+     round. The hash costs nothing and shifts nothing. It takes a second
+     round of mixing rather than a third window of the first, because bits
+     20..29 and 8..17 are spoken for and an overlapping window would tie a
+     man's speed to where he stands, which the C#'s independent draws do
+     not. Over the 72 rifle slots: 0.825 to 1.171, mean 0.9812, sd 0.1035
+     against C#'s 1.0000 and 0.1039. The mean is 1.5 sigma low on a
+     72-sample draw and is left alone rather than tuned.
+
+     Infantry z-spread, eight seeds, air pinned, seam0, both sides:
+
+       t        before            after            recording   inside?
+       15s      [0.90, 1.20]      [3.60, 4.50]     4.3 / 4.4   NO -> yes
+       30s      [3.00, 17.40]     [2.80, 17.30]   11.7 / 13.7  yes
+       60s      [10.00, 21.50]    [6.60, 21.30]   13.6 / 14.2  yes
+       90s      [4.70, 21.20]     [5.90, 21.50]    6.7 / 20.6  yes
+
+     Worked out beforehand from the C# ranges, `pace` alone should carry
+     about 3.75 m of the recorded 4.3 with the halt worth 1.5 and the gait
+     wave, over ten cycles in fifteen seconds, none: the mark came out at
+     4.13. And 2e's envelope holds - armour x-spread, density and alive
+     inside at all four marks, churn lost [52, 62] arrived [47, 57] against
+     59/55.
+
+     WHAT IS LEFT, and it is now a question for the numbers rather than a
+     plan: the halt (`restFor` / `nextRest`) and the gait wave. All four
+     marks are inside without them. The halt's draws happen DURING the step
+     (`Army.cs:664-665`), interleaved with the firing draws, so taking them
+     from the stream would move the whole protocol mid-round - a hash would
+     not, but would not be the same sequence either. Not decided here.
 
      Infantry z-spread, eight seeds, air pinned, seam0, both sides, against
      `core-size-reinforce`:
