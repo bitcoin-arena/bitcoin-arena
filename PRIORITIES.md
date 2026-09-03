@@ -1690,9 +1690,9 @@ recording: test/vectors/csharp-army.json.
      and what is left of the goal-following residual - 2.56% of ticks, of
      which give-ground is 1.35 - is named below. Neither is new work.
 
-  z. Liquidation bombers / fallout - IN PROGRESS. Steps 1 to 4 of 6 done:
-     the submitter with its protocol trace, the strike, the crater, and the
-     paths around it. The irradiation and the drawing are still to come.
+  z. Liquidation bombers / fallout - IN PROGRESS. Steps 1 to 5 of 6 done:
+     the submitter with its protocol trace, the strike, the crater, the
+     paths around it, and the irradiation. Only the drawing is left.
 
      STEP 2, THE STRIKE. One accepted liquidation arms exactly one strike,
      in the tick it is consumed, at the densest knot of living units within
@@ -1769,6 +1769,40 @@ recording: test/vectors/csharp-army.json.
 
      Still not in that step: damage, paths, irradiation, drawing.
      `WORDS` 2189 -> 2229.
+
+     STEP 5, THE FALLOUT. The contract is one sentence - the truck driving
+     through is irradiated, health drops, it can die - and it names no
+     radius, no rate and no duration. C# names none either: there is no
+     crater, no fallout and no irradiation anywhere in it. So both ends are
+     measured against what the core already carries. NO LAYOUT WORD: the
+     area is the crater's own radius and the rate is recovered from the
+     stored radius, so it rides the same normalised load as R, D and the
+     lifetime. One rule, four consequences.
+
+     Anchors, both from quantities already in the core, both measured:
+     crossing a 1 M crater costs 9.9 health, inside the courier hit's own
+     `Rand(5, 11)`; crossing a 1000 M crater costs exactly the truck's 100
+     and kills it. The falloff is the bowl's own `1 - (r/R)^2` - the
+     fallout lies where the ground was thrown out of.
+
+       load   R        crossing cost   standing at the centre
+          1 M 16.0 m    9.9            dead in 22.6 s
+         10 M 19.1 m   12.0
+        100 M 25.7 m   33.8
+       1000 M 40.0 m  100.0, lethal    dead in 3.6 s
+
+     One tick at the rim and half a metre outside it: 0.0000 both. Half a
+     metre inside: 0.0116. At the centre 0.4666 against the 28/60 = 0.4667
+     the constant states. Withheld by `practice`, like every other hit on
+     the truck; NOT divided by `TRUCK_ARMOUR`, because 1.5 is plating
+     against a shell and the word here is irradiated.
+
+     A seventh vector, `fallout`, carries it: four craters and a truck that
+     drives into one alive, 4.9 s inside and 77.9 health lost to it. The
+     `liquidation` vector could not - its truck never meets a hole, and its
+     digest is unchanged by this step, which is how the gap was found.
+
+     Envelopes unmoved: 68/72 air off, 67/72 air on, 29/29 air.
 
      STEP 4, THE PATHS. `Army.AvoidWrecks` (`Army.cs:533-552`) already has
      the rule and it is not the wrecks: a radial push of `(r + size) - d`,
