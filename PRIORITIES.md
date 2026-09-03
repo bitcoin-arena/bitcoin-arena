@@ -13,7 +13,8 @@ until something that does is finished.
     3  three post office buildings    M1   done
     4  hover overlays                 -    done
     5  prune the streamed bundles     -    done
-    6  bundler: private name check    -    small
+    6  bundler: private name check    -    later (Daniel: start M2)
+    8  M2.1 one node holds a round    M2   open
 
 THE TWELVE RED TESTS, ONE LINE EACH. Measured at f103f71. Not one is on the
 deploy path: eleven reach for the C# army that (e) does not build, and the
@@ -5359,11 +5360,41 @@ time. Each entry can only start when the ones above it are done, and the
 reason is given where it is not obvious - most of these dependencies are
 not preference, they are "this cannot be tested without that".
 
-Nothing here starts while item 2 above is open.
+Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
 
-## M2.1  The node daemon                            stage 3
+## M2.1  The node daemon                            stage 3  -  OPEN
 
-  1. **A round on one node.** HTTP and WebSocket over `node:sqlite`: open
+  1. **A round on one node.** DONE. `packages/blwp-node`: HTTP to open a
+     round, read it and take an entry; a WebSocket for input batches and
+     the close. `node:sqlite`, one process, one player, no verification.
+
+     The ids are the protocol's, not the node's: `roundId(contract)` and
+     `entryId(contract)`, checked against `@blwp/protocol` in the tests and
+     over the wire. Bodies are the protocol's own bytes, so the contract
+     that crosses the wire is the contract that is hashed.
+
+     IDEMPOTENCE IS IN THE SCHEMA. A tick is keyed `(round, entry, tick)`
+     with a primary key, so a repeat is a no-op the database performs and
+     not a check a caller can forget - and the ticks are absolute, so a gap
+     is the numbers themselves. Measured on a running process: 90 ticks
+     accepted, the same message again accepted as 0, ten more at 200, and
+     the store holds 100 rows over the range 0..209 - a hole of 110 that a
+     query names rather than a shorter list nobody can size.
+
+     `TYPE_INPUT_BATCH = 0x08` is the one message this needed: round, entry,
+     first tick, the five words `step` takes per tick, and the sparse
+     `[tick, size]` liquidations - without those a transcript would replay
+     a round with no strike, no crater and no fallout in it. Its tag is its
+     own, and `batch.js` is on the money guard's list because it carries
+     Q16.16 words that go straight into the core.
+
+     THE NODE DOES NOT STEP. A test asserts no file in `src/` reaches for
+     the core; stepping arrives with the checkpoints below and is measured
+     then.
+
+     Protocol 40/40 with its money guard 6 files clean, node 10/10.
+
+  1b. **The same, as the spec first put it.** HTTP and WebSocket over `node:sqlite`: open
      a round, accept an entry, take input batches, close it. One process,
      one player, no verification. This is the smallest thing that can
      hold a game and everything else attaches to it.
