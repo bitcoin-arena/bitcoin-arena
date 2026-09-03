@@ -1925,6 +1925,30 @@ recording: test/vectors/csharp-army.json.
      Two things measured here and deliberately NOT folded into it: (y-1)
      and (y-2) below.
 
+  y-3. The gunship's nose was pinned, not flown - FIXED, and it was the
+     DRAWER, not the path. `ArmyRenderer.cs:454` set the yaw from `H_DIR`,
+     which is the way the machine is crossing and is one number for the
+     whole sortie, while its z chases `seam(x) +- (26 + sin(t*0.6)*9)`.
+     Measured in the core over 150 s, seed 20260901: the drawn nose was
+     19.4 deg off the true travel on average, 37.0 at p95 and 55.9 at
+     worst - it crabbed. The z rate itself (mean 7.56 m/s, max 29.5) sits
+     inside C#'s own clamp of 32.0, so the PATH was already faithful.
+
+     Derived now the way `Army.cs:443-451` derives it - nose to the Atan2
+     of the step, eased at 3 per second, bank proportional to the turn,
+     clamped at 0.8 rad and eased at 3.5. Nothing in the simulation reads
+     either, so they cost no layout word.
+
+     Measured again in the running WebGL build, 60 samples:
+
+                       mean    p95    max
+       old nose       23.60  40.01  52.20 deg off travel
+       new nose        2.91  13.84  29.07 deg off travel
+       bank           -3.48  42.79  44.47 deg
+
+     The residual is the easing, which is C#'s own, and the bank tops out
+     at C#'s own clamp of 0.8 rad = 45.8 deg.
+
   y-1. The + wing never arrives, and it is not the front rule - OPEN,
      MEASURED. After (y) the - wing sits on its line (infantry -10.7,
      sd 9.5; armour -12.9, sd 7.9 at t=90) and the + wing does not
