@@ -2067,7 +2067,52 @@ recording: test/vectors/csharp-army.json.
      bundled.hash(b), entry.final)` - against a recorded final hash, the
      same stale transcript as the six `vector:` reds.
 
-  y-1. "The + wing never arrives" - WITHDRAWN. It was my measurement, not
+  y-6. A tank slid sideways below the turn floor - FIXED. (x) says a tank
+     drives only where its hull points. Both the heading update AND the
+     projection onto it sat inside `if (far > TURN_FLOOR)`, so under
+     0.4 m/s the tank kept `dx, dz` - the raw output of two separate
+     controllers - and travelled along that instead.
+
+       hull against the step actually taken   before   after
+         below the floor                      88.50    0.08 deg
+         above the floor                       0.00    0.00 deg
+
+     The floor is C#'s own (`Army.cs:456`, step above `dt * 0.4`) but in
+     C# it gates only the HEADING, because C# has no velocity constraint
+     to gate - its step is always along its goal vector. Gating the core's
+     projection with it put a guard on a rule it was never written for.
+     The heading still stops updating below the floor, where the direction
+     of a 6 mm step is noise.
+
+     IT CLOSED THREE ENVELOPE LINES rather than costing any:
+
+       army air on   65/72 -> 67/72   (t=60 bear armour sd and bear inf z)
+       air           28/29 -> 29/29   (armourDestroyedByShell, [51, 59]
+                                       against [43, 52])
+       army air off  68/72 unchanged
+
+     armourDestroyedByShell was the line y-2 left outside as a consequence;
+     it is back inside and y-2's note stands as the record of why it left.
+
+     NOT SHIPPED, measured and dropped: making the z controller
+     proportional like the x one. The z branch is bang-bang - `dz` takes
+     exactly two magnitudes and changes sign in 57.2% of ticks - and C#
+     moves along one goal vector proportionally, so it looked like the
+     cause of the whirl. It is not: with z proportional the hull's angular
+     error is 30.2 degrees against 29.8, and the turn rate 63.3 deg/s
+     against 60.7. A rule change that moves nothing measurable is not
+     shipped.
+
+     WHAT THE TURN RATE ACTUALLY IS, so it stops being read as a defect:
+     `TURN_RATE` closes 3.61% of the error a tick, which is 2.21 per
+     second - C#'s own 2.2. The hull's angular error is 29.8 degrees mean,
+     and 29.8 x 2.21 = 66 deg/s, which is the measured mean. The error is
+     LAG, not jitter: the direction it chases moves 1.9 degrees a tick and
+     the goal itself moves 0.029 m a tick. Lowering it further means
+     turning faster than C# or coupling the axes again, and both are
+     already decided against.
+
+  y-1. "The + wing never arrives" - WITHDRAWN.  y-1. "The + wing never arrives" - WITHDRAWN. It was my measurement, not
      the core. Two faults in the instrument, both found by measuring again
      rather than by arguing:
 
