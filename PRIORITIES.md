@@ -1649,7 +1649,49 @@ recording: test/vectors/csharp-army.json.
      and what is left of the goal-following residual - 2.56% of ticks, of
      which give-ground is 1.35 - is named below. Neither is new work.
 
-  z. Liquidation bombers / fallout - NOT STARTED. M1. Live Binance
+  z. Liquidation bombers / fallout - IN PROGRESS. Step 1 of 6 done: the
+     submitter and the protocol trace. The strike, the crater, the paths,
+     the irradiation and the drawing are still to come.
+
+     THERE IS NOTHING TO PORT. `MarketFeed.cs:15` opens
+     `!forceOrder@arr` and `:125-144` builds a `Liquidation` from
+     `q * ap`, but `OnLiquidation` has ZERO subscribers and the only
+     consumer of the list is `DriveHud.cs:1093`, a debug line that counts
+     them. C# has no liquidation bomber, so there is no recording to
+     measure against and C# is not the intent here - the rule is the
+     player's. And the core never saw the market at all: `sim.js:124`
+     builds its price tape from a fixed hash and does not even use the
+     argument it is handed.
+
+     A liquidation happens on an exchange, so it enters as an INPUT and is
+     carried in the state, where the digest covers it and a replay is
+     closed. `submitLiquidation(st, size)` queues it; `step` is untouched
+     and consumes the queue first thing in the tick, before anything
+     moves, drawing no random number - the order is protocol. Three words
+     appended after the squads, so no offset in front of them moves:
+     pending, last consumed, and a serial that counts every acceptance so
+     a replay which dropped one cannot match.
+
+     Size is in MILLIONS of USD, Q16.16. Dollars in Q16.16 overflow a
+     signed word at $32,768; millions reach $32 billion at a resolution of
+     $15.26.
+
+     Exercised in the running WebGL build, both submitters:
+
+       submit 2.5      pending 2.5, serial 1
+       after the tick  pending 0, last 2.5
+       sim clock, 2.5  last 2.5, serial 2     same size, same result
+       1.0 then 7.0    pending 7, serial 4    larger wins, both counted
+       size 0          refused, state unchanged
+
+     The live feed and the simulation clock are two callers of one
+     function, so they cannot drift: the core sees one input, not two
+     sources. `WORDS` 2181 -> 2184, so every golden vector's digest is
+     rewritten - unavoidable for state a replay must carry - and a seventh
+     vector, `liquidation`, carries the queue itself as `[tick, size]`
+     pairs.
+
+  z-old. Liquidation bombers / fallout, the rest of the letter. Live Binance
      futures liquidations (`!forceOrder@arr`) scramble a bomber with an
      atomic load. Liquidations are rare, so there is a **simulation
      toggle** that fires them on a clock when the feed is quiet, same
