@@ -4311,13 +4311,20 @@ check to every top-level declaration. Written up under item 2.
 
 ## 7. The red and flaky Unity tests  -  no milestone  -  small
 
-**And since (e), the combat audio hangs on the same hook.** `Bootstrap` wired
-the cannon, the rifle, the destroyed hull and the hit to `Fired`, `Shot`,
-`Destroyed`, `Killed` and `Bombed` - events of the C# army, which no longer
-runs. The core raises none of them, so a shot is neither drawn nor heard. That
-is one dependency, not two: whatever lets CombatFx see the core's shots lets
-the audio hear them. It is the reason (e) is closed and the game is still not
-deployable.
+**SUPERSEDED, and it was a live contradiction against item 2.** This chapter
+used to end its opening with "a shot is neither drawn nor heard... it is the
+reason (e) is closed and the game is still not deployable". Item 2 says item 7
+is closed. Item 2 is the truth, and it is the one with numbers behind it:
+measured in the player build, one drive, before against after - pieces drawn
+0 -> peak 65, shots 0 -> 160, hits 48, deaths 16, combat sounds 0 -> 233,
+rotor calls 0 -> 176. Shots ARE drawn and ARE heard. `Bootstrap` still wires
+the old `Fired`/`Shot`/`Destroyed`/`Killed`/`Bombed` events, which no longer
+fire, but `CombatFx.PollCore` and `GameAudio` no longer depend on them.
+
+So the deployability verdict stands but the REASON is not this one: the game
+is not deployable because the suites are not green, and for no other listed
+cause. That is what item 2 already says at "NOT DEPLOYABLE, and the reason has
+changed".
 
 
 Found while running the EditMode suite in batchmode to reach (l)'s
@@ -4388,13 +4395,87 @@ Both are clear of the threshold of 1. It cannot be reproduced with the
 instrument in place; the numbers are recorded so that a future red has
 something to be compared against instead of being called a flake a third time.
 
-**The two Visibility reds now have their reason printed, and it is not ours.**
-`ArmiesAreActuallyDrawn` fails on `Unhandled log message: '[Error]
-RenderTexture.Create failed'` and `RoadsAreActuallyDrawn` on "die Strassen
-veraendern nur 0.00% des Bildes" - both are a batch run with `-nographics`
-having no graphics device to render into. The dependency is a graphics device,
-not a code change: they cannot pass in this loop and they are not evidence of
-anything about the core. Listed here by name, with cause, as required.
+**THE TWELVE REDS, EACH ONE NAMED, WITH TODAY'S FAILURE TEXT.** The
+paragraph that used to stand here had the two Visibility reds' causes
+swapped and out of date; both were re-read from the run of 01b074f rather
+than repeated. Counts that go with this ledger, per suite:
+
+    Core (node)   54 / 54          determinism guard 19 files clean
+    EditMode     124 total, 123 pass,   1 fail,  0 skip
+    PlayMode     175 total, 154 pass,  11 fail, 10 skip
+
+TEN OF THE ELEVEN PLAYMODE REDS ARE ONE THING: they reach for the C# army,
+which (e) deliberately does not build, does not step and does not draw. In
+the Editor there is no core to put in its place - `BlwpCore` is stubbed
+unless `UNITY_WEBGL && !UNITY_EDITOR` - so the quantity they assert on
+exists in neither engine while the test runs. They cannot be made green in
+the Editor without reviving the retired simulation, which is combat and
+driving back in PhysX and is forbidden. None is on the deploy path: the
+deploy path is the WebGL player build, where the core answers and the same
+claims were measured in the browser.
+
+  1  VehicleTests.BothArmiesAreOnTheFieldAndOnTheGround
+       asserts both armies exist and stand on the terrain.
+       "keine Armeen in der Szene / Expected: not null, But was: null".
+  2  VehicleTests.ArmourBlocksTheTruck
+       asserts a tank stops the truck. "Expected: not null, But was: null"
+       - it looks up the armour through `Battlefield.Army`.
+  3  VehicleTests.TheTruckCanDriveOnAfterHittingTheArmy
+       asserts the truck is not trapped after a collision. Same null.
+  4  VehicleTests.UnitsDoNotShoveEachOtherWithPhysics
+       asserts units do not push each other through rigidbodies.
+       "kein Panzerrumpf in der Szene".
+  5  VehicleTests.ArmiesFightNearTheSeamRatherThanWanderingOff
+       asserts over half the armour settles within 60 m of the front.
+       NullReferenceException at VehicleTests.cs:442, `field.Army.Armour`.
+  6  FeatureTests.DamageIsFeltInTheDriving
+       asserts a courier hit lowers condition and the driving feels it.
+       NullReferenceException at FeatureTests.cs:168,
+       `_field.Army.CourierHit.Invoke(70f)`.
+  7  TruckHealthTests.CrashingIntoArmourWritesItOff
+       asserts driving flat out into the battlefield writes the truck off.
+       "der Truck ist mit Vollgas ins Schlachtfeld gefahren und nicht
+       zerstoert worden" - there is no armour in the scene to hit.
+  8  VisibilityTests.ArmiesAreActuallyDrawn
+       asserts the armies change more than 1% of the rendered image.
+       "keine Armee / Expected: not null, But was: null" - it never
+       reaches the render, so this is an army red and NOT the graphics
+       red it was filed as here before.
+  9  ImportedModelTests.SoldiersStandOnTheGroundAndAreAnimated
+       "keine Soldaten gefunden / Expected: greater than 0, But was: 0".
+ 10  ImportedModelTests.TanksStandOnTheGroundRatherThanInIt
+       "keine Panzerruempfe gefunden / Expected: greater than 0, But
+       was: 0".
+
+THE ELEVENTH PLAYMODE RED IS NOT THAT, and it is not ours either:
+
+ 11  VisibilityTests.RoadsAreActuallyDrawn
+       "Unhandled log message: '[Error] RenderTexture.Create failed'".
+       The test renders the scene twice through a `RenderTexture` and
+       diffs the pixels. Under `-batchmode -nographics` there is no
+       graphics device to create one. Not a code dependency: a device
+       one. Tried rather than argued: the same test run WITHOUT
+       `-nographics` does not reach the test at all - "Error opening
+       default X display. You must have a valid X server running." This
+       machine has no Xvfb either (`which Xvfb` finds nothing), so the
+       suite cannot be run with graphics here at all. On the deploy path
+       the claim is true and photographed - the road is under the truck
+       in every browser screenshot taken for (t), (u) and (v).
+
+THE ONE EDITMODE RED:
+
+ 12  CombatFxTests.RifleFireProducesAFlashAndATracer
+       "es wird geschossen, aber nichts ist zu sehen / Expected: greater
+       than 0, But was: 0". It builds `new Army(3)`, calls
+       `Populate(0, 20)` and `Bind`, then steps the RETIRED C# army for
+       20 s. Its sibling `TankFireProducesABlast` has the same shape and
+       PASSES, so this is not the harness: it is the C# army's rifle path
+       failing to raise `Shot`, in an engine the product no longer runs.
+       Editor-only by construction, not on the deploy path.
+
+So: eleven of the twelve are the retired C# engine, one is a missing
+graphics device. Not one of the twelve asserts something the core does in
+the browser, and not one was loosened, skipped or re-asserted to go green.
 
 ---
 
