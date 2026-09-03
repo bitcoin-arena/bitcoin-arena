@@ -106,6 +106,58 @@ recording: test/vectors/csharp-army.json.
      What is left over is presentation and has its own lines: item 7
      (CombatFx and the combat audio) and (r) the turret.
 
+     ITEM 7, THE COMBAT HALF - DONE. `CombatFx` was never dead: measured in
+     the player build it ticks every frame with `army=null` and drew
+     `pieces=0` for a whole drive, while `GameAudio` was asked for
+     `combat=0` sounds. All five things it drew - `Shot`, `Fired`,
+     `Killed`, `Destroyed`, `Bombed` - hung on a C# army that is never
+     built.
+
+     The core raises no events either, and does not have to. Each of the
+     five is a transition in the buffer Unity already polls, and the core
+     steps once per Unity frame so none is missed:
+
+       a tank fired      `U_TARGET`, the armour's reload counter, rises -
+                         it only counts down otherwise
+       a rifleman fired  `U_COOLDOWN` rises to 150 or more; the reload band
+                         is 150-269 and the "looked, found nobody" band is
+                         24-65, so a look draws no flash
+       somebody hit      `U_HP` fell while still alive
+       somebody died     `U_STATE` went 1 to 0
+       a bomb went off   `B_STATE` went 1 to 0
+
+     Nothing here decides anything: no roll, no damage, no range test that
+     costs anyone. The tracer's end is picked by re-running `pickTarget` /
+     `pickRifleTarget`'s own rule - nearest enemy of the same arm inside
+     46 m and 26 m - on the core's own state, and a slot that changed
+     alive-state this frame is skipped so a spawn's staggered reload cannot
+     read as a shot.
+
+     Measured in the player build, one drive, before against after:
+
+       pieces drawn      0 for the whole drive   ->  peak 65 at once
+       shots seen        -                       ->  160
+       hits seen         -                       ->  48
+       deaths seen       -                       ->  16
+       combat sounds     0                       ->  233
+
+     AND THE ENGINE NOTE. It read `_body.linearVelocity`, which is 0 for
+     good while the core drives a kinematic body - measured `kinematic=True,
+     linearVelocity=0.00` at speed, so the revs followed the throttle alone.
+     It reads `BlwpCore.TruckSpeed` now: at the fastest sample
+     `coreSpeed=23.54, physxSpeed=0.00, rpm=1.00`, and at the end
+     `coreSpeed=2.77, rpm=0.11`.
+
+     STILL OUT, and named rather than quietly carried: the skid needs
+     `truck.Slip`, a PhysX lateral velocity that reads 0.00 under the core,
+     and the core publishes no slip word - not invented here. `ChaseCamera`
+     still takes its lead from `linearVelocity` and so never leads.
+     `DriveHud`'s diagnostics panel prints the same zeroes; its main
+     readout is correct. And `CombatFxTests.RifleFireProducesAFlashAndATracer`
+     stays red for its own reason: it drives the RETIRED C# army through
+     `Bind` with `Populate(0, 20)` and that path raises no `Shot`. It tests
+     the engine this letter did not revive.
+
      BOTH ENGINES COMPARED AGAIN AFTER THE CUTOVER, because the last one
      predates `Separate`, the x-chase, the crash rule, condition-to-driving
      and the layout fix - and that fix mattered most: `S_PRACTICE` had been
