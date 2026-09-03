@@ -1817,6 +1817,83 @@ recording: test/vectors/csharp-army.json.
      was a leftover of drawing the truck on a hill, and it is not
      reproduced.
 
+  y. The front line was a price chart, not a line - FIXED.
+     `rules/frontline.js` lays the tape across the map at one sample every
+     4.13 m and took it raw, so the "front" ran +29.1, +2.6, +37.6, +5.8,
+     +28.1, -8.6, +8.8, -40.5, -28.4 at 22 m steps. A man walking nine
+     metres sideways saw his goal move sixty, and nobody ever arrived.
+
+     THE WIDTH IS DERIVED. A rifleman closes in z at 3.4 m/s and moves in x
+     at 2.4 m/s (`Army.cs:681`), so a slope above 3.4/2.4 = 1.42 m per m
+     outruns him. Raw: mean 6.00, p99 14.21, 88% of the map over the limit.
+     Box-averaged over N tape samples, five tapes:
+
+         N     mean   p99    max   over limit   amplitude
+          1    6.00  14.21  14.35     88.0%     +-56.7 m
+          9    0.93   2.66   2.80     22.9%     +-38.5 m
+         13    0.56   1.80   1.93      3.7%     +-42.7 m
+         21    0.42   1.20   1.27      0.0%     +-39.5 m
+
+     21 is the first width where p99 AND max are both under 1.42 and no
+     part of the map is above it. The normalisation keeps the RAW window's
+     range on purpose: against the smoothed range the curve re-expands to
+     full scale and 9.9% of the map is still over the limit at N=21.
+
+     C# has no filter. This is the core declining to copy a fault, not a
+     term lost in the port: a quantity used as a FRONT LINE cannot have 4 m
+     resolution and 60 m steps.
+
+     AND THE RULER WAS WRONG TOO. `sim.js:805` handed EVERY unit one seam,
+     taken at the TRUCK's x, so the whole battlefield lay on a flat line
+     whose height the player carried around with him - +27.3 m with the
+     truck at its spawn. `Army.cs:557` takes `FrontlineAt(v.x)` per tank
+     and `:651` per man. Now `unitSeam` does.
+
+     Arrival, measured against the front at each unit's own x, target 8 m
+     for infantry (`Rand(4,12)` + `Rand(-5,5)`, identical in both engines)
+     and 9 m for armour:
+
+                        before        after
+       infantry -    +5.2 sd 28.2   -10.7 sd  9.5   arrived
+       armour   -   -22.6 sd 30.9   -22.0 sd 18.3
+       infantry +   +36.5 sd 16.1   +32.8 sd 25.4   see (y-1)
+       armour   +   +27.1 sd 35.6   +23.7 sd 20.4   see (y-1)
+
+     THE 78 DO NOT MOVE. In the recording's own condition - the seam pinned
+     at 0, which is how the C# reference was taken - `measure-army.js
+     20260901 --seam0` prints output that is BYTE-IDENTICAL before and
+     after: zero lines differ. With a flat tape the window's span is zero,
+     so the filter cannot change anything and the per-unit seam equals the
+     truck's. Core 54/54 and the guard 19 files clean after the golden
+     vectors and `dist/blwp-core.js` were regenerated together.
+
+     Two things measured here and deliberately NOT folded into it: (y-1)
+     and (y-2) below.
+
+  y-1. The + wing never arrives, and it is not the front rule - OPEN,
+     MEASURED. After (y) the - wing sits on its line (infantry -10.7,
+     sd 9.5; armour -12.9, sd 7.9 at t=90) and the + wing does not
+     (infantry +32.8, armour +23.7 at t=30). The residual is OLDER than
+     the smoothing: it was +36.5 before it and +32.8 after, so the filter
+     did not cause it and does not cure it.
+
+     What the trace shows: with the front smooth a man closes steadily -
+     78.9 m to 15.4 m of remaining distance in 36 seconds - and then dies
+     and restarts the walk from the map edge. The + wing is a permanent
+     marching column. Losses over 90 s: + side 85 (57 of them infantry)
+     against - side 69 (37 infantry), 54% more infantry dead. That is
+     combat and the length of the walk back, not where the line is.
+
+     Not dug into in this letter by decision. Its share of the known gap
+     goes here as soon as it has a number.
+
+  y-2. The core's front is 7.4% shallower than C#'s - OPEN, MEASURED.
+     Same tape, same function: the largest disagreement is 11.03 m, at the
+     map edge. `rules/frontline.js` scales by `halfZ * 2/3` (+-56.7 m),
+     `PriceHistory.FrontlineZ:128` by `worldDepth * 0.72` (+-61.2 m).
+     Named on its own so the smoothing in (y) does not bury it; closing it
+     moves the 78 and is its own decision.
+
   v-1. `Raeder n/4` and `Pos` in the same panel - MEASURED, NOT TOUCHED.
      Both were in the probe above; neither is in (v), and neither is (w).
 
