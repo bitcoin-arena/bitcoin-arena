@@ -1558,8 +1558,12 @@ recording: test/vectors/csharp-army.json.
      baked into it, so the rule on top counted it twice: measured, 2.214 m/s
      against C#'s 2.409, and the infantry's mean z at t=15 overshot from
      1.3 m short to 3.3 m long. It is 2.788 now = 3.4 * 0.82 from
-     `Army.cs:672` - the walk times the gait wave's own mean, the wave not
-     being ported because it moves no mark. The 0.82 in the wave and the one
+     `Army.cs:672` - the walk times the gait wave's own mean. The wave itself
+     is not ported, and the reason is a BOUND rather than the "moves no mark"
+     that stood here: it advances at 4.2 rad/s, so over any window its
+     integral is 0.82 * T plus at most 2 * 0.18 / 4.2 = 0.0857 s-equivalents,
+     which is 0.29 m of travel however long the window - against the 1.80 m
+     width of the envelope it would have to move. The 0.82 in the wave and the one
      opening `Rand(0.82f, 1.18f)` are two different numbers that happen to be
      equal; folding the wrong one counts `pace` twice, and 3.4 raw was
      measured at 2.895 m/s with the mark 7-9 m through. Effective now
@@ -1572,6 +1576,12 @@ recording: test/vectors/csharp-army.json.
      `worst` at t=30 and the 46 m density at t=90; both are inside at
      thirty-two, which is the same sample width that fooled this file once
      before.
+
+     And the OTHER recording was re-read, because the halt changes when men
+     meet and `csharp-army.json` does not measure that: against
+     `csharp-infantry.json`, the nearest opposing pair, the men in rifle
+     range and the rifle kills all still overlap at 15, 30, 60 and 90 s.
+     Twelve comparisons, twelve overlaps.
 
      Golden vectors and `dist/` regenerated together. Core 54/54, guard 19
      files clean, EditMode 124/123/1, PlayMode 175/154/11/10.
