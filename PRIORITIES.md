@@ -14,7 +14,8 @@ until something that does is finished.
     4  hover overlays                 -    done
     5  prune the streamed bundles     -    done
     6  bundler: private name check    -    later (Daniel: start M2)
-    8  M2.1 checkpoints               M2   open  (1-2 done: a round, and its transcript)
+    8  M2.1 checkpoints               M2   parked (Daniel: M1 picture first)
+    9  M1 liquidation picture         M1   open
 
 THE TWELVE RED TESTS, ONE LINE EACH. Measured at f103f71. Not one is on the
 deploy path: eleven reach for the C# army that (e) does not build, and the
@@ -5160,6 +5161,27 @@ the browser, and not one was loosened, skipped or re-asserted to go green.
 
 ---
 
+## 9. M1 liquidation picture  -  M1  -  OPEN
+
+Daniel 2026-09-03: full frontend for atomic bombs, liquidations, craters
+and radiation. Pause M2.1.
+
+The core already has the strike, the bowl, the paths, the dose and the
+feed. Unity still shows HUD trefoils and IRRADIATED, no 3D hole, no
+bomber, and the truck hovers up to 6 m over the crater because
+`CoreDrivenTruck.Ground` reads Unity terrain.
+
+Picture only. Do not reopen the core rules. Claude designs the models.
+
+  1. Sit truck, units and roads on the core surface (relief minus crater).
+  2. Draw the bowl from the core crater list. Lifetime already 10-20 rounds.
+  3. When a strike arms: Claude-designed bomber flies to the impact and
+     drops a Claude-designed atom bomb. Bears and bulls each get their own
+     Bitcoin skin. Renderer theatre - the core strike has no aircraft.
+  4. Radiation on the ground, HUD warning stays.
+
+---
+
 # The milestones
 
 Items 1 to 7 above are the work in front of us. This is what that work is
@@ -5401,55 +5423,34 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      never been installable here, `packages/protocol` declaring no
      devDependencies at all. Unity untouched.
 
-  2. **Transcripts.** DONE. The round as ONE object, and the proof that
-     replaying it reproduces the round.
+  2. **Transcripts.** DONE. The round as one chained object, and the proof
+     that replaying it lands where the inputs did. `previous_hash` was
+     missing from the batch (spec section 11); with it `TYPE_TRANSCRIPT =
+     0x09` carries round, entry and batches in chain order, `GET
+     /transcript` hands the object over with its hash, and the node checks
+     the chain before it serves.
 
-     `previous_hash` is the spec's own field (section 11) and the batch was
-     missing it. With it a transcript is an ordered thing rather than a bag
-     of rows: `TYPE_TRANSCRIPT = 0x09` carries the round, the entry and the
-     batches in chain order, `transcriptHash` names it, and
-     `GET /transcript` hands it over with that hash in a header. The node
-     checks the chain before it serves - serving a broken one would make
-     the next verifier's problem out of its own - and refuses a batch that
-     does not name the head, while a repeat of the head stays a no-op.
+     Proved across a real process boundary: 300 ticks in five batches with
+     one liquidation, fetched as 6622 bytes, replayed by
+     `core/tools/replay.js` in a second process reading nothing else, to
+     `1e3eb491...330a870b` - the digest the inputs produced directly. One
+     flipped bit and it stops with "the chain is broken at batch 1".
 
-     THE PROOF, across a real process boundary: 300 ticks in five batches
-     with one liquidation, played over the socket, fetched as 6622 bytes,
-     replayed by `core/tools/replay.js` in a second process reading
-     nothing else. Digest 1e3eb491...330a870b, the same the inputs produced
-     directly. One flipped bit in the file and the replay stops with "the
-     chain is broken at batch 1".
+     Three holes the close-out found, all shut: the node took a batch it
+     could not later hand over, because a tick gap passed the chain check -
+     contiguity is checked at intake now, where the client can still fix
+     it, and the refusal names the due tick; `flatten` handed back absolute
+     liquidation ticks while every consumer walks the array from zero, so a
+     round beginning at tick 50 would have put a strike nowhere - it
+     rebases; and enforcing those made the node demand a start at tick 0,
+     which contradicts `joinTick`, so it reads that off the contract the
+     player signed.
 
-     A verifier is told WHERE, not merely that: a broken link, a removed
-     batch, a batch from another round or player, and a tick out of step
-     each name the batch index and the reason.
+     Core 67/67 and determinism guard 19 clean, protocol 50/50 and money
+     guard 7 clean, node 13/13. Unity untouched.
 
-     Sensitivity, measured because the first version of the test asserted
-     too much: one tick of 1024 steer units does not move the digest, nor
-     five, nor FULL lock for three - the wheel has a rate and pulls it
-     back. Thirteen ticks of 1024 does. The transcript is faithful either
-     way; what the test pins is that a verifier feels a real difference.
-
-     THREE HOLES THE CLOSE-OUT FOUND, all in this step and all shut:
-
-       - The node took a batch it could not later hand over. A gap passed
-         the chain check, so ticks 0..9 then 20..29 went in and `handOver`
-         threw "expected tick 10, got 20" with nobody left to ask.
-         Contiguity is checked at INTAKE now, where the one party who can
-         still fix it is listening, and the refusal names the due tick.
-       - `flatten` promised the core's own inputs and handed back ABSOLUTE
-         liquidation ticks while every consumer walks the array from zero.
-         A transcript beginning at tick 50 would have put a strike at index
-         51 of a two-element array - nowhere - and replayed to a different
-         round with nothing to say so. It rebases now.
-       - Enforcing the first two made the node demand a start at tick 0,
-         which contradicts `joinTick` in the entry contract. It reads that
-         field off the contract the player signed instead.
-
-     Core 67/67 with its determinism guard 19 files clean, protocol 50/50
-     with the money guard 7 files clean - `transcript.js` joined
-     `batch.js` on it - node 13/13. Unity untouched.
-  3. **Checkpoints.** NEXT. The state hash written at agreed ticks. Cheap now,
+  3. **Checkpoints.** PARKED behind item 9 - Daniel wants the M1 picture
+     first. The state hash written at agreed ticks. Cheap now,
      and it is what makes a disagreement findable rather than merely
      detectable - without them a divergence is "somewhere in ninety
      seconds".
