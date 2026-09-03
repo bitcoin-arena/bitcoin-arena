@@ -14,7 +14,7 @@ until something that does is finished.
     4  hover overlays                 -    done
     5  prune the streamed bundles     -    done
     6  bundler: private name check    -    later (Daniel: start M2)
-    8  M2.1 one node holds a round    M2   open
+    8  M2.1 transcripts               M2   open  (step 1 done: one node holds a round)
 
 THE TWELVE RED TESTS, ONE LINE EACH. Measured at f103f71. Not one is on the
 deploy path: eleven reach for the C# army that (e) does not build, and the
@@ -5364,55 +5364,52 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
 
 ## M2.1  The node daemon                            stage 3  -  OPEN
 
-  1. **A round on one node.** DONE. `packages/blwp-node`: HTTP to open a
-     round, read it and take an entry; a WebSocket for input batches and
-     the close. `node:sqlite`, one process, one player, no verification.
+  1. **A round on one node.** DONE. `packages/blwp-node`: HTTP opens a
+     round, reads it and takes an entry; a WebSocket carries input batches
+     and the close. `node:sqlite`, one process, one player, no
+     verification, and the node does not step - a test asserts no file in
+     `src/` reaches for the core.
 
-     The ids are the protocol's, not the node's: `roundId(contract)` and
-     `entryId(contract)`, checked against `@blwp/protocol` in the tests and
+     The ids are the protocol's: `roundId(contract)` and
+     `entryId(contract)`, tagged hashes checked against `@blwp/protocol`
      over the wire. Bodies are the protocol's own bytes, so the contract
      that crosses the wire is the contract that is hashed.
 
-     IDEMPOTENCE IS IN THE SCHEMA. A tick is keyed `(round, entry, tick)`
-     with a primary key, so a repeat is a no-op the database performs and
-     not a check a caller can forget - and the ticks are absolute, so a gap
-     is the numbers themselves. Measured on a running process: 90 ticks
-     accepted, the same message again accepted as 0, ten more at 200, and
-     the store holds 100 rows over the range 0..209 - a hole of 110 that a
-     query names rather than a shorter list nobody can size.
+     IDEMPOTENCE IS IN THE SCHEMA, at every level. A tick is keyed
+     `(round, entry, tick)`, so a repeat is a no-op the database performs
+     rather than a check a caller can forget; and because the ids are
+     hashes OF the contracts, opening or joining twice is the same round
+     and the same player, not a `UNIQUE constraint failed`. Measured on a
+     running process:
 
-     `TYPE_INPUT_BATCH = 0x08` is the one message this needed: round, entry,
-     first tick, the five words `step` takes per tick, and the sparse
-     `[tick, size]` liquidations - without those a transcript would replay
-     a round with no strike, no crater and no fallout in it. Its tag is its
-     own, and `batch.js` is on the money guard's list because it carries
-     Q16.16 words that go straight into the core.
+       90 ticks accepted                        90
+       the same message again                    0
+       ten more at tick 200                     10
+       on disk, over the range 0..209      100 rows, a gap of 110
+       a liquidation sent twice          stored once
+       open twice / join twice        one row, one id, each
+       reopened from the file       found by its own roundId, entry intact
+       close, then close again        "closed", then "already closed"
 
-     THE NODE DOES NOT STEP. A test asserts no file in `src/` reaches for
-     the core; stepping arrives with the checkpoints below and is measured
-     then.
+     `TYPE_INPUT_BATCH = 0x08` is the one message it needed: round, entry,
+     first tick, the five words `step` takes, and the sparse `[tick, size]`
+     liquidations - without those a transcript replays a round with no
+     strike, no crater and no fallout in it. `batch.js` is on the money
+     guard's list because it carries Q16.16 words bound for the core.
 
-     A REPEAT IS THE SAME ROUND AND THE SAME PLAYER, not only the same
-     tick. Opening a contract twice or joining twice first answered with a
-     raw `UNIQUE constraint failed` - the ids are hashes of the contracts,
-     so a repeat cannot mean anything else, and the node now writes nothing
-     and answers the same id. And a round outlives the process that opened
-     it: reopened from the file it is found by its own `roundId` with its
-     entry intact.
+     Node 12/12, protocol 40/40, money guard 6 files clean - the guard had
+     never been installable here, `packages/protocol` declaring no
+     devDependencies at all. Unity untouched.
 
-     Protocol 40/40 with its money guard 6 files clean, node 12/12. The
-     guard had never been installable here - `packages/protocol` declared
-     no devDependencies at all - which is now fixed rather than worked
-     around with a symlink.
-
-  1b. **The same, as the spec first put it.** HTTP and WebSocket over `node:sqlite`: open
-     a round, accept an entry, take input batches, close it. One process,
-     one player, no verification. This is the smallest thing that can
-     hold a game and everything else attaches to it.
-  2. **Transcripts.** Every input batch stored tick-numbered and
+  2. **Transcripts.** NEXT. Every input batch stored tick-numbered and
      idempotent, so a repeat is harmless and a gap is visible. A round
      that cannot be replayed from its own transcript is worthless later,
      so this comes before anything that would rely on it.
+
+     Step 1 already put the property in the schema and measured it. What
+     is left is the round as a whole rather than one player's ticks: the
+     transcript as a thing that can be handed over, and the proof that
+     replaying it reproduces the round.
   3. **Checkpoints.** The state hash written at agreed ticks. Cheap now,
      and it is what makes a disagreement findable rather than merely
      detectable - without them a divergence is "somewhere in ninety
