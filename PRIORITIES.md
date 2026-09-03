@@ -9,7 +9,7 @@ are worth doing and they buy no progress towards shipping, so they wait
 until something that does is finished.
 
     1  clear the red tests            M1   done
-    2  the army into the core         M1   done  (not deployed: suites red)
+    2  the army into the core         M1   in progress  (y: units pursue a real goal)
     3  three post office buildings    M1   done
     4  hover overlays                 -    done
     5  prune the streamed bundles     -    done
@@ -60,7 +60,7 @@ their names, so any plate size read at wiring time can describe something
 that no longer exists. Every display is re-fitted against the mesh that
 is there now.
 
-## 2. The army into the core  -  M1  -  DONE (l..s, x and item 7 closed; 78 of 78 against the recording)
+## 2. The army into the core  -  M1  -  IN PROGRESS (l..s, x and item 7 closed; y open — units must pursue a real goal)
 
 The last thing standing between here and M1.
 
@@ -1626,6 +1626,19 @@ recording: test/vectors/csharp-army.json.
      upper bound - it carries the collision shoves and the opening frames,
      where a hull has just been spawned - and node already separates the
      drive at 0.3 degrees. No further instrumentation.
+
+  y. Tanks and soldiers pursue a real goal - NOT STARTED. M1. The player's
+     rule: they act tactically. Each unit has a job and walks toward it —
+     close on the front, hold the line, engage a foe, fall back if overrun.
+     Not a random walk, not milling, not a parking lot on their own rear.
+     Infantry as well as armour. Wherever the front is (left or right),
+     that is where the units are.
+
+     C# already names the goals: StepArmour `goalZ = front - Dir*9` unless
+     close-engaged; StepInfantry walks the line. Measure: is each unit's
+     step toward a named goal, or drifting? Fix in Core. Do not copy a
+     units fault. Do not reopen 2-D coupling that was measured and reverted.
+     Deploy to btc-logistics-core-m1 only when this is true on screen.
 
   PRESENTATION READING A DEAD PHYSX VALUE. Four lines, none of them M1 and
   none of them item 7, because there is no combat in any of them. Named with
