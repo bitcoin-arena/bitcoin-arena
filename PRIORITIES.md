@@ -1990,6 +1990,54 @@ recording: test/vectors/csharp-army.json.
      not established for any of the six; they are named, with numbers, so
      they stop being invisible.
 
+  y-5. The bomb takes a target instead of a clock - DONE.
+     `Army.Release` drops on a timer and throws across the seam at a random
+     10-22 m/s: it aims at nothing, and the core had copied that. C# is
+     intent, and a gunship that flies over an army and lets go on a clock
+     is not the intent.
+
+     What is free and what is not, read from the flight rather than
+     assumed: `vx` is inherited from the aircraft and nothing steers the
+     bomb afterwards, so the landing x is settled the moment it leaves the
+     rack. Only z can be aimed. So the search runs where the bomb is
+     ALREADY going - around `x + vx * sqrt(2h/g)` - and takes the densest
+     clump of living enemies within one blast radius of it and inside 40 m
+     of `front(x)`. Index order, because a different order is a different
+     battle. The 10-22 m/s band stays: a clump beyond its reach is
+     undershot, not teleported to - aiming a bomb, not building a new one.
+     The RNG draw stays drawn whether or not the aimed branch uses it,
+     because the sequence of draws is the protocol. No layout word.
+
+     AIR ENVELOPE 29/29, which is the measure that covers this:
+
+                              before        after        recording
+       bombsOwnGround         10 - 12       3 - 6        5 - 11
+       bombsEnemyGround       12 - 17      17 - 18      14 - 17
+       menPerEffectiveBomb  1.86 - 7.09  2.69 - 5.53  3.67 - 4.75
+       dudShare                     -    0.48 - 0.62  0.50 - 0.58
+
+     ONE ARMY QUANTITY MOVED OUT, and it stays out rather than being
+     tuned away:
+
+       t=60 bear inf z   before core [12.92, 43.52]  rec 14.34  OVERLAPS
+                          after core [16.61, 58.23]  rec 14.34  OUTSIDE
+
+     so 66/72 -> 65/72 with the air ON, seeds 1..32. The cause is named
+     and it is not a defect of the aim: the recording was taken with NO
+     AIR, so a core flying sorties is not being judged against its own
+     condition there. Under `--airoff`, the recording's own condition, no
+     bomb flies at all and the verdict is unchanged at 68/72 before and
+     after - byte-identical output. A recording without air cannot referee
+     an aimed bomb, and the envelope that can, does: 29/29.
+
+     Golden vectors, `dist/blwp-core.js` and the template copy regenerated
+     together. Twelve core reds preceded that and all twelve had ONE cause,
+     measured rather than assumed: a bisect over 3600 ticks found NO
+     divergence between bundle and modules, so the six "bundle matches
+     modules" reds were failing on their last line - `assert.equal(
+     bundled.hash(b), entry.final)` - against a recorded final hash, the
+     same stale transcript as the six `vector:` reds.
+
   y-1. The + wing never arrives, and it is not the front rule - OPEN,
      MEASURED. After (y) the - wing sits on its line (infantry -10.7,
      sd 9.5; armour -12.9, sd 7.9 at t=90) and the + wing does not
