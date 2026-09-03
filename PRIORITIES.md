@@ -395,8 +395,9 @@ recording: test/vectors/csharp-army.json.
                           `targetBody.linearVelocity`, so it always took the
                           "below walking pace" branch and never led the
                           truck. Now `BlwpCore.Velocity`. See (u).
-       DriveHud.cs:1069   the diagnostics panel prints Tempo and Drift off the
-                          same body - the MAIN readout is fine, it reads
+       DriveHud.cs:1082   FIXED - the diagnostics panel printed Tempo and
+                          Drift off the same body. Now the core. See (v).
+                          The MAIN readout was always fine, it reads
                           `BlwpCore.TruckSpeed`
 
      The core already publishes what all four want: `BlwpCore.TruckSpeed`.
@@ -1744,9 +1745,67 @@ recording: test/vectors/csharp-army.json.
      (`BlwpCore` is stubbed unless `UNITY_WEBGL && !UNITY_EDITOR`), so a
      PlayMode test could only assert the `linearVelocity` fallback - the
      branch that is NOT the fix. The proof is the browser run above.
-  v. `DriveHud`'s diagnostics panel - NOT STARTED. It prints Tempo and Drift
-     off the same dead body. Its MAIN readout is correct: it already reads
-     `BlwpCore.TruckSpeed`.
+  v. `DriveHud`'s diagnostics panel - DONE. `DriveHud.cs:1082-1084` reads
+     the core when a core answers and keeps the PhysX properties for the
+     Editor, where there is no core. Tempo is `BlwpCore.TruckSpeed * 3.6f`
+     - the SAME quantity as the main readout at `:299`, so the screen
+     carries one speed and not two. Drift is `BlwpCore.TruckSlip`, the
+     chassis-frame projection from (t); no second formula.
+
+     What the panel was showing. Measured in the player build, headless
+     Chromium, F1 panel open, the same probe before and after:
+
+                        stand      straight, full    corner, full
+       BEFORE
+         HUD Tempo      0.00       0.00              0.00          km/h
+         core x 3.6     0.00       26.77-55.41       1.91-68.16    km/h
+         HUD Drift      0.000      0.000             0.000         m/s
+         TruckSlip      0.000      0.000             0.039-2.645   m/s
+       AFTER
+         HUD Tempo      0.00       26.77-49.57       0.34-27.64    km/h
+         core x 3.6     0.00       26.77-49.57       0.34-27.64    km/h
+         HUD Drift      0.000      0.000-6.985       0.043-0.609   m/s
+         TruckSlip      0.000      0.000-6.985       0.043-0.609   m/s
+
+     After the swap the HUD figure equals the core figure in every sample
+     of every phase - it is now the same read, not an agreement. The two
+     drives are not the same drive (the truck is shot at), which is why
+     the ranges differ between the halves; the pairing that carries the
+     claim is HUD against core WITHIN each run.
+
+     Share of the gap, one line: the panel showed 0 of 68.16 km/h and 0 of
+     2.645 m/s - all of the speed and all of the drift, on a HUD the
+     player can open with F1. Display, not a combat outcome.
+
+     Named, not hidden: Tempo inherits the `T_WHEEL` residual from (u) -
+     `TruckSpeed` is the resultant before the 34 m/s cap. It shows in the
+     after-run's corner: `TruckSpeed` averages 3.373 m/s against a body
+     3.364 m/s, low sample 0.094 against 0.043. Not corrected here; that
+     would be a second speed on the screen and it would drag `:299` in.
+
+     Not zero callers after all, which I had predicted: `SpeedKmh` and
+     `Slip` each keep exactly ONE caller - the Editor fallback in this
+     same panel. They stay.
+
+  v-1. `Raeder n/4` and `Pos` in the same panel - MEASURED, NOT TOUCHED.
+     Both were in the probe above; neither is in (v), and neither is (w).
+
+       `Pos` is ALREADY the core. `rb.position` against
+       `BlwpCore.TruckPosition` agreed to the printed two decimals in all
+       six phases of both runs - stand (-100.40, 10.20), driving
+       (-92.50..-51.26, -18.14..10.20). The transform is written from the
+       core and the kinematic body follows it, so this line is correct as
+       it stands. No work.
+
+       `Raeder n/4` is ALIVE but wrong at rest. It counts
+       `WheelCollider.isGrounded` over `truck.axles`, and the wheels still
+       cast against the terrain: 0/4 standing still, 0-4 driving straight,
+       2-4 through the corner, in both runs. A truck parked on the road
+       reporting 0 of 4 wheels down is the defect; it is a PhysX raycast
+       under a body the core is placing, so the fix is a real decision
+       about what "grounded" means with no PhysX driving - not a swap.
+       Left as its own item, with the numbers, rather than folded into a
+       letter about Tempo and Drift.
   w. `Impact` takes its knock as `Vector2.zero` - NOT A DEFECT, LISTED SO
      THE ABSENCE IS ON THE RECORD. The core publishes no direction for a
      hit, and `Bind` drew no spark at zero knock either, so the two paths
