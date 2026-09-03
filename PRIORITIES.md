@@ -148,15 +148,36 @@ recording: test/vectors/csharp-army.json.
      `coreSpeed=23.54, physxSpeed=0.00, rpm=1.00`, and at the end
      `coreSpeed=2.77, rpm=0.11`.
 
-     STILL OUT, and named rather than quietly carried: the skid needs
-     `truck.Slip`, a PhysX lateral velocity that reads 0.00 under the core,
-     and the core publishes no slip word - not invented here. `ChaseCamera`
-     still takes its lead from `linearVelocity` and so never leads.
-     `DriveHud`'s diagnostics panel prints the same zeroes; its main
-     readout is correct. And `CombatFxTests.RifleFireProducesAFlashAndATracer`
-     stays red for its own reason: it drives the RETIRED C# army through
-     `Bind` with `Populate(0, 20)` and that path raises no `Shot`. It tests
-     the engine this letter did not revive.
+     AND THE ROTORS, which were the last thing item 7 names.
+     `GameAudio.Rotors` had NO caller anywhere: the gunships crossed the
+     field from core state with their rotors turning, in silence. It wants
+     the nearest one each frame or nothing, so `PlaceAircraft` - already
+     walking the living helicopters - now measures them against the truck's
+     own position and hands over the nearest. Measured in the player build:
+     176 calls where there had been none, 134 of them carrying a
+     helicopter, and the rotor track reaching 0.240 while one is up against
+     0.002 when the sky is clear. The combat sounds and the drawn pieces
+     did not fall back - 143 and a peak of 58.
+
+     ITEM 7 IS CLOSED. What was left over is presentation with no combat in
+     it, and it gets its own non-M1 lines rather than being carried quietly
+     here:
+
+       - the skid wants `truck.Slip`, a PhysX lateral velocity that reads
+         0.00 under the core, and the core publishes no slip word. Not
+         invented here.
+       - `ChaseCamera` takes its lead from `linearVelocity` and so never
+         leads. `BlwpCore.TruckSpeed` is what it wants.
+       - `DriveHud`'s diagnostics panel prints the same zeroes. Its main
+         readout is correct - it already reads the core.
+       - `Impact` gets its knock as `Vector2.zero`, because the core
+         publishes no direction for a hit. The spark sits right; it just
+         does not fly anywhere.
+
+     `CombatFxTests.RifleFireProducesAFlashAndATracer` stays red for its
+     own reason and it is not this one: it drives the RETIRED C# army
+     through `Bind` with `Populate(0, 20)`, and that path raises no `Shot`.
+     It tests the engine this letter did not revive.
 
      BOTH ENGINES COMPARED AGAIN AFTER THE CUTOVER, because the last one
      predates `Separate`, the x-chase, the crash rule, condition-to-driving
