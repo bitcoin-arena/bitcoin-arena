@@ -1949,6 +1949,47 @@ recording: test/vectors/csharp-army.json.
      The residual is the easing, which is C#'s own, and the bank tops out
      at C#'s own clamp of 0.8 rad = 45.8 deg.
 
+  y-4. "78 of 78" does not reproduce, and the seed set was never written
+     down - MEASURED, SEEDS NOW PINNED. The commit that first reported it
+     (8acb7a5) says "Thirty-two seeds, air pinned, seam0" and does not say
+     which thirty-two. Neither does this file, `measure-army.js`, or any
+     script in the tree - searched all four. The seed set decides every
+     range, so the number was not repeatable.
+
+     1..32 is the named standard from here on, pinned in the tool and
+     printed with every verdict. It is a NEW standard, not a recovery: the
+     tool's mechanical check is 72 quantities (four marks, both sides,
+     armour and infantry alive/z/sd, six density figures a mark), and with
+     the pinned seeds it reads
+
+         air off   68/72       air on   66/72
+
+     on the tree as it stands, with NO rule change in it. The six lines
+     below were already outside before anything was touched. They are not
+     a regression of any letter; they are what the mechanical verdict says
+     the prose reading did not.
+
+       air off and air on both:
+         t=15 bull inf z    core [-42.19, -41.38]   rec -40.16
+         t=15 bear inf z    core [ 40.59,  41.34]   rec  41.44
+         t=15 bear inf sd   core [  4.91,   5.61]   rec   4.44
+       air off only:
+         t=30 density perTarget  core [2.00, 4.00]  rec 1.67
+       air on only:
+         t=60 bear armour sd  core [16.29, 25.47]   rec 13.77
+         t=90 bear inf z      core [17.25, 57.37]   rec 11.00
+         t=90 bear inf sd     core [10.30, 30.19]   rec  6.65
+
+     The three t=15 infantry lines are the mark (q) and (s) exist for, and
+     8acb7a5 recorded that same mark as [40.40, 42.20] against 41.40 where
+     this run gives [40.59, 41.34] against 41.44 - a NARROWER core range on
+     a different seed set, which is exactly why the set had to be pinned.
+     The air-on-only lines are not comparable at all in the direction they
+     look: the recording was taken with no air, so a core with sorties
+     flying is not being judged against its own condition there. Causes are
+     not established for any of the six; they are named, with numbers, so
+     they stop being invisible.
+
   y-1. The + wing never arrives, and it is not the front rule - OPEN,
      MEASURED. After (y) the - wing sits on its line (infantry -10.7,
      sd 9.5; armour -12.9, sd 7.9 at t=90) and the + wing does not
