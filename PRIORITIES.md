@@ -14,7 +14,7 @@ until something that does is finished.
     4  hover overlays                 -    done
     5  prune the streamed bundles     -    done
     6  bundler: private name check    -    later (Daniel: start M2)
-    8  M2.1 transcripts               M2   open  (step 1 done: one node holds a round)
+    8  M2.1 checkpoints               M2   open  (1-2 done: a round, and its transcript)
 
 THE TWELVE RED TESTS, ONE LINE EACH. Measured at f103f71. Not one is on the
 deploy path: eleven reach for the C# army that (e) does not build, and the
@@ -5401,16 +5401,39 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      never been installable here, `packages/protocol` declaring no
      devDependencies at all. Unity untouched.
 
-  2. **Transcripts.** NEXT. Every input batch stored tick-numbered and
-     idempotent, so a repeat is harmless and a gap is visible. A round
-     that cannot be replayed from its own transcript is worthless later,
-     so this comes before anything that would rely on it.
-
-     Step 1 already put the property in the schema and measured it. What
-     is left is the round as a whole rather than one player's ticks: the
-     transcript as a thing that can be handed over, and the proof that
+  2. **Transcripts.** DONE. The round as ONE object, and the proof that
      replaying it reproduces the round.
-  3. **Checkpoints.** The state hash written at agreed ticks. Cheap now,
+
+     `previous_hash` is the spec's own field (section 11) and the batch was
+     missing it. With it a transcript is an ordered thing rather than a bag
+     of rows: `TYPE_TRANSCRIPT = 0x09` carries the round, the entry and the
+     batches in chain order, `transcriptHash` names it, and
+     `GET /transcript` hands it over with that hash in a header. The node
+     checks the chain before it serves - serving a broken one would make
+     the next verifier's problem out of its own - and refuses a batch that
+     does not name the head, while a repeat of the head stays a no-op.
+
+     THE PROOF, across a real process boundary: 300 ticks in five batches
+     with one liquidation, played over the socket, fetched as 6622 bytes,
+     replayed by `core/tools/replay.js` in a second process reading
+     nothing else. Digest 1e3eb491...330a870b, the same the inputs produced
+     directly. One flipped bit in the file and the replay stops with "the
+     chain is broken at batch 1".
+
+     A verifier is told WHERE, not merely that: a broken link, a removed
+     batch, a batch from another round or player, and a tick out of step
+     each name the batch index and the reason.
+
+     Sensitivity, measured because the first version of the test asserted
+     too much: one tick of 1024 steer units does not move the digest, nor
+     five, nor FULL lock for three - the wheel has a rate and pulls it
+     back. Thirteen ticks of 1024 does. The transcript is faithful either
+     way; what the test pins is that a verifier feels a real difference.
+
+     Core 67/67 with its determinism guard 19 files clean, protocol 49/49
+     with the money guard 7 files clean - `transcript.js` joined
+     `batch.js` on it - node 12/12. Unity untouched.
+  3. **Checkpoints.** NEXT. The state hash written at agreed ticks. Cheap now,
      and it is what makes a disagreement findable rather than merely
      detectable - without them a divergence is "somewhere in ninety
      seconds".
