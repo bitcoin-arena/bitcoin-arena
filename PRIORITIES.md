@@ -9,7 +9,7 @@ are worth doing and they buy no progress towards shipping, so they wait
 until something that does is finished.
 
     1  clear the red tests            M1   done
-    2  the army into the core         M1   done
+    2  the army into the core         M1   REOPENED  <- (x), tanks strafed
     3  three post office buildings    M1   done
     4  hover overlays                 -    done
     5  prune the streamed bundles     -    done
@@ -60,7 +60,7 @@ their names, so any plate size read at wiring time can describe something
 that no longer exists. Every display is re-fitted against the mesh that
 is there now.
 
-## 2. The army into the core  -  M1  -  DONE (all of l, m, j, i, n, o, e, q, p, r, s and item 7 closed; 78 of 78 against the recording)
+## 2. The army into the core  -  M1  -  REOPENED FOR (x) (l..s and item 7 closed; 78 of 78 against the recording)
 
 The last thing standing between here and M1.
 
@@ -1585,6 +1585,54 @@ recording: test/vectors/csharp-army.json.
 
      Golden vectors and `dist/` regenerated together. Core 54/54, guard 19
      files clean, EditMode 124/123/1, PlayMode 175/154/11/10.
+
+  x. A tank drove sideways - DONE, AND IT REOPENED M1. The rule is the
+     player's: a tank may only drive the way its hull points.
+
+     `u.heading += Rand(-32, 32)` every tick - a random walk that knew
+     nothing about where the unit was going, and `ArmyRenderer` draws the
+     hull from it. Measured over sixteen seeds, the angle between a tank's
+     travel and its drawn hull: mean 90.5 degrees, median 91.6, past 45 for
+     75.3% of the samples and past 90 for 50.8%. Half the tanks on screen
+     were sliding sideways or driving backwards. C# has no wobble anywhere.
+
+     C#'S OWN FIX IS NOT ENOUGH HERE, and that is the interesting part.
+     `Army.cs:587-590` turns the hull INTO the line of advance at 2.2 per
+     second, which works there because `StepArmour` moves along one goal
+     vector and the direction of travel is smooth. This core steers x and z
+     on separate controllers on purpose - coupling them into one normalised
+     vector was tried, measured and reverted, because the z component then
+     gets dragged along by the x chase and the front loses its depth. So
+     travel jitters, and a hull that merely chases it still sat 45.7 degrees
+     off on average. Measured, not assumed.
+
+     So the constraint went on the velocity: the two controllers say how far
+     to go, the heading says which way, and the step is taken along the
+     heading, turned at C#'s own rate. A tank cannot strafe because it has
+     no sideways component left to strafe with.
+
+       angle between travel and hull        mean    median   past 90 deg
+       before                               90.5    91.6     50.8%
+       hull chases travel, C#'s rule        45.7    27.1     19.5%
+       velocity along the hull              31.2     7.7     11.2%
+       ... and of those, tanks nobody
+       could have shoved that tick           0.3     0.0      0.0%
+
+     The residual is `separatePair` and `clearOfTruck` - collision pushes,
+     which C# also applies outside its heading rule, `Separate` running
+     before `StepArmour` in `Army.Update`.
+
+     THE DRAW WAS KEPT AND THROWN AWAY. It is the first draw of a unit's
+     tick and the comment there calls that order protocol; dropping it would
+     shift every draw after it for every unit of every round. Against the
+     recording at forty-eight seeds: 78 of 78, before and after. At
+     thirty-two, `perTarget` at t=30 looked like a regression and is inside
+     at forty-eight - the same sample width that has fooled this file three
+     times now.
+
+     The rifleman is not a vehicle and is not treated as one: he walks in z,
+     holds his squad's x, and simply faces the way he walks or the enemy
+     when he is dug in, which is `Army.cs:692-694` and no constraint at all.
 
   PRESENTATION READING A DEAD PHYSX VALUE. Four lines, none of them M1 and
   none of them item 7, because there is no combat in any of them. Named with
@@ -4207,7 +4255,14 @@ the two largest risks in the whole undertaking:
     the wheel, not a mechanical port - and the way it was actually done
     was to record the PhysX truck and hold the core to the recording.
 
-**Where we are:** M1 IS CLOSED. Stages 0, 1 and 2 are finished, and the
+**Where we are:** M1 IS OPEN AGAIN, on one rule. It was closed and frozen to
+btc-logistics-core-m1.pages.dev, and that snapshot stays as what it is - a
+snapshot, not a finished milestone. A tank drove sideways: its heading was a
+random walk and the hull on screen faced 90.5 degrees away from its own travel
+on average. That is (x) above, fixed, and M1 closes again when it is
+signed off rather than by having been announced.
+
+Before that: Stages 0, 1 and 2 are finished, and the
 army - item 2 above - is in the core with the picture proved in a browser
 rather than argued: the truck's position, the damage it takes, the enemies
 and the delivery all have a named core reader with no C# gate in front of
