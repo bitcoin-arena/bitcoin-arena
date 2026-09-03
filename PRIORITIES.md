@@ -1653,6 +1653,15 @@ recording: test/vectors/csharp-army.json.
      Silent when it should be, heard when it should be. One source, not two
      formulas side by side; the editor keeps PhysX because there is no core
      there.
+
+     AND THE READER WAS CHECKED AGAINST THE CORE'S OWN ARITHMETIC, not just
+     against the tyres. C# projects with `Mathf.Sin`/`Cos` where the core
+     uses its integer tables, so the two can differ: driven at full lock,
+     largest slip 10.453 m/s, the largest gap between them is 2.67e-4 m/s -
+     0.0026% of it. That is table-against-float and it is presentation, not
+     simulation. Not measured separately: the handbrake, which reaches the
+     same number through a lower `GRIP_HAND` and so follows from the
+     mechanism rather than from its own run.
   u. `ChaseCamera` never leads - NOT STARTED. Its lead is
      `targetBody.linearVelocity`, which is 0 for good, so it always takes
      the "below walking pace" branch. `BlwpCore.TruckSpeed` is what it
