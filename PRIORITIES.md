@@ -1297,8 +1297,8 @@ recording: test/vectors/csharp-army.json.
      that were named; whether that is all of them is not established, and
      that question belongs before step 1 of the port, not after.
 
-  q. The infantry's halt and pace per man - PACE DONE, HALT AND GAIT WAVE
-     NOT STARTED. Every rifleman walked at exactly `RIFLE_WALK`, 2.6 m/s,
+  q. The infantry's halt and pace per man - DONE. Pace landed; the halt
+     and the gait wave are parked, and why is below. Every rifleman walked at exactly `RIFLE_WALK`, 2.6 m/s,
      so a squad that set off together arrived together. `pace` is now his
      own: a dimensionless 0.82-1.18 factor on that speed, as
      `Army.cs:278`'s `Rand(0.82f, 1.18f)` is a factor on the C#'s 3.4 m/s.
@@ -1329,12 +1329,25 @@ recording: test/vectors/csharp-army.json.
      inside at all four marks, churn lost [52, 62] arrived [47, 57] against
      59/55.
 
-     WHAT IS LEFT, and it is now a question for the numbers rather than a
-     plan: the halt (`restFor` / `nextRest`) and the gait wave. All four
-     marks are inside without them. The halt's draws happen DURING the step
-     (`Army.cs:664-665`), interleaved with the firing draws, so taking them
-     from the stream would move the whole protocol mid-round - a hash would
-     not, but would not be the same sequence either. Not decided here.
+     Checked wider than the envelope, same conditions: against
+     `csharp-infantry.json` the nearest opposing pair, the men in rifle
+     range and the rifle kills all overlap the recording at 15, 30, 60 and
+     90 s, and so do the armour's mean z and z-spread. Twenty comparisons,
+     twenty overlaps.
+
+     THE HALT AND THE GAIT WAVE ARE PARKED, NOT PENDING. Their share of the
+     measured gap is zero: all four marks are inside without them, and
+     every other published quantity is too. This is `AvoidWrecks` again - a
+     C# rule that carries nothing the recording can show - and copying an
+     rule that moves no measured number would only put an envelope at risk
+     that currently holds. C# is intent in the right units, not an
+     instruction to port everything in it. If a future measurement needs
+     them, the open question is where their draws come from: C#'s happen
+     DURING the step (`Army.cs:664-665`), interleaved with the firing
+     draws, so the stream would move mid-round while a hash would not.
+
+     Suites at the close: Core 54/54, guard 19 files clean, EditMode
+     124/123/1, PlayMode 175/154/11/10.
 
      Infantry z-spread, eight seeds, air pinned, seam0, both sides, against
      `core-size-reinforce`:
