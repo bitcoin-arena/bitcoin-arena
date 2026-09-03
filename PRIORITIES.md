@@ -4522,24 +4522,62 @@ the two largest risks in the whole undertaking:
     the wheel, not a mechanical port - and the way it was actually done
     was to record the PhysX truck and hold the core to the recording.
 
-**Where we are:** M1 is closed as a set of rules and NOT deployed. It was
+**Where we are:** M1 is closed as a set of rules and DEPLOYED. It was
 announced closed once and reopened the same day, because a tank drove
 sideways - its heading was a random walk and the hull on screen faced 90.5
 degrees away from its own travel. That is (x), fixed and proved in a browser.
-The freeze at btc-logistics-core-m1.pages.dev holds the state from before it
-and stays a snapshot. Nothing is deployed while the suites are red.
+
+The suites are not green and will not become green: eleven of the twelve
+reds drive the retired C# engine, which (e) deliberately does not build,
+and the twelfth needs a graphics device this machine does not have. Each
+of the twelve is listed by name with its failure text and its cause under
+item 7. None of them asserts anything the core does in the browser, so
+none of them is evidence about the thing being deployed. That is the
+decision on the record: a red that cannot go green without reviving PhysX
+is not a deploy gate, and a red that needs an X server is not one either.
+
+DEPLOYED 2026-09-03 from 2d4e6f2 plus this note, build 19.1 MB:
+
+    btc-logistics-core.pages.dev       daily      HTTP 200
+    btc-logistics-core-m1.pages.dev    M1 freeze  HTTP 200
+    btc-logistics-war.pages.dev        UNTOUCHED  serves its own older page
+
+Proved on the DEPLOYED freeze, not on a local server and not by argument -
+the core's own state buffer read out of the live page:
+
+    at the start   tick 16   x -100.400  z 10.200  heading 90  speed 0.000  hp 100
+    20 s throttle  tick 272  x  -70.319  z 10.200  heading 90  speed 12.885  hp 100
+    travelled      30.08 m in 256 ticks
+
+The truck's position, its heading and its speed all come out of the core's
+buffer in a browser with no editor anywhere near it. Photographed too:
+both armies on the field, the road, a gunship overhead, the HUD.
+
+Two things named rather than glossed. The page logs "ERROR: Shader" twice
+under headless SwiftShader; it has done so in every browser run this
+session and the scene renders regardless - it is the software rasteriser,
+not the build. And the build hung once before this one: an earlier attempt
+to run the suite WITHOUT `-nographics` died on the missing X display and
+left its licensing client behind, and the next build then sat on
+`futex_wait` for 40 minutes with 59 seconds of CPU. Killing the orphan
+cleared it; the rebuild took 6m09s. Worth knowing before someone waits
+another forty minutes.
 
 The rules themselves: Stages 0, 1 and 2 are finished, and the
 army - item 2 above - is in the core with the picture proved in a browser
 rather than argued: the truck's position, the damage it takes, the enemies
 and the delivery all have a named core reader with no C# gate in front of
-it, and the recording lies inside the core's envelope on 77 of the 78
+it, and the recording lies inside the core's envelope on all 78
 quantities it publishes.
 
-What is NOT in it, and is not M1: (s), the infantryman's halt, which is the
-one comparison of the seventy-eight still outside and costs a layout word
-to close - one mark against `U_WORDS` 8 -> 9, every offset after it, every
-golden vector and `BlwpLayout.cs`. It stays NOT STARTED and later.
+STALE UNTIL NOW, AND IT CONTRADICTED ITEM 2. This paragraph used to say
+(s), the infantryman's halt, was the one comparison of the seventy-eight
+still outside, that it cost a layout word (`U_WORDS` 8 -> 9, every offset
+after it, every golden vector and `BlwpLayout.cs`), and that it stayed NOT
+STARTED. All three are wrong now. (s) is DONE, it cost NO layout word - the
+halt is drawn from a hash of the man's index and the cycle number, so it
+carries no state - and the count is 78 of 78, which is what the item 2
+heading has said since (s) closed.
 
 ## MF - the client                          14-20 sessions
 
