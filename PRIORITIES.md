@@ -1649,10 +1649,9 @@ recording: test/vectors/csharp-army.json.
      and what is left of the goal-following residual - 2.56% of ticks, of
      which give-ground is 1.35 - is named below. Neither is new work.
 
-  z. Liquidation bombers / fallout - IN PROGRESS. Steps 1, 2 and 3 of 6
-     done: the submitter with its protocol trace, the strike, and the
-     crater. The paths around it, the irradiation and the drawing are
-     still to come.
+  z. Liquidation bombers / fallout - IN PROGRESS. Steps 1 to 4 of 6 done:
+     the submitter with its protocol trace, the strike, the crater, and the
+     paths around it. The irradiation and the drawing are still to come.
 
      STEP 2, THE STRIKE. One accepted liquidation arms exactly one strike,
      in the tick it is consumed, at the densest knot of living units within
@@ -1727,8 +1726,54 @@ recording: test/vectors/csharp-army.json.
      knows about a core crater, so the drawn truck hovers over its own hole
      by up to the crater depth, 6.00 m at the deepest. Step 6 pays it.
 
-     Still not in: damage from the strike, paths around the crater,
-     irradiation, drawing. `WORDS` 2189 -> 2229.
+     Still not in that step: damage, paths, irradiation, drawing.
+     `WORDS` 2189 -> 2229.
+
+     STEP 4, THE PATHS. `Army.AvoidWrecks` (`Army.cs:533-552`) already has
+     the rule and it is not the wrecks: a radial push of `(r + size) - d`,
+     3.2 m for a tank and 0.6 m for a man. Plain metres, no PhysX, no nav
+     mesh, no terrain height, so it ports as it stands with its own two
+     sizes. The wrecks stay out; what is taken is the shape.
+
+     A push after the step, the same class as the map edge beside it and
+     as `resolveSolids` for the truck. The TRUCK is not in it - it drives
+     through the bowl, which step 3 measured it can.
+
+       inside the crater radius, 8 seeds, 90 s   before      after
+         infantry                                22.63%      113 of
+                                                             2,662,217
+                                                             = 0.0042%
+         armour                                  15.31%      78 of
+                                                             775,015
+                                                             = 0.0101%
+         nearest approach to the centre          0.03 m      17.80 m
+                                                 0.08 m      18.96 m
+
+     The 191 remaining ticks sit at 32-39 m against R = 40 - the rim, not
+     the bowl. `separatePair` runs after the push and is a candidate, not
+     a cause; under a hundredth of a per mille, not chased.
+
+     AND THE RING HOLDS THE TRUCK, which is measured behaviour and not a
+     regression to be voted away. Escape from the centre at full throttle,
+     no steering:
+
+       load     before step 4   after
+        10 M      7.0 s          3.7 s    faster: the bowl is empty now
+       100 M      8.0 s          4.5 s
+      1000 M     10.2 s          trapped at 180 s
+
+     The cause is measured, not guessed: with only the infantry pushed out
+     the truck leaves all three (7.0 / 21.8 / 10.2 s), so it is the ring of
+     twenty-four tanks. A straight-driving truck does not get through it.
+     The step 3 assertion is NOT relaxed and gets no steering; an escape
+     with steering, if it is ever wanted, is its own named step with its
+     own measurement.
+
+     Envelopes unmoved: 68/72 air off, 67/72 air on, 29/29 air. (x)
+     untouched: hull against the step taken 0.00 deg above the turn floor,
+     0.08 below. Only the `liquidation` vector's digest moved - the other
+     six carry no liquidation, so no crater, so the push never runs, which
+     is itself the check that it acts only where it should.
 
      THERE IS NOTHING TO PORT. `MarketFeed.cs:15` opens
      `!forceOrder@arr` and `:125-144` builds a `Liquidation` from
