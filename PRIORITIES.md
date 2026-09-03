@@ -5392,7 +5392,18 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      the core; stepping arrives with the checkpoints below and is measured
      then.
 
-     Protocol 40/40 with its money guard 6 files clean, node 10/10.
+     A REPEAT IS THE SAME ROUND AND THE SAME PLAYER, not only the same
+     tick. Opening a contract twice or joining twice first answered with a
+     raw `UNIQUE constraint failed` - the ids are hashes of the contracts,
+     so a repeat cannot mean anything else, and the node now writes nothing
+     and answers the same id. And a round outlives the process that opened
+     it: reopened from the file it is found by its own `roundId` with its
+     entry intact.
+
+     Protocol 40/40 with its money guard 6 files clean, node 12/12. The
+     guard had never been installable here - `packages/protocol` declared
+     no devDependencies at all - which is now fixed rather than worked
+     around with a symlink.
 
   1b. **The same, as the spec first put it.** HTTP and WebSocket over `node:sqlite`: open
      a round, accept an entry, take input batches, close it. One process,
