@@ -5430,9 +5430,25 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      back. Thirteen ticks of 1024 does. The transcript is faithful either
      way; what the test pins is that a verifier feels a real difference.
 
-     Core 67/67 with its determinism guard 19 files clean, protocol 49/49
+     THREE HOLES THE CLOSE-OUT FOUND, all in this step and all shut:
+
+       - The node took a batch it could not later hand over. A gap passed
+         the chain check, so ticks 0..9 then 20..29 went in and `handOver`
+         threw "expected tick 10, got 20" with nobody left to ask.
+         Contiguity is checked at INTAKE now, where the one party who can
+         still fix it is listening, and the refusal names the due tick.
+       - `flatten` promised the core's own inputs and handed back ABSOLUTE
+         liquidation ticks while every consumer walks the array from zero.
+         A transcript beginning at tick 50 would have put a strike at index
+         51 of a two-element array - nowhere - and replayed to a different
+         round with nothing to say so. It rebases now.
+       - Enforcing the first two made the node demand a start at tick 0,
+         which contradicts `joinTick` in the entry contract. It reads that
+         field off the contract the player signed instead.
+
+     Core 67/67 with its determinism guard 19 files clean, protocol 50/50
      with the money guard 7 files clean - `transcript.js` joined
-     `batch.js` on it - node 12/12. Unity untouched.
+     `batch.js` on it - node 13/13. Unity untouched.
   3. **Checkpoints.** NEXT. The state hash written at agreed ticks. Cheap now,
      and it is what makes a disagreement findable rather than merely
      detectable - without them a divergence is "somewhere in ninety
