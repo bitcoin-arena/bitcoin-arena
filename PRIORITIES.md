@@ -2088,12 +2088,51 @@ recording: test/vectors/csharp-army.json.
      cause is claimed. It is small beside the marching share and it does
      not move the envelope, so it is listed rather than chased.
 
-  y-2. The core's front is 7.4% shallower than C#'s - OPEN, MEASURED.
-     Same tape, same function: the largest disagreement is 11.03 m, at the
-     map edge. `rules/frontline.js` scales by `halfZ * 2/3` (+-56.7 m),
-     `PriceHistory.FrontlineZ:128` by `worldDepth * 0.72` (+-61.2 m).
-     Named on its own so the smoothing in (y) does not bury it; closing it
-     moves the 78 and is its own decision.
+  y-2. The front's depth scale was 8% short - DONE, and the figure this
+     entry used to carry was stale. It said 7.4% and 11.03 m at the edge;
+     that was measured BEFORE the smoothing landed. On the tree as it
+     stands the core's amplitude is 39.3 m against C#'s 61.2 - 35.8%
+     shallower, 49.18 m apart at worst.
+
+     THE GAP SPLITS IN TWO, and only one half is an error:
+
+       constant   3.1 m   14%   a wrong port value - fixed here
+       tape jag  18.8 m   86%   filtered on purpose - stays out
+
+     `PriceHistory.FrontlineZ:128` returns `(n - 0.5) * worldDepth * 0.72`
+     with `n` in [0, 1], so +-0.36 of the FULL depth. `MempoolTerrain` has
+     width 260 and depth 170, exactly twice the core's HALF_X 130 and
+     HALF_Z 85, so that is 0.72 of the HALF depth. The core had 0.6667 -
+     the same quantity in the same units, eight per cent short. 43690 ->
+     47186. Amplitude 39.3 -> 42.4 m, the predicted 3.1 m to the digit.
+
+     The other 18.8 m is the jag, and it stays out. A man saw his goal
+     move sixty metres for nine of sideways walk and 88% of the map was
+     above his closing rate; a front he cannot close on is not a front,
+     whatever its amplitude.
+
+     ITS SHARE OF WHAT IS STILL FAILING IN (y) IS ZERO, measured rather
+     than assumed: with the C# constant in a copy, the pinned verdict is
+     68/72 air off and 65/72 air on - identical to the digit, same lines,
+     same ranges. Both verdicts run under `--seam0`, where the tape is
+     flat, `span` is zero, and the function returns 0 before it reaches
+     the scale. The recording cannot referee front depth because it was
+     taken with the front at 0. This was fixed because the number was
+     wrong, not because a test asked.
+
+     ONE QUANTITY LEFT THE AIR TABLE AS A CONSEQUENCE, and it is listed
+     rather than tuned away:
+
+       armourDestroyedByShell   before core [51, 57]  rec [43, 52]  OVERLAPS
+                                 after core [53, 60]  rec [43, 52]  OUTSIDE
+
+     so 29/29 -> 28/29, missing by one. The cause: a deeper front brings
+     the two lines into the 46 m gun more often, so shells kill more
+     armour. It was already at the edge - the old overlap was 51-52 alone.
+     It is a GROUND figure carried in the air table as a control; it
+     measures neither the bomb nor the front, and it stays on (y) as a
+     consequence with its numbers rather than blocking the fix that a
+     wrong constant needed.
 
   v-1. `Raeder n/4` and `Pos` in the same panel - MEASURED, NOT TOUCHED.
      Both were in the probe above; neither is in (v), and neither is (w).
