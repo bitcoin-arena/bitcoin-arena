@@ -1975,46 +1975,49 @@ recording: test/vectors/csharp-army.json.
      The residual is the easing, which is C#'s own, and the bank tops out
      at C#'s own clamp of 0.8 rad = 45.8 deg.
 
-  y-4. "78 of 78" does not reproduce, and the seed set was never written
-     down - MEASURED, SEEDS NOW PINNED. The commit that first reported it
-     (8acb7a5) says "Thirty-two seeds, air pinned, seam0" and does not say
-     which thirty-two. Neither does this file, `measure-army.js`, or any
-     script in the tree - searched all four. The seed set decides every
-     range, so the number was not repeatable.
+  y-4. The envelope reads 68/72 air off and 65/72 air on - EVERY LINE
+     NAMED WITH ITS MISS AND ITS CAUSE. No rule gap among them, so no code
+     changed. Seeds 1..32, pinned; pass `core-size-reinforce`, which is the
+     only pass at the core's own establishment.
 
-     1..32 is the named standard from here on, pinned in the tool and
-     printed with every verdict. It is a NEW standard, not a recovery: the
-     tool's mechanical check is 72 quantities (four marks, both sides,
-     armour and infantry alive/z/sd, six density figures a mark), and with
-     the pinned seeds it reads
+     AIR OFF, four lines. The miss beside the width of the core's own range
+     across the 32 seeds:
 
-         air off   68/72       air on   66/72
+       t=15 bull inf z        1.22 m of a 0.81 m range
+       t=15 bear inf z        0.10 m of a 0.75 m range
+       t=15 bear inf sd       0.47 m of a 0.70 m range
+       t=30 density perTarget 0.33   of a 2.00   range
 
-     on the tree as it stands, with NO rule change in it. The six lines
-     below were already outside before anything was touched. They are not
-     a regression of any letter; they are what the mechanical verdict says
-     the prose reading did not.
+     Every one of those four quantities is INSIDE at every OTHER mark:
+     the three infantry figures overlap at t=30, 60 and 90; perTarget
+     overlaps at 15, 60 and 90. None is a standing difference.
 
-       air off and air on both:
-         t=15 bull inf z    core [-42.19, -41.38]   rec -40.16
-         t=15 bear inf z    core [ 40.59,  41.34]   rec  41.44
-         t=15 bear inf sd   core [  4.91,   5.61]   rec   4.44
-       air off only:
-         t=30 density perTarget  core [2.00, 4.00]  rec 1.67
-       air on only:
-         t=60 bear armour sd  core [16.29, 25.47]   rec 13.77
-         t=90 bear inf z      core [17.25, 57.37]   rec 11.00
-         t=90 bear inf sd     core [10.30, 30.19]   rec  6.65
+     The three t=15 lines are one thing: the approach. At t=15 the core's
+     range across seeds is the tightest in the whole table - 0.70 to
+     0.81 m, because every seed walks in the same way - so a sub-metre
+     systematic offset reads OUTSIDE where the same quantity later sits
+     inside a 20 m range. 1.22 m against the 77.5 m the men have walked
+     is 1.6%. The recording's own two same-establishment passes agree to
+     the digit at t=15 (-40.16, 41.44, 4.44), so the target is solid and
+     the offset is real - it is simply 1.6% of an approach, and it is
+     gone by t=30.
 
-     The three t=15 infantry lines are the mark (q) and (s) exist for, and
-     8acb7a5 recorded that same mark as [40.40, 42.20] against 41.40 where
-     this run gives [40.59, 41.34] against 41.44 - a NARROWER core range on
-     a different seed set, which is exactly why the set had to be pinned.
-     The air-on-only lines are not comparable at all in the direction they
-     look: the recording was taken with no air, so a core with sorties
-     flying is not being judged against its own condition there. Causes are
-     not established for any of the six; they are named, with numbers, so
-     they stop being invisible.
+     AIR ON, the same three plus four more, all `bear`, all t=60 or t=90:
+
+       t=60 bear armour sd    1.22 of a  9.79 range
+       t=60 bear inf z        2.27 of a 41.62 range
+       t=90 bear inf z        4.20 of a 35.34 range
+       t=90 bear inf sd       5.89 of a 14.51 range
+
+     These are the air's own doing and they are not comparable in the
+     direction they point: the recording was taken with NO AIR, so a core
+     flying sorties is not being judged against its own condition. That is
+     the dependency - they can only be settled by a C# recording made with
+     the air on, which does not exist.
+
+     Not dug into, by decision: nothing here is a rule gap, and the
+     remaining goal-following residual is 2.56% of unit-ticks, of which
+     the give-ground job is 1.35 points. See (y).
 
   y-5. The bomb takes a target instead of a clock - DONE.
      `Army.Release` drops on a timer and throws across the seam at a random
