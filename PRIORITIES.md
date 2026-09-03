@@ -1631,8 +1631,9 @@ recording: test/vectors/csharp-army.json.
      rule: they act tactically. Each unit has a job and walks toward it —
      close on the front, hold the line, engage a foe, fall back if overrun.
      Not a random walk, not milling, not a parking lot on their own rear.
-     Infantry as well as armour. Wherever the front is (left or right),
-     that is where the units are.
+     Infantry as well as armour. Gunships too: they fly their own side of
+     the front and drop on what they pass, not a sideways slide. Wherever
+     the front is (left or right), that is where the units are.
 
      C# already names the goals: StepArmour `goalZ = front - Dir*9` unless
      close-engaged; StepInfantry walks the line. Measure: is each unit's
