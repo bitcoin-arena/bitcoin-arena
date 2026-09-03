@@ -1634,6 +1634,25 @@ recording: test/vectors/csharp-army.json.
      holds his squad's x, and simply faces the way he walks or the enemy
      when he is dug in, which is `Army.cs:692-694` and no constraint at all.
 
+     PROVED ON THE TRANSFORM, NOT ON CORE STATE. Reading the core's own
+     heading in the browser would only have repeated what node already
+     measured, and the gap this fault lived in is between the core and what
+     Unity actually places. So the renderer was instrumented to compare the
+     hull's own `transform.forward` against the path that same transform
+     travelled, and a WebGL build was driven:
+
+       n=3854 samples   mean 12.7 deg   median 3.6   past 45: 7.7%   past 90: 2.0%
+
+     against 90.5 / 91.6 / 75.3% / 50.8% before the rule. The cumulative
+     figure carries the shoves and the first frames, where a hull has just
+     been placed and its "previous position" is a spawn: the very first
+     sample of a run reads n=24, mean 85.4, which is that artefact and not a
+     tank. The picture shows tanks standing along their own tracks.
+
+     The renderer needed no change: it already draws from
+     `BlwpCore.UnitHeading`, which is the heading the drive is now
+     constrained to. No PhysX value is read for a hull anywhere.
+
   PRESENTATION READING A DEAD PHYSX VALUE. Four lines, none of them M1 and
   none of them item 7, because there is no combat in any of them. Named with
   their reason rather than carried under a closed item.
