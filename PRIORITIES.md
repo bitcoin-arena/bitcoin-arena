@@ -1649,10 +1649,10 @@ recording: test/vectors/csharp-army.json.
      and what is left of the goal-following residual - 2.56% of ticks, of
      which give-ground is 1.35 - is named below. Neither is new work.
 
-  z. Liquidation bombers / fallout - IN PROGRESS. Steps 1 and 2 of 6 done:
-     the submitter with its protocol trace, and the strike. The crater,
-     the paths around it, the irradiation and the drawing are still to
-     come.
+  z. Liquidation bombers / fallout - IN PROGRESS. Steps 1, 2 and 3 of 6
+     done: the submitter with its protocol trace, the strike, and the
+     crater. The paths around it, the irradiation and the drawing are
+     still to come.
 
      STEP 2, THE STRIKE. One accepted liquidation arms exactly one strike,
      in the tick it is consumed, at the densest knot of living units within
@@ -1679,10 +1679,56 @@ recording: test/vectors/csharp-army.json.
        two in one frame           load 9.00 M, liquidation serial 2,
                                   strike serial 1
 
-     NOT IN THIS STEP, and named rather than implied: the strike does no
-     damage yet, moves no ground and irradiates nothing. It is a place, a
-     load and a serial. `WORDS` 2184 -> 2189, so the golden digests are
-     rewritten again.
+     NOT IN THAT STEP: the strike does no damage. `WORDS` 2184 -> 2189.
+
+     STEP 3, THE CRATER. Its own list of eight, NOT written into
+     `st.ground.h`: the host re-uploads the whole relief whenever
+     `terrain.Revision` moves, which would erase it, and a crater that has
+     replaced the relief can never expire. `restart` carries the list and
+     ages it, which is why the lifetime is counted in ROUNDS.
+
+     One reader of the surface now. Three sampled `st.ground` on their own
+     - the slope under the truck, the resolution against solids, the air's
+     `groundAt` - and three readers of one quantity is how two of them end
+     up disagreeing. `gradeAlong` takes a sampler instead of the grid.
+
+     A cube root in `fixed.js`, Newton, with its own table test. A crater
+     follows the cube root of the energy, which is also what makes the rule
+     usable: three decades of load become a factor of ten and not 31.6.
+     Both ends are quantities the core already names - `BOMB_RADIUS` 16 m
+     at one million, the 40 m front band at a thousand.
+
+     DEPTH IS MEASURED, NOT CHOSEN. The geologist's ratio is 0.4 of the
+     radius, and at 0.4 the truck is TRAPPED: from the centre at full
+     throttle it never leaves a 100 M or a 1000 M crater in forty seconds,
+     and crawls out of the smallest in 36.2 s. The steepest wall is exactly
+     2 * D/R; driven up a constant slope the truck holds 0.45 and slides
+     back at 0.50. D/R is set at 0.15 - a wall of 0.30, the steepest where
+     it still keeps more than a third of its 24.3 m/s flat speed.
+
+       load     R        D       rounds   escape from the centre
+          1 M   16.00 m  2.40 m    10
+         10 M   19.08 m  2.86 m    11     7.0 s
+        100 M   25.71 m  3.86 m    14     8.0 s
+       1000 M   40.00 m  6.00 m    20    10.2 s
+       5000 M   40.00 m  6.00 m    20     clamped, as designed
+
+     Measured: crater centre against the impact 0.00 m in x and z; the bowl
+     `d(r) = D (1 - (r/R)^2)` reproduced at 20 radii to 2.9e-4 m, D at the
+     centre and 0 at the rim; steepest wall 0.297; replay gives the same
+     digest AND the same crater list; the digest moves, so a replay cannot
+     miss one; a 1000 M crater is gone after exactly 20 `restart`s.
+     Envelopes unmoved: 68/72 air off, 67/72 air on, 29/29 air.
+
+     THE PRICE, named and unpaid until step 6: six C# readers still ask
+     Unity's terrain rather than the core - `ArmyRenderer:970`,
+     `CombatFx:226`, `RoadNetwork:48/172/173`, `DeliveryGate:126` - and
+     `CoreDrivenTruck:405` places the truck itself that way. None of them
+     knows about a core crater, so the drawn truck hovers over its own hole
+     by up to the crater depth, 6.00 m at the deepest. Step 6 pays it.
+
+     Still not in: damage from the strike, paths around the crater,
+     irradiation, drawing. `WORDS` 2189 -> 2229.
 
      THERE IS NOTHING TO PORT. `MarketFeed.cs:15` opens
      `!forceOrder@arr` and `:125-144` builds a `Liquidation` from
