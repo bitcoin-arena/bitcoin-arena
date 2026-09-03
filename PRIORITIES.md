@@ -1258,8 +1258,14 @@ recording: test/vectors/csharp-army.json.
        RifleFireProducesAFlashAndATracer -> item 7, CombatFx
        ArmiesAreActuallyDrawn, RoadsAreActuallyDrawn -> a graphics device;
          `RenderTexture.Create failed` under `-nographics`
-       TheGogglesAnimate                 -> item 1's load flake; 11/11 on a
-         second run of the same tree
+       TheGogglesAnimate, and
+       RampReadyTests.TheRealTransactionsReplaceTheStandInsWhileNothingIsLoaded
+                                         -> item 1's load flake. One of the
+         two appears under load and the other does not, and which one it is
+         changes between runs of the SAME tree: two runs back to back gave
+         twelve failures each, the twelfth being RampReady in the first and
+         the Goggles in the second. Each passes in isolation. The stable
+         eleven are the ones above.
 
        4b. WAS: The truck's health, and it needs a DECISION rather than a port.
           The two owners are on different scales: the game divides by
@@ -1623,11 +1629,30 @@ recording: test/vectors/csharp-army.json.
   none of them item 7, because there is no combat in any of them. Named with
   their reason rather than carried under a closed item.
 
-  t. The skid has no source - NOT STARTED. `GameAudio` wants `truck.Slip`, a
-     PhysX lateral velocity that reads 0.00 while the core drives a
-     kinematic body, and the core publishes no slip word. Deriving one in C#
-     from `T_VX` and `T_VZ` would be inventing a quantity the core does not
-     keep, so the tyres stay silent until it has one.
+  t. The tyres had no source - DONE. `GameAudio` read `truck.Slip`, which is
+     `|InverseTransformDirection(_rb.linearVelocity).x|`, and the body is
+     kinematic while the core drives: measured in the player build, 0.00 at
+     speed, so the tyres were wired and silent.
+
+     THE CORE ALREADY WORKS IT OUT. `rules/vehicle.js:147-152` decomposes the
+     velocity into the chassis frame to spend the friction circle on it -
+     `rx = fz, rz = neg(fx)`, `across = vx*rx + vz*rz` - and then throws the
+     number away. So this is not a quantity the core does not hold, which is
+     what this entry used to say; it is one it holds and does not publish.
+     No word was spent on it: `T_VX`, `T_VZ` and `T_HEADING` are published
+     already, and `BlwpCore.TruckSlip` reads the file's own projection off
+     them. The axes are the file's, not a sketch - right is (cos h, -sin h),
+     and having it backwards would report a corner as a straight line.
+
+     Measured in the player build, full throttle, before against after:
+
+       straight   core-slip 0.000        tyres 0.000
+       corner     core-slip 0.664-1.723  tyres 0.015-0.079
+       PhysX slip 0.000 in both, which is what it was worth all along.
+
+     Silent when it should be, heard when it should be. One source, not two
+     formulas side by side; the editor keeps PhysX because there is no core
+     there.
   u. `ChaseCamera` never leads - NOT STARTED. Its lead is
      `targetBody.linearVelocity`, which is 0 for good, so it always takes
      the "below walking pace" branch. `BlwpCore.TruckSpeed` is what it
