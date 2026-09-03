@@ -1787,6 +1787,36 @@ recording: test/vectors/csharp-army.json.
      `Slip` each keep exactly ONE caller - the Editor fallback in this
      same panel. They stay.
 
+     THE AXIS, which the swap above did not check. Both formulas are
+     called "sideways"; that does not make them the same side. PhysX
+     returns 0, so the two cannot be compared at runtime - but the OLD C#
+     expression can be run on the CORE's velocity vector, which puts
+     Unity's float transform maths against the core's integer tables on
+     the same input. Measured, player build:
+
+                        straight, full        corner, full
+       core TruckSlip   0.0000                0.0802-0.7517  m/s
+       C# transform     0.0000-0.1025         0.0829-0.7333  m/s
+         apart          up to 0.10247         up to 0.05868
+       C# yaw only      0.0000-0.0004         0.0810-0.7505  m/s
+         apart          up to 0.00039         up to 0.00953
+       chassis pitch    0.00-11.99 deg        11.34-13.18 deg
+       chassis roll     -2.11-0.15 deg        3.32-4.13 deg
+
+     So the old formula was never a 2-D lateral speed. `transform.
+     InverseTransformDirection` uses the FULL rotation, and the renderer
+     pitches and rolls the chassis to the ground - up to 13 degrees here.
+     That tilt leaks into the local x axis and reported 0.1025 m/s of
+     drift on a straight road where the truck was sliding exactly none.
+     Strip the tilt and take yaw alone, which is what a 2-D simulation
+     means by sideways, and Unity's floats agree with the core's integer
+     projection to 0.00953 m/s worst, 0.0025 mean - the residual being the
+     transform's heading lag from (u) (96.41 against the core's 96.57).
+
+     C# was intent, and the intent was the lateral speed. The tilt term
+     was a leftover of drawing the truck on a hill, and it is not
+     reproduced.
+
   v-1. `Raeder n/4` and `Pos` in the same panel - MEASURED, NOT TOUCHED.
      Both were in the probe above; neither is in (v), and neither is (w).
 
