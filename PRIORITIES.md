@@ -9,7 +9,7 @@ are worth doing and they buy no progress towards shipping, so they wait
 until something that does is finished.
 
     1  clear the red tests            M1   done
-    2  the army into the core         M1   in progress  (z open: liquidation bombers)
+    2  the army into the core         M1   done
     3  three post office buildings    M1   done
     4  hover overlays                 -    done
     5  prune the streamed bundles     -    done
@@ -101,7 +101,7 @@ their names, so any plate size read at wiring time can describe something
 that no longer exists. Every display is re-fitted against the mesh that
 is there now.
 
-## 2. The army into the core  -  M1  -  IN PROGRESS (z open: liquidation bombers)
+## 2. The army into the core  -  M1  -  DONE
 
 The last thing standing between here and M1.
 
@@ -1690,9 +1690,9 @@ recording: test/vectors/csharp-army.json.
      and what is left of the goal-following residual - 2.56% of ticks, of
      which give-ground is 1.35 - is named below. Neither is new work.
 
-  z. Liquidation bombers / fallout - IN PROGRESS. Steps 1 to 5 of 6 done:
-     the submitter with its protocol trace, the strike, the crater, the
-     paths around it, and the irradiation. Only the drawing is left.
+  z. Liquidation bombers / fallout - DONE, all six steps: the submitter
+     with its protocol trace, the strike, the crater, the paths around it,
+     the irradiation, and the picture.
 
      STEP 2, THE STRIKE. One accepted liquidation arms exactly one strike,
      in the tick it is consumed, at the densest knot of living units within
@@ -1803,6 +1803,38 @@ recording: test/vectors/csharp-army.json.
      digest is unchanged by this step, which is how the gap was found.
 
      Envelopes unmoved: 68/72 air off, 67/72 air on, 29/29 air.
+
+     STEP 6, THE PICTURE. Two things asked for and two given: a warning
+     while the truck is in the bowl, and the atom on the crater. Both read
+     the CORE - `CraterCount`, `CraterAt`, `Irradiated` - and `Irradiated`
+     is a distance against the core's own radius, the same test the core
+     makes before it applies a dose. Nothing here computes damage and no
+     second bowl is drawn. `DrawFallout` is built on `DrawWaypoint`'s
+     shape: same camera lookup, same `WorldToScreenPoint`, same `Shadowed`.
+
+     Measured in the running WebGL build, the truck moved by the core's own
+     `teleport`, the warning read back out of the running HUD:
+
+       at the centre         warning ON    0.00 m
+       half the radius       warning ON   20.00 m
+       0.5 m inside the rim  warning ON   39.50 m
+       0.5 m outside         warning OFF  40.50 m
+       20 m outside          warning OFF  60.00 m
+       back at the centre    warning ON    0.00 m
+
+     R is 40.00, so it switches at the rim and nowhere else - the picture's
+     analogue of step 5's 0.0116 against 0.0000.
+
+     THE SYMBOL IS DRAWN, NOT TYPED. `U+2622` was typed first and the
+     build's font has not got it: the warning came up reading IRRADIATED
+     with nothing either side and the crater carried the missing-glyph box.
+     Three blades and a hub off the same 1x1 texture the rest of the HUD
+     uses, and photographed.
+
+     No core changed in this step, so vectors, guard and envelopes are
+     untouched by it. The 6.00 m hover from step 3 stands and misplaces
+     nothing here: the mark is drawn at the crater's own world position and
+     the warning is a position test, neither of which reads the terrain.
 
      STEP 4, THE PATHS. `Army.AvoidWrecks` (`Army.cs:533-552`) already has
      the rule and it is not the wrecks: a radial push of `(r + size) - d`,
