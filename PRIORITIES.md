@@ -1335,9 +1335,34 @@ recording: test/vectors/csharp-army.json.
      90 s, and so do the armour's mean z and z-spread. Twenty comparisons,
      twenty overlaps.
 
-     THE HALT AND THE GAIT WAVE ARE PARKED, NOT PENDING. Their share of the
-     measured gap is zero: all four marks are inside without them, and
-     every other published quantity is too. This is `AvoidWrecks` again - a
+     THE HALT'S SHARE IS NOT ZERO, AND THIS CORRECTS WHAT WAS WRITTEN HERE.
+     It is zero on the four SPREAD marks. It is not zero on the infantry's
+     MEAN POSITION: at t=15 the core holds [38.40, 40.10] m from the seam
+     against the recording's 41.40 - the men are one to three metres too
+     far advanced, on sixteen seeds. That was outside before `pace` too
+     ([38.10, 39.00], measured against a worktree at 817aeb3), so it is not
+     a pace effect; it is the halt's footprint. C# walks 3.4 * 0.82 = 2.788
+     m/s and stands still 13.6% of the time, an effective 2.409; this core
+     walks 2.6 and never stops.
+
+     AND IT CANNOT BE FOLDED INTO THE CONSTANT. Measured, not assumed: with
+     `RIFLE_WALK` set to the derived 2.4094 m/s, t=15 mean z comes inside
+     at [41.20, 42.90] and TWO other marks go out - t=15 z-spread 4.40
+     against [3.30, 4.30] and t=30 mean z 14.70 against [10.40, 14.20]. A
+     slower constant lowers the mean and the spread together; a halt lowers
+     the mean while ADDING spread. One miss traded for two is not a fix.
+
+     So the halt is the one thing left, it is worth 1.3 m at one mark of
+     seventy-eight, and it costs a layout word: `restFor` and `nextRest`
+     are per-unit state and all eight U_ words are taken, so it means
+     `U_WORDS` 8 -> 9 and every offset after it, every golden vector, the
+     generated `BlwpLayout.cs` and the C# state buffer. That is a protocol
+     change and wants its own go. The gait wave stays parked on its own
+     merits: over ten cycles in fifteen seconds it averages out and moves
+     no mark.
+
+     What was true and stays true: all four spread marks are inside without
+     either of them, and This is `AvoidWrecks` again - a
      C# rule that carries nothing the recording can show - and copying an
      rule that moves no measured number would only put an envelope at risk
      that currently holds. C# is intent in the right units, not an
