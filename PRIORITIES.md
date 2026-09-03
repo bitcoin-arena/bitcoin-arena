@@ -9,7 +9,7 @@ are worth doing and they buy no progress towards shipping, so they wait
 until something that does is finished.
 
     1  clear the red tests            M1   done
-    2  the army into the core         M1   in progress  (y: units pursue a real goal)
+    2  the army into the core         M1   in progress  (y: real goals; z: liquidation bombers)
     3  three post office buildings    M1   done
     4  hover overlays                 -    done
     5  prune the streamed bundles     -    done
@@ -60,7 +60,7 @@ their names, so any plate size read at wiring time can describe something
 that no longer exists. Every display is re-fitted against the mesh that
 is there now.
 
-## 2. The army into the core  -  M1  -  IN PROGRESS (l..s, x and item 7 closed; y open — units must pursue a real goal)
+## 2. The army into the core  -  M1  -  IN PROGRESS (y open: real goals; z open: liquidation bombers)
 
 The last thing standing between here and M1.
 
@@ -1641,6 +1641,22 @@ recording: test/vectors/csharp-army.json.
      step toward a named goal, or drifting? Fix in Core. Do not copy a
      units fault. Do not reopen 2-D coupling that was measured and reverted.
      Deploy to btc-logistics-core-m1 only when this is true on screen.
+
+  z. Liquidation bombers / fallout - NOT STARTED. M1. Live Binance
+     futures liquidations (`!forceOrder@arr`) scramble a bomber with an
+     atomic load. Liquidations are rare, so there is a **simulation
+     toggle** that fires them on a clock when the feed is quiet, same
+     visuals, marked as sim in the HUD.
+
+     Tactical, not random: the strike picks a place that matters near
+     the front (a cluster, a choke, the truck's line). Size of the
+     liquidation = size of the crater / fallout. Terrain is reshaped
+     and the crater stays **10-20 rounds**. Units path around it while
+     it lasts.
+
+     The truck driving through is irradiated: health drops, it can die.
+     On-screen warning plus the atom symbol. Not a gunship sortie — a
+     different air arm. Do not mix the two.
 
   PRESENTATION READING A DEAD PHYSX VALUE. Four lines, none of them M1 and
   none of them item 7, because there is no combat in any of them. Named with
