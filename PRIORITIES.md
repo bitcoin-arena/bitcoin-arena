@@ -391,9 +391,10 @@ recording: test/vectors/csharp-army.json.
                           now rises with the throttle alone, never with road
                           speed
        GameAudio.cs:105   the skid needs `truck.Slip`, which is 0
-       ChaseCamera.cs:279 the camera's lead is `targetBody.linearVelocity`, so
-                          it always takes the "below walking pace" branch and
-                          never leads the truck
+       ChaseCamera.cs:296 FIXED - the camera's lead was
+                          `targetBody.linearVelocity`, so it always took the
+                          "below walking pace" branch and never led the
+                          truck. Now `BlwpCore.Velocity`. See (u).
        DriveHud.cs:1069   the diagnostics panel prints Tempo and Drift off the
                           same body - the MAIN readout is fine, it reads
                           `BlwpCore.TruckSpeed`
@@ -1662,10 +1663,49 @@ recording: test/vectors/csharp-army.json.
      simulation. Not measured separately: the handbrake, which reaches the
      same number through a lower `GRIP_HAND` and so follows from the
      mechanism rather than from its own run.
-  u. `ChaseCamera` never leads - NOT STARTED. Its lead is
-     `targetBody.linearVelocity`, which is 0 for good, so it always takes
-     the "below walking pace" branch. `BlwpCore.TruckSpeed` is what it
-     wants; one line.
+  u. `ChaseCamera` never leads - DONE. `ChaseCamera.cs:296` now reads
+     `BlwpCore.Velocity` when a core answers and keeps `linearVelocity`
+     for the Editor, where there is no core. One assignment; the formula,
+     the 6 m/s threshold, `yawDamp`, `distanceAtSpeed`, `heightAtSpeed`
+     and `topSpeed` are untouched.
+
+     THE LINE ABOVE, WHICH SAID `BlwpCore.TruckSpeed`, WAS WRONG, and the
+     reason is worth keeping. `TruckSpeed` reads `T_WHEEL`, which despite
+     its name holds `total` from `rules/vehicle.js:222` - the resultant
+     BEFORE the 34 m/s cap is spent on it, while `T_VX`/`T_VZ` are
+     written after. The two part company exactly where the cap bites: 12
+     ticks in 2400 on a hard drive, by up to 5.101 m/s. It is also a
+     scalar, and the branch it was meant to feed is an `Atan2`, which
+     needs a direction. `linearVelocity` was the planar body velocity;
+     that is `T_VX`/`T_VZ`, and `BlwpCore.Velocity` already published it.
+     No new reader, no layout word.
+
+     One vector fed FIVE things, not the one the entry named: `speed01`
+     (reach and rise), the `Atan2` branch, the cornering load behind the
+     lean, and the lens. All five read a truck standing still.
+
+     Measured in the player build, headless Chromium, both numbers on the
+     SAME drive - the old source is logged beside the new one, so this is
+     one run and not a pair of runs:
+
+                        stand      straight, full     corner, full
+       |v| camera       0.000      7.014-16.028       3.669-19.326  m/s
+       |v| old PhysX    0.000      0.000              0.000         m/s
+       Atan2 branch     0/2        7/7                5/9
+       old branch       0/2        0/7                0/9
+       reach            9.000      9.928-11.121       9.486-11.558  m
+       old reach        9.000      9.000              9.000         m
+       rise             4.200      4.571-5.049        4.394-5.223   m
+       old rise         4.200      4.200              4.200         m
+
+     So: at rest the two agree, which is the control. Driving, the camera
+     takes the Atan2 branch every sample and the old source takes it in
+     none; reach grows by up to 2.56 m and rise by up to 1.02 m, and the
+     old ones do not move at all. PhysX is no longer the source.
+
+     Not measured separately: the lean and the lens, which read the same
+     vector through `speed01` and `Dot(v, forward)` and so follow from the
+     same swap rather than from their own run.
   v. `DriveHud`'s diagnostics panel - NOT STARTED. It prints Tempo and Drift
      off the same dead body. Its MAIN readout is correct: it already reads
      `BlwpCore.TruckSpeed`.
