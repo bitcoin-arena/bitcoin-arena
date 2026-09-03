@@ -13,7 +13,7 @@ until something that does is finished.
                                                  only (s) is left in it, and
                                                  (s) is marked later
     3  three post office buildings    M1   done
-    4  hover overlays                 -    small
+    4  hover overlays                 -    done
     5  prune the streamed bundles     -    small
     6  bundler: private name check    -    small
 
@@ -3974,11 +3974,47 @@ tank at once and wedging it. The correction is capped per tick now - 0.6
 m, which has to stay above the distance a tick of travel covers at
 24 m/s, or a fast approach pushes straight through.
 
-## 4. Hover overlays  -  no milestone  -  small
+## 4. Hover overlays  -  no milestone  -  DONE
 
 Transaction details on the loading ramp, and the full figure behind each
 bar on the miner's histogram. Polish: it makes the live chain data
-readable, and it moves nothing towards a milestone.
+readable, and it moves nothing towards a milestone. 0 of M1, and that was
+the reason to check both halves before writing anything.
+
+THE RAMP WAS ALREADY BUILT, and finding that out was the work.
+`LoadoutPanel.Inspector` is called from `OnGUI`, `PackageYard.Hovered` is
+set every frame by `PickAt`, and the card draws. Measured in the player
+build rather than argued: two pointer positions gave two DIFFERENT
+transactions - `e2aece3b...` at 0.68759532 BTC / $53,455.02 / 3,547 sat /
+32.5 sat/vB / 109 vB, and `9a97465f...` at 0.45904635 BTC / $35,680.46 /
+3,852 sat / 35.3 sat/vB - so the pick follows the pointer and the numbers
+are real. Nothing was wired and nothing rebuilt. The card shows chain data
+only; `danger` stays in the tile captions, out of it, because the core
+scores with `S_CARGO` fixed at 0.70 and never sees the load.
+
+THE BARS DID NOT HAVE THEIR FIGURE, though they were already holding it. A
+bar carried its rate twice - as a log-compressed height and as a colour -
+and the height cannot be read back: `log10(1 + rate)` mapped between the
+tenth and ninetieth percentile of the twenty-four, then clamped. But
+`LiveCurve` writes the real sat/vB into the field `_live` and `Bars` hands
+that same array to `Paint`, so the number existed and was thrown away.
+
+It is drawn now through the mechanism the board already uses - a TextMesh
+per bar, parented to the screen, on the same `shiftSeconds` clock as the
+height and the colour, from the same array. No overlay, no raycast, no
+second source, no core. The unit is spelled out ONCE for the row rather
+than twenty-four times, which is the panel's own rule read sensibly.
+
+Measured, not authored: 24 labels for 24 bars, bar pitch 3.800 in screen
+space, each figure 2.790 tall and 3.496 wide - 92% of the pitch, by
+construction - against the transaction rows' 3.8. Legible in the player
+build at 172 m from the board: "0.6 0.5 0.5 0.5 0.5 0.4 ... 0.3" and one
+"sat/vB". So every bar gets its number and the quarters fallback was not
+needed.
+
+Core 54/54 and guard 19 files clean, untouched. EditMode 124/123/1,
+PlayMode 175/154/11/10, unchanged. Still not deployable, for the standing
+reason: the suites are not green.
 
 ## 5. Prune the streamed bundles  -  no milestone  -  small
 
