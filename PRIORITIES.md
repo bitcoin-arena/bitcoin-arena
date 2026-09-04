@@ -5167,6 +5167,12 @@ Daniel 2026-09-03: full frontend for atomic bombs, liquidations, craters
 and radiation. Pause M2.1. Also in IMPLEMENTATION.md (M1 liquidation
 picture) and multiplayer_p2p.md (liquidation bombers).
 
+Daniel 2026-09-04: feeds + HUD. No free all-exchange tape. BTC
+liquidations from Binance, Bybit, OKX, Bitget, Gate.io, MEXC, Kraken
+Futures, Hyperliquid, same OnLiquidation. HUD: how much on which
+exchange; many in one tick = one summary (sums + exchanges). Wait until
+each exchange has at least one hit, no time cap. a7 and a8 below.
+
 HARD: after an atom bomb, the truck drives *into* the hole. Not over it.
 
 Picture only. Do not reopen the core rules.
@@ -5242,7 +5248,33 @@ Picture only, in this order:
      HUD reads "live" and the price keeps ticking. Instrumented at the call
      site: in 12 minutes it delivered NO message at all - not a liquidation,
      not a non-BTC order it would have filtered out - while spot kept the price
-     moving. Fix is to give _futures the same status and retry spot has.
+     moving.
+     FIXED, and the silence is NOT ours. `_futures` now has its own status, its
+     own silence window (180 s, an event stream is not a ticker) and its own
+     reconnect; `ConnectSpot`/`ConnectFutures` are separate so one dying does
+     not drop the other; the HUD names the liquidation socket whenever it is not
+     live. Measured after: the retry fires, three times in ten minutes, each
+     "reopened after 0 messages".
+     Then measured OUTSIDE the game, from node and again from a bare browser
+     page, 45-95 s each:
+
+       stream.binance.com  btcusdt@aggTrade    516-591 messages
+       fstream.binance.com btcusdt@aggTrade      0 messages
+       fstream.binance.com !forceOrder@arr       0 messages
+       stream.bybit.com    allLiquidation        subscribe acked, then quiet
+       ws.okx.com          liquidation-orders    subscribe acked, one payload
+
+     `fstream.binance.com` accepts the connection and never sends a frame, not
+     even on the busiest stream the exchange has. That is not a quiet market and
+     not our client - the host is mute from here. Which is what a7 is for.
+  a7. More than Binance. OPEN. Daniel 2026-09-04: no free all-exchange
+     liquidation feed. Subscribe BTC forced orders from Binance (already),
+     Bybit, OKX, Bitget, Gate.io, MEXC, Kraken Futures, Hyperliquid. Merge
+     into the same OnLiquidation. No time cap: wait until each exchange has
+     delivered at least one BTC liquidation. Sim-toggle stays.
+  a8. HUD. OPEN. Daniel 2026-09-04: show how much was liquidated on which
+     exchange. Many in the same tick: one summary line, sums and the
+     exchanges named. Not a row per order.
   b. The blast is a column now, not CombatFx's 26 m. DONE. A stem to 55 m in
      3.0 s, a cap 34 m across, a skirt 51 m wide on the ground, cooling from
      white through orange to ash and gone by 8 s. Photographed.
