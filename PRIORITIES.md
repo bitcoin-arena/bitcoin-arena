@@ -5234,20 +5234,18 @@ Picture only, in this order:
 
      Span on x and length on z in all three, so the axis the flight assumes
      holds for every skin. Dressing costs 2-3 ms.
-  a5. A real liquidation flies the skin of the side it hit. DONE. Photographed
-     from live feed liquidations, nothing submitted: a short liquidated on bybit
-     put the BEAR airframe up, a long on okx put the BULL airframe up, and both
-     shots are of a strike in a running round. The HUD read
-     "liq binance bybit x9 okx x4" and "LIQUIDATED $11.2M" at the time.
-     Was: OPEN, BLOCKED.
-     Two passive watches on the shipped build, submitting nothing: 14 min gave
-     3 strikes, 12 min gave 3 more, all six wearing the plain airframe and not
-     one feed liquidation among them. Every earlier run had pushed the
-     liquidation in over the JS bridge, which skips Bootstrap.OnLiquidation and
-     therefore the side - that is why they all said "default" and it was the
-     measurement, not the game.
-     Blocked on a6. Share: the moment of the strike.
-  a6. The futures socket is never watched, and it is silent. OPEN. Liquidations
+  a5. A real liquidation flies the skin of the side it hit. DONE. Three feeds
+     instead of one, both new ones pinged because they close inside a minute
+     without it, and photographed with nothing submitted: a bybit short put the
+     BEAR airframe up and an okx long the BULL, the HUD read
+     "liq binance bybit x9 okx x4  LIQUIDATED $11.2M" as one summarised line,
+     and OKX's sz is BTC and is not divided by a hundred.
+     It was blocked for a while by the measurement itself: every earlier run
+     pushed the liquidation in over the JS bridge, which skips
+     Bootstrap.OnLiquidation and so the side, and that is why six strikes in
+     twenty-six minutes of watching all wore the plain airframe.
+  a6. The liquidation socket is watched and reopened on its own. DONE. Was:
+     never watched and silent. Liquidations
      ride `!forceOrder@arr` on _futures; `MarketFeed.Status` and the reconnect
      are both computed from `_spot` alone, so that socket can be dead while the
      HUD reads "live" and the price keeps ticking. Instrumented at the call
@@ -5269,9 +5267,13 @@ Picture only, in this order:
        stream.bybit.com    allLiquidation        subscribe acked, then quiet
        ws.okx.com          liquidation-orders    subscribe acked, one payload
 
-     `fstream.binance.com` accepts the connection and never sends a frame, not
-     even on the busiest stream the exchange has. That is not a quiet market and
-     not our client - the host is mute from here. Which is what a7 is for.
+     CORRECTED. That table says fstream is mute, and it is not: the probe used
+     btcusdt@aggTrade, which is empty on the futures host. bookTicker on that
+     same host gives 4397 messages in four seconds. The host speaks; the
+     FORCED-ORDER stream is what sits open and quiet, which is a different fact.
+     So Binance now carries bookTicker as a heartbeat, !forceOrder@arr as the
+     all-symbol liveness proof, and a per-symbol stream for every BTC market -
+     and a7 is what makes a quiet stream survivable.
   a7. More than Binance. Bybit and OKX are IN. Daniel 2026-09-04: no free
      all-exchange liquidation feed. Both were measured accepting the documented
      subscription, both needed a keepalive (they closed at 1006 and 4004 inside
@@ -5290,9 +5292,13 @@ Picture only, in this order:
      BTCUSD_PERP and two dated quarters TRADING on dstream.binance.com, which is
      a different host and so a fourth source. Share: whatever that book
      liquidates.
-  a8. HUD. OPEN. Daniel 2026-09-04: show how much was liquidated on which
-     exchange. Many in the same tick: one summary line, sums and the
-     exchanges named. Not a row per order.
+  a9. HUD names the exchanges and sums the tick. DONE. Daniel 2026-09-04: show
+     how much was liquidated on which exchange, one summary line rather than a
+     row per order. Built: the venue line carries each feed, a "!" when it is
+     not live, "/n" forced orders in any symbol and "xn" BTC ones; the notice
+     under it is one line - total, order count, venues - over the last eight
+     seconds. Seen reading "liq binance bybit x9 okx x4" and
+     "LIQUIDATED $11.2M".
   b. The blast is a column now, not CombatFx's 26 m. DONE. A stem to 55 m in
      3.0 s, a cap 34 m across, a skirt 51 m wide on the ground, cooling from
      white through orange to ash and gone by 8 s. Photographed.
