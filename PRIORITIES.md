@@ -5234,7 +5234,12 @@ Picture only, in this order:
 
      Span on x and length on z in all three, so the axis the flight assumes
      holds for every skin. Dressing costs 2-3 ms.
-  a5. No skin has flown a strike IN PLAY, and now we know why. OPEN, BLOCKED.
+  a5. A real liquidation flies the skin of the side it hit. DONE. Photographed
+     from live feed liquidations, nothing submitted: a short liquidated on bybit
+     put the BEAR airframe up, a long on okx put the BULL airframe up, and both
+     shots are of a strike in a running round. The HUD read
+     "liq binance bybit x9 okx x4" and "LIQUIDATED $11.2M" at the time.
+     Was: OPEN, BLOCKED.
      Two passive watches on the shipped build, submitting nothing: 14 min gave
      3 strikes, 12 min gave 3 more, all six wearing the plain airframe and not
      one feed liquidation among them. Every earlier run had pushed the
@@ -5267,11 +5272,24 @@ Picture only, in this order:
      `fstream.binance.com` accepts the connection and never sends a frame, not
      even on the busiest stream the exchange has. That is not a quiet market and
      not our client - the host is mute from here. Which is what a7 is for.
-  a7. More than Binance. OPEN. Daniel 2026-09-04: no free all-exchange
-     liquidation feed. Subscribe BTC forced orders from Binance (already),
-     Bybit, OKX, Bitget, Gate.io, MEXC, Kraken Futures, Hyperliquid. Merge
-     into the same OnLiquidation. No time cap: wait until each exchange has
-     delivered at least one BTC liquidation. Sim-toggle stays.
+  a7. More than Binance. Bybit and OKX are IN. Daniel 2026-09-04: no free
+     all-exchange liquidation feed. Both were measured accepting the documented
+     subscription, both needed a keepalive (they closed at 1006 and 4004 inside
+     a minute with nothing sent), and both now deliver: in one eight-minute
+     window, bybit paid nine BTC liquidations and okx four, from $79 to
+     $8,708,073. Every one carries its venue, and the HUD names them.
+     Binance now subscribes EVERY BTC market - BTCUSDT, BTCUSDC, BTCUSD1, BTCU
+     and the two dated quarters, asked of fapi/v1/exchangeInfo rather than
+     remembered - with btcusdt@bookTicker as a heartbeat and !forceOrder@arr
+     still riding along as the all-symbol liveness proof. BTCDOM is dominance,
+     not the coin, and never matches. It has still paid nothing.
+     OPEN: Bitget, Gate.io, MEXC, Kraken Futures and Hyperliquid. Not built,
+     because no documented PUBLIC BTC liquidation stream is in hand for them and
+     a private own-position channel is not a feed. A URL will not be guessed.
+  a8. Coin-margined Binance is not subscribed. OPEN. dapi/v1/exchangeInfo lists
+     BTCUSD_PERP and two dated quarters TRADING on dstream.binance.com, which is
+     a different host and so a fourth source. Share: whatever that book
+     liquidates.
   a8. HUD. OPEN. Daniel 2026-09-04: show how much was liquidated on which
      exchange. Many in the same tick: one summary line, sums and the
      exchanges named. Not a row per order.
