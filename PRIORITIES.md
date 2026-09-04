@@ -5200,8 +5200,9 @@ DONE
   a5  a real liquidation flies the skin of the side it hit, and all three
       venue side mappings are checked against the price   b68091e 14275e2
   a6  the liquidation socket is watched and reopened on its own     fba827a
-  a7  bybit and okx are in, binance routed to /market, and three exchanges
-      already fill all eight crater slots     b68091e 14275e2 d0b1510
+  a7  bybit and okx are in, binance routed to /market, all six of its BTC
+      quote assets price in dollars, and three exchanges already fill all
+      eight crater slots            b68091e 14275e2 d0b1510
   a9  the HUD names the exchanges and sums the tick                 b68091e
   b   the blast is a column, not a 26 m fireball                    6ad9882
   c   the strike has a voice                                        6ad9882
