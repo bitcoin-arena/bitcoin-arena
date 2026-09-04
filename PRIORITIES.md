@@ -5170,6 +5170,14 @@ HARD: after the bomb the truck drives *into* the hole, not over it.
 Numbers live in the commits named below, not here.
 
 OPEN
+  a11 The strike's voice is built and has never been heard. A headless browser
+      has no audio.
+  d   The mushroom cap is never seen from the driving camera. The column stays
+      55 m and is not shortened to fit a frame; showing the cap is a camera
+      decision, not a mesh number.
+  e   `Bootstrap.cs:724` places the truck's FIRST spawn from Unity's relief.
+      Once, before any crater exists. Harmless, listed so it is not
+      rediscovered as a fault.
   a12 Bitget, Gate.io, MEXC, Kraken Futures, Hyperliquid. NOT STARTED. No
       documented public BTC liquidation stream is in hand for any of them, a
       private own-position channel is not a feed, and no URL will be guessed.
@@ -5186,14 +5194,6 @@ OPEN
       the open question: dapi/v1/exchangeInfo gives contractSize 100 and
       marginAsset BTC, so a fill is q * 100 dollars and not q * ap. Nothing
       built, nothing deployed.
-  a11 The strike's voice is built and has never been heard. A headless browser
-      has no audio.
-  d   The mushroom cap is never seen from the driving camera. The column stays
-      55 m and is not shortened to fit a frame; showing the cap is a camera
-      decision, not a mesh number.
-  e   `Bootstrap.cs:724` places the truck's FIRST spawn from Unity's relief.
-      Once, before any crater exists. Harmless, listed so it is not
-      rediscovered as a fault.
 
 DONE
   1   truck, units, roads, effects and the gate on the core surface  7202b15 a728036
@@ -5214,8 +5214,9 @@ DONE
   a9  the HUD names the exchanges and sums the tick                 b68091e
   a10 two liquidations in one frame are one crater, sized by the larger, and
       one skin on that side - forced in the core, the latch and the wire, and
-      compared in the core's own units so that two orders inside one $15.26
-      step tie the way the core ties them   39c4292 f092d68 00a287f
+      compared in the core's own units, because two orders inside one step of
+      $15.26 tie there and the first of them stays
+                                   39c4292 f092d68 00a287f 171d27e
   b   the blast is a column, not a 26 m fireball                    6ad9882
   c   the strike has a voice                                        6ad9882
 
