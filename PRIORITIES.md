@@ -5216,22 +5216,26 @@ Picture only, in this order:
      only, the core untouched.
      OPEN, named: not measured end to end. Driving it needs two live feed
      liquidations inside one 60 Hz tick.
-  a4. Bull and bear both fly their own skin. DONE. model/bomber-bull ->
-     bomber-bull.glb, 2.2 MB; model/bomber-bear -> bomber-bear.glb, 32 MB;
+  a4. Both skins load, are selectable, and are measured. DONE. model/bomber-bull
+     -> bomber-bull.glb 2.2 MB, model/bomber-bear -> bomber-bear.glb 32 MB,
      model/bomber -> bomber.glb for a side nobody knows. Ten models, ten
-     bundles, 23.6 MB streamed, initial download unchanged at 19.1 MB. Both
-     skins load at runtime.
-     OPEN, named: neither skin has flown a strike IN PLAY. Bear needs a live
-     short being liquidated and bull a live long; neither can be forced here.
+     bundles, 23.6 MB streamed, initial download unchanged at 19.1 MB.
+     Each was put through Dress and photographed drawing, not just loaded:
+
+       bomber.glb        30.80 x  7.76 x 23.25 m
+       bomber-bear.glb   43.86 x 10.33 x 31.80 m
+       bomber-bull.glb   55.24 x 15.97 x 47.42 m
+
+     Span on x and length on z in all three, so the axis the flight assumes
+     holds for every skin. Dressing costs 2-3 ms.
+  a5. No skin has flown a strike IN PLAY. OPEN. The selection is exercised only
+     by the probe; a strike wearing bear needs a live short liquidated and bull
+     a live long, neither forceable from here. Until then the airframe seen in
+     a real round is the plain one. Share: the moment of the strike.
   b. The blast is a column now, not CombatFx's 26 m. DONE. A stem to 55 m in
      3.0 s, a cap 34 m across, a skirt 51 m wide on the ground, cooling from
      white through orange to ash and gone by 8 s. Photographed.
-     OPEN, named: the CAP is never seen from the ground here. The frame reaches
-     20 degrees above horizontal, so at 72 m it shows 26 m of height; the cap
-     sits at 55 m and a 151 m standoff is needed. The map is 260 x 170 with the
-     post office at x -114 and the drop-off at +117, so that standoff always
-     puts a building in the shot - measured twice. Lower the column or leave the
-     cap for a raised camera; not decided.
+     The cap is not visible from the driving camera - its own line, d.
   c. The strike has a voice. DONE. `GameAudio.Strike()`, a synthesised
      detonation - a fast-filtered crack over a very slow-filtered roll whose
      envelope rises before it falls, 4.5 s. Synthesised like every other clip
@@ -5239,7 +5243,13 @@ Picture only, in this order:
      OPEN, named: not heard. A headless browser gives no audio; what is checked
      is that it is called on the same branch as the column, which is
      photographed.
-  d. `Bootstrap.cs:724` places the truck's FIRST spawn from Unity's
+  d. The mushroom CAP is never seen. OPEN. The column stays 55 m and is not
+     shortened to fit a frame. The driving camera reaches 20 degrees above
+     horizontal, so at 72 m it shows 26 m of height; the cap needs a 151 m
+     standoff and the map is 260 x 170 with buildings at x -114 and +117.
+     This is a camera decision - a short impact look, or a wide angle - not a
+     mesh number. Share: small while driving, all of it at the impact.
+  e. `Bootstrap.cs:724` places the truck's FIRST spawn from Unity's
      relief. Once, before any crater exists - harmless, listed so it is
      not rediscovered as a fault.
 
