@@ -5173,6 +5173,14 @@ OPEN
   a7  Bitget, Gate.io, MEXC, Kraken Futures, Hyperliquid. No documented public
       BTC liquidation stream in hand for any of them, and a private
       own-position channel is not a feed. No URL will be guessed.
+      Measured before adding any: three exchanges already fill the eight crater
+      slots. Window 29.3 min, 8/8 first at minute 18 and full to the end,
+      11 accepted liquidations, 10 strikes consumed. The per-venue split is a
+      SNAPSHOT from the 8/8 photo and not a sum over the 29 minutes - binance
+      0 BTC out of 390 all-symbol forced orders, bybit 1, okx 9. So more venues
+      buy strike frequency, not craters, and not size either: every liquidation
+      in the window was under the one-million floor and dug the 16 m minimum,
+      eight of which cover about 15% of a 260 x 170 map.
   a8  Coin-margined Binance: BTCUSD_PERP and two quarters on dstream, a fourth
       host. Not subscribed.
   a10 The tick latch is built and never driven end to end. Needs two live
