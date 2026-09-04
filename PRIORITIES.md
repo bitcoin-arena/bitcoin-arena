@@ -5197,6 +5197,23 @@ Picture only, in this order:
      bowl, warning on 3 m inside the edge and off 3 m outside. Two craters
      that overlap stay two bands crossing over bare ground, 37.5% with the
      camera aimed straight down the crossing.
+  a2. The bomber wears the side of whoever was liquidated, and the core still
+     has none. DONE 4929628. `MarketFeed.Liquidation.Long` reaches the renderer
+     past the core - no side word on submitLiquidation, no field at O_STRIKE,
+     `git diff` over packages/ empty. Keys: model/bomber -> bomber.glb,
+     model/bomber-bear -> bomber-bear.glb, model/bomb -> RMB_23. Both airframes
+     measured through the same Dress: plain 30.80 x 7.76 x 23.25 m, bear
+     43.86 x 10.33 x 31.80 m - span on x, length on z in both, so the axis the
+     flight assumes holds. The bear draws, photographed parked over the bay;
+     dressing it costs 5 ms; its bundle is 12.3 MB of the 22.3 MB streamed over
+     9 bundles, and the initial download stays 19.1 MB.
+     OPEN, named: a bear strike has never flown IN PLAY. It needs a real short
+     being liquidated on the live feed and cannot be forced from here. No bull
+     mesh exists and none was faked - bull flies the default airframe.
+  a3. Two liquidations inside one tick disagree. `submitLiquidation` keeps the
+     LARGEST size, the renderer's side latch keeps the LAST side, so the
+     airframe can wear one liquidation's side over the other's crater. Picture
+     only, the core is untouched. Share: the double-tick alone.
   b. The blast is CombatFx's 26 m. An atom bomb wants a column.
   c. No sound for the strike.
   d. `Bootstrap.cs:724` places the truck's FIRST spawn from Unity's
