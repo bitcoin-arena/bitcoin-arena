@@ -5186,27 +5186,24 @@ OPEN
       the open question: dapi/v1/exchangeInfo gives contractSize 100 and
       marginAsset BTC, so a fill is q * 100 dollars and not q * ap. Nothing
       built, nothing deployed.
-  a10 Two liquidations in one frame: the core keeps the larger, and the skin
-      must wear that same side. MEASURED, OPEN - the latch is unproven, not
-      disproven. The window is ONE FRAME and not a 60 Hz tick: `MarketFeed`
-      drains its sockets in `Update` and hands each order straight to
-      `NoteSubmitter`, so ~17 ms at 60 fps and ~500 ms headless. Twenty passive
-      minutes against a real build, three venues live: 2 liquidations
-      (0.10/min), 3 strikes, 0 double strikes, 0 collision lines - the line
-      that would prove it is in place and never fired. At 0.10/min a collision
-      falls about every 200 h; at the 0.73/min a7 measured, about every 4 h.
-      A long passive run in a busier market is the only way to close it, and
-      it is not this session's line. Nothing forced over the bridge.
-      SAME LATCH, ONE FRAME FURTHER: `_pendingUsd` was emptied only when
-      `StrikeTheatre` SAW the strike serial move. The core is stepped from
-      `CoreDrivenTruck`'s accumulator and the three components have no fixed
-      Update order, so if `CoreDrivenTruck` runs after `StrikeTheatre` the
-      latch noticed the consumption a frame late: a liquidation in that gap
-      compared itself against a size the core had already spent, lost to a
-      dead one, and left the airframe wearing the wrong side. CLOSED in
-      39c4292 - `NoteSubmitter` reads the serial itself and the consumed side
-      is handed to the drawing; StrikeLatchTests force the order, 3 red before
-      and 1 after. The double strike itself is the half that stays open.
+  a10 Two liquidations in one frame: one crater, sized by the larger, and the
+      skin on that same side. MEASURED - the core cannot make two. Two
+      `submitLiquidation` calls before a tick move the STRIKE serial by
+      exactly 1, dig one crater, load it with the larger in either order, and
+      600 ticks later the smaller is still dropped, not queued. So the picture
+      owes one bomber, and StrikeLatchTests force that instead of waiting:
+      nine EditMode cases, largest wins, tie keeps the first, the consumed
+      side is handed over before the next arrival can overwrite it.
+      The frame boundary beside it is CLOSED (39c4292): `NoteSubmitter` reads
+      the strike serial itself, because the core is stepped from
+      `CoreDrivenTruck`'s accumulator and no component fixes the Update order,
+      so the consumption used to be noticed a frame late and a liquidation in
+      that gap lost to a spent size.
+      OPEN, and only this: no live double arrival has been seen, so the seam
+      from `MarketFeed` through `Bootstrap` into the latch is untested. Twenty
+      passive minutes gave 2 liquidations (0.10/min), 3 strikes, 0 doubles; at
+      that rate one falls about every 200 h, at the 0.73/min of a7 about every
+      4 h. Nothing forced over the bridge.
   a11 The strike's voice is built and has never been heard. A headless browser
       has no audio.
   d   The mushroom cap is never seen from the driving camera. The column stays
