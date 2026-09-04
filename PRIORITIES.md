@@ -5228,10 +5228,21 @@ Picture only, in this order:
 
      Span on x and length on z in all three, so the axis the flight assumes
      holds for every skin. Dressing costs 2-3 ms.
-  a5. No skin has flown a strike IN PLAY. OPEN. The selection is exercised only
-     by the probe; a strike wearing bear needs a live short liquidated and bull
-     a live long, neither forceable from here. Until then the airframe seen in
-     a real round is the plain one. Share: the moment of the strike.
+  a5. No skin has flown a strike IN PLAY, and now we know why. OPEN, BLOCKED.
+     Two passive watches on the shipped build, submitting nothing: 14 min gave
+     3 strikes, 12 min gave 3 more, all six wearing the plain airframe and not
+     one feed liquidation among them. Every earlier run had pushed the
+     liquidation in over the JS bridge, which skips Bootstrap.OnLiquidation and
+     therefore the side - that is why they all said "default" and it was the
+     measurement, not the game.
+     Blocked on a6. Share: the moment of the strike.
+  a6. The futures socket is never watched, and it is silent. OPEN. Liquidations
+     ride `!forceOrder@arr` on _futures; `MarketFeed.Status` and the reconnect
+     are both computed from `_spot` alone, so that socket can be dead while the
+     HUD reads "live" and the price keeps ticking. Instrumented at the call
+     site: in 12 minutes it delivered NO message at all - not a liquidation,
+     not a non-BTC order it would have filtered out - while spot kept the price
+     moving. Fix is to give _futures the same status and retry spot has.
   b. The blast is a column now, not CombatFx's 26 m. DONE. A stem to 55 m in
      3.0 s, a cap 34 m across, a skirt 51 m wide on the ground, cooling from
      white through orange to ash and gone by 8 s. Photographed.
