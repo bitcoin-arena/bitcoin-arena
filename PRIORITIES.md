@@ -5175,15 +5175,17 @@ OPEN
       private own-position channel is not a feed, and no URL will be guessed.
       Parked: the slot question is answered without them.
   a8  Coin-margined Binance: BTCUSD_PERP and two quarters on dstream. PROBED,
-      PARKED. Host alive - btcusd_perp@bookTicker 4759 frames in 115 s, 20296
-      in ten minutes. Its !forceOrder@arr is the USDM tape and not the inverse
-      book: three spellings of the route, 56 frames each in 115 s, first
-      payload MARSCOINUSDT, and beside fstream 26 events against 26 all
-      identical - subscribing would count every liquidation twice. The
-      coin-margined forced orders, btcusd_perp and the two quarters, paid 0 in
-      ten minutes on that same socket. No payload, so the contract unit cannot
-      be settled, and a 100-dollar contract read as q*ap digs the largest
-      crater every time. No host, no core, nothing built, nothing deployed.
+      PARKED - the stream pays nothing, and that is the only reason left.
+      Host alive: btcusd_perp@bookTicker 4759 frames in 115 s, 20296 in ten
+      minutes. dstream's !forceOrder@arr is the USDM tape and not the inverse
+      book - three spellings, 56 frames each, first payload MARSCOINUSDT, and
+      beside fstream 26 events against 26 all identical, so subscribing it
+      would count every liquidation twice. The coin-margined forced orders paid
+      0 in twenty minutes across the unrouted AND the /market path, with about
+      36500 heartbeat frames beside them on the same sockets. The unit is NOT
+      the open question: dapi/v1/exchangeInfo gives contractSize 100 and
+      marginAsset BTC, so a fill is q * 100 dollars and not q * ap. Nothing
+      built, nothing deployed.
   a10 The tick latch is built and never driven end to end. Needs two live
       liquidations inside one 60 Hz tick.
   a11 The strike's voice is built and has never been heard. A headless browser
