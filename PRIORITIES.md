@@ -5174,16 +5174,14 @@ OPEN
       documented public BTC liquidation stream is in hand for any of them, a
       private own-position channel is not a feed, and no URL will be guessed.
       Parked: the slot question is answered without them.
-  a8  Coin-margined Binance: BTCUSD_PERP and two quarters on dstream. NOT
-      SUBSCRIBED, and probed before building. The host is alive and serves the
-      inverse book - btcusd_perp@bookTicker paid 20296 frames in ten minutes -
-      but dstream's !forceOrder@arr is the USDM tape, not the coin-margined
-      one: 26 events against fstream, all 26 identical, none unique, so
-      subscribing it would count every liquidation twice. The per-symbol
-      btcusd_perp@forceOrder and the two quarters paid 0 in ten minutes on the
-      same socket the heartbeat floods. No payload means the contract unit
-      cannot be checked - BTCUSD_PERP is a 100-dollar contract and q*ap would
-      dig a maximum crater every time - so nothing was built.
+  a8  Coin-margined Binance: BTCUSD_PERP and two quarters on dstream. PROBED,
+      PARKED. Host alive - btcusd_perp@bookTicker 20296 frames in ten minutes.
+      Its !forceOrder@arr is the USDM tape, not the inverse book - 26 events
+      against fstream, all 26 identical - so subscribing would count every
+      liquidation twice. The coin-margined forced orders paid 0 in ten minutes
+      on that same socket. No payload, so the contract unit cannot be settled,
+      and a 100-dollar contract read as q*ap digs the largest crater every
+      time. Not subscribed, not guessed, not built.
   a10 The tick latch is built and never driven end to end. Needs two live
       liquidations inside one 60 Hz tick.
   a11 The strike's voice is built and has never been heard. A headless browser
