@@ -5197,6 +5197,13 @@ OPEN
       falls about every 200 h; at the 0.73/min a7 measured, about every 4 h.
       A long passive run in a busier market is the only way to close it, and
       it is not this session's line. Nothing forced over the bridge.
+      SAME LATCH, ONE FRAME FURTHER: `_pendingUsd` was emptied only when
+      `StrikeTheatre` SAW the strike serial move. The core is stepped from
+      `CoreDrivenTruck`'s accumulator and the three components have no fixed
+      Update order, so if `CoreDrivenTruck` runs after `StrikeTheatre` the
+      latch notices the consumption a frame late: a liquidation in that gap
+      compares itself against a size the core has already spent and can lose
+      to a dead one, and the airframe wears the wrong side.
   a11 The strike's voice is built and has never been heard. A headless browser
       has no audio.
   d   The mushroom cap is never seen from the driving camera. The column stays
