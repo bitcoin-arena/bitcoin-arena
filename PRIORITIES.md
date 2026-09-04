@@ -5163,175 +5163,45 @@ the browser, and not one was loosened, skipped or re-asserted to go green.
 
 ## 9. M1 liquidation picture  -  M1  -  OPEN
 
-Daniel 2026-09-03: full frontend for atomic bombs, liquidations, craters
-and radiation. Pause M2.1. Also in IMPLEMENTATION.md (M1 liquidation
-picture) and multiplayer_p2p.md (liquidation bombers).
+Daniel 2026-09-03/04: the whole front end for liquidations - bomb, crater,
+radiation. Also in IMPLEMENTATION.md and multiplayer_p2p.md. PICTURE ONLY, the
+core rules stay shut. Stand-in models until designed ones arrive.
+HARD: after the bomb the truck drives *into* the hole, not over it.
+Numbers live in the commits named below, not here.
 
-Daniel 2026-09-04: feeds + HUD. No free all-exchange tape. BTC
-liquidations from Binance, Bybit, OKX, Bitget, Gate.io, MEXC, Kraken
-Futures, Hyperliquid, same OnLiquidation. HUD: how much on which
-exchange; many in one tick = one summary (sums + exchanges). Wait until
-each exchange has at least one hit, no time cap. a7 and a8 below.
+OPEN
+  a7  Bitget, Gate.io, MEXC, Kraken Futures, Hyperliquid. No documented public
+      BTC liquidation stream in hand for any of them, and a private
+      own-position channel is not a feed. No URL will be guessed.
+  a8  Coin-margined Binance: BTCUSD_PERP and two quarters on dstream, a fourth
+      host. Not subscribed.
+  a10 The tick latch is built and never driven end to end. Needs two live
+      liquidations inside one 60 Hz tick.
+  a11 The strike's voice is built and has never been heard. A headless browser
+      has no audio.
+  d   The mushroom cap is never seen from the driving camera. The column stays
+      55 m and is not shortened to fit a frame; showing the cap is a camera
+      decision, not a mesh number.
+  e   `Bootstrap.cs:724` places the truck's FIRST spawn from Unity's relief.
+      Once, before any crater exists. Harmless, listed so it is not
+      rediscovered as a fault.
 
-HARD: after an atom bomb, the truck drives *into* the hole. Not over it.
-
-Picture only. Do not reopen the core rules.
-
-Daniel 2026-09-03 23:06: no Claude Design for now. Stand-in models for
-plane, atom bomb, and crater. Design later.
-
-  1. Truck, units, roads, effects and the gate on the core surface.
-     DONE 7202b15 + a728036. Hovered 5.98 m over its own hole, now 0.00.
-  2. Crater bowl drawn in the terrain itself from the core's list.
-     DONE a728036. It opens when the bomb lands, not when the strike arms.
-  3. Stand-in bomber flies in and drops a stand-in atom bomb.
-     DONE a728036 + ca771fc. The airframe is photographed; the bomb is
-     drawn and flown but was never caught in a frame at 2 fps. Not
-     chased further and the mesh was NOT enlarged for the camera.
-  4. Radiation on the ground, HUD warning stays.  DONE a728036.
-  5. Post office and the map's edge barriers on the core surface.
-     DONE 2cdd2c8. The depot was the last live reader of Unity's terrain.
-
-Picture only, in this order:
-  a. The crater glow tints the ground instead of painting over it.
-     DONE 38ff8d3. A band on the crater's own radius, 0.90 to 1.00, plus
-     nine patches that hold still; the ground between them shows. Emission
-     unchanged. Crater (0, -1) r 40 m, share of the drawn ground: from the
-     rim 32.4% -> 16.0%, in the bowl 89.2% -> 12.1%.
-     Holds at both ends. The smallest crater the rule makes, r 16 m and a
-     1.60 m band, still reads as a ring: 11.4% from the rim, 10.4% in the
-     bowl, warning on 3 m inside the edge and off 3 m outside. Two craters
-     that overlap stay two bands crossing over bare ground, 37.5% with the
-     camera aimed straight down the crossing.
-  a2. The bomber wears the side of whoever was liquidated, and the core still
-     has none. DONE 4929628. `MarketFeed.Liquidation.Long` reaches the renderer
-     past the core - no side word on submitLiquidation, no field at O_STRIKE,
-     `git diff` over packages/ empty. Keys: model/bomber -> bomber.glb,
-     model/bomber-bear -> bomber-bear.glb, model/bomb -> RMB_23. Both airframes
-     measured through the same Dress: plain 30.80 x 7.76 x 23.25 m, bear
-     43.86 x 10.33 x 31.80 m - span on x, length on z in both, so the axis the
-     flight assumes holds. The bear draws, photographed parked over the bay;
-     dressing it costs 5 ms; its bundle is 12.3 MB of the 22.3 MB streamed over
-     9 bundles, and the initial download stays 19.1 MB.
-     OPEN, named: a bear strike has never flown IN PLAY. It needs a real short
-     being liquidated on the live feed and cannot be forced from here. No bull
-     mesh exists and none was faked - bull flies the default airframe.
-  a3. Two liquidations inside one tick no longer disagree. DONE. The latch
-     mirrors the core's own rule - strictly greater wins, so the first of a tie
-     stays - and is cleared when the core consumes what was pending. Picture
-     only, the core untouched.
-     OPEN, named: not measured end to end. Driving it needs two live feed
-     liquidations inside one 60 Hz tick.
-  a4. Both skins load, are selectable, and are measured. DONE. model/bomber-bull
-     -> bomber-bull.glb 2.2 MB, model/bomber-bear -> bomber-bear.glb 32 MB,
-     model/bomber -> bomber.glb for a side nobody knows. Ten models, ten
-     bundles, 23.6 MB streamed, initial download unchanged at 19.1 MB.
-     Each was put through Dress and photographed drawing, not just loaded:
-
-       bomber.glb        30.80 x  7.76 x 23.25 m
-       bomber-bear.glb   43.86 x 10.33 x 31.80 m
-       bomber-bull.glb   55.24 x 15.97 x 47.42 m
-
-     Span on x and length on z in all three, so the axis the flight assumes
-     holds for every skin. Dressing costs 2-3 ms.
-  a5. A real liquidation flies the skin of the side it hit. DONE. Three feeds
-     instead of one, both new ones pinged because they close inside a minute
-     without it, and photographed with nothing submitted: a bybit short put the
-     BEAR airframe up and an okx long the BULL, the HUD read
-     "liq binance bybit x9 okx x4  LIQUIDATED $11.2M" as one summarised line,
-     and OKX's sz is BTC and is not divided by a hundred.
-     Bybit's side was INVERTED and every Bybit strike wore the other skin. Read
-     against the price rather than the field name - a rising book forces shorts
-     out, a falling one forces longs - over twenty minutes: S=Buy means a long
-     was liquidated 17/17, S=Sell means a long 0/17, OKX posSide as the
-     liquidated position 23/31, and the two venues shared only three seconds and
-     never disagreed in them. Confirmed again live once Binance was routed
-     properly: bybit S=Buy, binance S=SELL and okx posSide=long all landed on
-     "long" within three seconds of each other.
-     It was blocked for a while by the measurement itself: every earlier run
-     pushed the liquidation in over the JS bridge, which skips
-     Bootstrap.OnLiquidation and so the side, and that is why six strikes in
-     twenty-six minutes of watching all wore the plain airframe.
-  a6. The liquidation socket is watched and reopened on its own. DONE. Was:
-     never watched and silent. Liquidations
-     ride `!forceOrder@arr` on _futures; `MarketFeed.Status` and the reconnect
-     are both computed from `_spot` alone, so that socket can be dead while the
-     HUD reads "live" and the price keeps ticking. Instrumented at the call
-     site: in 12 minutes it delivered NO message at all - not a liquidation,
-     not a non-BTC order it would have filtered out - while spot kept the price
-     moving.
-     FIXED, and the silence is NOT ours. `_futures` now has its own status, its
-     own silence window (180 s, an event stream is not a ticker) and its own
-     reconnect; `ConnectSpot`/`ConnectFutures` are separate so one dying does
-     not drop the other; the HUD names the liquidation socket whenever it is not
-     live. Measured after: the retry fires, three times in ten minutes, each
-     "reopened after 0 messages".
-     Then measured OUTSIDE the game, from node and again from a bare browser
-     page, 45-95 s each:
-
-       stream.binance.com  btcusdt@aggTrade    516-591 messages
-       fstream.binance.com btcusdt@aggTrade      0 messages
-       fstream.binance.com !forceOrder@arr       0 messages
-       stream.bybit.com    allLiquidation        subscribe acked, then quiet
-       ws.okx.com          liquidation-orders    subscribe acked, one payload
-
-     CORRECTED. That table says fstream is mute, and it is not: the probe used
-     btcusdt@aggTrade, which is empty on the futures host. bookTicker on that
-     same host gives 4397 messages in four seconds. The host speaks; the
-     FORCED-ORDER stream is what sits open and quiet, which is a different fact.
-     So Binance now carries bookTicker as a heartbeat, !forceOrder@arr as the
-     all-symbol liveness proof, and a per-symbol stream for every BTC market -
-     and a7 is what makes a quiet stream survivable.
-  a7. More than Binance. Bybit and OKX are IN. Daniel 2026-09-04: no free
-     all-exchange liquidation feed. Both were measured accepting the documented
-     subscription, both needed a keepalive (they closed at 1006 and 4004 inside
-     a minute with nothing sent), and both now deliver: in one eight-minute
-     window, bybit paid nine BTC liquidations and okx four, from $79 to
-     $8,708,073. Every one carries its venue, and the HUD names them.
-     Binance was on the wrong ROUTE. Their futures streams sit behind /public
-     and /market, and the unrouted host only answers for /public - so a socket
-     carrying bookTicker and !forceOrder@arr flooded with one and never heard
-     the other. Measured over 110 s: unrouted !forceOrder@arr 0 messages,
-     /market/ws/!forceOrder@arr 42, /public/ws/btcusdt@bookTicker 75635,
-     /market per-symbol forceOrder 0. It is now the all-market stream on
-     /market alone - no /public stream on the same socket, no per-symbol - and
-     BTC is filtered in code where BTCDOM never matches. In one seven-minute
-     window afterwards the three feeds paid 139 BTC liquidations: binance 42,
-     bybit 68, okx 29.
-     OPEN: Bitget, Gate.io, MEXC, Kraken Futures and Hyperliquid. Not built,
-     because no documented PUBLIC BTC liquidation stream is in hand for them and
-     a private own-position channel is not a feed. A URL will not be guessed.
-  a8. Coin-margined Binance is not subscribed. OPEN. dapi/v1/exchangeInfo lists
-     BTCUSD_PERP and two dated quarters TRADING on dstream.binance.com, which is
-     a different host and so a fourth source. Share: whatever that book
-     liquidates.
-  a9. HUD names the exchanges and sums the tick. DONE. Daniel 2026-09-04: show
-     how much was liquidated on which exchange, one summary line rather than a
-     row per order. Built: the venue line carries each feed, a "!" when it is
-     not live, "/n" forced orders in any symbol and "xn" BTC ones; the notice
-     under it is one line - total, order count, venues - over the last eight
-     seconds. Seen reading "liq binance bybit x9 okx x4" and
-     "LIQUIDATED $11.2M".
-  b. The blast is a column now, not CombatFx's 26 m. DONE. A stem to 55 m in
-     3.0 s, a cap 34 m across, a skirt 51 m wide on the ground, cooling from
-     white through orange to ash and gone by 8 s. Photographed.
-     The cap is not visible from the driving camera - its own line, d.
-  c. The strike has a voice. DONE. `GameAudio.Strike()`, a synthesised
-     detonation - a fast-filtered crack over a very slow-filtered roll whose
-     envelope rises before it falls, 4.5 s. Synthesised like every other clip
-     here, so it costs nothing to download and cannot go missing from a bundle.
-     OPEN, named: not heard. A headless browser gives no audio; what is checked
-     is that it is called on the same branch as the column, which is
-     photographed.
-  d. The mushroom CAP is never seen. OPEN. The column stays 55 m and is not
-     shortened to fit a frame. The driving camera reaches 20 degrees above
-     horizontal, so at 72 m it shows 26 m of height; the cap needs a 151 m
-     standoff and the map is 260 x 170 with buildings at x -114 and +117.
-     This is a camera decision - a short impact look, or a wide angle - not a
-     mesh number. Share: small while driving, all of it at the impact.
-  e. `Bootstrap.cs:724` places the truck's FIRST spawn from Unity's
-     relief. Once, before any crater exists - harmless, listed so it is
-     not rediscovered as a fault.
+DONE
+  1   truck, units, roads, effects and the gate on the core surface  7202b15 a728036
+  2   the crater IS the terrain, opened when the bomb lands          a728036
+  3   stand-in bomber and bomb, then streamed models        a728036 ca771fc f393fde
+  4   radiation on the ground, the HUD warning stays                 a728036
+  5   post office and the map's edge barriers on the core surface    2cdd2c8
+  a   the glow tints the ground instead of painting over it         38ff8d3
+  a2  the bomber wears the submitter's side, the core has none      4929628
+  a3  the tick latch mirrors the core's largest-wins rule           6ad9882
+  a4  both skins load, are selectable, and are measured             b701484
+  a5  a real liquidation flies the skin of the side it hit  b68091e 14275e2
+  a6  the liquidation socket is watched and reopened on its own     fba827a
+  a7  bybit and okx are in; binance routed to /market       b68091e 14275e2
+  a9  the HUD names the exchanges and sums the tick                 b68091e
+  b   the blast is a column, not a 26 m fireball                    6ad9882
+  c   the strike has a voice                                        6ad9882
 
 ---
 
