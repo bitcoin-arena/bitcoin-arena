@@ -5210,12 +5210,35 @@ Picture only, in this order:
      OPEN, named: a bear strike has never flown IN PLAY. It needs a real short
      being liquidated on the live feed and cannot be forced from here. No bull
      mesh exists and none was faked - bull flies the default airframe.
-  a3. Two liquidations inside one tick disagree. `submitLiquidation` keeps the
-     LARGEST size, the renderer's side latch keeps the LAST side, so the
-     airframe can wear one liquidation's side over the other's crater. Picture
-     only, the core is untouched. Share: the double-tick alone.
-  b. The blast is CombatFx's 26 m. An atom bomb wants a column.
-  c. No sound for the strike.
+  a3. Two liquidations inside one tick no longer disagree. DONE. The latch
+     mirrors the core's own rule - strictly greater wins, so the first of a tie
+     stays - and is cleared when the core consumes what was pending. Picture
+     only, the core untouched.
+     OPEN, named: not measured end to end. Driving it needs two live feed
+     liquidations inside one 60 Hz tick.
+  a4. Bull and bear both fly their own skin. DONE. model/bomber-bull ->
+     bomber-bull.glb, 2.2 MB; model/bomber-bear -> bomber-bear.glb, 32 MB;
+     model/bomber -> bomber.glb for a side nobody knows. Ten models, ten
+     bundles, 23.6 MB streamed, initial download unchanged at 19.1 MB. Both
+     skins load at runtime.
+     OPEN, named: neither skin has flown a strike IN PLAY. Bear needs a live
+     short being liquidated and bull a live long; neither can be forced here.
+  b. The blast is a column now, not CombatFx's 26 m. DONE. A stem to 55 m in
+     3.0 s, a cap 34 m across, a skirt 51 m wide on the ground, cooling from
+     white through orange to ash and gone by 8 s. Photographed.
+     OPEN, named: the CAP is never seen from the ground here. The frame reaches
+     20 degrees above horizontal, so at 72 m it shows 26 m of height; the cap
+     sits at 55 m and a 151 m standoff is needed. The map is 260 x 170 with the
+     post office at x -114 and the drop-off at +117, so that standoff always
+     puts a building in the shot - measured twice. Lower the column or leave the
+     cap for a raised camera; not decided.
+  c. The strike has a voice. DONE. `GameAudio.Strike()`, a synthesised
+     detonation - a fast-filtered crack over a very slow-filtered roll whose
+     envelope rises before it falls, 4.5 s. Synthesised like every other clip
+     here, so it costs nothing to download and cannot go missing from a bundle.
+     OPEN, named: not heard. A headless browser gives no audio; what is checked
+     is that it is called on the same branch as the column, which is
+     photographed.
   d. `Bootstrap.cs:724` places the truck's FIRST spawn from Unity's
      relief. Once, before any crater exists - harmless, listed so it is
      not rediscovered as a fault.
