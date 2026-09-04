@@ -5196,7 +5196,8 @@ DONE
   a2  the bomber wears the submitter's side, the core has none      4929628
   a3  the tick latch mirrors the core's largest-wins rule           6ad9882
   a4  both skins load, are selectable, and are measured             b701484
-  a5  a real liquidation flies the skin of the side it hit  b68091e 14275e2
+  a5  a real liquidation flies the skin of the side it hit, and all three
+      venue side mappings are checked against the price   b68091e 14275e2
   a6  the liquidation socket is watched and reopened on its own     fba827a
   a7  bybit and okx are in; binance routed to /market       b68091e 14275e2
   a9  the HUD names the exchanges and sums the tick                 b68091e
