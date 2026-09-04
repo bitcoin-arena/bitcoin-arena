@@ -5201,9 +5201,12 @@ OPEN
       `StrikeTheatre` SAW the strike serial move. The core is stepped from
       `CoreDrivenTruck`'s accumulator and the three components have no fixed
       Update order, so if `CoreDrivenTruck` runs after `StrikeTheatre` the
-      latch notices the consumption a frame late: a liquidation in that gap
-      compares itself against a size the core has already spent and can lose
-      to a dead one, and the airframe wears the wrong side.
+      latch noticed the consumption a frame late: a liquidation in that gap
+      compared itself against a size the core had already spent, lost to a
+      dead one, and left the airframe wearing the wrong side. CLOSED in
+      39c4292 - `NoteSubmitter` reads the serial itself and the consumed side
+      is handed to the drawing; StrikeLatchTests force the order, 3 red before
+      and 1 after. The double strike itself is the half that stays open.
   a11 The strike's voice is built and has never been heard. A headless browser
       has no audio.
   d   The mushroom cap is never seen from the driving camera. The column stays
