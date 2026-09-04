@@ -5192,6 +5192,11 @@ Picture only, in this order:
      nine patches that hold still; the ground between them shows. Emission
      unchanged. Crater (0, -1) r 40 m, share of the drawn ground: from the
      rim 32.4% -> 16.0%, in the bowl 89.2% -> 12.1%.
+     Holds at both ends. The smallest crater the rule makes, r 16 m and a
+     1.60 m band, still reads as a ring: 11.4% from the rim, 10.4% in the
+     bowl, warning on 3 m inside the edge and off 3 m outside. Two craters
+     that overlap stay two bands crossing over bare ground, 37.5% with the
+     camera aimed straight down the crossing.
   b. The blast is CombatFx's 26 m. An atom bomb wants a column.
   c. No sound for the strike.
   d. `Bootstrap.cs:724` places the truck's FIRST spawn from Unity's
