@@ -5186,10 +5186,12 @@ plane, atom bomb, and crater. Design later.
   5. Post office and the map's edge barriers on the core surface.
      DONE 2cdd2c8. The depot was the last live reader of Unity's terrain.
 
-Still open, picture only, in this order:
-  a. The crater glow is too strong seen from inside the bowl - it paints
-     the hole instead of tinting it, and the bowl's own shape is lost.
-     A defect in shipped work, so it goes first.
+Picture only, in this order:
+  a. The crater glow tints the ground instead of painting over it.
+     DONE 38ff8d3. A band on the crater's own radius, 0.90 to 1.00, plus
+     nine patches that hold still; the ground between them shows. Emission
+     unchanged. Crater (0, -1) r 40 m, share of the drawn ground: from the
+     rim 32.4% -> 16.0%, in the bowl 89.2% -> 12.1%.
   b. The blast is CombatFx's 26 m. An atom bomb wants a column.
   c. No sound for the strike.
   d. `Bootstrap.cs:724` places the truck's FIRST spawn from Unity's
