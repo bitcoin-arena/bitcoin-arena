@@ -5164,21 +5164,37 @@ the browser, and not one was loosened, skipped or re-asserted to go green.
 ## 9. M1 liquidation picture  -  M1  -  OPEN
 
 Daniel 2026-09-03: full frontend for atomic bombs, liquidations, craters
-and radiation. Pause M2.1.
+and radiation. Pause M2.1. Also in IMPLEMENTATION.md (M1 liquidation
+picture) and multiplayer_p2p.md (liquidation bombers).
 
-The core already has the strike, the bowl, the paths, the dose and the
-feed. Unity still shows HUD trefoils and IRRADIATED, no 3D hole, no
-bomber, and the truck hovers up to 6 m over the crater because
-`CoreDrivenTruck.Ground` reads Unity terrain.
+HARD: after an atom bomb, the truck drives *into* the hole. Not over it.
 
-Picture only. Do not reopen the core rules. Claude designs the models.
+Picture only. Do not reopen the core rules.
 
-  1. Sit truck, units and roads on the core surface (relief minus crater).
-  2. Draw the bowl from the core crater list. Lifetime already 10-20 rounds.
-  3. When a strike arms: Claude-designed bomber flies to the impact and
-     drops a Claude-designed atom bomb. Bears and bulls each get their own
-     Bitcoin skin. Renderer theatre - the core strike has no aircraft.
-  4. Radiation on the ground, HUD warning stays.
+Daniel 2026-09-03 23:06: no Claude Design for now. Stand-in models for
+plane, atom bomb, and crater. Design later.
+
+  1. Truck, units, roads, effects and the gate on the core surface.
+     DONE 7202b15 + a728036. Hovered 5.98 m over its own hole, now 0.00.
+  2. Crater bowl drawn in the terrain itself from the core's list.
+     DONE a728036. It opens when the bomb lands, not when the strike arms.
+  3. Stand-in bomber flies in and drops a stand-in atom bomb.
+     DONE a728036 + ca771fc. The airframe is photographed; the bomb is
+     drawn and flown but was never caught in a frame at 2 fps. Not
+     chased further and the mesh was NOT enlarged for the camera.
+  4. Radiation on the ground, HUD warning stays.  DONE a728036.
+  5. Post office and the map's edge barriers on the core surface.
+     DONE 2cdd2c8. The depot was the last live reader of Unity's terrain.
+
+Still open, picture only, in this order:
+  a. The crater glow is too strong seen from inside the bowl - it paints
+     the hole instead of tinting it, and the bowl's own shape is lost.
+     A defect in shipped work, so it goes first.
+  b. The blast is CombatFx's 26 m. An atom bomb wants a column.
+  c. No sound for the strike.
+  d. `Bootstrap.cs:724` places the truck's FIRST spawn from Unity's
+     relief. Once, before any crater exists - harmless, listed so it is
+     not rediscovered as a fault.
 
 ---
 
