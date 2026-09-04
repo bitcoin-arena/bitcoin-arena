@@ -5186,12 +5186,17 @@ OPEN
       the open question: dapi/v1/exchangeInfo gives contractSize 100 and
       marginAsset BTC, so a fill is q * 100 dollars and not q * ap. Nothing
       built, nothing deployed.
-  a10 The latch is built and never driven end to end. The window is ONE FRAME,
-      not a 60 Hz tick - `MarketFeed` drains its sockets in `Update`, so ~17 ms
-      at 60 fps and ~500 ms headless. The line that would prove it is in place
-      and stayed silent: twenty passive minutes gave 2 liquidations, 3 strikes,
-      0 collisions. At that rate one falls about every 200 h headless, at the
-      busier rate a7 measured about every 4 h. Waiting, not forcing.
+  a10 Two liquidations in one frame: the core keeps the larger, and the skin
+      must wear that same side. MEASURED, OPEN - the latch is unproven, not
+      disproven. The window is ONE FRAME and not a 60 Hz tick: `MarketFeed`
+      drains its sockets in `Update` and hands each order straight to
+      `NoteSubmitter`, so ~17 ms at 60 fps and ~500 ms headless. Twenty passive
+      minutes against a real build, three venues live: 2 liquidations
+      (0.10/min), 3 strikes, 0 double strikes, 0 collision lines - the line
+      that would prove it is in place and never fired. At 0.10/min a collision
+      falls about every 200 h; at the 0.73/min a7 measured, about every 4 h.
+      A long passive run in a busier market is the only way to close it, and
+      it is not this session's line. Nothing forced over the bridge.
   a11 The strike's voice is built and has never been heard. A headless browser
       has no audio.
   d   The mushroom cap is never seen from the driving camera. The column stays
