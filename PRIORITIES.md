@@ -5213,9 +5213,9 @@ DONE
       eight crater slots            b68091e 14275e2 d0b1510
   a9  the HUD names the exchanges and sums the tick                 b68091e
   a10 two liquidations in one frame are one crater, sized by the larger, and
-      one skin on that side - forced in the core, the latch and the wire,
-      because twenty passive minutes gave 0.10 liquidations a minute and no
-      double arrival                       39c4292 f092d68
+      one skin on that side - forced in the core, the latch and the wire, and
+      compared in the core's own units so that two orders inside one $15.26
+      step tie the way the core ties them   39c4292 f092d68 00a287f
   b   the blast is a column, not a 26 m fireball                    6ad9882
   c   the strike has a voice                                        6ad9882
 
