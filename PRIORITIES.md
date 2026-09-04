@@ -5170,17 +5170,10 @@ HARD: after the bomb the truck drives *into* the hole, not over it.
 Numbers live in the commits named below, not here.
 
 OPEN
-  a7  Bitget, Gate.io, MEXC, Kraken Futures, Hyperliquid. No documented public
-      BTC liquidation stream in hand for any of them, and a private
-      own-position channel is not a feed. No URL will be guessed.
-      Measured before adding any: three exchanges already fill the eight crater
-      slots. Window 29.3 min, 8/8 first at minute 18 and full to the end,
-      11 accepted liquidations, 10 strikes consumed. The per-venue split is a
-      SNAPSHOT from the 8/8 photo and not a sum over the 29 minutes - binance
-      0 BTC out of 390 all-symbol forced orders, bybit 1, okx 9. So more venues
-      buy strike frequency, not craters, and not size either: every liquidation
-      in the window was under the one-million floor and dug the 16 m minimum,
-      eight of which cover about 15% of a 260 x 170 map.
+  a12 Bitget, Gate.io, MEXC, Kraken Futures, Hyperliquid. NOT STARTED. No
+      documented public BTC liquidation stream is in hand for any of them, a
+      private own-position channel is not a feed, and no URL will be guessed.
+      Parked: the slot question is answered without them.
   a8  Coin-margined Binance: BTCUSD_PERP and two quarters on dstream, a fourth
       host. Not subscribed.
   a10 The tick latch is built and never driven end to end. Needs two live
@@ -5207,7 +5200,8 @@ DONE
   a5  a real liquidation flies the skin of the side it hit, and all three
       venue side mappings are checked against the price   b68091e 14275e2
   a6  the liquidation socket is watched and reopened on its own     fba827a
-  a7  bybit and okx are in; binance routed to /market       b68091e 14275e2
+  a7  bybit and okx are in, binance routed to /market, and three exchanges
+      already fill all eight crater slots     b68091e 14275e2 d0b1510
   a9  the HUD names the exchanges and sums the tick                 b68091e
   b   the blast is a column, not a 26 m fireball                    6ad9882
   c   the strike has a voice                                        6ad9882
