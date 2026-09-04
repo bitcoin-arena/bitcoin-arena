@@ -5240,6 +5240,14 @@ Picture only, in this order:
      BEAR airframe up and an okx long the BULL, the HUD read
      "liq binance bybit x9 okx x4  LIQUIDATED $11.2M" as one summarised line,
      and OKX's sz is BTC and is not divided by a hundred.
+     Bybit's side was INVERTED and every Bybit strike wore the other skin. Read
+     against the price rather than the field name - a rising book forces shorts
+     out, a falling one forces longs - over twenty minutes: S=Buy means a long
+     was liquidated 17/17, S=Sell means a long 0/17, OKX posSide as the
+     liquidated position 23/31, and the two venues shared only three seconds and
+     never disagreed in them. Confirmed again live once Binance was routed
+     properly: bybit S=Buy, binance S=SELL and okx posSide=long all landed on
+     "long" within three seconds of each other.
      It was blocked for a while by the measurement itself: every earlier run
      pushed the liquidation in over the JS bridge, which skips
      Bootstrap.OnLiquidation and so the side, and that is why six strikes in
@@ -5280,11 +5288,16 @@ Picture only, in this order:
      a minute with nothing sent), and both now deliver: in one eight-minute
      window, bybit paid nine BTC liquidations and okx four, from $79 to
      $8,708,073. Every one carries its venue, and the HUD names them.
-     Binance now subscribes EVERY BTC market - BTCUSDT, BTCUSDC, BTCUSD1, BTCU
-     and the two dated quarters, asked of fapi/v1/exchangeInfo rather than
-     remembered - with btcusdt@bookTicker as a heartbeat and !forceOrder@arr
-     still riding along as the all-symbol liveness proof. BTCDOM is dominance,
-     not the coin, and never matches. It has still paid nothing.
+     Binance was on the wrong ROUTE. Their futures streams sit behind /public
+     and /market, and the unrouted host only answers for /public - so a socket
+     carrying bookTicker and !forceOrder@arr flooded with one and never heard
+     the other. Measured over 110 s: unrouted !forceOrder@arr 0 messages,
+     /market/ws/!forceOrder@arr 42, /public/ws/btcusdt@bookTicker 75635,
+     /market per-symbol forceOrder 0. It is now the all-market stream on
+     /market alone - no /public stream on the same socket, no per-symbol - and
+     BTC is filtered in code where BTCDOM never matches. In one seven-minute
+     window afterwards the three feeds paid 139 BTC liquidations: binance 42,
+     bybit 68, okx 29.
      OPEN: Bitget, Gate.io, MEXC, Kraken Futures and Hyperliquid. Not built,
      because no documented PUBLIC BTC liquidation stream is in hand for them and
      a private own-position channel is not a feed. A URL will not be guessed.
