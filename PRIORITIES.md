@@ -71,6 +71,11 @@ M1.a13: 2026-09-05 morning picture. Claude updates each line.
 - wipe in crater radius, no wrecks — not done
 
 M1.a14: parked until a13 is closed — wheels in the ground at the depot / on the model.
+  Standing bury is fixed (0.178 m to 0.000, 3bd4208): the wheel was seated on
+  the collider's 0.550 m while the mesh reaches 0.728 m. Craters and the
+  core/terrain surfaces were both cleared by measurement, not argument.
+  Still open when it resumes: the driving bury, 0.12-0.21 m, which cannot be
+  told from bounding-box inflation until that model is made readable.
 - happens more often after round 1 or 2, reproducible then
 - not always; usually fine
 - write a test that plays 5–10 rounds and checks wheels vs ground
