@@ -5349,3 +5349,31 @@ only change since the last green run was one Debug.Log:
       short under load. Named, not touched.
   PlayMode   180: 159 green, 11 red, 10 skipped - the ten Battlefield.Army
     reds and VisibilityTests.RoadsAreActuallyDrawn, unchanged.
+
+## 2026-09-05  the iPhone was on silent, and Web Audio obeys that switch
+
+Read off Daniel's photographs, not guessed. Safari shows its speaker icon in
+the address bar - the system believes the tab is playing - and the status bar
+carries the silent-mode bell, in the 07:46, 08:00, 08:07 and 09:14 shots
+alike. iOS mutes Web Audio with the ring/silent switch unless the page owns a
+media PLAYBACK session; an unlocked, running context is not enough.
+
+Fix: a hidden <audio> carrying half a second of silence on a loop, started in
+the same gesture handler as the context. Measured on the desktop player at
+eabd236:
+
+  contexts before the loader          0
+  after load, no gesture              1, running
+  gesture #1                          media=none  paused=false
+  gesture #3..#6                      media=playing paused=false
+  jslib handle                        WEBAudio=true page=true ctx=running
+  strike after the gesture            level 0.550, impacts drawn
+
+`paused=false` from the first gesture is the element actually playing;
+`media=playing` appears once the play() promise resolves, which is why the
+first two lines still read none.
+
+A desktop has no ringer switch, so this run proves the element plays and the
+session is claimed - it cannot prove the phone. That is the ear again.
+
+Deployed: 254f8485.btc-logistics-core.pages.dev, daily host.
