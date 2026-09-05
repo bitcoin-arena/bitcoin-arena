@@ -5747,3 +5747,37 @@ Also unmeasured and worth naming: `Input.GetMouseButton(0)` follows the FIRST
 touch, so a thumb held on a driving pad occupies the pointer and a second
 finger cannot look around while driving. That is multi-touch input, a
 different piece of work from this bullet, and it was not started.
+
+## 2026-09-05  iOS audio is heard on the phone
+
+Daniel confirmed it at 13:47: the strike is audible on the iPhone. That
+closes the a13 bullet and settles a diagnosis no measurement here could
+reach - a desktop has no ring/silent switch, so every number I could take
+was consistent with both the working and the broken case.
+
+Two things were needed and neither alone was enough:
+
+  the unlock inside the gesture  `SplashScreen.Play` is an OnGUI callback in
+                                 the frame loop, not the gesture's call
+                                 stack, and Safari does not count it. The
+                                 page captures Unity's AudioContext at
+                                 construction and resumes it from a real
+                                 pointerdown/touchend.
+  a media playback session       an unlocked, running context is still muted
+                                 by the ring/silent switch unless the tab
+                                 owns one. A hidden <audio> looping half a
+                                 second of silence, started in that same
+                                 handler, claims it.
+
+The second half was read off Daniel's own photographs - Safari's speaker
+icon in the address bar beside the silent-mode bell in the status bar - and
+not guessed.
+
+A correction that belongs with it: I reported early on that Unity's
+AudioContext was not under `WEBAudio` in this build and concluded the old
+jslib could unlock nothing. Its own log line said `WEBAudio=true
+ctx=running`. The handle was always live; only `Module.WEBAudio` was
+unreachable from the page. The fault was never which handle - it was where
+the unlock ran.
+
+Code eabd236, deploy 254f8485.
