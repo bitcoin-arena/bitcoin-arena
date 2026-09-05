@@ -27,25 +27,36 @@ Top item first. Finish and deploy before starting the next.
 
 Twelve red tests: none on the deploy path. List in TASKBOOK.md.
 
-## 9. M1 liquidation picture  —  OPEN
+## M1
 
-Picture only. Truck drives *into* the crater. Details: TASKBOOK.md.
+Liquidation picture — OPEN. Truck drives *into* the crater.
+Details: TASKBOOK.md. Next letter: M1.a14.
 
-OPEN  (letters in order)
-  a8  coin-margined Binance probed, parked
-  a11 strike voice — built, needs Daniel's ear
-  a12 five extra venues parked (no public stream)
-  a13 2026-09-05 morning picture. Screenshots in daniel-screens/.
-      iOS audio. Camera look-back. Real mushroom mesh. HUD venue+size.
-      SIM under PRACTICE. Tanks along the front. Late-run sink.
-      Bar labels off. Whitepaper fits. Crater 2× deep. Wipe in radius,
-      no wrecks.
-  d   mushroom cap not seen from the driving camera
-  e   first truck spawn from Unity relief (harmless)
+M1.a8: coin-margined Binance probed, parked.
 
-Next new letter is a14.
+M1.a11: strike voice — built, needs Daniel's ear.
 
-DONE  1–5, a–a7, a9, a10, b, c. Names and commits in TASKBOOK.md.
+M1.a12: five extra venues parked (no public stream).
+
+M1.a13: 2026-09-05 morning picture.
+- iOS audio
+- camera look-back (free look, then forward)
+- real mushroom mesh
+- HUD: which liquidation, which exchange
+- SIM toggle under PRACTICE
+- tanks along the front, not in a heap
+- late-run truck/tanks not under the ground
+- no numbers on mining bars
+- whitepaper fits the frame
+- crater twice as deep
+- wipe in crater radius, no wrecks
+- screenshots in daniel-screens/
+
+M1.d: mushroom cap not seen from the driving camera.
+
+M1.e: first truck spawn from Unity relief (harmless).
+
+DONE: 1–5, a–a7, a9, a10, b, c. Names and commits in TASKBOOK.md.
 
 ---
 
