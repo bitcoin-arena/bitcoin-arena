@@ -5903,3 +5903,39 @@ answers inside the test's window the yard shows its transactions instead.
 Failed alone once, passed alone immediately after. Nothing in this change
 touches the feed or the package yard. Named, not touched, and not called a
 load flake any more now that it has failed in isolation.
+
+## 2026-09-05  the mushroom cools on the mesh
+
+The mesh wore one colour for its whole eight seconds - a fireball that never
+went out. The primitives had cooled white through orange to ash, and that
+curve is now one function, `Heat(t)`, driven onto the streamed renderers
+through a property block so the streamed materials are never written to.
+
+Measured at a real liquidation, at the impact:
+
+  t = 0.3 s   body 0.74,0.64,0.48   glow 1.01,0.67,0.32
+  t = 3.0 s   body 0.35,0.33,0.30   glow 0.08,0.07,0.07
+  t = 5.7 s   body 0.34,0.32,0.30   glow 0.07,0.07,0.06
+
+Photographed at the same three moments after the chase camera had settled:
+heat-rise.png shows a white-hot billow with the bomber leaving, heat-ash.png
+a dark grey remnant near the ground. The earlier false "too small" was an
+early shutter, and this time the frames were taken after the camera had
+caught up.
+
+Size untouched, as instructed: still asked 55 m, drawn 32.5 x 55.0 x 32.4 m,
+five renderers.
+
+`_EMISSION` is enabled once on the instance's own materials when the cloud is
+first dressed. Without the keyword a URP material ignores `_EmissionColor`
+entirely - the same thing three identical cubes proved over the start bay
+earlier in this build, where only the emissive one drew at all.
+
+The primitive fallback is untouched and now shares the same `Heat`, so the
+two cannot drift apart.
+
+  EditMode  136: 135 green, 1 red - CombatFxTests.RifleFireProducesAFlash
+                 AndATracer, known
+  PlayMode  185: 164 green, 11 red, 10 skipped - the known set.
+                 RampReadyTests passed this run, which confirms it is
+                 intermittent rather than newly broken.

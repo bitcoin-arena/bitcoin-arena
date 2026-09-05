@@ -69,8 +69,9 @@ M1.a13: 2026-09-05 morning picture. Claude updates each line.
   driving still needs multi-touch, which is not this bullet.
 - real mushroom mesh — done. Streamed as model/mushroom and drawn at the
   impact: measured 32.5 x 55.0 x 32.4 m, five renderers, against the 55 m
-  the column was built to. The three primitives remain only as the
-  fallback until it has streamed.
+  the column was built to, and it cools white to ash on the same clock the
+  primitives used. The three primitives remain only as the fallback until
+  it has streamed.
 - HUD: which liquidation, which exchange — not done
 - SIM toggle under PRACTICE — not done
 - tanks along the front, not in a heap — not done
