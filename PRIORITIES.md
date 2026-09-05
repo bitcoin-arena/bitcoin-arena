@@ -5217,6 +5217,18 @@ OPEN
       frame. When the bomb lands, everything inside the crater is gone at
       once — no wrecks. Crater twice as deep on impact; it is too shallow now.
       Always open Daniel's screenshots, do not guess.
+      iOS SOUND, MEASURED at 118e530 on the desktop player: Unity builds
+      exactly ONE AudioContext, and the template now catches it at
+      construction - 0 contexts before the loader, 1 after. The gesture
+      handler fires inside pointerdown/mousedown (6 unlocks over the three
+      start clicks, running=1 each) and the strike still plays afterwards
+      (level 0.550, pitch 0.966). CORRECTION to what was said before: the
+      jslib's own `WEBAudio` handle is NOT dead - it logged
+      `WEBAudio=true ctx=running`. Only `Module.WEBAudio` was unreachable
+      from the page. So the fault was never the handle, it was WHERE the
+      unlock ran: `SplashScreen.Play` is an OnGUI callback, outside the
+      gesture stack Safari requires. Desktop cannot prove Safari; the
+      iPhone verdict is Daniel's.
 
 DONE
   1   truck, units, roads, effects and the gate on the core surface  7202b15 a728036
