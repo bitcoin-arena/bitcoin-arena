@@ -17,19 +17,20 @@ until something that does is finished.
     8  M2.1 checkpoints               M2   parked (Daniel: M1 picture first)
     9  M1 liquidation picture         M1   open
 
-THE TWELVE RED TESTS, ONE LINE EACH. Measured at f103f71. Not one is on the
+THE TWELVE RED TESTS, ONE LINE EACH. Named at f103f71, counted again at
+5c81a7a - the same twelve, in suites that have grown since. Not one is on the
 deploy path: eleven reach for the C# army that (e) does not build, and the
 twelfth needs a graphics device this machine has not got. None can go green
 here, and none may be loosened.
 
-    EditMode   1 of 124 red
+    EditMode   1 of 136 red
       CombatFxTests.RifleFireProducesAFlashAndATracer
         builds `new Army(3)` and steps the RETIRED C# army for 20 s. Its
         sibling TankFireProducesABlast has the same shape and passes, so it
         is the C# rifle path, not the harness. Depends on: reviving the C#
         army, which is forbidden.
 
-    PlayMode  11 of 175 red, 10 skipped
+    PlayMode  11 of 180 red, 10 skipped
       VehicleTests.BothArmiesAreOnTheFieldAndOnTheGround   "keine Armeen"
       VehicleTests.ArmourBlocksTheTruck                    null armour
       VehicleTests.TheTruckCanDriveOnAfterHittingTheArmy   null armour
