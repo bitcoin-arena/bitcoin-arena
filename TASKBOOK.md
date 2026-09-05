@@ -5647,3 +5647,49 @@ none was faked.
 No existing vector moved: the index gained a name and checkpoint.json is byte
 for byte what it was. Unity untouched. The 167-vs-150 remainder stands and
 was not hunted.
+
+## 2026-09-05  the socket stops accepting a hundred megabytes
+
+M2.1 bullet 5, first of its three parts. The other two - watching outbound
+`bufferedAmount` and a resume point for a reconnecting client - were NOT
+started: Daniel reordered mid-turn, M1 before M2, and item 8 is parked.
+
+Measured sizes, which is where the cap comes from:
+
+  batch header, 0 ticks      107 bytes
+  per tick                    20
+  per liquidation              8
+  batch at 6 ticks (10 Hz)   227
+  batch at 9000 ticks     180107   a whole round at the test contract
+  largest DECODABLE batch 1835087   the encoder's own u16 vec ceilings
+  signed checkpoint          231
+  signed receipt             139
+
+  ws default maxPayload  104857600
+  now                      1835087   57x smaller
+
+Two layers, both derived, neither a chosen number:
+
+  transport  MAX_FRAME_BYTES is the longest message the protocol can encode
+             at all. Longer is not a large protocol message, it is not one,
+             so it can be refused without being parsed.
+  per round  a batch may not carry more ticks than the round's `blockTicks`,
+             read off the contract the node already stores. Refused by name:
+             "a batch carries at most the round's 9000 ticks, got 9001", and
+             the transcript stays at 0 ticks.
+
+The cap is NOT tight and that is said rather than hidden: an honest client at
+10 Hz sends 227 bytes. Tightening further needs a maximum ticks per batch,
+which is a protocol-visible limit and a decision, not a measurement.
+
+A hole found while testing it: a frame over the cap arrives as an ERROR
+event, not a message, and an unhandled one takes the process down - sending
+MAX_FRAME_BYTES + 1 threw `RangeError: Max payload size exceeded` out of the
+receiver with nothing listening. `ws` has already closed with 1009 by then;
+the daemon now survives it and names the connection.
+
+  core 67/67, determinism guard 19 clean
+  protocol 78/78 (76 before), money guard 7 clean
+  node 33/33 (31 before)
+
+Unity untouched.

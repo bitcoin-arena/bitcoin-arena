@@ -353,9 +353,10 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      computes a state hash and sends one. M2.1 is not finished.
   4. **Entry quotas.** A funded entry before the node stores a byte.
      Comes before opening a port to anyone else, not after.
-  5. **Backpressure and reconnection.** `ws` buffers without limit; watch
-     `bufferedAmount`. Batches are tick-numbered so a reconnecting client
-     re-sends and the node ignores what it already has.
+  5. **Backpressure and reconnection.** Inbound DONE: the socket caps a frame
+     at the longest message the protocol can encode, and a batch may not be
+     longer than the round's own `blockTicks`. Still open: watching outbound
+     `bufferedAmount`, and a resume point a reconnecting client can ask for.
 
   5b. **Discovery: read it off the chain** (spec 25.1). A node's address
      is in its own bond funding transaction, so there is no directory to
