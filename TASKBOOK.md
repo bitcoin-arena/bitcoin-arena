@@ -5588,3 +5588,62 @@ because they cut records at 167. The tests were wrong, not the wrapper.
 
 Unity was not in this slice. Remainder, still listed and still not hunted:
 167 bytes against section 10's ~150-byte budget, now 231 signed.
+
+## 2026-09-05  the checkpoint receipt exists as an object; nothing issues one
+
+The spec is thinner than a sitting here, so this stopped at the object plus
+tests, as agreed, rather than inventing the rest.
+
+WHAT THE TWO DOCUMENTS ACTUALLY SAY. Section 10, entire: "A checkpoint is
+accepted when enough nodes receive it within the required window; nodes
+timestamp receipt and return a signed CheckpointReceipt." The only field list
+anywhere is IMPLEMENTATION.md:594 - RECEIPT { checkpoint_hash, received_at,
+node_sig }. No struct, no reserved type, no reserved tag - unlike
+EntryReceipt, which section 7 writes out in full.
+
+THREE THINGS DECIDED, each following a precedent rather than invented:
+
+  nodePubkey is carried    IMPLEMENTATION's wire line omits it because a live
+                           socket knows its peer. Section 12 puts receipts[]
+                           inside the round record, where nothing can ask who
+                           signed. EntryReceipt carries node_pubkey for that
+                           reason; this follows it, and its field order.
+  signature beside         as decided for the checkpoint, so receiptId does
+                           not move when the receipt is signed.
+  type 0x0a, tag           BLWP/v1/CheckpointReceipt. The spec reserves
+                           neither and an object cannot exist without them.
+
+Measured:
+
+  receipt on the wire       75 bytes
+  signed receipt            139 bytes
+  checkpoint, for contrast  167 / 231 signed
+
+Refusals, each by name:
+
+  wrong type            "not a checkpoint receipt: type 5"
+  trailing bytes        "trailing bytes after the receipt"
+  wrong record length   "a signed receipt is 139 bytes, got 75"
+  wrong signature size  "a signature is 64 bytes, got 10"
+  a float timestamp     "u64 needs a BigInt, got number"
+
+And the properties that make it evidence rather than decoration: the signer,
+the time and the mark are each part of the id, so a receipt cannot be moved
+to another mark, re-dated, or attributed to another node; two nodes
+receipting one checkpoint produce two distinct objects, which is what
+"5 of 7 received it" has to be counted from.
+
+WHAT IS MISSING, and it is the larger half: nothing ISSUES a receipt. A node
+signs one with its own key, and this daemon has no key and no place to put
+one - grep for a node identity in blwp-node/src finds nothing. The identity
+comes from the bond advertisement, M2.1 step 5b. Until that exists the node
+cannot sign, so there is no ingest, no store and no wire for receipts, and
+none was faked.
+
+  core 67/67, determinism guard 19 clean
+  protocol 76/76 (63 before), money guard 7 clean
+  node 31/31, unchanged - the node was not touched
+
+No existing vector moved: the index gained a name and checkpoint.json is byte
+for byte what it was. Unity untouched. The 167-vs-150 remainder stands and
+was not hunted.
