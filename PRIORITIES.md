@@ -1,3 +1,9 @@
+# HARD (Daniel 2026-09-05)
+
+Every step, every fix: git commit AND git push origin
+phase0-deterministic-core. PRIORITIES, models, screens, code. Nothing
+stays local. Claude commits as claude after each measured change.
+
 # Working order
 
 Kept in the repo rather than in a conversation, because a plan that lives
