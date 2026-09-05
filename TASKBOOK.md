@@ -5539,3 +5539,52 @@ letter as the slice they belong to.
 Known remainder, not fixed: a checkpoint is 167 bytes against section 10's
 ~150-byte budget. Every byte is accounted for, so the only way down is
 dropping or shortening a field, which is a protocol change.
+
+## 2026-09-05  the session key signs the mark, beside it rather than inside it
+
+The signature slice of M2.1. The spec settled who signs and with which key;
+the covered bytes and the placement were ambiguous and Daniel decided them.
+
+  covered bytes    checkpointId, the tagged hash - not the raw encoding
+  placement        beside the object, a 64-byte suffix on the wire
+  key              sessionPubkey from the Entry Contract the node stores
+  curve            ed25519, per IMPLEMENTATION.md's session-key note
+  library          @noble/curves, in blwp-node only
+
+Measured:
+
+  checkpoint                     167 bytes
+  signed mark on the wire        231 bytes
+  GET /checkpoints record        231 bytes, verified over the read
+  protocol runtime dependencies  {} - unchanged, no crypto entered it
+  unsigned id after signing      identical, so previousHash never moves
+
+Refusals, each by name and each with nothing stored:
+
+  no signature at all       "a signed checkpoint is 231 bytes, got 167"
+  a stranger's key          "the signature does not verify under the entry's
+                             session key"
+  any field changed after   the same refusal, checked field by field over
+    signing                  tick, stateHash, inputChainHash, previousHash
+  one bit of the signature  the same refusal
+
+There is no shorter form that means "unsigned", so a mark cannot lose its
+signature by accident - the length check refuses it before anything parses.
+The signature is verified BEFORE the chain and tick rules, so a forged mark
+never reaches a rule that could store it and the refusal names the signature
+rather than whatever it collided with.
+
+All of it also driven over the real socket and a real fetch in
+server.test.js, not only in memory. Two marks accepted, six refused, and
+GET /checkpoints returned 2 records of 231 bytes whose signatures still
+verify after the round trip.
+
+Two of the slice's own read-back tests went red when the suffix landed,
+because they cut records at 167. The tests were wrong, not the wrapper.
+
+  core 67/67, determinism guard 19 clean
+  protocol 63/63 (59 before), money guard 7 clean
+  node 31/31 (25 before)
+
+Unity was not in this slice. Remainder, still listed and still not hunted:
+167 bytes against section 10's ~150-byte budget, now 231 signed.
