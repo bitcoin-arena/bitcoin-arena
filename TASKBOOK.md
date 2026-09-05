@@ -5446,3 +5446,46 @@ Two flakes seen under load during this letter and green on their own
 straight afterwards, neither touched:
   RunOverBodyTests.AThrownBodyIsHandedToThePhysicsEngine  0.831 vs 1.0, 5/5 green
   PostOfficeTests.TheGogglesAnimate                       0.0 vs 0.02, 11/11 green
+
+## 2026-09-05  checkpoints: the object, the table, and what they narrow
+
+M2.1 step 3, unsigned. Storage and the equivocation key; `session_signature`
+and `CheckpointReceipt` are the next slice and no stub for them is here.
+
+Bytes on the wire, measured from the encoder rather than budgeted:
+
+  checkpoint on the wire    167 bytes
+  spec budget (section 10)  about 150 bytes at 1 Hz
+  over a 90 s round         15.0 kB per player
+
+Over budget by 17 bytes, and every one is accounted for: type 1, version 2,
+five 32-byte fields, tick 4. Nothing is variable-length, which is why the
+read endpoint can hand back records back to back and a reader can cut them
+apart without a framing rule.
+
+What a checkpoint narrows, measured on the real core
+(`packages/core/tools/measure-checkpoints.js`):
+
+  round                     600 ticks, ten seconds
+  checkpoint every          60 ticks
+  input changed at          tick 307
+  smallest change that      128 of 65536 on the steer, one tick
+    reaches the state       (0.2% of full lock)
+  first disagreeing mark    tick 360
+  last agreeing mark        tick 300
+  divergence located to     60 ticks
+  without checkpoints       600 ticks, i.e. "somewhere in the round"
+
+Ten times narrower, and the window is one second.
+
+A finding worth keeping: a change of ONE unit of Q16.16 on the steer at a
+single tick never reaches the state at all - the digest is identical. The
+transcript is not fragile to arbitrarily small input noise; it took 128 units
+before the state moved. That number is measured by the tool itself, not
+assumed, so it will follow the vehicle rules if they change.
+
+  core 67/67, determinism guard 19 clean
+  protocol 59/59 (was 50), money guard 7 clean
+  node 20/20 (was 13)
+
+Unity untouched.
