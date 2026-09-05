@@ -5327,3 +5327,25 @@ DONE
   c   the strike has a voice                                        6ad9882
 
 ---
+
+## 2026-09-05  the iOS sound fix on the daily host
+
+Deployed from the player built at 106fb7f - Daniel's unlock (118e530) plus
+the camera's own worst-case line. `btc-logistics-core.pages.dev` answers and
+carries the gesture block; `btc-logistics-war.pages.dev` untouched.
+
+  deployment            62fea1b5.btc-logistics-core.pages.dev
+  build                 19.5 mb, no CS errors
+  unlock block live     yes, `__blwpAudio` and `pointerdown` in the served page
+
+Suites after the deploy, not before - the publish was ordered NOW and the
+only change since the last green run was one Debug.Log:
+
+  EditMode   136: 134 green, 2 red
+    CombatFxTests.RifleFireProducesAFlashAndATracer   known, listed
+    RunOverBodyTests.AThrownBodyIsHandedToThePhysicsEngine
+      FLAKE: 0.831 against a bar of 1.0 in the full run, green on its own
+      (5 of 5) straight afterwards. It measures a PhysX tumble and falls
+      short under load. Named, not touched.
+  PlayMode   180: 159 green, 11 red, 10 skipped - the ten Battlefield.Army
+    reds and VisibilityTests.RoadsAreActuallyDrawn, unchanged.
