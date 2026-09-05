@@ -67,7 +67,10 @@ M1.a13: 2026-09-05 morning picture. Claude updates each line.
   Residual: the dead zone is one degree of aim, 2.9 px at 640 wide, and a
   real thumb may wander further - only Daniel's tap can say. Looking while
   driving still needs multi-touch, which is not this bullet.
-- real mushroom mesh — not done (GLB on disk, not in the blast yet)
+- real mushroom mesh — done. Streamed as model/mushroom and drawn at the
+  impact: measured 32.5 x 55.0 x 32.4 m, five renderers, against the 55 m
+  the column was built to. The three primitives remain only as the
+  fallback until it has streamed.
 - HUD: which liquidation, which exchange — not done
 - SIM toggle under PRACTICE — not done
 - tanks along the front, not in a heap — not done

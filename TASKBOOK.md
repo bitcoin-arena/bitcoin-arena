@@ -5859,3 +5859,47 @@ a decision, not a measurement I can take now.
   EditMode  136: 135 green, 1 red - CombatFxTests.RifleFireProducesAFlash
                  AndATracer, known
   PlayMode  185: 164 green, 11 red, 10 skipped - the known set, no new red
+
+## 2026-09-05  the mushroom is the mesh, not three primitives
+
+M1.a13. The GLB had been committed and nothing streamed it - it was an unused
+file. It is now `model/mushroom` in the HighDetail group, fetched after the
+bomber for the same reason (only wanted when a liquidation lands, and it is
+the largest of these assets), and handed to the theatre.
+
+Measured on a real liquidation, at the event:
+
+  asked for       55 m, the height the column was built to
+  drawn           32.5 x 55.0 x 32.4 m, five renderers
+  at              the impact position, e.g. -43.4,-6.3
+  old cap width   34 m, so the silhouette is the same size it was
+
+Photographed: cloud3-settled.png shows a billowing cap on a stem standing at
+the impact with the bomber flying out beside it. The first two attempts
+photographed nothing useful and the reason is worth keeping - the harness
+teleported the truck and took the frame in the same breath, and the chase
+camera damps towards its target, so the shot was taken from where the camera
+used to be. The size was never wrong; the shutter was early.
+
+The primitives stay as the fallback for the seconds before the model has
+streamed and for a build without it, and they say so in the log: "[cloud]
+primitives ... no mesh streamed yet" against "[cloud] mushroom MESH".
+
+WHAT CHANGED WITH IT, and it is a visible difference rather than a hidden
+one: the primitives were driven white -> orange -> ash over the eight
+seconds, and the mesh wears its own materials, so that colour clock no longer
+applies. The timing does: full size in `Rise`, gone by `Gone`, the same
+numbers as before.
+
+  EditMode  136: 135 green, 1 red - CombatFxTests.RifleFireProducesAFlash
+                 AndATracer, known
+  PlayMode  185: 163 green, 12 red, 10 skipped
+
+The twelfth red is RampReadyTests.TheRealTransactionsReplaceTheStandInsWhile
+NothingIsLoaded: expected 2 captions on the ramp, got 10. It is intermittent
+and network-dependent by construction - the test seeds `feed.Offers` with two
+transactions while the LIVE mempool feed is running, so if the real feed
+answers inside the test's window the yard shows its transactions instead.
+Failed alone once, passed alone immediately after. Nothing in this change
+touches the feed or the package yard. Named, not touched, and not called a
+load flake any more now that it has failed in isolation.
