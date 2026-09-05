@@ -5406,3 +5406,43 @@ back. Nothing like that appears after.
 
 Note: this change was already on the daily host before it was measured - it
 rode along in the build deployed for the ringer fix (254f8485).
+
+## 2026-09-05  the horizon stops rolling in a corner
+
+Cause 2 of the camera letter. Three numbers on the same corner, measured
+fresh after the change rather than read off the earlier log:
+
+  core truck bank        0.00 deg
+  camera roll before     5.4 deg
+  camera roll after      0.0 deg
+  yaw off the nose       4.6 deg at 3.2 deg slip, 16.3 m/s
+
+The core has no bank to follow. Driven on the real module at 13.3 m/s with a
+yaw rate of 0.164 rad/s, the truck is thirteen integer words - x, z, heading,
+vx, vz, angular velocity, hp, cargo, flags, wheel, throttle, steer, impact -
+and not one is a roll, a pitch or a bank. So "the camera rolls with the core
+pose" resolves to zero, and the 5.4 degrees were a renderer flourish:
+`leanDegrees` 6 times the cornering load (yaw rate x forward speed). Not a
+PhysX leftover - the yaw rate came off the target's heading and the speed off
+`BlwpCore.Velocity` - but a flourish with no pose behind it all the same.
+
+CameraFeelTests.TheCameraLeansIntoACorner asserted the opposite: lean > 1.2
+degrees. It encoded the old decision, so it was inverted rather than
+loosened, and renamed TheHorizonStaysLevelInACorner with a bound of 0.5
+degrees. The measurement was 0.0000009 degrees, so half a degree is room for
+arithmetic noise and nothing else. An impact may still roll the frame; that
+decays in a third of a second and is not steering.
+
+I had grepped for `leanDegrees` outside ChaseCamera.cs, found nothing, and
+concluded the lean was unused elsewhere. The test asserts the EFFECT - the
+camera's Z rotation - not the field name. The check was too narrow.
+
+  EditMode  136: 135 green, 1 red - CombatFxTests.RifleFireProducesAFlash
+                 AndATracer, known, retired C# army
+  PlayMode  180: 159 green, 11 red, 10 skipped - the ten Battlefield.Army
+                 reds and VisibilityTests.RoadsAreActuallyDrawn
+
+Two flakes seen under load during this letter and green on their own
+straight afterwards, neither touched:
+  RunOverBodyTests.AThrownBodyIsHandedToThePhysicsEngine  0.831 vs 1.0, 5/5 green
+  PostOfficeTests.TheGogglesAnimate                       0.0 vs 0.02, 11/11 green
