@@ -31,16 +31,19 @@ Twelve red tests: none on the deploy path. List in TASKBOOK.md.
 
 Picture only. Truck drives *into* the crater. Details: TASKBOOK.md.
 
-OPEN
+OPEN  (letters in order)
+  a8  coin-margined Binance probed, parked
   a11 strike voice — built, needs Daniel's ear
+  a12 five extra venues parked (no public stream)
+  a13 2026-09-05 morning picture. Screenshots in daniel-screens/.
+      iOS audio. Camera look-back. Real mushroom mesh. HUD venue+size.
+      SIM under PRACTICE. Tanks along the front. Late-run sink.
+      Bar labels off. Whitepaper fits. Crater 2× deep. Wipe in radius,
+      no wrecks.
   d   mushroom cap not seen from the driving camera
   e   first truck spawn from Unity relief (harmless)
-  a12 five extra venues parked (no public stream)
-  a8  coin-margined Binance probed, parked
-  a13 2026-09-05 morning: iOS audio, camera look-back, real mushroom mesh,
-      HUD venue+size, SIM under PRACTICE, tanks along the front, late-run
-      sink, bar labels off, whitepaper fits, crater 2× deep, wipe in radius
-      no wrecks. Screenshots in daniel-screens/.
+
+Next new letter is a14.
 
 DONE  1–5, a–a7, a9, a10, b, c. Names and commits in TASKBOOK.md.
 
