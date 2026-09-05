@@ -51,9 +51,12 @@ M1.a12: not done (parked) — five extra venues, no public stream.
 
 M1.a13: 2026-09-05 morning picture. Claude updates each line.
 - iOS audio — not done (worked today; OS session up, nothing audible. Shot 09:14. Go back.)
-- camera look-back — not done (steering half closed: yaw off the nose
-  8.7 deg to 3.8, roll 5.4 to 0. Still open: the free look easing back on
-  a phone, and a minimum drag before a tap steals the drive view.)
+- camera look-back — done on the machine, unheard on the phone. Yaw off the
+  nose 8.7 deg to 3.8; roll 5.4 to 0; a tap moves the view 0.00 deg where it
+  moved 0.69; the look returns under 0.5 deg 3.07 s after a 2.5 s hold.
+  Residual: the dead zone is one degree of aim, 2.9 px at 640 wide, and a
+  real thumb may wander further - only Daniel's tap can say. Looking while
+  driving still needs multi-touch, which is not this bullet.
 - real mushroom mesh — not done (GLB on disk, not in the blast yet)
 - HUD: which liquidation, which exchange — not done
 - SIM toggle under PRACTICE — not done

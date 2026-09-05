@@ -5693,3 +5693,57 @@ the daemon now survives it and names the connection.
   node 33/33 (31 before)
 
 Unity untouched.
+
+## 2026-09-05  a tap no longer steals the drive view, and the look comes back
+
+The second half of the camera letter, driven through `useExternalPointer` -
+the same shape `TruckController` already uses - so it is measured in PlayMode
+rather than through a browser once and never again.
+
+THE TAP. Every touch outside a driving pad became a look the instant it
+landed. A pointer now has to travel first, and the distance is derived, not
+chosen: `dragYaw` is 220 degrees across a screen width, so one degree costs
+`Screen.width / dragYaw` pixels and the threshold IS one degree of aim.
+
+  dead zone at 640 px wide       2.909 px, one degree
+  pixels per degree, asserted    2.909  (a 4-dead-zone drag gives 3.0 deg)
+  a 2 px tap, before             0.69 deg of yaw stolen
+                                 (2 / 2.909, from the measured ratio above -
+                                  not from a run, and said so)
+  a 2 px tap, after              0.000 deg
+
+THE COMING BACK, measured on the pointer path:
+
+  looked away                    54.0 deg
+  held, no drift                 for the full 2.5 s hold
+  back under 0.5 deg             3.07 s after the hold ended
+  total from release             5.6 s
+
+A HOLE THE TEST FOUND, and it would only have shown on a slow phone: when
+the pointer crossed the dead zone the aim restarted from wherever the pointer
+then WAS, so a drag that covered a quarter of the screen in one frame moved
+the view by nothing at all. It now restarts from exactly one dead zone along
+the travel, so the swallowed amount is one degree whatever the frame rate. A
+finger moving a few pixels a frame would never have exposed it.
+
+AND A TEST THAT PROVED NOTHING. The tap fixture wandered by 0.9 of the dead
+zone, so setting the dead zone to zero made it a zero-movement tap and it
+passed regardless. It uses two absolute pixels now, guarded by an assertion
+that two pixels is inside the dead zone.
+
+  EditMode  136: 135 green, 1 red - CombatFxTests.RifleFireProducesAFlash
+                 AndATracer, known, retired C# army
+  PlayMode  185: 164 green, 11 red, 10 skipped - the ten Battlefield.Army
+                 reds and VisibilityTests.RoadsAreActuallyDrawn. Five new
+                 tests, no new red.
+
+RESIDUAL, not fixed and not hidden: 2.909 px is one degree at 640 wide and
+about 4.2 px on Daniel's phone. A real thumb's slop on the way to a tap can
+exceed that, and no measurement here can say by how much - only a thumb can.
+If taps still steal the view on the phone, the multiple is the knob, and it
+should move on evidence rather than on my taste.
+
+Also unmeasured and worth naming: `Input.GetMouseButton(0)` follows the FIRST
+touch, so a thumb held on a driving pad occupies the pointer and a second
+finger cannot look around while driving. That is multi-touch input, a
+different piece of work from this bullet, and it was not started.
