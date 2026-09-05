@@ -5489,3 +5489,53 @@ assumed, so it will follow the vehicle rules if they change.
   node 20/20 (was 13)
 
 Unity untouched.
+
+## 2026-09-05  the three holes in the unsigned checkpoint slice, closed
+
+Found by checking rather than assuming, and all three closed on the same
+letter as the slice they belong to.
+
+1. TICKS COULD RUN BACKWARDS. Measured before the rule existed: a mark at
+   tick 60 stored, then a mark at tick 30 naming the tick-60 mark as its
+   parent was ALSO stored, and GET handed back [30, 60] - the chain claiming
+   one order and the ticks another. That is the re-parenting defect
+   `previousHash` exists to prevent, on the time axis. Now:
+
+     tick 60                stored
+     tick 30 onto tick 60   REFUSED: expected a tick after 60, got 30
+     GET /checkpoints       167 bytes, 1 record, ticks [60]
+
+   Fails closed: named refusal, nothing stored, the read still shows only the
+   parent. Naming a parent the node does not hold was already refused - only
+   the head can be named - so that half needed nothing new.
+
+2. THE WIRE WAS UNTESTED. `Round.checkpoint` was covered; the TYPE_CHECKPOINT
+   dispatch on /play and GET /checkpoints were not. One test now drives the
+   seam end to end over a real socket and a real fetch: stored, repeat,
+   equivocation (with the stored id crossing the wire in the message), the
+   backwards tick, inputs the node never saw, and then the GET returning
+   exactly the two that were accepted.
+
+3. inputChainHash WAS DECORATION. Kept `previousHash` because a hash nobody
+   compares can be re-parented, then left this one uncompared. It is checked
+   now: the named batch must be one the node holds for that entry, or the
+   genesis for a mark taken before any batch was sent.
+
+   The exact head at the moment of arrival is NOT demanded, and that is a
+   decision rather than an omission: a client may take a mark at tick 60 and
+   send the batch covering 0..119 afterwards, which is a legitimate order
+   over one socket. What this cannot check at all is that those inputs
+   actually produce that state - that needs a replayer, and nothing in this
+   package imports the core. Verification has its own stage.
+
+   Three of the slice's own tests failed when the check landed, because they
+   named an invented input chain. The tests were wrong, not the rule; they
+   send a real batch now.
+
+  core 67/67, determinism guard 19 clean
+  protocol 59/59, money guard 7 clean
+  node 25/25 (20 before this, 13 before the slice)
+
+Known remainder, not fixed: a checkpoint is 167 bytes against section 10's
+~150-byte budget. Every byte is accounted for, so the only way down is
+dropping or shortening a field, which is a protocol change.
