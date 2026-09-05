@@ -22,7 +22,7 @@ Top item first. Finish and deploy before starting the next.
     4  hover overlays                 -    done
     5  prune the streamed bundles     -    done
     6  bundler: private name check    -    later (Daniel: start M2)
-    8  M2.1 checkpoints               M2   next after M1.a13 (do not wait)
+    8  M2.1 checkpoints               M2   open - unsigned slice closed
     9  M1 liquidation picture         M1   open
 
 HARD (Daniel 2026-09-05 09:04): when today's M1.a13 bullets are done,
@@ -334,11 +334,17 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      Core 67/67 and determinism guard 19 clean, protocol 50/50 and money
      guard 7 clean, node 13/13. Unity untouched.
 
-  3. **Checkpoints.** PARKED behind item 9 - Daniel wants the M1 picture
-     first. The state hash written at agreed ticks. Cheap now,
-     and it is what makes a disagreement findable rather than merely
-     detectable - without them a divergence is "somewhere in ninety
-     seconds".
+  3. **Checkpoints.** OPEN. The state hash written at agreed ticks, which is
+     what makes a disagreement findable rather than merely detectable -
+     without them a divergence is "somewhere in ninety seconds".
+
+     Unsigned slice CLOSED: the object, the table keyed (round, entry, tick),
+     ingest on /play and GET /checkpoints, with equivocation, a monotonic
+     tick and the named input chain each refused by name.
+     Signatures CLOSED: the session key signs the tagged id, the signature
+     rides beside the object. Numbers in TASKBOOK.md.
+     Still open here: CheckpointReceipt, receipt gossip, and a client that
+     computes a state hash and sends one. M2.1 is not finished.
   4. **Entry quotas.** A funded entry before the node stores a byte.
      Comes before opening a port to anyone else, not after.
   5. **Backpressure and reconnection.** `ws` buffers without limit; watch
