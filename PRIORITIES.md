@@ -28,6 +28,9 @@ Top item first. Finish and deploy before starting the next.
 HARD (Daniel 2026-09-05 13:25): finish M1 before M2. Stop checkpoint
 work. Back to M1.a13. Do not start M2 until item 9 is closed.
 
+HARD (Daniel 2026-09-05 16:48): do not start M1.a14 until M1.a13 is
+closed. a13 was not finished; a14 jumped the queue. Back to a13.
+
 HARD (Daniel 2026-09-05 09:04): when M1.a13 bullets are done, stay on
 M1 until the picture letter is closed. Then M2. Parked a8/a11/a12/d/e
 stay parked unless they block a13.
@@ -67,7 +70,7 @@ M1.a13: 2026-09-05 morning picture. Claude updates each line.
 - crater twice as deep — not done
 - wipe in crater radius, no wrecks — not done
 
-M1.a14: wheels in the ground at the depot / on the model.
+M1.a14: parked until a13 is closed — wheels in the ground at the depot / on the model.
 - happens more often after round 1 or 2, reproducible then
 - not always; usually fine
 - write a test that plays 5–10 rounds and checks wheels vs ground
