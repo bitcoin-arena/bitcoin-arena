@@ -5172,7 +5172,11 @@ Numbers live in the commits named below, not here.
 
 OPEN
   a11 The strike's voice is built and has never been heard. A headless browser
-      has no audio.
+      has no audio. MEASURED as far as a machine can take it, in the code and
+      in the served player: the clip carries energy, the trigger is the core's
+      strike serial one for one, the buffer leaves the audio engine, the four
+      silent gates are open, and the strike has a source of its own so a shot
+      inside its 4.5 s cannot bend its pitch. The last step is Daniel's ear.
   d   The mushroom cap is never seen from the driving camera. The column stays
       55 m and is not shortened to fit a frame; showing the cap is a camera
       decision, not a mesh number.
