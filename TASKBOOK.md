@@ -5781,3 +5781,31 @@ unreachable from the page. The fault was never which handle - it was where
 the unlock ran.
 
 Code eabd236, deploy 254f8485.
+
+## 2026-09-05  the drive camera, looked at on screen
+
+The suite is not this test, so the player was run and photographed. Round
+started, then a tap, then a real look, then the coming back.
+
+  tap over 2.0 px             view unmoved at 0.000 deg
+  drag begins after 27.0 px   dead zone 5.8 px of 1280
+  released at                 49.5 deg
+  back under 0.5 deg          4.00 s after release
+
+On screen: after the tap the camera sits dead astern with the road centred
+and the horizon level; the drag swings it round to the truck's quarter; after
+release it is behind the truck again, level, road ahead. Photographs
+look-1-after-tap.png, look-2-looking.png, look-4-returned.png.
+
+The browser and PlayMode agree. PlayMode measured 3.07 s from 1.25 s after
+release, so 4.32 s in total; the browser measured 4.00 s from release. The
+difference is frame sampling - SwiftShader renders about twice a second, so
+the 0.5 deg crossing is only noticed on the next frame.
+
+The dead zone is 5.8 px at 1280 canvas pixels. On Daniel's phone the canvas
+is CSS width times min(devicePixelRatio, 2), so roughly 1836 px and a dead
+zone of about 8.3 device pixels, which is 4.2 CSS pixels.
+
+The knob was NOT moved. A 2 px tap steals nothing on screen, and there is no
+measured thumb here to move it from - only Daniel's tap can say whether a
+real finger wanders further than 4.2 CSS pixels on the way to a button.

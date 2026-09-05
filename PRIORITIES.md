@@ -69,6 +69,11 @@ M1.a13: 2026-09-05 morning picture. Claude updates each line.
 
 M1.d: not done — mushroom cap not seen from the driving camera.
 
+M1.f: not started — a second finger cannot look around while a thumb
+holds a driving pad. `Input.GetMouseButton(0)` follows the FIRST touch,
+so the pad owns the pointer for the whole gesture. Needs real
+multi-touch input, not a camera change.
+
 M1.e: not done (harmless) — first truck spawn from Unity relief.
 
 DONE: 1–5, a–a7, a9, a10, b, c. Names and commits in TASKBOOK.md.
