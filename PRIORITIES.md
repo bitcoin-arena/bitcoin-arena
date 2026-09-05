@@ -41,7 +41,7 @@ Twelve red tests: none on the deploy path. List in TASKBOOK.md.
 ## M1
 
 Liquidation picture — OPEN. Truck drives *into* the crater.
-Details: TASKBOOK.md. Next letter: M1.a14.
+Details: TASKBOOK.md. Next letter: M1.a15.
 
 M1.a8: not done (parked) — coin-margined Binance probed.
 
@@ -66,6 +66,12 @@ M1.a13: 2026-09-05 morning picture. Claude updates each line.
 - whitepaper fits the frame — not done
 - crater twice as deep — not done
 - wipe in crater radius, no wrecks — not done
+
+M1.a14: wheels in the ground at the depot / on the model.
+- happens more often after round 1 or 2, reproducible then
+- not always; usually fine
+- write a test that plays 5–10 rounds and checks wheels vs ground
+- not done
 
 M1.d: not done — mushroom cap not seen from the driving camera.
 
