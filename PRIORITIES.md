@@ -5199,6 +5199,18 @@ OPEN
       the open question: dapi/v1/exchangeInfo gives contractSize 100 and
       marginAsset BTC, so a fill is q * 100 dollars and not q * ap. Nothing
       built, nothing deployed.
+  a13 Morning picture, 2026-09-05. OPEN. Daniel's iPhone. Screenshots in
+      daniel-screens/. iOS silent until the same tap plays a sample. Camera:
+      free look, then after a few seconds back to looking forward; steering
+      keeps the road ahead. Mushroom is fading planes — replace with a real
+      3D cloud. Liquidation on screen names venue + size at once. SIM toggle
+      under PRACTICE, not Debug. Tanks heap and twitch at the front — spread
+      along the line, still near it. Late-run truck and tanks sink under the
+      ground; crater is a hole you drive into, road stays. Mining board: no
+      numbers on the bars. Bitcoin whitepaper on the miner is too big for the
+      frame. When the bomb lands, everything inside the crater is gone at
+      once — no wrecks. Crater twice as deep on impact; it is too shallow now.
+      Always open Daniel's screenshots, do not guess.
 
 DONE
   1   truck, units, roads, effects and the gate on the core surface  7202b15 a728036
