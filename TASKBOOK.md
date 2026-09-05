@@ -5939,3 +5939,52 @@ two cannot drift apart.
   PlayMode  185: 164 green, 11 red, 10 skipped - the known set.
                  RampReadyTests passed this run, which confirms it is
                  intermittent rather than newly broken.
+
+## 2026-09-05  the dust spreads along the ground again
+
+WHAT THE ASSET ACTUALLY IS, read out of the GLB rather than guessed: six
+nodes, five of them meshes, named `stem`, `cap`, `crown_billow`,
+`dust_skirt` and `fireball_core`, with four materials `smoke_stem`,
+`smoke_cap`, `dust_skirt`, `fireball_core`. The parts were always there. They
+were simply not driven - the parent was scaled and all five moved on one
+curve, which is why the cloud read as a blob and the ground dust vanished.
+
+Each piece now moves on its own curve, the way the primitives did:
+
+  the skirt   spreads outward while the column shrinks, and stays at the
+              height the model put it
+  the core    the fire dies before the smoke: it shrinks on exp(-1.1 t)
+              rather than riding the whole cloud down
+  the skirt's glow  a third of the cloud's, because dust is not flame
+
+The ring, measured at a real liquidation:
+
+  t = 0.3 s   25.3 x 25.1 m
+  t = 1.7 s   48.9 x 48.7 m
+  t = 3.1 s   50.7 x 50.4 m
+
+50.7 m against the old primitive skirt's `CapWide * 1.5` = 51 m, so the shape
+is the one that was there before rather than a new invention. A first cut
+used a bigger constant and the ring measured 81.8 m - half again wider than
+the cloud it belongs to - and it was brought back to the stated intent rather
+than kept because it looked dramatic.
+
+Unchanged, as instructed: asked 55 m, drawn 32.5 x 55.0 x 32.4 m, five
+renderers, and the cooling curve reads the same numbers as before -
+t=0.3 body 0.74,0.64,0.48 glow 1.01,0.67,0.32; t=3.1 body 0.35,0.33,0.30
+glow 0.08,0.07,0.06.
+
+The fallback proved itself in the wild during these runs: a liquidation at
+27 s, before the model had streamed, logged "[cloud] primitives ... no mesh
+streamed yet" and drew the old three shapes.
+
+WHAT I DID NOT GET: a photograph that shows the spreading dust clearly. Four
+attempts, and every frame either sat behind the HUD, arrived after the two
+seconds the spread happens in, or caught the camera still easing after the
+teleport. The ring is proven by measurement rather than by a picture, and
+that is said here rather than dressed up.
+
+  EditMode  136: 135 green, 1 red - CombatFxTests.RifleFireProducesAFlash
+                 AndATracer, known
+  PlayMode  185: 164 green, 11 red, 10 skipped - the known set. RampReady
+                 passed; not touched.
