@@ -29,6 +29,10 @@ HARD (Daniel 2026-09-05 09:04): when today's M1.a13 bullets are done,
 do not wait for Daniel. Start M2 (item 8). Parked a8/a11/a12/d/e stay
 parked unless they block a13.
 
+HARD (Daniel 2026-09-05 09:24): every letter and every bullet is marked
+done or not done. Claude updates the mark when it changes. iOS audio
+was worked today and is still not done — he must go back to it.
+
 Twelve red tests: none on the deploy path. List in TASKBOOK.md.
 
 ## M1
@@ -36,29 +40,28 @@ Twelve red tests: none on the deploy path. List in TASKBOOK.md.
 Liquidation picture — OPEN. Truck drives *into* the crater.
 Details: TASKBOOK.md. Next letter: M1.a14.
 
-M1.a8: coin-margined Binance probed, parked.
+M1.a8: not done (parked) — coin-margined Binance probed.
 
-M1.a11: strike voice — built, needs Daniel's ear.
+M1.a11: not done — strike voice built, needs Daniel's ear.
 
-M1.a12: five extra venues parked (no public stream).
+M1.a12: not done (parked) — five extra venues, no public stream.
 
-M1.a13: 2026-09-05 morning picture.
-- iOS audio (2026-09-05 09:14: OS shows audio wants to play, nothing audible. Shot: daniel-screens/2026-09-05-0914-ios-silent.jpg)
-- camera look-back (free look, then forward)
-- real mushroom mesh
-- HUD: which liquidation, which exchange
-- SIM toggle under PRACTICE
-- tanks along the front, not in a heap
-- late-run truck/tanks not under the ground
-- no numbers on mining bars
-- whitepaper fits the frame
-- crater twice as deep
-- wipe in crater radius, no wrecks
-- screenshots in daniel-screens/
+M1.a13: 2026-09-05 morning picture. Claude updates each line.
+- iOS audio — not done (worked today; OS session up, nothing audible. Shot 09:14. Go back.)
+- camera look-back — not done
+- real mushroom mesh — not done (GLB on disk, not in the blast yet)
+- HUD: which liquidation, which exchange — not done
+- SIM toggle under PRACTICE — not done
+- tanks along the front, not in a heap — not done
+- late-run truck/tanks not under the ground — not done
+- no numbers on mining bars — not done
+- whitepaper fits the frame — not done
+- crater twice as deep — not done
+- wipe in crater radius, no wrecks — not done
 
-M1.d: mushroom cap not seen from the driving camera.
+M1.d: not done — mushroom cap not seen from the driving camera.
 
-M1.e: first truck spawn from Unity relief (harmless).
+M1.e: not done (harmless) — first truck spawn from Unity relief.
 
 DONE: 1–5, a–a7, a9, a10, b, c. Names and commits in TASKBOOK.md.
 
