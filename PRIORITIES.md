@@ -50,7 +50,7 @@ M1.a11: not done — strike voice built, needs Daniel's ear.
 M1.a12: not done (parked) — five extra venues, no public stream.
 
 M1.a13: 2026-09-05 morning picture. Claude updates each line.
-- iOS audio — not done (worked today; OS session up, nothing audible. Shot 09:14. Go back.)
+- iOS audio — done (Daniel 2026-09-05 13:47: audible on iPhone)
 - camera look-back — done on the machine, unheard on the phone. Yaw off the
   nose 8.7 deg to 3.8; roll 5.4 to 0; a tap moves the view 0.00 deg where it
   moved 0.69; the look returns under 0.5 deg 3.07 s after a 2.5 s hold.
