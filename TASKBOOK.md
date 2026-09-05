@@ -5989,7 +5989,32 @@ that is said here rather than dressed up.
   PlayMode  185: 164 green, 11 red, 10 skipped - the known set. RampReady
                  passed; not touched.
 
-## Parked for after M1.a13 - the mushroom shrinks after the first strike
+## RETRACTED - the mushroom never shrank after the first strike
+
+The section below is wrong and is kept so the mistake is on the record.
+
+`Dress` is called once, under `if (_mushroom == null)`, so nothing was ever
+re-scaling a mesh it had already scaled. What the launch line measured was
+the transform at the instant of launch, and `Column` sets the scale on the
+NEXT frame - so it was still carrying the previous cloud's fade floor,
+`Mathf.Max(0.05f, f)`. 55 x 0.05 is 2.75, which is the "2.6 x 2.8 x 2.6 m" I
+read as a broken cloud.
+
+Measured on the whole model at the same point on the theatre clock:
+
+    strike 1  t=1.7s  cloud 48.7 x 53.7 x 48.4 m
+    strike 2  t=1.7s  cloud 49.0 x 53.7 x 48.7 m
+    strike 3  t=1.8s  cloud 49.3 x 53.8 x 49.0 m
+
+The same, within the growth curve's own drift. The skirt agreed all along -
+49.2, 48.9 and 49.1 m on later strikes against the first's 48.7 - and I had
+that in the log when I filed the bug.
+
+The line now reports the modelled size measured once at dress time and
+prints the scale the transform is carrying beside it rather than instead of
+it: "32.5 x 55.0 x 32.4 m modelled, 5 renderer(s), growing from 5% of it".
+
+## The original, wrong note - the mushroom shrinks after the first strike
 
 Found while measuring the dust skirt, not fixed, not folded into a13.
 
