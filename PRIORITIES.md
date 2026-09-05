@@ -343,7 +343,10 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      tick and the named input chain each refused by name.
      Signatures CLOSED: the session key signs the tagged id, the signature
      rides beside the object. Numbers in TASKBOOK.md.
-     Still open here: CheckpointReceipt, receipt gossip, and a client that
+     CheckpointReceipt: the OBJECT exists - type, tag, encode/decode,
+     vectors - but nothing issues one, because a node signs with its own key
+     and the daemon has no identity yet. That waits on step 5b.
+     Still open here: issuing receipts, receipt gossip, and a client that
      computes a state hash and sends one. M2.1 is not finished.
   4. **Entry quotas.** A funded entry before the node stores a byte.
      Comes before opening a port to anyone else, not after.
