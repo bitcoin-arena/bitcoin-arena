@@ -31,6 +31,13 @@ work. Back to M1.a13. Do not start M2 until item 9 is closed.
 HARD (Daniel 2026-09-05 16:48): do not start M1.a14 until M1.a13 is
 closed. a13 was not finished; a14 jumped the queue. Back to a13.
 
+HARD (Daniel 2026-09-05 16:52): finish the current letter before starting
+a new one. Then update PRIORITIES.
+If current is a13 and a14 does not exist, the new item is a14.
+If a14 already exists, the new item becomes a14 and the old a14 slides
+to a15 (and so on). Do not start the new letter until the current one
+is closed.
+
 HARD (Daniel 2026-09-05 09:04): when M1.a13 bullets are done, stay on
 M1 until the picture letter is closed. Then M2. Parked a8/a11/a12/d/e
 stay parked unless they block a13.
