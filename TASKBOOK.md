@@ -5809,3 +5809,53 @@ zone of about 8.3 device pixels, which is 4.2 CSS pixels.
 The knob was NOT moved. A 2 px tap steals nothing on screen, and there is no
 measured thumb here to move it from - only Daniel's tap can say whether a
 real finger wanders further than 4.2 CSS pixels on the way to a button.
+
+## 2026-09-05  the wheel was seated on a collider that describes something else
+
+M1.a14, the depot wheels. Two hypotheses died on the numbers and the third
+was arithmetic.
+
+WHAT WAS RULED OUT, measured rather than argued:
+
+  carried craters   `craters core 4, drawn 4` - no lag - while the tyre was
+                    0.178 m buried. The reveal delay accounts for NONE of it.
+  core vs terrain   0.000 at every sample, in every round, standing and
+                    driving. The seating on SurfaceAt was never the fault.
+  ribbon wear       0.000 on the lanes sampled; deck lift 0.300 applied.
+  the spin          98 samples show the bury at 0.0 m/s. It is not motion.
+
+WHAT IT WAS:
+
+  seated radius (WheelCollider)   0.550 m
+  the mesh's own reach            0.728 m
+  difference                      0.178 m
+  measured bury, standing         0.178 m
+
+Exactly the difference. The wheel was placed one COLLIDER radius above the
+ground while its mesh reaches further than that, so it stood in the road by
+the excess. It varies between 0.523 and 0.728 with angle because the mesh's
+bounds are not centred on the pivot - the wheel turns about a point that is
+not its middle.
+
+THE FIX, from the renderer instead of the collider: each wheel's own radius
+and its own hub offset are taken at collect time from `Renderer.localBounds`,
+and the MESH's centre is placed one MESH radius above the ground, the pivot
+wherever that requires. The body rides on the mean of those radii. Nothing
+about the truck's seating on `BlwpCore.SurfaceAt` changed, and no collider
+number was tuned.
+
+  standing bury, before   0.178 m
+  standing bury, after    0.000 m   (bottom 7.415, ground 7.415)
+
+STILL OPEN, and not claimed as fixed: while driving the world box still reads
+0.12 to 0.21 m below the ground. I cannot tell from a player whether that is
+the tyre truly cutting through or `Renderer.bounds` inflating around a mesh
+that is not a body of revolution about its axle - the streamed model has
+Read/Write disabled, so `mesh.vertices` returns nothing and the earlier
+vertex scan proved exactly nothing. The way to settle it is to make that one
+model readable and take the true lowest vertex; that is an import setting and
+a decision, not a measurement I can take now.
+
+  EditMode  136: 135 green, 1 red - CombatFxTests.RifleFireProducesAFlash
+                 AndATracer, known
+  PlayMode  185: 164 green, 11 red, 10 skipped - the known set, no new red
