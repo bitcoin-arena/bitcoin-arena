@@ -22,12 +22,15 @@ Top item first. Finish and deploy before starting the next.
     4  hover overlays                 -    done
     5  prune the streamed bundles     -    done
     6  bundler: private name check    -    later (Daniel: start M2)
-    8  M2.1 checkpoints               M2   open - unsigned slice closed
+    8  M2.1 checkpoints               M2   parked — after M1 is closed
     9  M1 liquidation picture         M1   open
 
-HARD (Daniel 2026-09-05 09:04): when today's M1.a13 bullets are done,
-do not wait for Daniel. Start M2 (item 8). Parked a8/a11/a12/d/e stay
-parked unless they block a13.
+HARD (Daniel 2026-09-05 13:25): finish M1 before M2. Stop checkpoint
+work. Back to M1.a13. Do not start M2 until item 9 is closed.
+
+HARD (Daniel 2026-09-05 09:04): when M1.a13 bullets are done, stay on
+M1 until the picture letter is closed. Then M2. Parked a8/a11/a12/d/e
+stay parked unless they block a13.
 
 HARD (Daniel 2026-09-05 09:24): every letter and every bullet is marked
 done or not done. Claude updates the mark when it changes. iOS audio
