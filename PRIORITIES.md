@@ -22,8 +22,12 @@ Top item first. Finish and deploy before starting the next.
     4  hover overlays                 -    done
     5  prune the streamed bundles     -    done
     6  bundler: private name check    -    later (Daniel: start M2)
-    8  M2.1 checkpoints               M2   parked (Daniel: M1 picture first)
+    8  M2.1 checkpoints               M2   next after M1.a13 (do not wait)
     9  M1 liquidation picture         M1   open
+
+HARD (Daniel 2026-09-05 09:04): when today's M1.a13 bullets are done,
+do not wait for Daniel. Start M2 (item 8). Parked a8/a11/a12/d/e stay
+parked unless they block a13.
 
 Twelve red tests: none on the deploy path. List in TASKBOOK.md.
 
