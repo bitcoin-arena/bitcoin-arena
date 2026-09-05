@@ -5988,3 +5988,25 @@ that is said here rather than dressed up.
                  AndATracer, known
   PlayMode  185: 164 green, 11 red, 10 skipped - the known set. RampReady
                  passed; not touched.
+
+## Parked for after M1.a13 - the mushroom shrinks after the first strike
+
+Found while measuring the dust skirt, not fixed, not folded into a13.
+
+Every round, the FIRST liquidation draws the streamed model at the size it
+was asked for and every later one draws a toy:
+
+    [cloud] mushroom MESH at  60.4,  5.6, asked for 55 m, drawn 32.5 x 55.0 x 32.4 m
+    [cloud] mushroom MESH at -66.7,-36.5, asked for 55 m, drawn  3.2 x  3.4 x  3.2 m
+    [cloud] mushroom MESH at  71.0, 21.6, asked for 55 m, drawn  2.6 x  2.8 x  2.6 m
+
+55 / 3.2 is 17, and 32.5 / 1.9 is the same ratio the other way: `Dress`
+scales on the longest side of what it measures, and on the second call it is
+measuring a model it has already scaled, so it divides the size in again.
+The first call is right because the model is still at its authored size.
+
+Everything downstream reads correct - the skirt still logs 48.7 x 48.4 m at
+t=1.7 s, because the part curves are driven from `_skirtRest` captured at
+dress time - so this is only the parent's scale, and only from the second
+strike of a round onward.
+
