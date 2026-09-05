@@ -51,7 +51,9 @@ M1.a12: not done (parked) — five extra venues, no public stream.
 
 M1.a13: 2026-09-05 morning picture. Claude updates each line.
 - iOS audio — not done (worked today; OS session up, nothing audible. Shot 09:14. Go back.)
-- camera look-back — not done
+- camera look-back — not done (steering half closed: yaw off the nose
+  8.7 deg to 3.8, roll 5.4 to 0. Still open: the free look easing back on
+  a phone, and a minimum drag before a tap steals the drive view.)
 - real mushroom mesh — not done (GLB on disk, not in the blast yet)
 - HUD: which liquidation, which exchange — not done
 - SIM toggle under PRACTICE — not done
