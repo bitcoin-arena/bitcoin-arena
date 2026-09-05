@@ -5377,3 +5377,32 @@ A desktop has no ringer switch, so this run proves the element plays and the
 session is claimed - it cannot prove the phone. That is the ear again.
 
 Deployed: 254f8485.btc-logistics-core.pages.dev, daily host.
+
+## 2026-09-05  the driving camera sits behind the nose again
+
+Cause 1 of the camera letter: `c09f39b` put the camera behind
+`Atan2(v.x, v.z)`, the core's velocity vector. In a corner that points where
+the truck is SLIDING. Reach, rise and the lens still read that vector - they
+want a speed - but the direction the camera settles behind is now the hull
+heading, which also puts the position and the look-at target on one basis.
+
+Same slalom both times, keyboard, headless player:
+
+                     before (ccae4da)      after
+  worst off-nose      8.7 deg              3.8 deg
+  worst roll          5.2 deg              5.4 deg
+  slip at the worst   5.8 deg              6.6 deg
+  peak speed          15.4 m/s             16.7 m/s
+
+The after run cornered HARDER - more slip, more speed - and still halved the
+angle between where the camera looks and where the truck points. Roll is
+unchanged because it is cause 2 and has not been touched: `leanDegrees` is
+still 6 and still goes into the camera's Z rotation.
+
+The signature of the old fault is in the before line: at 2.8 degrees of slip
+the camera was 8.7 degrees off the nose. The error outlived the slip that
+caused it, because `yawDamp` was chasing a vector that had already swung
+back. Nothing like that appears after.
+
+Note: this change was already on the daily host before it was measured - it
+rode along in the build deployed for the ringer fix (254f8485).
