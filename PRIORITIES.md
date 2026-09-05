@@ -43,7 +43,7 @@ M1.a11: strike voice — built, needs Daniel's ear.
 M1.a12: five extra venues parked (no public stream).
 
 M1.a13: 2026-09-05 morning picture.
-- iOS audio
+- iOS audio (2026-09-05 09:14: OS shows audio wants to play, nothing audible. Shot: daniel-screens/2026-09-05-0914-ios-silent.jpg)
 - camera look-back (free look, then forward)
 - real mushroom mesh
 - HUD: which liquidation, which exchange
