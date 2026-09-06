@@ -59,7 +59,13 @@ M1.a11: not done — strike voice built, needs Daniel's ear.
 
 M1.a12: not done (parked) — five extra venues, no public stream.
 
-M1.a13: 2026-09-05 morning picture. Claude updates each line.
+M1.a13: 2026-09-05 morning picture — DONE. The liquidation picture is in:
+the SIM switch fires the core's strike, the HUD names that liquidation and
+its exchange, the mushroom stands on the crater floor with dust along the
+ground, every strike in a round draws full size, the crater is 1.5x deeper
+with the truck still climbing out, hulls in the bowl are wiped, the
+detonation is audible, and no debug key ships. Measured on the browser build,
+not inferred from the suite. Numbers in TASKBOOK.
 - iOS audio — done (Daniel 2026-09-05 13:47: audible on iPhone)
 - camera look-back — done on the machine, unheard on the phone. Yaw off the
   nose 8.7 deg to 3.8; roll 5.4 to 0; a tap moves the view 0.00 deg where it
