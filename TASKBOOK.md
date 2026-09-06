@@ -6195,3 +6195,45 @@ NOTHING ELSE IN THAT BLOCK IS UNSET. The only two `_strike` assignments in
 it were `fx`, now wired where the theatre is made, and `audio`, covered by
 the lazy fetch. Every other use of `_strike` runs after line 281.
 
+
+## M1.a13 - the tanks are not in a heap; they are not on the front either
+
+Measured before touching anything, both ends: the core in node, and what the
+renderer actually draws in a running build.
+
+THE CORE DOES NOT STACK THEM. Armour over a round, closest pair and spread:
+
+    t=  0s  n=24  x 170 m  z 158 m  closest  2.24 m  off the front: mean 74.4 m
+    t=  1s  n=24  x 162 m  z 161 m  closest  8.16 m  off the front: mean 70.6 m
+    t=  2s  n=24  x 148 m  z 150 m  closest  8.38 m  off the front: mean 64.1 m
+    t=  5s  n=24  x 119 m  z 111 m  closest  8.28 m  off the front: mean 44.8 m
+    t= 10s  n=23  x 104 m  z  95 m  closest  8.23 m  off the front: mean 18.4 m
+    t= 30s  n=19  x 142 m  z 121 m  closest  8.21 m  off the front: mean 21.1 m
+    t= 60s  n=20  x 114 m  z 142 m  closest  8.23 m  off the front: mean 25.2 m
+    t=120s  n=19  x 149 m  z 133 m  closest  8.11 m  off the front: mean 23.5 m
+
+The only stacking is at spawn: 2.24 m between the closest two, which is
+inside a tank's own 3.2 m size, so they interpenetrate for under a second.
+The core's own separation clears it by t=1 s and it never returns - 8.1 to
+8.4 m for the rest of the round.
+
+THE RENDERER IS FAITHFUL. From the running build, every few seconds:
+
+    [tanks] core alive 24, drawn 24, skipped for want of a hull 0;
+            drawn x -76.9..68.4 (145.3 m), z -75.0..72.3 (147.3 m),
+            closest pair 8.37 m
+
+Nothing is dropped for want of a hull, and the drawn spread and closest pair
+match the core's. So the picture is not a renderer bug and there is no heap
+to fix.
+
+WHAT IS ACTUALLY WRONG is the other half of the bullet. They are not ALONG
+the front: the mean distance from the front line at a tank's own x settles at
+20 to 25 m and individuals sit 58 to 81 m off it, and the z spread is 95 to
+161 m on a field 170 m deep. They occupy the whole depth rather than forming
+a line.
+
+That is a Core spawn/front rule, not a renderer one, and changing it moves
+every state hash and golden vector - the same class of decision the crater
+depth was. Not made here.
+
