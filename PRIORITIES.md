@@ -131,8 +131,9 @@ M1.a14: parked until a13 is closed. Daniel 2026-09-06 18:03. Not started.
   Daniel explicitly looks around
 - camera: when the atom bomb falls, do not snap the view to the bomb.
   View stays as it is
-- scoring: edge of the front ~1000 vs through the bad field similar or
-  less — must differ massively
+- scoring: not the geometric middle — proximity to the front, risk.
+  Edge ~1000 vs through the fighting similar or less is wrong; high
+  risk at the seam must score massively more
 - hunted: tanks and soldiers do not shoot; HUNTED status seems dead
 
 M1.a15: parked — was a14. Wheels in the ground at the depot / on the model.
