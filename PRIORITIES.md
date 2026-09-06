@@ -88,7 +88,10 @@ M1.a13: 2026-09-05 morning picture. Claude updates each line.
   and the truck never below -0.06 m. The 5-30 cm under band is tracks hanging
   below the seating plane, not a fault. SeatOnTerrain reads the core surface;
   no PhysX leftover. Table in TASKBOOK.
-- no numbers on mining bars — not done
+- no numbers on mining bars — done. The twenty-four per-bar figures are
+  never built now; measured on the build as "per-bar figures 0". The row
+  keeps its single sat/vB, the 24 bars keep their order, heights and live
+  mempool source. Before/after in TASKBOOK.
 - whitepaper fits the frame — not done
 - crater twice as deep — not done
 - wipe in crater radius, no wrecks — not done

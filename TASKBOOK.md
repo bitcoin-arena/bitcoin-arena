@@ -6393,3 +6393,38 @@ labels a player can currently read is not something to infer.
 
 No PhysX read and no 2-D coupling anywhere in this path.
 
+
+## M1.a13 - the per-bar figures are off the mining bars
+
+Daniel's pick, 2026-09-06: PRIORITIES wins over the consistency reading. The
+working order asked for no numbers on the bars, not a check that they agree.
+
+BEFORE (measured on the running build):
+
+    [bars] 24 bars from live mempool: first six 8.9, 3.5, 2.8, 2.3, 2.1, 2.0
+           sat/vB; labels "8.9", unit "sat/vB"
+
+Twenty-four TextMeshes named BarFigure0..23, each printing its own rate to
+one decimal, plus one unit label for the row.
+
+AFTER:
+
+    [bars] 24 bars from live mempool: first six 15.5, 5.2, 4.3, 4.0, 3.4, 3.0
+           sat/vB; per-bar figures 0, unit "sat/vB"
+    [bars] ... first six 15.5, 5.2, 4.4, 4.0, 3.4, 3.1 sat/vB;
+           per-bar figures 0, unit "sat/vB"
+
+Counted, not eyeballed: the diagnostic now walks the screen's children and
+counts TextMeshes named BarFigure*, and finds none. The figures are not
+blanked, they are never built.
+
+WHAT DID NOT CHANGE. Twenty-four bars, still fed from the same array, still
+richest on the left, heights still `_barTarget` from `rates`, source still
+the live mempool with the same two fallbacks, and the row still carries one
+"sat/vB". The unit's placement used to be computed inside the label loop; the
+tops and the pitch it needs now come from the bars themselves, so removing
+the figures did not move it.
+
+Renderer only. No core fee-rate was invented - the core still has no word for
+one - no PhysX read, no 2-D coupling.
+
