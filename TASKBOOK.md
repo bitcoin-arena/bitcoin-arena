@@ -7964,3 +7964,59 @@ runs off the left edge at -218, and it is no longer the column's width.
     trust: run on its own against this tree it is green, 1 of 1.
   PlayMode 212: 186 green, 11 red, 15 skipped - the documented
     Battlefield.Army set only, no rotating flake this run.
+
+
+## 2026-09-07  the cards, the debug readout and the panel rows
+
+FOUR MORE RECTS and three of them found something.
+
+THE DEBUG READOUT is a second debug panel and not the F1 box: that one is top
+LEFT and the condition bar already stacks under it, this one hangs from the
+debug ICON in the top-right corner - which is the corner the score column was
+pushed into last turn. Measured at 1920x1080 it lay over the column from
+y=297 to y=483. The readout is developer chrome behind a toggle and SCORE,
+BANKED and CARGO are what the player is playing for, so the column steps under
+the readout, the same shape as the condition bar stepping under the F1 panel.
+
+That moved twice more before it settled, and each was a real fault:
+
+  - The readout is 260 px wide against the settings column's 60, so with it up
+    the headline gap's right edge is the READOUT's left edge, not the icons'.
+    At 1024x768 the readout reached x=744.8 and the block clock's box ran to
+    753.
+  - Pushing the column down fired a branch that gave it the FULL screen width
+    when it sat below the SIM switch, and it then swallowed the gap and was
+    drawn over the model list - a box from x=27 across a list at x=371. That
+    branch is gone: the column always takes the strip right of the gap and the
+    type shrinks to it. A permanent layout cannot depend on which transient
+    thing happens to be in the gap.
+
+THE TWO CARDS were 92% of the screen wide and centred on it, so they covered
+the left column by construction. Measured at 1024x768 the send-off ran from
+x=41 across a condition bar at x=15. A card is a takeover of the middle of the
+screen and that is what it is for - but the middle of the screen is where the
+driver's numbers are, and a card over the condition bar hides whether he is
+still alive. Both stand in the gap under the block clock now, and the model
+list stands aside while either is up: of the two things that want that column,
+a list of model names is the one to drop while the player is being told what
+his run was worth.
+
+A GAP OR NOTHING. `HeadlineBox` reported any positive room while the drawing
+refused to use anything under 60 px, so at 640x480 it claimed 34.88 px that
+nothing would ever be drawn in - and every box measured from it inherited the
+fiction. One threshold, `UsableGap`, in one place.
+
+THE PANEL ROWS are checked the way the block board is: both panels lay lines
+out at `lh` apart and both boxes are built from a line count, which is exactly
+how the board came to claim 3.20 lines and draw 3.77. Both hold.
+
+AND A FAULT IN THE TESTS THEMSELVES, worth writing down because it made two
+other tests lie: the new test sets `GameSettings.Debug` to measure the HUD
+with the readout up, and a FAILING assertion left it set. The next four tests
+then measured a screen with the debug panel showing that they had never asked
+for, and two went red for it. It is a try/finally now.
+
+MUTATION-CHECKED, each reverted at once:
+  the send-off card back across the screen -> two tests red
+  the score column ignores the readout     -> TheDebugPanelAndTheCards red
+  the debug box shorter than its rows      -> the same test red
