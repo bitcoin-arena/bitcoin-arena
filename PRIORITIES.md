@@ -106,17 +106,27 @@ not inferred from the suite. Numbers in TASKBOOK.
   EXPOSURE_REFERENCE 190 was reached at an average threat of 0.53, so every
   braver line paid the same. At 320: edge 113, middle 563, seam 956. Golden
   vectors regenerated, not loosened.
-- hunted fire — not done. Daniel 2026-09-06 21:18: THIS IS A13. High hunted
-  means more fire on the truck. Low hunted means little fire.
-- build number on the loading screen — not done. Daniel 2026-09-06 22:18.
-- exposure in the HUD — not done. Daniel: the old UI had exposure; put it
-  back or say why it is gone.
-- HUD overlap — not done. Daniel 22:18 iPhone: BLOCK box over the price,
-  PRACTICE/SIM over BLOCK 965,829. No overlapping elements on desktop or
-  iOS. Shot daniel-screens/2026-09-06-2218-hud-overlap.jpg.
-- HUD layout — not done. Daniel 22:21: health and exposure stacked under
-  each other. MUTED and DEBUG as icons, not text buttons, so the bar is
-  slimmer.
+- hunted fire — done. It is a core rule on its own state word, fed from the
+  yard at roll-out: a parked truck with a full load is written off in 8.0 s
+  where an empty one lasts 16.7 s at the line, and 8.1 s against 85.3 s fifty
+  metres back. Zero until a host speaks, so an untold core still matches the
+  recordings.
+- build number on the loading screen — done. Stamped from the commit at
+  build time, read back onto a row of its own under the title bar, and checked
+  against every other box there.
+- exposure in the HUD — done. It was never removed: RunScore.Running is false
+  while the truck is invulnerable and practice makes it invulnerable, so the
+  one meter that teaches a rule was hidden from the mode a player learns in.
+  It draws in practice now and sits directly under the condition bar.
+- HUD overlap — done. Every top-level box has a rect and is checked against
+  every other at nine shapes including both phone orientations. Five elements
+  were built as a full-screen box with the text pushed to one side - the
+  price, the wanted row, two banners and the score column - and each is in its
+  own space now. Numbers in TASKBOOK.
+- HUD layout — done. The column is block, condition, danger, practice, SIM,
+  asserted in that order and with the diagnostics panel up as well. MUTED and
+  DEBUG are square icons side by side on one row, drawn from rectangles so a
+  missing font glyph cannot leave a blank where a control was.
 - SIM toggle under PRACTICE — done. It was built all along; the daily site
   had simply never been deployed since 32cae7d, and CI does not deploy. Live
   now and photographed at iPhone landscape. The models a strike needs also

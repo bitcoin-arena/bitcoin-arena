@@ -7840,3 +7840,74 @@ AND ONE THING THE FRAME CANNOT SHOW: the wanted pips. They read
 zero in the editor and the row correctly draws nothing. `WithNoCoreAnswering
 ThereAreNoStarsToInvent` asserts exactly that. The pips can only be seen in a
 browser.
+
+
+## 2026-09-07  the score column, the model list, the corner price, and four frames
+
+THE SCORE COLUMN had no rect and two faults followed from that. Its box was
+`w - pad * 2` - the whole screen, the fifth element in this file built that
+way - for the written reason that a right-aligned label in a narrow box is
+clipped on the LEFT. And it stacks upward off the driving pads with no floor,
+so on a short window it ran off the top: photographed at 733x293 with CARGO
+cut in half by the edge.
+
+  size        the box                    width   first line clear of the edge
+  1920x1080   1614..1893 x 314..575      279 px          314 px
+  1024x768     753..1005 x 212..429      252 px          212 px
+   844x390     691..834  x 108..239      143 px          108 px
+  1000x360     847..990  x 106..237      143 px          106 px
+
+Three things had to be got right together and each one broke the next:
+
+  1. Clamping the top made the BOX shorter while the drawing kept stacking
+     upward from the same baseline - the block board's fault a third time -
+     and the photograph still showed CARGO clipped. The box keeps its full
+     height and moves DOWN instead; the drawing takes its baseline from the
+     box, so the stack moves with it.
+  2. A narrower box then clipped the long lines on the left, exactly as the
+     original comment warned: "586 sat" where "CARGO 9 parcels - 580 sat"
+     was meant. The free strip beside the left column is 143 to 279 px at
+     these shapes and the longest line wants more at full size, so the type
+     shrinks to its box - the price's own trick, applied to the group so the
+     five rows keep their relative sizes, floored at 10 px.
+  3. Pushed down off the pads on a short window, the stack landed in the
+     top-right corner on the sound and debug icons. Its top is below them
+     now.
+
+THE MODEL LIST was at `w - width - pad, h * 0.30f` - the right-hand side, a
+third of the way down, which is where the block clock and the score column
+are. It was checked against the left column and the wanted row and passed
+both. In the gap under the block clock now, where nothing permanent lives and
+a list that retires four seconds after the last model lands belongs.
+
+  size        the list             below the clock   left of the score column
+  1920x1080   371..661 x 389..771       22 px               952 px
+  1024x768    352..642 x 290..666       15 px               111 px
+   844x390    320..610 x 149..382        8 px                81 px
+  1000x360    338..628 x 139..352        8 px               219 px
+
+Eleven models at a comfortable pitch is 244 px and a phone has 233 px under
+the clock, so the last row was a pixel off the screen at 844x390 and
+twenty-one off at 1000x360. The pitch tightens to the room rather than the
+list dropping rows - the model that FAILED is the one worth seeing - and it
+never goes below the font's own size. One function, asked by both the box and
+the drawing.
+
+THE CORNER PRICE does not land on the loadout panel. It is the one piece of
+the driving HUD that survives into that screen; the panel starts at a tenth of
+the height and the line ends well above it at all four shapes. Asserted now
+rather than assumed. Nothing else about the loadout screen is this letter.
+
+FOUR FRAMES: NOT AVAILABLE, and the reason is measured rather than asserted.
+`-screen-width` and `-screen-height` are PLAYER arguments; in the editor the
+Game view decides its own size and ignores them. `Screen.SetResolution(844,
+390)` was then asked for directly and the log says: "asked for 844x390, screen
+reports 733x293". The editor will not present the four shapes. A built player
+would - the WebGL build in a browser at a set viewport - and that is the
+deploy path, which this letter has not reached.
+
+What the one shape that DOES present is worth: 733x293, an aspect of 2.50
+against a phone's 2.16, three captures across the fixes. It found the German,
+the list over the clock, the clipped score column, and then each regression I
+introduced while fixing them. Every rect in this file was green through all
+of it.
