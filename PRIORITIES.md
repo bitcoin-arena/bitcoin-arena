@@ -56,6 +56,9 @@ at once. When a13 and a14 are done, continue with M2.
 HARD (Daniel 2026-09-06 22:48): when a letter like a13 or a14 is done,
 deploy to btc-logistics-core.pages.dev. Do not wait for Daniel to ask.
 
+HARD (Daniel 2026-09-06 22:51): read PRIORITIES.md on every message.
+Do not answer from memory of an older list.
+
 Twelve red tests: none on the deploy path. List in TASKBOOK.md.
 
 ## M1
