@@ -6157,3 +6157,41 @@ printing from the first build; `godring.mjs` only forwarded `[cloud]`,
 silence as the game returning early, wrote a second build to "make the log
 unconditional", and blamed the picture for something my own filter was doing.
 
+
+## M1.a13 - the strike's voice was never wired, and is not silent
+
+Measured after the crater wipe turned out to have been unwired in the same
+`if (_strike != null)` block. Fired from the SIM switch so the ninety-second
+clock cannot be mistaken for the tap:
+
+    [sim]   simulated liquidation $648,024,048 offered to the core (switch)
+    [voice] strike: wired by Bootstrap False, found lazily True,
+            audio present, clip yes
+    [voice] PlayOneShot detonation #1 level=0.550 pitch=0.989 sources=6
+    [voice] strike fired=95 clip=True source=True effectVolume=0.55
+            listener=True
+
+WHICH ASSIGNMENT RAN: not Bootstrap's. `_strike.audio` at Bootstrap.cs:760
+sits inside BuildArmies behind `if (_strike != null)`, and the theatre is not
+made until line 281, so it is skipped - and it would have handed over null
+anyway, because `GameAudio` is not created until line 297, after BuildArmies.
+Two faults on one line.
+
+HEARD ANYWAY, because `StrikeTheatre` fetches it lazily at the impact
+itself - "Lazily, because Bootstrap builds the audio and this in an order
+that is not this component's business to depend on". That comment was right
+and the fallback is what carries the sound.
+
+So NO WIRE WAS ADDED. The code is left as it stands, per the instruction:
+the sound plays, the clip is present, a listener exists, and the level and
+pitch are real. What is committed is the line that says so, so the claim can
+be re-checked rather than re-argued.
+
+The dead assignment at 760 is still there. It never runs and it reads as
+though it does - it is what sent me looking for a silent strike. Removing it
+is a decision, not a measurement, so it stays until Daniel says.
+
+NOTHING ELSE IN THAT BLOCK IS UNSET. The only two `_strike` assignments in
+it were `fx`, now wired where the theatre is made, and `audio`, covered by
+the lazy fetch. Every other use of `_strike` runs after line 281.
+
