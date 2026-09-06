@@ -139,12 +139,24 @@ not inferred from the suite. Numbers in TASKBOOK.
   StrikeTheatre.fx was never wired - a null assignment in BuildArmies that
   threw nothing - and a test now asserts the wiring, not just the method.
 
-M1.a14: OPEN — the current letter. a13 is closed. Not started.
+M1.a14: OPEN — the current letter. Both camera bullets are closed on
+measurement; HUNTED is what is left.
 - camera: the direction the truck drives must never leave the view unless
-  Daniel explicitly looks around
+  Daniel explicitly looks around — done, and no camera edit was needed. The
+  four cases a13's slalom never drove were measured first: reversing, a
+  handbrake spin, an impact and a released look. The camera does swing, up
+  to 24.9 degrees in the spin, but the road stays in the picture throughout
+  and never comes closer than a third of the way in from an edge. Reversing
+  does not move it at all. Five PlayMode tests hold it there, each killed by
+  a mutant. Numbers in TASKBOOK.
 - camera: when the atom bomb falls, do not snap the view to the bomb.
-  View stays as it is
+  View stays as it is — done. There is no snap and no reparent: with a cloud
+  raised 45 m off the road the view tilts to 25.4 degrees of its own 26
+  degree clamp and the yaw the driver steers by moves 0.08 degrees in a
+  frame. One fault did come out of it and is fixed: the cap stayed published
+  after its theatre was destroyed, so every later camera tilted at a ghost.
 - hunted: tanks and soldiers do not shoot; HUNTED status seems dead
+  — not done. Untouched; it is next.
 
 M1.a15: parked — was a14. Wheels in the ground at the depot / on the model.
   Standing bury is fixed (0.178 m to 0.000, 3bd4208): the wheel was seated on

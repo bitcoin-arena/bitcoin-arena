@@ -6985,3 +6985,134 @@ So the deployed binary carries the detonation fix, the ticker trim, the
 wreck life, the streaming order and the 320 exposure ceiling.
 
 btc-logistics-war.pages.dev untouched.
+
+
+## 2026-09-06  M1.a14 bullet 1 and 2: the four cases a13 never drove
+
+a13 measured the driving camera on ONE keyboard slalom and took the worst
+off-nose from 8.7 degrees to 3.8. The bullet says "never", and a slalom is
+not never, so the four cases it does not contain were driven headless in
+PlayMode BEFORE any camera edit. No camera edit came out of them.
+
+Two angles, because "the direction the truck drives" is not always the nose:
+off-nose is the camera against the hull, off-travel the camera against the
+velocity vector. Velocity is read the way `ChaseCamera.cs:380` reads it -
+the core when a core answers, the kinematic body only as the fallback. In
+the editor `BlwpCore.Available` is false, so this is the renderer's geometry
+with the PhysX velocity standing in for the core's; the camera path does not
+branch on where the vector came from.
+
+The frame is the last column and it is the one that matters. The driving
+lens is 58 degrees vertical, about 44 degrees from the middle of the picture
+to its edge, so a point 20 m down the road is projected into the camera and
+its place across the frame recorded: 0.00 is the left edge, 1.00 the right,
+0.50 dead centre.
+
+  case                worst off-nose   off-travel   slip    road across
+                                                            the frame
+  stop and reverse      0.0 deg        180.0        180.0   0.50 .. 0.50
+  spin-out             24.9             34.5         40.9   0.50 .. 0.64
+  impact throw         15.4             15.4          0.0   0.50 .. 0.56
+  look released        33.7             33.7          0.0   0.34 .. 0.50
+
+  back under 2 degrees off the nose:
+    reverse 0.00 s, impact 0.63 s, spin-out 3.06 s, look 4.09 s
+    (the look itself was 54.0 degrees of orbit yaw, 0.00 left at the end)
+
+SO THE BULLET IS ALREADY TRUE, and that is the finding. The camera does
+swing - 24.9 degrees through a handbrake spin, 15.4 under an impact - but
+the road it swings away from stays in the picture the whole time, never
+closer than a third of the way in from an edge. Reversing does not move the
+camera at all: off-nose 0.0, the road dead centre, and off-travel 180
+because the truck is going backwards while the driver looks over the bonnet.
+That is a design decision, not a fault, and it is recorded rather than
+quietly "fixed" - turning the view round in reverse is Daniel's call.
+
+The look case is the only one that puts the road off centre, to 0.34, and it
+is the driver's own drag. It comes back: 0.00 degrees of orbit left when the
+window closes.
+
+NO CAMERA EDIT. `ChaseCamera.cs` is untouched by this letter so far.
+
+## 2026-09-06  M1.a14 bullet 2: the strike tilts the view, it does not swing it
+
+Measured in the same probe rather than argued. A cloud raised 60 m ahead
+and 45 m to the SIDE of the road, with the camera watched frame by frame:
+
+  view pitch          up to 25.4 deg of the 26 deg `cloudLookUp` clamp
+  worst yaw step      0.08 deg in a frame
+  worst off-nose      0.2 deg
+  road across frame   0.50 .. 0.50, dead centre throughout
+
+So there is no snap to the bomb and there is no reparent: the only thing
+that moves is pitch, it stops at its own clamp, and the yaw the driver
+steers by does not move at all. Bullet 2 is closed on those numbers.
+
+The pitch STEP per frame is not a usable number and is written down here so
+it is not quoted as one: headless batchmode runs frames of wildly uneven
+length, and the same 2.2/s ease read 4.99 degrees in one frame in one run
+and 1.15 in the next. What is stable is that the whole tilt takes about a
+second and yaw never moves.
+
+Sideways matters. The first cut raised the cloud DEAD AHEAD, and a mutant
+that aimed the camera at the cloud - yaw and all, the exact snap this test
+forbids - passed, because pointing at something straight in front of you
+needs no yaw. With the cloud 45 m off the road the same mutant dies at
+32.96 degrees of yaw in a frame.
+
+## 2026-09-06  M1.a14: the cap outlived its theatre
+
+FOUND BY THE PROBE, not looked for. The strike case reported "view pitch up
+to 0.0 deg" while the tilt plainly worked, and the tilt then appeared in the
+NEXT test's log - on a camera whose scene had been reloaded and whose cloud
+did not exist.
+
+`StrikeTheatre.CapCentre` is static and is cleared in one place only, where
+`Column` reaches `Gone`. A theatre that goes away while a cloud is standing -
+a restart, a scene change, a round that ends on a strike - left the last
+cap's world position published for good, and every driving camera after it
+pitched up at nothing. The proof is in the test that names it: destroy the
+theatre with a cloud up and the cap is still published at
+(-40.47, 33.08, 10.14).
+
+Fixed where it belongs, one line: `void OnDisable() => CapCentre = null;`.
+Pictures only, no core value touched.
+
+## 2026-09-06  M1.a14: what the probe got wrong before it got anything right
+
+Three faults in my own measurement, all found by the numbers disagreeing
+with themselves rather than by reading the code again:
+
+  - ALL FOUR CASES ON ONE TRUCK. The impact case inherited the spin-out's
+    slide - 73.4 degrees of slip while it was supposed to be driving
+    straight - and by the fourth case the truck was not moving at all, so a
+    released look was measured over a parked lorry that read speed 0.0.
+    One case per test now, each from a fresh scene, and a guard that fails
+    the case if the truck never reached 6 m/s.
+  - TIME TO RETURN WAS THE FIRST FRAME UNDER THE THRESHOLD, which is frame
+    one in every case, before the disturbance has developed. It printed a
+    confident 0.00 s for a camera about to swing 43 degrees. It is the LAST
+    frame ABOVE the threshold now, and the clock carries across a two-part
+    window - the spin-out samples the slide and then the settle, and with
+    the clock restarting it claimed the camera was back on the nose after
+    0.01 s.
+  - 300 FRAMES IS NOT SIX SECONDS. Headless batchmode renders as fast as it
+    can, so the strike loop ran under a second of game time, the camera's
+    2.2/s ease reached a blend of 0.00, and the probe reported a tilt of 0.0
+    degrees for a tilt that works. Seconds, not frames.
+
+MUTATION-CHECKED, one mutant per test, each reverted immediately:
+
+  camera settles behind velocity again  -> Reversing red, road at -1.00,
+                                           i.e. behind the camera
+  yawDamp 2.8 -> 0.5                    -> SpinOut red at 0.92 across frame
+  the look never eases back             -> ComesBack red, 54.0 deg held
+  aim at the cloud, yaw included        -> Strike red, 32.96 deg/frame yaw
+  no OnDisable                          -> CapIsForgotten red
+  impact throw six times as violent     -> SURVIVED, and it should: a shake
+                                           moves the camera, not its aim, so
+                                           the road stays in the picture and
+                                           the asserted property is still
+                                           true. The bite for that case is
+                                           the decay, and the decay mutant
+                                           (3.2 -> 0.05) does kill it.
