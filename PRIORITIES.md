@@ -157,7 +157,6 @@ measurement; HUNTED is what is left.
   degree clamp and the yaw the driver steers by moves 0.08 degrees in a
   frame. One fault did come out of it and is fixed: the cap stayed published
   after its theatre was destroyed, so every later camera tilted at a ghost.
-- hunted: tanks and soldiers do not shoot; HUNTED status seems dead
   — not done, and now measured. The damage is not missing: both engines put
   100% of a parked truck's damage on tank shells and kill it in 12-20 s, the
   core within a second of the C# army it replaced. What is missing is the
