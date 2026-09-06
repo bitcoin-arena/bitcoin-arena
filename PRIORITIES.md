@@ -50,9 +50,8 @@ Twelve red tests: none on the deploy path. List in TASKBOOK.md.
 
 ## M1
 
-Liquidation picture — OPEN. The picture is measured-complete on the browser
-build; what remains is M1.a11, the strike's voice, which needs Daniel's ear
-and not code. Details: TASKBOOK.md. Next letter: M1.a15.
+Liquidation picture — OPEN. SIM button missing on iPhone (a13). Then a11
+ear. Details: TASKBOOK.md. Next letter: M1.a15.
 
 M1.a8: not done (parked) — coin-margined Binance probed.
 
@@ -60,7 +59,7 @@ M1.a11: not done — strike voice built, needs Daniel's ear.
 
 M1.a12: not done (parked) — five extra venues, no public stream.
 
-M1.a13: 2026-09-05 morning picture — DONE. The liquidation picture is in:
+M1.a13: 2026-09-05 morning picture — NOT DONE. SIM button missing on device.
 the SIM switch fires the core's strike, the HUD names that liquidation and
 its exchange, the mushroom stands on the crater floor with dust along the
 ground, every strike in a round draws full size, the crater is 1.5x deeper
@@ -88,10 +87,8 @@ not inferred from the suite. Numbers in TASKBOOK.
   named every exchange before: measured "13 orders, $528.6k, binance bybit
   okx" against the core's one $241.7k off binance. Gated on StrikeCount with
   an 8 s fade; a simulated strike reads "simulated". Photographed.
-- SIM toggle under PRACTICE — done. A SIM switch under PRACTICE, and only
-  while PRACTICE is on. It calls the same FireSimulated the silent-market
-  clock does, so the strike, crater, mushroom, fallout and hull wipe are the
-  core's; there is no second path. Both states photographed.
+- SIM toggle under PRACTICE — not done. Daniel 2026-09-06 17:33: PRACTICE
+  ON, DEBUG visible, no SIM button on the iPhone HUD. Reopened.
 - tanks along the front, not in a heap — done. There was no heap: closest
   pair 8.2 m from t=1 s, renderer draws 24 of 24. The band is Core's own
   measured rule, 4-14 m off the seam, and 50.4% of armour stands inside
