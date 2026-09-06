@@ -129,6 +129,8 @@ not inferred from the suite. Numbers in TASKBOOK.
 M1.a14: parked until a13 is closed. Daniel 2026-09-06 18:03. Not started.
 - camera: the direction the truck drives must never leave the view unless
   Daniel explicitly looks around
+- camera: when the atom bomb falls, do not snap the view to the bomb.
+  View stays as it is
 - scoring: edge of the front ~1000 vs through the bad field similar or
   less — must differ massively
 - hunted: tanks and soldiers do not shoot; HUNTED status seems dead
