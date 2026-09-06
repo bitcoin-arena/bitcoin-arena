@@ -6745,3 +6745,57 @@ the bomber's warning six seconds early, but there is no cap to aim at yet and
 it would change what the approach looks like, which is a design decision and
 not a defect.
 
+
+## M1.a15 - RESIDUAL, accepted and left: the first-instant cap clip
+
+Daniel's call, 2026-09-06: leave the ease-in at 2.2/s, do not pre-tilt at the
+bomber's warning.
+
+    t=0.3s   blend 0.52, cap needs 10.0 deg, allowed 10.0, aiming -1.9
+             (the ordinary driving aim is -14.7, down at the road)
+    70 m     one run clipped 116 of 143 px, one run whole 147 of 147
+    150 m    no clip at all, 128x78 of 128x78
+
+The cap is whole from about t=0.6 s for the rest of the cloud's life. The
+clamp is not binding at 10.0 degrees and the 55 m column is not the cause;
+the blend simply has not finished. A 7.7/s blend would put it whole at 0.3 s
+and swing the view 24.7 degrees in three tenths of a second, which is the
+lurch the ease exists to prevent.
+
+Written down as a residual rather than a defect: intermittent, near-truck
+only, one frame, while the flash and the blast hold the eye.
+
+
+## M1.a15 - the dust rides 3.1 to 4.7 m over the floor, across four craters
+
+Not a single-depth artefact. Four strikes, four crater sizes, the skirt's
+underside against `Ground` at the crater centre:
+
+    r 30.9 m   floor -2.87   skirt underside +0.78   gap 3.65 m
+    r 35.7 m   floor -5.10   skirt underside -0.94   gap 4.16 m
+    r 38.3 m   floor -4.52   skirt underside -1.41   gap 3.11 m
+    (earlier)  floor -3.73   skirt underside +0.93   gap 4.66 m
+
+The crater's own depth is 0.225 of its radius, so 6.95, 8.03 and 8.62 m for
+the three measured radii. The gap is 36 to 53% of the depth, which is what
+the recorded choice predicts: the column seats its foot on the floor while
+the skirt seats on the HIGHEST ground under its own 48 m span, and at 24 m
+out the bowl has climbed back most of the way to the rim.
+
+So the choice holds across depths rather than being true at one. Nothing is
+floating over flat ground: away from a crater the skirt sits ON the surface,
+and the gap only exists over the hole, which is where dust thrown OUT of a
+hole belongs.
+
+WHAT I COULD NOT SAMPLE. Every crater here is large, 30.9 to 38.3 m. SIM
+draws 1 to 1000 million uniformly in dollars and the radius follows the CUBE
+ROOT of the load, so the small end is compressed and four strikes never
+reached it. At the smallest crater the rule predicts something different in
+kind - a 16 m crater is narrower than the skirt's own 24 m reach, so the
+highest ground under the span is the surrounding relief and the gap should be
+the full depth, about 3.6 m - but that is arithmetic, not a measurement, and
+it is written here as such.
+
+Seating reads `Ground` - the core's surface, relief LESS craters - through
+`roads.SurfaceHeight`. No PhysX value is read anywhere on this path.
+
