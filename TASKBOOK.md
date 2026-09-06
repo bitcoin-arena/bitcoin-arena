@@ -6706,3 +6706,42 @@ ordinary driving pitch.
 
 No code changed for this bullet beyond the probe that prints it.
 
+
+## M1.a15 - the t=0.3 s cap clip is the ease-in, and it is intermittent
+
+Instrumented rather than guessed, because there were three candidates -
+camera pitch, cloud height, cap placement - and the answer is none of the
+ones that would have cost something.
+
+    t=0.3s  [look] blend 0.52, cap needs 10.0 deg, allowed 10.0,
+                   was -14.7, aiming -1.9
+    t=1.7s  [look] blend 0.95, cap needs 16.8 deg, allowed 16.8,
+                   was -14.7, aiming 15.1
+    t=3.0s  [look] blend 0.99, cap needs 17.0, allowed 17.0, aiming 16.8
+
+At the first instant the cap only needs 10.0 degrees - it is LOW, the cloud
+has barely grown - and the allowed lift is the same 10.0, so the 26 degree
+clamp is nowhere near binding. What is short is the blend: 0.52. The camera's
+ordinary aim is -14.7 degrees, down at the road, and half way through the
+ease that lands at -1.9 instead of +10.0.
+
+So it is not the cloud's height, not where the cap sits, and not the clamp.
+It is the ease-in at 2.2/s not having finished 0.3 s after the detonation.
+
+AND IT IS INTERMITTENT. Two runs at 70 m: one clipped, 116 of 143 px, and one
+whole, 147 of 147 px at 1.6% of the frame. It depends on where the strike
+lands relative to the truck. At 150 m it did not clip at all - 128x78 of
+128x78 at t=0.2 s - so it is a near-truck case only.
+
+SHARE OF THE REMAINING PICTURE GAP: very small. One frame at 0.3 s, close in,
+sometimes, while the flash and the blast are what the eye is on anyway. The
+cap is whole from about t=0.6 s for the rest of the cloud's life.
+
+NOT FIXED, and the reason is arithmetic rather than taste. To have the blend
+at 0.9 by t=0.3 s the rate must be about 7.7/s, which swings the view 24.7
+degrees in three tenths of a second - a lurch, and the ease exists precisely
+so a strike does not snap the picture. The other way is to start the tilt at
+the bomber's warning six seconds early, but there is no cap to aim at yet and
+it would change what the approach looks like, which is a design decision and
+not a defect.
+
