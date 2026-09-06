@@ -49,6 +49,9 @@ was worked today and is still not done — he must go back to it.
 HARD (Daniel 2026-09-06 18:23): do not stop for Daniel to check sound.
 Keep going. Audio is not a wait.
 
+HARD (Daniel 2026-09-06 18:53): keep going even if Daniel does not test
+at once. When a13 and a14 are done, continue with M2.
+
 Twelve red tests: none on the deploy path. List in TASKBOOK.md.
 
 ## M1
@@ -69,9 +72,8 @@ ground, every strike in a round draws full size, the crater is 1.5x deeper
 with the truck still climbing out, hulls in the bowl are wiped, the
 detonation is audible, and no debug key ships. Measured on the browser build,
 not inferred from the suite. Numbers in TASKBOOK.
-- iOS audio — not done. Heard 13:47; Daniel 17:45 silent again. Daniel
-  17:50: plane has no sound, bomb drop has no sound, explosion has no
-  sound. Need audio for all three.
+- iOS audio — not done. Daniel 2026-09-06 18:53: plane and bomb-drop
+  sound are there; explosion / mushroom blast is not audible. a13.
 - camera look-back — done on the machine, unheard on the phone. Yaw off the
   nose 8.7 deg to 3.8; roll 5.4 to 0; a tap moves the view 0.00 deg where it
   moved 0.69; the look returns under 0.5 deg 3.07 s after a 2.5 s hold.
