@@ -87,8 +87,9 @@ not inferred from the suite. Numbers in TASKBOOK.
   named every exchange before: measured "13 orders, $528.6k, binance bybit
   okx" against the core's one $241.7k off binance. Gated on StrikeCount with
   an 8 s fade; a simulated strike reads "simulated". Photographed.
-- SIM toggle under PRACTICE — not done. Daniel 2026-09-06 17:33: PRACTICE
-  ON, DEBUG visible, no SIM button on the iPhone HUD. Reopened. Cause
+- SIM toggle under PRACTICE — not done. Daniel 2026-09-06 17:33 and 17:38:
+  PRACTICE ON, DEBUG visible, no SIM button. No atom bomb on screen, no
+  detonation sound. Reopened. Cause
   measured: the switch is built, works, and draws legibly at iPhone landscape
   844x390 - the daily site is a stale build, never deployed since the switch
   was committed at 32cae7d, and CI does not deploy. Blocked on a deploy
