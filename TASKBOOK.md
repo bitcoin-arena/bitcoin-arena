@@ -6799,3 +6799,39 @@ it is written here as such.
 Seating reads `Ground` - the core's surface, relief LESS craters - through
 `roads.SurfaceHeight`. No PhysX value is read anywhere on this path.
 
+
+## M1.a15 - the small crater, and the seating rule confirmed end to end
+
+The tail the SIM draw never reached. No game code was changed for it: the
+bundle exports `submitLiquidation`, so the harness handed the core the load
+itself - one million, which is `CRATER_LOAD_MIN` and the 16 m radius the rule
+is defined at. Three strikes, all r 16.0 m:
+
+    floor  0.48   skirt underside 3.43   gap 2.95 m   0.82 of the depth
+    floor -0.07   skirt underside 3.72   gap 3.79 m   1.05
+    floor  1.55   skirt underside 5.39   gap 3.84 m   1.07
+
+Depth at 16.0 m is 0.225 x 16.0 = 3.60 m, so the mean is 0.98 of it. The
+arithmetic said the gap should become the FULL depth once the crater is
+narrower than the skirt's own 24 m reach, and it does.
+
+Beside the large end already recorded:
+
+    r 16.0 m   depth 3.60 m   gap 2.95-3.84 m   0.82-1.07 of depth
+    r 30.9 m   depth 6.95 m   gap 3.65 m        0.53
+    r 35.7 m   depth 8.03 m   gap 4.16 m        0.52
+    r 38.3 m   depth 8.62 m   gap 3.11 m        0.36
+
+One rule across the whole range: the fraction rises as the crater narrows
+towards the skirt's reach, and falls as it widens past it. Nothing here is an
+artefact of a single depth and nothing contradicts the choice, so the game is
+left alone.
+
+The spread at 16 m - 0.82 to 1.07 - is the surrounding relief: the skirt
+seats on the HIGHEST ground under its span, and 24 m out that ground can sit
+above or below the crater's own rim depending on the hill it landed on. Above
+1.0 simply means the ground out there was higher than the rim.
+
+Seating still reads `Ground` through `roads.SurfaceHeight` to the core
+surface. No PhysX value anywhere on this path.
+
