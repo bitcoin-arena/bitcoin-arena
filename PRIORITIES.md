@@ -142,13 +142,15 @@ not inferred from the suite. Numbers in TASKBOOK.
 M1.a14: OPEN — the current letter. Both camera bullets are closed on
 measurement; HUNTED is what is left.
 - camera: the direction the truck drives must never leave the view unless
-  Daniel explicitly looks around — done, and no camera edit was needed. The
-  four cases a13's slalom never drove were measured first: reversing, a
-  handbrake spin, an impact and a released look. The camera does swing, up
-  to 24.9 degrees in the spin, but the road stays in the picture throughout
-  and never comes closer than a third of the way in from an edge. Reversing
-  does not move it at all. Five PlayMode tests hold it there, each killed by
-  a mutant. Numbers in TASKBOOK.
+  Daniel explicitly looks around — NOT DONE, reopened on a measurement. The
+  four cases a13's slalom never drove are fine: reversing, a handbrake spin,
+  an impact and a released look all keep the road in the picture, never
+  closer than a third of the way in from an edge, and five PlayMode tests
+  hold them there. But those four asserted where the road lands ACROSS the
+  frame and never UP it, and while a mushroom stands the road is under the
+  bottom edge for 79.4% of the cloud's life. a13's fix for M1.d raised the
+  look point to bring the cap into frame and the road went out the bottom to
+  make room. Numbers in TASKBOOK; the fix is a choice and is not made yet.
 - camera: when the atom bomb falls, do not snap the view to the bomb.
   View stays as it is — done. There is no snap and no reparent: with a cloud
   raised 45 m off the road the view tilts to 25.4 degrees of its own 26
@@ -166,8 +168,14 @@ measurement; HUNTED is what is left.
   The picture half is DONE: the muzzle now takes the courier on the core's own
   rule, and of the shells the core spends on the truck 100% are drawn at it,
   at all five stand-offs and while driving, with none of the shots at units
-  drawn at the truck by mistake. The word HUNTED is untouched and is what is
-  left of this bullet.
+  drawn at the truck by mistake.
+  The word is decided and stays where it is: the old game showed cargo heat
+  and never showed being shot at, in any build, so HUNTED keeps reading
+  CargoBay.Heat and no incoming-fire signal is invented in the renderer. What
+  is genuinely dead is behind the word - Army.Heat was written to make the
+  load change how hard the war hunts you and was never assigned by anything,
+  and the core implements that same heat-zero case. A full load would die
+  2.1x faster if it were fed. That is a core rule and is not changed here.
 
 M1.a15: parked — was a14. Wheels in the ground at the depot / on the model.
   Standing bury is fixed (0.178 m to 0.000, 3bd4208): the wheel was seated on

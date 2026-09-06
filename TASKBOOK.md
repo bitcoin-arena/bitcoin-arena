@@ -7249,3 +7249,100 @@ foe. Mutation-checked, each reverted at once:
 Renderer only. No core change, no new core word, nothing about HUNTED or the
 HUD, and nothing here decides anything - the core has already spent the
 shell; this only points the barrel where it went.
+
+
+## 2026-09-06  CORRECTION: the old C# did NOT skip the truck when it drew a shot
+
+Written into the previous entry and into 07f2eed's message: "the old
+`Army.Bind` path skipped the truck here too; there was nothing to copy."
+That is wrong, and the code says so plainly.
+
+`Army.StepArmour` sets `at = c` when the shot is on the courier and then
+raises `Fired?.Invoke(v, impact)` with that point; `Army.StepInfantry` does
+the same through `mark` and `Shot`. `CombatFx.Bind` at :1429 draws the tank
+tracer at exactly that point. So the C# AIMED AT THE TRUCK CORRECTLY.
+
+What was true is a different sentence: `Bind` was never called in the shipped
+build - `army` is null and the measurement in the file says pieces 0, combat
+sounds 0 - so the correct draw never ran, and the core-driven redraw that
+replaced it re-derived the target from unit positions alone and dropped the
+courier. The regression came in with the rebuild, not from the C#.
+
+The fix at 07f2eed is unaffected: it restores what the C# intended AND what
+the core's rule says, and the seven pinned edges are the core's. Only the
+sentence about where the fault came from was wrong.
+
+## 2026-09-06  M1.a14 HUNTED: what the overlay keyed off, then and now
+
+                         old C#                        today
+  the word HUNTED        DriveHud, stars from          the same file, the
+                         `bay.Heat`, four stars up     same `bay.Heat`.
+                         Cargo fees and value only.    Unchanged.
+  what fed the army      `Army.Heat`: widens the       the core has no heat
+                         courier reach x(1+1.4H),      input to the army at
+                         lets the truck outrank a      all. It implements
+                         nearer tank x(1+2.5H), and    the Heat-ZERO
+                         multiplies the shell          specialisation and
+                         x(1+0.6H).                    says so in comments.
+  was that ever fed?     NO. A grep for an assignment  n/a - there is no
+                         to `Army.Heat` in shipped     field to feed.
+                         code finds nothing. Two test
+                         files set it, both to zero.
+  the cargo heat rule    `CargoBay.Heat` = clamp(fee   `cargo.js heat()` =
+                         /20000) + clamp(btc/25)*0.45  the same formula, and
+                                                       the core owns it. The
+                                                       HUD still reads the
+                                                       C# copy.
+
+SO THE FORK LANDS ON HEAT. The old game showed cargo heat and never showed
+being shot at, in any build, at any time. HUNTED stays on `CargoBay.Heat`
+and no incoming-fire signal is invented in the renderer.
+
+BUT THE C# INTENT WAS NOT WHAT IT SHIPPED, and that is the real content of
+"HUNTED seems dead". `Army.Heat` carries a written intent - "how badly both
+sides want the truck, set from what it is carrying. Without this the freight
+choice had no consequence at all - the player simply took the most valuable
+thing on the ramp every time" - and nothing ever set it. What the coupling
+would have been worth, measured on the C# army at z=-25:
+
+  heat 0.00   17.40 s to write-off   19 shells
+  heat 0.50    8.85 s                15 shells
+  heat 1.00    8.20 s                12 shells
+
+A full load would die 2.1x faster than an empty one. Today, and in every
+build that ever shipped, it dies at exactly the same rate - so four stars
+mean nothing is different, which is what a dead status looks like.
+
+That is a RULE, and the core already owns fire, reach and the
+courier-outranks test, so it belongs there and not in the renderer. It is a
+change of behaviour, not a redraw, and it is not made here.
+
+## 2026-09-06  M1.a14: the tilt that shows the cap takes the road off the bottom
+
+ASKED FOR AS A FRACTION AND IT IS 79.4%, so it is written down before
+anything else on this letter is ranked.
+
+The a14 camera probe asserted where the road lands ACROSS the frame and
+never up it. That is the one axis the strike tilt can plausibly break, since
+pitching the view up pushes the road DOWN the picture, and I closed bullet 1
+without measuring it. Measured now, from the same probe, while a cloud
+stands:
+
+  road across the frame   0.50 .. 0.50    dead centre, as reported
+  road UP the frame      -0.05 .. 0.61    below the bottom edge at its worst
+  off the bottom for      3616 of 4555 frames, 79.4% of the time a cloud is up
+
+So for four fifths of every mushroom, the direction the truck drives is not
+in the picture at all - it is under the bottom edge. That is bullet 1's own
+words failing, and it is a consequence of a13's fix for M1.d: the cap was
+brought into frame by raising the look point, and the road went out the
+bottom to make room. `cloudLookUp` is 26 degrees and the measurement says
+the road cannot afford all of it.
+
+BULLET 1 IS REOPENED on this number. It was closed on four cases - reverse,
+spin, impact, released look - none of which has a cloud standing.
+
+Not fixed here: the fix is a choice between lowering the clamp, holding the
+road at a floor in the frame, and framing both by pulling back, and the
+letter's sequence puts it after the barrel, which is done. The probe now
+records the vertical place every run so the choice is made on numbers.
