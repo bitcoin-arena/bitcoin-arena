@@ -75,6 +75,9 @@ not inferred from the suite. Numbers in TASKBOOK.
   driving still needs multi-touch, which is not this bullet.
 - real mushroom mesh — not done. Daniel 2026-09-06 17:39: iPhone photo, the
   blast is stacked planes/fireball, no 3D mushroom model. Reopened.
+- bear/bull bomber — not done. Daniel 2026-09-06 17:42: default airframe on
+  iPhone, not bear/bull. Catalog on the daily host contains bomber-bear,
+  bomber-bull and mushroom. HUD must show whether those models loaded.
 - HUD: which liquidation, which exchange — done. Size from the core's
   K_LOAD, venue from the latch that mirrors the core's own largest-wins rule,
   taken together off one order. It summed every order of the last 8 s and
