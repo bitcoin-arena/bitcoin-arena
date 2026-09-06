@@ -7748,3 +7748,95 @@ MUTATION-CHECKED, each reverted at once:
                                               The shape was added because it
                                               is one a browser can be, not to
                                               make a mutant fail.
+
+
+## 2026-09-07  the liquidation line, the two cards, and the panel that is not this screen
+
+THE LIQUIDATION LINE now has a rect, and the headline stack has fixed rows.
+The rows were placed from the price's FITTED size - the price shrinks when
+the gap is narrow - so the ticker, the liquidation line and the block clock
+all moved up the screen the moment the price gained a digit. They are placed
+from the unfitted size now; only the price's own glyphs change size inside
+its row.
+
+  size        the line              clear of the column   of the wanted row
+  1920x1080   371..1614 x 249..305        30 px                24 px
+  1024x768    352..753  x 178..218        17 px                17 px
+   844x390    320..691  x  91..112        25 px                10 px
+  1000x360    338..847  x  83..101        10 px                10 px
+
+And it was taller than its own row: 78.4 px of box in a 56.4 px row at
+1920x1080, reaching into the block clock underneath. The block board's fault
+in another corner. The row's height is the distance to the row below it now,
+and one line of the sub font is 49 px, so there is room for what is drawn.
+
+THE TWO CARDS CAN BOTH BE UP AND WOULD BE LAID ON EACH OTHER. The send-off
+runs 3.4 s from roll-out and the arrival card 5 s from a delivery or a miss -
+two independent clocks, nothing linking them. Deliver, confirm the next load
+inside five seconds, and both draw. They sit at 18% and 20% down the screen:
+
+  size        send-off      arrival       shared height
+  1920x1080   216..352      194..400        136 px
+  1024x768    154..278      138..328        124 px
+   844x390     78..142       70..168         64 px
+  1000x360     72..131       65..154         59 px
+
+Gated rather than moved: two cards side by side on a phone are two cards
+nobody can read, and of the pair the one about the run that has ENDED is the
+one to drop when a new run is starting. `ArrivalIsHiddenBy` is static so the
+rule is assertable without waiting five seconds for a clock.
+
+THE LOADOUT PANEL IS A DIFFERENT SCREEN and is left alone. While it is open
+`DriveHud.OnGUI` returns after `DrawWasted` - the block board, the wanted
+row, the danger meter, the streaming list, the waypoint and the diagnostics
+are all skipped, and `GUI.depth` is inverted so nothing of the game HUD can
+land on the window. The ONE exception is deliberate and is named here rather
+than tested: a small price line at 2% by 1.2%, drawn only while loading,
+because the price is not what the player is reading while choosing freight.
+Whether that line lands on the panel's own frame is not checked by anything.
+
+MUTATION-CHECKED, each reverted at once:
+  the liquidation row back to 1.6 line-heights -> TheLiquidationLineClears
+                                                  ItsNeighbours red
+  the arrival card no longer yields            -> TheTwoCardsAreNeverUp
+                                                  Together red
+
+## 2026-09-07  a frame, and the three things arithmetic could not see
+
+"Arithmetic is not a frame" was right, and the note in this book saying a
+frame cannot be taken here was out of date. This machine has an X server on
+:0 and Unity brings up an OpenGL 4.6 device on it. Two routes fail and one
+works, so they are written down: `WaitForEndOfFrame` is never evoked in
+batchmode, and `ScreenCapture.CaptureScreenshot` needs a presented frame that
+batchmode never gives. WITHOUT `-batchmode`, on the real display, the capture
+lands: 733x293, 2194 distinct colours, luminance 6..255 - guarded against the
+uniform-grey PNG this project was nearly fooled by once.
+
+The picture is scratchpad/shots/hud-733x293.png. What it shows that the rects
+had already fixed: the block readout inside its own border, condition and
+danger stacked under it, practice and SIM under those, the price centred in
+the gap and off the board, the two settings icons side by side.
+
+THREE THINGS IT FOUND THAT NO RECT COULD:
+
+  1. GERMAN ON THE DRIVING HUD. The streaming list said "aus Cache",
+     "fehlgeschlagen" and "wartet" in a build whose every other string is
+     English. The one German check in this project reads the model LABELS,
+     which have been English all along, so nothing ever looked at the words
+     beside them. They are "cached", "failed" and "waiting" now, behind a
+     static so they can be asserted without a scene.
+
+  2. The streaming list overlaps the headline stack. It is checked against
+     the column and the wanted row and passes both; the block clock and the
+     liquidation line underneath it are not in that check, and in the frame
+     the list is drawn straight across them. NOT FIXED - written down.
+
+  3. A score column top right - SCORE, BANKED, CARGO - with no rect, no
+     overlap check, and its top line clipped by the edge of the screen in the
+     frame. NOT FIXED - written down.
+
+AND ONE THING THE FRAME CANNOT SHOW: the wanted pips. They read
+`BlwpCore.Heat`, the core is a stub outside a WebGL build, so the heat is
+zero in the editor and the row correctly draws nothing. `WithNoCoreAnswering
+ThereAreNoStarsToInvent` asserts exactly that. The pips can only be seen in a
+browser.
