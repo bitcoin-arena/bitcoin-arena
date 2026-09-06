@@ -6317,3 +6317,45 @@ then 8.1 to 8.4 m for the rest of the round, with the renderer drawing 24 of
 Capping give-ground is not opened on this letter: it is a new investigation
 with no measured share of the remaining gap.
 
+
+## M1.a13 - nothing is under the ground, late in a run or early
+
+Measured on a running build across a full round, 6,600 ticks, with strikes
+landing during it. Distribution, not a mean.
+
+TANKS. Hull bottom - the renderer's own bounds, so tracks and skirts
+included - against the ground it stands on. 66 samples, 1,379 hull-readings:
+
+    more than 1 m UNDER    0.0%
+    0.3-1 m under          5.0%   ###
+    5-30 cm under         42.3%   #####################
+    on it (+/-5 cm)       22.6%   ###########
+    5-30 cm over          29.7%   ###############
+    0.3-1 m over           0.4%
+    more than 1 m over     0.0%
+    deepest -0.51 m, highest +0.36 m
+
+TRUCK. Its own lowest point over the same round, 65 samples to tick 6600:
+never below -0.06 m, never above +0.36 m.
+
+NOTHING IS BURIED. Not one hull-reading in 1,379 is more than a metre down,
+and the truck never goes under at all. The bullet's premise does not
+reproduce at any tick, early or late.
+
+There is a mild bias downward - 47.3% of readings sit below the ground
+against 30.1% above - and it is explained by what is being compared:
+`SeatOnTerrain` fits a plane through four corner samples and puts the
+transform's ORIGIN there, while this measures the lowest vertex of the whole
+model. A track that hangs below the hull's seating plane reads as 5 to 30 cm
+under, which is what a track bedded into soil should look like.
+
+The seating reads the CORE's surface - `roads.SurfaceHeight`, core ground
+plus deck lift, falling back to `BlwpCore.SurfaceAt` - not Unity terrain and
+not PhysX. No Rigidbody or transform read is involved, so the PhysX-era
+failure this bullet was expected to have is not present either.
+
+A HARNESS FAULT, the fourth of its kind this session and now fixed at the
+cause: `godring.mjs` filtered console lines against a whitelist of tags, so
+`[seat]` never reached the log and the build looked silent. It passes any
+`^[tag]` line now instead of a list that has to be remembered.
+
