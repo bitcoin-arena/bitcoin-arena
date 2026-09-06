@@ -6870,3 +6870,29 @@ REMAINING UNDER ITEM 9: M1.a11 alone - the strike's voice. It is blocked on a
 human ear, not on code: a headless browser has none, and it will not be
 closed from the harness. Item 9 stays open around it.
 
+
+## M1.a13 SIM bullet reopened - the daily site is a stale build
+
+Daniel, 2026-09-06 17:33, iPhone on btc-logistics-core.pages.dev: PRACTICE
+ON, DEBUG line visible, no SIM button.
+
+MEASURED BEFORE CHANGING ANYTHING, and there is nothing to change:
+
+  - the live wasm is 10,290,270 bytes against the local build's 10,288,371 -
+    a different build. Both are compressed, so grepping either for the SIM
+    strings proves nothing, and the control string confirms that test is
+    useless; it is not the evidence.
+  - `.github/workflows/core.yml` runs the core acceptance on push and does
+    NOT deploy. Deployment is `deploy-core.sh` by hand, to project
+    btc-logistics-core.
+  - I have not run it once this session. The SIM switch was committed at
+    32cae7d today, so the daily site cannot have it.
+  - and it is not a phone-layout fault: rendered at iPhone landscape,
+    844 x 390, the switch draws under PRACTICE and reads "SIM . OFF / tap to
+    fire liquidations". scratchpad/phone-hud.png.
+
+So the button is absent from Daniel's phone because the build he is looking
+at predates it, not because the feature is missing or broken. The fix is a
+deploy of the current build to the daily URL, which is an outward-facing
+action and his call, not mine.
+
