@@ -6664,3 +6664,45 @@ rather than over it.
 The still is scratchpad/c-t17-on.png: the whole cloud, stem and cap, standing
 in the driving view with the depot and the ground still in the lower half.
 
+
+## M1.a15 - the bomber and the bomb ARE in the driving picture
+
+The worry was a crater with no cause: six seconds pass between the warning
+and the hole, and if the aircraft and the bomb ran off the top the way the
+cap did, the player would never see what dug it. Measured with the same probe
+as the cap, from the same chase camera, at the same two stand-offs.
+
+    70 m
+      t=0.3s  plane  288x291 rect, on screen 288x124 px = 3.9%, CLIPPED top
+      t=1.5s  plane  rect x -1666..-944, on screen  0x74 px = 0.0%
+      t=2.9s  plane  rect x  -251..   4, on screen  4x33 px = 0.0%
+      t=3.9s  plane  on screen 240x32 px = 0.8%    bomb 56x26 px = 0.2%
+      t=5.0s  plane  on screen 227x32 px = 0.8%    bomb 49x32 px = 0.2%
+      t=6.0s  plane  on screen 204x29 px = 0.6%
+
+    150 m
+      t=0.3s  plane  front FALSE - behind the camera, 0.0%
+      t=1.7s  plane  rect x -793..-401, on screen 0x45 px = 0.0%
+      t=3.0s  plane  rect x -311..   7, on screen 8x40 px = 0.0%
+      t=4.1s  plane  on screen 273x40 px = 1.2%    bomb 60x29 px = 0.2%
+      t=5.2s  plane  on screen 286x40 px = 1.2%    bomb 52x35 px = 0.2%
+      t=6.2s  plane  on screen 256x34 px = 0.9%
+
+SO THIS IS NOT THE CAP'S FAULT REPEATED. The same shape at both distances:
+the aircraft comes in from the west, so for the first three seconds it is
+behind the camera or off the LEFT edge - not above it - and from about t=4 s
+it crosses the frame, releases, and both it and the bomb are on screen
+through to impact. The bomb is small, 50-60 px by 26-35, but it is there and
+unclipped for the whole fall.
+
+TWO THINGS THAT ARE TRUE AND SMALL. At 70 m the plane is clipped at the top
+when it first appears - 124 of 291 px at t=0.3 s - and for the first three
+seconds of the warning it is out of frame at both distances. Neither hides
+the cause: the release and the fall are both in the picture.
+
+The camera's cloud look-up plays no part here. It engages only while a cloud
+STANDS, which is after the impact, so the whole approach is measured at the
+ordinary driving pitch.
+
+No code changed for this bullet beyond the probe that prints it.
+
