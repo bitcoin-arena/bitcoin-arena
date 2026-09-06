@@ -88,6 +88,9 @@ not inferred from the suite. Numbers in TASKBOOK.
   daniel-screens/2026-09-06-1752-liq-counter.jpg.
 - tank wrecks — not done. Daniel 2026-09-06 17:53: do not shrink before
   they vanish. Leave them standing longer, then remove.
+- scoring — not done. Daniel 2026-09-06 18:15: THIS IS A13. Not the map
+  middle — proximity to the front, risk. High risk at the seam must score
+  massively more than the edge.
 - SIM toggle under PRACTICE — not done. Daniel 2026-09-06 17:33 and 17:38:
   PRACTICE ON, DEBUG visible, no SIM button. No atom bomb on screen, no
   detonation sound. Reopened. Cause
@@ -131,9 +134,6 @@ M1.a14: parked until a13 is closed. Daniel 2026-09-06 18:03. Not started.
   Daniel explicitly looks around
 - camera: when the atom bomb falls, do not snap the view to the bomb.
   View stays as it is
-- scoring: not the geometric middle — proximity to the front, risk.
-  Edge ~1000 vs through the fighting similar or less is wrong; high
-  risk at the seam must score massively more
 - hunted: tanks and soldiers do not shoot; HUNTED status seems dead
 
 M1.a15: parked — was a14. Wheels in the ground at the depot / on the model.
