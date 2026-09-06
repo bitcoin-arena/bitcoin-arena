@@ -6629,3 +6629,38 @@ NOT FIXED HERE, because the fix is a choice and not a measurement:
 Both are player-facing decisions. The instrumentation that measures either
 is committed; the choice is not mine to make.
 
+
+## M1.a15 - the driving camera looks up while a mushroom stands
+
+StemHigh stays 55 m. The view moves, not the cloud.
+
+While a cloud is up, `StrikeTheatre` publishes the cap's world centre and
+`ChaseCamera` raises its LOOK POINT towards it - never past it, and never
+above `cloudLookUp`, 26 degrees over the horizontal, so the road stays in the
+lower half of the frame. It eases in and out at 2.2/s and lets go by itself:
+the theatre publishes nothing between strikes, so there is no state to clear.
+
+Pictures only. Steering, throttle and brake are untouched; it is not an
+orbit, not a god view and not a second stick, and nothing here reads or
+writes a core value.
+
+    70 m stand-off, cap on screen, share of the frame
+      before   t=1.7s   694x  0 px   0.0%   rect y  794..1490
+               t=3.1s   678x  0 px   0.0%   rect y  790..1466
+      after    t=1.7s   298x204 px   6.6%   whole rect, nothing clipped
+               t=3.2s   288x195 px   6.1%   whole rect
+
+    150 m stand-off
+      before   t=1.7s   392x 39 px   1.7%   of a 317 px head
+               t=3.0s   395x 38 px   1.6%
+      after    t=1.6s   231x156 px   3.9%   whole rect
+               t=2.9s   233x157 px   4.0%   whole rect
+
+Nothing else moved. The stem is still seated on the crater floor -
+"foot was -31.96, crater floor -5.69, buried 26.28 m -> foot now -5.69" - and
+the truck still rides the ground at +0.36 m, so it still drives into the bowl
+rather than over it.
+
+The still is scratchpad/c-t17-on.png: the whole cloud, stem and cap, standing
+in the driving view with the depot and the ground still in the lower half.
+
