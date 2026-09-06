@@ -7472,3 +7472,70 @@ STILL OPEN AND NAMED: the overlay's stars still come from Unity's own
 `CargoBay.Heat` rather than from the word the core now holds. Same formula
 today - `cargo.js heat()` is the identical rule - so the picture and the core
 agree, but it is one rule in two places.
+
+
+## 2026-09-06  the stars read the word the war hunts with
+
+The overlay took its heat from `CargoBay.Heat` - Unity's own copy of the rule
+- while the shooting took its heat from the core's `S_HEAT`. They agreed,
+because the formula is written twice and identically, which is the
+arrangement that stops being true the first time one side changes.
+
+`DriveHud.DrawWanted` reads `BlwpCore.Heat` now and nothing else. The yard
+still CHOOSES the number - `LoadoutPanel.Confirm` hands it over at roll-out -
+but the picture reports the word the war is hunting with. There is no
+fallback: with no core answering, the heat is zero and the stars stay off
+rather than being invented from a second source. `bay.Heat` no longer appears
+in `DriveHud` at all.
+
+ONE NUMBER, TWO READERS, walked over the loads that produce it:
+
+    fee sats     btc   heat sent   core word   heat read   stars   word
+           0       0      0.0000           0      0.0000       0   -
+         500       0      0.0250        1638      0.0250       1   WANTED
+        4000       0      0.2000       13107      0.2000       1   WANTED
+       12000       0      0.6000       39321      0.6000       3   WANTED
+       14000       0      0.7000       45875      0.7000       4   HUNTED
+       20000       0      1.0000       65536      1.0000       5   HUNTED
+        6000    1200      0.5160       33815      0.5160       3   WANTED
+       20000    2500      1.0000       65536      1.0000       5   HUNTED
+
+The round trip is exact - what the yard sends is the word the hunt reads and
+the stars are drawn from. Heat zero is still bit-identical to the recordings;
+`an untold core hunts exactly as the recordings do` asserts that by hashing a
+core nobody spoke to against one told zero.
+
+TWO THINGS THAT CAME WITH IT.
+
+The `bay.IsLoaded` gate went, because an empty bed is heat zero and already
+draws nothing - keeping the bed as a second opinion about whether to show
+anything bought nothing. But the heat word survives the round in the core: it
+is cleared by the next roll-out, not by arriving, and the old gate had been
+hiding the stars when the bed emptied on delivery. So the stars are gated on
+`RunState` being live instead. Still one source, and it is the core's.
+
+And the display rule is pinned where it could not be before: `StarsFor` and
+`WantedWord` are static, so five EditMode assertions hold the ceiling, the
+floor, and both sides of the HUNTED edge - 0.60 is WANTED and 0.61 is HUNTED
+- without a scene.
+
+STILL A SECOND HEAT, NAMED AND NOT LIVE: `RunScore.RateNow` reads `bay.Heat`
+for the exposure rate. It is behind `if (FromCore) ... return;` and the file
+says why - the core's own rate is read back instead - so it is a dormant
+fallback for a build with no core, not a second source on the deploy path.
+
+## 2026-09-06  the pull-back holds on a phone-shaped frame
+
+Named as a hole when the twenty metres were measured, because the batchmode
+frame is 640x480 and the thing fixed is a VERTICAL fit: a phone in landscape
+is 2.16 to 1, much shorter for its width, and that is the unkind case.
+
+  aspect      road lowest   below the edge   cap up the frame   off the top
+  1.33 : 1       0.09          0/1335           0.54..0.56          0
+  1.78 : 1       0.11          0/1878           0.53..0.53          0
+  2.16 : 1       0.11          0/1255           0.53..0.53          0
+
+It holds, and the reason it holds is worth writing down rather than being
+lucky: Unity's camera keeps the VERTICAL field of view fixed and widens
+horizontally, so a wider frame costs nothing vertically. The 4:3 reading is
+the tightest of the three, not the loosest.
