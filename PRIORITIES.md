@@ -83,6 +83,9 @@ not inferred from the suite. Numbers in TASKBOOK.
 - HUD: which liquidation, which exchange — not done. Daniel 2026-09-06
   17:50: LIQ BINANCE $241.7K must appear only when the mushroom is on
   screen, not before.
+- HUD top liq counter — not done. Daniel 2026-09-06 17:52: remove
+  "liq binance/9 bybit okx" from the top bar. Only price and %. Shot
+  daniel-screens/2026-09-06-1752-liq-counter.jpg.
 - SIM toggle under PRACTICE — not done. Daniel 2026-09-06 17:33 and 17:38:
   PRACTICE ON, DEBUG visible, no SIM button. No atom bomb on screen, no
   detonation sound. Reopened. Cause
