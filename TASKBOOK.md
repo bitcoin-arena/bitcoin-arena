@@ -7911,3 +7911,56 @@ against a phone's 2.16, three captures across the fixes. It found the German,
 the list over the clock, the clipped score column, and then each regression I
 introduced while fixing them. Every rect in this file was green through all
 of it.
+
+
+## 2026-09-07  the exposure warning gets a row of its own
+
+"NO SCORE OUT HERE - GET CLOSER TO THE FIGHTING" was drawn at
+`meter.xMax - min(w * 0.75f, 560f)`: 560 px reaching LEFT from the danger
+meter's right edge. That was correct when the meter lived in the top-right
+corner and there was nothing to the left of it. Moving the meter into the
+column left the sentence running backwards across the practice switch and off
+the screen - at 1920x1080 it started at x = -218.
+
+It is a row of the column now, in the column's own width, and the row is
+RESERVED whether the warning is showing or not. A switch that jumps down the
+screen the moment the player drives out of the corridor moves exactly when he
+is looking at it.
+
+  size        the warning row              gap to the practice switch
+  1920x1080   21.6..341.6 x 486..531             8.6 px
+  1024x768    15.4..335.4 x 356..386             7.7 px
+   844x390     7.8..294.8 x 190..210             7.8 px
+  1000x360     7.2..327.2 x 178..198             7.2 px
+   733x293     5.9..255.1 x 148..168             5.9 px
+
+THREE PASSES, AND THE FRAME CAUGHT EACH ONE. The rects were green after the
+first: the row was in the column and nothing overlapped. The picture showed
+the sentence WRAPPED to two lines with the second drawn over the switch -
+`GUI.skin.label` wraps by default and `CalcSize` measures the unwrapped
+width, so the fit was computed for one line and the label drew two. With
+wrapping off it was clipped instead, and right-aligned clipping takes it off
+the LEFT: "SCORE OUT HERE" where "NO SCORE OUT HERE" was meant, which says
+the opposite of the warning.
+
+Forty-eight characters do not fit a 243 px column at the 9 px floor - about
+264 px of text - so the sentence loses its second half rather than its first
+where there is no room. The verdict survives, the instruction goes. Measured
+at 733x293: "NO SCORE OUT HERE", one line, in full, clear of the switch.
+
+The column then ran 9 px past the bottom of a phone with the diagnostics
+panel up - the 12 px of clearance written down as "clearance, not comfort"
+was exactly what the new row spent. The two switches have slack in them and
+the screen edge does not, so they shrink when the column is tight, floored at
+28 px. With DEBUG on at 844x390 the SIM switch now ends at 380 of 390.
+
+MUTATION-CHECKED: the warning back to its 560 px box kills two tests - it
+runs off the left edge at -218, and it is no longer the column's width.
+
+  EditMode 156: 151 green, 2 red, 3 skipped. One is the known retired C#
+    rifle path. The second is RunOverBodyTests.AThrownBodyIsHandedToThe
+    PhysicsEngine, which this book already carries as a load flake seen
+    during the camera letter - "0.831 vs 1.0, 5/5 green". Not taken on
+    trust: run on its own against this tree it is green, 1 of 1.
+  PlayMode 212: 186 green, 11 red, 15 skipped - the documented
+    Battlefield.Army set only, no rotating flake this run.
