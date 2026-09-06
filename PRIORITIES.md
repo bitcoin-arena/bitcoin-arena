@@ -66,7 +66,9 @@ ground, every strike in a round draws full size, the crater is 1.5x deeper
 with the truck still climbing out, hulls in the bowl are wiped, the
 detonation is audible, and no debug key ships. Measured on the browser build,
 not inferred from the suite. Numbers in TASKBOOK.
-- iOS audio — not done. Heard 13:47; Daniel 17:45: sound does not work.
+- iOS audio — not done. Heard 13:47; Daniel 17:45 silent again. Daniel
+  17:50: plane has no sound, bomb drop has no sound, explosion has no
+  sound. Need audio for all three.
 - camera look-back — done on the machine, unheard on the phone. Yaw off the
   nose 8.7 deg to 3.8; roll 5.4 to 0; a tap moves the view 0.00 deg where it
   moved 0.69; the look returns under 0.5 deg 3.07 s after a 2.5 s hold.
@@ -78,12 +80,9 @@ not inferred from the suite. Numbers in TASKBOOK.
 - bear/bull bomber — not done. Daniel 2026-09-06 17:42: default airframe on
   iPhone, not bear/bull. Catalog on the daily host contains bomber-bear,
   bomber-bull and mushroom. HUD must show whether those models loaded.
-- HUD: which liquidation, which exchange — done. Size from the core's
-  K_LOAD, venue from the latch that mirrors the core's own largest-wins rule,
-  taken together off one order. It summed every order of the last 8 s and
-  named every exchange before: measured "13 orders, $528.6k, binance bybit
-  okx" against the core's one $241.7k off binance. Gated on StrikeCount with
-  an 8 s fade; a simulated strike reads "simulated". Photographed.
+- HUD: which liquidation, which exchange — not done. Daniel 2026-09-06
+  17:50: LIQ BINANCE $241.7K must appear only when the mushroom is on
+  screen, not before.
 - SIM toggle under PRACTICE — not done. Daniel 2026-09-06 17:33 and 17:38:
   PRACTICE ON, DEBUG visible, no SIM button. No atom bomb on screen, no
   detonation sound. Reopened. Cause
