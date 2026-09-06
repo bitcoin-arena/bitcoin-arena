@@ -7539,3 +7539,109 @@ It holds, and the reason it holds is worth writing down rather than being
 lucky: Unity's camera keeps the VERTICAL field of view fixed and widens
 horizontally, so a wider frame costs nothing vertically. The 4:3 reading is
 the tightest of the three, not the loosest.
+
+
+## 2026-09-06  the HUD stops drawing on top of itself
+
+Daniel photographed it at 22:17 on an iPhone: the block board on the dollar
+sign of "$79,810", "CONDITION 100%" laid across the board's own last line,
+the practice switch under the centred "BLOCK 965,829 · 2:06", and MUTED and
+DEBUG as two grey word-slabs stacked down the right edge. Three asks at
+22:18 - a build number on the loading screen, exposure back or explained, no
+overlaps on desktop or iOS - and two more at 22:21: condition and danger
+stacked, the settings as icons.
+
+THERE WAS AN OVERLAP TEST AND IT WAS GREEN. It checked one pair, the
+condition bar against the block board, at 1600x900, which is neither a phone
+nor a desktop anyone uses. It stayed green through all four faults. The new
+one walks every pair of top-level boxes across eight shapes, including both
+orientations of a phone, the way the title screen has been checked since it
+was drawing over itself.
+
+FOUR CAUSES, each a number rather than a look.
+
+  1. The block box claimed 3.20 line-heights and `DrawBlock` laid out 3.77 -
+     0.15 in, a title, 0.62 of clock bar, the time left, the pending line.
+     With a leaderboard it claimed 4.40 against 6.17. So the last line was
+     drawn outside its own yellow border and the condition bar, which is
+     positioned from that claimed height, landed on it. There is one list of
+     rows now, walked by the drawing AND by the measurement, and the box is
+     the content plus a fifth of a line.
+
+  2. The price was drawn into `new Rect(0, y, w, ...)` - the whole screen -
+     and centred in it. On a desktop the columns are far apart and it looks
+     right; on a phone the "$" reached the block board. It is centred in the
+     GAP between the columns now, and it shrinks to fit that gap rather than
+     spilling out of it: 13% of the short side is wider than the gap a phone
+     leaves. The centred block line and the liquidation line moved with it.
+
+  3. The practice switch was positioned under "block plus condition". The
+     danger meter joining that column would have gone straight under it, so
+     the switch is measured from the meter now and the whole stack is
+     block, condition, danger, practice, SIM - asserted in that order and
+     asserted to fit above the steering pad on a 844x390 phone.
+
+  4. MUTED and DEBUG were `s*0.7` wide and `s*0.34` tall, stacked. They are
+     `s*0.34` squares side by side on one row now, in the width the view
+     toggle already claimed, so the right column did not grow. The glyphs are
+     drawn from rectangles rather than typed: an emoji or a box-drawing
+     character depends on the browser's font, and a missing glyph is a blank
+     square where a control used to be.
+
+EXPOSURE WAS NEVER REMOVED. It was switched off by the mode Daniel was in:
+`RunScore.Running` is false while the truck is invulnerable and practice
+makes it invulnerable, so the one meter that exists to TEACH a rule was
+hidden from the mode a player learns in. It draws in practice now and banks
+nothing there, which is the truth about practice. And it has moved out of the
+top-right corner to sit directly under the condition bar, same column, same
+width - the two numbers about the run you are in, together.
+
+`ScoreTests.ExposureMeterClearsTheBlockBoard` required the opposite - the
+meter to the RIGHT of the whole left column - so it was INVERTED rather than
+relaxed, renamed `TheDangerMeterSitsUnderTheConditionBar`, and it now checks
+four sizes instead of one.
+
+THE BUILD NUMBER is stamped by `BuildWebGL.Run` into `Resources/build.txt`
+from the commit being built, and read back by `BuildStamp`. It gets a row of
+its own under the title bar, checked against every other box on the splash,
+because it is only useful if nothing is drawn over it. In the editor it reads
+"dev", which is the honest answer there. It exists because twice in one
+session a measured fix "changed nothing on the phone" and both times the page
+was serving an older build than the one being argued about.
+
+MUTATION-CHECKED, each reverted at once:
+
+  block box back to the 3.20 it claimed  -> survived at first, and that was
+                                            the finding: nothing held the box
+                                            to its own content. With the row
+                                            list and the content assertion, a
+                                            box 15% short is red at 1920x1080
+
+THE SHORTFALL, BEFORE AND AFTER, printed by `MeasureTheBlockBoxAgainstIts
+OwnRows` rather than argued. Same proportion at every size, because both the
+old constant and the content scale with the line height:
+
+  size        claimed before   content drawn   outside   claimed now   spare
+  1920x1080      99.2 px         116.9 px      17.7 px     122.5 px    5.6 px
+  1366x768       99.2           116.9          17.7        122.5       5.6
+   844x390       64.5            76.0          11.5         79.6       3.6
+   640x480       74.4            87.7          13.3         91.8       4.2
+
+15.1% of the readout was drawn outside its own border, at every shape, and
+the condition bar was positioned from the number that was 15% short. That is
+the whole of fault 1.
+  headline back across the whole screen  -> TheHeadlineNeverReachesEither
+                                            Column red
+  the icons overlapping by a hair        -> TheSettingsAreTwoSquareIconsOn
+                                            OneRow red, which is how the
+                                            first cut of the icon row was
+                                            caught before it shipped
+
+  PlayMode 203: 178 green, 12 red, 13 skipped. Eleven are the documented
+    Battlefield.Army set; the twelfth is RampReadyTests.TheRealTransactions
+    ReplaceTheStandInsWhileNothingIsLoaded, which is the ROTATING flake this
+    book has carried since item 1 - one of it and TheGogglesAnimate appears
+    per run, never both. Not waved away: run on its own against this tree it
+    is green, 1 of 1, and TheGogglesAnimate was green in the full run.
+  EditMode 153: 150 green, 1 red, 2 skipped - the red is the known retired
+    C# rifle path.
