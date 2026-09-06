@@ -7116,3 +7116,70 @@ MUTATION-CHECKED, one mutant per test, each reverted immediately:
                                            true. The bite for that case is
                                            the decay, and the decay mutant
                                            (3.2 -> 0.05) does kill it.
+
+
+## 2026-09-06  M1.a14 HUNTED: both engines put 100% of the truck's damage on tank shells
+
+Measured before any edit, and the answer is not the one the bullet expects.
+
+The question was what share of the damage to a PARKED truck is tank fire in
+the retired C# army against what the core does now. Same establishment is
+not possible - the C# recording is 24 armour and 72 infantry a side, the
+core holds 12 and 36 - so the SHARE is the comparable figure, not the rate.
+Both were run with the truck held at one place, Heat at zero, and the window
+closed where the truck is written off, because damage is withheld after that
+and a tally that keeps counting reports a battle nobody was in.
+
+  parked at   C# seconds  shells  damage    core seconds  hits  damage
+   z =   0      13.73       21     157.1      12.45        19    153.1
+   z =  -5      13.73       21     159.3      12.45        20    158.7
+   z = -12      17.35       19     153.1      16.30        20    159.9
+   z = -25      17.40       19     156.5      16.73        19    155.5
+   z = -34      20.78       18     153.3      20.47        18    151.9
+
+  tank share of damage to the truck:   C# 100.0%   core 100.0%
+
+SO NOTHING IS MISSING FROM THE DAMAGE. X is zero of Y. The core hunts the
+truck as hard as the C# army did and kills a parked one in 12 to 20 seconds,
+all of it armour, within a second and a couple of shells of the engine it
+replaced. Riflemen contribute nothing to a parked truck in EITHER engine
+while it is alive: the rifle reaches 26 m against the tank's 34 to the
+courier, and the tank finishes it first. The rifle band exists in both
+(`COURIER_RIFLE_MIN` 1.5 to 3.5, `Army.cs:737`) and is simply never the
+thing that kills you.
+
+Two caveats on the record. The C# side needs a subscriber on `CourierHit`
+to see the hits at all, and `?.Invoke` evaluates `Rand(...)` only when
+something is subscribed - so watching the battle draws numbers an unwatched
+run does not, and this is not bit-identical to a silent one. The share does
+not turn on which draw a shell took. And the two engines were run from their
+own seeds, not a shared one; the agreement is of behaviour, not of stream.
+
+WHERE THE GAP ACTUALLY IS, found while looking for it and NOT acted on:
+
+  1. The picture never points a barrel at the player. `CombatFx.Muzzle` is
+     wired to the core - `fired` comes off the core's reload clock at
+     CombatFx.cs:1061 and the flash and tracer are drawn - but the target
+     search at :1109 only ever considers other UNITS: it skips `j == i`,
+     skips the dead, skips the wrong arm, skips own side, and the truck is
+     not in that list at all. When the core spends a shell on the courier -
+     which is 100% of what hurts the player - the tracer is drawn at some
+     other tank instead, or down the unit's heading when nothing is in
+     reach. So the player is hit hard, repeatedly, and never sees anyone
+     aiming at him. That is what "tanks and soldiers do not shoot" looks
+     like from the driving seat.
+
+  2. HUNTED is not a combat state at all. `DriveHud.cs:736` takes the stars
+     from `CargoBay.Heat`, and that is fees and cargo value only - "how
+     badly the war wants this load" - so it says HUNTED at four stars
+     because of what is in the bed, never because armour is firing at you.
+     Whether it ever reaches four stars on a normal load is a second
+     question and is not measured here.
+
+Neither was touched. The measurement is `ArmyDamageReferenceTests.
+MeasureWhatHitsAParkedTruck`, Explicit, in the same shape as the other
+reference measurements in this repo: it prints `[hunted]` lines and asserts
+nothing.
+
+  EditMode 140: 138 green, 1 red, 1 skipped - the red is the known retired
+  rifle path, the skip is this measurement.

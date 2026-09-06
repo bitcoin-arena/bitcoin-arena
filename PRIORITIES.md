@@ -156,7 +156,13 @@ measurement; HUNTED is what is left.
   frame. One fault did come out of it and is fixed: the cap stayed published
   after its theatre was destroyed, so every later camera tilted at a ghost.
 - hunted: tanks and soldiers do not shoot; HUNTED status seems dead
-  — not done. Untouched; it is next.
+  — not done, and now measured. The damage is not missing: both engines put
+  100% of a parked truck's damage on tank shells and kill it in 12-20 s, the
+  core within a second of the C# army it replaced. What is missing is the
+  picture and the word. The muzzle flash is drawn from the core but its
+  target search only ever considers other units, so the shell that hits the
+  player is drawn going somewhere else; and HUNTED is taken from the cargo's
+  fees, not from being shot at. No edit made - waiting on Go.
 
 M1.a15: parked — was a14. Wheels in the ground at the depot / on the model.
   Standing bury is fixed (0.178 m to 0.000, 3bd4208): the wheel was seated on
