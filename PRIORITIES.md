@@ -108,6 +108,9 @@ not inferred from the suite. Numbers in TASKBOOK.
 - HUD overlap — not done. Daniel 22:18 iPhone: BLOCK box over the price,
   PRACTICE/SIM over BLOCK 965,829. No overlapping elements on desktop or
   iOS. Shot daniel-screens/2026-09-06-2218-hud-overlap.jpg.
+- HUD layout — not done. Daniel 22:21: health and exposure stacked under
+  each other. MUTED and DEBUG as icons, not text buttons, so the bar is
+  slimmer.
 - SIM toggle under PRACTICE — done. It was built all along; the daily site
   had simply never been deployed since 32cae7d, and CI does not deploy. Live
   now and photographed at iPhone landscape. The models a strike needs also
