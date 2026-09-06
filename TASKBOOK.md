@@ -7183,3 +7183,69 @@ nothing.
 
   EditMode 140: 138 green, 1 red, 1 skipped - the red is the known retired
   rifle path, the skip is this measurement.
+
+
+## 2026-09-06  M1.a14: the barrel points at the truck the core just hit
+
+The damage was never missing - both engines write a parked truck off in
+twelve to twenty seconds and 100% of it is tank shells. The picture was.
+`CombatFx.Muzzle` drew the flash and the tracer off the core's own reload
+clock, correctly, but its target search only ever considered other UNITS: it
+skips self, the dead, the wrong arm and its own side, and the truck was not
+in that list at all. So the shell the core had just spent on the courier was
+drawn going at some other tank, or down the unit's heading when nothing was
+in reach. The player was hit repeatedly and never shown a barrel pointed at
+him.
+
+NOT A C# LEFTOVER COPIED. The old `Army.Bind` path skipped the truck here
+too; there was nothing to copy. This is the core's own rule, from both
+firing sites in `sim.js`: the courier outranks the enemy the unit had picked
+when it is inside the reach for that arm AND nearer than that enemy, and
+only once a foe has been found at all - a unit with nobody in range does not
+fire at the truck standing beside it.
+
+THE TWO REACHES ARE NOT THE SAME NUMBER, and mixing them would be exactly
+the unit error this letter is told to avoid: `COURIER_RANGE` is 34 m for a
+tank, and a rifleman's reach to the courier is his own `RIFLE_RANGE`, 26 m.
+
+THE SHARE. Of the shells the core spent on the courier, how many does the
+renderer now point at the truck? The core decides from the positions the
+tick STARTS with and CombatFx reads the state it ENDS with, so the two can
+disagree even with the same rule; this counts how often they do. Parked
+truck, Heat zero, window closed where the truck is written off, the same
+five stand-offs as the damage measurement:
+
+  parked at   shells at the courier   drawn at the truck   at another unit
+   z =   0            33                     33                  0
+   z =  -5            30                     30                  0
+   z = -12            29                     29                  0
+   z = -25            28                     28                  0
+   z = -34            27                     27                  0
+
+  share: 100.0% at every stand-off, and 0 of the 291 shots that went at
+  UNITS were drawn at the truck by mistake.
+
+And with the truck DRIVING rather than parked, because a parked truck is the
+kind case for a rule that reads a stale position: 8 shells on the courier, 8
+drawn at the truck, 100.0%, 0 wrong out of 19 shots at units. A tick of
+staleness is not enough to move a target 34 m.
+
+WHAT THIS MEASUREMENT IS NOT. It is the rule and the staleness, computed
+against the core in node; it is not the shipped C# executing. `BlwpCore` is
+a stub outside a WebGL build, so no editor test can run CombatFx's core path
+at all. The C# side of it is pinned instead by `CourierMuzzleTests`, seven
+EditMode assertions on `CombatFx.ShotGoesAtTheCourier` with the edges the
+core has - strict at the reach, strict at "nearer", and no shot without a
+foe. Mutation-checked, each reverted at once:
+
+  a rifleman given the tank's 34 m reach -> ARiflemanReachesTheTruckSix
+                                            MetresLessFarThanATank red
+  the nearer target no longer wins       -> TheNEARERTargetWins and
+                                            TheEdgesAreTheCoresEdges red
+  no foe needed                          -> NobodyInRangeMeansNoShotAt
+                                            TheTruckEither red
+  the edges go soft, < becomes <=        -> TheEdgesAreTheCoresEdges red
+
+Renderer only. No core change, no new core word, nothing about HUNTED or the
+HUD, and nothing here decides anything - the core has already spent the
+shell; this only points the barrel where it went.

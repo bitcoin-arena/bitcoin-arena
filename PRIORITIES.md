@@ -160,9 +160,14 @@ measurement; HUNTED is what is left.
   100% of a parked truck's damage on tank shells and kill it in 12-20 s, the
   core within a second of the C# army it replaced. What is missing is the
   picture and the word. The muzzle flash is drawn from the core but its
-  target search only ever considers other units, so the shell that hits the
-  player is drawn going somewhere else; and HUNTED is taken from the cargo's
-  fees, not from being shot at. No edit made - waiting on Go.
+  target search only ever considered other units, so the shell that hit the
+  player was drawn going somewhere else; and HUNTED is taken from the cargo's
+  fees, not from being shot at.
+  The picture half is DONE: the muzzle now takes the courier on the core's own
+  rule, and of the shells the core spends on the truck 100% are drawn at it,
+  at all five stand-offs and while driving, with none of the shots at units
+  drawn at the truck by mistake. The word HUNTED is untouched and is what is
+  left of this bullet.
 
 M1.a15: parked — was a14. Wheels in the ground at the depot / on the model.
   Standing bury is fixed (0.178 m to 0.000, 3bd4208): the wheel was seated on
