@@ -6896,3 +6896,43 @@ at predates it, not because the feature is missing or broken. The fix is a
 deploy of the current build to the daily URL, which is an outward-facing
 action and his call, not mine.
 
+
+## M1.a13 scoring - the risk map is fine; the clamp is what flattens it
+
+Daniel 18:11/18:15: score is proximity to the front, risk - the seam must pay
+massively more than the edges - and it does not.
+
+THE RISK MAP IS NOT THE FAULT. `threatAt` measured across the field at t=30 s
+(0 to 1, armour counts 1.0 and infantry 0.18 within range):
+
+              z=-70  z=-40  z=-15  z=0    z=+15  z=+40  z=+70
+      x=-100   0.00   0.00   0.00   0.10   0.10   0.10   0.10
+      x= -50   0.17   0.29   0.96   1.00   0.71   0.50   0.30
+      x=   0   0.02   0.70   1.00   1.00   1.00   0.72   0.10
+      x=  50   0.24   0.58   0.84   0.70   0.68   0.04   0.02
+      x= 100   0.00   0.10   0.10   0.21   0.19   0.00   0.00
+
+That is a well-shaped map: nothing at the corners, saturated at the seam.
+
+THE CLAMP IS. Exposure accrues as `threat * (1 + cargo) * forward metres`, and
+the score is
+
+    1000 * min(exposure, EXPOSURE_REFERENCE) / EXPOSURE_REFERENCE
+         * (REFERENCE_TICKS / ticks) * cargo
+
+with EXPOSURE_REFERENCE = 190. A run gains about 180 m of x, and a full bed
+makes the multiplier 2, so the reference is reached at an AVERAGE THREAT OF
+0.53. Anywhere near the seam averages far above that - the middle of the map
+integrates to roughly 306 - so a dangerous run and a moderately dangerous run
+both clamp to 1.0 and score the same 1000. Risk stops paying at about half of
+it.
+
+So the shape Daniel wants is already computed; it is thrown away by a ceiling
+that is too low to separate the two runs he drove.
+
+NOT CHANGED HERE. This is `packages/core/src/rules/score.js` - a core rule, so
+it moves every state hash and golden vector, exactly as the crater depth did -
+and "massively more" is a number somebody has to choose. What the fix looks
+like is either a much larger reference, or dropping the clamp and letting the
+factor run past 1.0 so the seam pays several times the edge.
+
