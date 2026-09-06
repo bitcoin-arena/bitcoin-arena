@@ -75,8 +75,16 @@ M1.a13: 2026-09-05 morning picture. Claude updates each line.
   never under it, each half proven to bite. Every strike in a round draws the
   same full mushroom. The probe keys are out of the player build. Numbers and
   the recorded rim-versus-floor preference are in TASKBOOK.
-- HUD: which liquidation, which exchange — not done
-- SIM toggle under PRACTICE — not done
+- HUD: which liquidation, which exchange — done. Size from the core's
+  K_LOAD, venue from the latch that mirrors the core's own largest-wins rule,
+  taken together off one order. It summed every order of the last 8 s and
+  named every exchange before: measured "13 orders, $528.6k, binance bybit
+  okx" against the core's one $241.7k off binance. Gated on StrikeCount with
+  an 8 s fade; a simulated strike reads "simulated". Photographed.
+- SIM toggle under PRACTICE — done. A SIM switch under PRACTICE, and only
+  while PRACTICE is on. It calls the same FireSimulated the silent-market
+  clock does, so the strike, crater, mushroom, fallout and hull wipe are the
+  core's; there is no second path. Both states photographed.
 - tanks along the front, not in a heap — done. There was no heap: closest
   pair 8.2 m from t=1 s, renderer draws 24 of 24. The band is Core's own
   measured rule, 4-14 m off the seam, and 50.4% of armour stands inside
@@ -92,13 +100,21 @@ M1.a13: 2026-09-05 morning picture. Claude updates each line.
   never built now; measured on the build as "per-bar figures 0". The row
   keeps its single sat/vB, the 24 bars keep their order, heights and live
   mempool source. Before/after in TASKBOOK.
-- whitepaper fits the frame — done. The block was still cut for the dead
-  9.4 x 12.2 portrait plate while the live one is 73.8 x 52.5 landscape, so
-  it filled the height and left half the width empty. Reshaped to the plate's
-  own ratio: 47% x 94% to 89% x 94%, neither axis over 100%. Numbers in
-  TASKBOOK.
-- crater twice as deep — not done
-- wipe in crater radius, no wrecks — not done
+- whitepaper fits the frame — done. The fit and its test both read a mesh
+  the renderer does not draw, so the page measured 89% full while sprawling
+  over the depot. All three read Renderer.bounds now: 11.5 x 8.6 m of text on
+  the 12.2 x 9.4 m drawn plate, 94% x 92%, stable, neither axis over 100%.
+  Fill band unchanged at 0.94. Before/after in TASKBOOK.
+- crater twice as deep — done as 1.5x, not 2x, on measurement. Depth is
+  0.225 of the radius now (was 0.15): 1000 M goes 6.00 m to 9.00 m. Twice is
+  not available - at 0.30 the truck never leaves the largest crater in 40 s,
+  and the cliff sits between 0.25 and 0.30. Golden vectors regenerated, not
+  loosened. Ladder in TASKBOOK.
+- wipe in crater radius, no wrecks — done. Burnt-out hulls inside the
+  radius are retired through CombatFx's own list; the core has no word for a
+  wreck and none was invented. It wiped nothing at first because
+  StrikeTheatre.fx was never wired - a null assignment in BuildArmies that
+  threw nothing - and a test now asserts the wiring, not just the method.
 
 M1.a14: parked until a13 is closed — wheels in the ground at the depot / on the model.
   Standing bury is fixed (0.178 m to 0.000, 3bd4208): the wheel was seated on
