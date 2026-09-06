@@ -7346,3 +7346,55 @@ Not fixed here: the fix is a choice between lowering the clamp, holding the
 road at a floor in the frame, and framing both by pulling back, and the
 letter's sequence puts it after the barrel, which is done. The probe now
 records the vertical place every run so the choice is made on numbers.
+
+
+## 2026-09-06  the view pulls back so the road and the cap share the frame
+
+The pick was pull back and frame both, with a hard floor that the road stays
+in the picture for the whole cloud, and no dropping the 26 degree clamp as
+the first move. Walked, not guessed. One fresh cloud a rung, a second and a
+half to let the position damp settle, then two seconds of sampling, frame
+640x480:
+
+  pull-back  lift   road lowest   below the edge   cap up frame   truck   aim
+     0 m      0 m      -0.05        1250/1304          0.58       200 px  25.4
+    10 m      0 m       0.06          0/1611           0.55        89 px  21.8
+    20 m      0 m       0.11          0/1945           0.53        54 px  20.0
+    30 m      0 m       0.15          0/1391           0.53        39 px  18.5
+    45 m      0 m       0.19          0/1446           0.52        27 px  16.5
+    60 m      0 m       0.23          0/1897           0.51        21 px  14.9
+    20 m      6 m       0.03          0/1758           0.53        59 px  16.9
+    30 m      8 m       0.08          0/1529           0.52        41 px  14.6
+
+TWENTY METRES, no lift. Ten already puts the road back in the picture but at
+0.06 it is clinging to the edge, and a slope or a crest would put it under
+again; twenty is the first rung with a real share of the frame under it. The
+truck costs 200 px down to 54 - eleven per cent of a 480-tall frame, which is
+smaller but is not a speck, and sixty metres at 21 px would be one. LIFT MAKES
+IT WORSE and is left at zero: raising the camera tips the aim down at the road
+and pushes it back towards the bottom, 0.11 to 0.03 at the same distance.
+
+THE CLAMP WAS NOT TOUCHED and did not need to be. Standing further off drops
+the angle the cap needs on its own: the aim peaks at 21.2 degrees where it
+used to sit against the 26 degree ceiling, so the clamp stops binding without
+being lowered. That is the difference between framing both and trading one
+for the other.
+
+  before   road up the frame -0.05..0.61, below the bottom edge for 3016 of
+           4078 frames of a standing cloud, cap 0.58..0.75, truck 109 px
+  after    road up the frame  0.08..0.61, below the bottom edge for 0 of
+           3208, cap 0.54..0.72 and never off the top, truck 53 px
+
+The floor is asserted, not admired: `AStrikeTiltsTheViewAndDoesNotSwingIt`
+now requires zero frames below the bottom edge and zero frames with the cap
+off the top. Mutation-checked by putting the pull-back back to zero - 3235 of
+4163 frames below the edge, red.
+
+Still true and still unasserted: this is the editor's aspect, 640x480, not a
+phone's, and a wider frame is more forgiving horizontally and identical
+vertically. The core does not drive the truck here either. Both were already
+written down.
+
+  PlayMode 197: 175 green, 11 red, 11 skipped - the documented
+    Battlefield.Army set, and the new skip is the pull-back ladder
+  EditMode 148: 145 green, 1 red, 2 skipped

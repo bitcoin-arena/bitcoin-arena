@@ -145,11 +145,15 @@ measurement; HUNTED is what is left.
   four cases a13's slalom never drove are fine: reversing, a handbrake spin,
   an impact and a released look all keep the road in the picture, never
   closer than a third of the way in from an edge, and five PlayMode tests
-  hold them there. But those four asserted where the road lands ACROSS the
-  frame and never UP it, and while a mushroom stands the road is under the
-  bottom edge for 79.4% of the cloud's life. a13's fix for M1.d raised the
-  look point to bring the cap into frame and the road went out the bottom to
-  make room. Numbers in TASKBOOK; the fix is a choice and is not made yet.
+  hold them there. Those four asserted where the road lands ACROSS the frame
+  and never UP it, and while a mushroom stood the road was under the bottom
+  edge for 79.4% of the cloud's life. Fixed by standing 20 m further off
+  while a cloud is up: the road is now inside the frame for every frame of
+  every cloud, the cap is never off the top, and the 26 degree clamp was not
+  lowered - at that distance the aim peaks at 21.2 and the clamp stops
+  binding on its own. It costs the truck 200 px of height down to 54 on a
+  480-tall frame. The floor is asserted and mutation-checked. Ladder in
+  TASKBOOK.
 - camera: when the atom bomb falls, do not snap the view to the bomb.
   View stays as it is — done. There is no snap and no reparent: with a cloud
   raised 45 m off the road the view tilts to 25.4 degrees of its own 26
