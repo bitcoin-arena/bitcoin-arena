@@ -51,7 +51,7 @@ Twelve red tests: none on the deploy path. List in TASKBOOK.md.
 ## M1
 
 Liquidation picture — OPEN. SIM button missing on iPhone (a13). Then a11
-ear. Details: TASKBOOK.md. Next letter: M1.a15.
+ear. Details: TASKBOOK.md. Next letter: M1.a16.
 
 M1.a8: not done (parked) — coin-margined Binance probed.
 
@@ -126,7 +126,14 @@ not inferred from the suite. Numbers in TASKBOOK.
   StrikeTheatre.fx was never wired - a null assignment in BuildArmies that
   threw nothing - and a test now asserts the wiring, not just the method.
 
-M1.a14: parked until a13 is closed — wheels in the ground at the depot / on the model.
+M1.a14: parked until a13 is closed. Daniel 2026-09-06 18:03. Not started.
+- camera: the direction the truck drives must never leave the view unless
+  Daniel explicitly looks around
+- scoring: edge of the front ~1000 vs through the bad field similar or
+  less — must differ massively
+- hunted: tanks and soldiers do not shoot; HUNTED status seems dead
+
+M1.a15: parked — was a14. Wheels in the ground at the depot / on the model.
   Standing bury is fixed (0.178 m to 0.000, 3bd4208): the wheel was seated on
   the collider's 0.550 m while the mesh reaches 0.728 m. Craters and the
   core/terrain surfaces were both cleared by measurement, not argument.
