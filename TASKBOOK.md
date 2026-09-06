@@ -6544,3 +6544,44 @@ TWO FAULTS OF MY OWN ON THE WAY, both caught by the suite rather than by me:
 
 The fill band was not moved: still 0.94, still >55% asserted.
 
+
+## M1.a15 - the truck drives INTO the hole. Measured, no code changed.
+
+The HARD line in item 9, never tested until now. It is a measurement, and
+the answer is that the picture already does it.
+
+IN THE CORE. Driven from outside the rim at full throttle, straight at the
+centre, reading the core's own `surfaceAt` under the truck every tick. The
+distribution is over the ticks spent inside 30 m of the centre:
+
+     10 M  floor -4.29 m   under the truck: min -4.29  median -0.45  max  0.00
+    100 M  floor -5.79 m   under the truck: min -5.78  median -3.25  max  0.00
+   1000 M  floor -9.00 m   under the truck: min -9.00  median -7.61  max -3.96
+
+At its closest approach - 0.0 to 0.1 m from the centre in all three - the
+ground under the truck is the crater floor itself: 0.00 m above it. It does
+not ride over the bowl at any size; the median shows it spends the crossing
+well below the rim, and the deeper the crater the deeper the median sits.
+
+IN THE BUILD. A liquidation fired from the SIM switch, then the truck put on
+the crater it dug:
+
+    outside   [seat] truck at tick 120: bottom +0.36 m vs the ground,
+              ride 5.95, surface 5.09
+    inside    [seat] truck at tick 224: bottom -0.10 m vs the ground,
+              ride -1.63, surface -2.48
+    [crater] nearest crater 0.0 m away, r 29.3 m
+
+The truck's ride drops 7.58 m, from 5.95 to -1.63, on a surface that drops
+7.57 m. It follows the bowl rather than standing over it, and its own lowest
+point stays within 0.36 m of the ground the whole way.
+
+STILL: scratchpad/into-hole.png. The truck sits inside the pale bowl with the
+green rim curving around and above it, the armour on the horizon overhead,
+the mushroom standing over the truck.
+
+No code was changed for this bullet. The seating that puts it there reads
+`Ground` - the core's surface, relief LESS craters - through
+`roads.SurfaceHeight`, so the hole the core dug is the hole the truck drives
+into. No PhysX read is involved and no 2-D coupling was reintroduced.
+
