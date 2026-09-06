@@ -77,7 +77,12 @@ M1.a13: 2026-09-05 morning picture. Claude updates each line.
   the recorded rim-versus-floor preference are in TASKBOOK.
 - HUD: which liquidation, which exchange — not done
 - SIM toggle under PRACTICE — not done
-- tanks along the front, not in a heap — not done
+- tanks along the front, not in a heap — done. There was no heap: closest
+  pair 8.2 m from t=1 s, renderer draws 24 of 24. The band is Core's own
+  measured rule, 4-14 m off the seam, and 50.4% of armour stands inside
+  15 m; the tail is documented give-ground and edge-walk reinforcements.
+  Left as it is on Daniel's pick - a hard line would retune the recording
+  numbers. Distribution in TASKBOOK.
 - late-run truck/tanks not under the ground — not done
 - no numbers on mining bars — not done
 - whitepaper fits the frame — not done

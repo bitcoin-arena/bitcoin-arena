@@ -6284,3 +6284,36 @@ numbers. That is a different decision from the crater depth, where the old
 value was the cautious end of a rule nobody had measured: here the current
 value IS the measurement. Not changed on my own judgement.
 
+
+## M1.a13 - the formation bullet is answered by the distribution. Pick: leave the rule.
+
+Daniel's call, 2026-09-06: do not tighten ARMOUR_STANDOFF or ARMOUR_SPREAD,
+do not cap give-ground.
+
+The band is Core's own measured rule and it already matches the C# intent -
+Spawn's `standoff = Rand(4f, 12f)` behind the line with 8.5 / 7.5 spacing
+against Core's 4 to 14 m off the seam with the same spacing. It is the
+RECORDING CORRECTION: the earlier flat 0-8 m put both lines too far forward
+and killed 81-116 riflemen a round against the recording's 60-76, with a bomb
+miss-rate of 42-49% against 50-58%. A hard line would retune those numbers on
+purpose, so it is not done.
+
+The distribution is the answer, not the mean. Armour against its own front
+line at its own x, 4,677 samples from 10 s to 130 s:
+
+     0-5 m    6.4%      15-20 m  16.0%      50+ m  15.3%
+     5-10 m  16.5%      20-30 m   7.8%
+    10-15 m  27.5%      30-50 m  10.5%
+
+50.4% inside 15 m. The tail - 10.5% at 30-50 m and 15.3% beyond 50 - is the
+documented give-ground scatter plus reinforcements walking in from the field
+edge, both deliberate. Mean 20-25 m was the wrong summary and I should not
+have led with it: a mean cannot tell a line with stragglers from a scatter.
+
+And there was never a heap: closest pair 2.24 m for under a second at spawn,
+then 8.1 to 8.4 m for the rest of the round, with the renderer drawing 24 of
+24 and skipping none.
+
+Capping give-ground is not opened on this letter: it is a new investigation
+with no measured share of the remaining gap.
+
