@@ -6428,3 +6428,36 @@ the figures did not move it.
 Renderer only. No core fee-rate was invented - the core still has no word for
 one - no PhysX read, no 2-D coupling.
 
+
+## M1.a13 - the whitepaper fits the frame: the block was still shaped for a plate that is gone
+
+The rule this file already carries, applied to the layer under the one it was
+learned on. The whitepaper sat at 22% through four changes because `Fit` had
+been handed a 9.4 x 12.2 plate while the page was 73.8 x 52.3. That was fixed
+by refitting against the live plate - and the TEXT was still cut for the dead
+one.
+
+BEFORE, measured on the running build:
+
+    [paper] plate 73.8 x 52.5, room 69.4 x 49.4, text 70.7 x 100.9,
+            k 0.489 -> drawn 34.6 x 49.4, covering 47% x 94% of the plate
+
+The plate is LANDSCAPE, 1.41. The text block was PORTRAIT, 0.70 - eleven
+short lines, shaped by its own comment "to the plate, which is 9.4 x 12.2 -
+portrait, about 0.77". `Fit` takes the tighter axis, so the block filled the
+height, ran out, and left half the width empty. Raising the fill from 0.80 to
+0.94 had moved it three points and stopped, because the fill was never the
+limit - the shape was.
+
+AFTER, seven lines with the longest about twenty-two characters, near the
+plate's own ratio:
+
+    [paper] plate 73.8 x 52.5, room 69.4 x 49.4, text 85.2 x 64.1,
+            k 0.770 -> drawn 65.6 x 49.4, covering 89% x 94% of the plate
+
+47% x 94% to 89% x 94%. Neither axis is over 100%, so it fills the frame
+without running off it.
+
+No core, no PhysX, no invented quantity: this is a TextMesh scaled against
+the mesh bounds of the plate it is parented to.
+

@@ -92,7 +92,11 @@ M1.a13: 2026-09-05 morning picture. Claude updates each line.
   never built now; measured on the build as "per-bar figures 0". The row
   keeps its single sat/vB, the 24 bars keep their order, heights and live
   mempool source. Before/after in TASKBOOK.
-- whitepaper fits the frame — not done
+- whitepaper fits the frame — done. The block was still cut for the dead
+  9.4 x 12.2 portrait plate while the live one is 73.8 x 52.5 landscape, so
+  it filled the height and left half the width empty. Reshaped to the plate's
+  own ratio: 47% x 94% to 89% x 94%, neither axis over 100%. Numbers in
+  TASKBOOK.
 - crater twice as deep — not done
 - wipe in crater radius, no wrecks — not done
 
