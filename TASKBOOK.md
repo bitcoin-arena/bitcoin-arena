@@ -6461,3 +6461,51 @@ without running off it.
 No core, no PhysX, no invented quantity: this is a TextMesh scaled against
 the mesh bounds of the plate it is parented to.
 
+
+## M1.a13 - the whitepaper still, and what it exposed. NOT CLOSED.
+
+Daniel asked for a still before this bullet counts as closed. It was the
+right call: the coverage number was measured in a space the camera does not
+use, and the photograph says so.
+
+FIRST ATTEMPT AT THE STILL FAILED and must not be mistaken for evidence. A
+PlayMode camera into a RenderTexture cannot render under `-batchmode
+-nographics`: "RenderTexture.Create failed", and it wrote a 13 KB uniform
+grey PNG. That test is deleted. The mushroom stills were taken from the
+WebGL build in a browser, and that is the only pattern that works here.
+
+THE STILL, from the build, truck stood in front of the plate:
+scratchpad/paper-west.png at e1837fc. The page is not on a plate at all - the
+lettering is sprawled across the whole depot, "31 Oct 2008" spanning the full
+width of the view.
+
+WHY, in world metres:
+
+    [paper] WORLD: plate 0.0 x 12.2 x 9.4 m, text 0.0 x 49.4 x 65.6 m
+    [paper] plate 73.8 x 52.5, room 69.4 x 49.4, text 85.2 x 64.1,
+            k 0.770 -> drawn 65.6 x 49.4, covering 89% x 94% of the plate
+
+The text is drawn four times taller and seven times wider than the plate it
+belongs to, while the local numbers report a tidy 89% x 94%.
+
+THE ROOT IS THE OLD TRAP, ONE LAYER FURTHER OUT. `Room()` reads
+`MeshFilter.sharedMesh.bounds` - 73.8 x 52.5 - and the renderer DRAWS a plate
+of 12.2 x 9.4. `Refit` was added to re-read the live plate and it re-reads the
+same stale mesh. So the page is still "sized perfectly, to something else".
+
+AND THE TEST SHARES THE MISTAKE. `PostOfficeTests.TheLetteringFillsItsPlates`
+measures `mf.sharedMesh.bounds.size` against `mr.localBounds * localScale` -
+the same stale frame. It asserts the largest lettering fills more than 55% of
+its plate and passes today at 89% while the page covers the depot.
+
+WHAT I TRIED AND REVERTED. A world-space second pass in `Fit` brought the
+paper to 94% x 85% of the plate in world metres and the sprawl was gone from
+the still - but applied to every plate it took `mined_face_03` down to 47%
+and turned that test red, and confined to the paper it turned the same test
+red on the whitepaper at 22%, because the test measures the stale frame. Both
+are reverted; the tree is back at e1837fc.
+
+So the bullet cannot be closed by measurement alone: the fit and the test
+share one wrong reference for this plate, and correcting it means changing
+what BOTH read. That is a decision, not a measurement.
+
