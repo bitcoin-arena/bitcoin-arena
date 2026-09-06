@@ -66,15 +66,15 @@ ground, every strike in a round draws full size, the crater is 1.5x deeper
 with the truck still climbing out, hulls in the bowl are wiped, the
 detonation is audible, and no debug key ships. Measured on the browser build,
 not inferred from the suite. Numbers in TASKBOOK.
-- iOS audio — done (Daniel 2026-09-05 13:47: audible on iPhone)
+- iOS audio — not done. Heard 13:47; Daniel 17:45: sound does not work.
 - camera look-back — done on the machine, unheard on the phone. Yaw off the
   nose 8.7 deg to 3.8; roll 5.4 to 0; a tap moves the view 0.00 deg where it
   moved 0.69; the look returns under 0.5 deg 3.07 s after a 2.5 s hold.
   Residual: the dead zone is one degree of aim, 2.9 px at 640 wide, and a
   real thumb may wander further - only Daniel's tap can say. Looking while
   driving still needs multi-touch, which is not this bullet.
-- real mushroom mesh — not done. Daniel 2026-09-06 17:39: iPhone photo, the
-  blast is stacked planes/fireball, no 3D mushroom model. Reopened.
+- real mushroom mesh — not done. Daniel 2026-09-06 17:45: mesh is there.
+  When it expires it must vanish, not shrink. Reopened.
 - bear/bull bomber — not done. Daniel 2026-09-06 17:42: default airframe on
   iPhone, not bear/bull. Catalog on the daily host contains bomber-bear,
   bomber-bull and mushroom. HUD must show whether those models loaded.
