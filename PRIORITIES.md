@@ -53,6 +53,9 @@ Keep going. Audio is not a wait.
 HARD (Daniel 2026-09-06 18:53): keep going even if Daniel does not test
 at once. When a13 and a14 are done, continue with M2.
 
+HARD (Daniel 2026-09-06 22:48): when a letter like a13 or a14 is done,
+deploy to btc-logistics-core.pages.dev. Do not wait for Daniel to ask.
+
 Twelve red tests: none on the deploy path. List in TASKBOOK.md.
 
 ## M1
