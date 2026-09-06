@@ -83,7 +83,11 @@ M1.a13: 2026-09-05 morning picture. Claude updates each line.
   15 m; the tail is documented give-ground and edge-walk reinforcements.
   Left as it is on Daniel's pick - a hard line would retune the recording
   numbers. Distribution in TASKBOOK.
-- late-run truck/tanks not under the ground — not done
+- late-run truck/tanks not under the ground — done. Nothing is buried: 0 of
+  1,379 hull-readings more than a metre down over a full round to tick 6,600,
+  and the truck never below -0.06 m. The 5-30 cm under band is tracks hanging
+  below the seating plane, not a fault. SeatOnTerrain reads the core surface;
+  no PhysX leftover. Table in TASKBOOK.
 - no numbers on mining bars — not done
 - whitepaper fits the frame — not done
 - crater twice as deep — not done
