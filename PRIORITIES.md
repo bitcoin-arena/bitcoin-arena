@@ -50,8 +50,9 @@ Twelve red tests: none on the deploy path. List in TASKBOOK.md.
 
 ## M1
 
-Liquidation picture — OPEN. Truck drives *into* the crater.
-Details: TASKBOOK.md. Next letter: M1.a15.
+Liquidation picture — OPEN. The picture is measured-complete on the browser
+build; what remains is M1.a11, the strike's voice, which needs Daniel's ear
+and not code. Details: TASKBOOK.md. Next letter: M1.a15.
 
 M1.a8: not done (parked) — coin-margined Binance probed.
 

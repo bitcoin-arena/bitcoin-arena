@@ -6835,3 +6835,38 @@ above or below the crater's own rim depending on the hill it landed on. Above
 Seating still reads `Ground` through `roads.SurfaceHeight` to the core
 surface. No PhysX value anywhere on this path.
 
+
+## 9. M1 liquidation picture - MEASURED-COMPLETE, still open on the voice
+
+Every named visual hole is fixed or recorded as a deliberate choice, and each
+was measured on the browser build rather than inferred from the suite:
+
+  - the bomber crosses the driving frame and the bomb is on screen, unclipped,
+    for the whole fall, at 70 m and 150 m
+  - the HUD names the liquidation the core took and the exchange it came off,
+    gated on StrikeCount with an eight-second fade; a simulated strike reads
+    "simulated"
+  - the mushroom's stem stands on the crater floor and its cap is in the
+    driving camera - 6.6% and 6.1% of the frame at 70 m, whole and unclipped,
+    against 0.0% before
+  - the cloud stays 55 m; the view moves, not the cloud
+  - the truck drives INTO the bowl: the ground under it reaches the crater
+    floor, and in the build the ride drops 7.58 m against a 7.57 m surface
+  - burnt-out hulls inside the radius are wiped
+  - the detonation plays, and no debug key ships
+
+DUST SEATING, the one deliberate choice, now measured across the whole range:
+
+    r 16.0 m   depth 3.60 m   gap 2.95-3.84 m   0.82-1.07 of depth
+    r 30.9 m   depth 6.95 m   gap 3.65 m        0.53
+    r 35.7 m   depth 8.03 m   gap 4.16 m        0.52
+    r 38.3 m   depth 8.62 m   gap 3.11 m        0.36
+
+RESIDUAL, accepted: the first-instant cap clip, intermittent and near-truck
+only, cause identified as the camera's 2.2/s ease-in rather than the cloud,
+the cap's placement or the 26 degree clamp.
+
+REMAINING UNDER ITEM 9: M1.a11 alone - the strike's voice. It is blocked on a
+human ear, not on code: a headless browser has none, and it will not be
+closed from the harness. Item 9 stays open around it.
+
