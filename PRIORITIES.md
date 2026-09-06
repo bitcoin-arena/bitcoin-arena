@@ -46,6 +46,9 @@ HARD (Daniel 2026-09-05 09:24): every letter and every bullet is marked
 done or not done. Claude updates the mark when it changes. iOS audio
 was worked today and is still not done — he must go back to it.
 
+HARD (Daniel 2026-09-06 18:23): do not stop for Daniel to check sound.
+Keep going. Audio is not a wait.
+
 Twelve red tests: none on the deploy path. List in TASKBOOK.md.
 
 ## M1
