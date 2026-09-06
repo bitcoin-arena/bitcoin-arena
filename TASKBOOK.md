@@ -6237,3 +6237,50 @@ That is a Core spawn/front rule, not a renderer one, and changing it moves
 every state hash and golden vector - the same class of decision the crater
 depth was. Not made here.
 
+
+## M1.a13 - the front band already exists in Core, and half the armour is in it
+
+Step 1 of the front bullet: read the old C# for the intended band before
+changing anything in Core.
+
+WHAT C# INTENDED. `Army.Spawn` sets `standoff = Rand(4f, 12f)` - "how far
+behind the line this man digs in" - and `StepInfantry` uses
+`goalZ = front - Dir * (standoff + squadOffsetZ)`. Spacing is
+`FriendlySpacing 8.5 m` / `HostileSpacing 7.5 m`. Units are spawned at the
+FIELD EDGE, `z = -dir * (HalfDepth - Rand(0,3))`, and walk up, deliberately:
+the comment says a random depth behind the line put reinforcements thirty
+metres from the fighting in plain view.
+
+CORE ALREADY CARRIES IT, and it is not a copied leftover. `ARMOUR_STANDOFF`
+is 9 m with `ARMOUR_SPREAD` 10, so armour holds 4 to 14 m off the seam;
+riflemen get 4 m plus a spread plus a squad offset, and the file explains at
+length that this was corrected against a recording - the core's earlier flat
+0-8 m put both lines four metres too far forward, which killed 81-116
+riflemen a round by bomb against the recording's 60-76, with 42-49% of bombs
+hitting nobody against 50-58%. FRIENDLY_SPACING and HOSTILE_SPACING are the
+same 8.5 and 7.5.
+
+SO THE BAND IS NOT MISSING. Measured distribution, armour against its own
+front line at its own x, sampled every half second from 10 s to 130 s,
+4,677 samples:
+
+     0-5 m    6.4%
+     5-10 m  16.5%
+    10-15 m  27.5%     <- half of it, 50.4%, is inside 15 m
+    15-20 m  16.0%
+    20-30 m   7.8%
+    30-50 m  10.5%
+    50+  m   15.3%     <- one in six
+
+Half the armour stands in the intended band. The mean of 20-25 m I reported
+earlier is pulled by a long tail, and that tail is two DESIGNED behaviours:
+units give ground when crowded - "one that backs off when crowded ends up
+scattered through a contested strip, which is where the trickle of
+engagements comes from" - and reinforcements walk in from the field edge
+during the round.
+
+Tightening the band would undo a rule that carries recorded validation
+numbers. That is a different decision from the crater depth, where the old
+value was the cautious end of a rule nobody had measured: here the current
+value IS the measurement. Not changed on my own judgement.
+
