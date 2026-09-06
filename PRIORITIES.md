@@ -67,11 +67,14 @@ M1.a13: 2026-09-05 morning picture. Claude updates each line.
   Residual: the dead zone is one degree of aim, 2.9 px at 640 wide, and a
   real thumb may wander further - only Daniel's tap can say. Looking while
   driving still needs multi-touch, which is not this bullet.
-- real mushroom mesh — done. Streamed as model/mushroom and drawn at the
-  impact: measured 32.5 x 55.0 x 32.4 m, five renderers, against the 55 m
-  the column was built to, and it cools white to ash on the same clock the
-  primitives used. The three primitives remain only as the fallback until
-  it has streamed.
+- real mushroom mesh — done. Streamed as model/mushroom, 32.5 x 55.0 x 32.4 m,
+  five renderers, cooling white to ash on the primitives' clock; the three
+  primitives remain only as the fallback until it has streamed. The stem
+  stands on the crater floor and the dust spreads on the ground around it,
+  both guarded by MushroomSeatingTests in PlayMode — foot on the floor, dust
+  never under it, each half proven to bite. Every strike in a round draws the
+  same full mushroom. The probe keys are out of the player build. Numbers and
+  the recorded rim-versus-floor preference are in TASKBOOK.
 - HUD: which liquidation, which exchange — not done
 - SIM toggle under PRACTICE — not done
 - tanks along the front, not in a heap — not done
