@@ -6359,3 +6359,37 @@ cause: `godring.mjs` filtered console lines against a whitelist of tags, so
 `[seat]` never reached the log and the build looked silent. It passes any
 `^[tag]` line now instead of a list that has to be remembered.
 
+
+## M1.a13 - the mining bars: what they show, and where it comes from
+
+Measured on the running build before any change.
+
+    [bars] 24 bars from live mempool: first six 8.9, 3.5, 2.8, 2.3, 2.1, 2.0
+           sat/vB; labels "8.9", unit "sat/vB"
+    [bars] ... first six 9.0, 3.5, 2.8, 2.3, 2.1, 2.0 sat/vB; labels "9.0"
+
+Twenty-four bars, richest on the left. Each bar carries a numeric label and
+the row carries one unit label, "sat/vB", spelled out once.
+
+THE NUMBERS ALREADY MATCH THEIR SOURCE. `_barLabels[i].text` is written from
+`rates[i]` - the same array that sets `_barTarget[i]`, the bar's height - in
+the same block, so a label cannot disagree with its bar. Measured: the first
+label reads 8.9 while `rates[0]` is 8.9, and moves to 9.0 when the rate does.
+
+THE SOURCE IS NOT THE CORE, and cannot be. The rates come from the live
+mempool - `stream.Transactions`, falling back to `ChainStats.FeeCurve` and
+then `MempoolTerrain.FeeRates`. The core has no word for a fee rate: it is
+handed the RELIEF built from the histogram through `setGround`, a round-setup
+upload that sits outside the hashed state, exactly as a liquidation reaches
+it as a size and never as an exchange. So "make the bar numbers match the
+core" has nothing to match against.
+
+WHICH LEAVES THE BULLET'S OWN WORDING. PRIORITIES says "no numbers on mining
+bars" - remove the per-bar figures - which is the opposite action from
+verifying them. The measurement supports the removal reading: there is
+nothing wrong with the numbers, so the only work the bullet can mean is
+taking them off the bars. Not done on my own judgement: deleting twenty-four
+labels a player can currently read is not something to infer.
+
+No PhysX read and no 2-D coupling anywhere in this path.
+
