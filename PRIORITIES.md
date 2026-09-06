@@ -102,6 +102,12 @@ not inferred from the suite. Numbers in TASKBOOK.
   vectors regenerated, not loosened.
 - hunted fire — not done. Daniel 2026-09-06 21:18: THIS IS A13. High hunted
   means more fire on the truck. Low hunted means little fire.
+- build number on the loading screen — not done. Daniel 2026-09-06 22:18.
+- exposure in the HUD — not done. Daniel: the old UI had exposure; put it
+  back or say why it is gone.
+- HUD overlap — not done. Daniel 22:18 iPhone: BLOCK box over the price,
+  PRACTICE/SIM over BLOCK 965,829. No overlapping elements on desktop or
+  iOS. Shot daniel-screens/2026-09-06-2218-hud-overlap.jpg.
 - SIM toggle under PRACTICE — done. It was built all along; the daily site
   had simply never been deployed since 32cae7d, and CI does not deploy. Live
   now and photographed at iPhone landscape. The models a strike needs also
