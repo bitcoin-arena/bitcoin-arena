@@ -6936,3 +6936,52 @@ and "massively more" is a number somebody has to choose. What the fix looks
 like is either a much larger reference, or dropping the clamp and letting the
 factor run past 1.0 so the seam pays several times the edge.
 
+
+
+## 2026-09-06  M1.a13 closed: the reckoning, not new work
+
+No code changed here. This is the count that lets the letter be marked
+done, taken at HEAD 3cd1825 with nothing uncommitted but PRIORITIES
+itself.
+
+  core acceptance   PASS
+     node --test    67 tests, 67 pass, 0 fail
+     cross-engine   node vs bundle-node identical,
+                    72289561158074cc17d11f756fa36e8acf6dc5b050dface15f242473fc341cb2
+     cross-version  SKIPPED, one runtime on this machine
+     cross-arch     SKIPPED, no docker daemon
+
+  EditMode  139: 138 green, 1 red
+     CombatFxTests.RifleFireProducesAFlashAndATracer - the known one. It
+     drives the RETIRED C# army through Bind with Populate(0, 20) and that
+     path raises no Shot. Editor-only by construction; the product does not
+     run that engine.
+
+  PlayMode  190: 168 green, 12 red, 10 skipped
+     Eleven are the documented Battlefield.Army set - BothArmiesAreOnThe
+     FieldAndOnTheGround, ArmourBlocksTheTruck, TheTruckCanDriveOnAfter
+     HittingTheArmy, UnitsDoNotShoveEachOtherWithPhysics, ArmiesFightNear
+     TheSeamRatherThanWanderingOff, DamageIsFeltInTheDriving, CrashingInto
+     ArmourWritesItOff, ArmiesAreActuallyDrawn, SoldiersStandOnTheGround
+     AndAreAnimated, TanksStandOnTheGroundRatherThanInIt, RoadsAreActually
+     Drawn. Same names as the last count; none is on the deploy path.
+
+     The twelfth is PostOfficeTests.TheGogglesAnimate, "0.0 vs 0.02" - the
+     load flake this book has carried since item 1. Not waved away: run on
+     its own against the same tree it is green, 1 of 1. It wants a mempool
+     fetch to land inside a two-second window and does not get one while
+     190 tests share the machine.
+
+  Suite growth since the last count: EditMode 136 -> 139, PlayMode 180 ->
+  190, from the seating, crater-wipe and fit tests this letter added.
+
+THE LIVE BUILD IS THE ONE AT HEAD, not an older upload that happens to
+work. btc-logistics-core.pages.dev/Build/webgl.wasm.unityweb md5
+c0b45c2e679bfa959f548643a5f8fa72, identical to the local artefact. The
+build ran 19:03-19:05; the last source touched under Assets or
+packages/core/src was GameAudio.cs at 18:59, and the only tree difference
+against HEAD is the addressables meta that is on the do-not-commit list.
+So the deployed binary carries the detonation fix, the ticker trim, the
+wreck life, the streaming order and the 320 exposure ceiling.
+
+btc-logistics-war.pages.dev untouched.

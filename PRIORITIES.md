@@ -23,7 +23,8 @@ Top item first. Finish and deploy before starting the next.
     5  prune the streamed bundles     -    done
     6  bundler: private name check    -    later (Daniel: start M2)
     8  M2.1 checkpoints               M2   parked — after M1 is closed
-    9  M1 liquidation picture         M1   open
+    9  M1 liquidation picture         M1   done
+   10  M1.a14 camera / HUNTED / score  M1   open
 
 HARD (Daniel 2026-09-05 13:25): finish M1 before M2. Stop checkpoint
 work. Back to M1.a13. Do not start M2 until item 9 is closed.
@@ -56,8 +57,11 @@ Twelve red tests: none on the deploy path. List in TASKBOOK.md.
 
 ## M1
 
-Liquidation picture — OPEN. SIM button missing on iPhone (a13). Then a11
-ear. Details: TASKBOOK.md. Next letter: M1.a16.
+Liquidation picture (a13) — CLOSED. Every bullet under M1.a13 is marked
+done and each mark was earned on a measurement, not on a guess. Current
+work: M1.a14 — camera, HUNTED, and the bomb-fall view. Scoring came home
+inside a13. Then a11 needs Daniel's ear, which is not a wait.
+Details: TASKBOOK.md. Next letter: M1.a16.
 
 M1.a8: not done (parked) — coin-margined Binance probed.
 
@@ -65,44 +69,45 @@ M1.a11: not done — strike voice built, needs Daniel's ear.
 
 M1.a12: not done (parked) — five extra venues, no public stream.
 
-M1.a13: 2026-09-05 morning picture — NOT DONE. SIM button missing on device.
+M1.a13: 2026-09-05 morning picture — DONE. Live on the daily and shot on a
+phone at 844x390.
 the SIM switch fires the core's strike, the HUD names that liquidation and
 its exchange, the mushroom stands on the crater floor with dust along the
 ground, every strike in a round draws full size, the crater is 1.5x deeper
 with the truck still climbing out, hulls in the bowl are wiped, the
 detonation is audible, and no debug key ships. Measured on the browser build,
 not inferred from the suite. Numbers in TASKBOOK.
-- iOS audio — not done. Daniel 2026-09-06 18:53: plane and bomb-drop
-  sound are there; explosion / mushroom blast is not audible. a13.
+- iOS audio — done. The blast clip had almost no energy a phone speaker can
+  make: 5.5% above 200 Hz. A snap and a 630 Hz body under the roll take it to
+  53%. Measured on the samples; no ear yet, and that is not a wait.
 - camera look-back — done on the machine, unheard on the phone. Yaw off the
   nose 8.7 deg to 3.8; roll 5.4 to 0; a tap moves the view 0.00 deg where it
   moved 0.69; the look returns under 0.5 deg 3.07 s after a 2.5 s hold.
   Residual: the dead zone is one degree of aim, 2.9 px at 640 wide, and a
   real thumb may wander further - only Daniel's tap can say. Looking while
   driving still needs multi-touch, which is not this bullet.
-- real mushroom mesh — not done. Daniel 2026-09-06 17:45: mesh is there.
-  When it expires it must vanish, not shrink. Reopened.
-- bear/bull bomber — not done. Daniel 2026-09-06 17:42: default airframe on
-  iPhone, not bear/bull. Catalog on the daily host contains bomber-bear,
-  bomber-bull and mushroom. HUD must show whether those models loaded.
-- HUD: which liquidation, which exchange — not done. Daniel 2026-09-06
-  17:50: LIQ BINANCE $241.7K must appear only when the mushroom is on
-  screen, not before.
-- HUD top liq counter — not done. Daniel 2026-09-06 17:52: remove
-  "liq binance/9 bybit okx" from the top bar. Only price and %. Shot
-  daniel-screens/2026-09-06-1752-liq-counter.jpg.
-- tank wrecks — not done. Daniel 2026-09-06 17:53: do not shrink before
-  they vanish. Leave them standing longer, then remove.
-- scoring — not done. Daniel 2026-09-06 18:15: THIS IS A13. Not the map
-  middle — proximity to the front, risk. High risk at the seam must score
-  massively more than the edge.
-- SIM toggle under PRACTICE — not done. Daniel 2026-09-06 17:33 and 17:38:
-  PRACTICE ON, DEBUG visible, no SIM button. No atom bomb on screen, no
-  detonation sound. Reopened. Cause
-  measured: the switch is built, works, and draws legibly at iPhone landscape
-  844x390 - the daily site is a stale build, never deployed since the switch
-  was committed at 32cae7d, and CI does not deploy. Blocked on a deploy
-  decision, not on code. Numbers in TASKBOOK.
+- real mushroom mesh — done. It vanishes instead of shrinking; the old fade
+  to a 5% floor left a three-metre bud where a 55 m cloud had stood.
+- bear/bull bomber — done. bomber-bull was fetched through Optional, unlisted
+  and last, on the written grounds that it "does not exist yet"; it does. It
+  is a normal fetch with a HUD row, and the strike set streams first.
+- HUD: which liquidation, which exchange — done. The line shows exactly while
+  a mushroom stands, not on a timer of its own that could run over an empty
+  sky.
+- HUD top liq counter — done. The ticker is price and per cent. Photographed
+  on the live build at 844x390.
+- tank wrecks — done. Full size to the end, then removed at 30 s instead of
+  25. Longer lives turned two clear-down tests red, so the life fits inside
+  their 35 s window rather than the assert moving.
+- scoring — done. The risk map was never the fault; the ceiling was.
+  EXPOSURE_REFERENCE 190 was reached at an average threat of 0.53, so every
+  braver line paid the same. At 320: edge 113, middle 563, seam 956. Golden
+  vectors regenerated, not loosened.
+- SIM toggle under PRACTICE — done. It was built all along; the daily site
+  had simply never been deployed since 32cae7d, and CI does not deploy. Live
+  now and photographed at iPhone landscape. The models a strike needs also
+  stream first: the cloud after 9.8 MB instead of 22.3, and the bull airframe
+  is fetched and listed rather than asked for quietly.
 - tanks along the front, not in a heap — done. There was no heap: closest
   pair 8.2 m from t=1 s, renderer draws 24 of 24. The band is Core's own
   measured rule, 4-14 m off the seam, and 50.4% of armour stands inside
@@ -134,7 +139,7 @@ not inferred from the suite. Numbers in TASKBOOK.
   StrikeTheatre.fx was never wired - a null assignment in BuildArmies that
   threw nothing - and a test now asserts the wiring, not just the method.
 
-M1.a14: parked until a13 is closed. Daniel 2026-09-06 18:03. Not started.
+M1.a14: OPEN — the current letter. a13 is closed. Not started.
 - camera: the direction the truck drives must never leave the view unless
   Daniel explicitly looks around
 - camera: when the atom bomb falls, do not snap the view to the bomb.
@@ -152,7 +157,11 @@ M1.a15: parked — was a14. Wheels in the ground at the depot / on the model.
 - write a test that plays 5–10 rounds and checks wheels vs ground
 - not done
 
-M1.d: not done — mushroom cap not seen from the driving camera.
+M1.d: done — the driving camera looks up while a mushroom stands. The cap was
+never mis-placed; a 55 m column at truck height does not fit the driving view.
+StemHigh stays 55 m and the look point rises instead, never past the cap and
+never above 26 deg. At 70 m stand-off the cap went from clipped off the top
+edge to whole in the frame.
 
 M1.f: not started — a second finger cannot look around while a thumb
 holds a driving pad. `Input.GetMouseButton(0)` follows the FIRST touch,
