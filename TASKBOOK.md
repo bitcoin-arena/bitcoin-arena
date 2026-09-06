@@ -6585,3 +6585,47 @@ No code was changed for this bullet. The seating that puts it there reads
 `roads.SurfaceHeight`, so the hole the core dug is the hole the truck drives
 into. No PhysX read is involved and no 2-D coupling was reintroduced.
 
+
+## M1.a15 - M1.d confirmed: the cap is above the driving camera's frame
+
+Measured from the chase camera - no god view, no orbit, no debug - with the
+truck stood off from the blast, and the cap's own renderer projected into
+that camera. The share is of the WHOLE frame, and the on-screen size is the
+part of its rect that is not past an edge.
+
+    70 m stand-off
+      t=0.3s  visible False  on screen 344x42 px = 1.6% of the frame
+      t=1.7s  visible False  on screen 694x 0 px = 0.0%   rect y 794..1490
+      t=3.1s  visible False  on screen 678x 0 px = 0.0%   rect y 790..1466
+      t=4.6s  visible True   on screen 365x32 px = 1.3%
+
+    150 m stand-off
+      t=0.3s  visible False  on screen 218x127 px = 3.0%
+      t=1.7s  visible True   on screen 392x 39 px = 1.7%   of 317 px of cap
+      t=3.0s  visible True   on screen 395x 38 px = 1.6%
+      t=4.3s  visible True   on screen 253x107 px = 2.9%
+      t=5.7s  visible True   on screen 142x 81 px = 1.3%   all of it
+
+At 70 m the cap is entirely off the top of the screen at both of the frames
+that matter. At 150 m it is in the frustum but still cut: 39 px of a 317 px
+head at 1.7 s. It is only whole once the cloud has SHRUNK, at 5.7 s.
+
+The still is scratchpad/c-t17-on.png: the column rises out of the top edge
+and the head is not in the picture.
+
+So M1.d is real and it is not a culling or a placement fault - the cap is
+where the core's impact says it is, and the stem is seated on the crater
+floor. It is a framing fault: a 55 m column seen from a camera at truck
+height subtends more than the driving view holds at the distances strikes
+land.
+
+NOT FIXED HERE, because the fix is a choice and not a measurement:
+
+  - lower the cloud, `StemHigh` 55 m being a theatre number and not the
+    core's, which costs the strike its scale; or
+  - let the driving camera look up while a cloud is standing, which is
+    camera work on a letter whose camera bullets are closed.
+
+Both are player-facing decisions. The instrumentation that measures either
+is committed; the choice is not mine to make.
+
