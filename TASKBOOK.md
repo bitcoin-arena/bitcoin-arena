@@ -6509,3 +6509,38 @@ So the bullet cannot be closed by measurement alone: the fit and the test
 share one wrong reference for this plate, and correcting it means changing
 what BOTH read. That is a decision, not a measurement.
 
+
+## M1.a13 - one stale frame, removed from the fit AND from its test
+
+The metric was wrong, not the threshold. `Room()`, `Fit`/`Refit` and
+`PostOfficeTests.TheLetteringFillsItsPlates` all read
+`MeshFilter.sharedMesh.bounds` - 73.8 x 52.5 for the whitepaper - while the
+renderer draws that plate at 12.2 x 9.4 m. Production and the assert agreed
+with each other and neither agreed with the screen, which is why 89% x 94%
+read as closed while the still showed the page across the depot.
+
+All three read the drawn plate now - `Renderer.bounds`, world metres, the
+size the camera has. Same number in production and in the test.
+
+    before  drawn plate 12.2 x 9.4 m, text 49.4 x 65.6 m   405% x 698%
+    after   drawn plate 12.2 x 9.4 m, text 11.5 x 8.6 m     94% x  92%
+
+Stable across four samples in one run: the fit is now RELATIVE - it measures
+what is drawn and multiplies the scale by the ratio it is short or over by -
+so the first pass with a real mesh lands on the target and every pass after
+it is a no-op. `_paperFitted` is gone with the latch it guarded, and `Refit`
+is `Fit`, because a plate swapped under its own name is simply measured
+again.
+
+TWO FAULTS OF MY OWN ON THE WAY, both caught by the suite rather than by me:
+
+  - A world-space pass applied to EVERY plate took `mined_face_03` to 47%
+    against the 55% the test requires. The other plates were already right;
+    only the whitepaper's transform carries the odd scale.
+  - `_room` was changed to hold the fraction of the plate a lettering is
+    entitled to, and one leftover still wrote METRES into it, so the paper
+    was told its share was 11.5 and came out 107 m wide on a 12.2 m plate.
+    The test caught that too, in the drawn frame, which is the point.
+
+The fill band was not moved: still 0.94, still >55% asserted.
+
