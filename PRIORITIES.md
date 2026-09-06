@@ -73,14 +73,8 @@ not inferred from the suite. Numbers in TASKBOOK.
   Residual: the dead zone is one degree of aim, 2.9 px at 640 wide, and a
   real thumb may wander further - only Daniel's tap can say. Looking while
   driving still needs multi-touch, which is not this bullet.
-- real mushroom mesh — done. Streamed as model/mushroom, 32.5 x 55.0 x 32.4 m,
-  five renderers, cooling white to ash on the primitives' clock; the three
-  primitives remain only as the fallback until it has streamed. The stem
-  stands on the crater floor and the dust spreads on the ground around it,
-  both guarded by MushroomSeatingTests in PlayMode — foot on the floor, dust
-  never under it, each half proven to bite. Every strike in a round draws the
-  same full mushroom. The probe keys are out of the player build. Numbers and
-  the recorded rim-versus-floor preference are in TASKBOOK.
+- real mushroom mesh — not done. Daniel 2026-09-06 17:39: iPhone photo, the
+  blast is stacked planes/fireball, no 3D mushroom model. Reopened.
 - HUD: which liquidation, which exchange — done. Size from the core's
   K_LOAD, venue from the latch that mirrors the core's own largest-wins rule,
   taken together off one order. It summed every order of the last 8 s and
