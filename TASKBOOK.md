@@ -6105,3 +6105,55 @@ mistake as burying it 23 m, arrived at from the other side.
 It is written down because it is a choice and not a measurement: the number
 is measured, the preference is not.
 
+
+## M1.a13 - crater depth, and what is left standing in the hole
+
+Both bullets measured before any code changed.
+
+DEPTH. The core sets it at 0.15 of the radius - `mulFast(r, 9830)` - and that
+number carries a written reason: the wall's steepest gradient is 2*D/R, the
+truck holds 0.45 uphill and slides backwards at 0.50, so D/R must stay under
+0.225. Current depths:
+
+       1 M   radius 16.00 m   depth 2.40 m
+      10 M   radius 19.08 m   depth 2.86 m
+     100 M   radius 25.71 m   depth 3.86 m
+    1000 M   radius 40.00 m   depth 6.00 m
+
+Nothing here is twice anything, so the bullet is real work.
+
+But twice is not available. Driven from the crater floor at full throttle in
+the core itself, measured rather than argued:
+
+    D/R 0.150   1000 M floor  -6.00 m   out after  5.3 s
+    D/R 0.180   1000 M floor  -7.20 m   out after  5.4 s
+    D/R 0.200   1000 M floor  -8.00 m   out after  5.5 s
+    D/R 0.225   1000 M floor  -9.00 m   out after  5.7 s
+    D/R 0.250   1000 M floor -10.00 m   out after 10.8 s
+    D/R 0.300   1000 M floor -12.00 m   NEVER out in 40 s
+
+At the doubled ratio the truck cannot leave the largest crater at all. The
+written limit of 0.225 is confirmed on live code: it costs 0.4 s and the
+cliff is just past it, between 0.25 and 0.30.
+
+So "twice as deep" as written cannot be done without trapping the truck. The
+deepest honest bowl is 0.225 - 1.5x, not 2x - which takes the 1000 M crater
+from 6.00 m to 9.00 m. That is a Core change and it moves every hash and
+golden vector, so it is not made on my own judgement.
+
+WRECKS IN THE RADIUS. There is no wipe anywhere: nothing in `packages/core`
+or in `Assets/Scripts` removes units or hulls inside a crater radius. Counted
+on the running build a second after the strike:
+
+    crater r 33.5 m, 1 open:   1 wreck inside, 8 on the field
+    crater r 27.8 m, 2 open:   0 wrecks inside, 6 on the field
+
+Small, but not zero, and a burnt-out hull standing in a fresh hole is exactly
+what the bullet says should not be there.
+
+A HARNESS FAULT, recorded because it cost two builds. The `[crater]` line was
+printing from the first build; `godring.mjs` only forwarded `[cloud]`,
+`bomber away` and `[strike] impact`, so it never reached the log. I read the
+silence as the game returning early, wrote a second build to "make the log
+unconditional", and blamed the picture for something my own filter was doing.
+
