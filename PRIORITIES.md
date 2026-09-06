@@ -88,7 +88,11 @@ not inferred from the suite. Numbers in TASKBOOK.
   okx" against the core's one $241.7k off binance. Gated on StrikeCount with
   an 8 s fade; a simulated strike reads "simulated". Photographed.
 - SIM toggle under PRACTICE — not done. Daniel 2026-09-06 17:33: PRACTICE
-  ON, DEBUG visible, no SIM button on the iPhone HUD. Reopened.
+  ON, DEBUG visible, no SIM button on the iPhone HUD. Reopened. Cause
+  measured: the switch is built, works, and draws legibly at iPhone landscape
+  844x390 - the daily site is a stale build, never deployed since the switch
+  was committed at 32cae7d, and CI does not deploy. Blocked on a deploy
+  decision, not on code. Numbers in TASKBOOK.
 - tanks along the front, not in a heap — done. There was no heap: closest
   pair 8.2 m from t=1 s, renderer draws 24 of 24. The band is Core's own
   measured rule, 4-14 m off the seam, and 50.4% of armour stands inside
