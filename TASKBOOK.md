@@ -6035,3 +6035,52 @@ t=1.7 s, because the part curves are driven from `_skirtRest` captured at
 dress time - so this is only the parent's scale, and only from the second
 strike of a round onward.
 
+
+## M1.a13 - the dust from the camera the player actually uses
+
+God view at 62 degrees was never the question; this is the chase camera, no
+G pressed, cloud clock frozen for each pair so the skirt could be toggled
+with nothing else in the picture moving.
+
+TWO HARNESS FAULTS FIRST, because both produced numbers I nearly believed.
+
+The first cut armed on one bomber warning and held the truck there. A later
+bomb landed 115 m away, off camera, and the renderer reported `visible
+False` with a rect 11671 px wide - the bounds were projecting behind the
+lens. The truck now follows whichever bomb is falling and a strike more than
+3 m from where it stands is skipped.
+
+The second cut held the truck ON the impact. That puts the chase camera
+INSIDE the mushroom: 9.4% of the frame changed when the skirt was toggled
+and R/G went 0.832 to 0.961, which looks like a strong result and is only
+the inside of a cloud filling the lens. The truck now stands 70 m off with
+its nose on the blast, which is what a player sees when one lands near them.
+
+WHAT IT LOOKS LIKE. Not a ring. From ground level a flat 50 m disc cannot
+read as a ring - the geometry forbids it - and what it does read as is a low
+dust bank spread along the horizon at the foot of the column, hiding the
+tanks and wrecks that are plainly visible with the skirt off. That is dust
+spreading on the ground, which is the thing this bullet asked for. The ring
+shape itself is a god-view reading.
+
+    frame        changed inside the skirt band   near-ground control
+    t = 1.7 s              39.4%                        0.0%
+    t = 3.2 s              48.5%                        0.0%
+
+    t = 1.7 s   on 135.5,129.3,97.9 R/G 1.048   off 132.1,128.3,97.9 R/G 1.029
+    t = 3.2 s   on 131.2,128.2,96.7 R/G 1.023   off 123.7,122.3,92.8 R/G 1.011
+
+The near-ground control is a hard zero over 128,000 px in both frames.
+
+SECONDS AND METRES. It is not a flash at 3 s; it is on screen for the whole
+life of the cloud, widest just after 3 s:
+
+    t=0.3s  25.3 m    t=1.7s  48.9 m    t=3.2s  49.3 m
+    t=4.6s  34.9 m    t=6.0s  20.5 m    t=7.4s   6.6 m     gone at 8.0 s
+
+LATER STRIKES MATCH. Second strike from the same camera, t=1.7 s: cloud
+48.8 x 53.7 x 48.5 m against the first's 48.7 x 53.7 x 48.4 m.
+
+Stills: scratchpad/chase-standoff.png (on above, off below),
+scratchpad/c-t17-on.png, c-t17-off.png, c-t31-on.png, c-t31-off.png.
+
