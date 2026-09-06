@@ -6084,3 +6084,24 @@ LATER STRIKES MATCH. Second strike from the same camera, t=1.7 s: cloud
 Stills: scratchpad/chase-standoff.png (on above, off below),
 scratchpad/c-t17-on.png, c-t17-off.png, c-t31-on.png, c-t31-off.png.
 
+
+## M1.a13 - the dust rides the rim, not the crater floor. A choice, measured.
+
+Once the column was seated in the bowl, the two seatings stopped agreeing.
+The stem's foot goes on `Ground` at the impact - the crater floor - while
+the skirt goes on the HIGHEST ground under its own 48 m span, which over a
+deep crater is the rim. Measured on the same frame, chase camera, t=1.7 s:
+
+    crater floor at the impact   -3.73 m
+    skirt underside              +0.93 m
+    the dust rides               +4.66 m above the floor
+
+That is deliberate and it stays. The column belongs in the hole the strike
+opened; the dust belongs on the ground around it, not draped down into the
+bowl. Seating the skirt on the floor instead would sink the ring into the
+crater and hide it behind the rim from every low camera - the same class of
+mistake as burying it 23 m, arrived at from the other side.
+
+It is written down because it is a choice and not a measurement: the number
+is measured, the preference is not.
+
