@@ -7645,3 +7645,106 @@ the whole of fault 1.
     is green, 1 of 1, and TheGogglesAnimate was green in the full run.
   EditMode 153: 150 green, 1 red, 2 skipped - the red is the known retired
     C# rifle path.
+
+
+## 2026-09-06  the rest of the HUD gets rects, and two more full-width boxes turn up
+
+The overlap test covered the boxes I had exposed and nothing else. These are
+the ones it could not see, given rects someone can ask for: the wanted row,
+the UNDER FIRE banner, the streaming list, the send-off card and the arrival
+card. `DrawFallout` and `DrawWaypoint` are deliberately NOT here - they are
+markers projected from a world position through the camera, so where they
+land depends on where the truck is looking and a static rect for them would
+be a fiction.
+
+THE SAME MISTAKE, TWICE MORE. Both were a box the width of the screen with
+the text pushed to one side, which looks correct and cannot be checked:
+
+  wanted row     before 0..1893 of 1920, right-aligned text
+                 after  1637..1893
+  UNDER FIRE     before 0..1920, centred text
+                 after   371..1614, the gap between the columns
+
+Measured at 1024x768 the banner's box lay straight over the condition bar.
+The text was centred so it LOOKED fine - which is why it survived a photo.
+
+THE STARS. In the 22:17 picture the word WANTED is on screen and the row
+above it is empty. Instrumented rather than guessed: both fonts a build can
+end up using report U+2605 and U+2606 present - the embedded LegacyRuntime
+and the OS Arial - so the glyph is not missing HERE. But `HasCharacter` in
+the editor answers for the editor's font stack, a browser has no OS fonts at
+all and falls back to whatever Unity embedded, and that question cannot be
+settled from this machine. So it is removed rather than argued: five squares,
+filled for earned and outlined for not, drawn from the same white texture as
+the settings icons and for the same stated reason. Whatever the browser's
+font has, the stars are rectangles.
+
+THE HEADLINE'S GAP WAS MEASURED FROM TWO OF THE FOUR COLUMN BOXES. The
+condition bar inherits the diagnostics panel's `min(320, w * 0.34)`, which is
+wider than the block board, and wider than the practice switch on a wide
+short window. The edge is asked of the boxes now instead of recomputed from
+their formulas.
+
+AND THERE IS NO GAP AT ALL ON A PHONE HELD UPRIGHT. The old code floored the
+headline's width at 60 px, which invents room: at 390 wide the practice
+switch alone is 52% of the screen and the columns meet in the middle. The
+floor put the headline 64 px inside the wanted row while the arithmetic
+reported everything fine. It returns an empty box now and the price is not
+drawn - it is worth less than the controls it would sit on, and this file
+already does the same for the loading panel.
+
+  size        headline gap   wanted row      UNDER FIRE
+  1920x1080    371..1614     1637..1893      371..1614
+  1366x768     352..1095     1112..1347      352..1095
+  1024x768     352..753       770..1005      352..753
+   844x390     320..691       701..834       320..691
+   640x480     323..471       481..628       323..471
+   390x844     none, 0 px     236..369       not drawn
+
+## 2026-09-06  the same column with the diagnostics panel up
+
+DEBUG on is the state Daniel drives in, and `HealthBox` switches its top
+between the block board and the diagnostics panel - with the danger meter,
+the practice switch and the SIM switch all measured from it. None of that was
+checked with the panel up. It holds:
+
+  size        diag ends   condition   danger   practice   SIM ends   of
+  1920x1080      362         371        433      504        645      1080
+  1366x768       350         356        409      468        570       768
+   844x390       223         227        261      297        378       390
+   640x480       258         262        301      341        422       480
+
+Nothing overlaps and the order is kept. The phone is the tight one: the SIM
+switch ends 12 px above the bottom edge at 844x390 with the panel up. That is
+clearance, not comfort, and it is written down because one more row in the
+diagnostics panel would spend it.
+
+AND A FOURTH ONE, found by grepping the file for the shape rather than
+waiting for another photograph: `IRRADIATED` was `Rect(0, h * 0.30f, w, ...)`
+with centred text. It is in the gap now, and the two radiation marks that
+flank it follow the band instead of the middle of the screen.
+
+The WASTED band is deliberately left full width and is NOT checked: it is a
+dark scrim behind a word the size of the screen, on a run that has already
+ended, and covering the HUD is what it is for. So is the UNDER FIRE vignette,
+which is four strips along the four edges - a frame, not a box.
+
+MUTATION-CHECKED, each reverted at once:
+
+  UNDER FIRE back across the screen        -> TheCornersAndBannersClearThe
+                                              Column red
+  wanted row back to the whole width       -> the same test red
+  the column ignores the diagnostics panel -> TheColumnStillStacksWithThe
+                                              DiagnosticsPanelUp red
+  left edge blind to the condition bar     -> SURVIVED at first. At every
+                                              shape in the list the practice
+                                              switch happened to be wider by
+                                              a hair, so the term was dead
+                                              weight. A wide short window -
+                                              1000x360, where the panel is at
+                                              its 320 px cap and the switch is
+                                              not - distinguishes them by 18
+                                              px, and the mutant dies there.
+                                              The shape was added because it
+                                              is one a browser can be, not to
+                                              make a mutant fail.
