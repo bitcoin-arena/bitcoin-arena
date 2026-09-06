@@ -7398,3 +7398,77 @@ written down.
   PlayMode 197: 175 green, 11 red, 11 skipped - the documented
     Battlefield.Army set, and the new skip is the pull-back ladder
   EditMode 148: 145 green, 1 red, 2 skipped
+
+
+## 2026-09-06  M1.a13: a hunted load is actually hunted
+
+HARD from Daniel 21:18: high hunted must mean more fire, low hunted little
+fire; heat does not scale shots. It did not, and it never had - in this core
+or in the game before it.
+
+WHAT WAS THERE. `Army.Heat` in the retired C# widens the reach a tank
+notices the truck at, lets the truck outrank a tank that is closer than it
+is, and multiplies the shell. It is documented as the whole point of
+choosing freight - "without this the freight choice had no consequence at
+all - the player simply took the most valuable thing on the ramp every time"
+- and a grep for an assignment to it in shipped code finds nothing. Two test
+files set it, both to zero. So the rule existed, was never fed, and the core
+faithfully ported the heat-zero specialisation of it.
+
+WHERE IT WENT. `S_HEAT`, its own word in the hashed state, and NOT `S_CARGO`:
+that word is the score's cargo factor and `accrue` already reads it as a
+heat, so writing the hunt into it would tie how hard you are shot at to what
+the run pays - a coupling nobody asked for, and one that would move the
+scoring settled earlier in a13. Zero until a host says otherwise, so a core
+nobody has spoken to is bit-identical to the recordings; there is a test for
+exactly that.
+
+The three factors are the C#'s own, in Q16.16, and they are three FUNCTIONS
+rather than three lines of inline arithmetic. That is not tidiness: with them
+inline, zeroing the reach and zeroing the shell both left the end-to-end
+measurements green, because the outranking alone carried the whole effect. A
+factor no test can kill is a factor nobody is holding.
+
+WHAT IT COSTS, parked truck, one heat a run, seconds to write-off:
+
+  behind the line   heat 0.00   heat 0.35   heat 0.70   heat 1.00
+    z = -12          16.30 s     10.48 s      8.08 s      7.78 s
+    z = -25          16.73 s     10.87 s      8.60 s      8.00 s
+    z = -50          85.33 s     17.53 s     10.92 s      8.08 s
+
+At the line a full load dies about twice as fast; fifty metres back it is
+10.6x, because that is where the widened reach does its work - an empty truck
+is beyond notice there and a laden one is not. That is "high hunted means
+more fire" in numbers, and low hunted means the recordings.
+
+THE WIRE. Nothing could tell the core what was on the bed: there was no such
+entry point. `setHeat` is one now, in the same shape as `setGround`,
+`setSolids` and `teleport` - core function, bundle export, jslib entry,
+`BlwpCore.SetHeat`, and one call in `LoadoutPanel.Confirm` after the round
+starts, because starting it clears the word. Unity sends the number; every
+consequence of it is the core's.
+
+THE LAYOUT MOVED, which is the part that would have been silent: `SCORE_WORDS`
+7 to 8 pushes `O_UNITS` from 25 to 26, and C# and JavaScript index the same
+buffer. `BlwpLayout.cs` is regenerated from `state.js` by the generator that
+exists for this exact failure. Golden vectors regenerated and the bundle
+rebuilt; not loosened.
+
+MUTATION-CHECKED, one factor at a time, each reverted:
+
+  reach x1.4 zeroed   -> "heat widens the reach ... by arm" red
+  reach x0.8 zeroed   -> the same test red on the rifle's word
+  outrank x2.5 zeroed -> "outranks a foe that is nearer" AND "a hunted load
+                         is written off sooner" both red
+  shell x0.6 zeroed   -> "heat multiplies the shell" red
+
+Two of the assertions are exact fixed-point words with the real number beside
+them, because 1.4 and 0.6 are not representable in Q16.16 - 91750/65536 is
+1.3999939 - so the reach at full heat is 5347724 and not 34 x 2.4 x 65536.
+Both are asserted: the word, which any change to a factor moves, and that it
+is within a thousandth of a metre of what the C# meant.
+
+STILL OPEN AND NAMED: the overlay's stars still come from Unity's own
+`CargoBay.Heat` rather than from the word the core now holds. Same formula
+today - `cargo.js heat()` is the identical rule - so the picture and the core
+agree, but it is one rule in two places.

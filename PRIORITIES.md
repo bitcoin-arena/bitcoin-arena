@@ -171,7 +171,13 @@ measurement; HUNTED is what is left.
   rule, and of the shells the core spends on the truck 100% are drawn at it,
   at all five stand-offs and while driving, with none of the shots at units
   drawn at the truck by mistake.
-  The word is decided and stays where it is: the old game showed cargo heat
+  Heat now scales the fire, which is the part that was dead: a parked truck
+  with a full load is written off in 8.0 s where an empty one lasts 16.7 s at
+  the line, and 8.1 s against 85.3 s fifty metres back. It is a core rule on
+  its own state word, fed from the yard at roll-out; zero until a host speaks,
+  so an untold core still matches the recordings. Ladder and mutants in
+  TASKBOOK.
+  The word in the overlay is decided and stays where it is: the old game showed cargo heat
   and never showed being shot at, in any build, so HUNTED keeps reading
   CargoBay.Heat and no incoming-fire signal is invented in the renderer. What
   is genuinely dead is behind the word - Army.Heat was written to make the
