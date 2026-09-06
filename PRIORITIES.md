@@ -57,11 +57,8 @@ Twelve red tests: none on the deploy path. List in TASKBOOK.md.
 
 ## M1
 
-Liquidation picture (a13) — CLOSED. Every bullet under M1.a13 is marked
-done and each mark was earned on a measurement, not on a guess. Current
-work: M1.a14 — camera, HUNTED, and the bomb-fall view. Scoring came home
-inside a13. Then a11 needs Daniel's ear, which is not a wait.
-Details: TASKBOOK.md. Next letter: M1.a16.
+Liquidation picture — OPEN. Hunted fire is a13 (Daniel 21:18). Do not
+start a14. Details: TASKBOOK.md. Next letter: M1.a16.
 
 M1.a8: not done (parked) — coin-margined Binance probed.
 
@@ -69,7 +66,7 @@ M1.a11: not done — strike voice built, needs Daniel's ear.
 
 M1.a12: not done (parked) — five extra venues, no public stream.
 
-M1.a13: 2026-09-05 morning picture — DONE. Live on the daily and shot on a
+M1.a13: 2026-09-05 morning picture — NOT DONE. Hunted fire. Live on the daily and shot on a
 phone at 844x390.
 the SIM switch fires the core's strike, the HUD names that liquidation and
 its exchange, the mushroom stands on the crater floor with dust along the
@@ -103,6 +100,8 @@ not inferred from the suite. Numbers in TASKBOOK.
   EXPOSURE_REFERENCE 190 was reached at an average threat of 0.53, so every
   braver line paid the same. At 320: edge 113, middle 563, seam 956. Golden
   vectors regenerated, not loosened.
+- hunted fire — not done. Daniel 2026-09-06 21:18: THIS IS A13. High hunted
+  means more fire on the truck. Low hunted means little fire.
 - SIM toggle under PRACTICE — done. It was built all along; the daily site
   had simply never been deployed since 32cae7d, and CI does not deploy. Live
   now and photographed at iPhone landscape. The models a strike needs also
