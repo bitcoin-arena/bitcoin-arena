@@ -13469,3 +13469,37 @@ Three offences: two results for one (round, player); signing for a round the
 operator played (5A.13); a fee share claimed without the availability rule
 (22A). Then the distribution field. Then steps 3 and 5 of 5A.3B - the
 arbitration set - which stay blocked.
+
+## M2.1 5A.3 row 4: the two fields the row had left free
+
+Found auditing my own row before answering whether it was finished, and fixed
+on the row rather than parked.
+
+`SlashProof` has one body across all rows. Rows 2 and 3 pin every field of it:
+row 2 checks `transcriptHash` against the canonical transcript and
+`playerPubkey` against the signed result, row 3 checks `transcriptHash` against
+the published inputs. **Row 4 checked neither.** Measured by reading the file:
+`playerPubkey` and `transcriptHash` appear at lines 181, 191, 193 and 292 -
+rows 2 and 3 - and nowhere in `slashHoldsOnSettlement`.
+
+Two free variables in a body whose hash goes on chain. What that costs:
+
+  - an accuser can vary them at will and mint unboundedly many DIFFERENT valid
+    proofs of one offence, each with a different commitment, which is exactly
+    what 5A.3B's "every slash is permanently auditable" rests on not happening
+  - and the record names an ENTRY, not a player, so a free `playerPubkey` puts
+    somebody's name on a settlement that was never about them - a reader of the
+    proof takes them for the victim
+
+Pinned: `transcriptHash` must be the record's own `entryId` - "the object this
+offence is measured against" is the entry whose hold invoice was acted on - and
+`playerPubkey` must be thirty-two zero bytes, because this row names no player
+directly. Required to be EMPTY rather than plausible: a field this row does not
+use should be checkably unused, not merely unchecked.
+
+Mutants: "the proof may name any entry" 1 red, "the proof may name any player"
+1 red. 17 planted on this row in total now, 17 killed, none retracted.
+
+protocol 184/184 (was 183). blwp-node, blwp-client, core and both guards
+unchanged and not re-run for theatre - no file outside `packages/protocol`
+moved. Unity untouched.
