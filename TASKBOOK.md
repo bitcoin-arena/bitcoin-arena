@@ -10254,3 +10254,96 @@ WHAT IS NOT DONE, named: nothing FETCHES yet. 5c is the half that asks two
 providers, cross-checks and answers omission - these are the primitives it will
 stand on. And BOND_MARKER has no value, which is a decision for whoever settles
 the genesis parameters, not for this slice.
+
+## M2.1 step 5b, second half: the client takes the endpoint off the chain
+
+THE HOLE IN THE FIRST HALF, found on re-reading it. `acceptAdvert` took
+`commitment` and `txid` as ARGUMENTS. Whoever handed over the advertisement
+handed those over too, so the proof was theatre. Measured against the code at
+7e37b27, using real mainnet block 100000:
+
+  a page writes its own advertisement, its own endpoint,
+  its own commitment over it, and a real block's real proof
+
+    ok: true, endpoint: wss://the-address-the-page-preferred:443
+
+That is the whole of what 5b exists to stop, and it passed. Now both are
+computed: the txid by hashing the transaction, the commitment by reading its
+outputs. The only things a caller supplies are bytes whose hashes it does not
+choose.
+
+WHERE THE ENDPOINT CAME FROM, BEFORE AND AFTER.
+
+  before   `BLWP_NODE`, a global in the page. Every stranger reached whatever
+           address whoever shipped the page had written there, and nothing in
+           the client could tell a bonded node from any other server.
+  after    a bond transaction, a merkle branch and a header chain. The page
+           may still carry the bytes - it cannot choose them. Grep for
+           BLWP_NODE in the client path returns one line, a comment saying
+           what it used to be.
+
+THE PARSER, measured against Bitcoin's own answers - three real mainnet
+transactions, fetched once and written into the test:
+
+  block 500000 coinbase   2157b554...0ecc1dd6   segwit, 2 outputs, OP_RETURN
+  block 500000 index 1    fe6c48bb...1961c69f   segwit spend
+  block 100000 index 1    fff2525b...f79702c4   pre-segwit
+  the coinbase's OP_RETURN  aa21a9ed10109f4b...05727a4, 36 bytes
+  a witness byte flipped    the txid does not move. That is what segwit is,
+                            and it is why a body in the witness is worth
+                            nothing until an output commits to it.
+  block 500000's coinbase, proven, advertises nothing: refused as "commits to
+  a different advertisement" - which is what almost every transaction is.
+
+THE CLIENT PATH, driven against a real node process on a real port with a
+decoy `BLWP_NODE` set for the whole file to http://127.0.0.1:1 - if the global
+were read anywhere, every test in that file would reach the decoy:
+
+  reached from the advertisement   base http://127.0.0.1:<port>, and a real
+                                   round opens on it
+  the endpoint swapped             throws "no proven endpoint: the bond output
+                                   commits to a different advertisement"
+  the honest body, same page       taken. The page is a courier.
+  a header not in the chain        "not in any block of that chain". Being
+                                   handed a header is not being handed a block.
+  headers that do not link         not a chain, however many
+  no chain at all                  no address. There is no fallback, because
+                                   any fallback is the page's word again.
+  no file in blwp-client/src       names BLWP_NODE, window, globalThis or
+                                   location
+
+MUTANTS, six, and one of them survived first: txid over the whole transaction
+including the witness (4 red), a length written the long way accepted (1), the
+offered body taken unchecked (2 protocol + 2 client), the proof not required
+(1 + 1), a header list treated as a chain (1). The survivor was "any output is
+a commitment" - 0 red, because the real transactions above happen to hold
+outputs whose pushes do not fill the script. A P2TR output does not: `OP_1`
+and a 32-byte push is byte for byte the shape of a commitment to a 32-byte
+hash, and a bond output IS P2TR. Test added, mutant now 1 red.
+
+THE BUNDLER now refuses two top-level names in one scope, not only two
+exported ones: `chain.js` and `transcript.js` each had a private `same`, which
+in one scope is a `const` redeclaration and would have thrown when the page
+loaded. Verified by adding a duplicate on purpose: exit 1, named both files.
+
+TESTS. protocol 87 -> 100, core 85/85 untouched, blwp-node 41/41,
+blwp-client 26 -> 32. Determinism guard 19 clean; money guard 7 -> 9 files,
+`chain.js` and `tx.js` added to it - a float literal where a txid is computed
+would be silent and total. No test-vector file changed at all this slice, so
+every money-bearing encoding is byte-identical. No C# changed, so PlayMode
+stays 213 / 189 green / 11 red / 13 skipped and EditMode 185 / 181 green /
+1 red / 3 skipped from 7b4caea. Nothing deployed; the daily stays 0.0.567.
+
+NOT DONE, named. BOND_MARKER is still null, so a light client can prove a bond
+it has been shown but cannot FIND one - `tools/bond.js` builds a transaction
+without the dust output 25.1 requires, and says so. That is a genesis
+parameter. And nothing fetches: one header chain cannot be weighed against
+another, which is 5c.
+
+A SPEC TENSION, found and not decided. 5A.1 makes `bond_outpoint` MANDATORY in
+the advertisement, and 25.1 puts the advertisement in the witness of the
+transaction whose output commits to it. The txid is therefore not knowable
+when the body is signed, and the two cannot both be had as written. An
+all-zero `bondTxid` is read as "the bond is an output of the transaction
+carrying me", because it is the only value expressible; a non-zero one must
+still equal the proven txid. Named here rather than settled.

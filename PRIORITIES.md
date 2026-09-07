@@ -16,10 +16,11 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-   14  M2.1 checkpoints               M2   OPEN — entry quotas done: a node
-                                            stores nothing for a round nobody
-                                            has funded. Next: discovery off
-                                            the chain (5b). Numbers: TASKBOOK.
+   14  M2.1 checkpoints               M2   OPEN — the client takes its
+                                            endpoint from a bond transaction
+                                            proven against a block header, not
+                                            from a page global. Next: 5c, the
+                                            chain source. Numbers: TASKBOOK.
    13  M1.a16 playable hunt            M1   done — the hunt is winnable
                                             through the front and the rim
                                             pays almost nothing; spectate is
@@ -673,6 +674,13 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
          light client.
        - **The advertisement in the witness** of the same transaction, so
          the transaction that proves the bond also carries the endpoint.
+         DONE. The live client path reads the endpoint out of a bond
+         transaction it has proven into a block, and `BLWP_NODE` is gone;
+         the txid and the commitment are computed from the transaction
+         rather than handed in beside it, which is what the first half
+         still allowed. Still open in 5b: `BOND_MARKER` has no value, so a
+         bond can be proven once shown but not found, and that is a genesis
+         parameter rather than a step. Numbers: TASKBOOK.
 
   5c. **The chain source: our own mempool.space, verified not trusted.**
 
