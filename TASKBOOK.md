@@ -11324,3 +11324,70 @@ assignment is what found the second one AFTER the first had been called done.
 Not deployable, and a player sees nothing: no page defines BLWP_CHAIN so the
 session never opens, the jslib has not been linked since 606f54d, and nothing
 has run in a browser since 7b4caea. Daily 0.0.567.
+
+## M2.1 step 3: the canonical transcript, which is selection and not simulation
+
+WHAT 13C ASKS FOR. "For each player, the canonical transcript is the longest
+checkpoint chain that carries receipts from at least 5 committee nodes,
+together with the input batches whose hashes it commits to. All nodes replay
+that object, so 'node A saw more than node B' cannot by itself produce
+disagreement."
+
+THE GAP, MEASURED BEFORE THE WORK. Sections 13, 13A and 13C name six artefacts;
+grepped across `packages/*/src`, ONE existed - the receipt and its counting.
+`PlayerResult`, `PROVISIONALLY_FINAL`, `Objection`, slashing and the canonical
+transcript itself did not appear anywhere. Of the five missing, four need the
+committee to exist; the canonical transcript is the exception, because it is a
+CHOICE over data one node already holds.
+
+THE FORK THAT WAS NOT TAKEN, and it is worth writing down. Section 13 says each
+committee node "independently replays the player's canonical transcript... and
+signs". `round.test.js` asserts "the node does not step: nothing here imports
+the core". Those cannot both stand at settlement, and the pick was: the no-core
+rule holds, settlement replay is a later letter, and this cut selects rather
+than replays. The no-core test is green, by name.
+
+WHAT LANDED. `canonicalTranscript(roundId, entryId)` and `GET /canonical`,
+answering `x-marks`, `x-dropped`, `x-through-tick`, `x-ticks` and the hash, and
+refusing 409 by name.
+
+MEASURED, with seven committee keys and a real node:
+
+  4 carried members    refused: "no checkpoint of that entry is carried by 5
+                       committee members: the first has 4"
+  5 carried            marks 2, dropped 0, through tick 120, ticks 200
+  7 carried            the same chain, unchanged
+  live then short      marks 1, dropped 1, through tick 60 - the qualifying
+    (5 then 1)         prefix, and the node still holds 2 checkpoints, so the
+                       whole transcript is a different object with a different
+                       count
+  one signer, five     the same receipt five times is a no-op: 2 members, the
+    times              node's own and that peer's. A DIFFERENT receipt from the
+                       same signer is refused before any counting arises -
+                       "has already receipted ... differently" - which is
+                       stricter than this cut assumed.
+  no checkpoints       "no checkpoints for that entry"
+  the door             200 with x-marks 2, x-dropped 0, x-through-tick 120;
+                       409 with the named reason on a short chain
+  inputs               two batches held, ONE served: the batch the carried
+                       marks commit to, not everything the node was sent
+
+TWO THINGS THE FIXTURE TAUGHT, both mine and neither a rule bending. Storing a
+checkpoint makes the node issue its own receipt, so four peer receipts read as
+FIVE members - the helper counts the node's own now. And the node refuses a
+second, different receipt from one signer as a contradiction, so "five copies
+of one signer" had to be measured as a repeat and a contradiction separately.
+
+MUTANTS, four, and one survived first: four members enough (4 red), the whole
+chain served short marks and all (4), an uncarried chain served anyway (3), and
+the inputs being everything the node holds - 0 red at first, because the
+fixture had ONE batch and cutting at the committed head was the same as taking
+everything. A second batch was added and it is 1 red.
+
+TESTS. blwp-node 41 -> 49, blwp-client 72, protocol 104, core 85 - 310 green,
+none red, none skipped. Determinism guard 19 clean, money guard 9 clean. No
+test-vector file changed. No C#, no Unity, nothing deployed; daily 0.0.567.
+
+STILL OPEN ON 13C: the no-quorum outcome (FORFEIT against VOID after the result
+window) and the slashing of nodes that contradict a replay. Both need the other
+six daemons, and neither was opened.

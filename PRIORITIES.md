@@ -25,8 +25,9 @@ Top item first. Finish and deploy before starting the next.
                                             live only when five committee
                                             members have receipted it — on the
                                             mark path and on resume. Next: the
-                                            rest of the quorum rule in step 3,
-                                            which needs the other six daemons.
+                                            rest of 13C — the no-quorum
+                                            outcome and slashing — which needs
+                                            the other six daemons.
                                             Numbers: TASKBOOK.
    13  M1.a16 playable hunt            M1   done — the hunt is winnable
                                             through the front and the rim
@@ -644,6 +645,11 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      (FORFEIT against VOID after the result window) and the slashing of nodes
      that contradict a replay; both need the other six daemons. Numbers:
      TASKBOOK.
+     CANONICAL TRANSCRIPT: DONE. A node serves the longest checkpoint chain
+     every mark of which five distinct committee members have receipted, plus
+     the input batches those marks commit to, and refuses by name when no
+     chain qualifies. Selection, not simulation: the daemon still imports no
+     core and does not step. Numbers: TASKBOOK.
      BATCH RESUME: DONE. The client publishes its own input batches now -
      nothing but tests did before - and `resume` reads the transcript the node
      already served, checks it rather than taking it, and comes back with the
