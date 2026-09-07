@@ -51,8 +51,14 @@ Top item first. Finish and deploy before starting the next.
                                             row 5: a node that signs for a
                                             round its DECLARED operator plays
                                             loses its bond, while being
-                                            conflicted alone never does. Next:
-                                            row 6 of 5A.3, the last.
+                                            conflicted alone never does. And
+                                            row 6, the last: a node that
+                                            claims a fee share 22A did not
+                                            earn loses its bond, and claiming
+                                            nothing never does. ALL SIX OF
+                                            5A.3'S ROWS NOW HAVE A PREDICATE.
+                                            What is left of slashing is the
+                                            enforcement, which is a daemon.
                                             Numbers: TASKBOOK.
    13  M1.a16 playable hunt            M1   done — the hunt is winnable
                                             through the front and the rim
@@ -681,14 +687,14 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
        - issue / settle / cancel the hold invoice - DAEMON: 23.6's
          threshold-signed Lightning node or Fedimint federation, a quorum
          operating real channels
-       - slashing - THE LAW IS IN FOR FIVE OF SIX, the enforcement is DAEMON.
+       - slashing - THE LAW IS IN FOR ALL SIX, the enforcement is DAEMON.
          5A.3B has five steps and only two of them need anybody: publish the
          proof, check it mechanically and commit H(proof) are pure, and are
-         done for 5A.3 rows 1, 2, 3, 4 and 5. Signing path B
+         done for every one of 5A.3's six rows. Signing path B
          with k-of-m arbitration keys and broadcasting it are the arbitration
-         set, which does not exist here. One offence is listed and unwritten,
-         and the slash DISTRIBUTION waits on a contract field that would move
-         every round id.
+         set, which does not exist here. No offence is unwritten now. The slash
+         DISTRIBUTION and 22A's minimum-service number both wait on Round
+         Contract fields, and a field moves every round id.
        - the committee re-run a suspension waits for - DAEMON: six more
          nodes, and a replay the daemon deliberately does not do
        - CLTV sizing - NO PROTOCOL TICK RATE: the contract measures the

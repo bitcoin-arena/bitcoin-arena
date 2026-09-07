@@ -13687,3 +13687,122 @@ and the two mutants that move only one of them die at 1 apiece.
 protocol 207/207 (was 197), blwp-node 70/70, blwp-client 89/89, core 80/80,
 money guard 10 files clean, determinism guard 19 files clean. Unity untouched:
 EditMode 190/186/1/3 and PlayMode 216/192/11/13 stand from 8cc7fdd.
+
+## M2.1 5A.3 row 6: claiming a fee share 22A did not earn
+
+The last unwritten row. **All six of 5A.3's rows now have a predicate.** What
+remains of slashing is 5A.3B steps 3 and 5 - the k-of-m arbitration signature
+and the broadcast - which is a daemon and stays parked.
+
+### The law
+
+22A: "A selected node earns its share only if it performed the contract-defined
+minimum service: for game/verify, the required receipts plus replay and
+signing; for settlement, participation in the settlement protocol during the
+settlement window. A conflicted node (5A.13) never qualifies. Unearned shares
+are redistributed pro rata among the other eligible nodes in the same role
+pool, keeping the total at 2%."
+
+Two ways to fail it, both in that one paragraph: the service was not performed,
+or the node was CONFLICTED and so never qualifies however much it served. The
+second reuses row 5's `operatorKeyOf` rather than a second copy of 5A.13.
+
+### CLAIMING NOTHING IS NOT AN OFFENCE
+
+22A's own remedy for a share nobody earned is REDISTRIBUTION - "keeping the
+total at 2%" - not a bond. A node that served nothing and claimed nothing has
+cost nobody anything, and the check returns no slash for it. That is this row's
+doing-nothing path, with its own test and its own mutant (1 red).
+
+### The measurement that shaped it: there is no minimum in the contract
+
+22A says "the contract-defined minimum service". Measured against
+`encodeRoundContract`: it carries simCoreHash, the two times, the objection
+window, custody, census height and root, committee seed, stake, bond floor,
+block ticks, the five exposure numbers, minScore, the rank curve and the nodes.
+**There is no minimum-service field.**
+
+So the number is handed in and BOUND into the proof by `feeInputsId`, the same
+discipline row 3 needed for its inputs: an accusation whose threshold the
+accuser picks after the fact makes every honest claim slashable by choosing a
+higher number. The precedent is `minScore`, which `computePayoutTable` also
+takes as an argument - the difference is that minScore HAS a contract field to
+be read from and this does not.
+
+Naming the field is what would make one minimum canonical for a network, and a
+new contract field moves every round id and every vector - the same blocker the
+slash distribution has. Listed, not invented.
+
+### Two new objects, one job each
+
+`TYPE_FEE_CLAIM = 0x0e` and `TYPE_SERVICE_RECORD = 0x0f`, next free numbers.
+The claim carries round, node, ROLE and amount - 22A pays the two pools
+separately and "an operator selected for both roles earns both shares", so a
+claim that did not say which role would be a claim on either. The record
+carries the same three plus `served`, one count in the unit its own role is
+measured in: receipts for game and verify, settlement participations for
+settlement. One count and not two schemes - the roles are measured in different
+units and the rule over them is the same rule.
+
+### The before and after
+
+| | served 20 of 20 | served 19 of 20 |
+|---|---|---|
+| `slashed` | false | true |
+| `bond` | **undefined - not even named** | `{txid 5555…, vout 3}` |
+| `offence` | - | `FEE_WITHOUT_SERVICE` |
+| `served` / `required` | - | 19 / 20 |
+| `conflicted` | - | false |
+| why | it served 20 of the 20 its role required, and 22A is what that fee is for | it claimed a verify share having served 19 of 20 |
+
+And a conflicted node that served 120 of 20 is slashed anyway, `conflicted:
+true` - 22A's own sentence.
+
+### Mutants: 18 planted, 18 killed, none retracted
+
+| mutant | protocol red |
+|--------|-------------:|
+| any service meets the minimum | 4 |
+| serving exactly the minimum is not enough | 3 |
+| a conflicted node still qualifies | 1 |
+| claiming nothing is an offence | 1 |
+| the minimum is the accuser's to pick | 2 |
+| the claim need not be the named one | 1 |
+| a claim in another role counts | 1 |
+| another round's claim counts | 1 |
+| another node's claim counts | 1 |
+| another round's record counts | 1 |
+| another node's record counts | 1 |
+| any minimum is a minimum | 1 |
+| a conflict in another round counts | 1 |
+| an undeclared operator is a conflict | 1 |
+| a stranger can claim a fee | 1 |
+| the bond is the accuser's to name | 1 |
+| the role is left out of the binding | 1 |
+| the record is left out of the binding | 2 |
+
+The proof's two pinned fields - the claim id and the bound record-and-minimum -
+have a test each and a mutant each that moves only one of them. That was the
+fault rows 1 and 4 each lost a mutant to, and it has not recurred since row 5.
+
+### One test of mine, corrected
+
+`JSON.stringify` cannot serialise a BigInt and one of the claim's fields is
+millisatoshi, so a message helper threw. Named by field rather than by value.
+The assertion itself was not touched.
+
+### Suites
+
+protocol 220/220 (was 207), blwp-node 70/70, blwp-client 89/89, core 80/80,
+money guard 10 files clean, determinism guard 19 files clean. Unity untouched
+and not re-run: EditMode 190/186/1/3 and PlayMode 216/192/11/13 stand from
+8cc7fdd.
+
+### What is left of slashing, now that the law is whole
+
+  - 5A.3B steps 3 and 5: the k-of-m arbitration signature over path B, and the
+    broadcast. A daemon, and the residual 5A.3B names itself - "any slashing
+    mechanism needs an off-chain party to attest that the proof checks".
+  - the slash distribution field, and 22A's minimum-service field. Both are
+    Round Contract fields, and a field moves every round id.
+  - curve-verify, which is the package boundary and not a hole.
