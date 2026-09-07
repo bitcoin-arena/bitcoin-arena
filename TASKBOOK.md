@@ -8408,3 +8408,48 @@ second scoring engine computed an OUTCOME, while these feed a lens, a
 speedometer and a pitch. Deleting them would leave the editor's camera with no
 velocity at all and take several camera tests with it, exactly as the score
 deletion took five. Named here rather than done quietly.
+
+
+## 2026-09-07  the two engines compared again, and one constant had not crossed
+
+Asked whether a14 needed anything else, the answer was yes, and it came out of
+putting the C# constants next to the core's rather than trusting that the
+score slice was finished when the C# formula was deleted.
+
+  what it is                 C# (RunScore)        core (rules/score.js)
+  the apron                  spawnFreeRadius 22   APRON_RADIUS 22 m      agree
+  par time                   referenceSeconds 65  REFERENCE_TICKS 3900   agree
+                                                  = 65 s at 60 Hz
+  exposure reference         exposureReference    EXPOSURE_REFERENCE     DIFFER
+                             190                  320
+
+The 190 is the value a13 replaced with 320 in the core, and it was still being
+multiplied into `Blwp.BlwpCore.Exposure` - a reading already in the core's own
+units - inside the branch that runs when the core IS driving. Not a dormant
+fallback: the live path.
+
+  measured on a drive, exposure gained per metre of new ground
+    tick 300   0.255 per metre     x190 =  48.4   clamped to 2.00
+    tick 450   1.386               x190 = 263.4   clamped to 2.00
+    tick 600   1.700               x190 = 323.0   clamped to 2.00
+    tick 750   7.887               x190 = 1498.6  clamped to 2.00
+
+The true rate runs 0.255 to 1.700, which is a real gradient inside the 0..2
+band the meter is documented for - "zero at the map edge, 1 on the seam with
+an empty bed, up to 2 on the seam under five stars". Multiplied by 190 it
+saturates at the first metre and stays there. So the meter's bright cap, the
+`cold` test that decides whether the warning shows at all, and the stalled
+warning that tells "out of the corridor" from "going round in circles" were
+all reading a pinned constant.
+
+The multiplier is gone and the units are pinned by `RunScore.RateFrom`, a
+static with three EditMode tests: what goes in comes out, divided by the
+ground, nothing scales it; the 0..2 clamp holds; and no ground made good is no
+rate. Putting the 190 back kills the first of them.
+
+THE OTHER TWO ENGINE COMPARISONS ALREADY STAND: HUNTED was measured against
+the C# army at three heats (17.40 / 8.85 / 8.20 s to write-off against the
+core's 16.73 / 10.87 / 8.60 / 8.00), and the barrel share against both
+engines at five stand-offs. The camera has no recording to compare against -
+`PhysxReferenceTests` records the truck, the hills and the wall, not the view -
+so it is measured against its own five cases instead.
