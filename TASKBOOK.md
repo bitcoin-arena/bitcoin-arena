@@ -10522,3 +10522,81 @@ A GREEN JS SUITE IS NOT A PLAYER, and that is the whole of it. What would
 change the answer is a WebGL build with no short timeout and a browser drive
 against a real node with a fixture advertisement and a real `?round=` id.
 Neither was started; this turn is journal only.
+
+## M2.1 5c slice 1: the chain is asked of two providers, or there is no chain
+
+WHERE THE CHAIN CAME FROM BEFORE. Nowhere. Measured: the only `fetch` in
+`packages/*/src` was the three round/entry/transcript calls to the node, and no
+source file had ever asked for a header. `reach` took `chains` as an argument
+and the page supplied it, so a player's whole belief about Bitcoin was the
+page's word - which is what 25.1 calls the failure with no symptom.
+
+WHAT DECIDES, AND WHAT FETCHES, ARE SEPARATE. A provider is a FUNCTION handed
+in, like `sign`, `verify` and the core are. `headersOverHttp(url)` is the only
+transport, and the CALLER gives the whole URL: no host and no path is written
+into `src`, because this protocol has no chain API of its own and a default
+address would be one the player never chose. What a real provider's URLs look
+like is a separate question and is not answered here.
+
+THE RULES, and each is refused by name.
+
+  fewer than two providers   refused BEFORE anyone is asked. Not because one
+                             source is probably lying but because nothing it
+                             says can be weighed: a short chain, and a chain
+                             with a block hidden, are the same bytes.
+  a chain that does not link  that source is discarded and named; the others
+                             still answer
+  fewer than two SURVIVE      refused, and the refusals are handed back
+  most work wins              Bitcoin's rule, not a vote
+  a shorter chain             CARRIED, not refused. Omission is the expected
+                             case - "omission is answered by asking a second
+                             one" - and refusing would stop a client every time
+                             one source lagged, which is every day.
+  a fork                      REFUSED rather than resolved, and the stray block
+                             is named. Most work is the right rule for a node
+                             holding the whole chain; here a fork means at
+                             least one provider is lying or broken, and taking
+                             the heavier one is guessing which.
+  500, or no answer at all    counted and named, not waited for. A silent
+                             provider must not stop the ones that answered.
+
+MEASURED, real mainnet headers 499998-500000 served over local HTTP:
+
+  three headers                240 bytes, 80 each
+  work, each                   8045049515748916497043
+  work, the three together      24135148547246749491129
+  the two-header source        16090099031497832994086, and it loses
+  tip                          00000000000000000024fb37364cbf81fd49cc2d51c09c75c35433c3a1945d04
+  two agreeing providers       ok, agreed 2, refused []
+  one whole and one short      ok, from 1, three headers
+  a fork                       refused, "providers 0 and 1 do not agree"
+  one provider alone           refused, and 0 calls went out
+  2 good + 1 unlinked          ok, agreed 2, the broken one named
+  1 good + 1 unlinked          refused, "only 1 of 2 providers gave a chain"
+  a 500 and a silent one       ok on the other two; "no answer in 50 ms"
+  120 bytes                    "not a whole number of headers"
+
+MUTANTS, six, and one survived first. One source enough (0 red at first - the
+later count refuses it anyway, so the verdict was identical; the property the
+early guard actually buys is that NOBODY IS ASKED, since a request would tell a
+provider which round a player is looking at for an answer that was never going
+to be used. Test now counts the calls: 1 red). One good answer enough (2), a
+fork resolved by weight (1), the lighter chain winning (1), an unlinked chain
+accepted (1), a ragged body padded (1).
+
+NOT WIRED YET, deliberately. `Client.at` still takes `chains` from the caller
+and the page still supplies them in the live path; nothing is in the bundle.
+Wiring waits for slice 2, where a bond transaction and its merkle proof are
+fetched and checked against these headers - otherwise the client would have a
+verified chain and still take the transaction on the page's word.
+
+TESTS. blwp-client 37 -> 44, protocol 101/101, blwp-node 41/41, core 85/85.
+Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
+No network in any test: every provider is a `node:http` server on 127.0.0.1.
+No C#, no Unity, nothing deployed; daily 0.0.567.
+
+LEFTOVERS PARKED NEXT TO BOND_MARKER, named so they are not rediscovered:
+checkpoint-or-genesis (a shipped checkpoint header is a trust anchor and a
+constant somebody must settle; syncing from genesis is ~4 MB and real work in a
+browser) and the beacon - 5A.5 puts the committee seed in drand at
+`committee_time`, which is neither Bitcoin nor the page, and it is not 5c.
