@@ -9149,3 +9149,15 @@ this is a renderer string, and the core has no opinion about it.
 TESTS. EditMode 176 / 172 green / 1 red / 3 skipped, three new, the red the
 known CombatFx one. PlayMode 213 / 188 green / 12 red / 13 skipped: the known
 eleven plus one load flake, `PostOfficeTests.TheGogglesAnimate`.
+
+DEPLOYED. btc-logistics-core.pages.dev, wasm md5
+b08a385f88a499bb731beec8c3696846, identical to the local artefact, built from
+aa29cdb and stamped 0.0.561. btc-logistics-war.pages.dev untouched.
+
+PHOTOGRAPHED, with what the photograph can and cannot show. Shot at 1024x768
+200 ms after Play: the headline reads "$79,379  -0.72% 24h" - the branch that
+HAS a price, English, and no German anywhere in the frame. The connecting
+branch could not be caught: the spot socket delivers a price before the splash
+can be dismissed, which is the same reason this word survived a13's sweep in
+the first place. That branch is pinned by the three tests instead, read off
+the same function the HUD draws from.
