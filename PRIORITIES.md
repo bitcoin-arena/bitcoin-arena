@@ -16,10 +16,11 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-   14  M2.1 checkpoints               M2   OPEN — M1 letters closed
-                                            (Daniel 12:58: if prio empty,
-                                            do M2). Next: client sends a
-                                            state-hash checkpoint.
+   14  M2.1 checkpoints               M2   OPEN — slice A done: a JS client
+                                            signs a state hash and a node
+                                            stores it. Next: receipts,
+                                            gossip, and step B (the game
+                                            sending them through jslib).
    13  M1.a16 playable hunt            M1   done — the hunt is winnable
                                             through the front and the rim
                                             pays almost nothing; spectate is
@@ -601,8 +602,17 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      CheckpointReceipt: the OBJECT exists - type, tag, encode/decode,
      vectors - but nothing issues one, because a node signs with its own key
      and the daemon has no identity yet. That waits on step 5b.
-     Still open here: issuing receipts, receipt gossip, and a client that
-     computes a state hash and sends one. M2.1 is not finished.
+     A CLIENT THAT SENDS ONE: DONE. `packages/blwp-client` opens a round,
+     joins with an entry carrying its session key, reads `hash(st)` off the
+     core bundle the browser loads, signs the tagged id and puts the mark on
+     `/play`. Measured against a real node process: the stored id is the one
+     the client signed, a second different hash at that tick is refused as
+     equivocation by name, and a refused mark does not move the client's
+     chain head. Numbers in TASKBOOK. JS only - the wire format has one
+     implementation and Unity was not touched.
+     Still open here: issuing receipts and receipt gossip, and step B, which
+     is the game itself sending these through the jslib bridge. M2.1 is not
+     finished.
   4. **Entry quotas.** A funded entry before the node stores a byte.
      Comes before opening a port to anyone else, not after.
   5. **Backpressure and reconnection.** Inbound DONE: the socket caps a frame

@@ -9303,3 +9303,97 @@ TWO THINGS NAMED, NOT PARKED:
     zero and the tank reach at heat zero is the base 34 m while the depot is
     far from the front. Listed so it is not rediscovered as a fault rather
     than guarded against on a case nobody has seen.
+
+
+## 2026-09-07 14:20  M2.1 slice A: the client signs a state hash and a node stores it
+
+Everything under this was already built and none of it had ever been driven
+from the player's side. Measured before writing anything:
+
+  the hashing bridge is COMPLETE, end to end, and was already there
+    packages/core/src/state.js   hash(st)
+    tools/bundle.js              exports it as `hash`
+    blwp.jslib                   BlwpStateHash(ptr, cap), ASCII hex out
+    BlwpCore.cs                  StateHash()
+  the node side is complete too
+    checkpoints table keyed (round, entry, tick), round.checkpoint(bytes) on
+    /play, GET /checkpoints, equivocation / chain head / monotonic tick / the
+    named input chain each refused by name, signature verified under the
+    entry contract's sessionPubkey
+  what did not exist
+    anything that BUILDS a checkpoint - `encodeCheckpoint` was called by
+    tests and by nothing else - and Unity does not talk to a node at all: no
+    script mentions blwp-node, /play or /round.
+
+So the missing piece was exactly the client half, and that is this slice.
+
+WHERE IT LIVES, and why not in C#. `packages/blwp-client`, JS, using
+`@blwp/protocol` as the one encoder. Re-encoding a checkpoint in C# would put
+a money-bearing wire format into two implementations, which is the fault this
+project has removed twice this week - a second score formula and a second
+army. There is no second encoder here and there must never be one.
+
+The core and the signing function are INJECTED rather than imported. In a
+browser the core is the bundle already running in the page - the object the
+game is drawing from - and the session key belongs to the run. Importing
+either would give the client an opinion about which core the player runs,
+which is the one thing it must not have.
+
+THE ONE CONVERSION, and it was a real seam rather than a formality: the core
+answers in HEX - `hash(st)` returns 64 characters and the jslib writes those
+same characters as ASCII - while the protocol's field is 32 raw bytes. Found
+by running it: `Error: expected 32 bytes, got 64`. `fromHex` is the protocol's
+own, and a core that answered anything else is refused by name rather than
+silently truncated into a mark that signs cleanly and commits to the wrong
+state.
+
+MEASURED against a real node process on a real port, with a real core:
+
+  happy path      round opened over HTTP, the id equals roundId(contract);
+                  entry joined, the id equals entryId(contract); a core driven
+                  120 ticks at 0.7 throttle; its hash signed and sent on /play
+                  -> "stored". GET /checkpoints answers x-checkpoints: 1, 231
+                  bytes, and the decoded record's id is the one the client
+                  signed, its tick is 120, its previousHash is the 32 zero
+                  bytes, its inputChainHash is the genesis, its stateHash is
+                  the hash the core produced, and its signature verifies under
+                  the session key in the entry contract.
+  equivocation    the same tick with a state reached by reversing instead:
+                  "error equivocation at tick 60: <id> already stored, now
+                  <id>", both ids named, and the store still holds one.
+  the chain       a mark chaining to the start of the round after the head has
+                  moved: "error the checkpoint does not follow the chain head".
+  the head        a refused mark must not move the client's head, or every
+                  later mark is refused for a reason that has nothing to do
+                  with it. A tick going backwards is refused - "error expected
+                  a tick after 60, got 30" - and the next mark still lands and
+                  names the stored one as its parent.
+
+MUTANTS, three, and the second one caught a hole in my own test:
+  a constant hash instead of the core's        2 tests red, "the hash on the
+                                               wire is not the hash the core
+                                               produced"
+  the head moves even on a refusal             SURVIVED at first. The test
+                                               sent the refused mark AROUND
+                                               the client, on the raw socket,
+                                               so the client was never asked
+                                               to make it and its head was
+                                               never touched. Rewritten to go
+                                               THROUGH the client; the mutant
+                                               then goes red.
+  signing the raw encoding, not the tagged id  all 4 red, the node refusing
+                                               the signature
+
+SUITES, each on its own:
+  packages/core        80 / 80        determinism guard 19 files clean
+  packages/protocol    78 / 78        money guard        7 files clean
+  packages/blwp-node   33 / 33
+  packages/blwp-client  4 / 4         new
+  Unity  untouched - `git status` shows no changed file under unity-proto, so
+  PlayMode stays 213 / 188 / 12 / 13 and EditMode 178 / 174 / 1 / 3 from the
+  run at eebba50. Nothing was built and nothing was deployed.
+
+The money guard does not cover this file and was not extended to reach it:
+its stated rule selects files that move a stake or carry Q16.16 words into the
+core, and this one carries a hash, two ids and a tick. Naming that here rather
+than widening a shared tool inside a slice that is about something else.
