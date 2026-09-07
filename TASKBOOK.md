@@ -8196,3 +8196,81 @@ been caught by before. It is committed, and it is byte-identical to
 `Assets/Resources/build.txt` is deliberately NOT committed: it is written at
 build time from the commit being built, so a copy in the tree would be a stamp
 that is wrong the moment anything else lands.
+
+
+## 2026-09-07  M1.a14 step 1: the recorded evidence re-measured at HEAD
+
+Verified, not rebuilt. Every figure reproduces:
+
+  the barrel share, parked        recorded    now
+    z =   0   shells on courier      33        33, 100% drawn at the truck
+    z =  -5                          30        30, 100%
+    z = -12                          29        29, 100%
+    z = -25                          28        28, 100%
+    z = -34                          27        27, 100%
+    driving                         8 of 8     8 of 8, 100%
+
+  the heat ladder, seconds to write-off
+                heat 0.00  0.35  0.70  1.00      now
+    z = -12       16.30  10.48  8.08  7.78    identical, digit for digit
+    z = -25       16.73  10.87  8.60  8.00    identical
+    z = -50       85.33  17.53 10.92  8.08    identical
+
+  the five camera cases: 8 of 8 green, road in frame in every one -
+    reverse 0.50..0.50, spin 0.50..0.64, impact 0.50..0.55, released look
+    0.34..0.50, standing cloud 0.50..0.50 across and 0.08..0.71 up with 0 of
+    4414 frames below the bottom edge.
+
+TWO FIGURES MOVED AND NEITHER IS A SLIP.
+
+The impact off-nose read 22.2 and then 12.8 against a recorded 15.4 - three
+runs of the SAME code. The shake is Perlin noise sampled at `Time.time * 47`,
+so its worst reading depends on wall-clock phase and is not a stable number.
+What is stable is the thing asserted: the road at 0.50..0.55, 0.56 and 0.58
+across those three runs. This is exactly why the assertion is "the road is on
+screen" and not a degree count.
+
+The strike pitch read 21.2 and 21.3 against a recorded 25.4 - and 25.4 is the
+PRE-PULL-BACK number. 21.2 is what this book and PRIORITIES already record
+after the 20 m pull-back: "the aim peaks at 21.2 and the clamp stops binding
+on its own". Nothing slipped; the older figure was read against older code.
+
+## 2026-09-07  M1.a14 step 2: the live page shows the core, and one number it does not
+
+Read off btc-logistics-core.pages.dev at 1024x768 in a browser, with the
+debug readout turned on so the core speaks for itself:
+
+  core DRIVING · tick 824 · speed 2.1 m/s 7 km/h · pos -16.4, 8.4 ·
+  heading 90 · practice on (scene)
+
+Beside it on the same frame: CONDITION 100%, DANGER x1.00, five filled wanted
+pips and HUNTED at 12,790 sat aboard, CARGO 9 parcels. The camera is behind
+the truck the core is placing - the position in the readout is the core's own
+`T_X`/`T_Z` - and the heat is the core's word. Both are on the player's screen.
+
+AND SCORE READ 0 WHILE DANGER READ x1.00. That is not the core: driven in
+node on the same rules, `runScore` returns 432 at ten seconds and 642 by the
+far end of the map, and 389 on a run that ends wrecked. The zero was Unity's.
+
+  practice=0   tick 600   x  25.4   exposure 118.4   score 389 (wrecked)
+  practice=1   tick 600   x  22.4   exposure 131.6   score 432
+               tick 1200  x  57.7   exposure 179.0   score 587
+               tick 1800  x 130.0   exposure 195.6   score 642
+
+`DriveHud` showed `live ? Projected : LastScore`, and `live` was
+`RunScore.Running`, which is false while the truck is invulnerable - and
+practice makes it invulnerable. So the score line showed the LAST run's number,
+zero on a first drive, in the mode a player learns in. The same fault the
+danger meter had and was fixed for; the score line now reads the core's
+projection in practice too.
+
+THE CORE IS NOT REACHABLE FROM PAGE SCRIPT, and that is worth writing down
+rather than working around: `Module.blwp` lives inside the emscripten closure
+and the template throws the instance away - `createUnityInstance(...).then(()
+=> ...)` ignores its argument. Reading the core from the browser would mean
+changing the shipped page for a measurement, so it is read the way the player
+reads it instead, with the core's own readout in the same frame.
+
+ALSO SEEN AND NOT THIS LETTER: the loading page carries one German string,
+`index.html:225`, "Der Loader konnte nicht geladen werden." It is player-
+facing, in a build whose every other string is English.
