@@ -10682,3 +10682,56 @@ network-parameter decision and sits with checkpoint-or-genesis.
 TESTS. protocol 101 -> 104, blwp-client 44 -> 46, blwp-node 41/41, core 85/85.
 Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
 No C#, no Unity, nothing deployed.
+
+## M2.1 5c, the four leftovers on the same letter
+
+ONE SERVER LISTED TWICE WAS TWO SOURCES, and the old test said so as if it were
+a feature: `agreedChain([only.get, only.get])` answered ok, agreed 2, from one
+machine. That is the worst kind of wrong - it looks exactly like the thing it
+is not. `httpProvider(url)` now tags a provider with its origin and a repeated
+tag is refused BEFORE anyone is asked: "providers 0 and 1 are the same source,
+http://127.0.0.1:NNNNN", 0 calls out. Independence itself is NOT checkable -
+two hostnames can be one machine and nothing in a client can tell - so this
+catches a mistake and proves nothing, and an untagged provider is counted as
+distinct because there is nothing else to do with it. Both halves are tests.
+
+DIFFERENT RANGES WERE READ AS A FORK. Two honest providers whose answers share
+no block were refused with the word used for a provider that is lying. They are
+told apart now: "answered about different parts of the chain and share no
+block, so neither can be weighed against the other". Still no answer - nothing
+was weighed - but a different fact, and the caller is told which. The question
+is also handed to the provider now (`agreedChain(providers, { ask })`), so an
+honest pair CAN be asked the same thing; what a provider does with the ask is
+the caller's business, and `httpProvider` takes a function of it for a provider
+whose URL carries the range.
+
+THE BODY IS BOUNDED, in both shapes a provider can send it, and the two are
+different refusals on purpose:
+
+  content-length declared    "the provider offered 320080 bytes, more than the
+                             320000 this client reads" - before a byte of body
+                             is pulled off the wire
+  chunked, no length         "the provider sent more than the 320000 bytes this
+                             client reads" - counted while reading, because
+                             that header is the provider's word like the rest
+  under the cap              4001 headers read, both ways
+
+THE READ IS ABORTED, not abandoned. A provider that sends headers and then
+never finishes the body used to keep a socket for the rest of the run; the
+timeout now aborts it and the server sees the request aborted.
+
+MUTANTS, six, all red: one server twice counted as two (1), disjoint ranges
+read as a fork (1), the streaming cap removed (1), content-length taken at its
+word (1), the abort removed (1), the question not passed on (1).
+
+TWO THINGS THE MUTANTS TAUGHT, both about the tests rather than the code.
+The content-length mutant survived at first because the streaming cap catches
+it anyway - the verdict was identical, only the WORDS differed - so the test
+now asserts each message against the transfer shape that produces it. And the
+abort mutant made the suite HANG rather than fail, because the test left a
+socket open: a hang is not a measurement, it is a test that cannot report, so
+the fixture destroys its connections rather than only closing the server.
+
+TESTS. blwp-client 46 -> 50, protocol 104/104, blwp-node 41/41, core 85/85.
+Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
+No network beyond 127.0.0.1. No C#, no Unity, nothing deployed; daily 0.0.567.
