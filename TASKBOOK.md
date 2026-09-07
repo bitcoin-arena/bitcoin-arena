@@ -8453,3 +8453,10 @@ core's 16.73 / 10.87 / 8.60 / 8.00), and the barrel share against both
 engines at five stand-offs. The camera has no recording to compare against -
 `PhysxReferenceTests` records the truck, the hills and the wall, not the view -
 so it is measured against its own five cases instead.
+
+  deployed with the meter fix: md5 31997c8588b15ef7d9fe840dc2bbbd19, identical
+  to the local artefact, built from 06df48e. Photographed at 1024x768:
+  SCORE 321 at tick 1040 - scoreOf needs exposure 97.72 for exactly that -
+  DANGER x1.00 with the live cap riding the fill instead of pinned, five pips
+  and HUNTED at 14,340 sat aboard, core DRIVING at pos -13.8, 12.3.
+  btc-logistics-war.pages.dev untouched.
