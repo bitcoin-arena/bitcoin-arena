@@ -8716,3 +8716,53 @@ one. EditMode 159 / 155 green / 1 red / 3 skipped, the known CombatFx one.
 `RampReadyTests.TheRealTransactionsReplaceTheStandInsWhileNothingIsLoaded`
 went red once under load and is green alone; named because it had not been
 seen before.
+
+
+## 2026-09-07 07:39  the view is the player's, and the build has a number
+
+REVERSED, on Daniel's word: "when the atom bomb comes the camera is still
+ripped from his hands. That must not happen. View stays unchanged." So the
+three tunables a14 measured a ladder for - `cloudLookUp` 26 deg, `cloudPullBack`
+20 m, `cloudLift` - are gone, with the blend that drove them and the block
+that re-aimed the look point. Nothing in `ChaseCamera` reads
+`StrikeTheatre.CapCentre` any more.
+
+The test is reversed with the rule rather than deleted. `AStrikeTiltsTheView-
+AndDoesNotSwingIt` asserted the view DID tilt (`worstPitch > 1`) and that the
+cap stayed framed; `AStrikeLeavesTheViewWhereThePlayerHadIt` runs the same six
+seconds twice from the same pose, once quiet and once with a mushroom 45 m off
+the road, and requires the camera to end up in the same place looking the same
+way - under 0.25 m and 0.5 deg, against the 20 m and 26 deg that were there
+before. The two ladder harnesses that picked the rung are deleted: there is no
+rung to pick.
+
+THE BUILD NUMBER, asked for as 0.0.xxx and on both screens.
+  - `StampTheBuild` writes `0.0.<git rev-list --count HEAD>` - 0.0.550 at this
+    commit - into `Resources/build.txt` AND onto `PlayerSettings.bundleVersion`.
+  - the SPLASH reads the file through `BuildStamp.Current`.
+  - the LOADING screen reads the version through the template's
+    `{{{ PRODUCT_VERSION }}}`, and now says "build 0.0.550" rather than the
+    bare number.
+  One string, two screens, no way for them to disagree. The old stamp was
+  `43e3375  ·  2026-09-07 05:28 UTC`: a hash nobody can put in order, on one
+  screen only. `BuildNumberTests` pins the shape and names the old one so it
+  cannot come back quietly.
+
+AND THE LOADING SCREEN STOPPED SPEAKING GERMAN while it was open - it was the
+first screen of the game and every word on it was German: "Verbindung wird
+aufgebaut", "Programm wird geladen", "Spieldaten werden geladen",
+"Schlachtfeld wird aufgebaut", "Fast fertig", "Einige Megabyte", "Der Loader
+konnte nicht geladen werden", and the note under the bar.
+
+M1.a8, PAUSED at 07:39 after one measurement. Asked: try the routed /market
+path on coin-margined. Probed for 300 s each, from this machine:
+
+  dstream /market/ws/!forceOrder@arr  (the ask)   open 792 ms   74 messages   BTC* 0
+  dstream /ws/!forceOrder@arr         (control)   open 729 ms   74 messages   BTC* 0
+  fstream /market/ws/!forceOrder@arr  (control)   open 765 ms   74 messages   BTC* 0
+
+All three opened and all three delivered the same 74 messages with no BTC*
+symbol among them - including the fstream path that is the one already shipping,
+which is what says this window was quiet rather than the coin-margined route
+being wrong. Nothing was merged into `OnLiquidation`, because nothing spoke.
+The run wants repeating at a busier hour before a8 is called either way.

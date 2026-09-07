@@ -20,17 +20,20 @@ Top item first. Finish and deploy before starting the next.
                                             world box growing as the wheel
                                             turns, not a tyre in the road;
                                             the round test is in
-   10  M1.a14 camera / HUNTED / score  M1   done — the camera follows the
-                                            core's pose, HUNTED is the core's
-                                            heat word, and the score on the
-                                            daily is the core's own projection
+   10  M1.a14 camera / HUNTED / score  M1   done — reopened 07:39 for the
+                                            camera snap and closed again: a
+                                            strike does not move the view at
+                                            all. Core pose, core heat word,
+                                            core projection as before
     1  clear the red tests            M1   done
     2  the army into the core         M1   done
     3  three post office buildings    M1   done
     4  hover overlays                 -    done
     5  prune the streamed bundles     -    done
     6  bundler: private name check    -    later (Daniel: start M2)
-    8  M2.1 checkpoints               M2   parked — a8 first (Daniel 07:28)
+    8  M2.1 checkpoints               M2   parked — a8 first (Daniel 07:28),
+                                            and a8 is paused behind the 07:39
+                                            camera and build-number work
     9  M1 liquidation picture         M1   done — the driving HUD is on the
                                             daily build and photographed at
                                             four sizes
@@ -79,10 +82,12 @@ Liquidation picture (a13) — CLOSED. M1.a14 — camera, HUNTED, score — CLOSE
 and live on the daily. M1.a15 — the depot wheels — CLOSED and live on the
 daily. Next letter: M1.a16, not named yet. Details: TASKBOOK.md.
 
-M1.a8: not done. Daniel 2026-09-07 07:28: solve a8. We already had Binance
-  USDT-M force orders on /market/ws. Coin-margined (BTCUSD_PERP on dstream)
-  paid 0 on the first probe. Try the routed /market path, merge BTC* into
-  the same OnLiquidation if it speaks. Do not invent a URL.
+M1.a8: not done, paused at 07:39 for the camera and build-number work.
+  Probed on the routed path as asked: dstream /market/ws, dstream /ws and
+  fstream /market/ws for 300 s each. All three opened, all three delivered 74
+  messages, and NONE of them carried a BTC* symbol. Nothing was merged,
+  because nothing spoke. Numbers in TASKBOOK; the run needs repeating at a
+  busier hour before a8 can be called either way.
 
 M1.a11: not done — strike voice built, needs Daniel's ear.
 
@@ -91,6 +96,11 @@ M1.a12: not done (parked) — five extra venues, no public stream.
 M1.a13: 2026-09-05 morning picture — DONE. The driving HUD is live on the daily
 and photographed at four sizes: 844x390 and 1000x360 on a player, 1024x768 and
 1920x1080 in a browser. Numbers in TASKBOOK.
+- build number — done. Reopened by Daniel 2026-09-07 07:39 and closed: the
+  format is 0.0.xxx, it is on the LOADING screen and on the SPLASH, and both
+  come from one string written at build time, so they cannot drift apart. The
+  loading screen also stopped speaking German while it was open.
+- explosion sound — done (Daniel 2026-09-07 07:39).
 the SIM switch fires the core's strike, the HUD names that liquidation and
 its exchange, the mushroom stands on the crater floor with dust along the
 ground, every strike in a round draws full size, the crater is 1.5x deeper
@@ -247,11 +257,11 @@ M1.a15: DONE. Wheels in the ground at the depot / on the model.
   sized off its world box, so it came out a different size on every heading.
   Fixed and deployed. — done
 
-M1.d: done — the driving camera looks up while a mushroom stands. The cap was
-never mis-placed; a 55 m column at truck height does not fit the driving view.
-StemHigh stays 55 m and the look point rises instead, never past the cap and
-never above 26 deg. At 70 m stand-off the cap went from clipped off the top
-edge to whole in the frame.
+M1.d: done — REVERSED by Daniel 2026-09-07 07:39: "when the atom bomb comes
+the camera is still ripped from his hands. That must not happen. View stays
+unchanged." The camera no longer looks up at the mushroom, no longer pulls
+back and no longer lifts. Nothing in ChaseCamera reads the cloud. The view is
+the player's; a strike is something he sees if he turns to look at it.
 
 M1.f: not started — a second finger cannot look around while a thumb
 holds a driving pad. `Input.GetMouseButton(0)` follows the FIRST touch,
