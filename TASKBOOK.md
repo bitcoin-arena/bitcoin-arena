@@ -11736,3 +11736,66 @@ was already BigInt millisatoshi throughout. No C#, no Unity, nothing deployed.
 NOT DONE, and not pretended at: the result window that says WHEN to ask, the
 HTLC that hands the stake back, and the slashing of nodes that contradict a
 replay. All three need the other six daemons or Lightning.
+
+## M2.1 13C: a VOID stake goes back, and the operator takes nothing
+
+WHAT THE HOLD PATH DID BEFORE. Nothing. `stakeCommitment` is H(P), the
+hold-invoice preimage commitment, carried in the entry contract, and `funded`
+is a predicate the operator supplies. Grepped across `packages/*/src`: no
+settle, no cancel, no preimage release, no refund - the words appear only in
+comments. So on VOID, on FORFEIT and on a delivered win the hold did the same
+thing, which was nothing, and a stake nobody decides about is a stake the
+operator is holding.
+
+Of 13C clause 2's three parts - the decision, the exclusion from pool and
+table, the refund by HTLC expiry - two were in (the decision at 7775643, the
+exclusion since before this letter) and this is the third.
+
+WHAT LANDED. `holdSettlement({ roundId, entries, minScore })` in
+`protocol/src/payout.js`. Every entry gets exactly one of two answers, because
+a hold invoice has exactly two: SETTLE, release the preimage and take it, or
+CANCEL, let it expire back to the payer.
+
+  VOID            CANCEL - the fault was the operator's, so the operator takes
+                  nothing
+  anything else   SETTLE - the stake joins the pot the payout table shares out
+
+MEASURED, before and after, msat:
+
+  DELIVERED-100 + FORFEIT + VOID
+    settled 200000, refunded 100000, paid 200000, rows 2, winner 200000
+    the void stake is in no row, and settled == paid exactly
+  DELIVERED-100 + FORFEIT (no void)
+    settled 200000, refunded 0, winner 200000 - a forfeited stake is SPENT.
+    Refunding it would hand a player who signed two chains their money back
+    and leave the winner nothing to be paid from.
+  DELIVERED + FORFEIT + VOID + VOID
+    settled + refunded 400000 - no stake goes missing; refunded 200000
+  everyone VOID
+    settled 0, paid 0, refunded 300000, and the table has no rows at all -
+    the case an operator would most like to be paid for
+
+A HOLE IN THE PAYOUT MODEL, found by probing the table rather than reading it.
+`computePayoutTable` says a cautious player "keeps their stake and simply does
+not place" - and gives them ZERO while their hold, not being VOID, settles.
+Zero paid and a stake taken is the operator keeping it. With no loser in the
+round the pool is empty and the table's own invariant is skipped, so nothing
+caught it. `holdSettlement` refuses: "the operator would keep 100000 msat:
+settled 200000 against 100000 paid out". It is refused rather than quietly
+paid, and the payout model is where the fix belongs - named here, not silently
+patched.
+
+MUTANTS, four, and one survived first: a VOID hold settled to the operator (3),
+a FORFEIT hold refunded instead of spent (3), refunded msat counted as settled
+(3), and the balance never checked - 0 red at first, because no test produced
+an input where it bites. That input is the cautious player above; with it the
+mutant is 1 red.
+
+TESTS. protocol 104 -> 108, blwp-node 66, blwp-client 72, core 85. Determinism
+guard 19 files clean, money guard 9 files clean - no float went near money and
+every figure here is BigInt millisatoshi. No C#, no jslib, no Unity.
+
+NOT DONE: the result window that says when to ask, the Lightning that actually
+settles or cancels an invoice, and slashing. This decides which of the two
+things must be done to each hold; doing it is the operator's plumbing, and
+slashing needs the bond and the other six daemons.
