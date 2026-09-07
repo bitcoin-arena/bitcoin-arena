@@ -9216,3 +9216,39 @@ They are not player-facing, they are not in a shipping script, and rewriting
 TESTS. EditMode 178 / 174 green / 1 red / 3 skipped - five new, the red the
 known CombatFx one. PlayMode 213 / 189 green / 11 red / 13 skipped - the known
 eleven exactly, no load flake in this run.
+
+
+## 2026-09-07 13:30  M1.a16 deployed and spectate photographed
+
+Built from 752e4b1 - "score the front, not the rim" - after two earlier builds
+went stale under me: HEAD moved from ffcbfa2 to 19284ed to 752e4b1 while a
+build was running, so the first artefact was thrown away rather than deployed.
+The generated core bundle was reset to HEAD before rebuilding, so the wasm
+carries the rules that are in the tree and not a mixture of two of them.
+
+  stamped        0.0.567 (752e4b1)
+  compile errors 0
+  local wasm     59ea55f8cdddca795e1a8e768b956723
+  live wasm      59ea55f8cdddca795e1a8e768b956723   identical
+  loading screen build 0.0.567
+  btc-logistics-war.pages.dev   HTTP 200, not redeployed
+
+SPECTATE, photographed on the deployed build at 1024x768, three shots across a
+running round - 5 s, 25 s and 60 s after pressing SPECTATE, so "price only" is
+shown to hold while a round runs and not merely on the first frame:
+
+  on screen   EXIT (top left, on the spectator camera)
+              $79,419
+              -0.70% 24h
+              "drag to look · pads to fly · two fingers up/down for height"
+              the two flight pads
+
+  NOT on screen   block board, block clock, score column, BANKED, PRACTICE,
+                  SIM, CONDITION, DANGER, HUNTED, cargo, manifest, the
+                  liquidation line
+
+The war itself is visible below - tanks burning on both sides of the seam,
+infantry in the grass, the mempool wall with its block panels - which is the
+point of spectating. The hunt tuning and the score rule were not touched here;
+they arrived in the tree at 19284ed and 752e4b1 and this letter only put them
+on the daily and photographed the HUD.

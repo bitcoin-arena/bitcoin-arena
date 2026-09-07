@@ -16,9 +16,11 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-   13  M1.a16 playable hunt            M1   not done — 30-40% should get
-                                            through the front, not only the
-                                            rim. Spectate: price only.
+   13  M1.a16 playable hunt            M1   done — the hunt is winnable
+                                            through the front and the rim
+                                            pays almost nothing; spectate is
+                                            price only, photographed on the
+                                            daily as 0.0.567
    12  M1.a8 coin-M liquidations       M1   done — coin-margined liquidations
                                             pay now. A captured BTCUSD_PERP
                                             of 197 contracts is $19,700 on
@@ -269,14 +271,18 @@ rules moved into the core suite. Numbers in TASKBOOK.
   and the core implements that same heat-zero case. A full load would die
   2.1x faster if it were fed. That is a core rule and is not changed here.
 
-M1.a16: 2026-09-07 playable hunt + spectate HUD — in progress.
+M1.a16: 2026-09-07 playable hunt + spectate HUD — DONE.
 Daniel: ten tries through the front, none made it; only the rim worked.
 Stay hard; 30-40% of committed runs should deliver. Spectate: price only.
 - hunted fire leaves a rim and a punch-through chance — done in core
 - 30-40% seam/committed delivery in core sims — done (36.7% of 150 rail seam)
 - rim far from the front pays almost nothing — done (629 vs 4)
-- spectate HUD is price only — coded, not photographed
-- deploy daily — not done
+- spectate HUD is price only — done, photographed on the daily at 1024x768,
+  three shots across a running round: EXIT, the price and the per-cent line
+  and nothing else. No block board, no score, no practice, no health, no SIM,
+  no HUNTED, no cargo.
+- deploy daily — done. 0.0.567 from 752e4b1, live wasm identical to the local
+  artefact, war untouched.
 
 M1.a15: DONE. Wheels in the ground at the depot / on the model.
   Standing bury was fixed earlier (0.178 m to 0.000, 3bd4208) and is not
