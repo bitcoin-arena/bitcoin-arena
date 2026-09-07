@@ -6,19 +6,20 @@ Not the status board. Status lives in PRIORITIES.md.
 Date convention: when a number is measured, write it here with the commit.
 
 THE TWELVE RED TESTS, ONE LINE EACH. Named at f103f71, counted again at
-5c81a7a - the same twelve, in suites that have grown since. Not one is on the
-deploy path: eleven reach for the C# army that (e) does not build, and the
-twelfth needs a graphics device this machine has not got. None can go green
-here, and none may be loosened.
+5c81a7a and again at 747dcaf - the same twelve, in suites that have grown
+since: PlayMode 213 / 189 green / 11 red / 13 skipped, EditMode 161 / 157
+green / 1 red / 3 skipped. Not one is on the deploy path: eleven reach for
+the C# army that (e) does not build, and the twelfth needs a graphics device
+this machine has not got. None can go green here, and none may be loosened.
 
-    EditMode   1 of 136 red
+    EditMode   1 of 161 red
       CombatFxTests.RifleFireProducesAFlashAndATracer
         builds `new Army(3)` and steps the RETIRED C# army for 20 s. Its
         sibling TankFireProducesABlast has the same shape and passes, so it
         is the C# rifle path, not the harness. Depends on: reviving the C#
         army, which is forbidden.
 
-    PlayMode  11 of 180 red, 10 skipped
+    PlayMode  11 of 213 red, 13 skipped
       VehicleTests.BothArmiesAreOnTheFieldAndOnTheGround   "keine Armeen"
       VehicleTests.ArmourBlocksTheTruck                    null armour
       VehicleTests.TheTruckCanDriveOnAfterHittingTheArmy   null armour
@@ -41,11 +42,15 @@ here, and none may be loosened.
         display", and there is no Xvfb here. Depends on: a graphics device.
         The claim itself is photographed in every browser run.
 
-    Rotating twelfth, one of the two, never both in a run:
-      PostOfficeTests.TheGogglesAnimate  and
+    Rotating twelfth, one of THREE, never more than one in a run:
+      PostOfficeTests.TheGogglesAnimate
       RampReadyTests.TheRealTransactionsReplaceTheStandInsWhileNothingIsLoaded
+      ScoreTests.IdlingEarnsNothingEvenOnTheSeam        (new 2026-09-07)
         item 1's load flake; which one appears changes between runs of the
-        same tree. Depends on: the suite's own load, not on any code here.
+        same tree. All three are green when run alone - measured today:
+        `ScoreTests;PostOfficeTests` on their own, 15 of 15 green. Depends on:
+        the suite's own load, not on any code here. The load went up today
+        when WheelSeatingTests added four more worlds to build.
 
 Everything for M2 and beyond is further down, under "The milestones", and
 none of it should be started while item 2 is open. M2 needs stage 3
@@ -8915,3 +8920,60 @@ earlier today went red in the full suite while passing alone - 2.98 m, then
 
 Nothing was relaxed - the bound is the same 0.02 m - the two sides are made
 the same age. PlayMode is back to the known eleven.
+
+
+## 2026-09-07 09:10  M1.a8 REOPENED: a BTCUSD_PERP liquidation does cross that stream
+
+THE 08:30 CONCLUSION IS RETRACTED - the second one I have had to take back on
+this letter. It said the documented coin-M all-market stream "delivers USDT-M
+force orders" and that subscribing would merge the shipping feed with itself.
+The first half is mostly true and the conclusion drawn from it was wrong.
+
+Asked whether any hole remained that would put a real coin-M liquidation on
+the map without inventing a URL, the two route shapes the change notice names
+and had not been tried were tried:
+
+  wss://dstream.binance.com/public/ws/!forceOrder@arr          180 s
+     70 messages, 35 symbols, 1 with an underscore
+  wss://dstream.binance.com/market/stream?streams=!forceOrder@arr   180 s
+    139 messages, 66 symbols, 2 with an underscore
+
+Underscores, where the 300 s captures had none. An underscore is not proof by
+itself - USDT-M has dated contracts too, BTCUSDT_261225 - so the names were
+taken in full and each checked against Binance's own two lists:
+
+  wss://dstream.binance.com/market/stream?streams=!forceOrder@arr   300 s
+    588 messages, 214 symbols, 4 with an underscore
+
+      ETHUSD_PERP     x1   on coin-M (dapi): YES   on USDT-M (fapi): no
+      BTCUSD_PERP     x1   on coin-M (dapi): YES   on USDT-M (fapi): no
+      XRPUSD_PERP     x1   on coin-M (dapi): YES   on USDT-M (fapi): no
+      BTCUSDT_261225  x1   on coin-M (dapi): no    on USDT-M (fapi): yes
+
+      BTC* of every kind: BTCUSDTx15  BTCUSDCx3  BTCUSD_PERPx1  BTCUSDT_261225x1
+
+So the stream carries both, and coin-M is about half a percent of it - 3 of
+588. That is why the earlier windows saw none: 84 and 100 messages give an
+expectation below one. Zero was a sample size, not a fact about the exchange,
+and it was read as a fact.
+
+WHAT IS ACTUALLY TRUE, then. A coin-margined BTC liquidation crosses a stream
+Binance documents, at a URL nobody had to invent. It pays 0 to the player for
+one reason only: nothing in the game subscribes to dstream. `MarketFeed` opens
+fstream, Bybit and OKX.
+
+WHAT WIRING IT NEEDS, named so the next turn does not have to re-derive it:
+  - a fourth source on wss://dstream.binance.com/market/stream?streams=!forceOrder@arr
+  - a coin-M-ONLY filter on that source. The stream carries the USDT-M orders
+    fstream is already delivering, so taking everything would count them
+    twice. The test is not "has an underscore" - BTCUSDT_261225 has one and is
+    USDT-M - it is the coin-M shape: BTC followed by USD and then _, as in
+    BTCUSD_PERP and BTCUSD_260925.
+  - the value is in COIN, not USDT: the coin-M payload's `q` is contracts of
+    100 USD for BTC, so `UsdValue` cannot be `q * price` the way the USDT-M
+    one is. That is a rule, and it needs its own measurement before it ships.
+  - `HandleFutures` already accepts the name: it filters `StartsWith("BTC")`
+    and rejects only BTCDOM, so BTCUSD_PERP passes.
+
+NOT DONE THIS TURN because no feature code was to be written. Nothing was
+added to `OnLiquidation`; the game is unchanged.

@@ -16,6 +16,12 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
+   12  M1.a8 coin-M liquidations       M1   NOT done — a BTCUSD_PERP
+                                            liquidation DOES cross the
+                                            documented stream; nothing
+                                            subscribes to it. One step left:
+                                            wire dstream and take coin-M
+                                            symbols only. Numbers: TASKBOOK
    11  M1.a15 depot wheels             M1   done — the driving bury is the
                                             world box growing as the wheel
                                             turns, not a tyre in the road;
@@ -31,9 +37,9 @@ Top item first. Finish and deploy before starting the next.
     4  hover overlays                 -    done
     5  prune the streamed bundles     -    done
     6  bundler: private name check    -    later (Daniel: start M2)
-    8  M2.1 checkpoints               M2   parked — a8 first (Daniel 07:28),
-                                            and a8 is paused behind the 07:39
-                                            camera and build-number work
+    8  M2.1 checkpoints               M2   parked — M1 first (Daniel 08:52).
+                                            a8 is closed, so nothing in M1 is
+                                            waiting on it
     9  M1 liquidation picture         M1   done — the driving HUD is on the
                                             daily build and photographed at
                                             four sizes
@@ -82,20 +88,21 @@ Liquidation picture (a13) — CLOSED. M1.a14 — camera, HUNTED, score — CLOSE
 and live on the daily. M1.a15 — the depot wheels — CLOSED and live on the
 daily. Next letter: M1.a16, not named yet. Details: TASKBOOK.md.
 
-M1.a8: CLOSED as pays-0. Coin-margined liquidations still pay nothing to the
-  player, and the reason is measured rather than assumed. Binance DOES name an
-  all-market coin-M liquidation stream — wss://dstream.binance.com plus
-  !forceOrder@arr — and on both the legacy and the current /market route, one
-  socket at a time, it delivers USDT-M force orders: 84 messages / 31 symbols
-  and 100 messages / 42 symbols, none with an underscore, and 15 of those
-  names checked against Binance's own exchangeInfo are 0-of-15 coin-M and
-  15-of-15 USDT-M. Subscribing to it would merge the stream already shipping
-  with itself. The per-symbol route, all 30 coin-M symbols combined, paid 0 in
-  600 s. The host is genuinely coin-M — btcusd_perp@markPrice answers
-  BTCUSD_PERP — so this is the exchange's behaviour, not the wrong host.
-  Nothing was added to OnLiquidation. The 07:28 three-socket probe is
-  retracted; it reported a result two different hosts cannot both produce.
-  Doc URL and every number in TASKBOOK.
+M1.a8: NOT done. It was written as closed-pays-0 an hour ago and that was
+  wrong — the longer capture found coin-M contracts on the very stream that
+  had looked like the USDT-M feed. Binance's documented coin-M all-market
+  liquidation stream carries BOTH: mostly USDT-M orders, and coin-M ones at
+  about half a percent of the traffic. BTCUSD_PERP, ETHUSD_PERP and
+  XRPUSD_PERP each arrived once in a 588-message window, and all three are on
+  Binance's coin-M contract list and not on its USDT-M one.
+- the stream is found and the URL is Binance's own, not invented — done
+- nothing in the game subscribes to it, so a coin-M liquidation never reaches
+  OnLiquidation — not done
+- wire it: subscribe to dstream and accept ONLY coin-M symbols, or the USDT-M
+  orders already arriving on fstream are counted twice — not done
+- measure a BTC coin-M liquidation arriving on the map — not done
+  Doc links, the probe table, the host checks and the two retractions:
+  TASKBOOK.
 
 M1.a11: not done — strike voice built, needs Daniel's ear.
 
@@ -198,7 +205,10 @@ not inferred from the suite. Numbers in TASKBOOK.
   StrikeTheatre.fx was never wired - a null assignment in BuildArmies that
   threw nothing - and a test now asserts the wiring, not just the method.
 
-M1.a14: NOT DONE. Camera still stolen on bomb. The camera follows the pose the core writes and keeps the road
+M1.a14: DONE. The camera was still stolen on the bomb when that was written;
+it is not any more — nothing in ChaseCamera reads the cloud, the strike moves
+the view under 0.25 m and 0.5 deg, and it is on the daily as 0.0.551.
+The camera follows the pose the core writes and keeps the road
 in the picture in all five cases; HUNTED and its pips read the core's heat word
 with no second copy; the score the driver sees on the daily is
 BlwpCore.RunScore() and the C# formula that used to shadow it is deleted, its
