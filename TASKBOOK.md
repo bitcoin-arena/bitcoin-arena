@@ -9033,3 +9033,24 @@ The `Forced` counter still moves on EVERY forced order on that socket,
 accepted or not, and that is deliberate: BTC coin-M is about half a percent of
 the traffic and can be silent for an hour, so a counter that only moved on
 accepted orders could not tell a quiet book from a dead subscription.
+
+DEPLOYED AND CHECKED ON THE DAILY. btc-logistics-core.pages.dev, wasm md5
+903ea91fc67d1dfaa1525f3d6b340daa, identical to the local artefact, built from
+ce9517a and stamped 0.0.557. btc-logistics-war.pages.dev untouched (HTTP 200,
+not redeployed). The page's own console, off the deployed build:
+
+    [feed] binance open, subscribe not needed
+    [feed] binance-cm open, subscribe not needed
+    [feed] bybit open, subscribe sent
+    [feed] okx open, subscribe sent
+    [feed] bybit is delivering
+    [feed] okx is delivering
+    [feed] binance is delivering
+    [feed] binance-cm is delivering
+
+Four sockets, all four delivering. No liquidation was ACCEPTED off binance-cm
+in that 100 s window, and that is the expected shape rather than a failure:
+BTC coin-M is about half a percent of a stream that itself carries a few
+orders a minute, so the wait for one is measured in tens of minutes. "Is
+delivering" is the check that can be made in a browser run; the payout itself
+is pinned by the captured order in `CoinMarginedFeedTests`.
