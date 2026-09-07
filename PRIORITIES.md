@@ -115,6 +115,11 @@ and photographed at four sizes: 844x390 and 1000x360 on a player, 1024x768 and
   come from one string written at build time, so they cannot drift apart. The
   loading screen also stopped speaking German while it was open.
 - explosion sound — done (Daniel 2026-09-07 07:39).
+- one German word is still on the driving HUD — not done. Found while
+  auditing a8: `DriveHud` line 2181 draws "verbinde … (status)" under the
+  price whenever the spot price has not arrived yet. It is the only one left
+  in that file; the loading screen's German went at 07:39. One line to change
+  and a deploy to prove it, and it is not a8's to do.
 the SIM switch fires the core's strike, the HUD names that liquidation and
 its exchange, the mushroom stands on the crater floor with dust along the
 ground, every strike in a round draws full size, the crater is 1.5x deeper
