@@ -10413,3 +10413,53 @@ THE JSLIB was not built this turn - no Unity run, no deploy - so this is source,
 not a measured artefact. `$blwpDiscovery` is declared on both users with
 `__deps`, which is how Emscripten keeps a library helper it would otherwise
 eliminate.
+
+## M2.1 step 5b, the round-id binding: "this round" stops meaning "whatever the page wrote"
+
+WHY IT WAS NEEDED. The committee check landed at e43710a and was circular. The
+page writes the contract, so the page writes `nodes`, so the page picks the
+committee that its own advertisement then satisfies - honestly, with a real
+bond, a real merkle proof and a real signature. Every check in the door passes.
+What does not pass is the arithmetic: an id here is the tagged hash OF the
+object, so changing one node in that list changes the round.
+
+WHAT IS CHECKED, and it is first. `Client.at` refuses unless `roundId(contract)`
+equals a 32-byte id the PLAYER supplied. Section 25.1 step 1 is "a link, QR,
+copied round_id - carries nothing", and carrying nothing is exactly why it is
+enough. In the page the id comes off `window.location.search`, which is the one
+input in this whole path the page's own script did not write.
+
+  a page naming its own node, everything else valid
+                              "the page offered round 6f4a..., which is not the
+                              round 8c11... you were given"
+  on that node afterwards     /round 404 for BOTH ids, /transcript x-ticks 0,
+                              zero batches. Asked, not assumed.
+  no id, null, 31 bytes, a hex STRING
+                              all refused: "nothing to check the page's
+                              contract against". Required, not optional - a
+                              player who arrived with no id has nothing to
+                              check and there is no safe way to guess one.
+  a matching id               the existing door still runs in full: committee
+                              membership, proven endpoint, header chain,
+                              advertisement signature, and a real round opens
+
+MUTANTS, three killed: the id not compared (2 red), a missing id tolerated (1),
+and the endpoint refusal moved ahead of the id refusal (1) - so the player is
+told they are on the wrong round rather than given a chain complaint that
+buries it.
+
+AND ONE THAT COULD NOT BE KILLED, written down rather than counted. Moving the
+`reach` CALL either side of the id check changes nothing observable, because
+`reach` is pure: it sends no byte, opens no socket and touches no state. The
+property that matters is not the order of two computations but that nothing
+leaves the client first, and that is measured on the stranger's own node above.
+The test comment was corrected to claim the thing it actually pins.
+
+ONE READER STILL. `BLWP_ADVERT` is read in exactly one place, `$blwpDiscovery`,
+used by both the gate and the door. The round id is a different input from a
+different place - the address bar - and is read in `net.open` only.
+
+TESTS. blwp-client 35 -> 37, protocol 101/101, blwp-node 41/41, core 85/85.
+Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
+No C#; PlayMode and EditMode stand from 7b4caea. The jslib is still source, not
+a built artefact - no Unity run this turn. Nothing deployed; daily 0.0.567.

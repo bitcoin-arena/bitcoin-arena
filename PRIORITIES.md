@@ -16,8 +16,9 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-   14  M2.1 checkpoints               M2   OPEN — the client will only talk to
-                                            a node this round's contract names,
+   14  M2.1 checkpoints               M2   OPEN — the client plays the round
+                                            the player was given, and talks
+                                            only to a node that round names,
                                             at an address proven against a
                                             block header. Next: 5c, the chain
                                             source. Numbers: TASKBOOK.
@@ -683,7 +684,10 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
          refused at the door, before the round is opened and before any
          section 11 input is published, and so is an endpoint that is not
          a `wss://` socket address or a body not signed by the node it
-         names. What is left of 5b is `BOND_MARKER`, which has no value,
+         names. And the contract itself must hash to the `round_id` the
+         player was given, or the committee check is circular: the page
+         wrote the list it would otherwise be checked against.
+         What is left of 5b is `BOND_MARKER`, which has no value,
          so a bond can be proven once shown but not found - a genesis
          parameter rather than a step. Numbers: TASKBOOK.
 
