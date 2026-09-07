@@ -10347,3 +10347,69 @@ when the body is signed, and the two cannot both be had as written. An
 all-zero `bondTxid` is read as "the bond is an output of the transaction
 carrying me", because it is the only value expressible; a non-zero one must
 still equal the proven txid. Named here rather than settled.
+
+## M2.1 step 5b, last piece: step 4 reads step 3's answer
+
+THE HOLE, and it was mine to find twice. The endpoint was proven and then the
+node it named was not looked at. `directory.js` returned `nodePubkey` and
+`Client.at` dropped it; the committee was consulted only when a RECEIPT came
+back - `client.js` refuses a receipt from a key not on the committee, and by
+then the entry contract and the opening batches are already on that node's
+disk. Section 11 makes publishing the client's duty; it is not something a
+client can take back. Section 25.1 is four steps and step 3, "which are on the
+committee?", is computed from the round's own contract - step 4 was not
+reading it.
+
+WHAT IS REFUSED NOW, and where. `Client.at` is the door and everything is
+refused there, before `openRound`, before `join`, before a byte of section 11:
+
+  a bonded stranger, proven and signed   "the advertisement is for <key>, which
+                                         is not on this round's committee"
+  and on the stranger's own node         /round -> 404, /transcript -> x-ticks 0
+                                         and zero batches. Measured by asking
+                                         that node, not by trusting the client.
+  a committee member, same proof         opens, and a real round is opened on it
+  an absent or empty committee           refused. The version that takes an
+                                         empty list and shrugs is the version
+                                         that ships.
+
+THE ENDPOINT IS A STRING SOMEBODY COMMITTED TO, NOT A URL. Committing it on
+chain makes it theirs; it does not make it an address, and the client used to
+`replace(/^ws/, 'http')` whatever was there and dial it. Refused now, each by
+name: http://, https://, a bare host:port, `wss:/` one slash short,
+`javascript:`, the empty string, and ws:// to any host that is not loopback -
+a plaintext socket to somewhere else is the one thing a committed endpoint
+must not be able to ask a player for. `wss://` anywhere; `ws://` only for
+127.0.0.1, localhost or [::1], because a test node on this machine has no
+certificate and refusing it would mean the tests could not drive the real door.
+
+THE ADVERTISEMENT'S OWN SIGNATURE, 5A.1's last field, is verified. A body now
+ARRIVES signed - 64 bytes beside it or it is not an advertisement - and
+`acceptAdvert` hands the signature back rather than pretending to check it,
+because this package carries no curve on purpose. Three refusals measured:
+signed by another key, signed by the right key over a different body, and 64
+zero bytes. It signs the TAGGED id, like every other signature here, so it can
+never be replayed as a signature over another object.
+
+WHERE THE ASYNC LINE FALLS, said plainly. Verifying is asynchronous in a
+browser and C# asks for the address once, at scene start, so `endpointFor` is a
+synchronous GATE - proof, commitment, committee, socket address - and
+`Client.at` is the asynchronous DOOR, which repeats all of that and adds the
+signature. Nothing is sent by the gate; the first thing that leaves the client
+is `openRound`, and that is inside the door.
+
+MUTANTS, six, all red: the committee not read (2 - and that mutant IS 606f54d),
+an absent committee tolerated (1), any string an address (1), ws to any host
+(1), the advertisement signature unchecked (1), an unsigned body accepted (1).
+The last one survived its first build because the extra push sat inside a try
+whose earlier line already threw; rebuilt, it is 1 red.
+
+TESTS. protocol 100 -> 101, blwp-client 32 -> 35, blwp-node 41/41, core 85/85.
+Determinism guard 19 clean, money guard 9 clean. No test-vector file changed,
+so every money-bearing encoding is byte-identical. No C#; PlayMode and EditMode
+stand from 7b4caea. Nothing deployed; the daily stays 0.0.567.
+
+THE JSLIB was not built this turn - no Unity run, no deploy - so this is source,
+not a measured artefact. `$blwpDiscovery` is declared on both users with
+`__deps`, which is how Emscripten keeps a library helper it would otherwise
+eliminate.

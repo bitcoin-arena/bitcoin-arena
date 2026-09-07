@@ -16,11 +16,11 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-   14  M2.1 checkpoints               M2   OPEN — the client takes its
-                                            endpoint from a bond transaction
-                                            proven against a block header, not
-                                            from a page global. Next: 5c, the
-                                            chain source. Numbers: TASKBOOK.
+   14  M2.1 checkpoints               M2   OPEN — the client will only talk to
+                                            a node this round's contract names,
+                                            at an address proven against a
+                                            block header. Next: 5c, the chain
+                                            source. Numbers: TASKBOOK.
    13  M1.a16 playable hunt            M1   done — the hunt is winnable
                                             through the front and the rim
                                             pays almost nothing; spectate is
@@ -677,9 +677,14 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
          DONE. The live client path reads the endpoint out of a bond
          transaction it has proven into a block, and `BLWP_NODE` is gone;
          the txid and the commitment are computed from the transaction
-         rather than handed in beside it, which is what the first half
-         still allowed. Still open in 5b: `BOND_MARKER` has no value, so a
-         bond can be proven once shown but not found, and that is a genesis
+         rather than handed in beside it, which is what the first cut
+         still allowed. Step 4 also reads step 3's answer now: an
+         advertisement for a node this round's contract does not name is
+         refused at the door, before the round is opened and before any
+         section 11 input is published, and so is an endpoint that is not
+         a `wss://` socket address or a body not signed by the node it
+         names. What is left of 5b is `BOND_MARKER`, which has no value,
+         so a bond can be proven once shown but not found - a genesis
          parameter rather than a step. Numbers: TASKBOOK.
 
   5c. **The chain source: our own mempool.space, verified not trusted.**
