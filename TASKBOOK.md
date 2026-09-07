@@ -13126,3 +13126,117 @@ and the eleven reds are the army / vehicle / imported-model cluster. That set
 VARIES between runs on this machine - ten last run, eleven this one, with
 `PostOfficeTests.TheGogglesAnimate` appearing and no change of mine between
 them - so it is reported as a flaky cluster and not attributed either way.
+
+## M2.1 5A.3B: the slash law, and the line between law and enforcement
+
+### The gap, counted before anything was written
+
+`grep -rn slash packages/*/src` returned **0**. §5A.3 names six offences and
+§5A.3B gives five steps from proof to transaction; the repo held none of it.
+
+The five steps, and which of them actually need somebody:
+
+  1. anyone publishes a fraud proof                      - PURE
+  2. the proof is mechanically checked - "either a signature comparison or a
+     deterministic replay. No judgement."                - PURE
+  3. k-of-m arbitration keys sign a spend of path B      - DAEMON
+  4. the transaction carries OP_RETURN = H(fraud_proof)  - PURE
+  5. outputs pay the distribution the contract fixes     - DAEMON
+
+So PRIORITIES' old line - "slashing needs the other six daemons" - was too
+broad. The LAW is pure and the ENFORCEMENT is not, and only the second half was
+ever blocked.
+
+### The slice, and its share
+
+§13C names exactly one slashing case, its clause 3: "nodes whose signature
+contradicts a replay of the canonical transcript are slashed", which is row 2
+of §5A.3's table. §13C has four clauses and three were in, so **this is the
+last 1 of the 4 things 13C names**, and 1 of the 6 offences in 5A.3.
+
+The replay verdict is INJECTED, exactly as §13A's `objectionHolds` injects it.
+This package steps no simulation and the daemon imports no core.
+
+### What went in
+
+`packages/protocol/src/slash.js`: `SlashProof` (type 0x0c, tag
+`BLWP/v1/SlashProof`, both the next free number rather than a reuse) carrying
+round, player, node, the canonical transcript hash, the accused result's id,
+and the bond outpoint; `slashProofId`; `slashCommitment`, which is what step 4
+requires the OP_RETURN to carry; and `slashHolds`.
+
+Eight checks, every one a comparison:
+
+  - the accused is on this round's committee - a stranger's signature is not
+    misconduct, and `provisionallyFinal` already ignores it
+  - the attached evidence IS the result the proof names, by id
+  - that result was signed by the accused, for this round, for this player
+  - the proof names the canonical transcript, AND so did the result - a node
+    that signed about another object answered a different question, which is
+    13C's no-quorum case and not a slashing one
+  - the bond is the outpoint the node's OWN advertisement committed to, txid
+    and vout both - an accuser who could name the outpoint would be naming
+    anybody's money
+  - and the one judgement, handed in: anything but an explicit `true` leaves
+    the bond alone, because 5A.3B's own residual is that an attesting party
+    "can, in principle, slash without cause"
+
+Deliberately not here: the distribution ("half to the affected players, half
+burned or to the remaining honest committee members, as fixed by the Round
+Contract") needs a contract field that does not exist, and adding one moves
+every round id. The retrieval hint of step 4 is not here either - the spec
+does not fix its shape, and inventing one would be inventing a second
+protocol. `OFFENCES` holds one name, not six: a name that answers nothing
+reads as coverage.
+
+### The before/after, which is the test this slice exists for
+
+Same proof, same evidence, same bond; only the replay verdict moves.
+
+| | `replayDiffers: false` | `replayDiffers: true` |
+|---|---|---|
+| `slashed` | false | true |
+| `bond` | **undefined - not even named** | `{txid 5555…, vout 3}` |
+| `offence` | - | `REPLAY_CONTRADICTS` |
+| `commitment` | - | `slashProofId(proof)`, what the OP_RETURN carries |
+| why | no replay has contradicted the signed result | the node signed a result the canonical transcript does not replay to |
+
+### Mutants: 14 planted, 14 killed, none retracted
+
+| mutant | protocol red |
+|--------|-------------:|
+| a claim is enough to slash | 2 |
+| a truthy verdict is enough (`!replayDiffers`) | 1 |
+| the accuser names the bond | 1 |
+| the vout is not part of the bond | 1 |
+| any advertisement will do | 1 |
+| the evidence need not be the accused result | 1 |
+| somebody else's signature counts | 1 |
+| another round counts | 1 |
+| another player counts | 1 |
+| the proof may name any transcript | 1 |
+| a result about another transcript counts | 1 |
+| a stranger can be slashed | 1 |
+| the bond vout left out of the commitment | 2 |
+| the transcript left out of the commitment | 2 |
+
+The last two matter most: a commitment that does not cover the whole proof is
+a slash a stranger cannot re-verify, and 5A.3B's whole audit story rests on
+being able to.
+
+### Suites
+
+protocol 160/160 (was 149), blwp-node 70/70, blwp-client 89/89, core 80/80,
+money guard **10** files clean - `slash.js` was added to its list, because a
+bond is money and what that file decides is whether an output the node owns
+may be spent away from it - determinism guard 19 files clean. Unity untouched;
+EditMode 190/186/1/3 and PlayMode 216/192/11/13 stand from 8cc7fdd.
+
+### What is left of slashing
+
+Five offences of 5A.3, all protocol-pure and none written: two results for one
+(round, player), a payout table that is not F(contract, membership, results), a
+settlement action without its 5-of-7, signing for a round the operator played
+(5A.13), and a fee share claimed without the availability rule (22A). Then the
+distribution field, which moves round ids. And then steps 3 and 5, which are
+the arbitration set and stay blocked.

@@ -28,9 +28,15 @@ Top item first. Finish and deploy before starting the next.
                                             node publishes the proof it holds,
                                             a stranger fetches it by entry id,
                                             and every refusal keeps the signed
-                                            mark. Next: the rest of 13C —
-                                            slashing — which needs the other
-                                            six daemons. Numbers: TASKBOOK.
+                                            mark. 13C's last clause has its
+                                            law: a node that signs a result
+                                            the canonical transcript does not
+                                            replay to is slashable, and the
+                                            proof names the bond the node
+                                            itself advertised. Spending it
+                                            needs the arbitration set. Next:
+                                            the other five offences of 5A.3.
+                                            Numbers: TASKBOOK.
    13  M1.a16 playable hunt            M1   done — the hunt is winnable
                                             through the front and the rim
                                             pays almost nothing; spectate is
@@ -658,7 +664,12 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
        - issue / settle / cancel the hold invoice - DAEMON: 23.6's
          threshold-signed Lightning node or Fedimint federation, a quorum
          operating real channels
-       - slashing - DAEMON: 5A.3B's bond output, MuSig2, an arbitration set
+       - slashing - THE LAW IS IN, the enforcement is DAEMON. 5A.3B has five
+         steps and only two of them need anybody: publish the proof, check it
+         mechanically and commit H(proof) are pure, and are done for the
+         offence 13C names. Signing path B with k-of-m arbitration keys and
+         broadcasting it are the arbitration set, which does not exist here.
+         The other five offences of 5A.3 are listed there and not written.
        - the committee re-run a suspension waits for - DAEMON: six more
          nodes, and a replay the daemon deliberately does not do
        - CLTV sizing - NO PROTOCOL TICK RATE: the contract measures the
