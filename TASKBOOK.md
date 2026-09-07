@@ -8460,3 +8460,163 @@ so it is measured against its own five cases instead.
   DANGER x1.00 with the live cap riding the fill instead of pinned, five pips
   and HUNTED at 14,340 sat aboard, core DRIVING at pos -13.8, 12.3.
   btc-logistics-war.pages.dev untouched.
+
+
+## 2026-09-07  M1.a15  the wheel's box grows as it turns, and no tyre is in the road
+
+The driving bury was the last thing left of a15. Standing at the depot the
+wheel sits at 0.000 (fixed in 3bd4208, closed, not re-measured). Driving, the
+same probe reported 0.12-0.21 m of tyre inside the road, and the open question
+was whether that was real penetration or the world-aligned bounding box
+inflating as the wheel spins. `Renderer.localBounds` answers it without
+enabling Read/Write on the model, so the diagnostic was made to print both and
+the daily was driven.
+
+THE MEASUREMENT. `btc-logistics-core.pages.dev`, wasm md5
+31997c8588b15ef7d9fe840dc2bbbd19, built from 06df48e. 36 `[wheel]` lines:
+23 standing at the depot, 13 driving and steering.
+
+  standing, repeated and stable
+    visual radius 0.523, bottom 3.099, ground 3.099, sunk 0.000
+    core 2.799, terrain 2.799, core-terrain 0.000, deck lift 0.300
+    (one early sample 0.530 / 0.007, before the truck had settled)
+
+  driving, all thirteen, against the seated radius of 0.523 m
+
+    world box half-height   sunk     half-height - 0.523   residual
+         0.539             0.016           0.016            0.000
+         0.541             0.019           0.018            0.001
+         0.559             0.036           0.036            0.000
+         0.624             0.101           0.101            0.000
+         0.638             0.115           0.115            0.000
+         0.649             0.126           0.126            0.000
+         0.694             0.172           0.171            0.001
+         0.711             0.188           0.188            0.000
+         0.715             0.192           0.192            0.000
+         0.736             0.213           0.213            0.000
+         0.740             0.217           0.217            0.000
+         0.746             0.223           0.223            0.000
+         0.763             0.240           0.240            0.000
+
+  the mesh's OWN extents, all 36 lines: 0.415, 0.680, 0.680 -> axle X
+  core-terrain 0.000 on all 36 lines
+
+The bury is the box's growth, to within the millimetre the log prints. The
+world half-height runs over 0.224 m while the mesh's local extents do not move
+at all, and seven of the thirteen report a world radius LARGER than the mesh's
+own local radius of 0.680 - 0.694, 0.711, 0.715, 0.736, 0.740, 0.746, 0.763 -
+which no vertex can produce and only an axis-aligned box around a rotated
+object can. Standing, where the wheel is not turning, the box equals the
+seated radius and the bury is 0.000.
+
+It is also an identity once written out. The seating puts the mesh's CENTRE at
+`ground + radius`, so
+
+  sunk = ground - box.min.y = ground - (centre.y - box.extents.y)
+       = box.extents.y - radius
+
+and the only term that varies is the box. `sunk` cannot tell a rotated wheel
+from a buried one; it was never able to.
+
+FINDING: the 0.12-0.21 m driving bury is bounding-box inflation. No tyre is in
+the road. Nothing is corrected, no Read/Write is enabled, no pixel changed, and
+nothing was deployed for it.
+
+WHAT WAS CHANGED, all of it measurement rather than picture:
+
+  - `CoreDrivenTruck.SeatingOf(i, out WheelSeating)` reads one wheel: the
+    ground under it, the mesh's own radius, where the mesh's centre actually
+    is, and the world box's floor. `Tyre` is `ground + radius - centre.y` and
+    is rotation-proof, because the wheel is round about its axle and its two
+    cross-axle extents are equal - 0.680 and 0.680 - so the distance from
+    centre to rim is the same at every spin angle. `Box` is the old number,
+    kept because it is what the browser log shows.
+  - the `[wheel]` line now prints "box sunk" and "tyre sunk" side by side, so
+    the next person to read it cannot mistake the one for the other.
+  - `PoseWheels` takes the steer, the speed and the frame time as arguments
+    instead of reading `BlwpCore` and `Time.deltaTime` inside. Same code; the
+    Update call site passes the core's own three numbers. This is what lets
+    the seating be run in an editor, where the core is a stub that would drive
+    nothing.
+
+THE ROUND-PLAYING TEST, asked for either way. `WheelSeatingTests`, PlayMode,
+three tests:
+
+  - eight rounds, the truck put on a fresh spot and heading each time and the
+    wheels re-streamed each time, rolling 40 frames at 9 m/s - about 1.7 whole
+    turns of a 0.55 m wheel - then every wheel read. `Tyre` within 0.01 m of
+    zero, AND the lowest real VERTEX of the wheel mesh not below the ground.
+    The vertex scan is the claim made without the seating's own arithmetic.
+  - the finding held as a test: over 120 frames of turning, the world box
+    claims more than 0.05 m of bury while the tyre never moves 0.01 m. If a
+    future probe goes back to trusting `bounds`, this says which number moved.
+  - eight rounds of re-collect all seat on the same radius, and on the mesh's
+    real one. This is "worse after round 1 or 2" stated as a number: a
+    re-collect returning a different radius or hub is the only thing that
+    could make round three sit lower than round one.
+
+The stand-in is a sphere squashed to a tyre's extents with its renderer hung
+off the pivot, as the streamed model's is - a stand-in centred on its pivot
+could not show the 0.178 m bury 3bd4208 fixed. `StartRound` is not called: it
+returns on its first line without a core, so calling it in an editor would be
+a line of test that does nothing and reads as though it did something.
+
+SECOND FINDING, out of the same measurement rather than looked for. The round
+test's log showed one unchanging mesh seated on a DIFFERENT radius every
+round - 0.503, 0.488, 0.486, 0.493, 0.507, 0.518 m - and the rounds differ by
+nothing except which way the truck was pointing when the model was handed
+over. `Bootstrap.NormaliseTruckModel` sized the streamed truck by
+
+    6.4 / max(worldBounds.size.x, worldBounds.size.z)
+
+which is the same axis-aligned world box. A truck standing at an angle is
+measured across its own diagonal, comes out too long, and is scaled down to
+compensate; the sole had it too, because a rotated box's floor is below the
+model's own, so a truck delivered at an angle was also set down at the wrong
+height. The function already knew the difference - two lines on it re-measures
+"in the TRUCK's space, not the world's" - and only the length had been left
+behind in the world's.
+
+  measured on the stand-in, 6.4 m long, wheel radius 0.550 m
+    world box   heading  0 deg -> 0.550 m     heading 15 deg -> 0.517 m
+    own box     heading  0 deg -> 0.550 m     heading 15 deg -> 0.550 m
+  a 6% size difference for pointing fifteen degrees off north
+
+`Bootstrap.Measure` carries each renderer's OWN box corner by corner into the
+truck's space, which is exact under rotation and needs no Read/Write. Both
+the length and the sole read it now. This one DID change pixels - the truck is
+the size it is meant to be whatever heading it streams in on - so it deploys.
+
+MUTANTS, both killed:
+  - `Measure` put back into world space: `TheModelIsSizedTheSameOnEveryHeading`
+    red at 15 deg, 0.517 m against 0.550 m.
+  - the seating put back on the collider radius, which is the 3bd4208
+    regression: `TheTyreStaysOnTheGroundThroughEightRounds` red at -0.027 m
+    and `TheWorldBoxClaimsABuryTheTyreDoesNotHave` red with the tyre moving
+    0.027 m while the box grew 0.214 m.
+
+The editor reproduces the browser's numbers on the real streamed wheel, which
+is the part that makes this a measurement rather than a story:
+`SmallTruck_Tyre_B_L`, local extents 0.415, 0.680, 0.680, seated on 0.523 m,
+box sunk 0.122 / 0.082 / 0.046 / 0.036 / 0.076 m and tyre sunk 0.000 in every
+one of them.
+
+TESTS, counted per suite.
+
+  PLAYMODE  213 / 185 green / 13 red / 15 skipped, and 213 / 186 / 12 / 15 on
+            a second full run of the same code. Eleven of the reds are the
+            known list. The other two are both green when run alone -
+            `ScoreTests;PostOfficeTests` on their own: 15 of 15 - and only one
+            of them appeared twice:
+              PostOfficeTests.TheGogglesAnimate       the documented load
+                                                      flake, item 1: green
+                                                      alone, red under load
+              ScoreTests.IdlingEarnsNothingEvenOnTheSeam
+                                                      red on run 1, green on
+                                                      run 2, green alone
+            Four more PlayMode fixtures' worth of world-building is what the
+            suite gained, and that is the load both of them are sensitive to.
+            Named rather than tuned away.
+  EDITMODE  159 / 155 green / 1 red / 3 skipped. The red is
+            `CombatFxTests.RifleFireProducesAFlashAndATracer`, the known one.
+  NEW       WheelSeatingTests, 4 PlayMode tests, all green.

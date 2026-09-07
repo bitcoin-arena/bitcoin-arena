@@ -16,7 +16,10 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-   11  M1.a15 depot wheels             M1   next, not started
+   11  M1.a15 depot wheels             M1   done — the driving bury is the
+                                            world box growing as the wheel
+                                            turns, not a tyre in the road;
+                                            the round test is in
    10  M1.a14 camera / HUNTED / score  M1   done — the camera follows the
                                             core's pose, HUNTED is the core's
                                             heat word, and the score on the
@@ -70,8 +73,8 @@ Twelve red tests: none on the deploy path. List in TASKBOOK.md.
 ## M1
 
 Liquidation picture (a13) — CLOSED. M1.a14 — camera, HUNTED, score — CLOSED
-and live on the daily. Next: M1.a15, the depot wheels. Details: TASKBOOK.md.
-Next letter: M1.a16.
+and live on the daily. M1.a15 — the depot wheels — CLOSED and live on the
+daily. Next letter: M1.a16, not named yet. Details: TASKBOOK.md.
 
 M1.a8: not done (parked) — coin-margined Binance probed.
 
@@ -221,16 +224,21 @@ rules moved into the core suite. Numbers in TASKBOOK.
   and the core implements that same heat-zero case. A full load would die
   2.1x faster if it were fed. That is a core rule and is not changed here.
 
-M1.a15: parked — was a14. Wheels in the ground at the depot / on the model.
-  Standing bury is fixed (0.178 m to 0.000, 3bd4208): the wheel was seated on
-  the collider's 0.550 m while the mesh reaches 0.728 m. Craters and the
-  core/terrain surfaces were both cleared by measurement, not argument.
-  Still open when it resumes: the driving bury, 0.12-0.21 m, which cannot be
-  told from bounding-box inflation until that model is made readable.
-- happens more often after round 1 or 2, reproducible then
-- not always; usually fine
-- write a test that plays 5–10 rounds and checks wheels vs ground
-- not done
+M1.a15: DONE. Wheels in the ground at the depot / on the model.
+  Standing bury was fixed earlier (0.178 m to 0.000, 3bd4208) and is not
+  re-opened. The driving bury, 0.12-0.21 m, is the world-aligned box growing
+  as the wheel turns: it matches "box half-height minus seated radius" to a
+  millimetre in all thirteen driving samples while the mesh's own extents
+  never move. No tyre is in the road, no visual correction was invented and
+  Read/Write was not enabled. Numbers in TASKBOOK.
+- happens more often after round 1 or 2, reproducible then — done, held by
+  the round test rather than argued: the re-collect is measured every round
+- not always; usually fine — done, explained: it depends on the spin angle
+- write a test that plays 5–10 rounds and checks wheels vs ground — done,
+  `WheelSeatingTests`, eight rounds on the real streamed wheel
+- one pixel DID change, out of the same measurement: the streamed truck was
+  sized off its world box, so it came out a different size on every heading.
+  Fixed and deployed. — done
 
 M1.d: done — the driving camera looks up while a mushroom stands. The cap was
 never mis-placed; a 55 m column at truck height does not fit the driving view.
