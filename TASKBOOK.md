@@ -8977,3 +8977,59 @@ WHAT WIRING IT NEEDS, named so the next turn does not have to re-derive it:
 
 NOT DONE THIS TURN because no feature code was to be written. Nothing was
 added to `OnLiquidation`; the game is unchanged.
+
+
+## 2026-09-07 10:05  M1.a8 CLOSED: coin-margined liquidations pay
+
+Wired, and the number moved from absent to a dollar amount.
+
+THE SOURCE. A fourth `MarketFeed` source, same shape as the fstream one - no
+subscribe frame, no keepalive, the stream is in the URL:
+
+    binance-cm  wss://dstream.binance.com/market/stream?streams=!forceOrder@arr
+
+THE FILTER, and why it is not "has an underscore". That socket carries both
+books - 588 messages over 300 s, of which 3 were coin-M - so taking everything
+would put every USDT-M liquidation on the map twice, once off each socket. The
+trap is the dated USDT-M contracts: BTCUSDT_261225 has an underscore, starts
+with BTC, and arrived on this very socket during the capture. `IsCoinMargined`
+matches the shape Binance actually uses - a base, then USD, then the
+underscore - and was checked against their own two lists rather than reasoned
+about:
+
+    dapi (coin-M)   30 symbols   the rule takes 30
+    fapi (USDT-M)  897 symbols   the rule takes  0
+    fapi's four underscore names: BTCUSDT_260925, ETHUSDT_260925,
+                                  BTCUSDT_261225, ETHUSDT_261225   all rejected
+
+THE VALUE. The quantity on this book is CONTRACTS, not coin. Contract sizes
+off dapi's exchangeInfo, read 2026-09-07:
+
+    contractSize 100 USD    3 symbols   BTCUSD_PERP, BTCUSD_260925, BTCUSD_261225
+    contractSize  10 USD   27 symbols   AAVEUSD_PERP, ADAUSD_PERP, ...
+
+THE MEASUREMENT, on an order caught off that socket rather than one written
+here. E=1788767113682, BTCUSD_PERP, forced BUY, q=197, ap=79288.0:
+
+    before   0            nothing subscribed to the book it came from
+    after    $19,700      197 contracts x 100 USD
+    the wrong reading     $15,619,736   (197 x 79288.0, the USDT-M rule)
+
+    and it is a forced BUY, so it closes a SHORT - the side is read the same
+    way as on the other Binance book.
+
+MUTANTS, both killed:
+  - filter removed: `AUsdtMarginedOrderOnTheSameSocketIsDropped` red, and
+    `EveryForcedOrderStillProvesTheSocketIsAlive` red at 2 accepted of 3.
+  - valued as `contracts * price`: `ACoinMarginedLiquidationPaysRealDollars`
+    red at 238,239.30 against 300.00 on the earlier fixture - a 794x
+    overstatement of a single order.
+
+TESTS. EditMode 169 / 165 green / 1 red / 3 skipped - eight new, the red the
+known CombatFx one. PlayMode 213 / 189 green / 11 red / 13 skipped - the known
+eleven, nothing new.
+
+The `Forced` counter still moves on EVERY forced order on that socket,
+accepted or not, and that is deliberate: BTC coin-M is about half a percent of
+the traffic and can be silent for an hour, so a counter that only moved on
+accepted orders could not tell a quiet book from a dead subscription.

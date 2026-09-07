@@ -16,12 +16,12 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-   12  M1.a8 coin-M liquidations       M1   NOT done — a BTCUSD_PERP
-                                            liquidation DOES cross the
-                                            documented stream; nothing
-                                            subscribes to it. One step left:
-                                            wire dstream and take coin-M
-                                            symbols only. Numbers: TASKBOOK
+   12  M1.a8 coin-M liquidations       M1   done — coin-margined liquidations
+                                            pay now. A captured BTCUSD_PERP
+                                            of 197 contracts is $19,700 on
+                                            the map where it was 0, and the
+                                            USDT-M orders on that same socket
+                                            are dropped. Numbers: TASKBOOK
    11  M1.a15 depot wheels             M1   done — the driving bury is the
                                             world box growing as the wheel
                                             turns, not a tyre in the road;
@@ -88,21 +88,20 @@ Liquidation picture (a13) — CLOSED. M1.a14 — camera, HUNTED, score — CLOSE
 and live on the daily. M1.a15 — the depot wheels — CLOSED and live on the
 daily. Next letter: M1.a16, not named yet. Details: TASKBOOK.md.
 
-M1.a8: NOT done. It was written as closed-pays-0 an hour ago and that was
-  wrong — the longer capture found coin-M contracts on the very stream that
-  had looked like the USDT-M feed. Binance's documented coin-M all-market
-  liquidation stream carries BOTH: mostly USDT-M orders, and coin-M ones at
-  about half a percent of the traffic. BTCUSD_PERP, ETHUSD_PERP and
-  XRPUSD_PERP each arrived once in a 588-message window, and all three are on
-  Binance's coin-M contract list and not on its USDT-M one.
+M1.a8: DONE. Coin-margined liquidations pay the player.
 - the stream is found and the URL is Binance's own, not invented — done
-- nothing in the game subscribes to it, so a coin-M liquidation never reaches
-  OnLiquidation — not done
-- wire it: subscribe to dstream and accept ONLY coin-M symbols, or the USDT-M
-  orders already arriving on fstream are counted twice — not done
-- measure a BTC coin-M liquidation arriving on the map — not done
-  Doc links, the probe table, the host checks and the two retractions:
-  TASKBOOK.
+- a fourth MarketFeed source on dstream, same shape as fstream — done
+- coin-M symbols only, matched on Binance's contract shape rather than on
+  "has an underscore": of dapi's 30 coin-M names it takes 30, of fapi's 897
+  USDT-M names it takes 0, including all four dated ones. Without it every
+  USDT-M liquidation would be on the map twice — done
+- UsdValue from contracts, not coin: a BTC coin-M contract is 100 USD, so a
+  captured order of 197 contracts is $19,700. Read the USDT-M way it would
+  have been $15.6M — done
+- measured on a real captured payload, both sides of the filter, with both
+  mutants killed — done
+  Doc links, the probe table, the contract sizes and the two retractions on
+  the way here: TASKBOOK.
 
 M1.a11: not done — strike voice built, needs Daniel's ear.
 
