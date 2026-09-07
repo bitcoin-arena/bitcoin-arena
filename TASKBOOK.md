@@ -42,15 +42,17 @@ this machine has not got. None can go green here, and none may be loosened.
         display", and there is no Xvfb here. Depends on: a graphics device.
         The claim itself is photographed in every browser run.
 
-    Rotating twelfth, one of THREE, never more than one in a run:
+    Rotating twelfth, one of THREE - and on 2026-09-07 10:50, for the first
+    time, TWO of them in one run:
       PostOfficeTests.TheGogglesAnimate
       RampReadyTests.TheRealTransactionsReplaceTheStandInsWhileNothingIsLoaded
       ScoreTests.IdlingEarnsNothingEvenOnTheSeam        (new 2026-09-07)
         item 1's load flake; which one appears changes between runs of the
         same tree. All three are green when run alone - measured today:
         `ScoreTests;PostOfficeTests` on their own, 15 of 15 green. Depends on:
-        the suite's own load, not on any code here. The load went up today
-        when WheelSeatingTests added four more worlds to build.
+        the suite's own load, not on any code here. The load went up twice
+        today: WheelSeatingTests added four more worlds to build, and a8 added
+        a fourth WebSocket to every PlayMode world.
 
 Everything for M2 and beyond is further down, under "The milestones", and
 none of it should be started while item 2 is open. M2 needs stage 3
@@ -9054,3 +9056,61 @@ BTC coin-M is about half a percent of a stream that itself carries a few
 orders a minute, so the wait for one is measured in tens of minutes. "Is
 delivering" is the check that can be made in a browser run; the payout itself
 is pinned by the captured order in `CoinMarginedFeedTests`.
+
+
+## 2026-09-07 10:50  a8 audited: the units the core is handed, and two tests of mine
+
+THE ENGINE QUESTION, answered with numbers. There is no second engine sizing a
+strike any more: `Bootstrap` hands every accepted liquidation to
+`BlwpCore.Liquidation(usd)`, and the C# side gets only the SIDE and the venue,
+for the renderer. So the comparison that matters is not core-versus-C#, it is
+whether the NEW book reaches the core in the same units as the old one.
+`BlwpCore.Scale` is the whole conversion - millions of USD in Q16.16, rounded,
+floored at one step of $15.26 - and it is readable outside a WebGL player, so
+it was measured rather than argued:
+
+  the captured order, 197 contracts of BTCUSD_PERP at 79288.0
+
+    before                      0 steps      nothing subscribed to that book
+    after, coin-M rule     $19,700 ->  1,291 steps
+    the USDT-M rule    $15,619,736 -> 1,023,655 steps
+
+  1,023,655 / 1,291 = 793x the strike. The crater follows the cube root of the
+  size, so that is about nine times the radius - not a rounding error, a
+  different weapon.
+
+  one BTC coin-M contract, $100 -> 7 steps. The smallest order this book can
+  produce still reaches the core rather than being floored away, which is the
+  thing worth checking about a book whose quantities are small integers.
+
+  and one rule, not two: Scale(coin-M $19,700) == Scale(USDT-M $19,700). Four
+  tests, `CoinMarginedCoreUnitsTests`.
+
+TWO REDS OF MY OWN, both from this letter, both fixed rather than listed:
+
+  - `CargoTests.TheWindowChromeDrawsWithoutThrowing` went red on the line
+    "[feed] binance-cm open, subscribe not needed". It watched for a throw by
+    requiring the CONSOLE TO BE SILENT - `LogAssert.NoUnexpectedReceived`
+    fails on an ordinary Log too - which made it a hostage of whatever else
+    spoke in those twenty frames. It listens for the thing itself now:
+    Exception, Error and Assert fail it; a Log does not.
+  - `WheelSeatingTests.TheRoadIsDrawnWhereThingsAreSeatedOnIt` was
+    intermittent, about one run in three, always -2.34 m at (82.4, -24.1).
+    Not noise: the frontline moves every frame and the lanes bend around it,
+    while `RoadNetwork` rebuilds at most every 0.25 s, so between two rebuilds
+    the seated centreline has walked on while the ribbon still holds the old
+    one - and (82.4, -24.1) is where a lane bends hardest. The test watches a
+    ribbon's own vertices and reads the road in the frame they change. Three
+    consecutive runs green, and a `[road]` line now prints the lane, the
+    seated height, the drawn height, the lift and the wear if it ever fails
+    again. The 0.02 m bound is untouched.
+  - `EveryRoundMeasuresTheSameWheel` flaked once for a third reason worth
+    naming: the streamed truck can arrive mid-run, so round 7 measured the
+    real 0.523 m tyre while round 1 measured a 0.620 m stand-in. That is the
+    model changing, not a re-collect lying about one mesh, and the fixture is
+    about the second thing - so it re-baselines when the wheel's name changes.
+
+TESTS. PlayMode 213 / 187 green / 13 red / 13 skipped: the known eleven plus
+TWO of the three load flakes at once, which has not happened before - both are
+green alone and the note above is updated. EditMode 173 / 169 green / 1 red /
+3 skipped, the known CombatFx one.
