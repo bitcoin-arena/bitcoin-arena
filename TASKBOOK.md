@@ -8067,3 +8067,49 @@ The models fail to stream in this player: the Addressables bundles are built
 for WebGL and there is no StandaloneLinux64 catalogue. That is expected and it
 made the pictures MORE useful, not less - the list is photographed in its
 failed and waiting states, which is the widest it ever gets.
+
+
+## 2026-09-07  the card contents, and the two debug panels in all four states
+
+THE CARDS HAD THREE FORMULAS FOR ONE NUMBER. `SendOffBox` sized itself from
+`clamp(min(w, h) * 0.055, 20, 46)`, `DrawSendOff` drew from
+`round(min(w * 0.034, min * 0.060))` and `DrawArrivalCard` from `0.040 /
+0.070`. At 844x390 the box was built for 21.45 and the send-off drew at 23, so
+the content was taller than the frame meant to hold it - the block board's
+fault a fifth time, and invisible because a card is up for three seconds.
+One `CardHead`, asked by both, and a `CardContentHeight` the box is asserted
+against.
+
+AND THE WORDS NOW FIT THE CARD. It stands in the gap - 371 px on a phone in
+landscape, not the 92% of the screen it used to take - so a headline sized for
+the old width was cut off at both ends by the centring. Three places in this
+file were already shrinking type to a box by hand and each did it slightly
+differently; there is one `FitInto` now, with one floor and one margin.
+
+THE TWO DEBUG PANELS ARE INDEPENDENT and only two of their four states had
+ever been walked. The F1 diagnostics box is top left with the condition bar
+stacked under it; the corner readout hangs from the debug icon with the score
+column stacked under it. All four, at five shapes. Rects at 844x390:
+
+  state                F1 box          corner readout   condition    score
+  debug off, f1 off    8,8 287x215     not drawn        8,92         691,108
+  debug off, f1 on     8,8 287x215     not drawn        8,227        691,108
+  debug on,  f1 off    8,8 287x215     574,111 260x120  8,92         564,237
+  debug on,  f1 on     8,8 287x215     574,111 260x120  8,227        564,237
+
+The block clock is 320,112 371x47 with the readout down and 320,112 244x47
+with it up - the gap narrows because the readout is 260 px wide against the
+settings column's 60.
+
+AND ON A SHORT WINDOW THEY DO NOT BOTH FIT. At 1000x360 with the readout up
+the score column ended at y=365 of 360. Of the two, one is eight lines of
+developer numbers behind a toggle and the other is what the player is playing
+for, so where they do not both fit the READOUT is not drawn at all. Two knock-
+ons came with that and both were measured, not guessed: an empty rect sits at
+x=0, so clamping the headline gap to it took the gap negative and the score
+column then took the whole width across the condition bar; and the content
+check compared a real height against nothing.
+
+MUTATION-CHECKED, each reverted at once:
+  the card box back to its own head formula -> TheDebugPanelAndTheCards red
+  the readout never yields to the score     -> two tests red
