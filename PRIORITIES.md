@@ -30,7 +30,7 @@ Top item first. Finish and deploy before starting the next.
     4  hover overlays                 -    done
     5  prune the streamed bundles     -    done
     6  bundler: private name check    -    later (Daniel: start M2)
-    8  M2.1 checkpoints               M2   open — after a15 (Daniel 07:11)
+    8  M2.1 checkpoints               M2   parked — a8 first (Daniel 07:28)
     9  M1 liquidation picture         M1   done — the driving HUD is on the
                                             daily build and photographed at
                                             four sizes
@@ -79,7 +79,10 @@ Liquidation picture (a13) — CLOSED. M1.a14 — camera, HUNTED, score — CLOSE
 and live on the daily. M1.a15 — the depot wheels — CLOSED and live on the
 daily. Next letter: M1.a16, not named yet. Details: TASKBOOK.md.
 
-M1.a8: not done (parked) — coin-margined Binance probed.
+M1.a8: not done. Daniel 2026-09-07 07:28: solve a8. We already had Binance
+  USDT-M force orders on /market/ws. Coin-margined (BTCUSD_PERP on dstream)
+  paid 0 on the first probe. Try the routed /market path, merge BTC* into
+  the same OnLiquidation if it speaks. Do not invent a URL.
 
 M1.a11: not done — strike voice built, needs Daniel's ear.
 
