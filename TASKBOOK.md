@@ -12447,3 +12447,62 @@ not parse.
 
 TESTS. protocol 136 -> 138, blwp-node 66, blwp-client 72, core 85. Money guard
 9 files clean, determinism guard 19 clean. No Unity, no C#, no floats.
+
+## M2.1 14: a FINAL result cannot be voided, and ENTRY_VOID is a real fate
+
+THE HOLE, found by re-reading section 14's ladder rather than the tests.
+
+  "PROVISIONAL -> VOID / ENTRY_VOID (refund; REACHABLE ONLY FROM PROVISIONAL)"
+  "once a player's result is FINAL, later infrastructure failure does not
+   erase it"
+
+Measured before the refusal existed: five committee members sign, the objection
+window closes, `finality` answers FINAL - and `noQuorumOutcome`, asked
+afterwards with three of five, answered VOID. Both functions were right on
+their own and nothing crossed them, so a settled round could be refunded after
+the fact. It is an escape hatch for both sides: a node that went quiet after
+finality could unmake a loss.
+
+MEASURED AFTER:
+
+  five signatures, window closed        FINAL
+  noQuorumOutcome asked anyway, 3 of 5  no outcome at all: "that result is
+                                        already FINAL, and a later failure does
+                                        not erase it: VOID is reachable only
+                                        from PROVISIONAL"
+  the same count from PROVISIONAL       VOID, as before
+  with no state given                   VOID, as before - the check is a
+                                        refusal on FINAL, not a new requirement
+  the hold, afterwards                  refunded 100000, pool 100000 - the
+                                        winner's own stake and nothing more
+
+ENTRY_VOID, THE FIFTH WORD. Section 14's ladder and section 18's pool rule name
+it - "VOID and ENTRY_VOID entries neither contribute to nor draw from the pool"
+- and 23.2 gives it the same hold as VOID. So the money behaves identically and
+the three-fate numbers do not move; what the word adds is that a caller can
+say an entry never activated (16: "before stake commitment: no financial entry
+exists; no loss") rather than writing it as a round that was played and could
+not be settled.
+
+  winner + loser + VOID + ENTRY_VOID   CANCEL SETTLE NOTHING NOTHING
+                                       pool 100000, refunded 300000,
+                                       pool - shares 0, two rows in the table
+  ENTRY_VOID's hold                    NOTHING, authorised with no conditions,
+                                       and it ends EXPIRED
+  isRefund                             true for both, false for FORFEIT
+
+MUTANTS, five, and one was a no-op that found something better. Red: a FINAL
+result voided anyway (1), the state ignored so anything can be voided (1),
+ENTRY_VOID settled like a loss (1), a never-activated entry contributing to the
+pool (1). The fifth - ENTRY_VOID written into the payout table - killed nothing,
+because `holdSettlement` re-derived the row list with a SECOND filter over the
+entries while the amounts came from the table, matched BY INDEX. Two filters
+that could drift, with no test able to see it. The second filter is gone: the
+rows come from the table itself now, so the mutant cannot be written at all.
+
+TESTS. protocol 138, blwp-node 66 -> 68, blwp-client 72, core 85. Money guard 9
+files clean, determinism guard 19 clean. No Unity, no C#, no floats.
+
+STILL LISTED, NOT STARTED: issuing, settling or cancelling a real invoice; the
+CLTV sizing check, which needs a tick rate the protocol does not carry; and
+slashing. All three want the other six daemons or a Lightning endpoint.
