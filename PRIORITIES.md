@@ -16,6 +16,7 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
+   10  M1.a14 camera / HUNTED / score  M1   OPEN — next, not started
     1  clear the red tests            M1   done
     2  the army into the core         M1   done
     3  three post office buildings    M1   done
@@ -23,8 +24,9 @@ Top item first. Finish and deploy before starting the next.
     5  prune the streamed bundles     -    done
     6  bundler: private name check    -    later (Daniel: start M2)
     8  M2.1 checkpoints               M2   parked — after M1 is closed
-    9  M1 liquidation picture         M1   done
-   10  M1.a14 camera / HUNTED / score  M1   open
+    9  M1 liquidation picture         M1   done — the driving HUD is on the
+                                            daily build and photographed at
+                                            four sizes
 
 HARD (Daniel 2026-09-05 13:25): finish M1 before M2. Stop checkpoint
 work. Back to M1.a13. Do not start M2 until item 9 is closed.
@@ -73,11 +75,9 @@ M1.a11: not done — strike voice built, needs Daniel's ear.
 
 M1.a12: not done (parked) — five extra venues, no public stream.
 
-M1.a13: 2026-09-05 morning picture — DONE. The driving HUD is closed and live:
-every element has a rect, nothing overlaps at nine shapes or in either state of
-the two debug panels, and it is photographed at four - 844x390 and 1000x360 on
-a player, 1024x768 and 1920x1080 in a browser on the daily. Numbers in
-TASKBOOK.
+M1.a13: 2026-09-05 morning picture — DONE. The driving HUD is live on the daily
+and photographed at four sizes: 844x390 and 1000x360 on a player, 1024x768 and
+1920x1080 in a browser. Numbers in TASKBOOK.
 the SIM switch fires the core's strike, the HUD names that liquidation and
 its exchange, the mushroom stands on the crater floor with dust along the
 ground, every strike in a round draws full size, the crater is 1.5x deeper
