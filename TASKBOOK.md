@@ -9966,3 +9966,39 @@ TESTS. blwp-client 19 -> 22, three new in `backpressure.test.js`. blwp-node
 money guard 7 clean. No C# changed - the jslib, the client and the node's
 server only - so PlayMode stays 213 / 189 green / 11 red / 13 skipped and
 EditMode 185 / 181 green / 1 red / 3 skipped from the run at 7b4caea.
+
+TWO THINGS NAMED ON THIS PATH, one accepted as untested and one that is a hole.
+
+  `bufferedAmount` IS UNTESTED, and deliberately. The guard is in `drain` and
+  a real node cannot produce a socket that reports a backed-up buffer without
+  faking the socket - the node answers as fast as the loopback allows, and the
+  buffer never fills. Daniel's pick: leave it, do not open a fake-socket hunt.
+  The backpressure that is measured is the hold, the single flight and the
+  skip-not-queue rule; this guard is a second line behind those three.
+
+  A DROPPED TICK MISLABELS THE TRANSCRIPT. Read off the code rather than
+  measured, and it is a code fact rather than a suspicion:
+
+    `Client.batch` numbers a batch `firstTick: this.nextTick`, and `nextTick`
+    advances by `ticks.length` on acceptance - a COUNT of published ticks.
+    `record` drops a tick when the hold is full and counts it.
+    The page gives a mark the REAL tick, `net.seen`.
+
+  So the moment `dropped` is not zero the two clocks part. The batch chain goes
+  on numbering 600, 601, 602 while those words are the inputs from tick 1800
+  onwards, and a mark says 1800 while the transcript it names has only reached
+  600. A verifier replaying that transcript lands in a different world from the
+  one the player was in, which is the one thing the money law does not allow -
+  identical inputs must produce identical results.
+
+  WHEN IT TRIGGERS: only once the hold has filled, which takes an outage as
+  long as the whole round - 9000 ticks is 150 s at 60 Hz. By then the run
+  cannot be completed. So the share of runs reaching it is small; what makes it
+  worth fixing is the SHAPE of the failure. A run that is over should look
+  over; this one keeps publishing a stream that reads as a valid transcript and
+  is not one.
+
+  THE FIX IS NOT A BOUND, it is an ending: once a tick has been dropped the
+  session should stop publishing and say the run is lost, rather than carry on
+  with a mislabelled chain. That is a decision about what a client does when it
+  can no longer be honest, so it is named here rather than taken.
