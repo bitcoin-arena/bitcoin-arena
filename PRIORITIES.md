@@ -30,7 +30,7 @@ Top item first. Finish and deploy before starting the next.
     4  hover overlays                 -    done
     5  prune the streamed bundles     -    done
     6  bundler: private name check    -    later (Daniel: start M2)
-    8  M2.1 checkpoints               M2   parked — after M1 is closed
+    8  M2.1 checkpoints               M2   open — after a15 (Daniel 07:11)
     9  M1 liquidation picture         M1   done — the driving HUD is on the
                                             daily build and photographed at
                                             four sizes
@@ -60,7 +60,10 @@ HARD (Daniel 2026-09-06 18:23): do not stop for Daniel to check sound.
 Keep going. Audio is not a wait.
 
 HARD (Daniel 2026-09-06 18:53): keep going even if Daniel does not test
-at once. When a13 and a14 are done, continue with M2.
+at once.
+
+HARD (Daniel 2026-09-07 07:11): when a15 is done, M2. a15 is marked
+done. Start M2.1 checkpoints. Parked a8/a11/a12 stay parked.
 
 HARD (Daniel 2026-09-06 22:48): when a letter like a13 or a14 is done,
 deploy to btc-logistics-core.pages.dev. Do not wait for Daniel to ask.
