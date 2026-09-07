@@ -11995,3 +11995,77 @@ nothing ties a `resultId` in that list to a result body anybody has seen. Both
 are the caller's, as they are for the equivocation proof. A node signing two
 DIFFERENT results for one player is counted on each side and is not called out
 - that is node equivocation, and it belongs with slashing.
+
+## M2.1 13A: the objection window, and what a valid objection actually does
+
+A SIGNED-OBJECT FORMAT CHANGE, made once. The round contract gained
+`objectionWindowMs` (u64), because 13A says the window is "reference: 10
+minutes, CONTRACT-DEFINED" and a window the caller chooses is a window the
+operator chooses - the operator being the party a veto exists against. The
+player signs up to it with the rest of the round. `OBJECTION_WINDOW_REFERENCE_MS
+= 600000n` is a REFERENCE and not a default: the number lives in the contract.
+
+  vectors regenerated   of the nine files only `contracts.json` moved, which
+                        is the one the change is in
+  fixtures              fifteen files build a round contract; every one got
+                        the field
+  the id                a shorter window is a different round - the field is
+                        covered by the contract's own hash
+
+TWO THINGS THE SPEC SAYS THAT THE ASK HAD BACKWARDS, and both are in the code
+now rather than in a comment:
+
+  WHO MAY OBJECT IS ANYONE. "the affected player, another player in the round,
+  a non-selected node, a spectator, a watchtower". Gating objectors on the
+  committee would silence exactly the parties 13A's collusion bar depends on.
+  Nothing here looks at who signed the objection. The set comparison is on the
+  RECEIPTS it carries: "CheckpointReceipts from committee nodes".
+
+  A VALID OBJECTION DOES NOT VOID. "A valid objection suspends finality. The
+  full committee re-runs the canonical transcript... If the committee cannot
+  reach 5-of-7 on the re-run, 13C applies." The answer is SUSPENDED and the
+  refusal text names the re-run; VOID appears nowhere in it, and a test asserts
+  that it does not.
+
+MEASURED:
+
+  five committee signatures, window running   PROVISIONALLY_FINAL, closesAt
+                                              at + 600000
+  four signatures                             no state at all - the window
+                                              never opens
+  one millisecond before the close            PROVISIONALLY_FINAL
+  at the close, and after                     FINAL
+  a 1000 ms window in the contract            closes at at+1000, so the number
+                                              is not in the code
+  a contract with no window field             refused, not guessed
+  strangers' receipts                         invalid, "not from this round's
+                                              committee"
+  the committee's receipts                    valid - and the objector is a
+                                              stranger in every case, because
+                                              anyone may object
+  a watchtower, a spectator, another player   each valid
+  no replay verdict                           invalid, "no replay has
+                                              contradicted the signed result"
+  receipts for another transcript             invalid
+  a valid objection inside the window         SUSPENDED, naming the re-run and
+                                              13C, and never VOID
+  an objection that does not hold             PROVISIONALLY_FINAL, unchanged
+
+THE REPLAY IS INJECTED, and that is the honest half of this cut. 13A's validity
+needs "deterministic replay under the round's sim_wasm_hash produces
+claimed_result != signed_result", this package steps no simulation and neither
+does the daemon, so `replayDiffers` comes in the way `verify` and
+`equivocationProven` do. A caller passing `true` without replaying has
+overturned a result on its own say-so, and absent it the answer is no.
+
+MUTANTS, six, all red: a stranger's receipts freezing the round (1), four
+signatures skipping the window (1), an objection after the window still
+suspending (1), the replay verdict ignored so any objection suspends (2), the
+window taken from the code rather than the contract (1), the window never
+closing (1).
+
+TESTS. protocol 118 -> 124, blwp-node 66, blwp-client 72, core 85. Money guard
+9 files clean, determinism guard 19 clean. No C#, no jslib, no Unity.
+
+STILL NOT DONE: the replay itself, the committee re-run a suspension waits for,
+slashing the nodes that signed a contradicted result, and Lightning.

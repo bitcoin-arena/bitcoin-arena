@@ -648,6 +648,17 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      (FORFEIT against VOID after the result window) and the slashing of nodes
      that contradict a replay; both need the other six daemons. Numbers:
      TASKBOOK.
+     OBJECTION WINDOW (13A): DONE, less the replay. The round contract
+     carries `objectionWindowMs` - the window is the player's signed round
+     and not the operator's choice - and a result with five committee
+     signatures is PROVISIONALLY_FINAL until it closes, FINAL after, to the
+     millisecond. ANYONE may object; what must be the committee's is the
+     receipts the objection carries. A valid objection SUSPENDS finality
+     pending the committee's re-run, and 13C applies only if that re-run
+     cannot reach five of seven - it does not void anything. The replay
+     verdict is injected, because neither this package nor the daemon steps
+     a simulation. Next: the re-run and slashing, both of which need the
+     committee. Numbers: TASKBOOK.
      PLAYER RESULT (13): the OBJECT is DONE. A node signs
      `PlayerResult` - round, player, outcome, score, transcript hash, core
      hash, its own key - a stranger verifies it, and a tampered score or
