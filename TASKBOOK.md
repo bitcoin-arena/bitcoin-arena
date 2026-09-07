@@ -12118,3 +12118,76 @@ even provisional. It is dated inside the window now.
 
 TESTS. protocol 124 -> 126, blwp-node 66, blwp-client 72, core 85. Money guard
 9 files clean, determinism guard 19 clean. No C#, no Unity.
+
+## M2.1 13C/23.2: the HTLC path, and two action words that were wrong
+
+WHAT THE HTLC PATH DOES TODAY, measured before anything was written: NOTHING.
+The only trace of it in `packages/*/src` is `stakeCommitment` in the entry
+contract - "H(P), the hold-invoice preimage commitment" - and the word
+`preimage` appears twice in the whole tree, both in comments. No invoice state,
+no share, no release, no cancel. So the answer to "does the HTLC path cancel
+the hold, or does only the table say refund" is: ONLY THE TABLE SAYS REFUND.
+
+AND TWO OF ITS THREE ANSWERS WERE WRONG against 23.2, which is worse than the
+missing plumbing because it is the money law rather than the wiring:
+
+  23.2                          what holdSettlement answered
+  DELIVERED  Cancel the HTLC    SETTLE - the winner's stake was moved into the
+             -> returns to the           pool and paid back out of it. 23.2
+             player                      never moves it.
+  FAILED /   Settle the HTLC    SETTLE - agreed
+  FORFEIT    -> the pool wallet
+  VOID       DO NOTHING; it     CANCEL - and a cancel REQUIRES 5-of-7
+             expires and the             settlement signatures, so a refund
+             wallet is refunded          became something an operator could
+             automatically               withhold by doing nothing
+
+"The default path - nobody acting - is always the refund. That is what makes
+infrastructure failure safe." Only SETTLE may move money away from a player,
+and it is the one direction with conditions on it.
+
+WHAT LANDED. `settlementAction` answers the action AND what it still needs:
+
+  VOID                       NOTHING, authorised with no conditions at all,
+                             even from a SUSPENDED result with zero shares and
+                             zero signatures
+  FAILED / FORFEIT           SETTLE, and refused until: the result is FINAL,
+                             at least 5 preimage shares, 5-of-7 settlement
+                             signatures. Each missing one is NAMED - a bare
+                             call lists three, not one.
+  DELIVERED, qualifying      CANCEL, needing 5-of-7 settlement signatures
+  DELIVERED, below the score CANCEL, "the stake was never at risk"
+
+AND THE POOL IS EXACTLY THE LOSERS' STAKES. A qualifier's own stake never
+enters it, so the equality is over SHARES rather than amounts: the table hands
+a winner `stake + share`, and only the share half comes out of the pool.
+
+  DELIVERED + FORFEIT + VOID   pool 100000, refunded 200000, shares 100000
+  no loser at all              pool 0, refunded 200000, both CANCEL
+  bold + cautious + FAILED     pool 100000, refunded 200000, shares 100000
+  everyone VOID                all NOTHING, pool 0, refunded 300000, no rows
+  nobody finished              refused: "the operator would keep 200000 msat:
+                               a pool of 200000 against 0 handed out"
+
+Operator take is zero in every combination that answers, and the one that
+cannot answer refuses rather than defaulting in the house's favour.
+
+MUTANTS, eight, all red: a VOID refund turned into a cancel so somebody must
+act (3), a VOID refund made to wait for signatures (1), a winner's stake
+settled into the pool (3), a loser settled without a FINAL result (1), without
+the preimage shares (1), without the settlement signatures (1), the pool
+allowed to hand out more or less than it holds (1), four of seven enough (2).
+
+THE TESTS WERE RESTATED, NOT LOOSENED. Every assertion in `hold.test.js`
+encoded the pot model 23.2 contradicts - settled 200000 where the pool is
+100000 - so each one was rewritten against the spec's table with the same
+claims and the right numbers.
+
+WHAT STILL NEEDS THE OTHER SIX DAEMONS, and it is the plumbing rather than the
+rule: issuing the hold invoice, the 5-of-7 verifiable secret sharing of P,
+releasing shares, and the settlement signatures themselves. This says what may
+be done and what each thing requires; doing it is Lightning and a committee.
+
+TESTS. protocol 126 -> 125 (one test replaced four by covering them together),
+blwp-node 66, blwp-client 72, core 85. Money guard 9 files clean, determinism
+guard 19 clean. No C#, no Unity.

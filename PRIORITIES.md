@@ -648,7 +648,19 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      (FORFEIT against VOID after the result window) and the slashing of nodes
      that contradict a replay; both need the other six daemons. Numbers:
      TASKBOOK.
-     OBJECTION WINDOW (13A): DONE, less the replay. The round contract
+     THE HTLC PATH (23.2): the RULE is DONE, the plumbing is not. Only
+     SETTLE moves money away from a player, and it is refused until the
+     result is FINAL with five preimage shares and five settlement
+     signatures, each missing one named. A winner's stake is CANCELLED back
+     and never enters the pool; a VOID stake needs NOBODY TO ACT - the HTLC
+     expires and the wallet is refunded - because a refund that waited on
+     five signatures is one an operator could withhold by doing nothing.
+     The pool is exactly the losers' stakes and hands out exactly what it
+     holds. Issuing the invoice, sharing P five ways and the settlement
+     signatures are Lightning and a committee. Numbers: TASKBOOK.
+     OBJECTION WINDOW (13A): DONE, less the replay. The window is closed on
+     both failure shapes - a late objection leaves a final result final, and
+     one about another round does not suspend this one. The round contract
      carries `objectionWindowMs` - the window is the player's signed round
      and not the operator's choice - and a result with five committee
      signatures is PROVISIONALLY_FINAL until it closes, FINAL after, to the
