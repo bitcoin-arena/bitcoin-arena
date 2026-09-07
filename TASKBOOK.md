@@ -12069,3 +12069,52 @@ TESTS. protocol 118 -> 124, blwp-node 66, blwp-client 72, core 85. Money guard
 
 STILL NOT DONE: the replay itself, the committee re-run a suspension waits for,
 slashing the nodes that signed a contradicted result, and Lightning.
+
+## M2.1 13A: the two ways a claim could still stop a paid round
+
+BOTH FOUND BY PROBING `finality` AND `objectionHolds` AGAINST EACH OTHER, which
+is what the six mutants on the cut before had not done: each property was
+measured on its own and nothing crossed them.
+
+  probe 1, before   an objection dated 999999 ms past the close: holds true,
+                    finality SUSPENDED - a settled round un-finalised by
+                    anybody who could produce one valid objection
+  probe 1, after    holds true (the objection is sound, only late) ->
+                    state FINAL, late 1, "came too late to reopen it"
+
+  probe 2, before   an objection naming ANOTHER round and another result:
+                    holds true, finality SUSPENDED - every check that existed
+                    passed, because they were checks about a different round
+  probe 2, after    holds false, "that objection is about round 7777...",
+                    and the state stays PROVISIONALLY_FINAL
+
+WHAT CHANGED. `objectionHolds` now requires the round and result being
+finalised and refuses without them - a caller that does not say what is being
+objected to cannot be told whether the objection is about it. `finality` works
+out the window FIRST and only then looks for an objection, and an objection
+counts only if ITS OWN timestamp fell inside the window: at or after the result
+went provisional, and strictly before the close. 13A opens the window after
+PROVISIONALLY_FINAL; 14 says once FINAL, later failure does not erase it.
+
+MEASURED AT THE EDGES:
+
+  atMs = closes - 1        SUSPENDED, even when asked long afterwards
+  atMs = closes            FINAL, late 1 - the same boundary the state uses
+  atMs = closes + 999999   FINAL, late 1
+  atMs before the round went provisional   ignored, PROVISIONALLY_FINAL
+  another round / another result           does not hold, does not suspend
+  no round or result given                 refused rather than assumed
+
+MUTANTS, seven, all red: the round not compared (1), the signed result not
+compared (1), the round and result optional again (1), a holding objection
+looked for before the clock (1), an objection's own time ignored (1), an
+objection from before the window counted (1), and the window boundary made
+inclusive - which was 0 red until a test dated an objection at exactly the
+closing millisecond, and is now 1.
+
+ONE FIXTURE WAS WRONG, not loosened: the shared objection was dated 5000 while
+the window opened at 10000, so it was an objection raised before the result was
+even provisional. It is dated inside the window now.
+
+TESTS. protocol 124 -> 126, blwp-node 66, blwp-client 72, core 85. Money guard
+9 files clean, determinism guard 19 clean. No C#, no Unity.
