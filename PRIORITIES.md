@@ -128,7 +128,7 @@ not inferred from the suite. Numbers in TASKBOOK.
   where an empty one lasts 16.7 s at the line, and 8.1 s against 85.3 s fifty
   metres back. Zero until a host speaks, so an untold core still matches the
   recordings.
-- build number on the loading screen — done. Stamped from the commit at
+- build number on the loading screen — not done. Daniel 2026-09-07 07:39: loading AND splash, format 0.0.xxx. Stamped from the commit at
   build time, read back onto a row of its own under the title bar, and checked
   against every other box there.
 - exposure in the HUD — done. It was never removed: RunScore.Running is false
@@ -180,7 +180,7 @@ not inferred from the suite. Numbers in TASKBOOK.
   StrikeTheatre.fx was never wired - a null assignment in BuildArmies that
   threw nothing - and a test now asserts the wiring, not just the method.
 
-M1.a14: DONE. The camera follows the pose the core writes and keeps the road
+M1.a14: NOT DONE. Camera still stolen on bomb. The camera follows the pose the core writes and keeps the road
 in the picture in all five cases; HUNTED and its pips read the core's heat word
 with no second copy; the score the driver sees on the daily is
 BlwpCore.RunScore() and the C# formula that used to shadow it is deleted, its
@@ -200,7 +200,8 @@ rules moved into the core suite. Numbers in TASKBOOK.
   480-tall frame. The floor is asserted and mutation-checked. Ladder in
   TASKBOOK.
 - camera: when the atom bomb falls, do not snap the view to the bomb.
-  View stays as it is — done. There is no snap and no reparent: with a cloud
+  View stays as it is — not done. Daniel 2026-09-07 07:39: camera still
+  ripped from his hands when the bomb comes. There is no snap and no reparent: with a cloud
   raised 45 m off the road the view tilts to 25.4 degrees of its own 26
   degree clamp and the yaw the driver steers by moves 0.08 degrees in a
   frame. One fault did come out of it and is fixed: the cap stayed published
