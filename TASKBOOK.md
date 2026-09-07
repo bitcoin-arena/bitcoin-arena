@@ -11078,3 +11078,61 @@ Unity, nothing deployed; daily 0.0.567.
 STILL PARKED, untouched this cut: the deployment anchor (a2), no page defines
 BLWP_CHAIN, the jslib unlinked since 606f54d, and `reach`/`endpointFor`
 exported and willing to verify a handed chain.
+
+## M2.1 5c slice 7: two providers means two sources, not two calls
+
+THE HOLE. The origin tag existed and only `httpProvider` set it, so it never
+fired where it matters. On the live path the PAGE writes the provider
+functions, and they carry nothing:
+
+  two untagged providers, same function   tag is undefined
+
+so `[f, f]` - one server, listed twice - counted as two sources and the
+two-provider floor counted CALLS. Same shape as `least`: a rule that held in
+the library and never fired at the door.
+
+WHAT LANDED. `discover` refuses a provider that does not declare a source, and
+refuses two that declare the same one, before anyone is asked. Header and bond
+providers are one class with one rule; splitting them would have been a second
+kind of provider with quieter rules.
+
+  two raw functions           "header provider 0 does not say which source it
+                              is: a provider must carry a tag, or two calls to
+                              one server count as two sources"
+  one tagged, one not         "header provider 1 does not say which source it is"
+  two with the same tag       "header providers 0 and 1 are the same source,
+                              one.example: one server listed twice is not two"
+  an untagged bond provider   "bond provider 0 does not say which source it is"
+  two distinct tags           two providers, and the round opens on
+                              https://node.example:443
+
+THE LIMIT, MEASURED RATHER THAN ASSUMED AWAY, because writing "independence is
+not checkable" into this file and closing would have made "two providers" mean
+"two calls":
+
+  one server behind two names   accepted, and `calls` counts 2 - one machine
+                                answered twice and the client could not tell
+
+There is nothing to read. Two honest providers on the same chain return the
+same bytes, so agreement is exactly what an honest pair looks like, and a
+browser has no network identity to check a name against. A tag is a
+DECLARATION, not a proof. What it buys is that the obvious case is refused and
+that a lie has to be written down as a lie instead of being the default.
+
+MUTANTS, three, all red: an untagged provider accepted (1), the same tag twice
+treated as two sources (1), only header providers required to declare (1).
+
+ONE FIXTURE FIXED, not a rule loosened: the lying bond provider in "the door
+will not open on one provider" was untagged and started failing for the tag
+instead of the proof. It now declares a source, so the claim it makes -
+`provenBond` runs on the live path - is the claim it tests.
+
+TESTS. blwp-client 65 -> 67, protocol 104/104, blwp-node 41/41, core 85/85.
+Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
+Bundle 123.6 -> 125.2 KB, 17 modules. `agreedChain` is unchanged and
+headers.test.js untouched - the requirement is the door's, where the page
+reaches. No network beyond 127.0.0.1. No C#, nothing deployed; daily 0.0.567.
+
+STILL PARKED: `reach`/`endpointFor` exported and willing to verify a handed
+chain - a recorded foot-gun, not on the session path; the deployment anchor
+(a2); no page defines BLWP_CHAIN; the jslib unlinked since 606f54d.
