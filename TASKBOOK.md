@@ -11188,3 +11188,69 @@ NEXT ON M2.1 is the quorum rule in step 3 - `receiptCount` answers how many
 committee members have receipted a mark and 13C's threshold is five, but
 whether a count is enough, and what happens when it is not, needs the other six
 daemons.
+
+## M2.1 step 3, quorum: a mark is live at five receipts, not at one
+
+WHAT THE CLIENT DID BEFORE, read out of the code rather than guessed:
+
+  0 receipts   the head does not move - readReceipt throws first
+  1 receipt    this.head = markId
+  4            identical to 1
+  5            identical to 1
+  7            identical to 1
+
+A step function at ONE, where 13C puts the threshold at five. There was no
+count and no threshold anywhere in `blwp-client/src`; the only counter in the
+repo was `receiptCount` on the node, whose own comment says whether five is
+enough needs the other six daemons. So "the head moves on a verified receipt,
+not on a word" was true and thinner than it sounded: one receipt out of seven.
+
+WHAT LANDED. `RECEIPTS_FOR_LIVE = 5`, a `witnesses` map of mark id -> the SET
+of distinct committee keys that have receipted it, `witnessed(markId)` and
+`live(markId)`, and the head advancing only on live. Receipts recovered after
+a reconnect count towards the same total.
+
+MEASURED, with the node's own key plus six real Ed25519 committee keys signing
+real CheckpointReceipts through the same door a gossiped one arrives by:
+
+  0 sent        head at NO_PREVIOUS, nothing witnessed
+  1 (the node)  witnessed 1, live false, head unmoved
+  4             witnessed 4, live false, head unmoved
+  5             witnessed 5, live TRUE, head = the mark
+  7             witnessed 7, live true, still the same one head
+  one signer five times      witnessed 2, not 6 - 13C counts NODES
+  a stranger's receipt       refused, "is not on this round's committee"
+  a committee key claimed,
+    signed by somebody else  refused, "does not verify under its own key"
+  an honest receipt for
+    another mark             refused, "the receipt is for ..."
+  after all three refusals   witnessed still 2, head still NO_PREVIOUS
+
+PENDING IS NOT FAILED, and nothing here decides otherwise. No run is voided,
+nothing is lost for the player, and VOID / PLAYER_LOST / DELIVERED are
+untouched. What happens to a run whose marks never reach five is the no-quorum
+rule - FORFEIT against VOID, the stake refunded by letting the HTLC expire,
+nodes contradicting a replay slashed - and that is settlement, needs the other
+six daemons, and was not opened.
+
+TWO FIXTURES REBUILT, NOT ASSERTIONS LOOSENED. `rig()` named a one-key
+committee, which cannot reach five however many times it answers, so two tests
+began failing for the right reason: the head no longer advanced and the second
+mark chained onto a stale parent. The committee is seven keys now - the real
+node plus six - and a helper carries a mark to five before a test publishes the
+next one. Every signature the client accepts, it still verified itself.
+
+MUTANTS, four, all red: the head moving on the first receipt again (2),
+four counted as enough (1), receipts counted instead of signers (4), and
+recovered receipts not counting (1). The last one SURVIVED at first - nothing
+asserted that recovery feeds the count - and the test now says so.
+
+TESTS. blwp-client 67 -> 69, protocol 104/104, blwp-node 41/41, core 85/85.
+Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
+Bundle 125.2 -> 127.3 KB, 17 modules. No C#, no Unity, nothing deployed;
+daily 0.0.567.
+
+WHAT THIS IS OF 13C: one of its three obligations. The canonical transcript -
+the longest chain carrying five receipts - is decidable in the client and is
+done. The no-quorum outcome and the slashing of nodes that contradict a replay
+are the other two, and both need the committee to exist.
