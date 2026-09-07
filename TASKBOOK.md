@@ -10484,12 +10484,41 @@ them. They are written down so they are not rediscovered as surprises.
 
 2. WHICH OF THE SEVEN. The page chooses which named committee member receives
    the entry and the opening transcript. All seven are named by the round, so
-   the door is satisfied; what is left is that one member sees it first. That
-   is quorum and liveness - 13C wants receipts from at least five, and gossip
-   is what spreads it - and it waits with the quorum work, not here.
+   5b is satisfied; what is left is that one member sees it first, and that is
+   LIVENESS AND PRIVACY, not standing: liveness because the one asked may be
+   the one that is down, privacy because that member sees a player's inputs
+   before anyone else does. It belongs with 13C's quorum receipts - at least
+   five - and the gossip that spreads them, not here.
 
 3. THE SAME SHAPE ONE LAYER UP, AND IT IS WHERE THE MONEY IS. `BLWP_ENTRY` -
    `stakeMsat`, `feeMsat`, `donationMsat`, `playerPubkey` - is still written by
    the page and bound to nothing the player supplied. The round-id bind fixed
    "which round"; nothing yet fixes "what am I paying". A LATER NAMED ITEM ON
    M2.1, deliberately not implemented now.
+
+## Deployability, recorded rather than investigated  -  at d54adba
+
+NOT DEPLOYABLE. Four reasons, in order of weight, and none of them is new work:
+
+  the jslib has not been Emscripten-linked since 606f54d. It parses as
+  JavaScript and `$blwpDiscovery` is declared on both users with `__deps`,
+  which is the mechanism that keeps such a helper - but that is reasoning
+  about a build, not a build.
+
+  the player path has not been driven in a browser since 7b4caea. Everything
+  in 606f54d, e43710a and 54ce8e9 is measured in Node against a real node
+  process. Real, and not a player.
+
+  a deploy today still ships no session: nothing supplies `BLWP_ADVERT`, and
+  the URL now needs `?round=<id>`. Not a regression - `BLWP_NODE` was unset on
+  the daily, so the shipping default was already no session - and not a
+  demonstration that any of this works either.
+
+  Unity still carries the known reds: the retired C# army group (tanks and
+  soldiers "not found", the three `VehicleTests` nulls, `CombatFx` reading a
+  `Shot` event that no longer fires) and the `TheGogglesAnimate` load flake.
+
+A GREEN JS SUITE IS NOT A PLAYER, and that is the whole of it. What would
+change the answer is a WebGL build with no short timeout and a browser drive
+against a real node with a fixture advertisement and a real `?round=` id.
+Neither was started; this turn is journal only.
