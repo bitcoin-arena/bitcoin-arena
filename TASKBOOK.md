@@ -9442,3 +9442,81 @@ would be byte-identical to the one already live. The daily is still the last
 good playable, checked rather than assumed: wasm md5
 59ea55f8cdddca795e1a8e768b956723, build 0.0.567 from 752e4b1, and
 btc-logistics-war.pages.dev untouched at HTTP 200.
+
+
+## 2026-09-07 15:10  M2.1 receipts: the node answers a mark with a signed receipt
+
+THE DEPENDENCY THAT WAS NOT ONE. `receipt.js` and PRIORITIES both said
+receipts wait on step 5b, "because a node signs with its own key and the
+daemon has no identity yet". Measured, that was an accurate description of the
+state - `grep` for pubkey/secretKey/identity across `blwp-node/src` returned
+nothing - but not of the dependency. 5b is DISCOVERY: BOND_MARKER and the
+advertisement in the bond transaction's witness, so a stranger can find a
+node's address and key on chain. Issuing a receipt needs a keypair the node
+holds and a key the client already has, and the client already has it: the
+Round Contract carries `nodes`, a sorted vector of 32-byte keys, and the client
+wrote that contract. Accepted by Daniel before any code was written.
+
+WHAT CHANGED, in three places.
+
+  the store    one row, `identity`, with a CHECK that keeps it one. A daemon
+               with two identities would sign some receipts with each and a
+               client checking them against the committee would be right to
+               refuse half. Read on the first ask, generated if absent.
+  the node     `receiptFor(id)`: made once, stored keyed by the checkpoint it
+               answers, and re-served ever after. The reply to a checkpoint is
+               that receipt instead of 'stored'/'repeat'. Batches are
+               untouched and still answer a count - the first byte of a binary
+               answer says which kind it is, the same way the request does.
+  the client   `readReceipt` checks three things and names each failure on its
+               own, and the chain head moves on a verified receipt rather than
+               on a word it had not checked.
+
+WHY A REPEAT MUST GET THE SAME RECEIPT, and it is not tidiness. Section 10's
+claim is that the player committed to that state at approximately that real
+time. A re-sent mark answered with a fresh `receivedAtMs` would hand the
+player two times for one commitment, and re-sending is exactly what a client
+does when it never learned the first one landed. The store makes it true;
+without it the mutant below passes.
+
+MEASURED, before and after:
+
+  the answer to a checkpoint    'stored' / 'repeat'  ->  139 bytes, first byte
+                                10, a signed CheckpointReceipt
+  a repeat                      the word 'repeat'    ->  the same 139 bytes,
+                                the same receivedAtMs
+  the node's identity           none at all          ->  32-byte pubkey, the
+                                same after reopening the same store file, and
+                                different for a different file
+  the client's head moved on    the string 'stored'  ->  a receipt whose mark,
+                                key and signature it checked
+
+  suites   blwp-node   33 -> 34      blwp-client   5 -> 7
+           core        80 -> 80      protocol     78 -> 78   (both untouched)
+
+ONE THING FOUND BY RUNNING IT, not by reading: Node's WebSocket hands a binary
+frame back as a Blob unless `binaryType` is set, and `new Uint8Array(blob)` is
+silently EMPTY rather than an error. The receipt came back as a 139-byte Blob
+and read as a zero-length array; the assertion failed, the socket was left
+open, and the whole node suite HUNG rather than reporting. Both the client and
+the test harness ask for an arraybuffer now, and the probe that found it is in
+the scratchpad.
+
+MUTANTS, four, each killing exactly one test:
+  the receipt's mark is not checked        red: "the receipt is for 7777..."
+  any key is accepted, not the committee's red: "is not on this round's
+                                           committee"
+  the signature is not verified            red: "does not verify under its
+                                           own key"
+  a repeat gets a fresh receipt            red in BOTH suites: the client's
+                                           repeat test and the node's
+
+TESTS TOUCHED RATHER THAN LOOSENED: six node tests asserted the words 'stored'
+and 'repeat'. The rule changed by decision, so they assert the new rule -
+each now decodes the receipt, recomputes its id and verifies the signature
+under the key the node publishes. Two of them then failed for a fault of MINE:
+`send` advances the chain, so asking `make` for the same mark afterwards built
+a different one chained onto itself. The rig keeps the mark it sent.
+
+Unity untouched, nothing built, nothing deployed. The daily is still 0.0.567
+from 752e4b1.

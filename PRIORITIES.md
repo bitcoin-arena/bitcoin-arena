@@ -16,11 +16,11 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-   14  M2.1 checkpoints               M2   OPEN — slice A done: a JS client
-                                            signs a state hash and a node
-                                            stores it. Next: receipts,
-                                            gossip, and step B (the game
-                                            sending them through jslib).
+   14  M2.1 checkpoints               M2   OPEN — the node answers a mark
+                                            with a signed receipt and the
+                                            client verifies it against the
+                                            committee. Next: gossip, then
+                                            step B (the game via jslib).
    13  M1.a16 playable hunt            M1   done — the hunt is winnable
                                             through the front and the rim
                                             pays almost nothing; spectate is
@@ -610,9 +610,17 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      equivocation by name, and a refused mark does not move the client's
      chain head. Numbers in TASKBOOK. JS only - the wire format has one
      implementation and Unity was not touched.
-     Still open here: issuing receipts and receipt gossip, and step B, which
-     is the game itself sending these through the jslib bridge. M2.1 is not
-     finished.
+     RECEIPTS: DONE. The node holds one ed25519 keypair, made once and kept
+     with the store, and answers a checkpoint with a signed `CheckpointReceipt`
+     instead of the word 'stored'. A re-sent mark gets the SAME receipt back,
+     same time, byte for byte, so a player never has two times for one
+     commitment. The client checks it against the committee in the round's own
+     contract and refuses three ways by name: a receipt for another mark, a key
+     not on the committee, a signature that does not verify. Its head moves on
+     a verified receipt, not on a word. Step 5b was not needed for it - that is
+     discovery, not the ability to sign.
+     Still open here: receipt gossip, and step B, which is the game itself
+     sending these through the jslib bridge. M2.1 is not finished.
   4. **Entry quotas.** A funded entry before the node stores a byte.
      Comes before opening a port to anyone else, not after.
   5. **Backpressure and reconnection.** Inbound DONE: the socket caps a frame
