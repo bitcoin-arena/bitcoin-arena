@@ -11023,3 +11023,58 @@ defines BLWP_CHAIN so a deploy opens no session; the jslib has not been
 Emscripten-linked since 606f54d; and `reach`/`endpointFor` remain exported from
 the bundle and will verify a chain handed to them - named on the record, not a
 boundary, since a hostile page can ignore the client entirely.
+
+## M2.1 5c slice 6: the two-provider floor is the client's, not a page setting
+
+THE HOLE, FOUND BY WALKING THE DOOR PATH AGAINST THE LIBRARY PATH. `discover`
+took `least` and `timeoutMs` from its caller, and `Client.at` spreads the
+page's own object into it. Measured through `Client.at` before the fix, on a
+chain honestly rooted at genesis:
+
+  least default, ONE provider   refused: "1 providers is fewer than the 2 it
+                                takes to weigh one against another"
+  page sets least: 1            https://one-provider.example:443   -- OPENS
+
+So the first clause of 5c's goal - "asks two providers" - was not true on the
+live path: one field turned "several independent sources, most work wins" into
+one source, and a short chain and a chain with a block hidden are the same
+bytes. It is the same fault as the anchor, in the same function, and I did not
+catch it while fixing the anchor.
+
+WHAT LANDED. `PROVIDERS_NEEDED = 2` and `PROVIDER_WAIT_MS = 10000` are named
+constants in `directory.js`, and `discover` refuses a supplied `least` or
+`timeoutMs` by name - the same shape as the anchor and the five handed keys:
+"least is the client's own and may not be supplied: how many providers must
+agree, and how long to wait for them, are not settings for whoever handed over
+the providers".
+
+`ask` is deliberately NOT refused. It names which range of chain to fetch, and
+a lie about it can only omit - which is the one lie a second provider answers.
+A test asserts it still reaches both header providers and the bond provider.
+
+MEASURED THROUGH `Client.at`:
+
+  one provider, nothing supplied     "no chain: 1 providers is fewer than the 2"
+  least: 1, one provider             "least is the client's own and may not be
+                                     supplied"
+  least: 1 with two providers        same refusal - it is refused for being
+                                     offered, not for the number
+  least: 5                           same refusal
+  timeoutMs 0, 1, 60000, 999999999   "timeoutMs is the client's own and may not
+                                     be supplied", each one
+  nothing of the client's supplied   opens, base https://node.example:443
+  ask: { from: 0, count: 2 }         reaches both header providers and the bond
+                                     provider, unchanged
+
+MUTANTS, four, all red: a supplied `least` used (1), a supplied `timeoutMs`
+used (1), the floor lowered to one (2), the floor not passed to `agreedChain`
+(2).
+
+TESTS. blwp-client 63 -> 65, protocol 104/104, blwp-node 41/41, core 85/85.
+Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
+Bundle 122.0 -> 123.6 KB, 17 modules. No network beyond 127.0.0.1. No C#, no
+Unity, nothing deployed; daily 0.0.567.
+
+STILL PARKED, untouched this cut: the deployment anchor (a2), no page defines
+BLWP_CHAIN, the jslib unlinked since 606f54d, and `reach`/`endpointFor`
+exported and willing to verify a handed chain.
