@@ -9520,3 +9520,73 @@ a different one chained onto itself. The rig keeps the mark it sent.
 
 Unity untouched, nothing built, nothing deployed. The daily is still 0.0.567
 from 752e4b1.
+
+
+## 2026-09-07 16:05  M2.1 receipts: recoverable after a reconnect, and gossiped between nodes
+
+THE HOLE FLAGGED LAST TURN, closed first. A client can recompute every mark it
+ever sent - it built them - but it cannot rebuild a signature over one. Until
+`GET /receipts` existed, a dropped socket lost them for good, and a receipt
+that cannot be recovered is not evidence of anything later.
+
+  GET /receipts?round=&entry=   fixed-size records back to back, the same
+                                shape /checkpoints comes back in, in tick
+                                order and then by signer, with x-receipts
+                                naming the count
+  the client                    `recoverReceipts` verifies every one against
+                                the committee in the contract it holds, and
+                                refuses three ways by name: a signer off the
+                                committee, a signature that does not verify,
+                                and a body that is not a whole number of
+                                139-byte receipts
+
+GOSSIP, on the socket that was already there. A receipt arriving on /play is
+recognised by its first byte, the same way a mark is, so gossip needed no
+second port and no envelope. A peer's receipt is kept only after the same
+three checks the client makes - and the committee is read off the ROUND
+CONTRACT this node already stores, never off the message. A member
+contradicting itself on one mark is refused by name rather than stored beside
+its first answer.
+
+  the receipts table  keyed (checkpoint_id) -> (checkpoint_id, node_pubkey),
+                      because 13C wants a mark to be able to carry one from
+                      every member, and a second, different one from the SAME
+                      member is a node contradicting itself
+
+QUORUM, counted and not decided. Section 13C: the canonical transcript is the
+longest chain carrying receipts from at least five committee nodes.
+`receiptCount` answers how many DIFFERENT members have receipted a mark. A
+seven-member round was measured going 1 -> 5 -> 7 as members' receipts arrived.
+Whether a count is enough, and what the no-quorum rule does, needs the other
+six daemons to exist; it is written as the next sub-item rather than invented.
+
+MEASURED ACROSS TWO REAL NODE PROCESSES, on two ports:
+
+  before   a receipt existed only in the reply to the mark that made it. A
+           reconnect lost it; no second node could hold it; receiptCount did
+           not exist.
+  after    mark receipted on node one; the same mark sent to node two, which
+           receipts it itself; node one's receipt offered to node two on its
+           /play socket and answered 'held'; node two then holds 2 for that
+           mark, and a fresh client recovers both from node two with the
+           gossiped one byte-identical to what node one issued.
+
+  suites   blwp-node   34 -> 37      blwp-client   7 -> 10
+           core        80 -> 80      protocol     78 -> 78   (both untouched)
+           determinism guard 19 clean, money guard 7 clean
+
+MUTANTS, four, and the fourth found a test that was not testing:
+  gossip skips the signature                   node red
+  gossip accepts a key off the committee       node red
+  a peer contradicting itself is stored anyway node red
+  recovery does not verify what it fetched     SURVIVED. Everything it
+                                               recovered was genuine, because
+                                               a real node cannot be made to
+                                               serve a bad receipt. A stub
+                                               that serves a forged one, a
+                                               stranger's, and a truncated
+                                               body was added; the mutant then
+                                               goes red.
+
+Unity untouched, nothing built, nothing deployed. The daily is still 0.0.567
+from 752e4b1, and btc-logistics-war.pages.dev was not approached.

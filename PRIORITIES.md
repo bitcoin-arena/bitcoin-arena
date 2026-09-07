@@ -16,11 +16,11 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-   14  M2.1 checkpoints               M2   OPEN — the node answers a mark
-                                            with a signed receipt and the
-                                            client verifies it against the
-                                            committee. Next: gossip, then
-                                            step B (the game via jslib).
+   14  M2.1 checkpoints               M2   OPEN — receipts are recoverable
+                                            after a reconnect and gossip
+                                            between two nodes is measured.
+                                            Next: step B (the game via
+                                            jslib) and batch resume.
    13  M1.a16 playable hunt            M1   done — the hunt is winnable
                                             through the front and the rim
                                             pays almost nothing; spectate is
@@ -619,8 +619,24 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      not on the committee, a signature that does not verify. Its head moves on
      a verified receipt, not on a word. Step 5b was not needed for it - that is
      discovery, not the ability to sign.
-     Still open here: receipt gossip, and step B, which is the game itself
-     sending these through the jslib bridge. M2.1 is not finished.
+     RECOVERY AND GOSSIP: DONE. `GET /receipts` hands back what this node
+     holds for an entry, in tick order, and a reconnecting client verifies
+     each against the committee before believing it - a client can rebuild
+     every mark it sent but never a signature over one. A peer's receipt is
+     offered on the same /play socket, the first byte saying which kind it is,
+     and is kept only after the same three checks; a member contradicting
+     itself on one mark is refused by name. Measured across two real node
+     processes: a mark receipted on one, gossiped to the other, recovered
+     byte-identical from either.
+     QUORUM: counted, not decided. `receiptCount` answers how many different
+     committee members have receipted a mark - 13C's threshold is five - and a
+     seven-member round is measured carrying one from every member. Whether a
+     count is enough, and the no-quorum rule, need the other six daemons and
+     are the next sub-item; nothing about a committee was invented here.
+     Still open here: step B, the game itself sending these through the jslib
+     bridge, and the outbound half of step 5 (watching bufferedAmount, and a
+     resume point for the input batches the way /receipts is one for the
+     marks). M2.1 is not finished.
   4. **Entry quotas.** A funded entry before the node stores a byte.
      Comes before opening a port to anyone else, not after.
   5. **Backpressure and reconnection.** Inbound DONE: the socket caps a frame
