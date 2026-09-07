@@ -11597,3 +11597,45 @@ TESTS. blwp-node 57 -> 61, protocol 104, blwp-client 72, core 85 - 322 green,
 none red, none skipped. Determinism guard 19 clean, money guard 9 clean. "The
 node does not step: nothing here imports the core" green by name. No C#, no
 Unity rebuild, nothing deployed; daily 0.0.567.
+
+## M2.1 13B: every refusal keeps the record now, not two of the three
+
+CONFIRMED LIVE AT f73cdcf, before touching anything, because a door that
+already works should not be reopened:
+
+  child B at 180, same parent   refused, "does not follow the chain head"
+  records held                  checkpoints 2, offered_marks 1
+  GET /equivocation             200, x-equivocations 1, 462 bytes
+  a stranger with the entry id  true, "two chains from one parent", ticks
+                                [120, 180]
+  a foreign receipt             refused as before, and GET /foreign-receipts
+                                200, x-foreign-receipts 1, byte-identical to
+                                what the member signed
+  a node holding none           204
+
+THE THIRD DOOR. Two refusals had been taught to keep the record and one had
+not: the monotonic-tick rule. A mark at tick 30 naming the mark at 60 as its
+parent passes the head check and dies there - and if the player then sends an
+honest child of that same parent, those two name ONE parent and are a fork by
+13B's own rule, with the earlier record already gone. The same shape of hole,
+three times, each in a door no test crossed.
+
+  tick 30 claiming to follow 60   refused, "expected a tick after 60, got 30",
+                                  and KEPT: offered_marks 1
+  nothing of ours contradicts it  equivocation() empty - correct, and the
+                                  honest stale-head case stays unpublished
+  then an honest child at 120     paired: "two chains from one parent"
+  through the doors               200, and a stranger with only the entry id
+                                  verifies it
+  re-sending the stored mark      keeps nothing, publishes nothing
+
+`keepOffered` is one place now, because there is more than one way to be
+refused and every one of them was destroying the record independently.
+
+MUTANTS, three, all red: the backwards-tick mark thrown away again (1), the
+head-path mark thrown away again (4), the keeper storing nothing at all (5).
+The eleven earlier mutants on this letter were re-run and stayed red.
+
+TESTS. blwp-node 61 -> 63, protocol 104, blwp-client 72, core 85 - 324 green,
+none red, none skipped. Determinism guard 19 clean, money guard 9 clean. No C#,
+no Unity, nothing deployed; daily 0.0.567.
