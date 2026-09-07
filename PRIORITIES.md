@@ -648,6 +648,19 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      (FORFEIT against VOID after the result window) and the slashing of nodes
      that contradict a replay; both need the other six daemons. Numbers:
      TASKBOOK.
+     PLAYER RESULT (13): the OBJECT is DONE. A node signs
+     `PlayerResult` - round, player, outcome, score, transcript hash, core
+     hash, its own key - a stranger verifies it, and a tampered score or
+     outcome does not. Five of seven COMMITTEE members on the identical
+     result is PROVISIONALLY_FINAL: strangers cannot make one final and one
+     stray signature cannot stop one, a node saying it five times is one
+     signer, and a committee split three and four ways is not final at seven
+     signatures. The outcome is one of the four the payout table reads and
+     no fifth word was added. What is NOT here: the replay that produces a
+     result - the daemon still does not step - the objection window,
+     slashing, and the Lightning that settles or cancels an invoice. Next of
+     those is the objection window, which needs the committee.
+     Numbers: TASKBOOK.
      THE MONEY TABLE (13C): DONE. A VOID stake is cancelled back to the
      payer, a forfeited one is spent on the winner, and a delivered player
      below the score keeps theirs - the table names which stakes enter the

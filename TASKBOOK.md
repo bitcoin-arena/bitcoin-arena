@@ -11946,3 +11946,52 @@ no qualifier refused in every shape.
 STILL NOT DONE: the replay that produces a result - the daemon does not step -
 the objection window, slashing, and the Lightning that settles or cancels an
 invoice.
+
+## M2.1 13: nobody is on a committee by signing something
+
+THE HOLE IN 0f3c4a0, found by probing the function rather than re-reading the
+test. `provisionallyFinal` counted distinct signers on one id and never asked
+whether those signers were on the round's committee:
+
+  five keys on NO committee, same bytes
+    -> {"final":true,"signers":5,"why":"5 of 5 signed the same result:
+        PROVISIONALLY_FINAL"}
+
+Five strangers finalised a result. The client has enforced the same rule on
+receipts since the receipt slice - "is not on this round's committee" - and
+this is a set comparison, not a signature check, so no curve is needed and it
+belongs here.
+
+WHAT LANDED. The committee is a required argument; a signer not on it is
+IGNORED and counted, not refused. Refusing would let anybody stop a round
+finalising with one stray signature, which is cheaper than the attack it
+prevents.
+
+  five strangers                final false, signers 0, strangers 5
+  five members + one stranger   final TRUE, signers 5, strangers 1 - one stray
+                                signature cannot block a finalised round
+  no committee given            refused: "no committee to check the signers
+                                against", for undefined, null, [] and a string
+  four members                  not final
+  five members                  PROVISIONALLY_FINAL
+  one member five times         1 signer
+  3/4 split at seven signatures not final, strongest side 4
+
+AND THE OUTCOME BYTE. Decoding already refused a byte past the four - it was
+simply never asserted. It is now, with a truncated and an over-long record
+beside it.
+
+MUTANTS, five, all red: anybody who signs counted as on the committee (1), a
+stranger's signature blocking the round (1), an absent committee counting
+everybody (1), an unknown outcome byte decoding as undefined (1), four of seven
+called final (1).
+
+TESTS. protocol 116 -> 118, blwp-node 66, blwp-client 72, core 85. Money guard
+9 files clean, determinism guard 19 clean. The payout fixtures are untouched.
+
+WHAT THIS CUT STILL DOES NOT DO, said plainly: nothing verifies the signatures
+(the caller passes what it checked - this package carries no curve), and
+nothing ties a `resultId` in that list to a result body anybody has seen. Both
+are the caller's, as they are for the equivocation proof. A node signing two
+DIFFERENT results for one player is counted on each side and is not called out
+- that is node equivocation, and it belongs with slashing.
