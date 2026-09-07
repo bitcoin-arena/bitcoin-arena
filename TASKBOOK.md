@@ -12506,3 +12506,58 @@ files clean, determinism guard 19 clean. No Unity, no C#, no floats.
 STILL LISTED, NOT STARTED: issuing, settling or cancelling a real invoice; the
 CLTV sizing check, which needs a tick rate the protocol does not carry; and
 slashing. All three want the other six daemons or a Lightning endpoint.
+
+## M2.1 23: the invoice path is daemon-blocked, and what it would take
+
+MEASURED BEFORE CLAIMING IT. Across all four packages: no Lightning
+dependency of any kind - `blwp-client` has `@noble/curves` and `ws` as dev
+deps, `blwp-node` has the same two, `core` and `protocol` have none but
+`acorn`. No BOLT-11, no bech32, no invoice encoder, nothing that speaks to a
+node. Three files mention Lightning at all: two are comments and the third is
+`advert.js`'s `lightningCapabilities`, a u32 bitmask a node advertises - a
+declaration of what an operator can do, not an implementation of it.
+
+WHY IT CANNOT BE DONE HERE, from 23.6 rather than from an opinion. The endpoint
+that issues, settles and cancels the hold is one of two things:
+
+  - a THRESHOLD-SIGNED LIGHTNING NODE, "FROST-style Schnorr over channel
+    operations, VLS-style remote signing generalized: the cleanest fit, and
+    EMERGING TECHNOLOGY rather than a solved product"
+  - a FEDIMINT-CLASS FEDERATION with a Lightning gateway, "production-ready
+    today, with an identical trust statement"
+
+Both are a quorum of separate parties operating real channels. Issuing a hold
+invoice, releasing a preimage into it, and cancelling it are operations ON that
+quorum - there is no version of them that is arithmetic in this package, which
+is what separates them from every 13C piece done so far. 23.1 is explicit: "the
+settlement committee's Lightning endpoint (23.6) issues a hold invoice".
+
+23.6 also adds a contract field this repo does not have: "The Round Contract
+NAMES WHICH CONSTRUCTION it uses."
+
+THE SHARE OF WHAT 13C STILL OWES, eight pieces:
+
+  issue the hold invoice        daemon: a Lightning endpoint plus 23.6's quorum
+  settle it                     daemon, and 5 preimage shares plus 5-of-7
+  cancel it                     daemon, and 5-of-7
+  let it expire                 DONE - nobody acts, and that is the state
+  slashing                      daemon: 5A.3B's bond output, MuSig2, an
+                                arbitration quorum
+  CLTV sizing                   blocked on a UNIT, not a daemon: the contract
+                                measures the round in ticks, an HTLC in time,
+                                and no protocol tick rate exists
+  the invoice check before
+    paying                      NOT BLOCKED. A client must refuse an invoice
+                                whose payment hash is not the stakeCommitment
+                                its entry contract signed, or whose amount is
+                                not stakeMsat. Nothing parses an invoice today,
+                                so nothing checks either.
+  the 23.6 construction field   NOT BLOCKED. A format decision like
+                                objectionWindowMs was.
+
+So four of the eight want a daemon, one wants a unit decision, one is done, and
+TWO can be built here. Neither of the two is "issuing, settling or cancelling",
+which is what this cut asked for - that is the blocked half, and it is blocked
+the same way slashing is.
+
+NOTHING WAS FAKED AND NO ENDPOINT WAS INVENTED. No code changed this turn.
