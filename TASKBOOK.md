@@ -11887,3 +11887,62 @@ cancels an invoice. FOUR are protocol rules and ONE is operator plumbing. Of
 the four rules, three need the committee to exist; the exception is the
 `PlayerResult` OBJECT and its signature, which can be built on one node exactly
 as `CheckpointReceipt` was built before anything issued one.
+
+## M2.1 13: the PlayerResult object, on one node
+
+THE SHAPE, NOT THE COMMITTEE. Section 13's struct - round_id, player_pubkey,
+result, score, transcript_hash, sim_wasm_hash, node_pubkey, signature - with
+its id, its signature and the arithmetic that says when five of seven have
+signed THE SAME one. Not the replay that produces it, not the objection window,
+not a live committee. The same order `CheckpointReceipt` was built in: the
+object first, issuing it later, said out loud rather than passed off as done.
+
+`TYPE_RESULT = 0x06` and `TAG.result` were already reserved, like `TAG.advert`
+before them, so nothing was invented to hold it.
+
+NO FIFTH OUTCOME WORD. The four `payout.js` already reads - DELIVERED, FAILED,
+FORFEIT, VOID - and `PLAYER_LOST` is refused by name: "PLAYER_LOST is not one
+of DELIVERED, FAILED, FORFEIT, VOID". A synonym would be a second word for one
+fate and a second place to get it wrong. `simCoreHash` is the spec's
+`sim_wasm_hash`, named as the round contract already names it, so a result and
+its contract call the pinned core the same thing.
+
+MEASURED:
+
+  round trip                    encode -> decode is the same object
+  every field covered by the id  round, player, outcome, score, transcript,
+                                core and node each move the id when changed
+  size                          168 bytes, 232 signed - checked against a real
+                                encoding, because the number first written
+                                down here was 133 and was wrong
+  signed by one node            a stranger verifies it from the bytes and the
+                                key the result names
+  the score raised after signing  does not verify
+  the outcome turned into a win   does not verify
+  somebody else's signature       does not verify
+  4 of 5 on one result            not final, "4 of 5 on the strongest result"
+  5 of 5                          PROVISIONALLY_FINAL
+  one node saying it five times   1 signer, not final
+  a committee split 3/4 at SEVEN
+    signatures                    NOT final, strongest side 4 - two nodes
+                                  signing different results are a
+                                  disagreement, and adding them would turn it
+                                  into finality
+
+MUTANTS, six, all red: a fifth outcome word accepted (1), the score not covered
+by the id (3), the transcript hash not covered (2), signers counted instead of
+distinct nodes (1), signatures over DIFFERENT results added together (1), four
+of seven called final (1).
+
+NODE'S OWN Ed25519 IN THE TEST, not a new dependency. `packages/protocol`
+declares almost none on purpose, and a test that added a curve to check a
+signature would have put one in the money path's own package.
+
+TESTS. protocol 112 -> 116, blwp-node 66, blwp-client 72, core 85. Money guard
+9 files clean, determinism guard 19 clean. The payout fixtures are untouched
+and still green: operator zero, settled + refunded = every stake, a pool with
+no qualifier refused in every shape.
+
+STILL NOT DONE: the replay that produces a result - the daemon does not step -
+the objection window, slashing, and the Lightning that settles or cancels an
+invoice.
