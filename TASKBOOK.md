@@ -11671,3 +11671,68 @@ The eleven reds are the known list: the retired C# army group, CombatFx reading
 a `Shot` event that no longer fires, and the TheGogglesAnimate load flake - and
 eleven is the known list rather than a stable count, since the same code has
 produced 13 and 12 on consecutive runs.
+
+## M2.1 13C: equivocation forfeits, disagreement without a proof is VOID
+
+THE RULE, and its asymmetry is the whole of it: "a player cannot manufacture a
+refund by causing disagreement, because the only way a player can cause it is
+equivocation, and equivocation forfeits. Everything else that goes wrong is the
+infrastructure's fault and refunds."
+
+`noQuorumOutcome({ signatures, needed, equivocationProven })` in
+`protocol/src/payout.js`. Both inputs were already in the tree - the fork proof
+a node publishes, and a count of committee signatures - and the output is the
+word `computePayoutTable` has consumed since before this slice. No daemon is
+invented and none is pretended at.
+
+MEASURED on one node, with the evidence taken off the doors exactly as a
+stranger takes it - GET /equivocation, then GET /entry for the session key,
+then `provesEquivocation`:
+
+  A, signed two chains, 3 of 5    FORFEIT: "no quorum at 3 of 5, and the player
+                                  signed two chains: 13B forfeits the entry"
+  B, played straight, 3 of 5      VOID: "nothing shows the player caused it"
+  the fork proof off the door     A true, B false - a straight player is not
+                                  proven a forker
+  5 of 5                          outcome null, "the committee agreed" - this
+                                  rule says it does not apply rather than
+                                  guessing
+
+AND THE ASYMMETRY IN MONEY, which is where it has to be true:
+
+  DELIVERED + FORFEIT + VOID   pool 100000 msat - the forfeited stake and
+                               nothing else
+                               table 2 rows: the void entry is not in it at all
+                               winner 200000 msat: own stake plus the forfeited
+  the same round with the
+    forker VOIDed instead      pool 0, winner 100000 - only the stake back
+
+So a player who could VOID by causing disagreement would have a free refund on
+every losing round, and that is exactly the door 13C closes.
+
+ONLY `true` FORFEITS. undefined, null, 'yes', 1, {} and an unawaited Promise
+all give VOID. A truthy check would forfeit a stake on a Promise somebody
+forgot to await, which is a stake taken by a typo. A count that is not a count
+is refused rather than guessed: negative, fractional, or a threshold of zero.
+
+PLAYER_LOST WAS NOT INVENTED. FORFEIT already names the case where the player's
+own conduct costs the stake, and a synonym would be a second word for one
+outcome and a second place to get it wrong.
+
+THE PROOF IS TAKEN AS ALREADY CHECKED, deliberately: `provesEquivocation` needs
+a curve, `packages/protocol` carries none, and a decision that re-verified
+would need one. The caller passes what it has verified, and the test verifies
+it the way a third party would rather than trusting the node that served it.
+
+MUTANTS, four, all red: a fork not forfeiting so everything voids (1), anything
+truthy forfeiting (1), no quorum never noticed so the rule never applies (2), a
+short committee counted as agreement (2).
+
+TESTS. blwp-node 63 -> 66, protocol 104, blwp-client 72, core 85 - 327 green,
+none red, none skipped. Determinism guard 19 clean, money guard 9 clean. No
+float went near money: the decision is words and integer counts, and the table
+was already BigInt millisatoshi throughout. No C#, no Unity, nothing deployed.
+
+NOT DONE, and not pretended at: the result window that says WHEN to ask, the
+HTLC that hands the stake back, and the slashing of nodes that contradict a
+replay. All three need the other six daemons or Lightning.
