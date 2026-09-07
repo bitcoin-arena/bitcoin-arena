@@ -10102,3 +10102,67 @@ the spec asks, the second contradicts it.
 Not a hole in backpressure, and not fixable inside M2.1's client: a client
 cannot decide what its own abandonment is worth. Listed here so the settlement
 work inherits it rather than meets it.
+
+
+## 2026-09-07 18:50  M2.1 step 4: a node stores nothing for a round nobody funded
+
+MEASURED FIRST, on a real file-backed node, because "it costs disk" is a claim
+and not a number:
+
+  an empty node          4096 bytes   rounds 0    entries 0
+  200 unfunded opens     4096 bytes   rounds 200  entries 0   answered 201 x200
+  one unfunded entry     4096 bytes   rounds 200  entries 1   answered 201
+
+  The file sat at one 4 KB page throughout, which is why the row counts are the
+  measurement at this scale and the page count is what is asserted in the test
+  rather than a stat: a page count moves where a stat does not.
+
+THE RULE, from IMPLEMENTATION.md: "A funded entry is required before the node
+stores one byte of transcript. Disk is spent only on stakes that exist - the
+main anti-DoS lever."
+
+WHAT THE NODE CANNOT DO IS DECIDE IT. A stake is a hold invoice on Lightning
+and there is no payment layer here yet. Inventing a funding message would be
+inventing the payment protocol, which is not this step's to write. So the
+daemon REFUSES until something the operator trusts says otherwise, and the
+default is `NOTHING_IS_FUNDED` - a daemon that assumed funding would be the
+flood lever rather than the guard against it, and a default of yes is the kind
+of thing nobody notices until the disk is full.
+
+  POST /round   402 "this node stores nothing for a round nobody has funded"
+  POST /entry   402 "this node stores nothing for an entry nobody has funded"
+  both asked BEFORE anything reaches the database, so a refusal costs a parse
+
+AFTER, the same stranger:
+
+  an empty node          4096 bytes   rounds 0  entries 0
+  200 unfunded opens     4096 bytes   rounds 0  entries 0   answered 402 x200
+  one unfunded entry     4096 bytes   rounds 0  entries 0   answered 402
+
+  200 rows -> 0 rows. And with nothing funded there is nowhere to send a tape:
+  a batch on the socket is refused by name and batches, checkpoints and
+  receipts all stay at zero - measured rather than reasoned about, because
+  "the socket needs the round to exist" is true until somebody adds a door.
+
+VOID STAYS VOID. Nothing on this path turns a technical failure into
+PLAYER_LOST or DELIVERED: a refusal is a 402 before any round exists, so there
+is no run to lose or deliver. And the client still decides nothing about
+funding - it asks, and is told.
+
+MUTANTS, three:
+  the default is yes                    2 red
+  the round door is not gated           2 red
+  the entry door is not gated           1 red
+
+TESTS. blwp-node 37 -> 41: four new in `quota.test.js`, and the five existing
+`serve()` calls in the node's and the client's suites now say `funded: () =>
+true`, because they are rounds somebody paid for and a test that means to play
+one has to say so. blwp-client 26/26, core 80/80 with the determinism guard 19
+clean, protocol 78/78 with the money guard 7 clean. No C# changed - the node
+and its tests only - so PlayMode stays 213 / 189 green / 11 red / 13 skipped
+and EditMode 185 / 181 green / 1 red / 3 skipped from 7b4caea.
+
+WHAT IS NOT DONE HERE, named rather than implied: who supplies that yes. The
+oracle is an argument to `serve`, and until there is a payment layer the honest
+answer for a live daemon is that it refuses everything. Wiring a real funding
+source is the payment work, not this step.

@@ -16,11 +16,10 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-   14  M2.1 checkpoints               M2   OPEN — backpressure done: a
-                                            dropped tick VOIDs the run and
-                                            the transcript stops there.
-                                            Next: entry quotas (step 4).
-                                            Numbers: TASKBOOK.
+   14  M2.1 checkpoints               M2   OPEN — entry quotas done: a node
+                                            stores nothing for a round nobody
+                                            has funded. Next: discovery off
+                                            the chain (5b). Numbers: TASKBOOK.
    13  M1.a16 playable hunt            M1   done — the hunt is winnable
                                             through the front and the rim
                                             pays almost nothing; spectate is
@@ -645,8 +644,12 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      Still open here: backpressure - a reconnect is tried once, and the held
      ticks grow without limit while the socket is down. M2.1 is not
      finished.
-  4. **Entry quotas.** A funded entry before the node stores a byte.
-     Comes before opening a port to anyone else, not after.
+  4. **Entry quotas.** DONE. A funded entry before the node stores a byte.
+     Both HTTP doors refuse until something the operator trusts says the stake
+     exists, and the default is no - a daemon that assumed funding would be the
+     flood lever rather than the guard. Measured: the same stranger who used to
+     open 200 rounds for nothing is answered 402 two hundred times and leaves
+     no row and no page behind. Numbers in TASKBOOK.
   5. **Backpressure and reconnection.** DONE. Inbound was already capped: the
      socket refuses a frame longer than the protocol can encode, and a batch
      may not be longer than the round's own `blockTicks`. Outbound now: the
