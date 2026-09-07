@@ -8113,3 +8113,50 @@ check compared a real height against nothing.
 MUTATION-CHECKED, each reverted at once:
   the card box back to its own head formula -> TheDebugPanelAndTheCards red
   the readout never yields to the score     -> two tests red
+
+
+## 2026-09-07  deployed, and photographed at the two shapes nothing here could show
+
+The daily is this tree. `webgl.wasm.unityweb` on btc-logistics-core.pages.dev
+is md5 cc2bd8da5ae829cafe22a2fc0e863ba2, identical to the local artefact, built
+from 749e0c2. btc-logistics-war.pages.dev untouched.
+
+THE BUILD FAILED FIRST AND THE REASON IS WORTH KEEPING. `BuildWebGL` has a
+hardcoded `DefaultOutput` of `/Users/daniel/code/btc-logistics-war/...` - a Mac
+path - so on this machine it tried to create `/Users/...` and got permission
+denied after sixteen seconds, having already stamped the build. It needs
+`-buildOutput /tmp/btc-phase0/unity-proto/build/webgl` here. With that it
+succeeded in 6:01 at 19 MB.
+
+BROWSER VIEWPORTS, which is where 1024x768 and 1920x1080 actually exist - the
+editor reports 733x293 whatever is asked for and this machine's X desktop is
+1280x720. Chromium under SwiftShader against the deployed page:
+
+  1024x768   driving HUD photographed. Block board inside its border,
+             condition, danger, the warning row, practice and SIM down the
+             left; price, ticker, LIQUIDATED $320, block clock and its
+             sentence down the middle; cargo, score and banked on the right;
+             one filled pip of five and WANTED in the corner.
+  1920x1080  the same, fully lit, with five filled pips and HUNTED at 13,921
+             sat aboard.
+
+AND THE BUILD NUMBER IS ON THE TITLE SCREEN IN A BROWSER: "build 749e0c2 -
+2026-09-07 00:47 UTC", its own row under the bar, photographed at 1024x768.
+That bullet is closed on a picture rather than on the code being present.
+
+THE PIPS ARE ONLY VISIBLE HERE. They read `BlwpCore.Heat` and the core is a
+stub outside a WebGL build, so the editor and the Linux player both correctly
+draw nothing. The browser is the only place the wanted row can be seen at all,
+and it draws: one pip at 3,219 sat, five at 13,921.
+
+DRIVING THE PAGE TOOK TWO CORRECTIONS AND BOTH ARE THE SAME MISTAKE. A click
+at a fixed screen fraction hit PLAY at 1024x768 and missed at 1920x1080,
+because the panel is `min(86% of the width, 900 px)` and its button row is a
+fixed inset from the panel's bottom - the fraction moves with the viewport.
+Same again for AUTO and ROLL OUT, which are thirds of a bar that is
+`min(94%, 1040 px)`. Both are computed from the same arithmetic the game lays
+them out with now.
+
+The only thing crossing anything in either picture is the drop-off marker over
+the ticker - world-projected, excluded on purpose with the fallout marker, the
+WASTED scrim and the UNDER FIRE frame.
