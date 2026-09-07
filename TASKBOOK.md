@@ -8020,3 +8020,50 @@ MUTATION-CHECKED, each reverted at once:
   the send-off card back across the screen -> two tests red
   the score column ignores the readout     -> TheDebugPanelAndTheCards red
   the debug box shorter than its rows      -> the same test red
+
+
+## 2026-09-07  a built player, and the shapes this machine can and cannot show
+
+The editor will not present the four shapes - asked for 844x390 it reports
+733x293, which is already on the record. A PLAYER does, so one was built:
+`BuildLinux.Run`, a StandaloneLinux64 player at 100 MB, driven by `AutoPlay`,
+which exists only when `-autoplay` is on the command line and dismisses the
+title screen and takes a load so a screenshot has something to photograph. A
+player started the normal way never constructs it.
+
+WHAT PRESENTED AND WHAT DID NOT, because two of the four cannot on this
+machine and that is a fact, not a shrug:
+
+  844x390    presented, captured, client area 844x390 in an 845x429 window
+  1000x360   presented, captured, 1002x399 with the frame
+  1024x768   CLAMPED to 1025x694 - the X display is 1280x720 and the window
+             cannot be taller than the desktop
+  1920x1080  NOT POSSIBLE - wider and taller than the 1280x720 display
+
+`xdpyinfo` says 1280x720. The two that fit were photographed; the two that do
+not need a bigger display or a browser at a set viewport, which is the deploy
+path.
+
+AND THE FIRST PLAYER FRAME FOUND ONE MORE. `DrawBlockTimer` draws "BLOCK
+965,853 - 2:23" and then "the block is the round - arrive before it closes"
+underneath at `font * 1.2`, while `BlockTimerBox` stopped at `font * 1.35` -
+so the sentence was outside its own rect, and the model list, which is
+measured to sit below that box, was drawn across it. The block board's fault
+in a fourth place, and the rect tests were green through it because the box
+was the thing that was wrong.
+
+Fixed, rebuilt, and photographed again: at 844x390 and at 1000x360 every
+number the driver reads stands clear - the block board inside its border,
+condition, danger, the warning row, practice and SIM down the left; price,
+ticker, block clock and its sentence, then the model list down the middle;
+cargo, score and banked on the right; the two settings icons in the corner.
+
+THE ONE THING THAT STILL CROSSES ANYTHING is the drop-off marker - "DROP-OFF
+215 m" over the ticker - and that is the world-projected waypoint, excluded on
+purpose along with the fallout marker, the WASTED scrim and the UNDER FIRE
+frame.
+
+The models fail to stream in this player: the Addressables bundles are built
+for WebGL and there is no StandaloneLinux64 catalogue. That is expected and it
+made the pictures MORE useful, not less - the list is photographed in its
+failed and waiting states, which is the widest it ever gets.
