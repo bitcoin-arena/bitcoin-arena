@@ -115,11 +115,14 @@ and photographed at four sizes: 844x390 and 1000x360 on a player, 1024x768 and
   come from one string written at build time, so they cannot drift apart. The
   loading screen also stopped speaking German while it was open.
 - explosion sound — done (Daniel 2026-09-07 07:39).
-- the line under the price is English — done. It read "verbinde … (connecting)"
-  while the spot price had not arrived; it reads "connecting … (connecting)"
-  now. Measured off the draw path itself, not off a comment: the line is its
-  own function, `DriveHud.PriceSubline`, with three tests, and putting the
-  German back turns all three red.
+- the driving HUD speaks English — done. Two places, not one. The line under
+  the price read "verbinde … (connecting)" before a price arrived and now reads
+  "connecting …"; and every row of the debug panel behind the DEBUG icon was
+  German - Tempo, Gas, Lenk, Raeder, Fluss, Panzer gruen/rot, Soldaten, Luft,
+  Bombe(n) - which the first sweep missed because none of them carries an
+  umlaut. All of it is measured off the draw path: nine small functions with
+  five tests, and putting any German back turns them red. No German string is
+  left in any shipping script.
 the SIM switch fires the core's strike, the HUD names that liquidation and
 its exchange, the mushroom stands on the crater floor with dust along the
 ground, every strike in a round draws full size, the crater is 1.5x deeper

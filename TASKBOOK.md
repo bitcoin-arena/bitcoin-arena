@@ -9161,3 +9161,45 @@ branch could not be caught: the spot socket delivers a price before the splash
 can be dismissed, which is the same reason this word survived a13's sweep in
 the first place. That branch is pinned by the three tests instead, read off
 the same function the HUD draws from.
+
+
+## 2026-09-07 12:20  the driving HUD speaks English - and it was two places, not one
+
+I reported the connecting word as "the only one left in that file". That was
+wrong, and wrong for a reason worth writing down: the sweep behind it searched
+for a fixed list of German words, and the list was built from the words already
+found. Every row of the DEBUG panel is German and not one of them carries an
+umlaut, so a check that looks for ä/ö/ü/ß walks straight past them.
+
+  Tempo   68 km/h                        ->  Speed   68 km/h
+  Gas +0.8  Lenk -0.3  HB                ->  Thr +0.8  Steer -0.3  HB
+  Drift   2.6 m/s   Raeder 4/4           ->  Drift   2.6 m/s   Wheels 4/4
+  Fluss   -0.42                          ->  Flow    -0.42
+  Panzer   gruen 3  rot 4                ->  Armour   green 3  red 4
+  Soldaten gruen 11  rot 9               ->  Infantry green 11  red 9
+  Luft     2 Heli  1 Bombe(n)            ->  Air      2 heli  1 bomb(s)
+
+That panel sits behind the DEBUG icon, which is on the driving HUD, so it is
+something a player can open - not developer-only.
+
+MEASURED OFF THE DRAW PATH, as the price line was. Each row is a small public
+function the panel calls, so what the test reads is what is drawn, and the row
+COUNT is untouched - which is what `DiagnosticsContentHeight` and
+`DebugPanelBox` are measured on, and why a13's layout tests are unaffected.
+
+AND THE SWEEP DONE PROPERLY THIS TIME, over every shipping script rather than
+one file, with a word list of German-only markers including the umlaut-free
+ones. Five hits remain and all five are false positives - "grade", "deg" and
+"Wasted Grade" catching a "Grad" marker. No German string reaches a player.
+
+  `MempoolFeed.Status` also carried "verbinde …" and "lade Mempool …". They are
+  DEAD - nothing in the project reads that property - and they are English now
+  anyway, because a dead string is one refactor away from being drawn.
+
+STILL GERMAN, and deliberately left: the assertion messages in the test suites.
+They are not player-facing, they are not in a shipping script, and rewriting
+616 of them is not this letter.
+
+TESTS. EditMode 178 / 174 green / 1 red / 3 skipped - five new, the red the
+known CombatFx one. PlayMode 213 / 189 green / 11 red / 13 skipped - the known
+eleven exactly, no load flake in this run.
