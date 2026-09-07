@@ -16,17 +16,15 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-   14  M2.1 checkpoints               M2   OPEN — 5b done: the client plays
-                                            the round in the address bar and
-                                            talks only to a node that round
-                                            names, at a proven address. Next:
-                                            5c, the chain source — the client
-                                            asks two providers for headers,
-                                            checks the work, anchors on a block
-                                            it already knows, and asks for the
-                                            bond; a chain handed to the door is
-                                            refused. Numbers and leftovers:
-                                            TASKBOOK.
+   14  M2.1 checkpoints               M2   OPEN — 5b and 5c done: the client
+                                            plays the round in the address bar,
+                                            asks two declared providers for a
+                                            chain it anchors on genesis, and
+                                            reads its node's address out of a
+                                            bond proven into it. Next: the
+                                            quorum rule in step 3, which needs
+                                            the other six daemons. Numbers and
+                                            leftovers: TASKBOOK.
    13  M1.a16 playable hunt            M1   done — the hunt is winnable
                                             through the front and the rim
                                             pays almost nothing; spectate is
@@ -690,6 +688,17 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
          M2.1 item) - are written down in TASKBOOK, not here.
 
   5c. **The chain source: our own mempool.space, verified not trusted.**
+     DONE. The client asks two providers that each declare which source they
+     are, keeps the chain with the most work, refuses a header whose hash does
+     not meet the target it claims, anchors on Bitcoin's genesis block rather
+     than on anything a page says, and asks for the bond rather than being
+     handed one. A chain offered to the door is refused, not verified.
+     A tag is a declaration and not a proof - one server behind two names is
+     believed, and that limit is measured in TASKBOOK rather than assumed away.
+     What is left is not the chain source: no page defines `BLWP_CHAIN`, the
+     jslib has not been linked since 606f54d, and which block a deployment
+     anchors on instead of carrying 68.7 MB to genesis is still a constant
+     nobody has chosen. Numbers: TASKBOOK.
 
      Run our own instances - that buys availability, and only that. For a
      stranger, an API we operate is worth exactly what our website is

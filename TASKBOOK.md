@@ -11136,3 +11136,55 @@ reaches. No network beyond 127.0.0.1. No C#, nothing deployed; daily 0.0.567.
 STILL PARKED: `reach`/`endpointFor` exported and willing to verify a handed
 chain - a recorded foot-gun, not on the session path; the deployment anchor
 (a2); no page defines BLWP_CHAIN; the jslib unlinked since 606f54d.
+
+## M2.1 5c CLOSED  -  the chain source, measured against its own sentence
+
+The sentence was: the client asks two providers for headers, checks the work,
+anchors on a block it already knows, and asks for the bond; a chain handed to
+the door is refused. Every clause, and why it is true:
+
+  two providers      PROVIDERS_NEEDED = 2 is the client's, a supplied `least`
+                     is refused, and every provider must declare a source -
+                     two calls to one server are not two providers
+  checks the work    a header is refused before its work is counted: "this
+                     header was not mined: its hash does not meet the target
+                     it claims"
+  a block it knows   BITCOIN_MAINNET_GENESIS, the client's own; a page-supplied
+                     anchor is refused by name
+  asks for the bond  askForBond over declared providers, and provenBond
+                     requires it into the agreed mined chain
+  a handed chain     chain, chains, transaction, branch and position each
+                     refused at Client.at, not verified
+
+Everything `discover` still takes from its caller is the page's by right
+(`headers`, `bonds`, `ask`, `signedAdvert`), overridden by the round contract
+(`committee`), or refused (`anchor`, `least`, `timeoutMs`). Walking that list
+is what found `least` and then the tags, and it now turns up nothing further.
+
+SEVEN CUTS, and each one existed because the cut before it was not enough:
+
+  54f41d2  two providers, link-checked, most work wins, a fork refused
+  969370c  and the work has to have been DONE - one fabricated header claimed
+           thirty-two orders of magnitude more than mainnet
+  665029a  one origin twice is one source; a provider cannot flood or stall
+  81c08e1  the bond proven into a mined block of that chain
+  894754d  the chain must hold a block the client already knows
+  dd18cca  the door asks instead of being handed
+  24f07c1  the anchor is the client's, not the page's
+  7ac843b  and so is the two-provider floor
+  ecd5822  and two providers means two declared sources, not two calls
+
+COUNTS AT CLOSE. blwp-client 67/67, protocol 104/104, blwp-node 41/41, core
+85/85 - 297 tests, no red, none skipped. Determinism guard 19 files clean,
+money guard 9 files clean. Bundle 125.2 KB, 17 modules. PlayMode 213/189/11/13
+and EditMode 185/181/1/3 as last measured at 7b4caea; no C# has moved since.
+
+NOT DEPLOYABLE, and the reasons are no longer about the chain source: no page
+defines BLWP_CHAIN so a deploy opens no session, the jslib has not been
+Emscripten-linked since 606f54d, nothing has been driven in a browser since
+7b4caea, and the Unity reds stand. Daily 0.0.567.
+
+NEXT ON M2.1 is the quorum rule in step 3 - `receiptCount` answers how many
+committee members have receipted a mark and 13C's threshold is five, but
+whether a count is enough, and what happens when it is not, needs the other six
+daemons.
