@@ -9742,3 +9742,55 @@ money guard 7 clean, blwp-node 37/37, blwp-client 13 -> 17.
 The session is OFF unless the page names a node and a round. No build that has
 shipped names either, so the daily is exactly the game it was. Nothing was
 deployed and the daily is still 0.0.567 from 752e4b1.
+
+
+## 2026-09-07 15:40  M2.1 step B: the socket drops and the run carries on
+
+The hole named when the happy path landed: the resume path existed in the
+client and nothing in the page reconnected or called it.
+
+  the client   tells its owner when the socket goes, and answers everything in
+               flight by name first - "error the socket closed". A publish
+               that never settles stops the queue behind it for the rest of the
+               run. `send` on a dead socket answers rather than throwing, in
+               the same shape a refusal takes, so a caller that already handles
+               "the node said no" handles this too.
+  the page     reconnects on a new socket and asks where the node got to, then
+               carries on. No new protocol: `connect` and `resume` are the ones
+               that were already there.
+
+AND THE TICKS ARE KEPT WHILE IT IS DOWN. They used to be dropped on the floor
+when the state was not ready, which would leave a hole in the chain - and the
+node refuses a gap at intake, where a client can still fix it, so the run would
+have ended at that hole with every input after it unusable. They pile up and go
+out in order from the tick the node says it is owed. A refused batch is put
+back in front of whatever arrived since, for the same reason.
+
+MEASURED END TO END, the same way as the happy path - real node, the real built
+player over HTTP, a real browser - with the drop done from the NODE's side,
+`sock.terminate()` on every /play connection, which is what a network going
+away looks like to the page:
+
+  before the drop   rounds 1  entries 1  batches 119  marks 11  receipts 11
+  the page said     "[blwp] resumed at tick 773, 119 batches and 11 receipts
+                    behind us"
+  after             rounds 1  entries 1  batches 133  marks 12  receipts 12
+                    x-ticks 1367, transcript hash eb514b3437165b7e...
+                    mark ticks 120, 180 ... 720, then 1320
+
+The node accepts no gap, so the transcript reaching 1367 contiguous ticks IS
+the proof that nothing was lost across the drop. The mark chain continued too:
+the twelfth mark, at tick 1320, chains onto the eleventh at 720 and came back
+receipted. No mark was taken while the socket was down, which is right - a
+commitment nobody can receipt is not evidence of anything.
+
+TESTS. blwp-client 17 -> 19, two new: everything in flight is answered when the
+socket goes and the owner is told; and a client that reconnects on the same
+round carries on, both chains read back and the next batch and mark accepted.
+blwp-node 37/37, core 80/80 with the determinism guard 19 clean, protocol 78/78
+with the money guard 7 clean. PlayMode 213 / 189 green / 11 red / 13 skipped
+and EditMode 185 / 181 green / 1 red / 3 skipped, both unchanged - no C#
+changed in this piece, only the jslib and the client.
+
+Page reload is deliberately NOT handled: a session key lasts the run, a reload
+is not a socket drop, and no persistence was added for it.
