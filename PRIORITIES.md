@@ -82,15 +82,20 @@ Liquidation picture (a13) — CLOSED. M1.a14 — camera, HUNTED, score — CLOSE
 and live on the daily. M1.a15 — the depot wheels — CLOSED and live on the
 daily. Next letter: M1.a16, not named yet. Details: TASKBOOK.md.
 
-M1.a8: ANSWERED, and the answer is that the routed path pays 0 — measured,
-  not guessed. dstream serves the SAME USDT-M all-market force-order stream
-  fstream serves: over 300 s all three hosts returned the identical 46
-  messages and the identical 23 symbols, every one of them a ...USDT name and
-  not one with an underscore, which is how every coin-margined contract is
-  named (BTCUSD_PERP). So there is no coin-margined force order on that route
-  to merge, and nothing was merged into OnLiquidation. Numbers in TASKBOOK.
-  A coin-margined stream would need a URL this project has not measured, and
-  none was invented.
+M1.a8: CLOSED as pays-0. Coin-margined liquidations still pay nothing to the
+  player, and the reason is measured rather than assumed. Binance DOES name an
+  all-market coin-M liquidation stream — wss://dstream.binance.com plus
+  !forceOrder@arr — and on both the legacy and the current /market route, one
+  socket at a time, it delivers USDT-M force orders: 84 messages / 31 symbols
+  and 100 messages / 42 symbols, none with an underscore, and 15 of those
+  names checked against Binance's own exchangeInfo are 0-of-15 coin-M and
+  15-of-15 USDT-M. Subscribing to it would merge the stream already shipping
+  with itself. The per-symbol route, all 30 coin-M symbols combined, paid 0 in
+  600 s. The host is genuinely coin-M — btcusd_perp@markPrice answers
+  BTCUSD_PERP — so this is the exchange's behaviour, not the wrong host.
+  Nothing was added to OnLiquidation. The 07:28 three-socket probe is
+  retracted; it reported a result two different hosts cannot both produce.
+  Doc URL and every number in TASKBOOK.
 
 M1.a11: not done — strike voice built, needs Daniel's ear.
 

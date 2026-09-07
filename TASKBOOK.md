@@ -8821,3 +8821,97 @@ CONCLUSION: 0, and now with a reason rather than a quiet window. Nothing was
 merged into `OnLiquidation` - merging it would merge the stream already
 shipping with itself. A coin-margined stream would need a URL this project has
 not measured, and none was invented.
+
+
+## 2026-09-07 08:30  M1.a8 CLOSED: the documented coin-M liquidation stream carries USDT-M orders
+
+THE EARLIER MEASUREMENT IS RETRACTED. The 07:28 probe opened three sockets at
+once and reported dstream and fstream returning the identical symbol table,
+and concluded "dstream serves the same USDT-M all-market stream fstream
+serves". Two hosts on different IPs serving different contract sets cannot
+return identical tables, and single-socket runs do not reproduce it. Whatever
+that probe measured, it was not the exchange. Everything below is ONE socket
+at a time, nothing else running.
+
+THE DOCS. Binance names it, so this is not an invented URL:
+  https://developers.binance.com/docs/derivatives/coin-margined-futures/websocket-market-streams/All-Market-Liquidation-Order-Streams
+    base endpoint  wss://dstream.binance.com
+    stream name    !forceOrder@arr
+    update speed   1000ms
+    payload symbol BTCUSD_200925
+  and the migration notice, which is why the routed path is the current one:
+  https://developers.binance.com/docs/derivatives/usds-margined-futures/websocket-market-streams/Important-WebSocket-Change-Notice
+    legacy URLs decommissioned after 2026-04-23; use /public, /market, /private
+
+THE HOST IS GENUINELY COIN-MARGINED, checked before anything was concluded
+from it:
+  dapi.binance.com/dapi/v1/exchangeInfo   30 symbols, 30 with an underscore
+                                          BTCUSD_PERP, AAVEUSD_PERP, BTCUSD_260925 ...
+  fapi.binance.com/fapi/v1/exchangeInfo   897 symbols, 4 with an underscore
+  wss://dstream.binance.com/ws/btcusd_perp@markPrice
+                                          4 messages in 15 s, symbol BTCUSD_PERP
+  dstream and fstream resolve to different IPs (57.180.191.254 / 54.168.230.110)
+
+THE DOCUMENTED ALL-MARKET STREAM, ON THAT HOST, ONE SOCKET, BOTH ROUTES:
+
+  wss://dstream.binance.com/ws/!forceOrder@arr           300 s
+     84 messages, 31 symbols, 0 with an underscore
+     UAIUSDTx14  IOSTUSDTx10  SOLVUSDTx6  COTIUSDTx5  CATIUSDTx4  XANUSDTx4 ...
+  wss://dstream.binance.com/market/ws/!forceOrder@arr    300 s   (current route)
+     100 messages, 42 symbols, 0 with an underscore
+     DOODUSDTx16  IOSTUSDTx14  MARSCOINUSDTx7  CFGUSDTx4  ORCAUSDTx3  XRPUSDTx3 ...
+
+  a raw one, so the shape is on the record rather than described:
+    {"e":"forceOrder","E":1788762843264,"o":{"s":"DOODUSDT","S":"SELL","o":"LIMIT",
+     "f":"IOC","q":"13828","p":"0.0021970","ap":"0.0022310","X":"FILLED",
+     "l":"11719","z":"13828","T":1788762842255,"ps":"DOODUSDT","st":1}}
+
+AND THOSE SYMBOLS ARE NOT COIN-MARGINED CONTRACTS. Fifteen of the names
+above, checked against Binance's own exchangeInfo for both products:
+
+  DOODUSDT IOSTUSDT MARSCOINUSDT CFGUSDT AKEUSDT ORCAUSDT ENAUSDT XRPUSDT
+  ETHUSDT XANUSDT SOLVUSDT CATIUSDT UAIUSDT COTIUSDT BULLAUSDT
+    on coin-M (dapi):  0 of 15
+    on USDT-M (fapi): 15 of 15
+
+So the coin-M all-market liquidation stream, at the host and stream name the
+docs give, on both the legacy and the current route, delivers USDT-M force
+orders. Subscribing to it would merge the stream already shipping with itself.
+
+THE ONLY OTHER ROUTE A COIN-M LIQUIDATION COULD TAKE is the per-symbol
+`<symbol>@forceOrder` stream, so every coin-M symbol was subscribed at once:
+
+  wss://dstream.binance.com/market/stream?streams=btcusd_perp@forceOrder/
+    aaveusd_perp@forceOrder/ ... 30 streams, all of dapi's symbols     600 s
+      0 messages, 0 symbols
+
+The socket opened and stayed open; it simply paid nothing. That is not proof
+the route is broken - coin-M liquidations are rare and 600 s is a short look -
+but it is not something that can be wired on and called measured either.
+
+NOTHING NEW REACHED `OnLiquidation`. No source was added. Wiring the
+all-market stream would duplicate the USDT-M feed already there; wiring the
+per-symbol streams would add a fourth socket to the shipping game that has
+never been observed to deliver a single message.
+
+a8 is CLOSED as pays-0: the coin-margined liquidations a player would see are
+still zero, and now with the reason on the record rather than a quiet window.
+
+AND ONE RED OF MY OWN, FOUND AND FIXED RATHER THAN LEFT. The road test added
+earlier today went red in the full suite while passing alone - 2.98 m, then
+-2.34 m, about roads nobody had touched. Two causes, both the same shape:
+
+  - it took whichever `CoreDrivenTruck` the scene handed over, and other
+    fixtures leave their worlds standing. A leftover truck is seated by a
+    leftover road network whose terrain has since been destroyed, so its
+    ground answers 0 under ribbons it still holds. It tears the scene down
+    before building its own world now, and refuses to measure a network whose
+    terrain is gone.
+  - the ground comes from a live fetch and reshapes under the road.
+    `RoadNetwork.Update` notices within 0.25 s and rebuilds, so measuring
+    across that window compares a surface sampled now against a mesh built
+    against the heights of a moment ago. The test holds the terrain version
+    still for two rebuild ticks before reading anything.
+
+Nothing was relaxed - the bound is the same 0.02 m - the two sides are made
+the same age. PlayMode is back to the known eleven.
