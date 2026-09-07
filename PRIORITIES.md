@@ -20,11 +20,12 @@ Top item first. Finish and deploy before starting the next.
                                             the round in the address bar and
                                             talks only to a node that round
                                             names, at a proven address. Next:
-                                            5c, the chain source — headers from
-                                            two providers, proof of work, and
-                                            the bond proven into a mined block
-                                            have landed; the Bitcoin anchor is
-                                            next. Numbers and leftovers:
+                                            5c, the chain source — the client
+                                            asks two providers for headers,
+                                            checks the work, anchors on a block
+                                            it already knows, and asks for the
+                                            bond; a chain handed to the door is
+                                            refused. Numbers and leftovers:
                                             TASKBOOK.
    13  M1.a16 playable hunt            M1   done — the hunt is winnable
                                             through the front and the rim

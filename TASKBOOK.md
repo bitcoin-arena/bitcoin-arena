@@ -10875,3 +10875,86 @@ a shipped checkpoint that must be kept fresh - is a constant nobody has chosen.
 TESTS. blwp-client 57 -> 59, protocol 104/104, blwp-node 41/41, core 85/85.
 Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
 No network beyond 127.0.0.1. No C#, no Unity, nothing deployed; daily 0.0.567.
+
+## M2.1 5c slice 4: the door asks for the chain instead of being handed one
+
+WHAT WAS WRONG, AND IT WAS THE WHOLE POINT OF 5C. Everything measured in the
+four cuts before this was a library nothing used. Grepped, not remembered:
+neither `client.js` nor `directory.js` nor the jslib called `agreedChain`,
+`askForBond` or `provenBond`, and the jslib handed `transaction`, `branch` and
+`chains` straight off `BLWP_ADVERT`. `reach` verified whatever it was given -
+which proves a chain and a proof agree WITH EACH OTHER and nothing whatever
+about Bitcoin, because a page that wrote both wrote a consistent pair. 25.1 is
+normative about what a CLIENT does, so until the door asks, the chain source
+was not the client's chain source.
+
+WHAT LANDED. `discover()` in `directory.js`: two provider functions for
+headers, weighed and anchored; then bond providers asked in turn until one
+proves a bond into that chain; then the endpoint read out of it. `Client.at`
+calls it, and REFUSES a ready-made chain or proof rather than verifying one -
+`chain`, `chains`, `transaction`, `branch` and `position` are each named:
+"must come from a provider, not from whoever opened the page: two things that
+agree with each other are not Bitcoin".
+
+MEASURED THROUGH THE DOOR, not through the library:
+
+  a perfect bundle handed over    reach(raw) accepts it - said out loud in the
+                                  test so the refusal cannot be mistaken for
+                                  the bundle being bad - and Client.at refuses
+                                  all five keys by name
+  the same bytes, asked for       the round opens, base https://node.example:443
+  one provider                    "no chain: 1 providers is fewer than the 2"
+  no anchor                       "no chain: no anchor"
+  an anchor the chain lacks       "no chain: only 0 of 2 providers gave a chain"
+  no bond provider                "no bond: no providers to ask for the bond"
+  a proof landing nowhere         "no bond: no provider proved that bond into
+                                  the chain" - provenBond, on the live path
+  the attacker's whole world      his own mined chain, his own bond in it, his
+                                  own signed advertisement, served by two
+                                  providers that agree completely: accepted
+                                  when anchored on his own first block, and
+                                  "only 0 of 2 providers gave a chain" when
+                                  anchored on a block this client knows
+
+THE CLIENT SPEAKS BITCOIN'S SHAPES AND NOBODY'S JSON: 80-byte headers back to
+back, and a merkle branch of 32-byte hashes with an index. No explorer schema
+and no host or path is in the package. Translating a real API into these
+functions is an adapter that lives on the page or the node, where it can be
+changed without touching anything that decides.
+
+THE JSLIB. `$blwpDiscovery` now reads `BLWP_CHAIN.headers`, `.bonds` and
+`.anchor` and REFUSES a page still carrying `chains`, `chain`, `transaction` or
+`branch` - a page on the old path is told so rather than quietly taken at its
+word. It also refuses fewer than two header providers, no bond provider, and a
+missing anchor, each by name.
+
+`BlwpNetNodeUrl` can no longer answer with an address: the address is now read
+off a bond proven into a chain two providers agreed on, and every step of that
+is a fetch. What C# does with the answer is ask whether it is empty, so it
+answers whether a session is worth opening - "the chain", or empty for none -
+and the address is resolved in `net.open`, before a byte is sent. Renaming the
+C# side is C# and was out of scope.
+
+`bond.js` and `headers.js` are in the bundle now, which follows from the import
+rather than being arranged: 15 modules -> 17, 102.9 KB -> 120.3 KB.
+
+MUTANTS, five red: a handed chain verified rather than refused (1), the agreed
+chain not the one `reach` checks (7), a refused chain still opening a session
+(2), a refused bond still opening one (1), the bond's position not carried
+through (7). A sixth was written badly - `bond.branch = bond.branch` changes
+nothing - and is not counted.
+
+ONE TEST FIXTURE FAULT FOUND AND FIXED, not a rule loosened: two tests said
+`reach({ ...fixture, chains: X })` while the fixture had grown a `chain` key,
+which takes precedence, so the override was silently ignored. They now offer
+the chain they mean to.
+
+TESTS. blwp-client 59 -> 62, protocol 104/104, blwp-node 41/41, core 85/85.
+Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
+No network beyond 127.0.0.1. No C#; the jslib is source, not a built artefact.
+Nothing deployed; daily 0.0.567.
+
+LEFTOVERS AFTER THIS SLICE: which block a deployment anchors on is still
+nobody's decision (genesis at 68.7 MB, or a checkpoint kept fresh); no page yet
+defines BLWP_CHAIN, so a deploy still opens no session; and the jslib has not
+been Emscripten-linked since 606f54d.
