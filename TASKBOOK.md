@@ -12191,3 +12191,55 @@ be done and what each thing requires; doing it is Lightning and a committee.
 TESTS. protocol 126 -> 125 (one test replaced four by covering them together),
 blwp-node 66, blwp-client 72, core 85. Money guard 9 files clean, determinism
 guard 19 clean. No C#, no Unity.
+
+## M2.1 23.1: five of seven rebuild the stake preimage, four rebuild nothing
+
+WHAT 23.4 SAYS THIS BUYS: "Settling a loser's HTLC requires reconstructing P,
+which requires 5 of the 7 shares, which the mechanical rule releases only
+against a FINAL result." So the property that matters is what FOUR colluding
+settlement nodes hold, and it is measured rather than asserted.
+
+THE FIELD is 2^521 - 1, a Mersenne prime anybody can check, chosen because a
+32-byte preimage has to fit in one element with room to spare - reducing P into
+a smaller field would change the number whose hash the player already
+committed to. Exact BigInt throughout; no float near it, for the same reason
+none goes near the payout table.
+
+MEASURED, and not on a sample:
+
+  every four of the seven      all 35 combinations refused: "4 shares cannot
+                               reconstruct anything: 5 are needed"
+  four interpolated anyway     the answer is NOT P - checked on five of the 35
+                               by asking for a four-of-four reconstruction of
+                               the same points
+  every five of the seven      all 21 combinations rebuild P exactly, and
+                               sha256 of what came back equals the
+                               stakeCommitment the player signed
+  six and seven                also rebuild P
+  three, two, one, none        refused the same way
+  one seat answering twice     "two shares for one seat are one share"
+  a share altered in transit   fails its seat's commitment
+  seat 1's value as seat 2's   fails - a member cannot hand over another's
+                               share as their own and be counted twice
+  a different secret, and the
+  same secret with different
+  randomness                   different shares, and each rebuilds its own
+
+MUTANTS, seven, and one survived first: four shares enough (1), the threshold
+set to four (6), one seat twice counted as two (1), the secret not the constant
+term (2), a Lagrange term dropped (3), a share consistent with any commitment
+(1), and the seat left out of the commitment - 0 red until a test presented one
+seat's value under another seat's name, and 1 red after.
+
+WHAT "VERIFIABLE" MEANS HERE, AND WHAT IT DOES NOT. Each share carries a
+commitment its holder can check against the share it was given, so a share
+corrupted in transit or swapped by whoever passed it on is caught without
+reconstructing anything - the literal reading of 23.1. It is NOT Feldman: it
+does not prove the dealer used ONE polynomial for all seven seats. That needs
+commitments in a group with a hard discrete log, this package carries no group
+for the same reason it carries no curve, and a dishonest dealer would be caught
+at reconstruction rather than at handout. Named here rather than papered over,
+and it is the hole in this piece.
+
+TESTS. protocol 125 -> 131, blwp-node 66, blwp-client 72, core 85. Money guard
+9 files clean, determinism guard 19 clean. No Unity, no C#, no browser.
