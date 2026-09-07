@@ -5,6 +5,14 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+M1.a16 2026-09-07 playable hunt. Heat-zero recordings unchanged. Full-heat
+factors were 1.4 / 2.5 / 0.6 (tanks noticed at 81.6 m on an 85 m half-map).
+Now 0.3 / 0.5 / 0.3: notice 44.2 m, outrank 1.5x, shell x1.3. Parked at
+z=-70 lasts the 90 s cap; at the line a full load 14.7 s vs empty 16.7 s.
+Rail courier, full heat, 40+40: seam 13/40 = 32.5% delivered, rim 29/40 =
+72.5%. Target 30-40% committed. Spectate HUD: DriveHud returns after the
+price+percent when SpectatorCamera.Active.
+
 THE TWELVE RED TESTS, ONE LINE EACH. Named at f103f71, counted again at
 5c81a7a and again at 747dcaf - the same twelve, in suites that have grown
 since: PlayMode 213 / 189 green / 11 red / 13 skipped, EditMode 161 / 157

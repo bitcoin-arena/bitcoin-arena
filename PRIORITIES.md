@@ -16,6 +16,9 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
+   13  M1.a16 playable hunt            M1   not done — 30-40% should get
+                                            through the front, not only the
+                                            rim. Spectate: price only.
    12  M1.a8 coin-M liquidations       M1   done — coin-margined liquidations
                                             pay now. A captured BTCUSD_PERP
                                             of 197 contracts is $19,700 on
@@ -86,7 +89,7 @@ Twelve red tests: none on the deploy path. List in TASKBOOK.md.
 
 Liquidation picture (a13) — CLOSED. M1.a14 — camera, HUNTED, score — CLOSED
 and live on the daily. M1.a15 — the depot wheels — CLOSED and live on the
-daily. Next letter: M1.a16, not named yet. Details: TASKBOOK.md.
+daily. Next letter: M1.a16 playable hunt. Details: TASKBOOK.md.
 
 M1.a8: DONE. Coin-margined liquidations pay the player.
 - the stream is found and the URL is Binance's own, not invented — done
@@ -265,6 +268,14 @@ rules moved into the core suite. Numbers in TASKBOOK.
   load change how hard the war hunts you and was never assigned by anything,
   and the core implements that same heat-zero case. A full load would die
   2.1x faster if it were fed. That is a core rule and is not changed here.
+
+M1.a16: 2026-09-07 playable hunt + spectate HUD — in progress.
+Daniel: ten tries through the front, none made it; only the rim worked.
+Stay hard; 30-40% of committed runs should deliver. Spectate: price only.
+- hunted fire leaves a rim and a punch-through chance — done in core
+- 30-40% seam/committed delivery in core sims — done (32.5% rail seam)
+- spectate HUD is price only — coded, not photographed
+- deploy daily — not done
 
 M1.a15: DONE. Wheels in the ground at the depot / on the model.
   Standing bury was fixed earlier (0.178 m to 0.000, 3bd4208) and is not
