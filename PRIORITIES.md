@@ -16,6 +16,10 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
+   14  M2.1 checkpoints               M2   OPEN — M1 letters closed
+                                            (Daniel 12:58: if prio empty,
+                                            do M2). Next: client sends a
+                                            state-hash checkpoint.
    13  M1.a16 playable hunt            M1   done — the hunt is winnable
                                             through the front and the rim
                                             pays almost nothing; spectate is
@@ -42,9 +46,7 @@ Top item first. Finish and deploy before starting the next.
     4  hover overlays                 -    done
     5  prune the streamed bundles     -    done
     6  bundler: private name check    -    later (Daniel: start M2)
-    8  M2.1 checkpoints               M2   parked — M1 first (Daniel 08:52).
-                                            a8 is closed, so nothing in M1 is
-                                            waiting on it
+    8  M2.1 checkpoints               M2   OPEN — unparked, same as item 14
     9  M1 liquidation picture         M1   done — the driving HUD is on the
                                             daily build and photographed at
                                             four sizes
@@ -78,6 +80,9 @@ at once.
 
 HARD (Daniel 2026-09-07 07:11): when a15 is done, M2. a15 is marked
 done. Start M2.1 checkpoints. Parked a8/a11/a12 stay parked.
+
+HARD (Daniel 2026-09-07 12:58): if PRIORITIES has no open M1 letter, do
+M2. Do not idle. a16 is closed. Current letter is M2.1.
 
 HARD (Daniel 2026-09-06 22:48): when a letter like a13 or a14 is done,
 deploy to btc-logistics-core.pages.dev. Do not wait for Daniel to ask.
