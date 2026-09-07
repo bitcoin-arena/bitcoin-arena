@@ -9252,3 +9252,54 @@ infantry in the grass, the mempool wall with its block panels - which is the
 point of spectating. The hunt tuning and the score rule were not touched here;
 they arrived in the tree at 19284ed and 752e4b1 and this letter only put them
 on the daily and photographed the HUD.
+
+AUDIT OF a16, and the gap it found: NO SUITE HAD BEEN RUN since the a16 core
+changes landed. Three commits moved the money law - the heat factors at
+ffcbfa2 and 19284ed, the score's front weighting at 752e4b1 - and regenerated
+all eight golden vectors, and the letter was marked done off a photograph of
+the HUD. Run now:
+
+  core       80 / 80 pass, including all eight vectors after regeneration
+  guard      19 files clean
+  PlayMode   213 / 188 green / 12 red / 13 skipped
+  EditMode   178 / 174 green /  1 red /  3 skipped
+
+The PlayMode reds are the known eleven plus `PostOfficeTests.TheGogglesAnimate`,
+the load flake; EditMode's is the known CombatFx one. Nothing new.
+
+CORE VERSUS OLD, in numbers rather than in feel. At heat ZERO the two engines
+are not merely close, they are identical BY CONSTRUCTION: all three rules are
+`base + base * (heat * FACTOR)`, so at heat 0 the second term is exactly zero
+whatever the constant is. a16 changed only those constants, so every C#
+recording - all of which were taken at heat zero, because `Army.Heat` was
+written and never assigned by anything - compares exactly as it did before
+this letter. a13's comparison stands untouched and did not need re-taking.
+
+  what changed, and only above heat zero
+    tank reach at full heat   34 x 1.4 = 81.6 m  ->  34 x 1.3 = 44.2 m
+    outrank                   2.5                ->  0.5
+    shell                     x1.6               ->  x1.22
+    rifle reach               x0.8               ->  x0.2
+
+There is no recording to compare full heat against - the C# never ran a heat
+path at all - so a16's numbers come from the core's own rail sims: 55/150 =
+36.7% delivered on the seam, 105/150 = 70% on the rim, and a seam run scoring
+a mean 629 against the rim's mean 4.
+
+TWO THINGS NAMED, NOT PARKED:
+
+  - the spectate gate has NO automated test. It is a drawn rule and the only
+    evidence is the live photograph. Pinning it needs a rendered frame, which
+    this machine cannot produce - the same missing graphics device that keeps
+    `VisibilityTests.RoadsAreActuallyDrawn` red under -nographics. A helper
+    that asserted the gate's own boolean would prove nothing about the order
+    of the draw calls, which is what a regression would break, so none was
+    written.
+  - `LoadoutPanel` draws its own IMGUI and is not gated on the spectator. It
+    opens on `TruckHealth.Respawned`, and spectate does not stop the world:
+    the truck still stands in the depot while the war runs. If it were written
+    off during a spectate the ramp would open over the price-only view. Not
+    observed in 60 s of spectating, and unlikely because an empty bed is heat
+    zero and the tank reach at heat zero is the base 34 m while the depot is
+    far from the front. Listed so it is not rediscovered as a fault rather
+    than guarded against on a case nobody has seen.
