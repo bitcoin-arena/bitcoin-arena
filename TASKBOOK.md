@@ -12390,3 +12390,60 @@ not hand out (1), a void stake counted into the pool (4).
 
 TESTS. protocol 135 -> 136, blwp-node 66, blwp-client 72, core 85. Money guard
 9 files clean, determinism guard 19 clean. No Unity, no C#, no floats.
+
+## M2.1 23.2: the hold as state, and where each of the three fates ends
+
+WHAT EXISTED, COUNTED BEFORE THE CUT. `invoice` and `htlc` appeared four times
+across the source packages and every one was a comment; `stakeCommitment` - a
+field of the signed entry contract - was the only real thing. The three fates
+were words on a decision with no state behind them.
+
+  invoice   src 3 files, all comment lines
+  htlc      src 2 files, all comment lines
+  preimage  src 3 files
+  stakeCommitment  src 2 files, 12 test files
+
+WHAT LANDED. `holdAfter` gives a hold the four ends it can have - HELD,
+SETTLED, CANCELLED, EXPIRED - and says who has the money at each. The machine
+leans one way on purpose, which is 23.2's own sentence: "The default path -
+nobody acting - is always the refund."
+
+  nobody acts             EXPIRED, the payer has it, whatever was to be done
+  NOTHING (a VOID)        EXPIRED - NOT cancelled. A cancel is an ACT needing
+                          five of seven, and a refund that needed an act is one
+                          an operator could withhold by doing nothing.
+  SETTLE, authorised      SETTLED, the pool has it
+  CANCEL, authorised      CANCELLED, the payer has it
+  anything unauthorised   HELD, nobody has it - "in flight, in nobody's
+                          balance", and if the conditions never come it expires
+                          back to the payer anyway
+
+MEASURED ON ONE ROUND CARRYING ALL THREE:
+
+  winner  CANCEL  -> CANCELLED, the payer
+  loser   SETTLE  -> SETTLED,   the pool
+  void    NOTHING -> EXPIRED,   the payer
+  pool 100000, refunded 200000, pool - shares 0, two rows in the table
+
+MUTANTS, six, all red: a VOID hold cancelled instead of expiring (2), a VOID
+hold settled (1), a hold nobody acts on left with the house (2), an
+unauthorised settle going through (1), a settled hold going to the payer (1), a
+void stake counted into the pool (5).
+
+STILL A COMMENT, AND THAT IS THE ANSWER TO "IS VOID PROTOCOL-COMPLETE": the
+STATE is complete and the TRANSITIONS are complete; what does not exist is
+anything that issues, settles or cancels a real invoice. That is a Lightning
+endpoint, not a rule, and it is blocked the same way slashing is - both need a
+daemon this package will not pretend to have.
+
+AND THE GAP THAT STAYS WITH THE LIGHTNING WORK, in one clause: 23.1 sizes CLTV
+beyond round plus windows, the contract measures the round in ticks, an HTLC is
+in time, and there is no protocol tick rate to convert - so that check is not
+this cut and no constant was invented for it.
+
+ONE FAULT OF MINE, worth writing down because it cost a run: `packages/*/src`
+inside a block comment closes the comment at the `*/`, and the test file would
+not parse.
+
+TESTS. protocol 136 -> 138, blwp-node 66, blwp-client 72, core 85. Money guard
+9 files clean, determinism guard 19 clean. No Unity, no C#, no floats.
