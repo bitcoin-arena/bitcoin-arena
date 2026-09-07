@@ -11310,3 +11310,17 @@ TESTS. blwp-client 69 -> 72, protocol 104/104, blwp-node 41/41, core 85/85.
 Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
 Bundle 127.3 -> 128.5 KB, 17 modules. No C#, no Unity, nothing deployed;
 daily 0.0.567.
+
+CLIENT-SIDE 5-OF-7 CLOSED, at a668be7. All three places the head can be set
+are accounted for: NO_PREVIOUS at the start of a round, the mark path gated at
+five (5480b41), and the resume path gated at five (a668be7). Grepping every
+assignment is what found the second one AFTER the first had been called done.
+
+  blwp-client 72, protocol 104, blwp-node 41, core 85  -  302 green, none red,
+  none skipped. Determinism guard 19 files clean, money guard 9 files clean.
+  Bundle 128.5 KB, 17 modules. PlayMode 213/189/11/13 and EditMode 185/181/1/3
+  stand from 7b4caea; no C# has moved.
+
+Not deployable, and a player sees nothing: no page defines BLWP_CHAIN so the
+session never opens, the jslib has not been linked since 606f54d, and nothing
+has run in a browser since 7b4caea. Daily 0.0.567.

@@ -21,10 +21,13 @@ Top item first. Finish and deploy before starting the next.
                                             asks two declared providers for a
                                             chain it anchors on genesis, and
                                             reads its node's address out of a
-                                            bond proven into it. Next: the
-                                            quorum rule in step 3, which needs
-                                            the other six daemons. Numbers and
-                                            leftovers: TASKBOOK.
+                                            bond proven into it, and a mark is
+                                            live only when five committee
+                                            members have receipted it — on the
+                                            mark path and on resume. Next: the
+                                            rest of the quorum rule in step 3,
+                                            which needs the other six daemons.
+                                            Numbers: TASKBOOK.
    13  M1.a16 playable hunt            M1   done — the hunt is winnable
                                             through the front and the rim
                                             pays almost nothing; spectate is
@@ -632,11 +635,15 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      itself on one mark is refused by name. Measured across two real node
      processes: a mark receipted on one, gossiped to the other, recovered
      byte-identical from either.
-     QUORUM: counted, not decided. `receiptCount` answers how many different
-     committee members have receipted a mark - 13C's threshold is five - and a
-     seven-member round is measured carrying one from every member. Whether a
-     count is enough, and the no-quorum rule, need the other six daemons and
-     are the next sub-item; nothing about a committee was invented here.
+     QUORUM: the client half is DONE. A mark is live only when five distinct
+     committee members have receipted it, and the head advances on live rather
+     than on the first receipt - on the mark path and on the resume path, which
+     took the node's last mark on that node's word alone until a668be7. Below
+     five a mark is pending, which is not failed: no run is voided and nothing
+     is lost for the player. What is left of 13C is the no-quorum outcome
+     (FORFEIT against VOID after the result window) and the slashing of nodes
+     that contradict a replay; both need the other six daemons. Numbers:
+     TASKBOOK.
      BATCH RESUME: DONE. The client publishes its own input batches now -
      nothing but tests did before - and `resume` reads the transcript the node
      already served, checks it rather than taking it, and comes back with the
