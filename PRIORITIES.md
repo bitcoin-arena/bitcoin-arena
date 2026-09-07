@@ -16,12 +16,12 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-   14  M2.1 checkpoints               M2   OPEN — the client plays the round
-                                            the player was given, and talks
-                                            only to a node that round names,
-                                            at an address proven against a
-                                            block header. Next: 5c, the chain
-                                            source. Numbers: TASKBOOK.
+   14  M2.1 checkpoints               M2   OPEN — 5b done: the client plays
+                                            the round in the address bar and
+                                            talks only to a node that round
+                                            names, at a proven address. Next:
+                                            5c, the chain source. Numbers and
+                                            three named leftovers: TASKBOOK.
    13  M1.a16 playable hunt            M1   done — the hunt is winnable
                                             through the front and the rim
                                             pays almost nothing; spectate is
@@ -675,21 +675,14 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
          light client.
        - **The advertisement in the witness** of the same transaction, so
          the transaction that proves the bond also carries the endpoint.
-         DONE. The live client path reads the endpoint out of a bond
-         transaction it has proven into a block, and `BLWP_NODE` is gone;
-         the txid and the commitment are computed from the transaction
-         rather than handed in beside it, which is what the first cut
-         still allowed. Step 4 also reads step 3's answer now: an
-         advertisement for a node this round's contract does not name is
-         refused at the door, before the round is opened and before any
-         section 11 input is published, and so is an endpoint that is not
-         a `wss://` socket address or a body not signed by the node it
-         names. And the contract itself must hash to the `round_id` the
-         player was given, or the committee check is circular: the page
-         wrote the list it would otherwise be checked against.
-         What is left of 5b is `BOND_MARKER`, which has no value,
-         so a bond can be proven once shown but not found - a genesis
-         parameter rather than a step. Numbers: TASKBOOK.
+         DONE. The client reads the endpoint out of a bond transaction it
+         has proven into a block, refuses a node this round's contract does
+         not name, and refuses a contract that does not hash to the round id
+         the player was given - all before anything is sent. `BOND_MARKER`
+         is what remains of 5b and it is a genesis parameter, not a step.
+         Three named leftovers - the address-bar limit, which committee
+         member is asked first, and the page-chosen entry contract (a later
+         M2.1 item) - are written down in TASKBOOK, not here.
 
   5c. **The chain source: our own mempool.space, verified not trusted.**
 

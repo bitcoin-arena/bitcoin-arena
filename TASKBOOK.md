@@ -10463,3 +10463,33 @@ TESTS. blwp-client 35 -> 37, protocol 101/101, blwp-node 41/41, core 85/85.
 Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
 No C#; PlayMode and EditMode stand from 7b4caea. The jslib is still source, not
 a built artefact - no Unity run this turn. Nothing deployed; daily 0.0.567.
+
+## M2.1 5b - closed, and the three leftovers it does not cover
+
+The door is three things, measured: the endpoint comes from a bond transaction
+proven against a block header, a node this round's contract does not name is
+refused, and a contract that does not hash to the round id in the address bar
+is refused before anything is sent. Nothing in the live path talks before
+`Client.at`.
+
+These three are NOT bugs against that door and no code on this letter touches
+them. They are written down so they are not rediscovered as surprises.
+
+1. A LIMIT, not a bug. The round id is read from `location.search` when
+   `net.open` runs, not at first paint, so a page that rewrote its own address
+   bar first would be checked against its own rewrite. What the check buys is
+   therefore precise and worth stating exactly: the id the player CAN STILL SEE
+   is the one that is checked. That is not fixable from inside the client, and
+   pretending otherwise would be worse than naming it.
+
+2. WHICH OF THE SEVEN. The page chooses which named committee member receives
+   the entry and the opening transcript. All seven are named by the round, so
+   the door is satisfied; what is left is that one member sees it first. That
+   is quorum and liveness - 13C wants receipts from at least five, and gossip
+   is what spreads it - and it waits with the quorum work, not here.
+
+3. THE SAME SHAPE ONE LAYER UP, AND IT IS WHERE THE MONEY IS. `BLWP_ENTRY` -
+   `stakeMsat`, `feeMsat`, `donationMsat`, `playerPubkey` - is still written by
+   the page and bound to nothing the player supplied. The round-id bind fixed
+   "which round"; nothing yet fixes "what am I paying". A LATER NAMED ITEM ON
+   M2.1, deliberately not implemented now.
