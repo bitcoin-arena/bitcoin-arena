@@ -12561,3 +12561,68 @@ which is what this cut asked for - that is the blocked half, and it is blocked
 the same way slashing is.
 
 NOTHING WAS FAKED AND NO ENDPOINT WAS INVENTED. No code changed this turn.
+
+## M2.1 23: the invoice a player is asked to pay, and the construction it sits in
+
+TWO PIECES THAT NEEDED NO DAEMON, and neither of them issues, settles or
+cancels anything.
+
+THE CHECK BEFORE THE MONEY IS IN FLIGHT. 23.1: the endpoint issues a hold
+invoice for `payment_hash`, the player's wallet pays it, and from that moment
+the stake is committed. Nothing checked that invoice against the entry the
+player signed.
+
+  hash = stakeCommitment, amount = stakeMsat   accepted
+  another hash                                 refused: "nobody could ever
+                                               settle it" - the committee's
+                                               shares reconstruct a preimage
+                                               for a different hash
+  one byte of the hash flipped                 refused
+  100001, 99999, 0, 1000000 msat               each refused by its own number
+  no entry, a number instead of BigInt,
+    a 31-byte hash                             refused
+
+Both sides come off the SIGNED entry contract, so this takes nobody's word: the
+player is checking an invoice against the thing they themselves signed. Fees
+and the donation are charged on top at entry (18), which is why the amount
+comparison is exact and not a floor.
+
+THE CONSTRUCTION FIELD. 23.6: "The Round Contract names which construction it
+uses", and it names two - a threshold-signed Lightning node, which the spec
+calls "emerging technology rather than a solved product", and a Fedimint-class
+federation, "production-ready today, with an identical trust statement". Same
+residual, different maturity. `custody` is a u8 in the round contract now:
+
+  round-trips                       THRESHOLD_LN and FEDERATION both
+  the other construction            a DIFFERENT roundId - a round settled under
+                                    one cannot be replayed as the other
+  a word nobody named               refused, not encoded as zero
+  vectors                           of nine files only `contracts.json` moved
+
+Naming a construction is not implementing one. Neither exists in this repo.
+
+MUTANTS, five, all red: the payment hash not compared (1), the amount not
+compared (1), paying MORE than the entry staked allowed (1), the construction
+left out of the contract (4), any word accepted as a construction (1).
+
+TESTS. protocol 138 -> 140, blwp-node 68, blwp-client 72, core 85. Money guard
+9 files clean, determinism guard 19 clean. No Unity, no C#.
+
+WHAT IS LEFT ON ITEM 14, each named by what blocks it:
+
+  issue / settle / cancel a hold invoice   DAEMON. 23.6's threshold-LN node or
+                                           Fedimint federation; a quorum
+                                           operating real channels.
+  slashing                                 DAEMON. 5A.3B's bond output, MuSig2,
+                                           an arbitration quorum.
+  the committee re-run after a valid
+    objection                              DAEMON. Six more nodes, and a replay
+                                           the daemon deliberately cannot do.
+  CLTV sizing                              UNIT. The contract measures the
+                                           round in ticks, an HTLC in time, and
+                                           no protocol tick rate exists. Not a
+                                           guess to be made here.
+  the Feldman residual on the VSS          BUILDABLE, but only with a
+                                           discrete-log group this package does
+                                           not carry - so it is a decision
+                                           before it is work.
