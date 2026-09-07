@@ -16,11 +16,11 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-   14  M2.1 checkpoints               M2   OPEN — step B done: the game
-                                            opens a session, publishes on a
-                                            cadence and carries on through a
-                                            dropped socket. Next:
-                                            backpressure. Numbers: TASKBOOK.
+   14  M2.1 checkpoints               M2   OPEN — backpressure done: a
+                                            dropped tick VOIDs the run and
+                                            the transcript stops there.
+                                            Next: entry quotas (step 4).
+                                            Numbers: TASKBOOK.
    13  M1.a16 playable hunt            M1   done — the hunt is winnable
                                             through the front and the rim
                                             pays almost nothing; spectate is
@@ -647,10 +647,16 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      finished.
   4. **Entry quotas.** A funded entry before the node stores a byte.
      Comes before opening a port to anyone else, not after.
-  5. **Backpressure and reconnection.** Inbound DONE: the socket caps a frame
-     at the longest message the protocol can encode, and a batch may not be
-     longer than the round's own `blockTicks`. Still open: watching outbound
-     `bufferedAmount`, and a resume point a reconnecting client can ask for.
+  5. **Backpressure and reconnection.** DONE. Inbound was already capped: the
+     socket refuses a frame longer than the protocol can encode, and a batch
+     may not be longer than the round's own `blockTicks`. Outbound now: the
+     hold is bounded by the round, one publish is in flight at a time, a mark
+     is skipped rather than queued, and a dropped tick VOIDs the run so no
+     mislabelled transcript is ever published. A reconnecting client asks for
+     its resume point and carries on at the tick the node is owed. Numbers,
+     mutants and the two parked items - `bufferedAmount` known-untested, and a
+     page reload ending the session because the key lasts the run - are in
+     TASKBOOK.
 
   5b. **Discovery: read it off the chain** (spec 25.1). A node's address
      is in its own bond funding transaction, so there is no directory to
