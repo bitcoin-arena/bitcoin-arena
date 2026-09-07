@@ -10814,3 +10814,64 @@ missing.
 TESTS. blwp-client 50 -> 57, protocol 104/104, blwp-node 41/41, core 85/85.
 Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
 No network beyond 127.0.0.1. No C#, no Unity, nothing deployed; daily 0.0.567.
+
+## M2.1 5c slice 3: the winner has to be Bitcoin's chain, not a chain
+
+WHAT AGREEMENT AND MINING DID NOT BUY. Together they prove only that a set of
+headers is a chain of SOMETHING. Mining a short chain at trivial difficulty
+costs almost nothing, so a client whose whole provider list belongs to one
+operator - two hostnames, one machine, which the origin tag catches only when
+it is obvious - took that operator's fork by default: there was nothing heavier
+to weigh it against.
+
+THE ANCHOR IS REQUIRED AND MAY NOT COME FROM THE PAGE. An anchor an attacker
+supplies is no anchor, because he would name a block of his own fork. It is a
+caller's argument, brought by the client.
+
+  no anchor                 refused, and this is the measured "before": two
+                            providers agreeing perfectly on a four-header
+                            chain he mined himself, every header meeting its
+                            target, and nothing to refuse him with
+  his chain, with an anchor  "only 0 of 2 providers gave a chain", both named
+                            "this chain does not contain ..., the block this
+                            client is anchored to". It is not weighed at all -
+                            it is an answer to a different question.
+  the honest chain          accepted, 3 headers, work 24135148547246749491129
+  the fabricated header     still refused, unchanged from 969370c
+
+`BITCOIN_MAINNET_GENESIS` is in `protocol/src/chain.js`, hashing order, and the
+test checks it displays as
+000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f. It is not a
+parameter and not a choice: that number IS mainnet, anyone can check it, it
+cannot go stale, and no operator can change it.
+
+THE SPEC'S OWN NUMBER IS WRONG, and it decides checkpoint-vs-genesis. 25.1 says
+"80 bytes a block; under 4 MB for all of history". Measured: 500,000 headers is
+38.1 MB, 800,000 is 61.0 MB, 900,000 is 68.7 MB - seventeen times the figure in
+the spec. No browser will fetch that to open a round, so a deployment will
+anchor on a later block instead, which is a constant somebody must choose and
+keep fresh. WHICH block is not decided here; that there must be one is.
+
+A BRANCH DELETED RATHER THAN LEFT UNREACHABLE. The "answers about different
+parts of the chain" refusal from the last cut cannot happen any more: every
+chain that gets weighed contains the anchor, so any two of them share at least
+that block. Keeping it would have been a branch no test and no mutant could
+reach. The same fact is said earlier now, per source, by name.
+
+MUTANTS, four, all red: the anchor made optional (2), a chain not required to
+contain it (2), the anchor checked only on the winner rather than per source
+(2), and the genesis constant changed by one byte (1).
+
+WHAT SHARE THIS CLOSES. The chain source had one hole left after headers, PoW
+and the bond, and this is it: the anchor accounts for essentially all of the
+remaining chain-source gap. What is left is not the chain source.
+
+LEFTOVERS OF THIS SLICE, not a new letter: the merkle-proof envelope is still
+the test's rather than a real API's; `bond.js` is not in the bundle; the live
+path still takes `chains` from the page, so the door is not yet fed by
+`agreedChain`; and which block a deployment anchors on - genesis at 68.7 MB or
+a shipped checkpoint that must be kept fresh - is a constant nobody has chosen.
+
+TESTS. blwp-client 57 -> 59, protocol 104/104, blwp-node 41/41, core 85/85.
+Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
+No network beyond 127.0.0.1. No C#, no Unity, nothing deployed; daily 0.0.567.
