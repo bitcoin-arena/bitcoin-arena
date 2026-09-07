@@ -11639,3 +11639,35 @@ The eleven earlier mutants on this letter were re-run and stayed red.
 TESTS. blwp-node 61 -> 63, protocol 104, blwp-client 72, core 85 - 324 green,
 none red, none skipped. Determinism guard 19 clean, money guard 9 clean. No C#,
 no Unity, nothing deployed; daily 0.0.567.
+
+## M2.1 13B doors closed at f26cd26 — what was measured, and what was assumed
+
+MEASURED, this turn, by running the suites and driving the doors:
+
+  protocol      104 / 104 green
+  blwp-node      63 /  63 green
+  blwp-client    72 /  72 green
+  core           85 /  85 green
+                324 green, none red, none skipped
+  determinism guard   19 files clean
+  money guard          9 files clean
+  the no-core test     green by name
+
+  GET /equivocation, fork held      200, x-equivocations 1, 462 bytes
+  a stranger with only the entry id verifies "two chains from one parent",
+                                    ticks [120, 180]
+  both limbs held                   x-equivocations 2, 924 bytes
+  GET /foreign-receipts             200, x-foreign-receipts 1, byte-identical
+                                    to what the member signed
+  a node holding none               204, and it cannot invent one
+  tick 30 claiming to follow 60     refused with the same words, and KEPT
+  an honest stale head              kept and NOT published
+
+ASSUMED, and said so rather than counted: PlayMode 213 / 189 green / 11 red /
+13 skipped and EditMode 185 / 181 green / 1 red / 3 skipped carry from 7b4caea.
+They were NOT re-run. The argument is that no C#, no asset and no jslib has
+changed since, which is checkable in the log and is not a measurement of Unity.
+The eleven reds are the known list: the retired C# army group, CombatFx reading
+a `Shot` event that no longer fires, and the TheGogglesAnimate load flake - and
+eleven is the known list rather than a stable count, since the same code has
+produced 13 and 12 on consecutive runs.

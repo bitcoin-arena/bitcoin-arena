@@ -23,12 +23,15 @@ Top item first. Finish and deploy before starting the next.
                                             reads its node's address out of a
                                             bond proven into it, and a mark is
                                             live only when five committee
-                                            members have receipted it — on the
-                                            mark path and on resume. Next: the
-                                            rest of 13C — VOID with the HTLC
-                                            refund, and slashing — which needs
-                                            the other six daemons.
-                                            Numbers: TASKBOOK.
+                                            members have receipted it. The
+                                            13B fork-proof doors are closed: a
+                                            node publishes the proof it holds,
+                                            a stranger fetches it by entry id,
+                                            and every refusal keeps the signed
+                                            mark. Next: the rest of 13C — VOID
+                                            with the HTLC refund, and slashing
+                                            — which needs the other six
+                                            daemons. Numbers: TASKBOOK.
    13  M1.a16 playable hunt            M1   done — the hunt is winnable
                                             through the front and the rim
                                             pays almost nothing; spectate is
