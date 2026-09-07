@@ -10002,3 +10002,72 @@ TWO THINGS NAMED ON THIS PATH, one accepted as untested and one that is a hole.
   session should stop publishing and say the run is lost, rather than carry on
   with a mislabelled chain. That is a decision about what a client does when it
   can no longer be honest, so it is named here rather than taken.
+
+
+## 2026-09-07 18:05  M2.1: a dropped tick ends the run instead of minting a false transcript
+
+Daniel's pick, and the reasoning is his: BLWP needs a transcript independent
+nodes can replay and agree on. Relabelling batches from the real tick would
+still emit a stream that looks like a valid transcript with a hole in it.
+Honesty is the client's job - one that can no longer produce a contiguous input
+tape must say so and stop.
+
+THE ENDING IS VOID. Not DELIVERED, because nothing was. Not PLAYER_LOST, which
+would claim a completed simulation nobody has. A slow node filling the hold
+must not become a house win, and a player cannot use it as a way out either:
+the answer is the same whoever caused it, because an incomplete tape can be
+neither a win nor a certified loss.
+
+  on the first dropped tick   publishing freezes, the socket is closed, the run
+                              is VOID with a reason that names the tick
+  nextTick never moves        for a tick that was not published - it only ever
+                              advanced on an accepted batch, and it does not
+                              advance now either
+  a second line               `nextTick + held` must equal `offered` before any
+                              batch leaves. Every tick a client accepts is
+                              either published or still held; if those part, a
+                              batch would name ticks it does not carry, and it
+                              does not go
+  a reconnect is untouched    `resume` reconciles `offered` with the tick the
+                              node is owed, so carrying on after a dropped
+                              SOCKET does not read as a dropped TICK
+
+MEASURED on the hold-full path, a 600-tick round, printed rather than
+described:
+
+  published a round    batches 1  nextTick 600  held   0  offered  600  dropped 0  marks 1  ending -
+  hold full, +1 tick   batches 1  nextTick 600  held 600  offered 1201  dropped 1  marks 1  ending VOID
+  asked to publish     batches 1  nextTick 600  held 600  offered 1201  dropped 1  marks 1  ending VOID
+  reason: "a tick was dropped at 1201: the hold was full at 600, so no
+           transcript from here can be replayed"
+  what a verifier can fetch afterwards: x-ticks 600, marks 1
+
+  Before this the same sequence would have gone on publishing: the batch chain
+  would have numbered 600, 601, 602 while carrying the inputs from tick 1201
+  onward, and the marks would have said 1800 - a plausible-but-wrong tape. Now
+  the publish count is frozen at 1, the tick numbering at 600, and what the
+  node can hand a verifier is exactly the part that was honest.
+
+MUTANTS, four, and the second found a test that was not testing:
+  a dropped tick only counts                    2 red
+  publishing is not frozen after the end        SURVIVED. On the dropped-tick
+                                                path the run ends AND the
+                                                numbers part in the same
+                                                instant, so `drain` refused for
+                                                the second reason whether or
+                                                not it looked at the first. A
+                                                case where the run has ended
+                                                and the counts still agree
+                                                tells them apart; the mutant
+                                                then goes red.
+  the numbers are not checked before a batch    1 red
+  the ending is a player defeat                 3 red
+
+TESTS. blwp-client 22 -> 26, four new. blwp-node 37/37, core 80/80 with the
+determinism guard 19 clean, protocol 78/78 with the money guard 7 clean. No C#
+changed - the client, its bundle and the template copy - so PlayMode stays
+213 / 189 green / 11 red / 13 skipped and EditMode 185 / 181 green / 1 red / 3
+skipped from the run at 7b4caea.
+
+Still parked by decision: `bufferedAmount` known-untested, and the session key
+lasting the run so a page reload ends it.
