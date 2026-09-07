@@ -648,6 +648,14 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      (FORFEIT against VOID after the result window) and the slashing of nodes
      that contradict a replay; both need the other six daemons. Numbers:
      TASKBOOK.
+     THE MONEY TABLE (13C): DONE. A VOID stake is cancelled back to the
+     payer, a forfeited one is spent on the winner, and a delivered player
+     below the score keeps theirs - the table names which stakes enter the
+     pot and `holdSettlement` only carries that out. What may be taken is
+     checked equal to what is handed back, so a pool with no qualifier is
+     refused rather than kept: the operator takes nothing in every
+     combination measured. Next: the Lightning that settles or cancels an
+     invoice, and slashing. Numbers: TASKBOOK.
      EQUIVOCATION PROOF (13B): DONE, BOTH LIMBS. The second world a player signs at a
      tick is still refused, and is now KEPT beside the first instead of
      thrown away - 13B calls the two records a complete portable proof and

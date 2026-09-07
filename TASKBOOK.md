@@ -11853,3 +11853,37 @@ C#, no jslib, no Unity.
 STILL NOT DONE: Lightning actually settling or cancelling an invoice, the
 result window, and slashing. This decides which answer each hold gets; doing it
 is the operator's plumbing.
+
+## M2.1 13C payout table: every outcome combination, probed
+
+Not reasoned about - run. `settled + refunded == every stake` is the
+"accounted" column, and the operator column is what the house would keep:
+
+  FAILED only                     REFUSED: "would keep 200000 msat"
+  FAILED + VOID, no qualifier     REFUSED: "would keep 100000 msat"
+  FORFEIT only                    REFUSED: "would keep 100000 msat"
+  FAILED + below-score DELIVERED  REFUSED: "would keep 100000 msat"
+  below-score DELIVERED only      settled 0, refunded 100000, operator 0, accounted
+  two DELIVERED, both qualify     settled 200000, refunded 0, paid 200000, operator 0
+  VOID only                       settled 0, refunded 200000, operator 0, accounted
+  no entries at all               all zero, accounted
+  one DELIVERED, zero stake       all zero, accounted
+
+So a pool with no qualifier is refused in every shape it comes in, and every
+shape that answers has the operator at zero with every stake accounted for.
+
+THE GUARD CANNOT BE WRONGLY SKIPPED, which is the one thing worth checking
+about `if (activated.length && settledMsat !== paidMsat)`: a mismatch needs a
+SETTLING entry, and a settling entry is an activated one, so there is no input
+where money moves and the check is skipped. `holdSettlement` recomputing
+`activated` for that length is a second computation of the word but not a
+second decision about pot membership - the pot is `table.settling` and nothing
+else reads anything else.
+
+WHAT REMAINS OF 13/13A/13C, and it is 5 pieces: the result window that says
+when to ask, `PlayerResult` with 5-of-7 on a result and PROVISIONALLY_FINAL,
+the objection window, slashing, and the Lightning that actually settles or
+cancels an invoice. FOUR are protocol rules and ONE is operator plumbing. Of
+the four rules, three need the committee to exist; the exception is the
+`PlayerResult` OBJECT and its signature, which can be built on one node exactly
+as `CheckpointReceipt` was built before anything issued one.
