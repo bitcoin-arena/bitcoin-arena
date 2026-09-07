@@ -8640,3 +8640,79 @@ redeployed). The probe was run again against the deployed page:
 
 So the two numbers now sit next to each other in one line and say different
 things, and the one that means something says the tyre is on the road.
+
+
+## 2026-09-07  M1.a15 audited: three leftovers found, all closed
+
+Asked whether a15 needed anything else, the answer was yes three times.
+
+ENGINE COMPARISON FIRST, since that is what the question asks for. There is no
+C#-versus-core pair to compare here: the wheel seating already comes through
+the core. `RoadNetwork.Ground` is documented as the funnel - "it comes from
+the CORE, `surfaceAt` in sim.js is the one thing that says what the ground is,
+and it is the relief LESS the craters" - and Unity contributes only the deck it
+draws on top. The live probe prints both sides on every line and they agree:
+`core-terrain 0.000` on 35 of 37 lines and -0.001 on the other two. Off a
+lane the two are identical to the millimetre (core 1.944, terrain 1.944, deck
+lift 0.000); on a lane the drawn surface is the core's plus the deck (core
+4.531, ground 4.831, deck lift 0.300), which is the renderer adding the road
+it draws and not a second opinion about the ground.
+
+CHECKED AND CLEARED, so it is not left as a suspicion: the two red tests named
+"stands in the ground" - `ImportedModelTests.TanksStandOnTheGroundRatherThanInIt`
+and `SoldiersStandOnTheGroundAndAreAnimated` - are not a seating fault. They
+fail with "no tank hulls found" and "no soldiers found": the C# army is retired
+and there is nothing in the scene for them to measure. Same for the three
+`VehicleTests` nulls. They stay on the known list.
+
+1. THE WHEEL ROLLED ON THE COLLIDER'S RADIUS. `_spin` was advanced on
+   `_wheelRadius`, the WheelCollider's 0.550 m, while every seating line used
+   the mesh's 0.523 m - the same leftover 3bd4208 took out of the seating and
+   left in the rolling. The tyre turned 5.2% slower than the ground it stands
+   on and slipped for the whole drive. Now `_rollRadius`, the mesh's own mean.
+   Measured, not declared: 9.00 m of road turns a 0.620 m stand-in 832 deg,
+   and the mutant that rolls on the collider turns it 938.
+
+   That test was VACUOUS when first written and said so on the second run: the
+   stand-in was 0.550 m and the collider is 0.550 m, so both radii turn the
+   wheel through the same angle and the mutant survived. The stand-in is 0.620
+   now, and the test refuses to run if the two are within 0.02 m of each other.
+
+2. THE INSTRUMENT SHIPPED. The `[wheel]` line was printing to the console of
+   the live build every two seconds. The finding it produced is closed and held
+   by tests, so it is behind `GameSettings.Debug` now - the DEBUG icon on the
+   HUD brings it back when it is wanted again.
+
+3. THE ROAD WAS NOT DRAWN WHERE THINGS STOOD ON IT. `RoadNetwork` said so
+   itself, in a comment ending "whether that is the gap in the photograph is a
+   measurement, not an argument". It is 0.272 m, measured against the ribbon's
+   OWN vertices in a built world, at (59.7, 45.2), over 804 drawn
+   cross-sections.
+
+   Two causes, one fix. The ribbon lays two vertices per cross-section and
+   spans them flat, so the drawn road is a CHORD between its edges while
+   everything on it was seated on the ground under its own feet - above that
+   chord over a crest, below it in a hollow. And the mesh drops a worn stretch
+   by `broken * 0.55` on one edge and `broken * 0.30` on the other, drawing a
+   rut the seating had never heard of. `SurfaceHeight` now builds the ribbon's
+   surface the way the mesh builds it: the same `side`, the same two edge
+   samples, the same wear across the width, and the same shoulder fade so
+   nothing steps at the edge. Worst gap 0.272 m -> under 0.02 m.
+
+   Mutant: `SurfaceHeight` back to `Ground + Lift` goes red at 0.272 m.
+
+   TWO FAULTS IN THE TEST ITSELF, both found by running it rather than reading
+   it. It walked every `Road_` mesh in the scene, and the full suite leaves
+   earlier worlds standing: it compared one network's ribbon against another
+   network's model, and a network whose terrain has since been destroyed
+   answers 0 for the ground while still holding the mesh it built when the
+   terrain was there. That produced a 2.34 m disagreement about a road that is
+   fine. It now walks the network the TRUCK is seated by.
+
+TESTS. PlayMode 215 / 188 green / 12 red / 15 skipped. Eleven are the known
+list; the twelfth is `ScoreTests.IdlingEarnsNothingEvenOnTheSeam`, the load
+flake from earlier today - green when run alone, green on the run before this
+one. EditMode 159 / 155 green / 1 red / 3 skipped, the known CombatFx one.
+`RampReadyTests.TheRealTransactionsReplaceTheStandInsWhileNothingIsLoaded`
+went red once under load and is green alone; named because it had not been
+seen before.
