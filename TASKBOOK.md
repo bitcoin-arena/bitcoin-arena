@@ -8325,3 +8325,29 @@ own last warm rate now.
   before  ScoreTests 9 tests, 5 of them measuring the C# formula
   after   ScoreTests 4 tests, all of them Unity's own behaviour
           packages/core 79 tests, 79 green
+
+
+## 2026-09-07  the score on the daily is the core's, read off the screen
+
+Deployed and photographed at 1024x768 in a browser, practice mode, with the
+core's own readout in the same frame:
+
+  on screen   SCORE 311   ·   DANGER x1.00   ·   CARGO 9 parcels, 2,897 sat
+              BANKED 0, "yours only if you reach the drop-off"
+  readout     core DRIVING · tick 1048 · pos -10.8, 8.0 · practice on (scene)
+
+THE TWO NUMBERS CLOSE. `scoreOf(exposure, 1048, 0.70)` returns exactly 311 for
+an exposure of 94.63, and the time factor at 1048 ticks is at its 1.5 ceiling.
+DANGER reads x1.00 because the meter is `clamp01(exposure)` and 94.63 saturates
+it - consistent, not contradictory. The cargo term is 0.70 because that is what
+`init` writes and nothing in Unity sets it.
+
+And the stronger fact: there is no longer any other formula it COULD be.
+`Projected` is `BlwpCore.RunScore()` and nothing else - the C# arithmetic that
+used to sit behind `FromCore` is deleted. Before this letter the same screen in
+the same mode read SCORE 0, because the HUD showed the last run's number while
+the truck was invulnerable.
+
+  live   btc-logistics-core.pages.dev/Build/webgl.wasm.unityweb
+         md5 62f9ef3497f8e903c97ec12d04172ae8, identical to the local
+         artefact, built from 4fb231c. btc-logistics-war.pages.dev untouched.
