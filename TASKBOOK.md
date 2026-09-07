@@ -9817,3 +9817,73 @@ THE THREE LEFTOVERS, named when B closed and not done in it:
     they are non-authoritative by definition - and never receipts."
   - a page RELOAD ends the run's ability to sign, because the session key
     lasts the run by design. Not a socket drop, and deliberately not handled.
+
+
+## 2026-09-07 16:30  M2.1 backpressure: a node can go away and the run comes back
+
+WHAT EACH HOLE COST, measured before writing anything.
+
+  the tick rate on this machine   649 batches x 6 = 3894 ticks in about 90 s,
+                                  so ~43 ticks a second headless; 60 in a real
+                                  browser
+  a tick on the wire              5 int32 words = 20 bytes
+  the node's caps                 a batch may not exceed the round's own
+                                  blockTicks (9000 in the test contract), and
+                                  MAX_INPUT_BATCH_BYTES is 1,835,087 which is
+                                  also MAX_FRAME_BYTES
+
+  HOLE 1, one reconnect only.  `net.tick` returned early for `error`, so the
+  moment that single attempt failed the session was finished: no tick and no
+  mark published again, and nothing tried again. Cost: ALL of the remaining
+  run, triggered by a blip of any length that happens to land while the node
+  is restarting. This is the likely one.
+
+  HOLE 2, the hold grows.  It grows at 20 bytes a tick, so ~1.2 KB/s at 60 Hz,
+  and it is bounded by the round - 9000 ticks is 180 KB - so memory was never
+  the danger. The danger is the WALL: past 9000 held ticks the drain is one
+  batch longer than the round allows, refused by name, put back, and re-sent
+  for ever. That is about 150 seconds of outage at 60 Hz, and after it the run
+  is stuck even when the network returns. Less likely, but unrecoverable.
+
+WHAT WAS DONE, three things and each of them the spec's own words:
+  - reconnect keeps trying, backing off 1, 2, 4, 8 seconds, until the run ends.
+  - a drain is chunked at 600 ticks, never more than the round's blockTicks, so
+    a long outage leaves as several ordinary batches instead of one the node is
+    bound to refuse.
+  - `bufferedAmount` is watched before queueing, IMPLEMENTATION.md: "ws buffers
+    without limit... above a threshold drop ghost frames first and never
+    receipts". There are no ghost frames yet, so the half that applies is: do
+    not add to a socket already backed up; the ticks stay held.
+
+MEASURED THE SAME WAY B WAS - real node, the real built player over HTTP, a
+real browser - with the node taken away ENTIRELY for 25 seconds, not just the
+socket terminated:
+
+  playing            batches 119  marks 11  receipts 11
+  node down          batches 119  marks 11  receipts 11   (nothing published,
+                     which is right - there is nobody to publish to)
+  node back, same port and same store
+  the page said      "resumed at tick 773 after 4 try(s), 119 batches and 11
+                     behind us"
+  after              batches 140  marks 13  receipts 13
+                     x-ticks 1628, transcript hash d00c13f0309ec82b...
+                     mark ticks 120, 180 ... 720, then 1560, 1620
+
+Four retries is the backoff working: 1 + 2 + 4 + 8 covers the 25 seconds the
+node was gone. Before this the first try would have failed and the session
+would have read `error` for the rest of the round. The transcript reaching
+1628 contiguous ticks is the proof the backlog drained in order - the node
+accepts no gap - and the 21 batches after the return are the chunked drain.
+
+AND THE NODE CAN NOW BE CLOSED. `close()` waited on `http.close`, which waits
+for open connections to end, and a play socket does not end on its own: the
+harness hung and the page kept publishing to a server that was supposed to be
+gone. It terminates its sockets first now. That is also what made a suite run
+hang for three hours earlier today - a test waiting on an answer from a socket
+that had gone quiet, with no timeout on the runner.
+
+TESTS. core 80/80 with the determinism guard 19 clean, protocol 78/78 with the
+money guard 7 clean, blwp-node 37/37, blwp-client 19/19. No C# changed in this
+piece - the jslib and the node's server only - so PlayMode stays 213 / 189
+green / 11 red / 13 skipped and EditMode 185 / 181 green / 1 red / 3 skipped
+from the run at 7b4caea.
