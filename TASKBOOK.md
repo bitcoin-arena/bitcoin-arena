@@ -11799,3 +11799,57 @@ NOT DONE: the result window that says when to ask, the Lightning that actually
 settles or cancels an invoice, and slashing. This decides which of the two
 things must be done to each hold; doing it is the operator's plumbing, and
 slashing needs the bond and the other six daemons.
+
+## M2.1 13C: the cautious player keeps their stake, and the table says who settles
+
+WHAT WAS WRONG. `computePayoutTable` has always carried the sentence "a
+cautious player keeps their stake and simply does not place", and then paid
+that player ZERO while their hold - not being VOID - settled. Zero paid and a
+stake taken is the operator keeping it. With no loser in the round the pool is
+empty and the table's own invariant was skipped, so nothing noticed.
+`holdSettlement` refusing that input was a detector, not the fix.
+
+WHAT LANDED. The table now names WHICH stakes enter the pot and returns that
+set; a delivered player below the score is not among them. `holdSettlement`
+reads that set rather than deciding again - two places deciding which stakes
+move is two places to get it wrong - and the balance check no longer waits for
+a non-empty pool, because an empty one was exactly where the money went
+missing.
+
+MEASURED, msat, all five fixtures:
+
+  fixture                     settled  refunded    paid  rows  winner  operator
+  DELIVERED+FORFEIT+VOID       200000    100000  200000     2  200000         0
+  DELIVERED+FORFEIT            200000         0  200000     2  200000         0
+  everyone VOID                     0    300000       0     0       0         0
+  bold+cautious, minScore 50   100000    100000  100000     2  100000         0
+  bold+cautious+FAILED         200000    100000  200000     3  200000         0
+
+Before, the fourth row could not be answered at all - `holdSettlement` refused
+it, and the table alone would have paid the winner 100000 while 100000 of the
+cautious player's money sat settled with nobody. The operator column is zero on
+every row, and that is the property.
+
+A ROUND NOBODY FINISHED. Everybody FAILED: the pool holds every stake and there
+is no qualifier to hand it to. The table answers without complaint, because its
+own invariant only applies when somebody qualified, so the only thing between
+the operator and the whole pot is this equality - "the operator would keep
+200000 msat: settled 200000 against 0 paid out". What such a round should do
+with the pot is a decision nobody has made; refusing is not that decision, it
+is declining to pay it to the house by default. One finisher and it answers:
+settled 300000, paid 300000, the finisher taking 300000.
+
+MUTANTS, five. Red: the cautious stake put back into the pot (2), holdSettlement
+deciding for itself instead of reading the table (2), a VOID hold settled to the
+operator (5), and the balance check removed (1). The balance check was 0 red
+against the fixed table until the no-finisher input existed - every other
+fixture balances by construction now - which is why that test was written
+rather than the check dropped.
+
+TESTS. protocol 109 -> 112, blwp-node 66, blwp-client 72, core 85. Money guard
+9 files clean, determinism guard 19 clean; every figure BigInt millisatoshi. No
+C#, no jslib, no Unity.
+
+STILL NOT DONE: Lightning actually settling or cancelling an invoice, the
+result window, and slashing. This decides which answer each hold gets; doing it
+is the operator's plumbing.
