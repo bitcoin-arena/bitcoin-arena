@@ -13345,3 +13345,127 @@ Four offences of 5A.3, all protocol-pure and none written: two results for one
 operator played (5A.13); a fee share claimed without the availability rule
 (22A). Then the distribution field, which moves round ids. Then steps 3 and 5 -
 the arbitration set - which stay blocked.
+
+## M2.1 5A.3 row 4: a settlement action 23.2 did not authorise
+
+**This accounts for 1 of the 4 that were missing**, and three remain.
+
+### Why this row of the four
+
+By count the four are equal, so the pick was by the class named: a
+deterministic recomputation with no attester injected. Row 4 is the only one of
+the four whose `F` is already in this package - `settlementAction` IS §23.2's
+table, and `SETTLEMENT_THRESHOLD` is its 5. Row 1 (two results for one player)
+is a signature comparison rather than a recomputation; rows 5 and 6 need rules
+the repo does not hold - §5A.13's `operator_id` linkage and §22A's availability.
+
+It is also the only one of the four where the player's money has ALREADY LEFT
+THEM when the offence happens: §23.2's SETTLE is the single direction that
+takes a stake.
+
+### What went in
+
+`TYPE_SETTLEMENT_RECORD = 0x0d` and `BLWP/v1/SettlementRecord`, both the next
+free number, because the spec names the record as a proof and gives it no
+encoding. The record is what a node DID and the conditions it published for
+having done it: round, entry, node, action, outcome, qualification, state,
+shares, signatures. The entry is in it because a settlement action is about one
+player's hold invoice - without it the action is against no particular money
+and its signature would carry to any entry of the round.
+
+`ACTIONS` / `actionByte` / `actionOf` in payout.js, so the three words have a
+wire byte and two implementations cannot spell one action two ways.
+`outcomeOf` in result.js, the inverse `decodePlayerResult` had inline - two
+copies of one mapping is two places for a byte to come to mean different
+things. ENTRY_VOID deliberately has no byte: widening `OUTCOMES` would move
+every result id, and §23.2 gives VOID and ENTRY_VOID the same action anyway.
+
+### Two ways to be wrong, and one that is not
+
+  - the counts the node itself published do not meet §23.2's requirements
+  - the action is not the one those conditions call for - settling where 23.2
+    cancels takes a qualifier's own stake into the pool WITH the signatures
+    that authorise a cancel, so the counts are met and the money still went
+    the wrong way
+
+And DOING LESS IS NOT AN OFFENCE. §23.2: "the default path - nobody acting - is
+always the refund. That is what makes infrastructure failure safe." A node that
+acted on nothing has taken nothing from anybody, and slashing for it would
+invert the one direction the design is built to keep safe: an operator could be
+punished for leaving a player their money.
+
+### The before and after
+
+One loser's stake, one settlement, and the only thing that moves is a count the
+node published about itself.
+
+| | 5 signatures | 4 signatures |
+|---|---|---|
+| `slashed` | false | true |
+| `bond` | **undefined - not even named** | `{txid 5555…, vout 3}` |
+| `offence` | - | `SETTLED_WITHOUT_AUTHORITY` |
+| why | 23.2 authorised SETTLE on those conditions | SETTLE needed 4 of 5 settlement signatures |
+
+Every one of §23.2's five conditions on a settle was measured separately -
+signatures, shares, a result that is PROVISIONALLY_FINAL, one that is
+SUSPENDED, and one that is not final at all - and each is slashed. A qualifier
+settled with a FULL seven signatures is slashed too, `due: CANCEL`.
+
+### Mutants: 15 planted, 15 killed, none retracted
+
+| mutant | protocol red |
+|--------|-------------:|
+| any settlement is authorised | 8 |
+| the counts need not be met | 6 |
+| the action need not be the right one | 3 |
+| doing nothing is slashable too | 2 |
+| the evidence need not be the named record | 2 |
+| another round's record counts | 2 |
+| another node's record counts | 2 |
+| a stranger can be slashed on a record | 2 |
+| the bond is the accuser's to name | 2 |
+| the shares are not one of the conditions | 3 |
+| the signatures are not one of the conditions | 5 |
+| finality is not one of the conditions | 2 |
+| qualification is not one of the conditions | 1 |
+| the entry is left out of the record | 2 |
+| the action is left out of the record | 4 |
+
+### A test of mine that was measuring nothing
+
+"a stranger cannot be slashed" left the PROOF naming a committee member while
+only the record named the stranger, so it stopped at "written by a different
+node" and never reached the committee check it claimed to be about. It passed
+either way, which is the worst kind. Fixed, not loosened.
+
+### The offence count moved for the second time
+
+`OFFENCES` was asserted in whichever file added a row last, so every new row
+broke the previous file's count. It is a claim about the MODULE, so it now
+lives once in `slash.test.js` and adding row 5 touches that line and no other.
+
+### Suites
+
+protocol 183/183 (was 171), blwp-node 70/70, blwp-client 89/89, core 80/80,
+money guard 10 files clean, determinism guard 19 files clean. Unity untouched:
+EditMode 190/186/1/3 and PlayMode 216/192/11/13 stand from 8cc7fdd.
+
+### The two leftovers from row 3, written down and left
+
+  - THE ACCUSED NODE'S SIGNATURE over the table - and now over the settlement
+    record - stays the caller's to verify. There is no curve in this package,
+    the same as every other slash row and the same as `provesEquivocation`,
+    which takes the session key from whoever holds one. It is not a hole in
+    this row; it is where the boundary is drawn for the whole package.
+  - SLASH DISTRIBUTION - "half to the affected players of that round, half
+    burned or to the remaining honest committee members, as fixed by the Round
+    Contract" - needs a contract field, and adding one moves every round id and
+    every vector with it. That is a later item on its own. Three unenforced
+    5A.3 rows are the bulk of the gap; paying out one slash is not.
+
+### What is left of slashing
+
+Three offences: two results for one (round, player); signing for a round the
+operator played (5A.13); a fee share claimed without the availability rule
+(22A). Then the distribution field. Then steps 3 and 5 of 5A.3B - the
+arbitration set - which stay blocked.
