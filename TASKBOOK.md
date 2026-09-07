@@ -13240,3 +13240,108 @@ settlement action without its 5-of-7, signing for a round the operator played
 (5A.13), and a fee share claimed without the availability rule (22A). Then the
 distribution field, which moves round ids. And then steps 3 and 5, which are
 the arbitration set and stay blocked.
+
+## M2.1 5A.3 row 3: a payout table that is not F of its published inputs
+
+**This accounts for 1 of the 5 that was missing** - five §5A.3 rows were
+unenforced after `REPLAY_CONTRADICTS`, and four are now.
+
+### Why this row and not another
+
+§20 is what makes it mechanical: "PayoutTable = F(RoundContract, Membership,
+FinalResults). Deterministic. Nodes sign the payout-table hash... A node
+signing a table that does not equal F(...) of its published inputs is
+slashable." `F` is `computePayoutTable` and it already lives in this package,
+so unlike the replay row **nothing is injected**: no attesting party is needed
+and 5A.3B's residual - an attester who "can, in principle, slash without
+cause" - does not reach this row at all.
+
+### The one decision, made in the open
+
+§20 fixes `F` and says the table's HASH is signed; it does not fix the bytes
+that hash is taken over. `TYPE_PAYOUT_TABLE = 0x07` and the tag
+`BLWP/v1/PayoutTable` were reserved before anything used them, so the encoding
+fills a reserved slot the way the objection did when the spec gave a field list
+and no layout. Two things went into it deliberately:
+
+  - THE ROUND ID. Without it a table is a list of amounts that could belong to
+    any round with the same players, and a signature would carry across rounds.
+    Mutant "the round is left out of the table": **11 red**, the loudest of the
+    battery, because half the vectors hang off that id.
+  - SORTED BY PUBKEY. `computePayoutTable` returns rows in the caller's entry
+    order, so two honest nodes handed the same entries in a different order
+    would otherwise sign different bytes and `F` being deterministic would buy
+    nothing.
+
+### The inputs are the node's, not the accuser's
+
+Row 3 is about a table against "its published inputs", so a proof that did not
+name them would be an accusation with a free variable: whoever checks it later
+recomputes from a different membership and gets a different answer.
+`payoutInputsId` commits to the membership - pubkey, outcome, score, stake -
+and the score floor, sorted the way `F` sorts, so two people publishing the
+same inputs commit to the same 32 bytes. It rides in the proof's existing
+`transcriptHash` field, which means "the object this offence is measured
+against": a transcript for the replay row, the inputs for this one. One field,
+one meaning, and no widening of a body that is already committed to on chain.
+
+### The before and after
+
+Same node, same bond, same published inputs; one millisatoshi moved.
+
+| | honest table | one msat short |
+|---|---|---|
+| `slashed` | false | true |
+| `bond` | **undefined - not even named** | `{txid 5555…, vout 3}` |
+| `offence` | - | `TABLE_IS_NOT_F` |
+| `expected` | - | the id of F's own table, so the accusation is checkable |
+| why | the table signed is exactly F of its published inputs | the table signed is not F of the inputs the node published |
+
+A millisatoshi moved BETWEEN two players - a table that still sums correctly -
+is also not F, and is also slashed.
+
+### A rough edge the tests found
+
+`slashHoldsOnTable` threw `u64 needs a BigInt` out of the input commitment when
+handed entries with a number stake, which hands a caller that asked for a
+verdict an exception instead. The caller least able to cope with that is a node
+acting on somebody else's accusation, so malformed inputs are now refused by
+name like every other check here.
+
+### Mutants: 14 planted, 14 killed, none retracted
+
+| mutant | protocol red |
+|--------|-------------:|
+| any table equals F | 4 |
+| no table equals F | 3 |
+| the accuser picks the inputs | 2 |
+| the evidence need not be the named table | 2 |
+| another round's table counts | 2 |
+| a stranger can be slashed on a table | 2 |
+| the bond is the accuser's to name | 2 |
+| bad inputs raise instead of answering | 2 |
+| the round is left out of the table | 11 |
+| the table is not sorted | 2 |
+| the amount is left out of the table | 5 |
+| the floor is not one of the inputs | 3 |
+| the outcome is not one of the inputs | 2 |
+| the inputs are not sorted | 2 |
+
+### Suites
+
+protocol 171/171 (was 160), blwp-node 70/70, blwp-client 89/89, core 80/80,
+money guard 10 files clean, determinism guard 19 files clean. Unity untouched:
+EditMode 190/186/1/3 and PlayMode 216/192/11/13 stand from 8cc7fdd.
+
+One assertion MOVED rather than loosened: `slash.test.js` asserted `OFFENCES`
+held one name, which is now false. The claim lives in `slash-table.test.js`,
+which owns the second name. Two files counting one list is two files to forget,
+and the forgotten one goes green while saying something false.
+
+### What is left of slashing
+
+Four offences of 5A.3, all protocol-pure and none written: two results for one
+(round, player); a settlement action without its 5-of-7; signing for a round the
+operator played (5A.13); a fee share claimed without the availability rule
+(22A). Then the distribution field, which moves round ids. Then steps 3 and 5 -
+the arbitration set - which stay blocked.
