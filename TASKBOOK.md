@@ -8779,3 +8779,45 @@ ab4ab5b and stamped 0.0.551. Both screens shot at 1024x768:
                   three numbered steps and the PLAY / SPECTATE buttons.
 
 btc-logistics-war.pages.dev untouched (HTTP 200, not redeployed).
+
+
+## 2026-09-07 07:28  M1.a8: the routed path on coin-margined is the USDT-M stream
+
+Asked: try the routed /market path on coin-margined; if it speaks, merge BTC*
+into the same `OnLiquidation`; if it still pays 0, say so with the measurement.
+
+FIRST PROBE, 300 s each, message counts only:
+
+  dstream /market/ws/!forceOrder@arr  (the ask)   open 792 ms   74 messages   BTC* 0
+  dstream /ws/!forceOrder@arr         (control)   open 729 ms   74 messages   BTC* 0
+  fstream /market/ws/!forceOrder@arr  (control)   open 765 ms   74 messages   BTC* 0
+
+Three hosts, one count. That is not an answer - the fstream control is the
+path already shipping, and it paid 0 BTC* too, so the window was quiet. Counts
+cannot tell a quiet market from a wrong route.
+
+SECOND PROBE, the same 300 s but recording SYMBOLS, which can:
+
+  dstream /market/ws   46 messages, 23 symbols, 0 coin-margined
+  dstream /ws          46 messages, 23 symbols, 0 coin-margined
+  fstream /market/ws   46 messages, 23 symbols, 0 coin-margined
+
+    WLDUSDTx14  UAIUSDTx4  IOSTUSDTx3  BTRUSDTx2  PONSUSDTx2  SOPHUSDTx2
+    FILUSDTx1  ETHUSDTx1  XANUSDTx1  DOODUSDTx1  ...
+
+The three tables are IDENTICAL - the same symbols in the same counts. Every
+name ends in USDT and not one carries an underscore, and an underscore is how
+every coin-margined contract is named: BTCUSD_PERP, BTCUSD_241227. So dstream
+is serving the same USDT-M all-market force-order stream fstream serves, and
+the routed path does not reach coin-margined at all.
+
+THE HARNESS WAS CHECKED BEFORE THAT WAS BELIEVED, because three identical
+tables is exactly what a harness bug looks like. Two rows on genuinely
+different streams: dstream /market/ws forceOrder 2 messages in 20 s, fstream
+/public/ws btcusdt@bookTicker 710. The rows are independent; the sameness is
+the exchange's.
+
+CONCLUSION: 0, and now with a reason rather than a quiet window. Nothing was
+merged into `OnLiquidation` - merging it would merge the stream already
+shipping with itself. A coin-margined stream would need a URL this project has
+not measured, and none was invented.

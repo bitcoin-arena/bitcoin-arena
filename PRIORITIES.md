@@ -82,12 +82,15 @@ Liquidation picture (a13) — CLOSED. M1.a14 — camera, HUNTED, score — CLOSE
 and live on the daily. M1.a15 — the depot wheels — CLOSED and live on the
 daily. Next letter: M1.a16, not named yet. Details: TASKBOOK.md.
 
-M1.a8: not done, paused at 07:39 for the camera and build-number work.
-  Probed on the routed path as asked: dstream /market/ws, dstream /ws and
-  fstream /market/ws for 300 s each. All three opened, all three delivered 74
-  messages, and NONE of them carried a BTC* symbol. Nothing was merged,
-  because nothing spoke. Numbers in TASKBOOK; the run needs repeating at a
-  busier hour before a8 can be called either way.
+M1.a8: ANSWERED, and the answer is that the routed path pays 0 — measured,
+  not guessed. dstream serves the SAME USDT-M all-market force-order stream
+  fstream serves: over 300 s all three hosts returned the identical 46
+  messages and the identical 23 symbols, every one of them a ...USDT name and
+  not one with an underscore, which is how every coin-margined contract is
+  named (BTCUSD_PERP). So there is no coin-margined force order on that route
+  to merge, and nothing was merged into OnLiquidation. Numbers in TASKBOOK.
+  A coin-margined stream would need a URL this project has not measured, and
+  none was invented.
 
 M1.a11: not done — strike voice built, needs Daniel's ear.
 
