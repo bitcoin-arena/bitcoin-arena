@@ -10735,3 +10735,82 @@ the fixture destroys its connections rather than only closing the server.
 TESTS. blwp-client 46 -> 50, protocol 104/104, blwp-node 41/41, core 85/85.
 Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
 No network beyond 127.0.0.1. No C#, no Unity, nothing deployed; daily 0.0.567.
+
+## M2.1 5c slice 2: the bond is proven into a block somebody mined
+
+WHAT WAS LEFT. 25.1's third line - "verify: proof against header,
+H(advertisement) against the bond output's commitment". The second half has
+been true since the endpoint stopped coming off the page. The first half was
+only ever as good as the header it was checked against, and `reach` weighed
+whatever list of chains its caller handed over: mined since 969370c, but never
+AGREED.
+
+THE ATTACK, END TO END, on the same fabricated header as the last cut. He does
+not need to break a hash. He needs a block whose merkle root is the one his own
+proof rebuilds, and he can simply write it down:
+
+  his block hash    6fe1215659d8493cbee898bfb8738ae75c8efdb61d7364b07092b6f8c97e499f
+  his merkle root   897e0cc60ac26b827f221353a7ef2f552393f454fbfd61198eff537fff1a368f
+  does his proof rebuild it?   TRUE - the merkle arithmetic passes completely
+  was his block mined?         false
+  provenBond                   "that is not a mined chain: this header was not
+                               mined: its hash does not meet the target it
+                               claims"
+
+Before the target was checked, that same block proved his bond and his endpoint.
+Hanging it off an honest block does not help either: a chain carrying it is not
+a chain.
+
+WHAT LANDED. `blwp-client/src/bond.js`. `provenBond({chain, transaction, branch,
+position})` re-checks the chain rather than taking it on the caller's word - one
+pass over headers already in hand, and the difference between "a block" and "80
+bytes somebody handed me" - computes the txid from the transaction, and finds
+the block the proof lands in. `reach` now takes `chain`, the chain two
+providers already agreed on, as well as the old `chains` list, and re-checks
+either.
+
+ONE PROVIDER IS ENOUGH HERE, AND TWO ARE NEEDED FOR HEADERS. Not a preference
+and worth saying plainly: the weight of a chain means nothing except in
+comparison, so headers need agreement; a bond proof carries its own proof and
+cannot be forged at any price, so the only lie available is silence - and
+"omission is answered by asking a second one" is a search, not a vote.
+`askForBond` asks in turn, keeps every refusal, and stops at the first proof.
+
+MEASURED:
+
+  an honest bond            proven into the mined block, header = chain[1]
+  the fabricated block      refused, alone and hung off an honest one
+  the right proof, position 1   "is not proven into any block of that chain"
+  a chain that does not hold it refused
+  bytes that are not a transaction  "not a transaction"
+  three providers, two useless  proven by provider 2, both refusals kept
+  a silent provider         "no answer in 50 ms", not waited for
+  over real HTTP            proven, block hash matches chain[1]
+  the door with an agreed chain ok, endpoint read
+  the door with his block   "not a mined chain"
+
+FIVE MUTANTS, all red: the chain taken on the caller's word (1), the proof not
+checked against the header (4), the txid taken from the caller rather than
+hashed (4), a refusing provider ending the search (1), an agreed chain not
+re-checked in the door (1).
+
+THE ENVELOPE IS THE TEST'S, NOT THE CLIENT'S. A bond provider is a function,
+like a header provider is: the shape a chain API puts a merkle proof in is
+nobody's standard, and writing one API's field names into the client would be
+adopting a second protocol without saying so. The test speaks one over local
+HTTP; mapping a real API onto it is not done.
+
+NOT WIRED, and bond.js is deliberately not in the bundle: the live path still
+takes `chains` from the page. Wiring is the next thing on this letter.
+
+THE REMAINING HOLE, named and NOT opened: `agreedChain` weighs only the chains
+it is handed, and nothing anchors the winner to Bitcoin. A client whose whole
+provider list belongs to one operator - two hostnames, one machine, which the
+origin tag catches only when it is obvious - accepts a cheaply mined chain
+because there is nothing heavier to compare it with. That is
+checkpoint-or-genesis, and it accounts for essentially all of what is still
+missing.
+
+TESTS. blwp-client 50 -> 57, protocol 104/104, blwp-node 41/41, core 85/85.
+Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
+No network beyond 127.0.0.1. No C#, no Unity, nothing deployed; daily 0.0.567.
