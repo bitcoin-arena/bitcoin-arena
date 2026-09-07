@@ -16,11 +16,10 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-   14  M2.1 checkpoints               M2   OPEN — receipts are recoverable
-                                            after a reconnect and gossip
-                                            between two nodes is measured.
-                                            Next: step B (the game via
-                                            jslib) and batch resume.
+   14  M2.1 checkpoints               M2   OPEN — a reconnecting client
+                                            resumes both chains and carries
+                                            on. Next: step B (the game via
+                                            jslib), then backpressure.
    13  M1.a16 playable hunt            M1   done — the hunt is winnable
                                             through the front and the rim
                                             pays almost nothing; spectate is
@@ -633,10 +632,13 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      seven-member round is measured carrying one from every member. Whether a
      count is enough, and the no-quorum rule, need the other six daemons and
      are the next sub-item; nothing about a committee was invented here.
+     BATCH RESUME: DONE. The client publishes its own input batches now -
+     nothing but tests did before - and `resume` reads the transcript the node
+     already served, checks it rather than taking it, and comes back with the
+     tick the node is owed and both chain heads. Numbers in TASKBOOK.
      Still open here: step B, the game itself sending these through the jslib
-     bridge, and the outbound half of step 5 (watching bufferedAmount, and a
-     resume point for the input batches the way /receipts is one for the
-     marks). M2.1 is not finished.
+     bridge, and the inbound half of step 5 (watching outbound
+     `bufferedAmount`). M2.1 is not finished.
   4. **Entry quotas.** A funded entry before the node stores a byte.
      Comes before opening a port to anyone else, not after.
   5. **Backpressure and reconnection.** Inbound DONE: the socket caps a frame

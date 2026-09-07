@@ -9590,3 +9590,74 @@ MUTANTS, four, and the fourth found a test that was not testing:
 
 Unity untouched, nothing built, nothing deployed. The daily is still 0.0.567
 from 752e4b1, and btc-logistics-war.pages.dev was not approached.
+
+
+## 2026-09-07 16:50  M2.1 batch resume: a dropped socket costs a client nothing
+
+MEASURED FIRST, on a running node, before anything was written. Two batches of
+200 ticks published and the socket dropped:
+
+  GET /transcript    200   8287 bytes   x-ticks=400
+                     decodes to 2 batches, chain ok, so the next due tick is
+                     400 and the head is 269dc1b9...
+  GET /checkpoints   200      0 bytes   x-checkpoints=0
+  GET /receipts      200      0 bytes   x-receipts=0
+
+So the DOOR was already there - `/transcript` has served the batches since
+step 2 - and nothing in the client asked for it or checked a byte of it. And
+the larger finding: THE CLIENT COULD NOT SEND A BATCH AT ALL. Only tests did,
+raw over the socket. "The batches the client already sent" was a thing that
+had never happened.
+
+WHAT THE SPEC ASKS FOR, and it is not what the phrase suggests. Section 11
+hash-chains the inputs and leaves publishing to the client; IMPLEMENTATION.md
+is blunter - "the daemon never requests retransmission: publishing is the
+client's duty, and unpublished inputs cost the player the run". So a
+reconnecting client does not want its batches BACK. It has them. It wants the
+two numbers that let it carry on: the tick the node is owed next, and the head
+to hang the next batch off. No new door was invented for that.
+
+  the client   `batch(ticks, ...)` builds an InputBatch from its own head and
+               next tick, sends it, and moves neither unless the node answers
+               a count - the same rule the marks follow.
+  `resume`     reads the transcript, refuses to take it, and returns the tick
+               owed and BOTH chain heads.
+
+AND NO SIGNATURE IS INVENTED. An `InputBatch` carries none in this protocol -
+the chain hash is its integrity - so the checks that apply are that the
+transcript is for the round and entry this client asked about, that the chain
+is unbroken, and that the records are whole. Each refused by name.
+
+THE OTHER CHAIN, resumed with it. A client's mark head is lost by the same
+dropped socket, and a resume that left it at the start of the round would look
+fixed until the first checkpoint after it, which would then be refused for not
+following the head. `resume` reads it off `/checkpoints`, which was already
+there too.
+
+BEFORE AND AFTER, measured end to end:
+
+  before   a fresh client owed the round from tick 0 and had no head. Its
+           first batch after a reconnect would have been refused for a gap and
+           its first mark for the chain head.
+  after    resume: 2 batches, 400 ticks, next tick 400, batch head equal to the
+           one the first client published, mark head equal to the mark it
+           published, 1 receipt recovered - and the reconnected client's next
+           batch (200 accepted) and next mark ('receipted') both land.
+
+  suites   blwp-client  10 -> 13
+           blwp-node    37 -> 37   core 80 -> 80   protocol 78 -> 78
+           all three untouched; determinism guard 19 clean, money guard 7 clean
+
+MUTANTS, five, each killing exactly one test:
+  resume does not check the chain            red
+  resume takes a transcript for another round red
+  the batch chain moves on a refusal          red
+  resume forgets the mark chain head          red
+  resume ignores where the ticks got to       red
+
+A real node will not serve a broken transcript, so the first two are driven by
+a stub - the same shape as the forged-receipt stub - or the mutants would have
+survived on honest data.
+
+Unity untouched, nothing built, nothing deployed. The daily is still 0.0.567
+from 752e4b1.
