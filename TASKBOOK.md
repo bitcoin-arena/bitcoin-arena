@@ -11391,3 +11391,79 @@ test-vector file changed. No C#, no Unity, nothing deployed; daily 0.0.567.
 STILL OPEN ON 13C: the no-quorum outcome (FORFEIT against VOID after the result
 window) and the slashing of nodes that contradict a replay. Both need the other
 six daemons, and neither was opened.
+
+## M2.1 13C: the equivocation proof, the one part one node can hold up alone
+
+THE FRACTION, MEASURED BEFORE THE WORK. Sections 13, 13A and 13C name six
+artefacts. Two now exist: the receipt with its counting, and the canonical
+transcript (69c3dce). Grepped for the rest across `packages/*/src`:
+`PlayerResult`, `PROVISIONALLY_FINAL`, `Objection`, `equivocation_rule_hash`
+and slashing appear NOWHERE.
+
+The no-quorum rule is three clauses, and they do not cost the same:
+
+  1. FORFEIT if the disagreement is explained by PROVEN player equivocation
+     (13B). Needs two signed checkpoints and the session key. No committee, no
+     replay, no core.
+  2. otherwise VOID, the stake refunded by letting the HTLC expire, the entry
+     excluded from the pool and the payout table. Needs a RESULT with 5-of-7
+     signatures, the result window, and Lightning.
+  3. nodes whose signature contradicts a replay are slashed. Needs the bond
+     output of 5A.3B - MuSig2, an arbitration quorum, `bond_maturity` - and a
+     replay to contradict.
+
+So of the four artefacts still missing, ONE does not need a committee, and it
+is the one the other two clauses are conditioned on: clause 2 begins
+"Otherwise", so without clause 1 it cannot even be evaluated. That is this cut.
+Clauses 2 and 3 are the remaining three of four and every one of them needs
+either the other six daemons or the bond on chain.
+
+WHAT WAS WRONG. The node detected equivocation and THREW - "equivocation at
+tick 60: X already stored, now Y" - and the second signed mark was discarded.
+13B says those two records together are "a complete, portable proof" and that
+"nodes MUST publish such a proof when they hold one". The node was destroying
+the only thing that shows what the player did, every time.
+
+WHAT LANDED. An `equivocations` table keyed (round, entry, tick); the refused
+mark is kept beside the stored one and the refusal is unchanged. `equivocation()`
+answers what this node holds, `GET /equivocation` publishes it - 200 with
+`x-equivocations` and `x-ticks-at`, 204 when there is none.
+`provesEquivocation(a, b, sessionPubkey, verify)` in `protocol/src/checkpoint.js`
+answers from the two records alone; `verify` is injected because this package
+carries no curve.
+
+MEASURED:
+
+  before the second mark    nothing held
+  after it                  refused as before, and 1 record kept: two signed
+                            marks of 231 bytes each, different bytes, tick 60
+  the carried chain         still ONE checkpoint, and it is the first one
+  the proof, checked        ok, tick 60, two different ids - from the records
+                            and the session key, nothing else asked
+  the same mark twice       refused: "the same mark, sent twice" - a dropped
+                            socket and a re-send must not take a stake
+  ticks 60 and 120          refused: "at ticks 60 and 120" - that is a chain
+  two entries               refused: "not from the same entry"
+  a stranger's signature    refused, either side: "the first/second mark is
+                            not signed by that entry". A forgery must not
+                            forfeit somebody else's stake.
+  bytes that are not a mark "not a signed checkpoint"
+  the door                  200, x-equivocations 1, x-ticks-at 60, 462 bytes;
+                            204 on a node that holds none
+  and what came off the
+    wire proves it          checked without asking that node anything
+
+MUTANTS, five, all red: the second world thrown away again (3), the same mark
+twice counted as equivocation (1), a forgery forfeiting the stake (1), the
+second signature unchecked (1), two different ticks read as a contradiction (1).
+
+THE NO-CORE RULE STANDS, green by name: "the node does not step: nothing here
+imports the core". Nothing here replays anything; a proof that needed a replay
+would be the other clause.
+
+TESTS. blwp-node 49 -> 53, protocol 104, blwp-client 72, core 85 - 314 green,
+none red, none skipped. Determinism guard 19 clean, money guard 9 clean. No
+test-vector file changed. No C#, no Unity, nothing deployed; daily 0.0.567.
+
+WHAT A FORFEIT COSTS IS NOT HERE. This object is the evidence; the stake
+joining the loser pool is settlement, and settlement is not this letter.

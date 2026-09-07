@@ -25,8 +25,8 @@ Top item first. Finish and deploy before starting the next.
                                             live only when five committee
                                             members have receipted it — on the
                                             mark path and on resume. Next: the
-                                            rest of 13C — the no-quorum
-                                            outcome and slashing — which needs
+                                            rest of 13C — VOID with the HTLC
+                                            refund, and slashing — which needs
                                             the other six daemons.
                                             Numbers: TASKBOOK.
    13  M1.a16 playable hunt            M1   done — the hunt is winnable
@@ -645,6 +645,15 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      (FORFEIT against VOID after the result window) and the slashing of nodes
      that contradict a replay; both need the other six daemons. Numbers:
      TASKBOOK.
+     EQUIVOCATION PROOF (13B): DONE. The second world a player signs at a
+     tick is still refused, and is now KEPT beside the first instead of
+     thrown away - 13B calls the two records a complete portable proof and
+     says nodes MUST publish one. `GET /equivocation` serves it and
+     `provesEquivocation` checks it from the records and the entry's session
+     key alone: no node asked, no replay, no committee. A repeat, two ticks,
+     two entries and a forgery are each refused, so a dropped socket or
+     somebody else's signature cannot take a stake. What a forfeit COSTS is
+     settlement and is not here. Numbers: TASKBOOK.
      CANONICAL TRANSCRIPT: DONE. A node serves the longest checkpoint chain
      every mark of which five distinct committee members have receipted, plus
      the input batches those marks commit to, and refuses by name when no
