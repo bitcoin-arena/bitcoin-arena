@@ -776,9 +776,17 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      the page kept its own word and learned `ended` only when a reconnect
      gave up. And the game is now TOLD: one signal carries the client's word
      and reason across the bridge, the core stops stepping a round that
-     cannot be settled, and the controls stop taking input for it. Unity
-     decides nothing - it repeats the word the client holds. Numbers:
-     TASKBOOK.
+     cannot be settled, and the TRUCK IS LOCKED - `controlsLocked`, the same
+     lock the loading bay and the title screen use, handbrake and all. The
+     stop handed the truck back to PhysX at first, exactly as `OnDisable`
+     does, so the core stopped and the player drove on; one handover now
+     serves both and says which of the two it is. And the player is TOLD: one
+     HUD line says the run stopped and why, in the client's own words about
+     the cause and with no word for what it pays - the client's `VOID` is
+     what a COMMITTEE decides under the no-quorum rule, not something a
+     browser may announce. Measured in PlayMode against real physics with the
+     throttle held down. Unity decides nothing - it repeats the word the
+     client holds. Numbers: TASKBOOK.
      Still open here: nothing unblocked. What is left of M2.1 is 13C's
      slashing, which needs the other six daemons.
   4. **Entry quotas.** DONE. A funded entry before the node stores a byte.

@@ -12941,3 +12941,91 @@ and has nothing to do with this door. PlayMode was not re-run; 213/189/11/13
 still stands from 7b4caea. The WebGL bridge is measured by evaluating the
 jslib, not by a browser - a real player run is still the thing neither of those
 proves.
+
+## M2.1 backpressure: the truck stops, and the player is told why
+
+Two holes I named in an audit of my own push, closed with numbers.
+
+### A - the stop handed the truck back to PhysX
+
+`StopDriving` did exactly what `OnDisable` does: `_rb.isKinematic =
+_wasKinematic; _truck.externallyDriven = false`. That is the handover TO the
+physics controller. `TruckController.controlsLocked` - the real input lock,
+`throttle = 0, steerIn = 0, handbrake = true`, the one `LoadoutPanel` and
+`SplashScreen` already use - was never set. So the core stopped stepping, the
+client published nothing, and the player kept driving a round that could not be
+settled. My `Locked` guard only zeroed input INTO the core, which had already
+stopped, which is why it looked closed.
+
+One `HandBack(bool lockControls)` now serves both callers, so the three lines
+cannot drift again: an ending locks, an ordinary disable does not.
+
+### B - nothing on screen said why
+
+`grep` found no reference to `NetSession`, `BlwpNet` or `Marks` anywhere in
+`DriveHud.cs`. The ending went to `Debug.Log` - the browser console. The player
+saw a truck stop dead and was told nothing.
+
+`DriveHud.RunStoppedLine(ending)` turns `<WORD> <reason>` into
+`RUN STOPPED - <reason>` and DROPS THE WORD. The client's word is `VOID`, and
+that is the protocol's name for what a COMMITTEE decides under the no-quorum
+rule; a browser announcing it would be the browser-side outcome the whole
+design forbids. What this client knows is that it cannot record any more of
+this round, so that is what is said. The EditMode test asserts the line
+contains none of VOID / REFUND / REFUNDED / WON / LOST / FORFEIT / PAID /
+DELIVERED.
+
+### The measurement, and two wrong tests on the way to it
+
+FIRST TRY, `DriveInput.TouchThrottle = 1f` held for two seconds: the truck
+moved 0 m. No keyboard is pressed in a batch run and `TouchControls` writes
+those fields every frame, so the control measurement failed - which means the
+"it did not move once stopped" test beside it, which PASSED, was proving
+nothing at all. Switched to `useExternalInput` + `externalThrottle`, which is
+what every other PlayMode driving test uses.
+
+SECOND TRY, with a throttle that actually reached the wheels: **the lock test
+failed at 3.75 m**. That was the honest answer to a badly framed question - a
+loaded truck at speed coasts, and the window started half a second after the
+lock. Coasting to a halt is not driving. So the test now gives it the three
+seconds a loaded truck needs, asserts it is AT REST (< 0.5 m/s), and only then
+watches for two seconds with the throttle still down.
+
+Final, all three green:
+
+| | measured |
+|---|---|
+| alive, throttle 1.0, 2s | moved > 1 m (the control) |
+| stopped, throttle still 1.0 | at rest, < 0.5 m over 2 s |
+| `controlsLocked` after the stop | true |
+| `externallyDriven` after the stop | false |
+| ordinary handover (`OnDisable`) | `controlsLocked` false - still the player's truck |
+
+### Mutants: 4 planted, 4 killed
+
+| mutant | platform | red |
+|--------|----------|----:|
+| the stop does not lock the truck | PlayMode | 1 of 3 |
+| an ordinary handover locks it too | PlayMode | 1 of 3 |
+| the HUD prints the protocol word | EditMode | 3 of 189 (2 new) |
+| the HUD says nothing at all | EditMode | 3 of 189 (2 new) |
+
+### Suites
+
+protocol 149/149, blwp-node 70/70, blwp-client 88/88, core 80/80, money guard 9
+files clean, determinism guard 19 files clean.
+
+Unity EditMode 189/185/1/3, `error CS` 0 - the one red is
+`CombatFxTests.RifleFireProducesAFlashAndATracer`, pre-existing, rifle flash, a
+later item. Unity PlayMode 216/193/10/13, `error CS` 0: the three new
+`RunStoppedTests` pass and the ten reds are the known army / vehicle / imported
+model cluster, none of them mine. The carried figure was 213/189/11/13; the
+failing set here is ten of those names, and the baseline commit was not re-run,
+so the difference is not attributed - it is not claimed as a fix.
+
+### What is still not proven
+
+The screen. A WebGL build was NOT made this turn, and the jslib and the C# only
+take effect in one. PlayMode proves the truck stops under real physics and
+EditMode proves the words; neither is a browser. That is the remaining evidence
+gap on this door, and it is a build, not a rule.
