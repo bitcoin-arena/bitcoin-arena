@@ -9397,3 +9397,48 @@ The money guard does not cover this file and was not extended to reach it:
 its stated rule selects files that move a stake or carry Q16.16 words into the
 core, and this one carries a hash, two ids and a tick. Naming that here rather
 than widening a shared tool inside a slice that is about something else.
+
+AUDIT OF SLICE A, and it found one hole in the slice itself.
+
+THE HOLE: the client took the round and entry ids ON THE NODE'S WORD. It
+posted the contract and returned whatever bytes came back. An id here is the
+tagged hash of a contract the CLIENT wrote, so the client can compute it and
+has no reason to be told it - and a node is not trusted in this protocol, which
+is the whole premise. Taking the answer would file every mark of the round
+under an id the player cannot show belongs to their own contract.
+
+  fixed: `openRound` and `join` compute `roundId(contract)` / `entryId(entry)`
+  themselves and read the node's answer as AGREEMENT. A different answer is a
+  disagreement about which round this is, named in full:
+    "the node calls this round <what it said>, and its contract hashes to <id>"
+  tested against a stub that answers 201 with the wrong thirty-two bytes,
+  because a real node cannot be made to lie without changing it.
+  mutant: taking the answer back -> that test red. 5 tests now, not 4.
+
+CHECKED AND FOUND CLOSED ALREADY, so it is not left as a suspicion: a
+non-integer tick cannot reach the wire. `encode.js`'s `u32` is
+`Number.isInteger(v) || throw`, measured directly - `encodeCheckpoint` with
+tick 60.7 answers "u32 out of range: 60.7". Nothing needed adding for it.
+
+NAMED AND OUT OF THIS SLICE, deliberately:
+  - the client's chain head lives in memory only. A client that reconnects
+    mid-round starts at NO_PREVIOUS and its first mark is refused for the
+    chain head. Reading the head back off `GET /checkpoints` is reconnection
+    work and belongs with the game sending marks for real, not here.
+  - the money guard still does not reach this package. Its rule selects files
+    that move a stake or carry Q16.16 words; this one carries a hash, two ids
+    and a tick, and widening a shared tool inside this slice was refused.
+
+SUITES after the fix, each on its own:
+  packages/core        80 / 80    determinism guard 19 files clean
+  packages/protocol    78 / 78    money guard        7 files clean
+  packages/blwp-node   33 / 33
+  packages/blwp-client  5 / 5
+  Unity untouched - no changed file under unity-proto - so PlayMode stays
+  213 / 188 / 12 / 13 and EditMode 178 / 174 / 1 / 3.
+
+NOT DEPLOYABLE AND NOTHING TO DEPLOY: no Unity file changed, so the artefact
+would be byte-identical to the one already live. The daily is still the last
+good playable, checked rather than assumed: wasm md5
+59ea55f8cdddca795e1a8e768b956723, build 0.0.567 from 752e4b1, and
+btc-logistics-war.pages.dev untouched at HTTP 200.
