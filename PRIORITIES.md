@@ -645,7 +645,7 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      (FORFEIT against VOID after the result window) and the slashing of nodes
      that contradict a replay; both need the other six daemons. Numbers:
      TASKBOOK.
-     EQUIVOCATION PROOF (13B): DONE. The second world a player signs at a
+     EQUIVOCATION PROOF (13B): DONE, BOTH LIMBS. The second world a player signs at a
      tick is still refused, and is now KEPT beside the first instead of
      thrown away - 13B calls the two records a complete portable proof and
      says nodes MUST publish one. `GET /equivocation` serves it and
@@ -653,7 +653,13 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      key alone: no node asked, no replay, no committee. A repeat, two ticks,
      two entries and a forgery are each refused, so a dropped socket or
      somebody else's signature cannot take a stake. What a forfeit COSTS is
-     settlement and is not here. Numbers: TASKBOOK.
+     settlement and is not here. The second limb is a fork - two marks
+     naming one parent are two chains, at whatever ticks - and both signals
+     a split committee leaves behind are kept rather than dropped: a receipt
+     for a mark this node never got, and a peer's copy of the other chain.
+     Neither is a live mark and neither counts toward live-at-five. `GET
+     /entry` serves the session key, without which the proof could be read
+     and not checked. Numbers: TASKBOOK.
      CANONICAL TRANSCRIPT: DONE. A node serves the longest checkpoint chain
      every mark of which five distinct committee members have receipted, plus
      the input batches those marks commit to, and refuses by name when no

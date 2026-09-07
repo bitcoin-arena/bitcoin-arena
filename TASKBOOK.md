@@ -11467,3 +11467,84 @@ test-vector file changed. No C#, no Unity, nothing deployed; daily 0.0.567.
 
 WHAT A FORFEIT COSTS IS NOT HERE. This object is the evidence; the stake
 joining the loser pool is settlement, and settlement is not this letter.
+
+## M2.1 13B finished: both limbs, and a proof a stranger can actually check
+
+TWO HOLES, BOTH MINE FROM THE CUT BEFORE. The proof that landed at 9af1c17
+covered one limb of 13B and could not be checked by anybody who was not
+already holding the entry.
+
+  13B, verbatim   "two different checkpoints for the same (round_id,
+                  player_pubkey, tick), OR TWO CHAINS THAT DIVERGE AT ANY TICK"
+  what existed    the first limb only. `provesEquivocation` refused two marks
+                  at different ticks by name, and a test asserted it.
+  and             "a complete, portable proof" - with no door serving the
+                  session key those signatures verify under.
+
+THE SECOND LIMB IS A FORK, and it is provable from two records: a chain has one
+child per parent, so two marks naming the same parent are two chains, whatever
+ticks they sit at. Anything needing a third record, or the chain in between,
+would not be portable and was not built.
+
+  two children of one parent, ticks 120 and 180   proves, "two chains from one
+                                                  parent"
+  two first marks, ticks 60 and 90                proves - two chains from the
+                                                  start of the round
+  same tick, different state                      proves, "two marks at one
+                                                  tick", unchanged
+  ticks 60 and 120, second naming the first       REFUSED: "name different
+                                                  parents, so they can be one
+                                                  chain" - that is playing
+  the same mark twice                             still "the same mark, sent
+                                                  twice"
+  a forgery on either limb                        still "not signed by that
+                                                  entry"
+
+THE SPLIT COMMITTEE, on one node. Chain A here, chain B elsewhere, every node
+locally consistent. Two signals were being dropped at the door and both are
+kept now, neither as a live mark and neither as a vote:
+
+  a receipt for a mark this node never got   kept as evidence, filed
+                                            unattributed - a receipt carries a
+                                            checkpoint id, a signer and a time,
+                                            NOT a round, so there is no
+                                            committee to check it against. Its
+                                            signature is checked under the key
+                                            it names; a flipped byte is refused
+                                            and kept nowhere.
+  and it counts toward nothing              receiptCount for our own mark stays
+                                            1; live-at-five is untouched
+  a peer's copy of the other chain          refused - "does not follow the chain
+                                            head" - and kept beside ours. The
+                                            carried chain is still ONE
+                                            checkpoint, and it is ours.
+
+PORTABLE, MEASURED AS A STRANGER. Holding the entry id and nothing else - no
+contract, no session key, no transcript, never watched the round:
+
+  GET /equivocation      200, two signed marks
+  guessing the key       refused, "not signed by that entry" - the honest
+                         failure, not a pass
+  GET /entry             200, and the session key off the contract the player
+                         signed matches
+  then the proof         ok, "two marks at one tick", tick 60
+  an entry nobody has    404, "no such entry"
+
+MUTANTS, seven, all red and none a no-op: foreign receipts dropped again (1),
+a foreign receipt kept without checking its signature (1), the other chain
+thrown away again (1), the fork limb refused (1), the same-tick limb refused
+(2), a repeat counted as equivocation (1), the entry door removed (1).
+
+ONE FAULT WORTH WRITING DOWN, because it has now happened twice in this repo: a
+backtick inside the SQL template literal in `store.js` closed the string and
+every node suite went red at once with "missing ) after argument list". The
+same trap is already in this file from an earlier slice.
+
+TESTS. blwp-node 53 -> 57, protocol 104, blwp-client 72, core 85 - 318 green,
+none red, none skipped. Determinism guard 19 clean, money guard 9 clean. "The
+node does not step: nothing here imports the core" is green by name. No C#, no
+Unity rebuild, nothing deployed; daily 0.0.567.
+
+WHAT IS LEFT OF 13C: VOID with the HTLC refund, slashing, and the objection
+window. All three need the other six daemons or Lightning - 3 of 3 - and there
+is no honest one-node slice of any of them.
