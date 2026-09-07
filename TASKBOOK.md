@@ -11254,3 +11254,59 @@ WHAT THIS IS OF 13C: one of its three obligations. The canonical transcript -
 the longest chain carrying five receipts - is decidable in the client and is
 done. The no-quorum outcome and the slashing of nodes that contradict a replay
 are the other two, and both need the committee to exist.
+
+## M2.1 step 3, quorum: the resume path counts to five as well
+
+THE HOLE. The rule landed in `readReceipt` and was missing one function away.
+Every place the head is set, grepped rather than remembered:
+
+  client.js:218   NO_PREVIOUS                        the start of a round
+  client.js:404   if (live) head = markId            gated at 5480b41
+  client.js:555   head = the node's LAST mark        ungated
+
+So a run that lost its socket came back and adopted whatever mark the node
+happened to hold, on that node's word alone - four committee members might
+never have seen it. That is the operator of a short committee being paid for
+one, arriving by the reconnect door instead of the mark door.
+
+WHAT LANDED. `resume` walks the recovered marks NEWEST FIRST and adopts the
+first that five distinct committee keys have receipted. If none is live the
+head stays where the client can prove it belongs - the existing live head, or
+NO_PREVIOUS - and the session is NOT refused: a disconnect is not an escape
+hatch, and a slow committee must still be able to carry the run. `resume` also
+answers `live` and `witnessed` now, so a caller can see why.
+
+MEASURED. Reconnect with 1, 4 and 5 receipts held BY THE NODE, the extra ones
+gossiped over the door a peer's receipt really arrives by:
+
+  on the node   before        after resume                  witnessed
+  1 receipt     NO_PREVIOUS   NO_PREVIOUS, live false       0
+  4 receipts    NO_PREVIOUS   NO_PREVIOUS, live false       0
+  5 receipts    NO_PREVIOUS   the mark, live true           5
+
+and at 1 and 4 the run is not refused: `nextTick` still comes back as 200, so
+the client knows where to carry on and republishes what follows.
+
+  two marks, first carried by five, second by one
+                head -> the FIRST, not the node's last
+  three marks, first and second carried by five, third by one
+                head -> the SECOND: the newest LIVE one, not the oldest
+                witnessed 5 / 5 / 1
+
+FIXTURES CARRIED, NOT ASSERTIONS LOOSENED. Two reconnect tests published a
+one-receipt mark and expected `resume` to adopt it, which is the behaviour just
+removed. They now gossip four real committee receipts to the node first, so the
+mark is live for whoever comes back - and the receipts go over the wire exactly
+as they were signed, because the encoding carries its own type byte and a
+frame made them 140 bytes where the node wanted 139.
+
+MUTANTS, three, and one survived first: resume taking the node's last mark
+again (2 red), resume refusing instead of carrying on (1 red), and resume
+adopting the OLDEST live mark (0 red at first - the walk-back test had only one
+live mark, so both directions gave the same answer). A three-mark case with two
+live was added and it is now 1 red.
+
+TESTS. blwp-client 69 -> 72, protocol 104/104, blwp-node 41/41, core 85/85.
+Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
+Bundle 127.3 -> 128.5 KB, 17 modules. No C#, no Unity, nothing deployed;
+daily 0.0.567.
