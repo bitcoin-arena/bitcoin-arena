@@ -644,10 +644,30 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      than on the first receipt - on the mark path and on the resume path, which
      took the node's last mark on that node's word alone until a668be7. Below
      five a mark is pending, which is not failed: no run is voided and nothing
-     is lost for the player. What is left of 13C is the no-quorum outcome
-     (FORFEIT against VOID after the result window) and the slashing of nodes
-     that contradict a replay; both need the other six daemons. Numbers:
-     TASKBOOK.
+     is lost for the player. The no-quorum outcome is decided too: FORFEIT
+     when the player's own conduct is what is missing, VOID when it is the
+     committee's, and neither once the result is FINAL. Numbers: TASKBOOK.
+     THE INVOICE AND THE CUSTODY WORD (23.1, 23.6): DONE. A player refuses
+     an invoice whose payment hash is not the `stakeCommitment` their entry
+     signed, or whose amount is not `stakeMsat` exactly - fees and the
+     donation are charged on top, so it is not a floor. And the round
+     contract names which construction the stake sits in, THRESHOLD_LN or
+     FEDERATION: the other word is a different round id, so one cannot be
+     replayed as the other. Naming a construction is not implementing one.
+
+     WHAT IS LEFT OF 13C, each by what blocks it and none of it faked here:
+       - issue / settle / cancel the hold invoice - DAEMON: 23.6's
+         threshold-signed Lightning node or Fedimint federation, a quorum
+         operating real channels
+       - slashing - DAEMON: 5A.3B's bond output, MuSig2, an arbitration set
+       - the committee re-run a suspension waits for - DAEMON: six more
+         nodes, and a replay the daemon deliberately does not do
+       - CLTV sizing - NO PROTOCOL TICK RATE: the contract measures the
+         round in ticks and an HTLC in time, and no constant was invented
+       - the Feldman residual on the split preimage - NO DISCRETE-LOG GROUP
+         in this package, so it is a decision before it is work
+     Numbers: TASKBOOK.
+
      THE STAKE PREIMAGE, SPLIT (23.1): RECONSTRUCTION IS IN. Every five of
      the seven shares rebuild P and hash to the stakeCommitment the player
      signed; every four refuse. `reconstruct` checks its answer against that
@@ -721,11 +741,19 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      Neither is a live mark and neither counts toward live-at-five. `GET
      /entry` serves the session key, without which the proof could be read
      and not checked. Numbers: TASKBOOK.
-     CANONICAL TRANSCRIPT: DONE. A node serves the longest checkpoint chain
-     every mark of which five distinct committee members have receipted, plus
-     the input batches those marks commit to, and refuses by name when no
-     chain qualifies. Selection, not simulation: the daemon still imports no
-     core and does not step. Numbers: TASKBOOK.
+     CANONICAL TRANSCRIPT: DONE, BOTH HALVES. A node serves the longest
+     checkpoint chain every mark of which five distinct committee members have
+     receipted, plus the input batches those marks commit to, and refuses by
+     name when no chain qualifies. The MARKS ARE NOW IN THE OBJECT, which is
+     the half 13C names first: until they were, two nodes that had carried
+     different chains over one set of batches - including a node whose player
+     had committed to a different world at the last tick - handed back one
+     transcript hash, and a signed PlayerResult names nothing else. The
+     transcript checks both chains now, refuses a mark committing to inputs it
+     does not carry (§11's withholding rule, as a refusal rather than a
+     sentence), refuses a mark that rewinds to earlier inputs, and refuses
+     batches no carried mark stands behind. Selection, not simulation: the
+     daemon still imports no core and does not step. Numbers: TASKBOOK.
      BATCH RESUME: DONE. The client publishes its own input batches now -
      nothing but tests did before - and `resume` reads the transcript the node
      already served, checks it rather than taking it, and comes back with the

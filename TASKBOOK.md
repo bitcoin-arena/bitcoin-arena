@@ -12626,3 +12626,113 @@ WHAT IS LEFT ON ITEM 14, each named by what blocks it:
                                            discrete-log group this package does
                                            not carry - so it is a decision
                                            before it is work.
+
+## M2.1 13C: what is still missing, counted, and the one slice that was not blocked
+
+Before opening anything, the gap was counted rather than described. §13C names
+four normative things:
+
+  1. the canonical transcript = the longest checkpoint chain five committee
+     members receipted, TOGETHER WITH the input batches it commits to, as one
+     object every node replays
+  2. no quorum + proven equivocation -> FORFEIT
+  3. no quorum otherwise -> VOID, refunded by letting the HTLC expire, out of
+     the pool and out of the payout table
+  4. nodes whose signature contradicts a replay are slashed
+
+Status at ead28a1: 2 and 3 done. 4 daemon-blocked (5A.3B bond output, MuSig2,
+an arbitration set). 1 HALF done - the selection was right and the object was
+not. So of 4 clauses, 1.5 were missing, and of that 1.5 exactly 0.5 was
+buildable here: **one third of what 13C was still missing, and all of the part
+that is not waiting on a daemon, a time unit or a discrete-log group.**
+
+The other candidate slice on the list was client backpressure (a reconnect is
+tried once, the hold grows without limit while the socket is down). Real, M2.1,
+unblocked - and 0 of the 13C gap, so it did not win the turn.
+
+### The collision, measured before it was fixed
+
+Three carried chains over ONE set of three batches:
+
+| node | marks | through tick | last state hash | transcriptHash |
+|------|-------|--------------|-----------------|----------------|
+| A    | 3     | 12           | 33333333        | f5abe7b64aa9e058 |
+| B    | 2     | 9            | 22222222        | f5abe7b64aa9e058 |
+| C    | 3     | 12           | **99999999**    | f5abe7b64aa9e058 |
+
+One hash for three objects, therefore one `resultId` (f9cfca55024f7c70) for a
+committee to sign - including for node C, whose player had committed to a
+different world at the last tick. `PlayerResult` carries `transcriptHash` and
+nothing else that names the run, and `objectionHolds` binds an objection to the
+same 32 bytes, so both money paths were pinned to the input half only.
+
+The header comment on `transcript.js` had said so plainly since it was written
+("Checkpoints belong in it later ... their absence here is why `transcriptHash`
+covers the inputs only"). It was a stated hole, not a discovered one; what was
+missing was the number that says how much it costs.
+
+### What went in
+
+`transcript.js` gained `marks`: a vector of whole signed checkpoint records,
+231 bytes each, no length prefix because nothing in a signed mark is
+variable-length. The hash covers the signature, which is the OPPOSITE of the
+rule one object down - a checkpoint's own id is taken before it is signed so
+the chain does not shift underneath it. The reason is that a transcript is a
+container, not an identity: what must be pinned is the bytes a node hands over
+and a committee signs a result about, and a signature outside the hash would
+let a node serve marks with nobody's signature on them and still match.
+
+`checkTranscript` now returns `{ ok, ticks, marks, throughTick }` and reports
+failures as `{ ok: false, in, at, why }`, `in` being 'batch' or 'mark' because
+the two are numbered separately. It checks, from the object alone and with no
+curve:
+
+  - each mark is for this round and this entry
+  - the mark chain links, first to NO_PREVIOUS
+  - ticks strictly increase (the same tick twice is 13B, not a chain)
+  - every `inputChainHash` is a head this transcript actually reaches - §11's
+    "a transcript whose inputs were never published cannot be replayed and
+    therefore cannot be finalized as a win", as a refusal
+  - the heads do not go backwards (two marks on ONE head is legal: a mark can
+    be taken with no input between them; a rewind is not)
+  - the last mark commits through the LAST batch, so a node cannot pad the
+    canonical object with ticks nobody receipted
+
+`canonicalTranscript` puts the carried prefix's marks in the object it serves.
+`handOver` carries none, deliberately: it is the store's own copy for a resume,
+where the marks travel on `/checkpoints` and the client checks each against the
+receipts it recovered - taking a node's word for its own last mark is exactly
+what `resume` refuses to do. The difference between the two objects shows in
+the hash instead of being a matter of who is asking.
+
+### Mutants: 11 planted, 11 killed, none retracted
+
+| mutant | protocol red | node red |
+|--------|-------------:|---------:|
+| unknown input head accepted | 1 | 0 |
+| a rewind to earlier inputs allowed | 1 | 0 |
+| batches past the last mark allowed | 2 | 0 |
+| the same tick twice allowed | 1 | 0 |
+| the mark chain unchecked | 1 | 0 |
+| another round's mark accepted | 1 | 0 |
+| another entry's mark accepted | 1 | 0 |
+| a short record accepted | 1 | 0 |
+| the marks left out of the encoding | 4 | 2 |
+| the node serves no marks | 0 | 6 |
+| the node serves every mark it holds | 0 | 2 |
+
+The last two are the ones that matter: a node that served an empty chain or its
+whole chain instead of the carried prefix is caught at the node, not only in
+the package.
+
+### Suites
+
+protocol 149/149 (was 140), blwp-node 70/70 (was 68), blwp-client 72/72,
+core 80/80, money guard 9 files clean, determinism guard 19 files clean.
+Unity untouched.
+
+### What 13C still misses after this
+
+Only clause 4, slashing, and it is daemon-blocked. The replay in clause 1 ("all
+nodes replay that object") is the committee's, not this repo's: the node
+imports no core by law.
