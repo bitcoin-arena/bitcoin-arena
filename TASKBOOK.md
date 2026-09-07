@@ -11548,3 +11548,52 @@ Unity rebuild, nothing deployed; daily 0.0.567.
 WHAT IS LEFT OF 13C: VOID with the HTLC refund, slashing, and the objection
 window. All three need the other six daemons or Lightning - 3 of 3 - and there
 is no honest one-node slice of any of them.
+
+## M2.1 13B: the proof a node held and could not publish
+
+THE HOLE, FOUND BY PROBING THE DOOR RATHER THAN RE-READING THE TESTS. Every
+test passed and 13B's "nodes MUST publish such a proof when they hold one" was
+false:
+
+  first mark at 60, child A at 120   accepted
+  child B at 180, same parent        refused, "does not follow the chain head"
+  equivocations table                0
+  offered_marks                      1
+  GET /equivocation                  204, "no equivocation held for that entry"
+
+Both records were on the node, in two tables, and the door read one of them.
+The same-tick pair had been measured through the DOOR and the fork pair through
+`provesEquivocation`; nothing crossed them, so nothing caught it. That is the
+shape of every hole this letter has had.
+
+WHAT LANDED. `equivocation()` now pairs each kept `offered_mark` with the
+stored mark that shares its TICK or its PARENT, and serves those beside the
+same-tick pairs. No second proof format: the same bytes, checked the same way
+with `provesEquivocation` and `/entry`. Nothing here decides - the pairing is
+the proof's own rule and the answer is still the two records.
+
+  the fork, published    200, x-equivocations 1, 462 bytes, and a stranger
+                         holding only the entry id verifies it: "two chains
+                         from one parent", ticks 120 and 180
+  both limbs together    x-equivocations 2, 924 bytes, one of each kind
+  a stale head           a mark naming a parent this node never held is KEPT
+                         and NOT published - nothing of ours contradicts it,
+                         and publishing it would forfeit a stake for a dropped
+                         socket
+
+AND THE SPLIT-COMMITTEE SIGNAL CAN BE ASKED FOR. `GET /foreign-receipts` serves
+the receipts this node holds for marks it has not got - 200 with
+`x-foreign-receipts`, 204 where there are none - byte for byte as the member
+signed them, so a stranger can read whose it is and what it names without
+asking this node anything. It is not a proof and not a vote; it says where to
+go looking, and evidence nobody can ask for does nothing.
+
+MUTANTS, four, all red: the fork limb never published - the 204 bug itself (2),
+the parent pairing dropped so only same-tick pairs survive (2), a refused mark
+that contradicts nothing published anyway (1), the foreign-receipt door removed
+(1).
+
+TESTS. blwp-node 57 -> 61, protocol 104, blwp-client 72, core 85 - 322 green,
+none red, none skipped. Determinism guard 19 clean, money guard 9 clean. "The
+node does not step: nothing here imports the core" green by name. No C#, no
+Unity rebuild, nothing deployed; daily 0.0.567.
