@@ -8274,3 +8274,54 @@ reads it instead, with the core's own readout in the same frame.
 ALSO SEEN AND NOT THIS LETTER: the loading page carries one German string,
 `index.html:225`, "Der Loader konnte nicht geladen werden." It is player-
 facing, in a build whose every other string is English.
+
+
+## 2026-09-07  M1.a14 step 3: the editor no longer computes a score
+
+`RunScore` carried a second scoring formula for when no core is answering.
+On the deploy path it never ran - but in the editor the core is a stub, so it
+ALWAYS ran there, and FIVE PlayMode tests were measuring Unity's arithmetic
+and calling it the score. Not three: the count came out of running the suite
+with the formula gone, not out of reading the file.
+
+MOVED FIRST, DELETED SECOND. Each rule now lives in `packages/core/test`
+where the core actually runs, and each has a mutant that kills it:
+
+  an empty bed collapses a score that was already built
+      drive 1200 ticks, score 587, set S_CARGO to 0, score 0
+      mutant: cargo dropped from scoreOf -> red
+  nothing accrues while the truck is still on the apron
+      16.8 m out at tick 180, exposure 0; 22.3 m at tick 210, exposure 4290
+      mutant: the apron stops refusing -> red
+  a wreck banks nothing, however much the run had earned
+      standing score 587, hp to 0, state RUN_WRECKED, S_DELIVERED still 0
+      mutant: banked on any outcome -> red
+  the seam banks more than the quiet lane for the same ground
+      at 60 m of ground made good: edge 110.4, 145.9, 155.7, seam 178.9
+      mutant: flat threat -> red
+  heat raises what a metre of ground is worth
+      half danger over ten metres pays 5.0 cold and 10.0 at full heat
+      mutant: none needed, the assertion is exact arithmetic
+
+THE FIRST APRON TEST WAS WRONG AND THE MUTANT SAID SO. It held the truck
+still and was green with the apron rule deleted - `accrue` pays only for
+ground made good, so a stationary truck earns nothing whatever `earning`
+says. It proved the wrong thing. Driving across the boundary instead, both
+sides asserted, and the mutant now dies.
+
+THE NUMBERS DID NOT TRANSPLANT. The C# asserted 1.8x between the seam and the
+quiet lane, measured against its own threat model and its own fixture. In the
+core at equal ground the gradient is 1.62x, so the core test asserts 1.5x with
+the monotonic ordering beside it. Copying 1.8 would have been carrying a
+constant into different units.
+
+WHAT WAS DELETED: `Projected`'s C# formula, `Exposure`'s C# accumulator, the
+whole `!FromCore` branch of `Track`, and `RateNow()` - which walked a C# army
+that no longer exists, fell through to a geometry fallback, and multiplied by
+`bay.Heat`, Unity's own copy of a rule the core owns. `DriveHud` used it to
+tell "out of the corridor" from "going round in circles"; it reads the core's
+own last warm rate now.
+
+  before  ScoreTests 9 tests, 5 of them measuring the C# formula
+  after   ScoreTests 4 tests, all of them Unity's own behaviour
+          packages/core 79 tests, 79 green
