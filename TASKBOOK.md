@@ -8351,3 +8351,60 @@ the truck was invulnerable.
   live   btc-logistics-core.pages.dev/Build/webgl.wasm.unityweb
          md5 62f9ef3497f8e903c97ec12d04172ae8, identical to the local
          artefact, built from 4fb231c. btc-logistics-war.pages.dev untouched.
+
+
+## 2026-09-07  M1.a14 camera and HUNTED, measured on this tree
+
+CAMERA - the five cases, 8 of 8 green, road in the picture in every one:
+
+  case                worst off-nose   road across the frame   speed
+  stop and reverse       0.0 deg           0.50 .. 0.50       14.0 m/s
+  spin-out              20.6               0.50 .. 0.61       12.5
+  impact throw          25.7               0.46 .. 0.60       16.5
+  released look         34.3               0.33 .. 0.50       12.5
+  standing cloud         0.0               0.50 .. 0.50       parked
+    and up the frame 0.06 .. 0.58, 0 of 3566 frames below the bottom edge,
+    pitch 22.5 of the 26 clamp, yaw 0.00 deg in a frame, cap never off the top
+
+ONE OF THEM WENT RED FIRST AND IT WAS THE FIXTURE, NOT THE CAMERA. The
+reverse case failed its own guard - "the truck only reached 5.3 m/s, so this
+case measured nothing" - because five seconds of throttle is enough alone and
+not enough with the whole suite, a browser and two builds sharing the machine.
+Run on its own it reaches 14.0 m/s and reads 0.0 degrees off the nose and
+0.50..0.50 across the frame, the recorded values exactly.
+
+The guard is not the thing to relax: it is the only reason a camera test on a
+stationary truck cannot pass. So `UpToSpeed` waits FOR the speed now, up to
+four times as long, and still gives up rather than pretend. Every case reached
+12.5 m/s or better on the next full run.
+
+WHAT THE CAMERA READS: the pose is the core's - `CoreDrivenTruck` writes
+`transform.SetPositionAndRotation` from `T_X`/`T_Z` and the camera follows that
+transform, and the direction it settles behind is the hull heading, not a
+velocity vector. The one PhysX read left in `ChaseCamera` is
+`targetBody.linearVelocity` at line 390, behind `BlwpCore.Available`, and it
+feeds reach, rise and the lens - how far back the camera sits and how wide it
+opens. It cannot run when a core is answering.
+
+HUNTED - what the player saw on the daily against what the core says:
+
+  on screen   one filled pip of five, WANTED, CARGO 9 parcels 2,897 sat
+  the core    heat(2897, 0) = 0.1448 -> ceil(0.1448 x 5) = 1 pip -> WANTED
+
+  the 1920x1080 shot earlier read five pips and HUNTED at 13,921 sat:
+    heat(13921, 0)    = 0.6960 -> 4 pips, HUNTED
+    heat(13921, 1200) = 0.9120 -> 5 pips, HUNTED
+  so the fifth pip is the BTC term, which the picture does not name - both
+  readings are HUNTED either way.
+
+`DriveHud` reads `BlwpCore.Heat` and nothing else: no fallback, no second
+copy. The word and the pips are the core's word.
+
+THE ONE THING NAMED AND NOT DONE: three core-first pairs remain that fall back
+to a PhysX or C# value when no core answers - `ChaseCamera`'s velocity, the
+HUD's speed and slip readout, and the engine note in `GameAudio`. None can run
+on the deploy path. They are NOT the class of thing the score fallback was: a
+second scoring engine computed an OUTCOME, while these feed a lens, a
+speedometer and a pitch. Deleting them would leave the editor's camera with no
+velocity at all and take several camera tests with it, exactly as the score
+deletion took five. Named here rather than done quietly.

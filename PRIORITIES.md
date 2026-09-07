@@ -16,7 +16,11 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-   10  M1.a14 camera / HUNTED / score  M1   OPEN — next, not started
+   11  M1.a15 depot wheels             M1   next, not started
+   10  M1.a14 camera / HUNTED / score  M1   done — the camera follows the
+                                            core's pose, HUNTED is the core's
+                                            heat word, and the score on the
+                                            daily is the core's own projection
     1  clear the red tests            M1   done
     2  the army into the core         M1   done
     3  three post office buildings    M1   done
@@ -65,8 +69,8 @@ Twelve red tests: none on the deploy path. List in TASKBOOK.md.
 
 ## M1
 
-Liquidation picture (a13) — CLOSED, and live on the daily. Current work:
-M1.a14 — camera, HUNTED, score. Not started. Details: TASKBOOK.md.
+Liquidation picture (a13) — CLOSED. M1.a14 — camera, HUNTED, score — CLOSED
+and live on the daily. Next: M1.a15, the depot wheels. Details: TASKBOOK.md.
 Next letter: M1.a16.
 
 M1.a8: not done (parked) — coin-margined Binance probed.
@@ -167,10 +171,13 @@ not inferred from the suite. Numbers in TASKBOOK.
   StrikeTheatre.fx was never wired - a null assignment in BuildArmies that
   threw nothing - and a test now asserts the wiring, not just the method.
 
-M1.a14: OPEN — the current letter. Both camera bullets are closed on
-measurement; HUNTED is what is left.
+M1.a14: DONE. The camera follows the pose the core writes and keeps the road
+in the picture in all five cases; HUNTED and its pips read the core's heat word
+with no second copy; the score the driver sees on the daily is
+BlwpCore.RunScore() and the C# formula that used to shadow it is deleted, its
+rules moved into the core suite. Numbers in TASKBOOK.
 - camera: the direction the truck drives must never leave the view unless
-  Daniel explicitly looks around — NOT DONE, reopened on a measurement. The
+  Daniel explicitly looks around — done. The
   four cases a13's slalom never drove are fine: reversing, a handbrake spin,
   an impact and a released look all keep the road in the picture, never
   closer than a third of the way in from an edge, and five PlayMode tests
