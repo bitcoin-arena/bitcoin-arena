@@ -274,6 +274,7 @@ Daniel: ten tries through the front, none made it; only the rim worked.
 Stay hard; 30-40% of committed runs should deliver. Spectate: price only.
 - hunted fire leaves a rim and a punch-through chance — done in core
 - 30-40% seam/committed delivery in core sims — done (36.7% of 150 rail seam)
+- rim far from the front pays almost nothing — done (629 vs 4)
 - spectate HUD is price only — coded, not photographed
 - deploy daily — not done
 

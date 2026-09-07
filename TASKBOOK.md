@@ -14,6 +14,10 @@ seam 44/150 = 29.3%. Tuned HEAT_SHELL 0.3 → 0.22. Confirm 300: seam 55/150
 = 36.7% delivered, rim 105/150 = 70%. Target 30-40% committed: hit.
 Spectate HUD: DriveHud returns after the price+percent when SpectatorCamera.Active.
 
+Score far from the front (Daniel 12:13): frontWeight quadratic, 0 at 40 m
+off the seam. 150+150 rail full heat: seam mean 629 (543-758), rim mean 4
+(0-16). Golden vectors regenerated with the rule.
+
 THE TWELVE RED TESTS, ONE LINE EACH. Named at f103f71, counted again at
 5c81a7a and again at 747dcaf - the same twelve, in suites that have grown
 since: PlayMode 213 / 189 green / 11 red / 13 skipped, EditMode 161 / 157
