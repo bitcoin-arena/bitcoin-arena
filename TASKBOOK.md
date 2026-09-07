@@ -10071,3 +10071,34 @@ skipped from the run at 7b4caea.
 
 Still parked by decision: `bufferedAmount` known-untested, and the session key
 lasting the run so a page reload ends it.
+
+A RELOAD IS AN ESCAPE HATCH, AND IT IS LISTED RATHER THAN PARKED.
+
+Asked whether reload-as-VOID lets the operator profit. It does not - it is the
+other direction, and that is worse for the pool than for the house.
+
+  the key lasts the run, so a reload ends the ability to sign for that entry.
+  The transcript stops wherever it stopped. Section 11 says a transcript whose
+  inputs were never published cannot be replayed and cannot be finalized as a
+  win, so a reload can never MAKE a player win.
+  But it can unmake a loss. A player who is doing badly, sixty seconds into a
+  round, presses F5. There is now no complete tape, and if a partial tape
+  settles to VOID with a refund then the reload is a free undo: the stake comes
+  back, and every honest entrant's pool is the poorer for it.
+
+The operator is not the winner here and neither is the player exactly - what is
+broken is that a run can be abandoned at no cost. Where it is decided is not
+this letter: it is the settlement rule for a partial tape, which is section 13C
+territory (no quorum, VOID and refund) and needs the committee that does not
+exist yet.
+
+WHAT WOULD CLOSE IT, named so it is not rediscovered: a partial tape must not
+settle to a refund by default. Either the entry forfeits after the challenge
+window when no complete transcript was published, or the session key survives a
+reload so the run can be resumed and the tape completed. Those are opposite
+answers and only one of them can be right; the first keeps the key ephemeral as
+the spec asks, the second contradicts it.
+
+Not a hole in backpressure, and not fixable inside M2.1's client: a client
+cannot decide what its own abandonment is worth. Listed here so the settlement
+work inherits it rather than meets it.
