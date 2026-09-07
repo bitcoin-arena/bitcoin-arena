@@ -12347,3 +12347,46 @@ AFTER that is discovered, which is at settlement.
 
 TESTS. protocol 133 -> 135, blwp-node 66, blwp-client 72, core 85. Money guard
 9 files clean, determinism guard 19 clean. No Unity, no C#, no floats.
+
+## M2.1 23.2: what VOID does to the hold, measured against the other two fates
+
+MEASURED FIRST, not guessed. The rule landed at 9ddf99a; this is what it
+actually answers, printed rather than recalled:
+
+  round                    pool   refunded  winner  operator  actions
+  winner + VOID               0     200000  100000         0  CANCEL NOTHING
+  winner + FORFEIT       100000     100000  200000         0  CANCEL SETTLE
+  winner + FAILED + VOID 100000     200000  200000         0  CANCEL SETTLE NOTHING
+
+  VOID action    NOTHING, authorised true, missing []
+  VOID why       "the HTLC expires and the wallet is refunded automatically;
+                 nobody has to act"
+
+So the VOID refund is already what 23.2 asks for: nobody acts, the operator
+takes zero, the winner's stake never enters the pool, and it stays distinct
+from FORFEIT's SETTLE and from a winner's CANCEL. Only VOID needs nothing:
+asked with a SUSPENDED result, no shares and no signatures, VOID is authorised
+and the other two are not - a settle is short three things.
+
+WHAT IS STILL NOT THERE, and it is not the rule. Nothing issues, settles or
+cancels an actual invoice: `invoice` and `htlc` appear three times in
+`packages/*/src` and every one is a comment. This decides what must be done to
+a hold; doing it is a Lightning endpoint.
+
+AND A UNIT THAT DOES NOT EXIST, found looking for the one check that would make
+"delay is never loss" verifiable without Lightning. 23.1: "CLTV is sized in
+days, comfortably beyond round + objection window + result window + claim
+window". A client should refuse to pay a hold invoice whose CLTV expires before
+the round could finish - a stake that refunded mid-round would be an escape
+hatch. That floor cannot be computed today: the round contract measures its
+length in TICKS (`blockTicks`) and an HTLC in TIME, and the protocol defines no
+tick rate to convert between them. The only place 60 ticks a second is written
+down is a C# comment in `BlwpNet.cs`, which is exactly the leftover number not
+to copy into the money path. Naming it rather than inventing a constant.
+
+MUTANTS, four, all red: VOID settled like a loss (5), VOID made to wait for
+signatures before refunding (2), the house allowed to keep what the pool does
+not hand out (1), a void stake counted into the pool (4).
+
+TESTS. protocol 135 -> 136, blwp-node 66, blwp-client 72, core 85. Money guard
+9 files clean, determinism guard 19 clean. No Unity, no C#, no floats.
