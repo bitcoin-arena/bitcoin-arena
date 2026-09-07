@@ -10166,3 +10166,91 @@ WHAT IS NOT DONE HERE, named rather than implied: who supplies that yes. The
 oracle is an argument to `serve`, and until there is a payment layer the honest
 answer for a live daemon is that it refuses everything. Wiring a real funding
 source is the payment work, not this step.
+
+
+## 2026-09-07 19:40  M2.1 step 5b: an endpoint is read off Bitcoin, not taken from a page
+
+MEASURED FIRST, what a client knows today and where from:
+
+  a round        the page names it - and that is CORRECT. Section 25 opens
+                 "Finding a ROUND is not authoritative: project website,
+                 community sites, a direct link, a QR code, or a copied
+                 round_id", and its table says step 1 "carries nothing".
+                 Nothing to do there.
+  which nodes    `census.js` encodes bond entries and roots them, `buildCensus`
+                 applies confirmations - steps 2 and 3 of 25.1's table exist.
+  the committee  `sortition.js` computes it from the seed. Arithmetic, as the
+                 spec requires. Also exists.
+  the endpoint   `BLWP_NODE`, a page global. A stranger has to take whoever
+                 wrote the page at their word, and a census entry carries NO
+                 endpoint field at all. That is the hosted directory 25.1
+                 forbids, and it is the whole of what was missing.
+
+  Nothing in `packages/*/src` mentioned NodeAdvertisement, BOND_MARKER, a
+  Bitcoin merkle proof or a block header before this. `TAG.advert` had been
+  reserved and never used.
+
+WHY THE VERIFIERS COME BEFORE THE FETCH. 25.1 is normative: "A client MUST
+verify every census entry against block headers it obtained independently. It
+MUST NOT take a census, a committee or an endpoint on the word of any API,
+including one operated by the same party that ships the client." And it says
+why that is normative rather than advisory - the failure has no symptom: such
+a client "behaves exactly like one that verifies - same screens, same rounds,
+same results - right up until the API returns a census that suits whoever runs
+it". Writing the fetch first would build exactly that and then retrofit the
+guard, which the same paragraph says never happens.
+
+WHAT LANDED, protocol package only, no network anywhere in it:
+
+  advert.js   NodeAdvertisement - 5A.1's fields, encode/decode, `advertId` on
+              the reserved tag, signature BESIDE the body because the bond
+              output commits to a body that is fixed when the funding
+              transaction is built.
+  chain.js    `provesTransaction` (a Bitcoin merkle proof against a header's
+              root - not the census tree), `mostWork` over header chains, and
+              `acceptAdvert`, which needs both halves: the transaction really
+              in the block, and the output really committing to THIS body.
+  BOND_MARKER named, and NULL. It is part of the network's identity like
+              `genesis_parameters`: fixing it late makes every earlier bond
+              unfindable. Writing a plausible address into a source file would
+              be settling it by accident, so `bondMarker()` throws instead. A
+              bond search that quietly found none would look exactly like a
+              network with no nodes in it.
+
+MEASURED against real mainnet data, fetched once and written into the test so
+it needs no network: block 100000, header
+0100000050120119...4c86041b0f2b5710, and the merkle proof for the second
+transaction in it.
+
+  the genuine transaction        verifies, and rebuilds the header's own root
+  one bit flipped in the branch  fails
+  the same branch at position 0  fails - the position is part of the claim
+  a different txid, same proof   fails
+  the txid in DISPLAY order      fails. Byte order is the trap: a txid is
+                                 printed reversed from the way it is hashed,
+                                 so a caller who passes what an API prints
+                                 gets a refusal rather than a wrong answer.
+  block 100000's id              000000000003ba27aa200b1cecaad478d2b00432346c3f1f3986da1afd33e506
+  the endpoint swapped           refused, "commits to a different advertisement"
+  a chain that does not link     not in the running at all, and with nothing
+                                 else there is no answer rather than a bad one
+
+MUTANTS, five: the branch side not read from the position (2 red), the
+commitment not compared (1), the proof not required (1), a broken chain still
+counted (1), a single hash instead of the double (4).
+
+THE MONEY-BEARING ENCODINGS DID NOT MOVE, and that is checked rather than
+asserted: of the nine vector files only `index.json` changed, by one line
+adding "advert". `census.json`, `contracts.json`, `sortition.json` and the rest
+are byte-identical, so `encodeEntry`, the census leaf hash and `censusRoot` are
+exactly what they were.
+
+TESTS. protocol 78 -> 87, nine new. core 80/80 with the determinism guard 19
+clean, blwp-node 41/41, blwp-client 26/26, money guard 7 clean. No C# changed -
+protocol only - so PlayMode stays 213 / 189 green / 11 red / 13 skipped and
+EditMode 185 / 181 green / 1 red / 3 skipped from 7b4caea.
+
+WHAT IS NOT DONE, named: nothing FETCHES yet. 5c is the half that asks two
+providers, cross-checks and answers omission - these are the primitives it will
+stand on. And BOND_MARKER has no value, which is a decision for whoever settles
+the genesis parameters, not for this slice.
