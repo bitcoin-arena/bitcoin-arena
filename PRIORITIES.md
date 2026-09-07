@@ -47,8 +47,12 @@ Top item first. Finish and deploy before starting the next.
                                             1, the first in the table: a node
                                             that signs two different results
                                             for one player loses its bond, and
-                                            a retransmission never does. Next:
-                                            rows 5 and 6 of 5A.3.
+                                            a retransmission never does. And
+                                            row 5: a node that signs for a
+                                            round its DECLARED operator plays
+                                            loses its bond, while being
+                                            conflicted alone never does. Next:
+                                            row 6 of 5A.3, the last.
                                             Numbers: TASKBOOK.
    13  M1.a16 playable hunt            M1   done — the hunt is winnable
                                             through the front and the rim
@@ -677,12 +681,12 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
        - issue / settle / cancel the hold invoice - DAEMON: 23.6's
          threshold-signed Lightning node or Fedimint federation, a quorum
          operating real channels
-       - slashing - THE LAW IS IN FOR FOUR OF SIX, the enforcement is DAEMON.
+       - slashing - THE LAW IS IN FOR FIVE OF SIX, the enforcement is DAEMON.
          5A.3B has five steps and only two of them need anybody: publish the
          proof, check it mechanically and commit H(proof) are pure, and are
-         done for 5A.3 rows 1, 2, 3 and 4. Signing path B
+         done for 5A.3 rows 1, 2, 3, 4 and 5. Signing path B
          with k-of-m arbitration keys and broadcasting it are the arbitration
-         set, which does not exist here. Two offences are listed and unwritten,
+         set, which does not exist here. One offence is listed and unwritten,
          and the slash DISTRIBUTION waits on a contract field that would move
          every round id.
        - the committee re-run a suspension waits for - DAEMON: six more

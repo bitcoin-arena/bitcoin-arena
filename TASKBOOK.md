@@ -13595,3 +13595,95 @@ EditMode 190/186/1/3 and PlayMode 216/192/11/13 stand from 8cc7fdd.
 
 The `OFFENCES` count assertion, moved into `slash.test.js` last row precisely
 so this would be cheap, took one line.
+
+## M2.1 5A.3 row 5: signing for a round the declared operator played
+
+The next unwritten row in document order. **Five of 5A.3's six rows are
+written; one remains** - row 6, a fee share claimed without §22A's availability
+rule. Rows 5 and 6 are ordinary offences, not enforcement: the enforcement that
+stays parked is 5A.3B steps 3 and 5, the k-of-m arbitration signature and the
+broadcast.
+
+### The law
+
+5A.13: "A selected node may not sign anything for a round in which its operator
+has an Entry Contract... If a selected node's `operator_id` also signed an Entry
+Contract in that round, the node is conflicted: its result signatures,
+payout-table signatures and settlement participation are invalid, and it earns
+no fee share. Signing anyway is a slashable offence with a one-artifact proof."
+
+Nothing is injected. Like rows 1, 3 and 4 this only reads what two objects
+already say.
+
+### BEING CONFLICTED IS NOT THE OFFENCE. SIGNING IS.
+
+An operator may play a round their node was selected for. What 5A.13 forbids is
+that node SIGNING in it, and its own remedy for a committee pushed under
+threshold by conflicts is ENTRY_VOID - a refund - not somebody's bond. A
+conflicted node that signed nothing has taken nothing from anybody, and the
+check returns no slash for it. That is this row's doing-nothing path and it has
+its own test and its own mutant ("being conflicted is the offence", 1 red).
+
+### The one decision, made in the open
+
+5A.13 calls `operator_id` "a pubkey" AND "a self-declaration... not a proof of
+identity". This package already carried it as a STRING for the second reason -
+`advert.js` says so at the line that encodes it - so reading one as a key is
+done in `operatorKeyOf` and nowhere else: sixty-four LOWERCASE hex characters,
+the way `toHex` writes a key, and anything else declares nobody.
+
+That is not a weakness of the check, it is 5A.13's own scope, in its words: "an
+attacker who runs nodes and plays simply declares nothing, or declares
+unrelated ids, and the rule does not fire... defence in depth, not a Sybil
+control." Measured: an empty string, a word, 63 hex characters, 66, and the
+same key in UPPERCASE all declare nobody and conflict with nobody.
+
+### All three signatures, by the byte the object already carries
+
+5A.13 names result signatures, payout-table signatures and settlement
+participation. All three are encodable here now, and each object's first byte
+says which it is - so no discriminator was invented and no caller declares one.
+A payout table carries no signer of its own (the signature sits beside it), so
+the node it accuses is the proof's; a result and a settlement record carry one
+and it must be the accused's.
+
+### The before and after
+
+| | the entry is a stranger's | the entry is the declared operator's |
+|---|---|---|
+| `slashed` | false | true |
+| `bond` | **undefined - not even named** | `{txid 5555…, vout 3}` |
+| `offence` | - | `OPERATOR_PLAYED` |
+| `signed` | - | `result` / `payout table` / `settlement record` |
+| why | 5A.13 fires on a DECLARED conflict and nothing else | the node's declared operator has an entry in this round, and it signed a … anyway |
+
+### Mutants: 15 planted, 15 killed, none retracted
+
+| mutant | protocol red |
+|--------|-------------:|
+| any entry conflicts with any operator | 1 |
+| an undeclared operator conflicts too | 1 |
+| any string is read as a key | 1 |
+| a short declaration is padded into a key | 1 |
+| being conflicted is the offence | 1 |
+| the proof may name any player | 1 |
+| the proof may be measured against any entry | 1 |
+| the object need not be the named one | 1 |
+| another round's entry counts | 1 |
+| another round's object counts | 1 |
+| another node signing counts | 1 |
+| a stranger can be slashed for a conflict | 1 |
+| any advertisement will do | 1 |
+| the bond is the accuser's to name | 1 |
+| only results count, not tables or records | 1 |
+
+THE PAIR WAS PINNED ONE HALF AT A TIME FROM THE START. Rows 4 and 1 each lost a
+mutant to the opposite mistake - a test moving two proof fields together shows
+neither pinned - so `playerPubkey` and `transcriptHash` have a test each here,
+and the two mutants that move only one of them die at 1 apiece.
+
+### Suites
+
+protocol 207/207 (was 197), blwp-node 70/70, blwp-client 89/89, core 80/80,
+money guard 10 files clean, determinism guard 19 files clean. Unity untouched:
+EditMode 190/186/1/3 and PlayMode 216/192/11/13 stand from 8cc7fdd.
