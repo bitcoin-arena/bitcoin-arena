@@ -12243,3 +12243,61 @@ and it is the hole in this piece.
 
 TESTS. protocol 125 -> 131, blwp-node 66, blwp-client 72, core 85. Money guard
 9 files clean, determinism guard 19 clean. No Unity, no C#, no browser.
+
+## M2.1 23.1: what a dishonest dealer can still do, counted
+
+THE CONTRACT OF THIS PIECE IS SHARE-TO-SEAT BINDING, NOT POLYNOMIAL BINDING.
+It is not Feldman and it is not unqualified VSS, and the module, the tests and
+this file all say so. A dealer who splits with two polynomials and gives some
+seats the second one hands out shares that EACH pass their own seat commitment;
+nothing at handout can tell.
+
+THE PLAYER IS THE DEALER, so this is not an operator fault: it is a player
+arranging that a loss can never be settled.
+
+COUNTED over all 21 ways to pick five of seven, with k seats given a second
+polynomial's share:
+
+  k   every share passes its seat?   subsets that open P   refused
+  0   yes                            21                     0
+  1   yes                             6                    15
+  2   yes                             1                    20
+  3   yes                             0                    21
+
+So a player needs to mis-share THREE of their own seven to make it impossible
+for any five honest settlement nodes to open the committed preimage. That is
+the whole of the escape, and it is the fraction: at k=3 the honest side has 0
+of 21 workable subsets while every share still looks correct to its holder.
+
+CLOSED THIS TURN, the half that needs no group: `reconstruct` takes the
+`stakeCommitment` - H(P), already in the entry contract the player signed - and
+refuses an answer that does not hash to it. Measured on a k=3 handout: some
+subsets produce a well-formed 32-byte value that is NOT P, and unchecked those
+come back looking exactly like a preimage. With the commitment checked, all 21
+refuse. `openStake` tries every subset and answers "none of the 21 ways to pick
+5 shares opens the committed preimage" rather than handing back a wrong one.
+
+A NUMBER THAT MOVED, and what was done about it: how many of the 21 land inside
+32 bytes at all is LUCK - a mixed interpolation lands somewhere in a 521-bit
+field - and asserting 19 directly passed once and failed the next run at 16.
+The test asserts the invariant instead: the ones that do land there are wrong,
+and with the commitment checked every subset is refused. Three consecutive runs
+green.
+
+NOT CLOSED, and it cannot be without a group: catching the mis-share at
+HANDOUT. That is Feldman - commitments in a group with a hard discrete log -
+and this package carries no group for the same reason it carries no curve.
+
+AND A GAP IN THE SPEC ITSELF, named not invented: 13C makes VOID the operator's
+fault and FORFEIT the player's. A player who mis-shares P has caused a
+settlement failure by their own conduct, which reads like 13B's logic, but 13B
+is about equivocation and says nothing about sharing. Nothing here decides it.
+
+MUTANTS, four, and one was a no-op: the answer not checked against the
+commitment (2), openStake trying only the first subset (1), a wrong preimage
+opened when the commitment is absent (2), and openStake reporting success
+without opening anything - written first as `back || new Uint8Array(32)`, which
+changes nothing because `back` is always truthy, then as `ok: true`.
+
+TESTS. protocol 131 -> 133, blwp-node 66, blwp-client 72, core 85. Money guard
+9 files clean, determinism guard 19 clean. No Unity, no C#.

@@ -648,6 +648,16 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      (FORFEIT against VOID after the result window) and the slashing of nodes
      that contradict a replay; both need the other six daemons. Numbers:
      TASKBOOK.
+     THE STAKE PREIMAGE, SPLIT (23.1): RECONSTRUCTION IS IN. Every five of
+     the seven shares rebuild P and hash to the stakeCommitment the player
+     signed; every four refuse. `reconstruct` checks its answer against that
+     commitment, so a subset that rebuilds SOMETHING is never mistaken for
+     one that rebuilt P. THE RESIDUAL, measured: this binds a share to its
+     SEAT and not to one polynomial - it is not Feldman - so a player who
+     mis-shares three of their own seven leaves 0 of 21 subsets able to open
+     the preimage while every share still passes its holder's check. Closing
+     that at handout needs a discrete-log group this package does not carry.
+     Numbers: TASKBOOK.
      THE HTLC PATH (23.2): the RULE is DONE, the plumbing is not. Only
      SETTLE moves money away from a player, and it is refused until the
      result is FINAL with five preimage shares and five settlement
