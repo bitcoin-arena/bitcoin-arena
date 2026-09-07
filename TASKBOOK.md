@@ -9661,3 +9661,84 @@ survived on honest data.
 
 Unity untouched, nothing built, nothing deployed. The daily is still 0.0.567
 from 752e4b1.
+
+
+## 2026-09-07 15:10  M2.1 step B: the game opens a session and its marks come back receipted
+
+MEASURED FIRST. The jslib exported 16 functions and every one was the core -
+init, step, read state, hash, score, ground, solids, restart, teleport,
+impact, params, liquidation, heat, frontline, surface, words - matched one for
+one by 16 DllImports. Nothing in `unity-proto/Assets/Scripts` mentioned
+blwp-node, /play, a round or a checkpoint. Step B was entirely new plumbing.
+
+THE CLIENT IN THE PAGE. `packages/blwp-client/tools/bundle.js` is the same
+smallest-possible bundler the core uses, for the reason that file records: a
+bundler in the trust path is a bad property for something that pins money.
+55.4 KB from 11 modules, and it carries NO crypto - signing and verifying are
+injected - so it is the protocol's encoding plus the client's rules and
+nothing else. `bundle.test.js` holds it to the modules: same round and entry
+ids, the same signed mark byte for byte over a core driven 120 ticks, the same
+words when refusing a short receipt. A one-tick drift planted in the bundle
+turns it red.
+
+Signing is awaited now, so the browser's own Ed25519 through `crypto.subtle`
+can be used rather than vendoring a curve into the page. A synchronous signer
+still works exactly as before.
+
+THE SESSION KEY lives in the page, made by `crypto.subtle.generateKey`,
+non-extractable, and never crosses the bridge - Unity cannot read it and has
+no use for it. It is ephemeral and lasts exactly the run, which is what the
+protocol asks of a session key: the long-term entry key signs once, at the
+entry, and never again per mark. A page RELOAD therefore ends the ability to
+sign for that entry, which is a consequence worth naming rather than hiding -
+a reload is not a socket drop, and nothing in this slice claims to survive one.
+
+THE INPUTS ARE TAKEN WHERE THE CORE IS STEPPED, inside `BlwpStep`, not from a
+copy Unity keeps. A transcript has to be the inputs the core actually stepped
+on; two records of one thing is how they start to differ, and a verifier
+replaying the wrong one lands somewhere else with nothing to say it went
+wrong.
+
+THE CADENCE is the spec's, written as arithmetic rather than as two numbers:
+`IMPLEMENTATION.md` puts INPUT_BATCH at 10 Hz and CHECKPOINT at 1 Hz, the core
+runs at 60 ticks a second, so every 6 ticks and every 60.
+
+MEASURED END TO END, with nothing deployed: a real blwp-node on a real port,
+the real built player served over HTTP, and a real browser pressing PLAY.
+
+  before                       rounds 0  entries 0  batches 0  marks 0  receipts 0
+  first attempt                rounds 1  entries 0  ...  and "[blwp] session:
+                               Failed to fetch". The round was created and the
+                               ANSWER was unreadable: the daemon sent no CORS
+                               headers, and a browser is always on another
+                               origin. There is nothing for an origin check to
+                               protect here - every write is authorised by a
+                               signature over a tagged hash and there are no
+                               cookies - so the headers are sent, including
+                               the x- counts a client reads answers out of.
+  with CORS                    rounds 1  entries 1  batches 75  marks 20  receipts 20
+                               75 batches is 450 ticks against 20 marks, which
+                               is 1200 ticks seen: two thirds of the inputs
+                               were refused and thrown away. Both chains hang
+                               off state the client updates when an answer
+                               returns, and two publishes in flight build the
+                               second from state the first has not finished
+                               moving. Serialised through one queue.
+  after                        rounds 1  entries 1  batches 118  marks 11  receipts 11
+                               x-ticks 708, and 118 x 6 = 708 - nothing lost.
+                               Mark ticks 60, 120, 180, 240, 300, 360, 420,
+                               480, 540, 600, 660: the 1 Hz cadence exactly.
+                               transcript hash c207f484c49d7df7...
+
+  A queued mark hashes the state AT THE TICK IT NAMES, not when the queue
+  reaches it, or a checkpoint would commit to a world a few frames later than
+  the tick it claims.
+
+TESTS. EditMode 178 -> 185 (7 new, `NetSessionTests`), 181 green, 1 red - the
+known CombatFx one. PlayMode 213 / 189 / 11 / 13, the known eleven, nothing
+new. core 80/80 with the determinism guard 19 clean, protocol 78/78 with the
+money guard 7 clean, blwp-node 37/37, blwp-client 13 -> 17.
+
+The session is OFF unless the page names a node and a round. No build that has
+shipped names either, so the daily is exactly the game it was. Nothing was
+deployed and the daily is still 0.0.567 from 752e4b1.
