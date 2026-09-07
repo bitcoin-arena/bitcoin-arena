@@ -10958,3 +10958,68 @@ LEFTOVERS AFTER THIS SLICE: which block a deployment anchors on is still
 nobody's decision (genesis at 68.7 MB, or a checkpoint kept fresh); no page yet
 defines BLWP_CHAIN, so a deploy still opens no session; and the jslib has not
 been Emscripten-linked since 606f54d.
+
+## M2.1 5c slice 5: the client brings the anchor, and a page that offers one is refused
+
+THE HOLE, AND IT WAS MINE. dd18cca wired the door to providers and then took
+the anchor off `BLWP_CHAIN`. `directory.js` said, in a comment I had written
+myself, "It is a caller's argument rather than a page's value on purpose. An
+anchor an attacker supplies is no anchor - he would name a block of his own
+fork"; the jslib said "The anchor is the page's to CARRY" and did exactly what
+the first comment forbids. Weighing, mining and the bond proof were all honest,
+and the block they were all anchored TO arrived from the page.
+
+So the headline of that cut did not hold on the live path. The attacker's world
+was refused only when anchored on a block the client knew, and through the
+jslib he supplied that too.
+
+WHAT LANDED. `discover` anchors on `BITCOIN_MAINNET_GENESIS`, always, and a
+supplied `anchor` is refused by name rather than used - the same shape as the
+five handed keys: "the anchor is the client's own and may not be supplied: a
+block chosen by whoever handed over the chain is not a block the client knows".
+The jslib no longer reads `BLWP_CHAIN.anchor` and the comment that said it
+should is gone.
+
+`BITCOIN_MAINNET_GENESIS_HEADER` - the eighty bytes, not only the hash - is in
+`protocol/src/chain.js` so a chain can START at Bitcoin's first block. Nothing
+about it is taken on trust: the test hashes it and gets
+000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f, and that is
+the only reason to believe either the header or the hash constant beside it.
+The fixtures were rebuilt on it, so an honest chain contains the block the
+client knows because it IS that block, not because a fixture said so.
+
+MEASURED THROUGH THE LIVE SHAPE:
+
+  his whole world, every field a page can give
+      his own mined first block, his bond in the next, his signed
+      advertisement for a node on this round's committee, two providers
+      agreeing completely
+    the library, handed his chain      ACCEPTS it - asserted, so the refusal
+                                       cannot be mistaken for a bad bundle
+    the door                           "no chain: only 0 of 2 providers gave a
+                                       chain" - his chain does not contain
+                                       genesis
+    him offering his own anchor        "the anchor is the client's own and may
+                                       not be supplied"
+  an honest chain rooted at genesis    opens, base https://node.example:443
+  genesis header                       hashes to the block everybody knows;
+                                       80 bytes; matches the hash constant
+
+MUTANTS. Two red: a page-supplied anchor used rather than refused (2), the
+genesis header changed by one byte (9). A third - adding `anchor ||` in front
+of the constant - killed nothing and is NOT counted: the guard above refuses a
+supplied anchor first, so the fallback is unreachable and the mutation changes
+nothing observable. Same shape as the reach-ordering non-mutant recorded
+earlier.
+
+TESTS. blwp-client 62 -> 63, protocol 104/104, blwp-node 41/41, core 85/85.
+Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
+Bundle 120.3 -> 122.0 KB, still 17 modules. No network beyond 127.0.0.1. No C#;
+the jslib is source, not a built artefact. Nothing deployed; daily 0.0.567.
+
+LEFT, AND NOT THIS LETTER: which block a deployment anchors on if it will not
+carry 68.7 MB of headers to genesis - a constant, a decision, (a2); no page
+defines BLWP_CHAIN so a deploy opens no session; the jslib has not been
+Emscripten-linked since 606f54d; and `reach`/`endpointFor` remain exported from
+the bundle and will verify a chain handed to them - named on the record, not a
+boundary, since a hostile page can ignore the client entirely.
