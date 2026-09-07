@@ -9794,3 +9794,26 @@ changed in this piece, only the jslib and the client.
 
 Page reload is deliberately NOT handled: a session key lasts the run, a reload
 is not a socket drop, and no persistence was added for it.
+
+STEP B, THE TABLE, kept here rather than in the working list:
+
+  happy path      before   rounds 0  entries 0  batches 0    marks 0   receipts 0
+                  after    rounds 1  entries 1  batches 118  marks 11  receipts 11
+                           x-ticks 708, 118 x 6 = 708, nothing lost
+                           mark ticks 60, 120, 180 ... 660, the 1 Hz cadence
+  a dropped socket, terminated from the node's side
+                  before   batches 119  marks 11  receipts 11
+                  the page "resumed at tick 773, 119 batches and 11 receipts
+                           behind us"
+                  after    batches 133  marks 12  receipts 12, x-ticks 1367
+                           mark ticks 120, 180 ... 720, then 1320
+
+THE THREE LEFTOVERS, named when B closed and not done in it:
+  - a reconnect is attempted ONCE. A node still down when it retries leaves
+    the session in `error` and nothing tries again.
+  - the held ticks grow without limit while the socket is down. Nothing
+    watches `bufferedAmount` either, which is IMPLEMENTATION.md's own note:
+    "`ws` buffers without limit... above a threshold drop ghost frames first -
+    they are non-authoritative by definition - and never receipts."
+  - a page RELOAD ends the run's ability to sign, because the session key
+    lasts the run by design. Not a socket drop, and deliberately not handled.
