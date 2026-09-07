@@ -10600,3 +10600,85 @@ checkpoint-or-genesis (a shipped checkpoint header is a trust anchor and a
 constant somebody must settle; syncing from genesis is ~4 MB and real work in a
 browser) and the beacon - 5A.5 puts the committee seed in drand at
 `committee_time`, which is neither Bitcoin nor the page, and it is not 5c.
+
+## M2.1 5c, the hole in slice 1: the work was never checked to have been done
+
+WHAT WAS WRONG. `chainWork` summed `workOf`, which reads the difficulty out of
+bytes 72..76 - four bytes WRITTEN BY WHOEVER HANDS THE HEADER OVER. Nothing
+asked whether the hash met the target it claimed. The comment in headers.js
+said "forging is already impossible... the work is arithmetic over bytes nobody
+can choose", and that sentence was simply wrong.
+
+BEFORE, measured on the code at 54f41d2:
+
+  mainnet 499998-500000, work    24135148547246749491129
+  one fabricated header, work    57896044618658097711785492504343953926634992
+                                 332820282019728792003956564819968
+
+Thirty-two orders of magnitude, from four bytes and no mining at all.
+
+The fork rule masked it in the obvious case - the fake chain won on work, the
+honest blocks were not in it, refused - but that is a denial of service, not a
+defence: one provider could make every client refuse forever. And it did NOT
+mask the real attack. A provider serving the HONEST chain plus one header of
+his own on the end is a SUPERSET, so every honest provider's blocks are in his,
+there is no stray and nothing disagrees:
+
+  accepted: true, from provider 1, headers 4
+  winning tip   803e37e66daab4b5025b2a4231d43b46232af6396b4506aae8c8f9a453ba163a
+  merkle root   bbbbbbbb...bbbbbbbb, his to choose
+
+That merkle root is exactly what slice 2's bond proof would have been checked
+against.
+
+AFTER, the same header and the same claimed work:
+
+  fabricated header hash        803e37e66daab4b5025b2a4231d43b46232af6396b45...
+  meets its claimed target      false
+  claimed work of his chain     578960446186580977117854925043439539266349923
+                                32820282043863940551203314311097
+  honest work                   24135148547246749491129
+  two providers (one his)       refused: "only 1 of 2 providers gave a chain",
+                                and provider 1 is named "this header was not
+                                mined: its hash does not meet the target it
+                                claims"
+  three providers (two honest)  ok, agreed 2, headers 3 - his chain is
+                                discarded, not obeyed, and the fabricated
+                                header is not in the answer
+
+WHAT LANDED. `targetOf` and `meetsTarget` in `protocol/src/chain.js`, and
+`chainWork` refuses a header that does not meet its target BEFORE adding its
+work. The byte order is the usual trap and is now written down: a block hash is
+stored reversed from the way it is read as a number, so the comparison is
+against the reversed bytes. A mantissa with its high bit set is a negative
+target and is no target at all.
+
+REAL HEADERS PROVE IT IS NOT JUST REFUSING EVERYTHING: mainnet 100000 and
+500000 both meet their targets, and the three-header chain still weighs
+24135148547246749491129.
+
+THE FIXTURES NOW MINE. `blockOf` grinds the nonce until the hash meets the
+target, because a fixture that could not be refused measures nothing. The
+default bits are 0x207fffff - a target just under 2^255, so roughly every
+second nonce works - since mining at mainnet difficulty in a test is not
+possible. Nothing else in the suites had to change: 101 -> 104 protocol and
+44 -> 46 client, with every existing fork and agreement test untouched.
+
+MUTANTS, four, all red: the hash not compared to the target (2 protocol +
+2 client), an unmined header still counted (2 + 2), a negative target treated
+as a target (1), and the hash compared in display order rather than as a
+number (3 + 7).
+
+STILL ON THIS LETTER, not parked and not slice 2: the question needs a range,
+so two honest providers serving different ranges are not read as a fork; one
+origin counted twice must not read as two sources; the HTTP body needs a bound;
+and a timed-out fetch should abort its socket.
+
+A LIMIT, named. There is no network minimum difficulty here, so a chain of very
+easy headers is accepted - it simply carries almost no work and cannot outweigh
+a real chain. Enforcing a minimum, and the retarget schedule with it, is a
+network-parameter decision and sits with checkpoint-or-genesis.
+
+TESTS. protocol 101 -> 104, blwp-client 44 -> 46, blwp-node 41/41, core 85/85.
+Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
+No C#, no Unity, nothing deployed.
