@@ -12844,3 +12844,100 @@ money guard 9 files clean, determinism guard 19 files clean. Unity untouched.
 0 of 13C. It was the whole of the remaining unblocked M2.1: PRIORITIES named
 exactly one open item there and this was it. What is left of M2.1 is 13C's
 slashing, which needs the other six daemons.
+
+## M2.1 backpressure: the session's one word, and the game being told
+
+Two holes an audit found in code no test could load, closed with numbers.
+
+### A - the socket-up VOID, before and after
+
+The page kept `net.state` and learned `ended` from one place only: `reconnect`
+answering null, which is the socket-DOWN path. `endRun` closes the socket, and
+the close listener's first line is `if (this.ended) return;` - the run is over,
+not dropped - so a VOID that happened with the socket still up (a slow node
+filling the hold; the case `backpressure.test.js` calls "the first dropped tick
+ends the run") reached nothing. Measured on the bridge itself:
+
+| | before | after |
+|---|---|---|
+| `client.state` after a socket-up VOID | (did not exist) | `ended` |
+| status line, first word | `ready` | `ended` |
+| the same line also carried | `ENDED VOID` | `VOID <reason>` |
+| `onEnd` fired | never | once, with word and reason |
+
+Two words about one session, and the first is the one a reader trusts.
+
+The word and the line now live in `client.js`. `opening -> ready -> dropped ->
+ready ... -> ended`, terminal, and `status(seen)` builds the panel line where
+`node --test` can read its first word. The jslib keeps `net.state` only for the
+phase before a client exists: `opening`, or `error` with the client nulled.
+`gone` is gone - grep showed three reads and no assignment anywhere, so it had
+never been set.
+
+### B - the game was never told
+
+`NetSession.Status` is a string polled twice a second and `git grep` found
+nothing consuming it but HUD text. So after a VOID the truck kept driving, the
+core kept stepping, and the player finished a round nobody could pay out.
+
+Two exports now: `BlwpNetEnded()` as an int, because it is asked every tick and
+on every input read and pinning a 256-byte buffer per frame to be told "no" is
+a cost every player pays for the case that has not happened; and
+`BlwpNetEnding(ptr, cap)` writing `<WORD> <reason>` or nothing. Both read
+`client.ending` and `client.endingReason` and choose neither.
+
+C# consumes them as two rules, static so an editor can read them - `BlwpNet` is
+a stub outside a WebGL player, so nothing there will ever answer true:
+
+  CoreDrivenTruck.ShouldStop(driving, ended)      -> stop stepping
+  CoreDrivenTruck.LocksControls(locked, ended)    -> take no more input
+
+No combat, no driving, no scoring, no delivery moved into C#. `StopDriving`
+hands the rigidbody back the way `OnDisable` already did and logs the reason it
+was given. Nothing tells the node: 13C reads what the node already holds, and
+no protocol message was invented.
+
+### C - coverage across the bridge
+
+The jslib is one `mergeInto(LibraryManager.library, {...})` call, which is an
+object literal. `bridge.test.js` evaluates it with a `mergeInto` that keeps
+what it is handed and a fake `Module.HEAPU8`, then drives the three exports
+against a REAL client on a REAL node and reads the bytes C# would read. What is
+stubbed is Emscripten; nothing that matters is mocked.
+
+### Mutants: 10 planted, 10 killed, none retracted
+
+| mutant | blwp-client red |
+|--------|----------------:|
+| endRun leaves the word alone | 4 |
+| endRun tells nobody | 3 |
+| the ending is left out of the line | 2 |
+| the line always opens with ready | 4 |
+| connect says ready on an ended run | 1 |
+| a dropped socket keeps saying ready | 2 |
+| the bridge never reports an ending | 1 |
+| the bridge picks the word itself (DELIVERED) | 1 |
+| the panel builds its own line again | 1 |
+| a run that ends mid-attempt (see below) | - |
+
+ONE SURVIVED THE FIRST PASS at 0 red: removing the `ended` guard in `connect`.
+The window is real - the game keeps handing over ticks while a reconnect is in
+flight, so the hold can fill and end the run between the socket being asked for
+and the socket opening, and the loop's own catch would put the word back only a
+moment later. A moment in which a panel and a game read `ready` on a round that
+cannot be settled. A test for that window went in and the mutant then died at
+1 red. It was not retracted and it was not tested around.
+
+### Suites
+
+protocol 149/149, blwp-node 70/70, blwp-client 88/88 (was 79; +5 state-word,
++4 bridge), core 80/80, money guard 9 files clean, determinism guard 19 files
+clean.
+
+Unity EditMode was RUN, twice, because C# changed: 185/181/1/3 before the new
+rules and 187/183/1/3 after, `error CS` 0 both times. The one failure is
+`CombatFxTests.RifleFireProducesAFlashAndATracer`, which was already failing
+and has nothing to do with this door. PlayMode was not re-run; 213/189/11/13
+still stands from 7b4caea. The WebGL bridge is measured by evaluating the
+jslib, not by a browser - a real player run is still the thing neither of those
+proves.
