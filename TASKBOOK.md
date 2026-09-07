@@ -8620,3 +8620,23 @@ TESTS, counted per suite.
   EDITMODE  159 / 155 green / 1 red / 3 skipped. The red is
             `CombatFxTests.RifleFireProducesAFlashAndATracer`, the known one.
   NEW       WheelSeatingTests, 4 PlayMode tests, all green.
+
+DEPLOYED AND RE-MEASURED ON THE LIVE DAILY. btc-logistics-core.pages.dev,
+wasm md5 f530f17206c36c3ec191dfb964ce8d4d, identical to the local artefact,
+built from 2011145. btc-logistics-war.pages.dev untouched (HTTP 200, not
+redeployed). The probe was run again against the deployed page:
+
+  standing at the depot, 20 lines
+    box sunk 0.000, tyre sunk 0.000, seated on 0.523
+    (one line at 0.007 / 0.000 before the truck had settled)
+
+  driving, 17 lines
+    box sunk   0.044 0.047 0.056 0.068 0.075 0.106 0.118 0.130 0.146 0.159
+               0.180 0.199 0.214 0.220 0.223 0.233 0.245
+    tyre sunk  0.000 on every one of the seventeen
+    seated on  0.523 on every one of the seventeen, across a run that turned
+               the truck through the whole map - which is the heading fix
+               holding on the live build, not only in the fixture
+
+So the two numbers now sit next to each other in one line and say different
+things, and the one that means something says the tyre is on the road.
