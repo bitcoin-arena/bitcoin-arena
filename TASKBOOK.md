@@ -8766,3 +8766,16 @@ symbol among them - including the fstream path that is the one already shipping,
 which is what says this window was quiet rather than the coin-margined route
 being wrong. Nothing was merged into `OnLiquidation`, because nothing spoke.
 The run wants repeating at a busier hour before a8 is called either way.
+
+DEPLOYED AND PHOTOGRAPHED. btc-logistics-core.pages.dev, wasm md5
+1f2678c3cb24240d3ba9f3efa0b61c4a, identical to the local artefact, built from
+ab4ab5b and stamped 0.0.551. Both screens shot at 1024x768:
+
+  loading screen  "Bitcoin Logistics War / build 0.0.551 / 0 % · 0.0 / 19.2 MB
+                  / Loading the program … / 19.2 MB to load. The first time is
+                  the slowest — after that most of it is in the browser cache."
+                  Every word English, and the number under the title.
+  splash          "build 0.0.551", right-aligned under the title bar, above the
+                  three numbered steps and the PLAY / SPECTATE buttons.
+
+btc-logistics-war.pages.dev untouched (HTTP 200, not redeployed).
