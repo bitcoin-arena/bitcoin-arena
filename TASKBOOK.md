@@ -12736,3 +12736,111 @@ Unity untouched.
 Only clause 4, slashing, and it is daemon-blocked. The replay in clause 1 ("all
 nodes replay that object") is the committee's, not this repo's: the node
 imports no core by law.
+
+## M2.1 backpressure: a VOID run stays VOID when the socket comes back
+
+### The baseline, measured at 8c8c68a before anything was written
+
+The letter's premise was that a reconnect is tried once and the hold grows
+without limit. Both halves were already false, and saying so was the first
+thing measured.
+
+**Reconnects.** The loop was `blwp.jslib:306-333`: retry forever, backoff
+1000 -> 2000 -> 4000 -> 8000ms cap, one attempt in flight on `net.chain`, and
+its only stop condition was `net.state === 'gone'`. Its own comment records
+that one-attempt was an earlier fault. **0 tests reached it** - all 19
+"reconnect" lines in the client suites drive `connect()` + `resume()` by hand,
+because the jslib is the one file `node --test` cannot load.
+
+**What grew while down.** Socket closed, 3000 ticks fed at the page's cadence
+(a batch every 6th, a mark every 60th), contract `blockTicks: 9000`:
+
+| down-tick | held | marksSkipped | dropped |
+|-----------|-----:|-------------:|--------:|
+| 600       |   0* |            1 |       0 |
+| 1200      |  594 |            1 |       0 |
+| 1800      | 1194 |            1 |       0 |
+| 2400      | 1794 |            1 |       0 |
+| 3000      | 2394 |            1 |       0 |
+
+`said` 0, marks in flight 0, publishes in flight 0. Marks are skipped, never
+queued. 550 messages were handed to a socket that was not there, each answered
+`error there is no socket`. (*the 0 is `held` under-reporting: up to `chunk` =
+600 rows sat inside a doomed publish promise, neither held nor sent.)
+
+**The bound that already existed.** `maxHold = blockTicks` = 9000 ticks = 150s
+at 60Hz, and the first tick that will not fit is `dropped=1, ended=true,
+ending='VOID'`. Justified in the code, not chosen by taste. Left alone.
+
+### The hole that was actually there
+
+```
+ENDED : ended true  ending VOID
+ENDED : reason a tick was dropped at 607: the hold was full at 600, so no
+        transcript from here can be replayed
+ENDED : resume() answered {"ticks":6,"batches":1,"nextTick":6,"receipts":1,
+        "live":false,"witnessed":0}
+ENDED : after resume, ended true ending VOID nextTick 6 held 600
+```
+
+`resume` never looked at `ended`. The jslib then set `net.state = 'ready'` and
+logged `resumed at tick 6`. A link the operator owns had ended the player's run
+and the page showed a healthy session: status `ready`, the player still
+driving, every later tick silently discarded by `record`, nobody told. A
+disconnect working as an escape hatch, in the operator's favour.
+
+### What went in
+
+`Client.reconnect(where)` in `packages/blwp-client/src/client.js`: one in
+flight whatever the drop rate (a second caller gets the first one's promise),
+retries with the same 1s/2s/4s/8s ladder so a two-second node restart does not
+end a session, and reads `ended` EVERY time round rather than once on the way
+in - the game keeps handing over ticks through an outage, so the run can end
+while the loop is asleep. `sleep` is injected, like `sign` and `verify`, so the
+ladder can be watched in milliseconds instead of thirty real seconds.
+
+`resume` refuses an ended run by name and returns no numbers. It decides
+nothing: `endRun` decided VOID where the fault happened, and this only declines
+to re-animate it. No second word is ever set and no outcome is computed in a
+browser.
+
+`drain` and `markNow` do not touch the wire with no socket. 550 doomed sends
+became 0, and `held` reports 3006 of 3006 instead of reading up to 600 short.
+
+`blwp.jslib` lost its copy of the loop, its `chain`, `tries`, `backoff` and
+`drops`, and calls `client.reconnect(net.where)`. When that answers null the
+run is over: the page prints the client's own word and reason and goes to
+state `ended` - it does not pick one. The status line gained ` ENDED <word>`.
+
+### Mutants: 9 planted, 9 killed, none retracted
+
+| mutant | blwp-client red |
+|--------|----------------:|
+| reconnect ignores ended (the door) | 2 |
+| reconnect ignores ended (the loop) | 2 |
+| two reconnects in flight | 1 |
+| the backoff never doubles | 1 |
+| the backoff has no cap | 1 |
+| resume ignores ended | 1 |
+| drain sends with no socket | 1 |
+| markNow sends with no socket | 1 |
+| the hold bound is a taste number (100000) | 4 |
+
+TWO OF THEM KILLED BY STALLING FIRST, and that was fixed rather than counted.
+A loop that ignores `ended` goes on opening sockets after its assertion has
+already failed, so `node --test` never exited and the runner timed out at 200s
+- a suite that stalls says nothing about which rule broke. Both tests now RACE
+the loop against a 1000ms wait and assert on the result, and park the loop in
+`finally` (`sleep` replaced with a promise that never settles, which holds no
+timer so the process can exit). Both then died red, at 2 and 1.
+
+### Suites
+
+blwp-client 79/79 (was 72), blwp-node 70/70, protocol 149/149, core 80/80,
+money guard 9 files clean, determinism guard 19 files clean. Unity untouched.
+
+### What this closes
+
+0 of 13C. It was the whole of the remaining unblocked M2.1: PRIORITIES named
+exactly one open item there and this was it. What is left of M2.1 is 13C's
+slashing, which needs the other six daemons.

@@ -28,10 +28,9 @@ Top item first. Finish and deploy before starting the next.
                                             node publishes the proof it holds,
                                             a stranger fetches it by entry id,
                                             and every refusal keeps the signed
-                                            mark. Next: the rest of 13C — VOID
-                                            with the HTLC refund, and slashing
-                                            — which needs the other six
-                                            daemons. Numbers: TASKBOOK.
+                                            mark. Next: the rest of 13C —
+                                            slashing — which needs the other
+                                            six daemons. Numbers: TASKBOOK.
    13  M1.a16 playable hunt            M1   done — the hunt is winnable
                                             through the front and the rim
                                             pays almost nothing; spectate is
@@ -763,9 +762,16 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      spec's cadence, and reconnects and resumes both chains when the socket
      goes. Measured against a real node with a real browser; numbers in
      TASKBOOK.
-     Still open here: backpressure - a reconnect is tried once, and the held
-     ticks grow without limit while the socket is down. M2.1 is not
-     finished.
+     BACKPRESSURE: DONE. The reconnect loop is in the client now, not in the
+     jslib where nothing could measure it: one attempt in flight whatever the
+     drop rate, a backoff so a two-second restart does not end a run, and it
+     stops the moment the run has. A run that VOIDed on the publish path
+     stays VOID when the socket comes back - `resume` refuses it by name and
+     hands back no tick numbers, where it used to answer as if the session
+     were healthy - and nothing is offered to a wire that is not there. The
+     hold bound is still the round's own length. Numbers: TASKBOOK.
+     Still open here: nothing unblocked. What is left of M2.1 is 13C's
+     slashing, which needs the other six daemons.
   4. **Entry quotas.** DONE. A funded entry before the node stores a byte.
      Both HTTP doors refuse until something the operator trusts says the stake
      exists, and the default is no - a daemon that assumed funding would be the
