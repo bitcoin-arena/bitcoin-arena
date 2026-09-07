@@ -9887,3 +9887,82 @@ money guard 7 clean, blwp-node 37/37, blwp-client 19/19. No C# changed in this
 piece - the jslib and the node's server only - so PlayMode stays 213 / 189
 green / 11 red / 13 skipped and EditMode 185 / 181 green / 1 red / 3 skipped
 from the run at 7b4caea.
+
+
+## 2026-09-07 17:20  M2.1 backpressure: the hold is bounded and one publish is in flight
+
+WHAT THE PATH ACTUALLY DID, read before changing it. `net.publish` sliced a
+chunk off the hold and appended a link to a promise chain on every sixth tick
+whether or not the one before had finished, and `net.mark` did the same every
+sixtieth. So a slow node grew a QUEUE OF LINKS, one per six ticks, each holding
+its words - and the `bufferedAmount` check added earlier sat INSIDE a link,
+which defers work without bounding anything. The hold was not the unbounded
+thing; the queue was, and nothing counted it.
+
+It also lived in the jslib, which is the one place in this project that cannot
+be tested. So the rules moved into `@blwp/client`, where they are measured
+against a real node, and the page and the tests now run one set of rules rather
+than two that look alike.
+
+THE THREE RULES, and none of the bounds is invented:
+
+  the hold is bounded by the ROUND. `blockTicks` is the round's own length off
+  its contract; inputs for more ticks than the round HAS are inputs for a round
+  that is over, and the node already refuses a batch longer than it. Past the
+  bound a tick is COUNTED, not silently dropped - `dropped` is what makes a
+  stall visible.
+
+  one publish in flight, so there is no queue to grow. What is not sent yet is
+  still held, where it is counted.
+
+  a mark is skipped rather than queued. Ticks are the transcript and must not
+  be lost - unpublished inputs cannot be replayed and cost the player the run -
+  but a checkpoint says where the world was AT A TICK, and one that could not
+  go out while its moment passed is not that moment. Skipping is also what
+  stops a slow link turning into a flood of marks the instant it clears.
+  `marksSkipped` counts them.
+
+MEASURED against a real node with a deliberately slow LINK (the node and the
+client share one event loop, so a slow handler would stall the client too and
+measure nothing):
+
+  the hold           1800 ticks offered into a 600-tick round
+                     before: it would have kept all 1800
+                     after:  held 600, dropped 1200, counted
+  two in flight      600 ticks at 40 ms a message
+                     before: a link per six ticks, unbounded
+                     after:  worst concurrent publishes 1
+  a flood of marks   six marks due while one is going, 60 ms a message
+                     before: six queued and sent when the link cleared
+                     after:  1 sent, 5 skipped and counted
+
+  mutants: unbound the hold, allow two publishes, queue the marks - each turns
+  exactly one of the three red.
+
+AND END TO END, the same node-down cycle as before, with the client's rules
+now driving the page:
+
+  playing            batches 102  marks 18  receipts 18
+  node down          batches 102  marks 18  receipts 18
+  the page said      "resumed at tick 1018 after 5 try(s), 102 batches and 18
+                     behind us"
+  after              batches 106  marks 19  receipts 19, x-ticks 1534
+                     mark ticks 60, 120 ... 1080, then 1560
+
+18 marks by the drop where the old shape managed 11 over a longer run: the
+cadence holds now because nothing is queued behind a slow answer. 1534
+contiguous ticks is the proof the backlog drained in order, since the node
+accepts no gap.
+
+A STALL IS NOT AN ESCAPE HATCH, and it is worth saying why plainly: what a
+stalling player achieves is an unpublished transcript, and section 11 is
+explicit that a transcript whose inputs were never published cannot be replayed
+and therefore cannot be finalized as a win. Withholding is never an advantage.
+The counts - `dropped`, `marksSkipped`, `drops`, `tries` - are on the status
+line so a stall is visible rather than silent.
+
+TESTS. blwp-client 19 -> 22, three new in `backpressure.test.js`. blwp-node
+37/37, core 80/80 with the determinism guard 19 clean, protocol 78/78 with the
+money guard 7 clean. No C# changed - the jslib, the client and the node's
+server only - so PlayMode stays 213 / 189 green / 11 red / 13 skipped and
+EditMode 185 / 181 green / 1 red / 3 skipped from the run at 7b4caea.
