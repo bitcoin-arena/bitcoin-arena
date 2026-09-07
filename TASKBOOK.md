@@ -13503,3 +13503,95 @@ Mutants: "the proof may name any entry" 1 red, "the proof may name any player"
 protocol 184/184 (was 183). blwp-node, blwp-client, core and both guards
 unchanged and not re-run for theatre - no file outside `packages/protocol`
 moved. Unity untouched.
+
+## M2.1 5A.3 row 1: a node that signs two different results for one player
+
+The first row of the table in document order, and the last of the four whose
+`F` or comparison this package already had. **Four of 5A.3's six rows are now
+written; two remain** - row 5 (signing for a round the operator played, 5A.13)
+and row 6 (a fee share without the availability rule, 22A).
+
+### The purest of the four
+
+Rows 3 and 4 recompute an `F`; row 2 needs somebody to have replayed. This one
+only COMPARES, so no attesting party enters at any point and 5A.3B's residual -
+an attester who "can, in principle, slash without cause" - does not touch it.
+The two objects ARE the offence, which is what 5A.3 means by "a portable
+artifact anyone can check".
+
+It is 13B's rule with the sides swapped. There, two marks at one tick forfeit a
+PLAYER's stake; here, two results about one player cost a NODE its bond. Both
+are a signature comparison and neither needs a curve in this package: whose
+signature it is stays the caller's, the same boundary `provesEquivocation`
+draws.
+
+### One offence, one commitment
+
+5A.3 row 1 is about a PAIR, and a pair that could be written either way round
+is two proofs of one offence with two different hashes. 5A.3B step 4 puts
+H(fraud_proof) on chain and rests "every slash is permanently auditable" on it,
+so an offence that could be minted twice is one an auditor cannot tell from two
+separate offences.
+
+`orderedResultIds` sorts the two ids by their bytes: the LOWER is the one the
+proof names in `signedResultId`, the higher rides in `transcriptHash`, which on
+every row means "the object this offence is measured against" - a transcript on
+row 2, the published inputs on row 3, the entry on row 4, the other result
+here. Measured: handing the evidence in either order gives the same commitment,
+and a proof that names them the other way round is REFUSED rather than being a
+second valid proof of the same thing.
+
+### The before and after
+
+| | the same result twice | two different results |
+|---|---|---|
+| `slashed` | false | true |
+| `bond` | **undefined - not even named** | `{txid 5555…, vout 3}` |
+| `offence` | - | `TWO_RESULTS` |
+| why | those are the same result, signed twice | the node signed two different results for one player of one round |
+
+A repeat is not a contradiction, exactly as it is not one in 13B: taking a bond
+for a retransmission would punish a dropped socket. Re-signing one result with
+a different 64 bytes is still one result - the id is taken over the body, and
+the signature sits beside it.
+
+Two nodes disagreeing is NOT this offence - that is 13C's no-quorum case, which
+voids or forfeits an entry and must take nobody's bond - and two results about
+different players or different rounds are two honest answers.
+
+### Mutants: 12 planted, 12 killed, none retracted
+
+| mutant | protocol red |
+|--------|-------------:|
+| a repeat is an offence | 2 |
+| the pair may be named either way | 2 |
+| only the named id is pinned | 1 (was **0**, see below) |
+| only the other id is pinned | 1 |
+| the order is the call order | 2 |
+| any number of results is a pair | 1 |
+| another node signing counts | 1 |
+| another round counts | 1 |
+| another player counts | 1 |
+| a stranger can be double-signed against | 1 |
+| the bond is the accuser's to name | 1 |
+| any advertisement will do | 1 |
+
+**ONE SURVIVED AT 0 RED and it was the same hole row 4 had.** Checking only
+`signedResultId` and dropping the `transcriptHash` half left every test green,
+because the swap test moves BOTH fields at once and the single-field check
+still catches that. So `transcriptHash` was not actually pinned by anything - a
+free variable in a body whose hash goes on chain, for the second row running. A
+test now asserts each half of the pair alone, and the mutant dies at 1.
+
+That is twice in two rows. The shared `SlashProof` body is the reason: a field
+that means something different on each row is a field each row has to be shown
+to pin, and a test that moves two of them together shows neither.
+
+### Suites
+
+protocol 197/197 (was 184), blwp-node 70/70, blwp-client 89/89, core 80/80,
+money guard 10 files clean, determinism guard 19 files clean. Unity untouched:
+EditMode 190/186/1/3 and PlayMode 216/192/11/13 stand from 8cc7fdd.
+
+The `OFFENCES` count assertion, moved into `slash.test.js` last row precisely
+so this would be cheap, took one line.
