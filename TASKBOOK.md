@@ -8160,3 +8160,39 @@ them out with now.
 The only thing crossing anything in either picture is the drop-off marker over
 the ticker - world-projected, excluded on purpose with the fallout marker, the
 WASTED scrim and the UNDER FIRE frame.
+
+
+## 2026-09-07  M1.a13 closed: the count, the build and the four shapes
+
+  EditMode 156: 152 green, 1 red, 3 skipped
+    red   CombatFxTests.RifleFireProducesAFlashAndATracer - the retired C#
+          army's rifle path, which raises no Shot. Editor-only by
+          construction; the product does not run that engine.
+    skip  the two parked-truck reference measurements and the glyph probe
+  PlayMode 214: 187 green, 12 red, 15 skipped
+    red   the eleven documented Battlefield.Army reds, unchanged names, plus
+          RampReadyTests.TheRealTransactionsReplaceTheStandInsWhileNothing
+          IsLoaded - the rotating load flake, green 1 of 1 on its own against
+          this tree, checked rather than assumed.
+
+  live   btc-logistics-core.pages.dev/Build/webgl.wasm.unityweb
+         md5 cc2bd8da5ae829cafe22a2fc0e863ba2, identical to the local
+         artefact, built from 749e0c2. btc-logistics-war.pages.dev untouched.
+
+  shapes 844x390   Linux player, photographed
+         1000x360  Linux player, photographed
+         1024x768  browser on the daily, photographed
+         1920x1080 browser on the daily, photographed
+
+AND ONE THING THAT WAS NOT A STRAY EDIT. The build refreshed
+`WebGLTemplates/BtcLogistics/blwp-core.js` through `SyncCore`, and the diff is
+not cosmetic: the committed copy still had `SCORE_WORDS = 7` and no `S_HEAT`.
+That is the core the browser LOADS. Leaving it out would have left the repo
+saying the page runs a core without the heat word while the deployed page runs
+one with it - the same class of fault as the stale bundle this project has
+been caught by before. It is committed, and it is byte-identical to
+`packages/core/dist/blwp-core.js`.
+
+`Assets/Resources/build.txt` is deliberately NOT committed: it is written at
+build time from the commit being built, so a copy in the tree would be a stamp
+that is wrong the moment anything else lands.

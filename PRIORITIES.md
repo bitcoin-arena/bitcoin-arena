@@ -63,8 +63,9 @@ Twelve red tests: none on the deploy path. List in TASKBOOK.md.
 
 ## M1
 
-Liquidation picture — OPEN. Hunted fire is a13 (Daniel 21:18). Do not
-start a14. Details: TASKBOOK.md. Next letter: M1.a16.
+Liquidation picture (a13) — CLOSED, and live on the daily. Current work:
+M1.a14 — camera, HUNTED, score. Not started. Details: TASKBOOK.md.
+Next letter: M1.a16.
 
 M1.a8: not done (parked) — coin-margined Binance probed.
 
@@ -72,8 +73,11 @@ M1.a11: not done — strike voice built, needs Daniel's ear.
 
 M1.a12: not done (parked) — five extra venues, no public stream.
 
-M1.a13: 2026-09-05 morning picture — NOT DONE. Hunted fire. Live on the daily and shot on a
-phone at 844x390.
+M1.a13: 2026-09-05 morning picture — DONE. The driving HUD is closed and live:
+every element has a rect, nothing overlaps at nine shapes or in either state of
+the two debug panels, and it is photographed at four - 844x390 and 1000x360 on
+a player, 1024x768 and 1920x1080 in a browser on the daily. Numbers in
+TASKBOOK.
 the SIM switch fires the core's strike, the HUD names that liquidation and
 its exchange, the mushroom stands on the crater floor with dust along the
 ground, every strike in a round draws full size, the crater is 1.5x deeper
