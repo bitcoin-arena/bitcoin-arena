@@ -657,6 +657,9 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      mis-shares three of their own seven leaves 0 of 21 subsets able to open
      the preimage while every share still passes its holder's check. Closing
      that at handout needs a discrete-log group this package does not carry.
+     A handout no five seats can open is FORFEIT, not VOID: the player deals
+     their own shares, so sabotaging settlement of your own stake is not the
+     operator's fault, and VOID would hand a loser their money back for it.
      Numbers: TASKBOOK.
      THE HTLC PATH (23.2): the RULE is DONE, the plumbing is not. Only
      SETTLE moves money away from a player, and it is refused until the

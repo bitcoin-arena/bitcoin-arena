@@ -12301,3 +12301,49 @@ changes nothing because `back` is always truthy, then as `ok: true`.
 
 TESTS. protocol 131 -> 133, blwp-node 66, blwp-client 72, core 85. Money guard
 9 files clean, determinism guard 19 clean. No Unity, no C#.
+
+## M2.1 23.1: a handout nobody can open is FORFEIT, not VOID
+
+THE CLASSIFICATION, decided by Daniel and encoded here. The player IS the
+dealer of their own stake preimage - 23.1 has them split P and encrypt one
+share to each settlement seat - so a handout where no five of the seven open
+the committed P did not happen to anybody. It was made, and only the player
+could have made it.
+
+VOID is the operator-fault path: nobody acts, the HTLC expires, the stake goes
+home. Calling a sabotaged handout VOID would hand a losing player their money
+back for having broken settlement themselves, which is the same family as
+escaping by disconnect.
+
+BEFORE AND AFTER, in msat, one winner and one saboteur at 100000 each:
+
+                     pool   refunded   winner   operator
+  as FORFEIT (now)  100000    100000   200000          0
+  as VOID (before)       0    200000   100000          0
+
+So the difference is exactly the stake: as VOID the dealer has it back and the
+winner is paid nothing beyond their own; as FORFEIT it pays the winner. The
+house takes zero either way, which is the other half of the property - this
+closes a player escape without opening an operator one.
+
+  the saboteur's hold   SETTLE - it is not handed back
+  the winner's hold     CANCEL - a winner's stake still never enters the pool
+  pool - shares         0
+
+`handoutOutcome` reads `openStake`'s answer and nothing else: a committee that
+cannot open a preimage has already tried every subset, and this is not a second
+judgement. An honest handout returns no outcome at all - it is nothing to do
+with this rule - and anything that is not an openStake answer is refused.
+
+MUTANTS, five, all red: the outcome called VOID (1), a sabotaged handout made
+nobody's fault (1), an opened handout forfeiting too (1), a forfeited stake
+refunded to its dealer (1), the house allowed to keep it (1).
+
+WHAT THIS DOES NOT DO. It does not catch the mis-share at handout - that is
+Feldman and needs a group this package does not carry - and the measured
+fraction stands: three mis-shared seats leave 0 of 21 subsets openable while
+every share passes its holder's check. The classification decides what happens
+AFTER that is discovered, which is at settlement.
+
+TESTS. protocol 133 -> 135, blwp-node 66, blwp-client 72, core 85. Money guard
+9 files clean, determinism guard 19 clean. No Unity, no C#, no floats.
