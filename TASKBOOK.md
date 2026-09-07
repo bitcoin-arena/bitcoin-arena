@@ -42,8 +42,9 @@ this machine has not got. None can go green here, and none may be loosened.
         display", and there is no Xvfb here. Depends on: a graphics device.
         The claim itself is photographed in every browser run.
 
-    Rotating twelfth, one of THREE - and on 2026-09-07 10:50, for the first
-    time, TWO of them in one run:
+    Rotating twelfth, one of THREE - and since 2026-09-07 10:50 sometimes TWO
+    of them in one run, which the earlier note said never happened. Measured
+    over four full runs that afternoon: two, two, none, one:
       PostOfficeTests.TheGogglesAnimate
       RampReadyTests.TheRealTransactionsReplaceTheStandInsWhileNothingIsLoaded
       ScoreTests.IdlingEarnsNothingEvenOnTheSeam        (new 2026-09-07)
@@ -9114,3 +9115,37 @@ TESTS. PlayMode 213 / 187 green / 13 red / 13 skipped: the known eleven plus
 TWO of the three load flakes at once, which has not happened before - both are
 green alone and the note above is updated. EditMode 173 / 169 green / 1 red /
 3 skipped, the known CombatFx one.
+
+
+## 2026-09-07 11:40  the line under the price is English
+
+The last German word anywhere a driver looks. It was drawn under the price
+whenever the spot feed had not delivered one yet - the first seconds of a
+session, and so never in a photographed frame, which is how it survived a13's
+whole German sweep. `StreamingWordsTests` was written for exactly this class
+of fault and could not see this one: it reads the streamed model list.
+
+MEASURED OFF THE DRAW PATH, not off the source. The line was first pulled out
+of `DrawHeadline` into `DriveHud.PriceSubline(price, changePct, status)` with
+its text unchanged, so what the tests read is what the HUD draws. Then:
+
+    before   "verbinde … (connecting)"      price 0, status connecting
+    after    "connecting … (connecting)"
+
+    and with a price, unchanged in both:
+             "-0.77% 24h"  "+1.20% 24h"  "0.00% 24h"
+
+The before is not a quotation from a comment - it is the string the function
+returned with the old text in it, printed by the three tests failing on it:
+"price 0 status connecting reads "verbinde … (connecting)", which is German".
+Putting the German back is therefore its own mutant, and it kills all three.
+
+Nothing else moved. The line still says the day's move once a price is there
+and nothing about the connection, which was a decision taken when the feed
+roll ran the width of an iPhone across the scene; `Venues()` and
+`market.Status` stay in the debug panel. No simulation value is involved -
+this is a renderer string, and the core has no opinion about it.
+
+TESTS. EditMode 176 / 172 green / 1 red / 3 skipped, three new, the red the
+known CombatFx one. PlayMode 213 / 188 green / 12 red / 13 skipped: the known
+eleven plus one load flake, `PostOfficeTests.TheGogglesAnimate`.
