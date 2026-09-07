@@ -13029,3 +13029,100 @@ The screen. A WebGL build was NOT made this turn, and the jslib and the C# only
 take effect in one. PlayMode proves the truck stops under real physics and
 EditMode proves the words; neither is a browser. That is the remaining evidence
 gap on this door, and it is a build, not a rule.
+
+## M2.1 backpressure: the door, photographed on the built player
+
+PlayMode shows the truck at rest under real physics and EditMode shows the
+wording. Neither is a browser, and the jslib and the C# only take effect in a
+WebGL build - so the door was driven on the built page: a real blwp-node, the
+real player over HTTP, a real Chrome, the node taken away entirely.
+
+The harness is kept as `packages/blwp-client/tools/screen.mjs`. It builds a
+bond into a block mined on top of Bitcoin's REAL genesis header, because
+`discover` anchors on genesis and refuses one the page supplies; serves the
+headers from two ports so the two-source floor is met by two origins rather
+than two calls; and injects the round, entry and providers into the built
+`index.html` after the client bundle.
+
+### Three refusals on the way in, each the door working
+
+  - `bond provider 0 does not say which source it is` - a bond provider needs
+    a declared tag, exactly as a header provider does.
+  - `the advertisement for 2694e2e6... is not signed by the node it names` -
+    an advertisement signed by a stranger is not the committee's.
+  - and then it opened: **rounds 1, entries 1, batches 33, checkpoints 1**,
+    asked of the node's own store rather than inferred from a quiet console.
+
+### FAULT 1, and only a browser could have found it
+
+    [blwp] run ended VOID: a tick was dropped at NaN: the hold was full at 0
+
+Every session VOIDed on its first tick, before a byte was published.
+`Client.at` resolves three round trips before `setRound` does - open, join,
+connect - and Unity ticks at 60 Hz through all of them, so `record` ran against
+a client whose `maxHold` was still the constructor's 0 and whose `offered` was
+`undefined++`, which is NaN. Every test in the client suite calls `setRound`
+before it records anything; the game does not.
+
+It predates this door and it was INVISIBLE, because nothing was told: the page
+went on looking healthy while the client had quietly given up. It shows now
+only because a VOID stops the truck. `record` refuses when there is no round -
+the entry's `joinTick` is what says where a transcript begins - and the mutant
+that removes the guard is 1 red.
+
+### FAULT 2, photographed
+
+The RUN STOPPED banner was hung off `UnderFireBox` and landed straight across
+"BLOCK 965,982 · 0:55" and the drop-off marker: two lines of yellow over each
+other. The horizontal rule this file records learning four times - the gap
+between the columns, never the whole width - had been obeyed, and the vertical
+one had never been asked. It is a row of the same headline stack the price, the
+liquidation line and the block clock are rows of now, starting where the block
+clock's box ends, and an EditMode test asserts that at 1280x660, 1920x1080,
+844x390 and 390x844.
+
+### The measurement, on the built page
+
+The headless renderer draws about eleven frames a second, not sixty - measured,
+90 held ticks in the first eight - so a 1800-tick round takes some 165 seconds
+of outage to fill rather than thirty. Watched rather than assumed:
+
+    +8s    dropped held  102  ... tries 2
+    +40s   dropped held  478  ... tries 6
+    +88s   dropped held  982  ... tries 10
+    +136s  dropped held 1446  ... tries 14
+    +176s  ended   held 1800 offered 2187 maxHold 1800 tries 17 ENDED VOID
+
+    [blwp] run ended VOID: a tick was dropped at 2187: the hold was full at
+           1800, so no transcript from here can be replayed
+    [blwp] the core stopped driving: VOID a tick was dropped at 2187 ...
+
+Seventeen reconnect attempts over 176 seconds, one loop, never abandoned; the
+hold stopping exactly at `maxHold`; and then the four checks:
+
+| on the built page | before the stop | after it |
+|---|---|---|
+| banner | none drawn | `RUN STOPPED - a tick was dropped at 2187: ...` |
+| throttle | `Thr +1.0` | `Thr +1.0`, held |
+| speed | 19 km/h | 0 km/h |
+| `Pos` (rigidbody) | -97, 10 moving | -87, 10 and -87, 10 eight seconds apart |
+| block clock | running | 1:00 -> 0:56, so the game is live and the truck is not |
+
+None of VOID / REFUND / WON / LOST / FORFEIT / PAID / DELIVERED is on that
+line: the word is dropped and the cause is kept, because what the entry pays is
+the committee's under the no-quorum rule and not a browser's to announce.
+
+Photographs: `daniel-screens/2026-09-08-run-stopped-*.jpg`.
+
+### Suites
+
+protocol 149/149, blwp-node 70/70, blwp-client 89/89, core 80/80, money guard
+9 files clean, determinism guard 19 files clean.
+
+Unity EditMode 190/186/1/3 - the one red is
+`CombatFxTests.RifleFireProducesAFlashAndATracer`, pre-existing, a later item.
+Unity PlayMode 216/192/11/13, `error CS` 0: the three `RunStoppedTests` pass
+and the eleven reds are the army / vehicle / imported-model cluster. That set
+VARIES between runs on this machine - ten last run, eleven this one, with
+`PostOfficeTests.TheGogglesAnimate` appearing and no change of mine between
+them - so it is reported as a flaky cluster and not attributed either way.

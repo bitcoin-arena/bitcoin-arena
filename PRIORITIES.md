@@ -785,8 +785,13 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      the cause and with no word for what it pays - the client's `VOID` is
      what a COMMITTEE decides under the no-quorum rule, not something a
      browser may announce. Measured in PlayMode against real physics with the
-     throttle held down. Unity decides nothing - it repeats the word the
-     client holds. Numbers: TASKBOOK.
+     throttle held down, AND PHOTOGRAPHED ON THE BUILT PLAYER - a real node,
+     the real WebGL build over HTTP, a real browser, the node taken away and
+     the hold left to fill. The browser found two faults no suite could: a
+     session that VOIDed on its own first tick because the game ticks while
+     the door is still opening, and this very banner drawn straight across
+     the block clock. Both fixed and both now pinned. Unity decides nothing -
+     it repeats the word the client holds. Numbers: TASKBOOK.
      Still open here: nothing unblocked. What is left of M2.1 is 13C's
      slashing, which needs the other six daemons.
   4. **Entry quotas.** DONE. A funded entry before the node stores a byte.
