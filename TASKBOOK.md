@@ -14487,3 +14487,75 @@ Hole B - nothing binds an entry to a set - because 22A fixes it by hashing the
 set into the Round Contract, which moves every round id and is a contract
 decision. And `failed` stays a caller-supplied attestation: nothing here can
 verify a Lightning payment, the same class as `replayDiffers`.
+
+## M2.1 22A: the round names its donation set
+
+Hole B, the last unblocked thing in sub-item 3. 22A: "The set is named in the
+Round Contract and its HASH IS PART OF THE CONTRACT HASH, so it cannot change
+after entry." Until this a set had an id and nothing named which one applied,
+so two honest nodes could agree on a set's bytes and still disagree about
+whether it was this round's.
+
+### Measured first, not assumed
+
+  construction sites   **22**, counted fresh. The last count was 20; two test
+                       files have been added since, so the old number would
+                       have missed two. `slash.js` names `slashRemainder` and
+                       is not a site: it READS a contract. `blwp.jslib` reads
+                       `contract.blockTicks` and builds nothing.
+  vectors that move    **one**, `contracts.json`. It is the only vector that
+                       builds a contract; `checkpoint.json` and `payout.json`
+                       carry a round id as opaque bytes and did not move.
+                       1 file changed, 4 insertions.
+
+### The round id moved, and for a measured reason
+
+Checked against the PRE-CHANGE encoder, checked out beside the new one:
+
+  contract     211 -> 243 bytes
+  round id     5b0b853d321cd581... -> 71a39572bb516259...
+  another set  405c483c290db8a5...  (a round naming a different set is a
+                                     different round, which is what "cannot
+                                     change after entry" rests on)
+  the vector   275 -> 307 bytes, id b1cb45543f2d708d... -> 30367903256034b9...
+
+### A set that does not stand cannot reach a contract
+
+Not by a check in the contract - by construction. `donationSetId` refuses to
+hash a set whose shares do not sum to 10000, that lists a payee twice, or that
+carries a mixed-case address, so there is no id for a contract to name. A
+non-standing set presented against any round is answered, not thrown.
+
+### A rough edge fixed on the way
+
+A missing 32-byte field used to read `undefined.length` and hand the caller
+"Cannot read properties of undefined", which names neither the field nor what
+it wanted. `Writer.bytes` now says `expected 32 bytes, got nothing`, the way
+every other refusal in that encoder does. The mutant that restores the crash is
+1 red.
+
+### Mutants: 6 planted, 6 killed, none retracted
+
+| mutant | protocol red |
+|--------|-------------:|
+| the set is not in the round id | 2 |
+| any set matches any round | 1 |
+| a round need not name a set | 1 |
+| a short id is a set id | 1 |
+| a non-standing set matches anyway | 1 |
+| a missing field crashes instead of refusing | 1 |
+
+### Suites
+
+protocol 275/275 (was 271), blwp-node 70/70, blwp-client 89/89, core 80/80,
+money guard 12 files clean, determinism guard 19 files clean. Every honest
+caller that already built a contract still builds one - all 22 sites updated
+and green. Unity untouched and not re-run; no C# or PhysX value is anywhere in
+this package.
+
+### What is left of sub-item 3
+
+Only the five parked entries, each on its named blocker: the hold invoice,
+slash enforcement and the committee re-run on a DAEMON, CLTV on the absent
+protocol tick rate, and the Feldman residual on a discrete-log group this
+package does not carry.

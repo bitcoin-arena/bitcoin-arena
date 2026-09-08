@@ -855,9 +855,10 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      AND ITS CASE RULES ARE BECH32'S: mixed case does not stand, a payee is the
      same payee in upper or lower, the two spellings of one address cannot be
      listed as two recipients, and one set has ONE byte string - a stranger's
-     uppercase encoding of it is refused. The set is still
-     not on the round contract: 22A wants it hashed into the contract
-     and that moves every round id.
+     uppercase encoding of it is refused. AND THE ROUND NAMES ITS SET:
+     `donationSetId` is a contract field, so an entry cannot stand under a set
+     the contract did not name and a set cannot change after entry. A set that
+     does not stand has no id and can never reach a contract.
      Numbers: TASKBOOK.
   4. **Entry quotas.** DONE. A funded entry before the node stores a byte.
      Both HTTP doors refuse until something the operator trusts says the stake
