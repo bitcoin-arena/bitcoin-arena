@@ -16173,3 +16173,92 @@ format moved: `frames.js` reads type bytes that already existed.
 No fan-out, no interest management, no renderer, no lobby. No Unity, no C#, no
 PhysX, no collider. No ghost handed to `step` - the missing parameter from
 piece 1 is untouched and its two mutants still die.
+
+## M2.2 item 18, piece 3: which twenty others you see
+
+IMPLEMENTATION section 7: "Ghost fan-out uses interest management: each
+connection subscribes to ~20 others (nearest plus leaderboard top), recomputed
+every few seconds - O(N.K), never O(N^2)."
+
+### Measured before any code
+
+  grep -i "subscri|fanout|fan-out|interest|nearest|broadcast"
+  over blwp-node/src, blwp-client/src, protocol/src   ->  NOTHING
+
+Greenfield. No subscription, no budget, no fan-out anywhere.
+
+### The bandwidth claim, measured rather than asserted
+
+  K = 20
+   N   frames sent   everyone-sees-everyone   ratio
+    2            2                      2      1.0
+    5           20                     20      1.0
+   10           90                     90      1.0
+   20          380                    380      1.0
+   40          800                   1560      1.9
+   60         1200                   3540      3.0
+  120         2400                  14280      6.0
+
+Below the budget the two are equal, because there is nobody to leave out.
+Above it, frames are exactly N.K and grow linearly while everyone-sees-everyone
+grows with the square: doubling 60 to 120 doubles the frames and quadruples the
+alternative.
+
+### The half that matters more than bandwidth
+
+A set a node chooses however it likes is a set the OPERATOR chooses: show a
+player the competitors it wants them to see, hide the one about to beat them,
+and the round looks different depending on which node answered. 0.9 lets a
+player watch competitors "drive, struggle, fail and arrive"; it does not say
+"watch whichever ones your node felt like sending".
+
+So the rule is a pure function of the round's own state and TOTAL-ORDERED.
+Every comparison ends in the entry id, so a tie is broken by something
+intrinsic rather than by arrival order - the same fault a census tie on work
+had before it was broken on the tip hash. Measured: the same twenty, in the
+same ORDER, from a reversed input, from a rank-shuffled input, and from an
+x-sorted input.
+
+### K is NOT a contract field, and that is deliberate
+
+The census depth and the committee size went onto the signed contract because
+they decide who sits and what a bond is worth. A ghost decides nothing -
+`frames.js` says so and the core has no argument one could arrive through - so
+how many pictures a node can afford to send is that node's bandwidth policy,
+not a rule the round signs. Naming it as `GHOST_SUBSCRIPTIONS = 20` keeps it
+out of the round id AND out of an undeclared per-call argument.
+
+### Distance is BigInt, and it has to be
+
+The words are Q16.16 in an i32. Two trucks the same enormous distance away in
+x, one a single unit further in z: exactly, one is nearer; as doubles they are
+the same number, because the squared x is 2^62 and the ULP up there is 1024.
+Tested with that fixture, and the mutant that computes the distance in Number
+dies on it.
+
+### Mutants: 11 planted, 11 killed, none retracted
+
+no budget at all (4 red), the budget off by one (4), only leaders (1), only
+neighbours (1), the leader half taking the whole budget (1), ties falling back
+to arrival order (1), distance measured by x alone (1), distance in Number (1),
+a player sent their own truck (3), leaders taken from the bottom of the board
+(1), a negative budget accepted (1).
+
+`compareBytes` was exported from `payout.js` rather than copied: a second
+comparator is a second place for a total order to drift, the reason
+`slotsForRole` imports 22A's pool mapping instead of restating it.
+
+### Suites
+
+protocol 362/362 (was 357), core 83/83, blwp-node 71/71, blwp-client 89/89,
+money guard 12 files clean, determinism guard 19 files clean. No wire format
+moved: selection reads positions and ranks that a ghost frame already carries.
+
+### What piece 3 does NOT include
+
+The recompute cadence ("every few seconds") is a daemon's timer, not a rule -
+nothing here schedules anything, and the function is called when a caller
+decides to call it. No socket subscribes to anything yet; wiring the set into
+the node's send loop needs the daemon that is parked. And piece 4 - the
+renderer that must never carry a collider - is untouched: no Unity, no C#, no
+PhysX.

@@ -51,10 +51,19 @@ discrete-log group. They stay in number order below the last closed item.
                                             first and never evidence; with no
                                             picture left the NEWCOMER is
                                             refused rather than an accepted
-                                            frame discarded. Pieces 3-4 remain:
-                                            fan-out with interest management,
-                                            and the renderer that must never
-                                            carry a collider.
+                                            frame discarded. Piece 3 is in: a
+                                            player sees the leaders and their
+                                            nearest, about twenty in all, and
+                                            every node picks the same twenty in
+                                            the same order because every tie
+                                            ends at the entry id. Measured at
+                                            60 players: 1200 frames a broadcast
+                                            against 3540 if everyone saw
+                                            everyone. K is a node's bandwidth
+                                            policy, not a signed field - a
+                                            ghost decides nothing. Piece 4
+                                            remains: the renderer that must
+                                            never carry a collider.
                                             Numbers: TASKBOOK.
 
 BOND-OUTPUT RECOGNITION is DONE. A chain output counts as a bond or does not,
