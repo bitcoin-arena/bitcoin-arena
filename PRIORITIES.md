@@ -32,44 +32,31 @@ AFTER 20, in this order (unparked):
 HARD (Daniel 2026-09-08 10:18): deferred remainders are M2. Do not skip
 tick rate, daemon, curve, BOND_MARKER, ghost subscribe, run duration.
 
-   20  M2.2 leaderboard               M2   OPEN — the live letter. 0.11: "the
-                                            leaderboard is presentation, not
-                                            authority", derived from signed
-                                            final results and free to show
-                                            pseudonym, run status, delivered or
-                                            failed, score, rank, cargo and
-                                            payout. Nothing is built: `grep -i
-                                            leaderboard` over the sources finds
-                                            only comments in `interest.js` and
-                                            `ghost.js` pointing at it. FIRST
-                                            SLICE IS IN: `leaderboard` builds
-                                            the same rows in the same order on
+   20  M2.2 leaderboard               M2   OPEN — 0.11: "presentation, not
+                                            authority", from signed finals.
+                                            Slice 1: `leaderboard` builds the
+                                            same rows in the same order on
                                             every node - score down, then the
-                                            player key, never arrival - from
-                                            results the ROUND's committee made
-                                            final at 5 of 7. A refund is shown
-                                            without a rank, because section 18
-                                            says it neither contributes nor
-                                            draws; a forfeit keeps its place.
-                                            The board carries no money: section
-                                            20's table stays the authority and
-                                            a test refuses any column that
-                                            reads like an amount. Of 0.11's
-                                            seven fields, four are on a final
-                                            or derived from one; pseudonym,
-                                            cargo statistics and live run
-                                            status are RETURNED as named parked
-                                            fields, not blank columns. Next
-                                            slice: `interestSet`'s rank comes
-                                            from this board instead of from its
-                                            caller - DONE: the standing is
-                                            looked up on the board by player
-                                            key, a rank written on the caller's
-                                            object is ignored, and with no
-                                            board there are no leaders at all.
-                                            A player still driving has no
-                                            standing and is watched as a
-                                            neighbour; a refund is not a place.
+                                            player key - from results the
+                                            round's committee made final at
+                                            5 of 7; a refund is shown unranked,
+                                            a forfeit keeps its place, and no
+                                            column carries money. Slice 2: the
+                                            standing an interest set uses is
+                                            the board's, not the caller's - an
+                                            injected rank is ignored, a player
+                                            with no final is a neighbour rather
+                                            than a leader, and a truck with no
+                                            player key has no standing at all.
+                                            STILL UNBUILT: nothing is on
+                                            screen, which is the only reason
+                                            this is not deployable; and three
+                                            0.11 fields a signed final cannot
+                                            supply - pseudonym (a client
+                                            rendering of the player key),
+                                            cargo statistics (no field, not
+                                            derivable), live run status (a
+                                            final is after the run).
                                             Numbers: TASKBOOK.
    19  M2 late join                   M2   done — a late run begins at the tick
                                             its own signed Entry Contract

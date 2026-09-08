@@ -16800,3 +16800,45 @@ NOT DEPLOYABLE: still nothing on screen.
 The notes above that call BOND_MARKER a blanket park are stale as of e3b8d12:
 regtest and testnet markers are SET, mainnet is still null, and the remaining
 census-scan work is item 24 in the queue rather than a park.
+
+### Auditing the second slice: a namespace that leaked, and a path nobody tested
+
+TWO GAPS, both closed on the same slice.
+
+A LEAKED NAMESPACE. `whose()` read `o.playerPubkey || o.entryId`. A board keys
+by PLAYER and a subscription keys by ENTRY; they are different namespaces, and
+that `||` walked from one to the other in silence. Measured with two seats, so
+the leaders half actually exists:
+
+  an other with NO playerPubkey, on a board ranking its entryId bytes
+    before  ->  [5, 6]   the keyless truck took the leaders seat
+    after   ->  [6, 7]   the seats go to the nearest, and the same truck WITH
+                         the key does take the seat
+
+At one seat the leaders half is `floor(1/2) = 0` and the probe could not see
+the difference at all - the third time this letter a fixture could not tell the
+answers apart. Measured at two.
+
+A PATH NOBODY TESTED. `fanOut` is what a node calls once per broadcast;
+`interestSet` is what it calls. It does carry the board - measured, viewer 1
+sees [1, 3] with one and [3, 4] without - but nothing tested it, and a refactor
+that dropped it would empty the leaders half for every player at once with only
+the `interestSet` tests noticing. Pinned now, including that the frame count is
+the same either way.
+
+ONE MUTANT RETRACTED, and the code changed instead. "a keyless other is still
+looked up" removed a `whose(o) !== null &&` guard and nothing went red, because
+`rank.has(null)` is already false on a map that only ever holds string keys.
+That is a no-op mutant over dead code, so the guard came out rather than being
+carried as unkillable: the filter is now the same test written once.
+
+  mutants   2 planted, 2 killed, 1 retracted with the code simplified
+  protocol  375 -> 377
+
+### The board's cost per broadcast, named not fixed
+
+`standings(board)` rebuilds its map inside every `interestSet` call, so a
+`fanOut` over N viewers rebuilds it N times - O(N.B) where B is the board. It
+is correct and it is not free. Not changed here: the shape that fixes it is
+hoisting the map into `fanOut`, which is a different slice and would be
+measured against a real N rather than guessed at.
