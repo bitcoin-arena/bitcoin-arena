@@ -20619,3 +20619,29 @@ no ghost field". 4 total, 0 passed, 4 failed, 0 error CS.
     ghost tests after the fix       17 / 17
     PlayMode   229/205/11/13  ->  233/209/11/13   the same eleven reds by name
     EditMode   190/186/1/3    ->  190/186/1/3     unchanged
+
+### On the daily
+
+Rebuilt and deployed after the wiring fix.
+
+    build              Build Finished, Result: Success
+                       [BuildWebGL] result=Succeeded size=19MB errors=0
+                       time=00:06:03, error CS 0
+    after the build    git status on packages/ and the template: EMPTY again
+    page blwp-core.js  227,592 b, md5 cecf6b18, HALF_X 1 declaration,
+                       3600 ticks OK, hash 88c39534...891883 == golden
+    page blwp-client   223,678 b, md5 d0545265, watchGhosts 2
+    player data        GhostField 1, GhostTruck 1, BuildGhostBody 1,
+                       FitTruckBody 1  - the wiring is IN the build
+    framework          BlwpNextGhost 3, watchGhosts 1, net.ghosts 3
+    live               btc-logistics-core.pages.dev 200; the deployed
+                       webgl3.data.unityweb carries GhostField, BuildGhostBody
+                       and FitTruckBody, read back over HTTPS
+    war                200, md5 611ad3d4, its own page. UNTOUCHED.
+
+WHAT IS STILL NOT MEASURED, and it is the close condition: a person opening two
+pages against two daemons and seeing the other truck. Everything up to the last
+inch is measured - the pictures are that player's transcript to the integer,
+the field exists in the built player, the body is a truck at the right size,
+the heading is the transcript's, the seat is the local truck's own surface -
+and the last inch is a pair of eyes. No browser harness was built for it.
