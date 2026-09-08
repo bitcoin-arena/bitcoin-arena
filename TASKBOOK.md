@@ -15213,3 +15213,94 @@ on the wire this letter:
 
 Adding any of these later is a format break, and that is now written down
 rather than discovered.
+
+## M2.2 bond-output recognition: which chain outputs count as bonds
+
+**This accounts for 2 of the 5 that is missing for bond recognition.**
+
+What makes an on-chain output a bond, per the spec, and where each rule stood:
+
+  R1  the output is P2TR (5A.3B)                       MISSING - built here
+  R2  the transaction commits to H(advertisement)      already in (RESOLVE)
+  R3  the advertisement names THIS outpoint (5A.1)     MISSING - built here
+  R4  a dust output pays BOND_MARKER (25.1)            BLOCKED, marker null
+  R5  the output's script tree is 5A.3B's template     BLOCKED until spent
+  R6  the advertisement signature (5A.3)               BLOCKED, no curve
+
+### The measurement that opened the letter
+
+  candidate at vout 0  ->  eligible: 1   ACCEPTED
+  candidate at vout 1  ->  eligible: 1   ACCEPTED     <- the OP_RETURN
+  advert says its bond is at vout 0
+
+  vout 0   value 100000000   script 5120 7777...  (34 bytes, P2TR)
+  vout 1   value 0           script 6a20 c37c...  (34 bytes, OP_RETURN)
+
+The census checked the transaction and the commitment and never looked at the
+OUTPUT. A zero-value OP_RETURN counted as somebody's bond. A publisher could
+have pointed an entry at a change output instead and inflated its own weight,
+and nothing in the package would have said no.
+
+### After
+
+  candidate at vout 0  ->  eligible: 1
+  candidate at vout 1  ->  excluded at step `resolve`, "that output is not a
+                           taproot output, so it is not the bond 5A.3B
+                           describes", and the root differs
+
+SCAN still finds the OP_RETURN and reports its height. That is right: step 1
+answers where an outpoint is and whether it was spent, not what it is for.
+
+### RECOGNITION IS NOT ENUMERATION, and that is the whole letter
+
+"Is this output a bond?" is answerable from chain data. "Find me every bond"
+is not, and will not be until BOND_MARKER is chosen: 25.1 exists because "a
+P2TR output is a 32-byte key and looks like every other one", so without the
+marker there is nothing to scan FOR. The two questions were one conjunct on
+the working list and they are not one question.
+
+### No branch is written for the marker
+
+`recognizeBond` names the marker in `unchecked` and does not test for it. A
+branch comparing against a value nobody has chosen cannot be tested, and
+shipping an untested path that looks ready is the same fault as writing a
+plausible address into `constants.js`. When the marker is chosen the branch is
+written and tested then.
+
+### Mutants: 16 planted, 16 killed, none retracted
+
+Eight of the "accepts a non-bond" family and four of the "drops a real bond"
+family, as required, plus four on the census wiring:
+
+  any script is taproot / the shape is not checked / witness version ignored
+    / program length ignored / any vout the advert did not name / another
+    transaction's advert / an out-of-range vout / a body with no outpoint
+  nothing is a taproot output / the self-reference is not read / the vout must
+    differ / recognition always refuses
+  the census does not recognise at all / it recognises the wrong output / the
+    marker is dropped from what it cannot check / the value comes back wrong
+
+All died first time. The negative cases are real script shapes - P2PKH,
+P2WPKH, P2WSH, a 31-byte program, and OP_2 instead of OP_1 - not a fabricated
+"not taproot" blob.
+
+### 15's remaining park, restated marker-done vs still-curve
+
+  finding which outputs are bonds   HALF MOVED. Recognition is in; enumeration
+                                    still needs BOND_MARKER.
+  the bond script template          HALF MOVED. The CLASS is read (witness v1,
+                                    32-byte program); the three spend paths
+                                    stay hidden until one is spent, which is
+                                    why 5A.3B chose taproot.
+  the advertisement signature       UNMOVED. Still the curve.
+
+So after this letter 15 waits on BOND_MARKER for one thing only - enumerating
+bonds from the chain without being told where to look - plus the template's
+paths and the curve. Nothing else about it is blocked on the marker.
+
+### Suites
+
+protocol 331/331 (was 325), blwp-node 70/70, blwp-client 89/89, core 80/80,
+money guard 12 files clean, determinism guard 19 files clean. No wire format
+moved: recognition reads outputs, it does not add a field, so no round id, no
+census root and no vector changed.

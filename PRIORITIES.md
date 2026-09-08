@@ -22,10 +22,15 @@ discrete-log group - so none of them is promoted, because a parked item at the
 top would make this order lie. They stay where they are, in number order,
 below the last closed item.
 
-NEXT LETTER, Daniel's pick: BOND-OUTPUT RECOGNITION - which chain outputs count
-as bonds. It is what parks 15, and census-from-chain is how a round knows who
-may sit, which is the money path. Ghosts, late join, the leaderboard and the
-eighteen audited section 6 names stay parked. Not started.
+BOND-OUTPUT RECOGNITION (Daniel's pick) is DONE. The package can now say of a
+chain output that it counts as a bond or that it does not, from chain data: the
+output must be P2TR, and the advertisement must name that very outpoint. It
+found a real defect - a zero-value OP_RETURN was being counted as somebody's
+bond - and the census refuses it now. Recognition is not enumeration: finding
+every bond without being told where to look still waits on BOND_MARKER, which
+is the only thing 15 still waits on the marker for. Ghosts, late join, the
+leaderboard and the eighteen audited section 6 names stay parked. Numbers:
+TASKBOOK.
 
    16  M2.2 contract fields before    M2   done — the signed round contract
        they are used                         names the network it is for, the
