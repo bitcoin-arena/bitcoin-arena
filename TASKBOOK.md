@@ -21503,3 +21503,75 @@ how the test found it.
 
     core 84/84   protocol 431/431   blwp-node 218 -> 221   blwp-client 118/118
     money guard 12 clean, determinism guard 20 clean. No C# moved.
+
+## Item 32, slice 4: POST /round seats the committee the chain names
+
+### What that path did before, printed rather than assumed
+
+    round         85e81c98...1b46ee37
+    beacon held   block 26, 14 deep
+    node A seats  NOBODY
+    node B seats  NOBODY
+
+The beacon was read and nobody was ever asked who sits: `server.js` seats only
+`if (chainFor)` and the 2-of-2 tool gave no chain view.
+
+### Four things were wrong under that one line, each found by running it
+
+    the tool gave no chain view          seating never ran
+    the census root was 32 bytes of 2    `censusFor` refuses a round whose named
+                                         root is not the one its blocks derive to,
+                                         so seating could not have run either
+    only node A had a bond               `seatRound` refuses when the census seats
+                                         a different set from the one the contract
+                                         names, so a 2-of-2 with one bond is
+                                         refused by its own daemons - correctly
+    the bond paid the fixture filler     "that census carries 0 game nodes where
+      key 0x77 repeated                  regtest was born needing 2": letter 24
+                                         rebuilds a bond's key from the node key,
+                                         the arbitration set and the maturity, and
+                                         a key derived from nothing rebuilds to
+                                         nothing
+    the adverts declared game+verify     "that census carries 0 settlement nodes
+                                         where regtest was born needing 2"
+
+And one more that only a running test finds: the beacon was refreshed AFTER the
+round was posted, so the daemons refused with "this node has no beacon for that
+round". It is read before the post now, which is also 5A.5's own order - the
+committee forms AT committee_time, and a node that has not seen the beacon has
+nothing to form it from.
+
+### After
+
+    beacon held   block 26, 14 deep
+    node A seats  4291f736150d6ee1... 8a28c2f40b903c51...
+    node B seats  4291f736150d6ee1... 8a28c2f40b903c51...
+
+Both daemons seat the same two keys, and they are the two the contract names.
+`seating.test.js` holds it with no bitcoind: the chain is mined in-process and
+served over the three RPC calls the reader makes. With no chain at all, or a
+chain that cannot be read, `POST /round` is REFUSED by name - "this node has no
+beacon for that round, so it cannot say who the census seats" - rather than
+seating blind.
+
+Also fixed while measuring: `standUpRound` left two daemons listening when a
+round was refused, so a refused round hung the suite on open handles. What it
+opens, it closes.
+
+### THE GAP THIS LETTER DOES NOT CLOSE, named
+
+`beaconIsTheChains` - the check that refuses a late-but-wrong block - is still
+not called by the roster, and it cannot be yet: in this tool the CENSUS chain
+and the BEACON chain are different chains. The census is derived from a two
+block fixture carrying the bonds; the beacon is read from bitcoind. A roster
+asking "is this beacon the block my chain names" would be asking the census
+fixture about a regtest block and would refuse every time.
+
+That is not a bug in the check, it is the tool being honest about running on
+two chains. Closing it means the bonds move onto the same regtest the beacon is
+read from - `census-regtest.mjs` already posts real bonds there - and that is a
+letter's worth of work, not a line. Until then a node still refuses a beacon at
+or before committee_time (27), and derives its own when it has a view.
+
+    core 84/84   protocol 431/431   blwp-node 221 -> 225   blwp-client 118/118
+    money guard 12 clean, determinism guard 20 clean. No C# moved.
