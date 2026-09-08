@@ -15941,3 +15941,39 @@ outside this package. Nothing plausible has been written for it.
 The follow-up findings of this letter are recorded above: the arrival-order
 tie, the emptied header, the mutant that compared only the first byte, and the
 test that asserted inside an `if` that never ran.
+
+### EXTERNAL REMAINDER: the chain anchor is Daniel's pick
+
+Not a task, not a design exercise, and not this package's to attempt. The
+census view is anchored to nothing, so a wholly fabricated chain is a chain if
+it outweighs the real one; work comparison is the defence that exists and it is
+Bitcoin's own. 5A.4's other answer is a checkpoint - a height and a block hash,
+fixed once and wrong forever if wrong - which is the BOND_MARKER and NETWORK_ID
+class. DANIEL CHOOSES IT. Nothing is designed for it here, no height, no block
+hash and no genesis has been written into the census package, and no work on it
+is queued.
+
+Two facts this letter settled and that stay settled:
+
+  a tie on work            broken by the tip hash, LOWER WINS, so two parties
+                           with the same two chains compute the same census
+                           whichever order the chains are offered. `mostWork`
+                           keeps first-seen, which is right for a NODE choosing
+                           its own tip; a census is not allowed it.
+  an emptied header        a block handed over with no transactions while its
+                           header commits to a merkle root is not omission
+                           under 25.1 - it is a view that contradicts Bitcoin.
+                           Refused unless that root is zero, which is the only
+                           list consistent with none.
+
+Closing state of item 17:
+
+  protocol            347/347
+  blwp-node            70/70
+  blwp-client          89/89
+  core                 80/80
+  money guard          12 files clean
+  determinism guard    19 files clean
+
+No red tests. Nothing loosened. Vectors unmoved. Not a player-facing deploy and
+not an M1 freeze.
