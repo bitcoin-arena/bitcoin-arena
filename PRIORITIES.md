@@ -16,21 +16,40 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-   16  M2.2 contract fields before    M2   OPEN — the next unblocked item.
-       they are used                         5d / spec 27A.4: anything the
-                                            Round Contract carries must be in
-                                            its FIRST version, because adding
-                                            a field to something signed is a
-                                            format break. `network_id`,
-                                            `required_protocol_version` against
-                                            the advertisement's supported set,
-                                            and `config_hash` are named there
-                                            and are not in the contract. The
-                                            donation set field already is. The
-                                            VALUES wait on genesis parameters
-                                            and on keys nobody has generated;
-                                            the FIELDS do not, and that is the
-                                            whole point of 5d. Not started.
+   16  M2.2 contract fields before    M2   OPEN — the two fields are in and
+       they are used                         the version check is the round's.
+                                            5d / 27A.4: anything the Round
+                                            Contract carries must be in its
+                                            FIRST version, because adding a
+                                            field to something signed is a
+                                            format break. It now carries
+                                            `networkId` (27A.4: nodes reject
+                                            contracts for a network they were
+                                            not built for) and `configHash`
+                                            (27A.7.5: a round keeps the config
+                                            it was created under), both in the
+                                            round id, and `contractIsForThis
+                                            Build` refuses a foreign one. The
+                                            third named field does not exist:
+                                            the spec has no
+                                            `required_protocol_version`, only
+                                            `protocol_version`, which has been
+                                            the contract's second field since
+                                            version one. What was missing was
+                                            the CHECK, and the census now
+                                            filters on the round's version
+                                            instead of a caller default - a
+                                            version the caller picks is a
+                                            version the operator picks. Neither
+                                            VALUE is invented: NETWORK_ID and
+                                            GENESIS_CONFIG_HASH are null and
+                                            both accessors refuse, because both
+                                            preimages name genesis parameters
+                                            and keys nobody has generated, so a
+                                            build that names no network accepts
+                                            no contract. Round id moved, one
+                                            vector file regenerated, client
+                                            bundle rebuilt. Numbers: TASKBOOK.
    15  M2.2 census from chain         M2   OPEN — parked, no unblocked work
                                             left. A contract's `censusRoot` is
                                             checked against the census it

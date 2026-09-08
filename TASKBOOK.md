@@ -14957,3 +14957,117 @@ id, the same family as the two divergences already recorded (the leaf carries a
 pubkey where 5A.4 wants the advertisement hash; the contract carries one root
 where 5A.4 wants one per role). Inventing a second floor would also settle a
 number nobody has chosen. It is recorded so it is not rediscovered as a bug.
+
+## M2.2 item 16: the fields a signed contract must carry before anything uses them
+
+5d / 27A.4. "Anything the Round Contract carries has to be in its FIRST
+version, because adding a field to something signed is a format break." After
+the first bond exists a break costs every node its census entry - capital
+timelocked, entry void - so the fields go in while nothing is committed.
+
+### The three, measured against the spec rather than against the list
+
+  network_id       27A.4 and 27A.7.5 both say the contract carries it. ADDED.
+  config_hash      section 6's field list, line 1259, and 27A.7.5. ADDED.
+  required_
+    protocol_
+    version        DOES NOT EXIST. `grep required_protocol_version` over
+                   multiplayer_p2p.md finds nothing; the name is ours. The
+                   spec's contract carries `protocol_version` (line 1226) and
+                   this encoder has written it as the second field since
+                   version one. There was no field to add - only a check.
+
+### The check that was actually missing
+
+  before   resolveCensus(entries, { contract, resolve,
+                                    supportedVersions = [PROTOCOL_VERSION] })
+  after    resolveCensus(entries, { contract, resolve })
+           and the filter reads contract.protocolVersion
+
+Whoever called the census decided which nodes were selectable. A version the
+caller picks is a version the OPERATOR picks - the same fault that moved the
+objection window (13A) and the minimum service (22A) into the contract. 27A.7.5
+puts it on the round: a node "simply stops being selectable for rounds naming
+the new hash, exactly as with protocol versions". The measurement is one
+advertisement, unchanged, in or out depending only on which round is asking.
+
+The decoder had to change to allow it: `decodeRoundContract` checked the
+version and DISCARDED it, so a decoded contract could not say what version its
+round ran. It now carries `protocolVersion` back. Nothing moved on the wire.
+
+### Two spec inconsistencies recorded rather than silently resolved
+
+  1. Section 6's Round Contract field list does not name `network_id`, while
+     27A.4 ("Round Contracts carry it") and 27A.7.5 ("carries `config_hash`
+     alongside `network_id`") both do. Section 6 predates them. FOLLOWED 27A.4.
+     Section 6 is not rewritten.
+  2. PLACEMENT. The instruction was "config_hash beside node_fee_bps", which is
+     section 6's order - but there IS no node_fee_bps field here: section 18's
+     ruling made the 2% a constant, identical for everyone, not a signed field.
+     So that neighbour does not exist to sit beside. The two new fields are
+     placed together immediately after the version, following 27A.7.5's own
+     pairing, and ahead of `simCoreHash`: which network, then which rules, then
+     which build - so a decoder can refuse a foreign contract before parsing
+     anything else about it. Stated here rather than done quietly.
+
+### No derivers, and both anchors null
+
+`NETWORK_ID = null`, `networkAnchor()` throws. Its preimage is
+`genesis_parameters` (27A.6), which names the `bond_marker` that is null one
+constant above it, plus two keys nobody has generated. `GENESIS_CONFIG_HASH =
+null`, `genesisConfigHash()` throws: the value is H(canonical(game_config)) and
+there is no game_config to canonicalise. Writing plausible values would settle
+the network's identity in a source tree, which is exactly how such a thing gets
+decided without anyone deciding it.
+
+The consequence is the useful one and is asserted: a build that names no
+network accepts NO contract. Wrong in the safe direction, and loud.
+
+### The break, measured
+
+  round contract    307 -> 371 bytes
+  round id          30367903256034b9587ee0266d2c991fc8ee6a9cf7f9b5ed...
+                 -> dcf58c47881bc906335c23d9569ce3b00f622fbcc915fb7b...
+  entry id          fbba81897a7bfe2c5e076dd656f9983bbac854ab2f824670...
+                 -> a9d0492eb5d5a7f8b201371bb25eb7986e06c15d3ebd7611...
+                    (159 bytes, unchanged: it carries the round id)
+  vectors           only contracts.json moved. census, sortition, payout,
+                    checkpoint, receipt, advert, tagged, encoding all
+                    byte-identical, so the break is contained to the contract.
+  construction      20 sites across protocol, blwp-node and blwp-client
+  client bundle     rebuilt, 160.2 KB from 17 modules; `bundle.test.js` is the
+                    guard that caught the stale one.
+
+### Mutants: 19 planted, 19 killed, none retracted
+
+One survived at 0 red and it was a real hole, not a fixture gap: the length
+check in `is32` reduced to a bare `instanceof`, and nothing noticed - because
+the comparison walks the CONTRACT's bytes. A sixteen-byte `networkId` matching
+the anchor's first sixteen would pass `.every` and be accepted as this network.
+A prefix collision an attacker picks the length of. Now refused on both sides
+of the comparison.
+
+The other eighteen died first time: either field left off the wire (10 each),
+the two read back in the wrong order (3), the decoder dropping the version
+again (1), any network or any config matching (1 each), the anchor read off the
+contract it is judging (1), a missing anchor or config on either side accepted
+(2 each), the census filtering on a literal 1 rather than the round (1),
+filtering on nothing (2), not requiring a version (1), not naming the round's
+version in the refusal (2), and either constant quietly chosen or the accessor
+returning instead of refusing (1 each).
+
+### Suites
+
+protocol 322/322 (was 313), blwp-node 70/70, blwp-client 89/89, core 80/80,
+money guard 12 files clean, determinism guard 19 files clean.
+
+### THE CHEAP COMBINED BREAK WAS DECLINED, ON RULING
+
+This letter moved every round id. Three recorded divergences move the same
+signed shapes and were parked because they do: the leaf carries a pubkey where
+5A.4 wants the advertisement hash; the contract carries one census root where
+5A.4 wants one per role; the contract carries one `bondMinSats` where 5A.3
+names `bond_min_game_verify` and `bond_min_settlement`. Folding them in here
+would have cost one regeneration of the vectors instead of four. Daniel ruled
+they stay parked and pay for their own break: one item at a time. Written down
+so the next letter that moves these shapes knows what it is paying for twice.
