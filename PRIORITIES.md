@@ -16,23 +16,33 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: 20, the leaderboard. Finish it, then the deferred M2 queue.
+LIVE LETTER: 21, the protocol tick rate. 20 is done.
 Daniel 10:18: everything that was set aside is M2, not later.
 
-AFTER 20, in this order (unparked):
+IN THIS ORDER (unparked):
    21  M2 protocol tick rate          — unlocks player_run_duration and
                                         entry_close_time (19 remainders)
    22  M2 daemon steps the core       — unlocks ghost spawn/subscribe (18),
-                                        and the daemon 14/8 waited on
+                                        the daemon 14/8 waited on, and the
+                                        board on a screen: 20's rows are built
+                                        and nothing draws them, because finals
+                                        reach a client through the daemon.
+                                        LIVE RUN STATUS (0.11) is here too - a
+                                        final is after the run, so it comes
+                                        from marks and ghosts.
    23  M2 advert signatures / curve   — the discrete-log 15/14 waited on
    24  M2 BOND_MARKER + census scan   — regtest+testnet markers SET (Daniel
                                         10:22). Mainnet still null. Scan next.
    15/14/8 are this queue, not a later milestone.
 
+DANIEL DECIDES (not a task anyone can take): the PSEUDONYM SCHEME (0.11/0.12
+- clients MAY derive one, no scheme named; two wordlists would name one player
+twice, so it is chosen once, the BOND_MARKER and checkpoint class).
+
 HARD (Daniel 2026-09-08 10:18): deferred remainders are M2. Do not skip
 tick rate, daemon, curve, BOND_MARKER, ghost subscribe, run duration.
 
-   20  M2.2 leaderboard               M2   OPEN — 0.11: "presentation, not
+   20  M2.2 leaderboard               M2   done — 0.11: "presentation, not
                                             authority", from signed finals.
                                             Slice 1: `leaderboard` builds the
                                             same rows in the same order on
@@ -101,11 +111,21 @@ tick rate, daemon, curve, BOND_MARKER, ghost subscribe, run duration.
                                             names are reported in key order,
                                             so shuffled input gives the same
                                             list and not merely the same rows.
-                                            STILL UNBUILT: nothing is on
-                                            screen - the only reason this is
-                                            not deployable, and BLOCKED ON 22
-                                            because finals reach a client
-                                            through the daemon.
+                                            The protocol board is finished
+                                            and deployable: 0.11's seven
+                                            fields are four built and three
+                                            owned elsewhere - live run status
+                                            on 22, cargo statistics on M2.3's
+                                            replay pool, the pseudonym scheme
+                                            on Daniel. Nothing renders a
+                                            board; that is 22, not a remainder
+                                            of 20. protocol 384/384, core
+                                            83/83, blwp-node 71/71, blwp-
+                                            client 95/95, money and
+                                            determinism guards clean. No Unity
+                                            ran for this letter: no PlayMode
+                                            or EditMode numbers, and no C#
+                                            was touched.
                                             Numbers: TASKBOOK.
    19  M2 late join                   M2   done — a late run begins at the tick
                                             its own signed Entry Contract
@@ -1332,7 +1352,9 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
 
  11. **A replay pool.** Worker threads, each importing `@blwp/core` once.
      Priority: objected runs first, then top-ranked, then the rest.
-     Capacity is MEASURED, not assumed.
+     Capacity is MEASURED, not assumed. CARGO STATISTICS (0.11) come from
+     here: the core holds cargo in its state, so a replay has it and a
+     signed final does not. Item 20's board names the gap; it cannot fill it.
  12. **Five-of-seven finality on the RESULT.** Seven nodes replay a
      player's run and five must agree. Needs the pool, and needs
      checkpoints (3) to say WHERE they disagree rather than merely that
