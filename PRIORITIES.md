@@ -16,7 +16,7 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: 29, Feldman on the split preimage. 15, 18, 20-28 are done.
+LIVE LETTER: 31, player_run_duration. 15, 18, 20-29 are done.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
 threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
@@ -37,6 +37,11 @@ HARD (Daniel 2026-09-08 18:26): when M2 is finished, start M3
 immediately. No pause, no ask, no action=done at the M2 boundary.
 Playable M2 is 28. Then remaining queue (29 Feldman if still open),
 then M3: hold invoices, VSS, FROST, testnet sats. Lightning stays M3.
+
+2026-09-09: 29 IS CLOSED. What is left of M2 is 31 (player_run_duration,
+19's last remainder) and 30 (publication lead). `entry_close_time` - the
+other of 19's two - was closed by 27: a round that closes entry before its
+committee forms is refused by name.
 
 IN THIS ORDER (unparked):
    22  M2 daemon replays the core     M2   done — slice 1 IS IN: the node reaches the
@@ -199,8 +204,42 @@ IN THIS ORDER (unparked):
                                         so two participants at different tips
                                         derive the same census. 734 green.
                                         Numbers: TASKBOOK.
-   29  M2 Feldman on the split        LIVE — next M2 item. Do not start it
-       preimage (23.1)                    before Daniel says so.
+   31  M2 player_run_duration         LIVE — 19's last open remainder. Section 6
+                                        names the run length and no contract
+                                        carries it, so `transcript.js` reports
+                                        it UNCHECKED: a run's own length is
+                                        taken on the client's word. Do not
+                                        start it before Daniel says so.
+   30  M2 publication lead + receipts —  queued behind 31.
+   29  M2 Feldman on the split        M2   done — a crooked dealer is refused at
+       preimage (23.1)                    handout, before anybody reconstructs.
+                                        A share must lie on the ONE polynomial
+                                        the dealer published, checked with
+                                        Feldman commitments in the curve this
+                                        system already uses - injected, because
+                                        the protocol package still carries none
+                                        - and the sharing field is that curve's
+                                        order, so a preimage too large to be a
+                                        scalar is refused at generation rather
+                                        than reduced into a different number.
+                                        The rule is not enough on its own: the
+                                        commitments are on the wire as their own
+                                        authority-bearing type, the entry's
+                                        `vss_shares_ref` binds them in the
+                                        SIGNED bytes, and a seat runs the check
+                                        at its own door before it accepts the
+                                        entry that names them - which is what
+                                        makes it a rule in force rather than a
+                                        green test. Every entry id moved and the
+                                        vectors were regenerated, not edited.
+                                        The deployed player and the daemon now
+                                        name one entry. Two things stay M3 and
+                                        are named, not parked: the shares travel
+                                        in the clear, which is safe only because
+                                        M2 has no stake behind the preimage, and
+                                        the page is not a dealer, which arrives
+                                        with the hold invoice.
+                                        Numbers: TASKBOOK.
    28  M2 two nodes play              M2   done — two players see each other's
                                         trucks. The picture is that player's
                                         own transcript replayed through the one
@@ -255,7 +294,7 @@ IN THIS ORDER (unparked):
                                         signature it makes is BIP-340 under
                                         the key its bond was posted with.
                                         Numbers: TASKBOOK.
-   29  M2 Feldman on the split        — (LIVE, listed above) a VSS share must
+   29  M2 Feldman on the split        — (DONE, see above) a VSS share had to
        preimage (23.1)                  bind to the polynomial and not only to
                                         its seat:
                                         today a player mis-sharing three of
@@ -272,8 +311,8 @@ IN THIS ORDER (unparked):
                                         the contract carries no published_at.
                                         The grind fence today is
                                         committee_time and is exactly as
-                                        strong as that. M2, after 28 - which
-                                        is closed, so this is queued behind 29.
+                                        strong as that. M2, and 29 is closed
+                                        too, so this is queued behind 31.
    15/14/8 are this queue, not a later milestone.
 
 DISPLAY NAME (Daniel 2026-09-08 18:55, M3): DECIDED. Default =
