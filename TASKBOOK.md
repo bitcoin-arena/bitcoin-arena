@@ -19601,3 +19601,61 @@ Still parked, by ruling: slice 3 (verifyAdvert, one key, BIP-340 on the
 secp256k1 `node_pubkey`, replacing letter 23's ed25519 check), and the two
 genesis remainders - `census_min_nodes` per role versus one u16, and
 testnet4's genesis carrying 2 where the spec's table says 3.
+
+## Item 26, slice 2 (cont.): the round's own census root is checked against the chain
+
+Found while asking what census-and-eligibility still needs: every contract
+names a `censusRoot`, `censusRootMatchesRound` exists in the protocol, and
+nothing on the daemon's path called it or compared anything. So a round could
+name any thirty-two bytes; this node would derive a different census, seat a
+committee out of it and serve that - the divergence 5A.2 removes, arriving
+through the round's own header. 5A.4 is blunt about such a round: it "IS
+INVALID and no honest node will issue receipts against it".
+
+`roster.censusFor` now refuses it by name, and says what the chain gives:
+
+  a round naming 5a5a...            refused: "names census root
+                                    5a5a5a5a5a5a5a5a and the chain gives
+                                    <root> at height 900000"
+  the same blocks, the right root   held; committee seated
+  a refused census                  yields no committee at all
+
+The comparison is against the root DERIVED HERE from blocks at the contract's
+own height. `censusRootMatchesRound` is the other question - somebody else
+presents entries and a commitment to them - and is not what this path needs.
+
+The fixtures had to become rounds somebody could really have opened: each one
+derives the census first and names that root, the way an opener does. They go
+through `encodeRoundContract`/`decodeRoundContract` on the way, because that is
+the contract the daemon reads - a root taken from the loose fixture object is
+the root of a contract nobody published, which is what the first run measured
+("that round names no protocol version").
+
+### Mutants: 2 killed, 1 retracted
+
+  the root is never checked against the chain     killed
+  the check compares the root with itself         killed
+
+RETRACTED: "a root of the wrong length passes as a root". Every path into this
+function reads the contract through `decodeRoundContract`, which fixes that
+field at thirty-two bytes, so the guard cannot fire from any route this daemon
+has. It stays because a caller building a contract object by hand gets a
+refusal instead of a TypeError from inside the comparison - but it is not a
+rule anything can break, and counting it would be counting a check that cannot
+fail.
+
+### Suites
+
+core 83/83, protocol 411/411, blwp-node 176/176, blwp-client 102/102 - 772
+tests, 0 red. Money guard 12 files clean, determinism guard 20 clean.
+
+### The hole this letter still has
+
+The census now decides who is SEATED, and nothing else. The node's own trust
+still rests on `contract.nodes`: `verdict.js` counts signatures against that
+list and `round.js` counts receipts against it, so a contract naming a
+committee the chain does not support is still served. That is 26's own
+sentence - independent nodes agreeing who is allowed into a round - and it is
+named here rather than quietly left. It is not slice 3, and it touches letter
+22's closed result path and the running 2-of-2 setup, so it needs a ruling
+before code.

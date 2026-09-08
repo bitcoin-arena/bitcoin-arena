@@ -198,11 +198,23 @@ IN THIS ORDER (unparked):
                                         so two participants at different tips
                                         derive the same census. 734 green.
                                         Numbers: TASKBOOK.
-   26  M2 census + eligibility        LIVE — leftover after 15: sort
-                                        txid/vout, min census for 2-of-2, and
-                                        the first production caller of the
-                                        census - which is where the
-                                        verifyAdvert hook gets wired.
+   26  M2 census + eligibility        LIVE — slices 1 and 2 are in: a census
+                                        below the network's census_min_nodes
+                                        is refused by name and no committee is
+                                        sliced from it; the daemon derives its
+                                        census from the chain through
+                                        src/roster.js - the only caller - and
+                                        refuses a round whose censusRoot is
+                                        not the one the blocks give.
+                                        GET /committee is the door.
+                                        STILL OPEN: the node's own trust still
+                                        rests on contract.nodes - verdict.js
+                                        and receipt counting - rather than on
+                                        the committee the census seats.
+                                        PARKED for slice 3: verifyAdvert, one
+                                        key, BIP-340 on the secp256k1
+                                        node_pubkey, replacing 23's ed25519.
+                                        Numbers: TASKBOOK.
    27  M2 committee_time + seed       — seed from bitcoin-block-hash after
                                         committee_time; committee exists
                                         before first entry
