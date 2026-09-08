@@ -19911,3 +19911,65 @@ tests, 0 red. Money guard 12 files clean, determinism guard 20 clean, bundle
 Not in this slice, by ruling: `committee_time` and `randomness_rule` as
 contract fields (slice 2, and they move every round id), and the entry window
 (slice 3).
+
+## Item 27, slice 2: committee_time and randomness_rule are fields, and the beacon is bound to them
+
+Before: the contract carried a `committee_seed` - which section 6 does not
+list - and neither `committee_time` nor `randomness_rule`, which it does. The
+ordering check measured the beacon against `census_height` and said so in its
+own comment: what the fields could prove, not what 5A.5 asks.
+
+After: `committee_time` (u64 ms) and `randomness_rule` (string) are on the
+contract, `committee_seed` is gone, and `beaconIsAfterRound` asks the question
+the spec asks - "committee_time: beacon value appears -> committees selected &
+verified". A beacon is a block with a TIME now, because the rule is "the first
+Bitcoin block after committee_time" and a height cannot answer that.
+
+### The numbers
+
+  the beacon's line              census_height -> committee_time
+  a beacon at or before it       refused: "from 500, at or before this round's
+                                 committee time 500 - the creator could have
+                                 held it when the round was made"
+  exactly at committee_time      refused (a mutant moving `<=` to `<` dies)
+  an undated beacon              refused: "names no time"
+  a round naming no committee    refused by name
+  time or no randomness rule
+  a rule the network was not     refused: 'names randomness rule "drand" where
+  born reading                   regtest was born reading "bitcoin-block-hash"'
+  two beacons, same round        different committees, so the randomness
+                                 decides rather than decorates
+  ground bytes on a contract     still seat nobody: slice 1 holds, and the
+                                 field they used to sit in no longer encodes
+  contract round id (vector)     49d5f0855f9629ec -> aafbc69366a6e530
+  entry id (vector)              4e334026861f3225 -> 25acd6d3a3a40215
+                                 (an entry names its round, so it moved too)
+  fixtures carrying a contract   39 files updated; every round id in the tree
+                                 moved, and the golden vector regenerated
+  blwp-node                      193 -> 195
+
+### Mutants: 6 planted, 6 killed
+
+  a beacon at or before committee_time is accepted     killed
+  the beacon may be exactly at committee_time          killed
+  an undated beacon counts as late enough              killed
+  a round with no committee time is seeded anyway      killed
+  a round names a beacon its network never read        killed
+  the contract carries a committee seed again          killed
+
+### What this slice did NOT do
+
+`randomness_fallback` (section 6 lists it beside the rule) and the §5A.5 window
+constraints that need a `published_at` - `committee_time >= published_at +
+min_publication_lead`, and the five pre-randomness timestamp receipts - are not
+in. The contract carries no publication time, so "the creator did not publish
+after seeing the beacon" is provable only as far as committee_time reaches.
+Written down rather than implied: `entry_open_time == committee_time` and
+`start_time >= committee_time + min_entry_window` are slice 3's.
+
+### Suites
+
+core 83/83, protocol 416/416, blwp-node 195/195, blwp-client 102/102 - 796
+tests, 0 red. Money guard 12 files clean, determinism guard 20 clean. The
+client bundle rebuilt at 212.7 KB (it encodes the contract, so its bytes moved
+with the field). No Unity, no C#, no genesis byte, no deploy.
