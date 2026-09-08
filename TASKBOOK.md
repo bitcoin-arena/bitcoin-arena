@@ -19131,3 +19131,86 @@ Not in this slice, by ruling: the socket. Spawn and subscribe are slice 2 -
 identified connections, refusals by name, K respected, never a picture of
 yourself, an unsubscribed connection unchanged. Unity stays shut unless a
 measured hole in consume forces it (piece 4 already landed that path).
+
+## Item 18, slice 2: spawn and subscribe are socket facts
+
+Before: the `/play` socket was anonymous and had never pushed a byte. It took
+input batches and answered a number, so the daemon had no way to address
+anybody - a picture could be produced (slice 1) and delivered to nobody.
+
+After: a connection says `watch <round> <entry>` and is thereafter shown the
+others. On subscribing it is told `watching N` and then handed N frames - the
+count first, so a client that reads it knows what is coming and no push
+overtakes the answer to its own question. Every later batch that stores a tick
+makes a new picture for whoever is watching that round.
+
+The frames come from `Ghosts` (`src/ghosts.js`), which caches per round, entry
+and tick, and whose every picture came out of `ghostFor` -> `replay.js`. The
+selection is piece 3's `interestSet`, over positions that are REPLAYED rather
+than announced: a mutant that fed it zeroed positions for anybody whose replay
+failed dies.
+
+### The numbers
+
+  a connection that never subscribed        0 frames while batches flow
+  on subscribing to a round already driving 'watching 1', then that one frame
+  the frame's x, z, heading                 equal to a direct core drive of
+                                            THAT entry under its own seed
+                                            (H(beacon || pubkey || secret ||
+                                            join_tick)), at tick 119
+  a second batch                            a second picture, at tick 64 for a
+                                            run stored 40 then 25
+  the same tick twice                       one replay, served from the cache
+  the viewer's own truck                    never sent; 2 frames stay 2 after
+                                            the viewer publishes 30 ticks
+  the interest budget (limit 2, 6 entries)  2 shown, both binding, viewer not
+                                            among them
+  a round with no randomness beacon         nobody is shown anything, and the
+                                            refusal names the missing beacon
+  an entry with no published inputs         no picture, on the socket as in
+                                            the library
+  a tick past the published inputs          refused: 19 ok, 20 and 9999 not
+  blwp-node suite                           158 -> 165
+
+Refusals by name: a watch with no round or entry, a round this node does not
+hold, an entry it does not hold, an entry from another round, and a second
+identity on a connection that already named one - because letting a socket
+re-declare itself would make "never a picture of yourself" mean nothing.
+
+### Mutants: 7 planted, 7 killed, 3 retracted
+
+  announced positions instead of replayed ones      killed
+  the world seed invented when there is no beacon   killed
+  a connection may re-declare itself                killed
+  the viewer is shown their own truck               killed
+  a picture goes to every open socket               killed
+  frames labelled with the viewer's identity        killed
+  the interest budget ignored, whole field sent     killed
+
+RETRACTED, with reasons rather than counted:
+  - "warm the viewer's own frame first" is a cache warm; `setFor` already
+    iterates every entry and `interestSet` drops the viewer by id, so the
+    output cannot change.
+  - "serve a picture for a tick nobody published" only changes WHICH refusal
+    fires: `playedThrough` returning null is an early exit, and `ghostFor`
+    refuses the same case by name one layer down.
+  - "push to subscribers of other rounds too" cannot deliver another round's
+    truck: the frames are always `setFor(who.roundId, ...)`, so what the round
+    filter saves is work, not correctness. The rule it looked like it was
+    protecting - that a set is per round - was genuinely untested, and now is.
+
+### A hole in the client, found while checking consume
+
+`blwp-client/src/client.js` matches EVERY socket message to the next queued
+request in order. A pushed GHOSTS frame would be handed to whoever was waiting
+for an answer - so a client that publishes inputs and watches ghosts on one
+socket, which is the intended use, would read a picture as the answer to its
+publish. The daemon side is right and the browser side cannot consume a push
+yet. Not fixed here: slice 2 is socket facts by ruling. It is the next thing
+18 needs, and it is `blwp-client`, not Unity.
+
+### Suites
+
+core 83/83, protocol 404/404, blwp-node 165/165, blwp-client 95/95 - 747 tests,
+0 red. Money guard 12 files clean, determinism guard 20 clean, bundle 201.1 KB
+byte-identical.
