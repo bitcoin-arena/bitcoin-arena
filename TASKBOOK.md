@@ -20230,3 +20230,72 @@ core 83/83, protocol 416/416, blwp-node 199/199, blwp-client 102 -> 108 - 806
 tests, 0 red. Money guard 12 files clean, determinism guard 20 clean. Bundle
 218.4 KB from 21 modules. NO UNITY BUILD, no C# touched, no PlayMode or
 EditMode run this slice - the C# half is slice 2.
+
+## Item 28, slice 2: the other trucks are drawn, and Gather still sees no wall
+
+Measured before: `GhostTruck.Show` had no caller in this project and
+`blwp.jslib` had no ghost entry point. A picture was produced, delivered and
+kept by the page - and drawn by nobody.
+
+After: `BlwpNextGhost` hands ONE picture across, twelve ints (the entry id as
+eight words, then x, z, heading and the tick they were taken at), and
+`GhostField` puts one truck per entry where its own frame says. That is the
+whole component: no rigidbody, no collider, no velocity, no contact, no
+scoring, no delivery. The pose is the frame's - there is no integrator here and
+no smoothing that invents a position between two pictures, because a truck
+drawn where nobody said it was is a truck this node cannot prove.
+
+  Show callers                    0 -> 1 (GhostField)
+  ghost channels in blwp.jslib    0 -> 1, and the rule for WHAT is kept stays
+                                  in `@blwp/client` where node --test measures
+                                  it - the jslib only drains
+  three pictures, two entries     two trucks; the entry that moved is at its
+                                  LAST frame's x, not an average of two
+  a drawn field                   0 colliders, 0 rigidbodies, CarriesPhysics
+                                  false on every ghost
+  a picture with no entry         draws nothing; no identity is invented
+  a drain of 4 out of 10          4 drawn, 1 truck, the rest left for the next
+                                  frame, then 6 more and 0 on an empty queue
+
+### GATHER, WITH AND WITHOUT A LIVE GHOST
+
+  solids without the ghosts   1
+  with two ghosts drawn       1
+
+Identical, and the test refuses a scene with none (`without >= 1`), so the
+equality is not the empty-set trick. This is the PhysX-era class letter 18 shut
+the door on with no ghost yet drawn; it is now measured against LIVE ones taken
+off the queue, which is the case that will actually exist.
+
+### Unity counts, both platforms, both with and without
+
+  PlayMode  baseline (files aside)  222 total, 197 passed, 12 failed, 13 skipped
+  PlayMode  with GhostField         227 total, 202 passed, 12 failed, 13 skipped
+  PlayMode  with, first run         227 total, 203 passed, 11 failed, 13 skipped
+  EditMode  (unchanged by this)     190 total, 186 passed,  1 failed,  3 skipped
+
+  NEW FAILURES VS BASELINE: NONE, in both runs.
+
+The five new passes are exactly the five GhostField tests, and the six existing
+`GhostTests` passed in every run. EditMode is untouched because the file is in
+the PlayMode assembly - the same split the earlier ghost piece recorded.
+
+STILL RED, PRE-EXISTING, each proven so by the baseline above and not by this
+work: FeatureTests.DamageIsFeltInTheDriving, ImportedModelTests x2,
+TruckHealthTests.CrashingIntoArmourWritesItOff, VehicleTests x5,
+VisibilityTests.ArmiesAreActuallyDrawn, VisibilityTests.RoadsAreActuallyDrawn,
+and EditMode's CombatFxTests.RifleFireProducesAFlashAndATracer.
+`PostOfficeTests.TheGogglesAnimate` is the documented wall-clock flake: it
+failed in the baseline and the second run and passed in the first, which is why
+the failure count reads 11 or 12 depending on the run and why the DIFF, not the
+count, is the measurement.
+
+ROADS: `VisibilityTests.RoadsAreActuallyDrawn` is NOT on the still-red list the
+earlier ghost piece wrote down, and it is in the baseline here - so it went red
+between that letter and this one, on somebody else's work or on drift. Named
+rather than absorbed into "the usual ten".
+
+### JS suites, unchanged by this slice
+
+core 83/83, protocol 416/416, blwp-node 199/199, blwp-client 108/108 - 806
+tests, 0 red.
