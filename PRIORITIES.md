@@ -57,8 +57,19 @@ Top item first. Finish and deploy before starting the next.
                                             earn loses its bond, and claiming
                                             nothing never does. ALL SIX OF
                                             5A.3'S ROWS NOW HAVE A PREDICATE.
-                                            What is left of slashing is the
-                                            enforcement, which is a daemon.
+                                            The fee and the donation are
+                                            arithmetic now too, and a round
+                                            names its donation set - though
+                                            nobody publishes the set's bytes.
+                                            UNBLOCKED CHECKPOINT WORK IS DONE.
+                                            The only remainder is five parked
+                                            items: the hold invoice, slash
+                                            enforcement and the committee
+                                            re-run each need a DAEMON; CLTV
+                                            sizing needs a protocol tick rate
+                                            that does not exist; the Feldman
+                                            residual needs a discrete-log
+                                            group this package does not carry.
                                             Numbers: TASKBOOK.
    13  M1.a16 playable hunt            M1   done — the hunt is winnable
                                             through the front and the rim
