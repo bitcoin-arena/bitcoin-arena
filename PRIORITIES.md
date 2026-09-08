@@ -32,9 +32,21 @@ Top item first. Finish and deploy before starting the next.
                                             BOND_MARKER, a genesis parameter
                                             this protocol leaves null on
                                             purpose, so the candidates come in
-                                            from advertisements. Next: 5A.4's
-                                            RESOLVE and the rest of 5A.3's
-                                            filters. Two
+                                            from advertisements. RESOLVE is in
+                                            with the three 5A.3 filters that
+                                            wait on nothing parked: a body that
+                                            cannot be retrieved is excluded the
+                                            same way for everyone, a bond under
+                                            the ROUND's floor is out, and an
+                                            advertisement that declares no role
+                                            or no version we speak is out. The
+                                            other three are named and not faked:
+                                            the bond script template cannot be
+                                            read off a taproot output, and the
+                                            advertisement signature needs a
+                                            curve this package does not carry.
+                                            Item 15's remaining conjuncts are
+                                            those three. Two
                                             signed-shape divergences recorded
                                             and deliberately not fixed: the
                                             leaf carries a pubkey where 5A.4

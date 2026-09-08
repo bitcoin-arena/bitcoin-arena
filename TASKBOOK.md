@@ -14775,3 +14775,86 @@ one silently dropped 2, and the three input refusals 1 each.
 protocol 293/293 (was 283), blwp-node 70/70, blwp-client 89/89, core 80/80,
 money guard 12 files clean, determinism guard 19 files clean. JS protocol only:
 no Unity, no C# port, no PhysX, no daemon, and no vector moved.
+
+## M2.2 5A.4 step 2: RESOLVE, and the three 5A.3 filters that wait on nothing
+
+**This accounts for 3 of the 6 that was still missing for census from chain.**
+5A.3 lists six eligibility criteria; "bond exists, unspent, deep enough" was
+already done by SCAN. Of the six that remained:
+
+  RESOLVE - body retrievable and hash-matching   THIS SLICE
+  bond_amount >= bond_min(role)                  THIS SLICE
+  declares the role and a supported version      THIS SLICE
+  bond output uses the bond script template      BLOCKED - a taproot output
+                                                 hides its script paths until
+                                                 spent (5A.3B), the same wall
+                                                 BOND_MARKER stands behind
+  advertisement signature under node_pubkey      PARKED - no curve here, the
+                                                 standing package boundary
+  SCAN's finding conjunct                        BLOCKED - BOND_MARKER is null
+
+So the three built are exactly the three needing neither a genesis parameter,
+a curve, nor a daemon. **Item 15's remaining conjuncts are those three.**
+
+### RESOLVE does not re-prove inclusion, and that is deliberate
+
+`acceptAdvert` bundles a merkle proof with the resolution, because it is used
+where nothing has established the transaction is in the chain. SCAN has - it
+read the blocks. Demanding a header and a branch again would make RESOLVE ask
+for what step 1 already answered, and 5A.4 asks something narrower of it: read
+the committed hash, retrieve the body, match. So the resolution is done from
+the transaction alone, with the same primitives.
+
+### Three holes the tests found, each by failing honestly
+
+  1. A DIFFERENT BUT SELF-CONSISTENT TRANSACTION RESOLVED HAPPILY. Handing back
+     another node's bond worked, because a coherent transaction commits to its
+     own body - so an entry at one outpoint could be resolved with an
+     advertisement from somewhere else entirely, endpoint and all. The
+     transaction must be the one the outpoint names. Found by a test that
+     failed rather than by a mutant.
+  2. An uncommitted witness body would have been taken if the check were
+     dropped, because every transaction this repo builds commits to its own.
+     A bond whose OP_RETURN names something else went in - `bondTransaction`
+     already takes a `commitment` override - and that mutant now dies.
+  3. A transaction committing to NOTHING was never tested, because every
+     transaction here carries an OP_RETURN. Rather than fabricate one, the
+     real mainnet block-100000 transaction already in `tx.test.js` was used:
+     pre-segwit, two P2PKH outputs, no commitment.
+
+And a fourth: THE RESOLVED BODY WINS OVER THE ENTRY'S SUMMARY. The roles in a
+census row are somebody's transcription; the body is what the bond committed
+to. A census that believed the transcription would let a publisher put a node
+in a role its own advertisement never claimed. Tested with an entry claiming
+`settlement` against an advertisement declaring `game`.
+
+### Measured
+
+  every body resolves            3 of 3 eligible, and the endpoint comes off
+                                 the resolved body
+  one body unreachable           excluded, named; the census is not broken
+  a resolver that THROWS         the same - a failing peer is a failed
+                                 retrieval, not an exception for the caller
+  a bond of 49999 at a floor
+    of 50000                     out, and the SAME bond is in a round whose
+                                 floor is 10000: "the network stratifies; it
+                                 does not evict"
+  exactly the floor              in - 5A.3 says >=
+  no role declared               out
+  version 99 against ours        out; 99 AND ours is in
+  what it cannot check           returned in `unchecked`, both named
+
+### Mutants: 14 planted, 14 killed, none retracted
+
+Three survived at 0 red first and all three were gaps in the fixtures, closed
+as described above. The rest: any transaction resolving any entry 1, an
+unretrievable body kept 1, a throwing resolver breaking the census 1, the floor
+not applied / excluding the exact floor / being a constant 1 each, a role not
+needed 1, any version supported 1, no floor or no resolver needed 1 each, and
+the unchecked list emptied 1.
+
+### Suites
+
+protocol 303/303 (was 293), blwp-node 70/70, blwp-client 89/89, core 80/80,
+money guard 12 files clean, determinism guard 19 files clean. JS protocol only:
+no Unity, no C# port, no PhysX, no daemon, no vector moved.
