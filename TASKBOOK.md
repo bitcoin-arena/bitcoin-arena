@@ -17887,3 +17887,64 @@ height is later M2. The leaderboard `signedBy` clash stays here.
 protocol 398/398, core 83/83, blwp-node 97 -> 99, blwp-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. Files in
 blwp-node/src reaching the simulator: exactly replay.js. No Unity, no C#.
+
+## Item 23, slice 1: the advertisement signature
+
+5A.1 ends the body with "signature - by node_pubkey over all of the above" and
+nothing checked it. `chain.js` said so in the list it returns with every bond:
+"the advertisement signature (no curve in this package)".
+
+  before   acceptAdvert accepts a bond whose body is signed by ANY key, and
+           hands back BOND_UNCHECKED with the signature on it (2 entries)
+  after    acceptSignedAdvert accepts only a body signed by the key it names,
+           and its unchecked list is 1 entry - the script template, which a
+           taproot output really does hide until it is spent
+
+ed25519 under node_pubkey: the key that already signs this daemon's receipts
+and results. No second curve. The BOND key stays secp256k1 and its link to the
+body is the commitment H(advert), not this signature - one says "this body is
+worth money", the other "this body is mine".
+
+### The refusals, each by name
+
+  another key         "that advertisement is not signed by <key>, the node it
+                      names" - and the chain door accepts that same
+                      transaction, which is why this one exists
+  a different body    a good signature over another advertisement's id fails
+                      the same way
+  another transaction "names a different bond transaction" - the chain's own
+                      reason, not dressed up as a signature failure
+  no signature        an unsigned body is refused
+
+### THE ZERO KEY SIGNS ITSELF, measured
+
+    ed25519.verify(zeros64, anything, zeros32) === true
+
+Zero decodes to a point of small order and the equation closes trivially. And
+`tools/bond.js` fills an unsigned body with exactly 64 zero bytes, calling them
+in its own comment "a signature that verifies under no key" - they verify under
+one. So an advertisement naming the zero key and carrying no signature would
+have passed this door as signed by the node it names, and had its endpoint
+handed to a player. Both halves are now refused by name. Of 256 uniform keys
+tried, none made `verify` throw, so the catch around it is defensive only.
+
+### Mutants: 7 planted, 6 killed, 1 retracted
+
+  Z1 the signature check removed                    1 red
+  Z2 a throwing verify treated as a pass            RETRACTED
+  Z3 the body swapped under a good signature        1 red
+  Z4 the unchecked list left as the chain's         1 red
+  Z5 the body-only check always passing             1 red
+  Z6 the zero key allowed                           1 red
+  Z7 an empty signature allowed on a loose body     1 red
+
+Z2 IS RETRACTED, not counted: it only differs when `ed25519.verify` throws, and
+it does not throw for any 32-byte key tried - it returns false. The catch is
+there for an input shape this curve does not produce, so the mutant measures an
+unreachable line rather than the check.
+
+### Suites
+
+protocol 398/398, core 83/83, blwp-node 99 -> 104, blwp-client 95/95, money
+guard 12 files clean, determinism guard 20 files clean. Files in
+blwp-node/src reaching the simulator: still exactly replay.js. No Unity, no C#.
