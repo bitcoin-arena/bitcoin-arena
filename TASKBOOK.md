@@ -17647,3 +17647,91 @@ A note for the next sweep: `blwp-client`'s own `npm test` is
 `node tools/bundle.js && node --test test/*.test.js`. Running `node --test`
 alone skips the rebuild and tests a stale bundle - which is how a broken build
 sat behind a passing-looking suite.
+
+## Item 22, the committee half: nodes fetch each other's results
+
+Serving a result nobody fetches is a committee of one writing in a diary.
+Measured before: `/results` answered and NOTHING asked - `verifiedFinal` was
+called from a test file and from nowhere else.
+
+### Two daemons, two identities, one contract
+
+Both seats named by the contract; each daemon told where the other answers,
+because a contract names a committee by KEY and a key is not an address (25.1
+makes finding one discovery's job, not this letter's). Real sockets.
+
+  after both closes, without any test calling gather
+      the node that closed second already holds 2 records
+  gather on each          fetched >= 1, kept 1, held 2, needed 2, verified 2,
+                          final true on both
+  asking again            held 2, kept 0 - one seat, one result
+  a stranger in the seat  final false, strangers 1
+
+AGREEMENT IS ON THE RUN, NOT ON THE BYTES. Section 13's PlayerResult carries
+`node_pubkey`, so two seats that replayed the same run to the same answer
+produce two DIFFERENT result ids - the record names who made it. Counting ids
+would put every honest committee at one of seven forever. The tally key is
+therefore the result with the signer removed: computed in `verdict.js`, never
+signed and never sent, so it adds no object to the protocol. Measured: the two
+records agree on player, outcome, score, transcript hash and core hash, and
+differ in `nodePubkey` and in their ids.
+
+  NOTE FOR A LATER LETTER, not folded into this one: `leaderboard` counts
+  `signedBy` entries by a SHARED resultId, which assumes every seat signs one
+  node's object. A daemon signs its own. The two models will have to meet
+  before a board is built from what these daemons hold.
+
+### What a peer says is not believed because it said it
+
+  a record signed with the wrong key            kept 0
+  a record for another round, signed by a real
+  seat of this round, perfectly                 kept 0
+  a peer that is simply down                    refused 1, held unchanged -
+                                                a committee that stopped
+                                                counting when one node was
+                                                offline is one any node
+                                                could stall
+
+### The retry
+
+A run replayed before its transcript was carried is not a failure, it is an
+EARLY one: 13C's canonical prefix grows as receipts arrive. A receipt landing
+after the close now re-queues that run.
+
+  closed with 1 of 2 receipts   0 results
+  the second seat receipts      1 result, hashed over the canonical transcript,
+                                score 257
+  a second late receipt         still 1 - and `retry` declines outright for a
+                                run this seat has signed
+
+### agreeOnState is gone
+
+It counted unsigned state hashes and had no production caller; `verifiedFinal`
+counts signatures, which is what section 13 asks for, and two functions both
+meaning "the committee agrees" is how two answers begin. Its two tests were
+rewritten rather than deleted: they now measure the thing the count rests on -
+seven stores replaying their own tables reach ONE state, and the one holding
+different inputs does not.
+
+### Mutants: 7 planted, 7 killed, 0 retracted
+
+  V1 peer records kept without verifying           1 red
+  V2 a forged peer record stored                   1 red
+  V3 a record for another round filed here         1 red
+  V4 a stranger counted as a seat                  2 red
+  V5 agreement taken on the signer's own id        3 red
+  V6 a seat re-signing a run it has already signed 1 red
+  V7 a late receipt triggering nothing             1 red
+
+V2, V3 and V6 survived the first run at 0 red. No fixture had ever met a
+dishonest peer - every `gather` was against an honest one - and none asked the
+retry directly. V3 needed care: its first fixture signed the foreign record
+with a stranger's key, so the SIGNATURE check refused it and the round check
+was never consulted; the record is now impeccable except for the round it
+names.
+
+### Suites
+
+protocol 394/394, core 83/83, blwp-node 94 -> 97, blwp-client 95/95, money
+guard 12 files clean, determinism guard 20 files clean. Files in
+blwp-node/src reaching the simulator: exactly replay.js.

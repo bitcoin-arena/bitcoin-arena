@@ -38,16 +38,7 @@ IN THIS ORDER (unparked):
                                         simulator - that is what the client's
                                         header argues against and what the
                                         node's own guard test now pins by
-                                        name. BLOCKED ON DANIEL for a real
-                                        round: replay needs the world's seed,
-                                        IMPLEMENTATION names it
-                                        H(round_randomness || pubkey ||
-                                        secret || join_tick), and `secret` is
-                                        the player's with no clause putting it
-                                        in front of a verifier - the
-                                        BOND_MARKER and checkpoint class. A
-                                        fixture owns its own number; no rule
-                                        was written. Slices 2 and 3 ARE IN:
+                                        name. Slices 2 and 3 ARE IN:
                                         the replay runs in a worker started on
                                         the same file, so the daemon's own
                                         thread is never the simulator and the
@@ -93,6 +84,21 @@ IN THIS ORDER (unparked):
                                         Bitcoin block hash this daemon does
                                         not read - and a node given none stops
                                         there rather than inventing a world.
+                                        Slice 7: NODES FETCH EACH OTHER. A
+                                        daemon asks its peers for their
+                                        results when a round closes, keeps
+                                        only what verifies under the key it
+                                        names and belongs to the run it is
+                                        filed under, and counts with the
+                                        contract's own slots - two daemons on
+                                        one contract each end up holding both
+                                        signatures and a 2-of-2 reaches two.
+                                        Agreement is on the RUN, since a
+                                        record names its signer and two ids
+                                        can never match. A receipt arriving
+                                        after the close re-queues the run it
+                                        completes, so a late transcript still
+                                        becomes a signed result.
                                         Unlocks ghost spawn/subscribe (18),
                                         the daemon 14/8 waited on, and the
                                         board on a screen: 20's rows are built
