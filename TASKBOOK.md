@@ -19036,3 +19036,29 @@ real bytes without a bitcoind. Regenerate with:
 The root in the fixture is that run's own root - the node keys are random per
 run - so a regenerated fixture carries a new root and the test reads it from
 the file rather than from a constant.
+
+## Letter 15 closed: the remainders and who owns them
+
+15 named three things - SCAN by the round's own marker, FILTER by the 24
+template, and chain facts - and all three are measured. What came up alongside
+them is not 15's, and each has an owner so none of it is a silent drop:
+
+  A RELAYABLE WITNESS                 owner: the letter that posts a real bond
+    5A.2 puts the advertisement body in the witness of the funding
+    transaction. Consensus accepts the carrier spend this tree builds
+    (OP_DROP <key> CHECKSIG); mempool POLICY will not relay a tapscript stack
+    item that large, so `tools/census-regtest.mjs` funds through
+    `generateblock`, which validates fully without asking the mempool. M2 is
+    play money on regtest/testnet4 and generateblock is the measured funding
+    path until that letter exists. Not a design task now, by ruling.
+
+  THE ADVERTISEMENT SIGNATURE         owner: 26, the first production caller
+    The census still parks "the advertisement signature (no curve in this
+    package)" unless a caller injects `verifyAdvert`, and no production code
+    calls the census yet. The hook gets wired where the first caller is. The
+    curve conflict behind it - letter 23 verifies `node_pubkey` as ed25519
+    while letter 24 feeds the same field to secp256k1 - stays as written
+    above; it is a ruling, not a defect to pick a side on.
+
+  TREE-CARRIED COMMITMENTS            owner: whichever letter wires the curve
+    As ruled: this build produces and recognizes OP_RETURN only.

@@ -16,7 +16,7 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: 15, the census from the chain. 20-25 are done.
+LIVE LETTER: 18, ghosts / private world. 15 and 20-25 are done.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
 threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
@@ -29,10 +29,9 @@ HARD (Daniel 2026-09-08 12:09): both committee nodes are reachable on
 Tailscale, not LAN. M2 asks for no money and distributes none.
 
 HARD (Daniel 2026-09-08 15:26): close 15 and 18 as soon as they are
-unblocked. Do not leave them OPEN while 26-28 run. 15 is next after 25
-(marker scan / template / chain facts). 18 is next after 15 (spawn and
-subscribe; daemon 22 is already in). Ghosts-on-screen in 28 does not
-mop them up.
+unblocked. Do not leave them OPEN while 26-28 run. 15 IS CLOSED. 18 is
+live now (spawn and subscribe; daemon 22 is already in). Ghosts-on-screen
+in 28 does not mop them up. 26 stays parked until 18 is closed.
 
 IN THIS ORDER (unparked):
    22  M2 daemon replays the core     M2   done — slice 1 IS IN: the node reaches the
@@ -175,16 +174,26 @@ IN THIS ORDER (unparked):
                                         both leaves spendable on a real node,
                                         and a slash that carries the proof
                                         justifying it. Numbers: TASKBOOK.
-   15  M2.2 census from chain         — remainders now unblocked: SCAN
-                                        by BOND_MARKER, FILTER by the
-                                        24 template, chain facts from 25.
-                                        Close this letter. Do not skip.
-   18  M2.2 ghosts / private world    — spawn and subscribe on the
+   18  M2.2 ghosts / private world    LIVE — spawn and subscribe on the
                                         daemon socket. Pieces 1-4 are
                                         in; 22 unlocked this. Do not
                                         skip and do not wait for 28.
-   26  M2 census + eligibility        — leftover after 15: sort
-                                        txid/vout, min census for 2-of-2
+   15  M2.2 census from chain         M2   done — the census is a function of
+                                        the chain: it finds its own bonds by
+                                        the round's marker, refuses a root
+                                        with the 5A.3B template unchecked or
+                                        a round that names no network, and
+                                        takes spentness, height and depth off
+                                        real blocks - depth at census_height,
+                                        so two participants at different tips
+                                        derive the same census. Measured on a
+                                        regtest node, not on fixtures.
+                                        Numbers: TASKBOOK.
+   26  M2 census + eligibility        — PARKED until 18 closes. Leftover
+                                        after 15: sort txid/vout, min census
+                                        for 2-of-2, and the first production
+                                        caller - which is where the
+                                        verifyAdvert hook gets wired.
    27  M2 committee_time + seed       — seed from bitcoin-block-hash after
                                         committee_time; committee exists
                                         before first entry
