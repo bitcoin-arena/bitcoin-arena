@@ -231,6 +231,15 @@ IN THIS ORDER (unparked):
                                         share still passes its holder's check.
                                         The discrete-log group 15/14 waited
                                         on. NOT letter 23.
+   30  M2 publication lead + receipts — REMAINDER off 27, listed and NOT the
+                                        next task: 5A.5's other half wants
+                                        committee_time >= published_at +
+                                        min_publication_lead and five
+                                        pre-randomness timestamp receipts, and
+                                        the contract carries no published_at.
+                                        The grind fence today is
+                                        committee_time and is exactly as
+                                        strong as that. M2, after 28.
    15/14/8 are this queue, not a later milestone.
 
 DISPLAY NAME (Daniel 2026-09-08 18:55, M3): DECIDED. Default =

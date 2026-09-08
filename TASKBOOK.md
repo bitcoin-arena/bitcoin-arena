@@ -20152,3 +20152,21 @@ substitute.
 Suites at the close: core 83/83, protocol 416/416, blwp-node 199/199,
 blwp-client 102/102 - 800 tests, 0 red. Money guard 12 files clean,
 determinism guard 20 clean.
+
+## Item 27, the two rulings recorded
+
+RANDOMNESS_FALLBACK STAYS UNENCODED (Daniel, accepted as the ruling): a field
+that may only ever equal the born beacon carries no information; encoding it
+would move every round id again and would OPEN the channel the check then
+closes. Over the wire a foreign fallback is already impossible - the field does
+not encode, so a decoded contract carries none whatever the sender wrote - and
+the object-level check is the right place for the one case that remains. This
+is a decision, not a slice of code waiting to be written.
+
+PUBLISHED_AT IS AN M2 REMAINDER, now listed on PRIORITIES as item 30 rather
+than living only here: 5A.5's other half asks for
+`committee_time >= published_at + min_publication_lead` and five pre-randomness
+timestamp receipts, and this contract carries no publication time. The grind
+fence in place today is `committee_time` and is exactly as strong as that
+field - no stronger, and it is not claimed to be. Not M3, not silent, and not
+the next coding task: playable M2 is 28.
