@@ -16842,3 +16842,62 @@ carried as unkillable: the filter is now the same test written once.
 is correct and it is not free. Not changed here: the shape that fixes it is
 hoisting the map into `fanOut`, which is a different slice and would be
 measured against a real N rather than guessed at.
+
+## M2.2 item 20, third slice: the payout on each row is the table's
+
+Section 20 makes the payout table `F(contract, membership, results)`, and 0.11
+makes the board presentation. A second thing that produced amounts would be a
+second scoring path.
+
+### The board is not handed a table
+
+There is no argument for one. It is handed the INPUTS - the entries with their
+stakes and outcomes - and calls `computePayoutTable`, the one implementation.
+A forged table cannot be passed because there is nowhere to pass it, which is
+the same shape as the core's missing ghost parameter: the guarantee is the
+absence, not a check.
+
+AND THE INPUTS MUST BE THIS ROUND'S. Every payout entry is measured against the
+final the board already accepted:
+
+  a player the committee made no final for   "counts a player the committee has
+                                              made no result final for"
+  FAILED promoted to DELIVERED               "says DELIVERED for a player whose
+                                              final result is FAILED"
+  a score inflated to 9999                   "scores a player 9999 where the
+                                              final says 800"
+  an amountMsat written on the input          ignored - the board reads the
+                                              table it computed, exactly as an
+                                              injected rank is ignored
+
+### Zero is a paid amount
+
+The table lists everybody activated, and a qualifier who places outside the
+paying ranks is paid 0n. A player the table does not list at all - a refunded
+run, which section 18 says neither contributes nor draws - has NO `payoutMsat`
+field. Measured both ways in one board: the loser carries `payoutMsat: 0n` and
+`'payoutMsat' in row` is true; the refunded player has no such key.
+
+### Payout is a column, not a sort key
+
+The order was settled by score then player key; money must not move anybody.
+The mutant that sorted by amount survived at first because the fixture's payout
+order agreed with its score order - the fourth time this letter a fixture could
+not tell two answers apart. It is measured on a CROSSED pair now: a FAILED run
+with the highest score is ranked first and paid nothing, while a lower-scoring
+delivery is ranked second and paid.
+
+### Mutants: 7 planted, 7 killed
+
+the board computing an amount itself (2 red), an amount read off the caller's
+object (3), a player the table omits paid zero (1), a payout entry not matched
+to the final outcome (1) or the final score (1), a player with no final paid
+(1), and payout used as a sort key (1).
+
+### Suites
+
+protocol 377 -> 380, core 83/83, blwp-node 71/71, blwp-client 95/95, money
+guard 12 files clean, determinism guard 19 files clean.
+
+NOT DEPLOYABLE: still nothing on screen. The standings rebuild inside
+`interestSet` is still a named remainder and was not hoisted.

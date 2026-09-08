@@ -48,6 +48,16 @@ tick rate, daemon, curve, BOND_MARKER, ghost subscribe, run duration.
                                             with no final is a neighbour rather
                                             than a leader, and a truck with no
                                             player key has no standing at all.
+                                            Slice 3: each row carries the
+                                            payout the ROUND's table gives that
+                                            player - the board is handed the
+                                            inputs and calls section 20's
+                                            function, there is no argument for
+                                            a table, and an input that
+                                            disagrees with a signed final is
+                                            refused. Zero is a paid amount; a
+                                            player the table does not list has
+                                            no amount at all.
                                             STILL UNBUILT: nothing is on
                                             screen, which is the only reason
                                             this is not deployable; and three
