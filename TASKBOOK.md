@@ -19064,3 +19064,70 @@ letter, and not M3 - they belong to M2 letters that already exist.
 
   TREE-CARRIED COMMITMENTS            owner: whichever letter wires the curve
     As ruled: this build produces and recognizes OP_RETURN only.
+
+## Item 18, slice 1: a ghost is produced, from the one door
+
+Before: the GHOSTS frame existed and nothing made one. Measured at the start of
+this slice - `encodeGhost` and `interestSet` had no caller anywhere in
+`blwp-node/src` or `blwp-client/src`, so pieces 1 and 3 were a wire format and
+a selection policy with nothing behind them. The frame could be CHECKED and
+could not be MADE, and `ghostBinds` says out loud that checking is the smaller
+half: "this cannot say the truck was AT x,z - only a replay says that".
+
+After: `blwp-node/src/ghosts.js` builds a frame for one entry at one tick, and
+the three truck words come out of `replay.js` - the daemon's only door to the
+simulator - which now takes a `pictures` option and reads x, z and heading
+inside the loop it was already running. `ghosts.js` itself never touches the
+core, so the guard that counts the files reaching it still counts one.
+
+A TICK CONVENTION, WRITTEN DOWN because the two ends have to agree: a picture
+at tick N is the truck AFTER N was stepped. That is not the mark convention -
+a mark names the state it REACHED, published after stepping N-1 - and the
+difference is deliberate: 11's input chain covers TICKS, and `ghostBinds`
+checks the tick against the inputs that cover it. The same state is mark N+1
+and ghost N. `ghostForChecked` runs the checker over what it just built, so
+drift between the two ends is a failing test rather than a frame a stranger
+quietly rejects.
+
+### The numbers
+
+  encodeGhost callers in src/       0 -> 1 (ghosts.js)
+  x, z, heading at 7 ticks          equal to the core driven directly, at
+                                    0, 1, 37, 99, 100, 250 and 299
+  the head a picture names          the FIRST batch that covers the tick, not
+                                    a later one that would also pass
+  a tick past the published inputs  refused by the producer AND by ghostBinds
+  a run with no published inputs    refused, and an all-empty chain gives the
+                                    same reason rather than "no such tick"
+  a late entry (join tick 500)      photographed at the ticks it played; tick
+                                    0 refused, which is letter 19's rule
+  blwp-node suite                   152 -> 158
+
+### Mutants: 7 planted, 7 killed, 1 retracted
+
+  a second stepping path in ghosts.js that agrees today   killed by the
+                                                          one-door guard
+  the frame bound to genesis                              killed
+  a tick past the chain photographed anyway               killed
+  the picture taken one tick late                         killed
+  the head is a later batch that also covers the tick     killed
+  the frame names the session key, not the player's       killed
+  the checker's range drifts one from the producer's      killed by
+                                                          ghostForChecked
+
+RETRACTED: "record a picture at every tick, whatever was asked". It is
+equivalent code, not a behaviour - `taken` is keyed by tick and read by tick,
+so recording extra entries costs memory and changes no answer. A test could
+only tell the difference by measuring allocation, which is not a rule anybody
+stated.
+
+### Suites
+
+core 83/83, protocol 404/404, blwp-node 158/158, blwp-client 95/95 - 740 tests,
+0 red. Money guard 12 files clean, determinism guard 20 files clean, bundle
+201.1 KB byte-identical: nothing the client bundles changed.
+
+Not in this slice, by ruling: the socket. Spawn and subscribe are slice 2 -
+identified connections, refusals by name, K respected, never a picture of
+yourself, an unsubscribed connection unchanged. Unity stays shut unless a
+measured hole in consume forces it (piece 4 already landed that path).
