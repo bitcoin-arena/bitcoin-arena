@@ -14364,3 +14364,80 @@ hash, which has to exist before anything can carry it.
 protocol 265/265 (was 260), blwp-node 70/70, blwp-client 89/89, core 80/80,
 money guard 12 files clean, determinism guard 19 files clean. Nothing outside
 `packages/protocol` calls any of it. Unity untouched and not re-run.
+
+## M2.1 22A: an LNURL is bech32, and its case rules are bech32's
+
+A defect in the check delivered one commit earlier, found by auditing it rather
+than by a test. `donationSetStands` compared `lnurl` by exact string equality,
+so measured on the delivered code:
+
+    [{LNURL1ABC, 5000}, {lnurl1abc, 5000}]  ->  STANDS, id 6b847471c97e87d2
+
+That is ONE PARTY HOLDING TWO SHARES - exactly what the duplicate check exists
+to prevent - and the same payee produced two different set ids
+(`e8b941be2898bcdf` upper against `e9173b82ff008c57` lower), so two honest
+nodes handed the same recipients in different case disagreed about which set
+was used.
+
+### The rules are the encoding's, not this file's
+
+Bech32 says a string may not be mixed case, and that case carries no meaning.
+Both are now enforced: a mixed-case address does not stand, identity is
+compared canonically, and the bytes carry the canonical form so the id follows.
+
+    two spellings of one payee   refused, "one party with two shares"
+    LnUrL1abc                    refused, "mixed case, which bech32 does not allow"
+    all-upper id                 4ea755742786f087
+    all-lower id                 4ea755742786f087   (the same set)
+
+### Folded in ASCII, and not with `toLowerCase`
+
+`toLowerCase` is Unicode: in a Turkish locale it maps `I` to a dotless `ı`, so
+two implementations of this protocol could canonicalise one address two
+different ways and disagree about who is being paid. Bech32 is ASCII, so the
+fold is ASCII - `A`-`Z` only, and `İ` and `Ä` are left exactly as they are. The
+mutant that swaps the fold for `toLowerCase` is 1 red.
+
+### Nothing published in lowercase moved
+
+VERIFIED AGAINST THE PRE-FOLD CODE ITSELF rather than reasoned about: the
+previous `donation.js` was checked out beside the new one and both were asked
+for the id of an all-lower set. Both answer **44022895c61f07fd**. Lowercase was
+already what the fold outputs, so those bytes never moved. A set typed in UPPER
+does change id - to the id its lowercase twin already had - which is the point
+of the ruling.
+
+A test that guessed a number was corrected here too: I first wrote a
+placeholder id into that assertion and called it measured. It was not. The
+number above is the one both versions actually produce.
+
+### Round-trip is canonical, and says so
+
+`decodeDonationSet(encodeDonationSet(upperSet))` returns the lowered form, so
+the round-trip assertion compares against the canonical set rather than the
+input. That is the behaviour, not a weakened test: the payee is the same payee
+either way, and the bytes say which payee.
+
+### Mutants: 9 planted, 9 killed, none retracted
+
+| mutant | protocol red |
+|--------|-------------:|
+| only an upper letter makes it mixed | 15 |
+| only a lower letter makes it mixed | 6 |
+| the fold does nothing | 4 |
+| the id is over the address as typed | 3 |
+| the fold uppercases instead | 2 |
+| nothing is mixed case | 2 |
+| duplicates are compared verbatim again | 1 |
+| mixed case stands | 1 |
+| the fold is Unicode, not ASCII | 1 |
+
+### Suites
+
+protocol 270/270 (was 265), blwp-node 70/70, blwp-client 89/89, core 80/80,
+money guard 12 files clean, determinism guard 19 files clean. Nothing outside
+`packages/protocol` moved; Unity untouched and not re-run.
+
+HOLE B STAYS PARKED: nothing binds an entry to a set, and 22A fixes that by
+hashing the set into the Round Contract - which moves every round id and is a
+named contract decision, not this defect.

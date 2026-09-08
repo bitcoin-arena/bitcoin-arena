@@ -851,7 +851,10 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      endpoint must not quietly redistribute other people's money. The set is
      A SET NOW HAS A TAGGED ID from published bytes, so a committee can check
      one instead of being handed an array, and a reordered set is a DIFFERENT
-     set because the order decides who takes the remainder. The set is still
+     set because the order decides who takes the remainder. AN LNURL IS BECH32
+     AND ITS CASE RULES ARE BECH32'S: mixed case does not stand, a payee is the
+     same payee in upper or lower, and the two spellings of one address cannot
+     be listed as two recipients. The set is still
      not on the round contract: 22A wants it hashed into the contract
      and that moves every round id.
      Numbers: TASKBOOK.
