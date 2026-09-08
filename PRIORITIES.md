@@ -29,7 +29,7 @@ HARD (Daniel 2026-09-08 12:09): both committee nodes are reachable on
 Tailscale, not LAN. M2 asks for no money and distributes none.
 
 HARD (Daniel 2026-09-08 15:26): close 15 and 18 as soon as they are
-unblocked. BOTH ARE CLOSED. 26 is unparked and live. Drawing another
+unblocked. 15, 18 AND 26 ARE CLOSED. 27 is live. Drawing another
 player's truck on screen is 28 and was never 18's.
 
 HARD (Daniel 2026-09-08 18:26): when M2 is finished, start M3
