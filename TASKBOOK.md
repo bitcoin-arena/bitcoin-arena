@@ -18722,3 +18722,44 @@ It is not on the bond-verification path.
 
 protocol 415/415, core 83/83, blwp-node 120 -> 121, blwp-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean.
+
+## Item 25 closed: the numbers
+
+All six criteria measured across both doors - twelve of twelve door-criterion
+pairs:
+
+  named-key taproot output           the key its named keys produce
+  both leaves reachable              65-byte control blocks rebuild the key,
+                                     and a real node spends by each
+  spentness and depth                read off the chain, not off the entry
+  network-correct marker             census and advert door, both
+  a slash carries its proof          refused by the protocol when it does not,
+                                     though bitcoind accepts such a spend
+  a wrong output key                 refused at both doors
+
+  protocol       415/415
+  core           83/83
+  blwp-node      121/121
+  blwp-client    95/95
+  money guard    12 files clean
+  determinism    20 files clean
+
+The last pair, before and after: a testnet round accepted a bond paying the
+REGTEST marker; now it refuses it by name and takes the testnet one, and a
+regtest round does the mirror.
+
+Left out by ruling, not by oversight: the slash distribution (5A.3B step 5,
+blocked on a Round Contract field that would move every round id), the MuSig2
+key-path spend (needs a signing session), and a daemon caller for
+`bond-spend.js` (15's chain work).
+
+### The one-run 119/120 blwp-node flake
+
+Cause unknown, and left listed rather than smoothed over. Six later full runs
+were clean; neither commit around it touched a blwp-node test file - only
+`tools/bond-regtest.mjs`, which the suite does not execute. The failing test was
+never named in the output and I did not guess one. Not on the bond-verification
+path.
+
+Nothing was deployed for this letter: no client code changed, and no daemon
+holds an arbitration set, a chain view or a network yet.

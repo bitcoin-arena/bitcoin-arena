@@ -16,7 +16,7 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: 25, bond verification. 20-24 are done.
+LIVE LETTER: 15, the census from the chain. 20-25 are done.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
 threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
@@ -167,7 +167,14 @@ IN THIS ORDER (unparked):
                                         does not rebuild, and say so when they
                                         were given nothing to rebuild with.
                                         Numbers: TASKBOOK.
-   25  M2 bond verification           — output is what it claims
+   25  M2 bond verification           M2   done — a bond output is what it
+                                        claims: the key its named keys
+                                        produce, unspent and deep enough by
+                                        the chain rather than by the entry,
+                                        its marker the round's own network's,
+                                        both leaves spendable on a real node,
+                                        and a slash that carries the proof
+                                        justifying it. Numbers: TASKBOOK.
    15  M2.2 census from chain         — remainders now unblocked: SCAN
                                         by BOND_MARKER, FILTER by the
                                         24 template, chain facts from 25.
