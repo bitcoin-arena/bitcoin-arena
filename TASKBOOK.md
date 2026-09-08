@@ -20299,3 +20299,69 @@ rather than absorbed into "the usual ten".
 
 core 83/83, protocol 416/416, blwp-node 199/199, blwp-client 108/108 - 806
 tests, 0 red.
+
+## Item 28, slice 3: two nodes, one page, the other truck on screen
+
+The pictures Unity draws in this slice are not numbers invented in C#. They are
+the exact twelve ints `BlwpNextGhost` hands across, captured from a REAL
+two-node run by `blwp-client/test/two-nodes-play.test.js` and kept as
+`unity-proto/Assets/Tests/Fixtures/two-node-ghosts.txt`: two daemons, two
+identities, one contract naming both seats, a page that subscribed, and the
+other player's transcript replayed by the node through `replay.js`.
+
+### The JS half: what a page is actually sent
+
+  the page's subscribe             'watching 1' - the other identity, not
+                                   itself
+  the picture at tick 59           x -6568339, z 668467, heading 16384 - equal
+                                   to the core driven directly over that
+                                   entry's own inputs under its own seed
+  sixty ticks later, tick 119      x -6409535, z 668336, heading 16413, and
+                                   the test refuses equality with the first,
+                                   so "it moved" is measured and not assumed
+
+### The Unity half: on screen, and still a picture
+
+  the truck's position             the frame's own x and z to the millimetre
+                                   (-100.22 m, 10.20 m), then -97.80 m after
+                                   the second picture
+  in the camera's view             TestPlanesAABB against a camera looking at
+                                   it: true for both poses. Batchmode presents
+                                   no frame to capture, so what is measured is
+                                   what a camera would draw - named as that
+                                   rather than called a screenshot
+  the renderer                     enabled; a ghost nobody can see is not on
+                                   screen
+  solids without the other truck   1
+  solids with it drawn             1
+  colliders / rigidbodies          0 / 0, on a model built from a primitive
+                                   that arrives WITH a collider
+
+### Counts, per suite, with and without
+
+  PlayMode  baseline (ghost files aside)   222 total, 197 passed, 12 failed, 13 skipped
+  PlayMode  with GhostField                227 total, 202 passed, 12 failed, 13 skipped
+  PlayMode  with GhostField + on-screen    229 total, 205 passed, 11 failed, 13 skipped
+  EditMode  before this letter's C#        190 total, 186 passed,  1 failed,  3 skipped
+  EditMode  with GhostField in Runtime     190 total, 186 passed,  1 failed,  3 skipped
+
+  NEW FAILURES VS BASELINE: NONE.
+
+The seven new passes across the two Unity slices are exactly the five
+GhostField tests and the two on-screen tests; the six existing `GhostTests`
+passed in every run. EditMode is unchanged with the new runtime file in place -
+measured, not assumed, because `GhostField.cs` is in the assembly EditMode
+references.
+
+  JS: core 83/83, protocol 416/416, blwp-node 199/199, blwp-client 108 -> 109
+  - 807 tests, 0 red.
+
+### The hole this slice does not close, named
+
+A browser is not driven here: there is no chromium, no playwright and no
+puppeteer in this environment, so the one hop nothing measures end to end is
+the WebGL player itself - `blwp.jslib` calling `watchGhosts` and
+`BlwpNextGhost` returning twelve ints inside a real page. Both sides of that
+line are measured against real data (the JS half against two daemons, the C#
+half against the frames those daemons produced), and the line between them is
+three statements long. It is named here rather than implied by a green suite.
