@@ -16623,3 +16623,108 @@ live work.
 Closing numbers: blwp-client 89 -> 95, protocol 367/367, core 83/83, blwp-node
 71/71, 11 mutants planted and killed across the two halves, none retracted.
 PlayMode and EditMode were not required and were not re-run.
+
+## M2.2 item 20, first slice: the board, and it decides nothing
+
+0.11: "Derived from signed final protocol results. It may show pseudonym, live
+run status, delivered/failed state, score, rank, cargo statistics and payout.
+THE LEADERBOARD IS PRESENTATION, NOT AUTHORITY."
+
+### Measured before any code: what a signed final carries
+
+`encodePlayerResult` is 168 bytes plus a 64-byte signature:
+
+  roundId | playerPubkey | outcome | score | transcriptHash | simCoreHash
+  | nodePubkey
+
+Against 0.11's seven fields - THIS ACCOUNTS FOR 4 OF THE 7:
+
+  delivered/failed  ON THE FINAL      `outcome`: DELIVERED, FAILED, FORFEIT, VOID
+  score             ON THE FINAL      u32
+  payout            DERIVABLE         `computePayoutTable`, section 20's
+                                      F(contract, membership, results) - and
+                                      NOT this slice's to compute
+  rank              DERIVABLE         it IS the ordering, which is this slice
+  pseudonym         NOT CARRIED       0.12: "clients MAY derive a friendly
+                                      pseudonym" - a rendering of the player
+                                      key, client-side, not a protocol field
+  cargo statistics  NOT CARRIED       no field, and not derivable from a final
+  live run status   IMPOSSIBLE HERE   a final is after the run. 0.11 lists it
+                                      while also saying the board is derived
+                                      from finals - a tension in the SPEC, not
+                                      in this code, and not resolved by
+                                      inventing a source. It would come from
+                                      marks and ghosts, a different letter.
+
+The three that cannot come from a final are RETURNED AS NAMED PARKED FIELDS,
+not left as blank columns: a column nobody filled looks the same as a column
+somebody forgot, and the first is a decision while the second is a bug.
+
+### What is now true
+
+`leaderboard(rows, { contract })` where a row is `{ result, signedBy }` - the
+shape `provisionallyFinal` already takes.
+
+  the committee is the ROUND's, off `contract.nodes`, not a list the caller
+  brings. A caller who could choose the committee could choose which results
+  counted as final, and the board is what a player reads to find out whether
+  they won.
+
+  a result the committee has not made final DOES NOT APPEAR. Not ranked last,
+  not greyed: section 13's threshold is what makes a result a result, and
+  showing the others would put a node's opinion beside a committee's decision
+  as though they were the same kind of thing. Five signatures from OFF the
+  committee are not five seats.
+
+  order is score descending, then the player key. Never arrival. A stable sort
+  keeps the INPUT order and the input order is exactly what must not decide a
+  rank - the tie discipline the census needed on the tip hash and interest
+  management needed on the entry id.
+
+  A REFUND IS NOT A PLACE. Section 18: "VOID and ENTRY_VOID entries neither
+  contribute to nor draw from the pool", so ranking one last would put a
+  refunded player below one who lost and the board would say something the
+  money does not. They are shown with `rank: null`. FORFEIT keeps its place:
+  `isRefund` covers VOID and ENTRY_VOID and not FORFEIT, and the payout table
+  puts a forfeit's stake into the loser pool - it played and lost.
+
+  no money. The row keys are exactly playerPubkey, outcome, score, signers,
+  rank, and a test refuses any key matching /payout|amount|msat|sat|prize|
+  winnings/ - so a second scoring path cannot be added quietly.
+
+### Measured
+
+  four scores 900/700/500/100 in three shuffled orders -> identical rows and
+    identical ranks every time
+  three players tied on 700, offered forwards and backwards -> 0x33, 0x66,
+    0x99 both times
+  4 of 5 signatures -> excluded, "has not made that result final: 4 of 5"
+  0 signatures     -> "nobody has signed a result"
+  5 strangers      -> excluded, "came from elsewhere"
+  VOID             -> rank null, after the ranked, and among themselves by key
+  FORFEIT          -> rank 2 of 3, between a delivery and a failure
+
+### Mutants: 12 planted, 12 killed, none retracted
+
+The four required: ordering by arrival (2 red), ties unbroken (1), an
+under-signed final admitted (1), VOID ranked (1). And eight more: the board
+ordered upwards (2), four signatures enough (1), a stranger's signature
+counting (1), FORFEIT losing its place (1), the unranked ordered by arrival
+(1), ranks starting at zero (2), what a final cannot say not named (1), and
+the board carrying an amount (1).
+
+### Suites
+
+protocol 367 -> 372, core 83/83, blwp-node 71/71, blwp-client 95/95, money
+guard 12 files clean, determinism guard 19 files clean. Core untouched: no
+scoring path in the browser and `step` unchanged. blwp-node, blwp-client and
+Unity unchanged this slice.
+
+NOT DEPLOYABLE: a board with no renderer changes no screen.
+
+### Next slice of the same letter, not started
+
+`interestSet` takes `rank` from its caller. Now that an ordering exists that
+every node computes alike, that rank must come from it - a rank a caller picks
+is a rank the operator picks, which is the fault removed from the census depth,
+the committee size, the seed, the bond floor and the protocol version.

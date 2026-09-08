@@ -36,8 +36,28 @@ discrete-log group. They stay in number order below the last closed item.
                                             payout. Nothing is built: `grep -i
                                             leaderboard` over the sources finds
                                             only comments in `interest.js` and
-                                            `ghost.js` pointing at it. Not
-                                            started.
+                                            `ghost.js` pointing at it. FIRST
+                                            SLICE IS IN: `leaderboard` builds
+                                            the same rows in the same order on
+                                            every node - score down, then the
+                                            player key, never arrival - from
+                                            results the ROUND's committee made
+                                            final at 5 of 7. A refund is shown
+                                            without a rank, because section 18
+                                            says it neither contributes nor
+                                            draws; a forfeit keeps its place.
+                                            The board carries no money: section
+                                            20's table stays the authority and
+                                            a test refuses any column that
+                                            reads like an amount. Of 0.11's
+                                            seven fields, four are on a final
+                                            or derived from one; pseudonym,
+                                            cargo statistics and live run
+                                            status are RETURNED as named parked
+                                            fields, not blank columns. Next
+                                            slice: `interestSet`'s rank comes
+                                            from this board instead of from its
+                                            caller. Numbers: TASKBOOK.
    19  M2 late join                   M2   done — a late run begins at the tick
                                             its own signed Entry Contract
                                             names. The Round Contract is never
