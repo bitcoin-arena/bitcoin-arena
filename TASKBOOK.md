@@ -20854,3 +20854,44 @@ which looks exactly like a provider that never answered. The tool prints that
 warning with the way out: serve the built page over http from the same machine
 (`BLWP_PAGE=http://host:8000`), or put the daemons behind https. Nothing in the
 protocol changes either way; it is where the page is served from.
+
+### And the page is served from the same machine, so nothing is mixed content
+
+The wall named at the end of the last slice is closed. The daily is https and
+these daemons are http, and an https page fetching `http://127.0.0.1` is a
+mixed-content request a browser may refuse - a refusal that looks exactly like
+a chain provider which never answered, which is the worst kind of wall: it
+fails where the evidence points somewhere else.
+
+So the tool serves the SAME BUILD over http beside the daemons. The bytes are
+the deployed ones; only where they are fetched from changes. The daemons stay a
+different origin - a different port - which is what their CORS header is for.
+
+    page  /                                200  13,868 b  text/html
+          /blwp-client.js                  200 233,311 b  application/javascript
+          /blwp-core.js                    200 227,592 b  application/javascript
+          Build/webgl4.wasm.unityweb       200            application/wasm
+          Build/webgl4.framework.js.unityweb 200          application/javascript
+          Build/webgl4.data.unityweb       200            application/octet-stream
+          Build/webgl4.loader.js           200            application/javascript
+    and the served index carries joinFromQuery
+
+The content types are set by the tool because Cloudflare gets them from
+`_headers`, which a plain server does not read, and Unity's loader will not
+start a wasm module served as text/plain.
+
+    http://127.0.0.1:18000/?round=106bca82...5021d312
+      &node=http://127.0.0.1:18100,http://127.0.0.1:18101
+      &bond=http://127.0.0.1:18100/bond&advert=f3f9c854...c7eb9d3c
+
+One scheme, one machine, two tabs. `BLWP_PAGE` still names the daily instead
+for anyone who wants the deployed origin, and the mixed-content warning still
+prints when that combination is chosen.
+
+WHAT IS LEFT IS A PAIR OF EYES. Every step up to the screen is measured: the
+join resolves the round and refuses a substituted one, the chain is agreed
+across two origins and a fork is refused by name, the bond is proven, the
+address is read off it, two tabs are two entries, the picture is the other
+entry's, its pose equals that player's own transcript at delta zero, and the
+shipping player draws that pose at delta zero with no new solid. Nobody has
+looked at it, and no browser was driven here to look on their behalf.
