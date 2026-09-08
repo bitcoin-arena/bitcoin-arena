@@ -18341,3 +18341,66 @@ recorded under item 23 - `node --test` alone does not rebuild.
 protocol 408/408, core 83/83, blwp-node 114 -> 116, blwp-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. Bundle 198.5 KB from 19
 modules. No bitcoind, no witness assembly, no Unity.
+
+## Item 24, slice 6: the doors are walked through
+
+`recognizeBond` learned to rebuild a bond's output key, and the two live
+callers - `resolveCensus` and `acceptAdvert` - called it WITHOUT the set. A door
+nobody walks through is not a door: eligibility, and the endpoint a player is
+handed, still rested on whatever thirty-two bytes the poster wrote.
+
+Threaded the same way letter 23 threaded `verifyAdvert`: an optional `bond`
+(arbitration keys, quorum, maturity, tweakPoint, combine) passed straight to
+`recognizeBond`. With it, checked. Without it, exactly what it did before, and
+the gap stays listed - no path that cannot check may pretend it did.
+
+### The four measurements
+
+  census, one honest bond and one whose output key is a stranger's taproot
+      1 eligible, 1 excluded, "not the taproot tweak of the keys and maturity
+      it declares"; without the set, 2 eligible, as before
+  census, a bond declaring maturity 1
+      excluded - a bond withdrawable the moment it is posted is not one at
+      stake; without the set, counted, as before
+  unchecked
+      drops the script template with the curve, unchanged without it
+  acceptAdvert, the door a player walks through
+      the honest bond accepted with the template dropped from unchecked; a
+      stranger's output, an already-mature bond, and a set of the poster's own
+      choosing each refused; each still accepted when the door is given no set
+
+### Mutants: 6 planted, 4 killed, 2 retracted
+
+  I1 the census drops the option                    2 red
+  I2 the door drops the option                      1 red
+  I3 the exclusion downgraded to a warning          2 red
+  I4 the maturity taken from the body               RETRACTED
+  I4b the maturity ignored in the rebuild           3 red
+  I4c the maturity guard removed                    RETRACTED
+  I5 the template always dropped from unchecked     census 2 red
+
+I4 IS RETRACTED and the reason is the point: the advertisement body has NO
+maturity field. `advert.bondMaturity` is always undefined, so the mutant falls
+back to genesis and changes nothing. The poster has nowhere to put a maturity -
+structurally impossible beats checked. I4c is retracted too: without the guard,
+`recoveryLeaf` throws on an undefined locktime and the rebuild refuses anyway,
+by another route. Both measure an unreachable line rather than the check.
+
+### One test that hid its own failure
+
+The first version built its failure message with `JSON.stringify` over rows
+carrying BigInt sats, so the assertion failed and the MESSAGE threw - a
+TypeError where a measurement should have been. The message now names the
+count and the reasons.
+
+### Every live call site
+
+  census.js:727   recognizeBond(..., bond ? { bond } : {})
+  chain.js:471    recognizeBond(..., bond ? { bond } : {})
+
+Nothing else calls it.
+
+### Suites
+
+protocol 408/408, core 83/83, blwp-node 116 -> 119, blwp-client 95/95, money
+guard 12 files clean, determinism guard 20 files clean. Bundle 198.8 KB.
