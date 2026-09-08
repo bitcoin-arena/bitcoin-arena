@@ -21037,3 +21037,32 @@ a thing this slice quietly skipped.
     money guard 12 clean, determinism guard 20 clean
     No Unity ran and no C# changed: PlayMode 234/209/12/13 and EditMode
     190/186/1/3 stand from item 28.
+
+### Slice 1b: one door answers both questions
+
+The accepted sequence named `shareIsConsistent` as the function that checks a
+share against the commitments, and the first cut left it as the hash check with
+a second function beside it. Aligned: the same call takes the polynomial as an
+optional third argument and answers both questions, and `shareOpensTo` stays as
+the one that gives a reason by name.
+
+Called with two arguments it is EXACTLY what it always was, which matters -
+the test that measures the dealer's blindness calls it that way on purpose, and
+that measurement is the before half of 0 of 7 -> 3 of 7.
+
+    two arguments, crooked handout      0 of 7 refused   (the hash is blind)
+    three arguments, crooked handout    3 of 7 refused   seats 5, 6, 7
+    an honest seat                      passes both ways
+    a value bent by one                 fails both ways
+
+`checkHandout` now asks both ways and REFUSES TO REPORT if they disagree - two
+ways of asking the same thing about one share is two places for the answer to
+drift, and a thrown error is better than a quiet majority.
+
+Two more mutants, both dead:
+
+    the door ignores the polynomial          5 tests red
+    the door ignores the hash commitment     2 tests red
+
+    core 84/84   protocol 420 -> 421   blwp-node 207/207   blwp-client 118/118
+    money guard 12 clean, determinism guard 20 clean
