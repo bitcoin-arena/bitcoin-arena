@@ -18938,3 +18938,101 @@ bundle 201.1 KB from 19 modules, byte-identical.
 
 3. No live bitcoind this slice, by ruling. Chain facts against real blocks are
    slice 3.
+
+## Item 15, slice 3: chain facts against real blocks
+
+Before: every census measurement in this tree ran on blocks a fixture composed
+- the spend state, the depth and the height were all chosen by the test. A
+fixture cannot lie about Bitcoin, which sounds like a virtue and is the
+opposite: nothing had ever asked a real node whether these rules survive real
+bytes.
+
+After: `blwp-node/tools/census-regtest.mjs` posts four bonds on an isolated
+regtest (own datadir under session scratch, port 29444, RPC 29443, cookie auth,
+own wallet, stopped when the numbers were taken - it shares nothing with the
+2-of-2 daemons or the mainnet/testnet4 nodes), spends one by a real 5-of-7
+slash, leaves one two blocks under the census, marks one for another network,
+and derives the census from the node's own blocks - header bytes included.
+
+`protocol/src/block.js` is new: `splitBlock` turns `getblock <hash> 0` into the
+view the census already takes. `parseTransaction` refuses leftover bytes on
+purpose, so it cannot be pointed at the middle of a block; this walks the same
+structure to find each span, and the span is handed back to `parseTransaction`
+under that same rule. A wrong span cannot slip through - the slice fails to
+parse, or its txid is wrong and the block's own merkle root refuses it. It sits
+in its own module because the client bundles `tx.js` and never reads a block:
+in `tx.js` it cost the client 2.4 KB of code nobody calls.
+
+THE ADVERTISEMENT IN A REAL WITNESS. 5A.2 requires the body to travel in the
+witness of the funding transaction, and the wallet cannot do that -
+`sendtoaddress` builds its own transaction. Each bond is funded from a carrier
+output whose one leaf is `OP_DROP <key> OP_CHECKSIG`, and the spend of that
+carrier IS the funding transaction, with the signed body as the item the leaf
+drops. Bitcoin's consensus rules accept it; its mempool policy does not
+("bad-witness-nonstandard": a tapscript stack item that large is not relayed),
+so the tool puts the transactions in blocks with `generateblock`, which
+validates them fully without asking the mempool. Named, not smoothed over: a
+deployment that posts a real bond needs a witness the mempool also relays, and
+that is a construction question for the letter that does it.
+
+### The numbers, on blocks bitcoin-31.1 produced
+
+  heights            funded 132, shallow 140, census 141, tip 146
+  blocks read        17, from height 130
+  eligible           1   ws://honest
+  excluded           ws://doomed   | scan | already spent at the census height
+                     ws://shallow  | scan | 2 confirmations deep, round needs 6
+  never scanned      ws://elsewhere (pays testnet4's marker on a regtest round)
+  root               953e57a2c5a68ad691541c6009a3b09fd72524e6f12425a6d4e22b73ac585afb
+  unchecked          only the advertisement signature (ed25519, letter 23)
+  template           CHECKED: the key on chain recomputes from the body in its
+                     own witness
+
+  before / after, same blocks:
+  handed a list claiming all three unspent and deep   1 eligible, same root
+  the same list with no chain view to check it        3 eligible, 2 of them a
+                                                      spent bond and a
+                                                      two-confirmation bond
+
+### A defect the mutants found: depth was measured at the tip
+
+`depth = tipHeight - height + 1`. Swapping it for `censusHeight` broke no test,
+because every fixture had the two close enough together not to matter. They are
+not the same rule. 5A.4 step 1 is "unspent AT CENSUS_HEIGHT with >=
+census_confirmations depth", and the point of "given census_height, every
+participant runs the same five steps" is that the answer cannot depend on when
+it is asked. Measured against the tip it did: the shallow bond above is two
+blocks under the census and seven under the tip, so a node deriving at the
+census would exclude it and a node deriving five blocks later would count it -
+two honest participants, two committees, which is the divergence 5A.2 exists to
+remove. Fixed to `censusHeight - height + 1`, pinned in `census-scan.test.js`
+across three tips, and the real-block fixture now has its tip past the census
+so the two rules can be told apart at all.
+
+### Mutants: 7 planted, 7 killed (4 by the real blocks alone)
+
+  a spent bond is counted                            killed  (real blocks too)
+  spentness is the caller's claim again              killed  (real blocks too)
+  an immature bond is deep enough                    killed  (real blocks too)
+  depth measured at the tip, moving with the chain   killed  (real blocks too)
+  a spend after the census height retires the bond   killed
+  the splitter drops the witness bytes from the span killed  (real blocks too)
+  a block with bytes left over is a block            killed
+
+### Suites
+
+core 83/83, protocol 404/404, blwp-node 152/152, blwp-client 95/95 - 734 tests,
+0 red. Money guard 12 files clean, determinism guard 20 files clean, client
+bundle 201.1 KB from 19 modules, byte-identical.
+
+The 17 blocks are kept as `blwp-node/test/fixtures/regtest-census.json` and one
+of them as `protocol/test/fixtures/regtest-block.hex`, so the suite replays
+real bytes without a bitcoind. Regenerate with:
+
+  bitcoind -regtest -datadir=DIR -port=29444 -rpcport=29443 -fallbackfee=0.0001 -daemon
+  RT=DIR DUMP=packages/blwp-node/test/fixtures/regtest-census.json \
+    node tools/census-regtest.mjs
+
+The root in the fixture is that run's own root - the node keys are random per
+run - so a regenerated fixture carries a new root and the test reads it from
+the file rather than from a constant.
