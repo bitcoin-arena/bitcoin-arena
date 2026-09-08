@@ -18256,3 +18256,88 @@ written beside them.
 
 protocol 408/408, core 83/83, blwp-node 112 -> 114, blwp-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean.
+
+## Item 24, slice 5: the arbitration set is the network's, and the door recomputes
+
+### The set, as a genesis fact
+
+The slash leaf hashes the arbitration keys, so a bond's output key is a
+function of them - and a poster free to name their own would name themselves
+and hold a bond nobody could ever slash. They are genesis now, beside
+bond_maturity, arbitration_k and arbitration_m, sorted so a set is a set and
+not an arrangement.
+
+ON REGTEST AND TESTNET4 THE SECRETS ARE DERIVABLE BY ANYONE, deliberately:
+
+    secret_i = taggedHash('BLWP/v1/TestArbitration', `${chain}:${i}`)
+
+M2 distributes no money, and an arbitration set whose keys nobody holds could
+never slash anything - a test network with an unusable set would be testing a
+slash that cannot happen. Mainnet has no set here, exactly as it has no
+BOND_MARKER: real keys held by real people are a decision, not a derivation.
+
+The network ids moved again, recomputed by hand from the same public donation
+keys - `make-genesis.mjs` was not rerun, since it generates new keys every run:
+
+  NETWORK_ID_REGTEST   a0115253... -> b07c4a094718b9b28f6963f788838e02
+                                      5a8ad591a7d7a498f0fe0ac0bdd14d9f
+  NETWORK_ID_TESTNET4  384dd0dd... -> a677bbaed17223c848811410c07fb8db
+                                      0fdaeda1e69821de717810fc8df17124
+
+### The measurement that closes the letter's own question
+
+A second node, holding only the published advertisement body and its own copy
+of genesis - no fixture, no shared object, nothing the poster told it - rebuilds
+the SAME output key, the same parity, and both 65-byte control blocks. A poster
+naming its own seven keys produces a different output, and the rebuild says so.
+
+### The door
+
+`recognizeBond` given the set, the quorum, the maturity and a curve rebuilds
+the key and compares it with the thirty-two bytes on chain, and its unchecked
+list drops the script template. Given none of that it behaves exactly as
+before and still lists it - nothing pretends.
+
+  a bond built for one node key, presented for another   refused
+  a bond whose maturity is 1 rather than the network's    refused
+  a body naming template version 2                        refused by name
+
+THE MATURITY WAS A NUMBER THE POSTER PICKED. Nothing held it to genesis, so a
+node could post a bond already matured - withdrawable the moment it is posted,
+at no risk, and counted by a census as though it were at stake. That is the
+Sybil door 5A.3 exists to shut.
+
+### The two small guards
+
+`bondTapTree` refused nothing without a curve and would build a tree over any
+thirty-two bytes; a tree is enough to produce a control block, so the guard on
+`bondOutputKey` had a door beside it. It now requires the curve and the derived
+key like everything else. And `bond_script_template_version` was written to the
+wire, read back, and compared with nothing: version 1 is now bound to this
+exact tree, so two nodes cannot read one number as two trees.
+
+### One break of my own, found by the bundler
+
+  bundle: is32 is declared at the top level of both protocol/src/contracts.js
+  and protocol/src/bond-script.js
+
+The client bundle flattens every module into one scope. `bond-script.js` became
+reachable from it the moment `chain.js` imported it, and my local helper
+collided. Renamed. The suite had passed on a STALE dist, which is the same trap
+recorded under item 23 - `node --test` alone does not rebuild.
+
+### Mutants: 6 planted, 6 killed, 0 retracted
+
+  H1 the keys left out of the genesis encoding      genesis red
+  H2 the door recomputes nothing                    key red
+  H3 the door still claims it cannot read the        key red
+     template after reading it
+  H4 any template version accepted                  key red
+  H5 the door rebuilds with a maturity of one       key red
+  H6 the tree unguarded again                       script red
+
+### Suites
+
+protocol 408/408, core 83/83, blwp-node 114 -> 116, blwp-client 95/95, money
+guard 12 files clean, determinism guard 20 files clean. Bundle 198.5 KB from 19
+modules. No bitcoind, no witness assembly, no Unity.
