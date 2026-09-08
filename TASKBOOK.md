@@ -15304,3 +15304,40 @@ protocol 331/331 (was 325), blwp-node 70/70, blwp-client 89/89, core 80/80,
 money guard 12 files clean, determinism guard 19 files clean. No wire format
 moved: recognition reads outputs, it does not add a field, so no round id, no
 census root and no vector changed.
+
+### The hole the recognition letter left, found by asking whether anything was missing
+
+`recognizeBond` returned the output's value and the census went on believing
+the ENTRY's `bondSats`. Measured on a real bond funded at 60000 sats:
+
+  entry claims         60000  ->  eligible, census bondSats=60000,  weight 1
+  entry claims             1  ->  refused, under the floor
+  entry claims  100000000000  ->  ELIGIBLE, census bondSats=100000000000,
+                                  weight 2000000
+
+A two-million-fold selection advantage bought with a lie, on an output the
+chain says is worth 60000 sats. 5A.3 says exactly why this is not a detail:
+"The bond is what makes identity expensive. Without it, a Sybil attacker
+creates arbitrarily many nodes for free and buys arbitrarily many selection
+chances - the flaw that made v4.4 unsafe." A bond that is asserted rather than
+observed costs nothing. `encodeEntry` hashes `bondSats` into the leaf, so the
+lie was committed into the census root as well.
+
+Not parked, because nothing parks it: the value was already in hand from the
+output. `resolveCensus` now takes `bond.valueSats`, and both the floor check
+and the census entry carry it. After: every claim above gives eligible=1,
+bondSats=60000, weight 1; and a claim of 100000000000 against an output funded
+at 49999 is refused, with the refusal carrying 49999 rather than the claim.
+
+The fixtures had to be FUNDED rather than asserted - a test that only claims
+49999 measures nothing once the amount is read off the chain.
+
+Mutants: 6 more planted, 6 killed. One survived at 0 red - `valueSats` read
+from `outputs[0]` instead of `outputs[vout]` - because every fixture had its
+bond at vout 0 with only an OP_RETURN beside it. A funding transaction that
+pays a bond and returns change to another taproot address is ordinary, and then
+the bond is not vout 0; tested now, and reading the first output reports
+somebody else's money as the bond.
+
+Running total for this letter: 22 mutants planted, 22 killed, none retracted.
+protocol 331 -> 333.

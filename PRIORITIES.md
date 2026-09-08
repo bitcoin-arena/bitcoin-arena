@@ -25,8 +25,10 @@ below the last closed item.
 BOND-OUTPUT RECOGNITION (Daniel's pick) is DONE. The package can now say of a
 chain output that it counts as a bond or that it does not, from chain data: the
 output must be P2TR, and the advertisement must name that very outpoint. It
-found a real defect - a zero-value OP_RETURN was being counted as somebody's
-bond - and the census refuses it now. Recognition is not enumeration: finding
+found two real defects - a zero-value OP_RETURN was being counted as somebody's
+bond, and the census believed the amount an entry CLAIMED rather than the one
+the output holds, which bought a two-million-fold selection weight on a 60000
+sat bond. Both are refused now, and the amount is the chain's. Recognition is not enumeration: finding
 every bond without being told where to look still waits on BOND_MARKER, which
 is the only thing 15 still waits on the marker for. Ghosts, late join, the
 leaderboard and the eighteen audited section 6 names stay parked. Numbers:
