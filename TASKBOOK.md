@@ -15760,3 +15760,63 @@ the way its depth rule is supplied changed.
 `tools/chainview.js` mines headers for tests and vectors at regtest's target,
 and is not part of the protocol - nothing in `src/` imports it, the same rule
 `tools/bond.js` beside it follows.
+
+### Audit of item 17 after it closed: the window, and the anchor
+
+Two findings. The first is built; the second is named with its measurement and
+the reason it cannot be built without choosing something nobody has chosen.
+
+FOUND AND FIXED - A WINDOW IS NOT THE CHAIN. Measured, bond funded at H-20:
+
+  view starts at 899980  -> ok, eligible 1, root 86353eb3...
+  view starts at 899990  -> ok, eligible 0, root 00000000...,
+                            "no such outpoint at or before that height"
+  view starts at 900000  -> the same
+
+A view beginning after a bond's funding block returned ok, an empty census, a
+different root, and a REASON THAT CLAIMED SOMETHING IT HAD NOT LOOKED AT: "no
+such outpoint at or before that height" is a statement about Bitcoin, and the
+view had not reached back far enough to make it. 5A.2 says the eligible set is
+"a pure function of the chain up to census_height" - two parties with the same
+chain but different windows were quietly computing different censuses.
+
+The window cannot be made unnecessary here: a bond can be funded at any height,
+and enumerating them from the chain alone needs BOND_MARKER, which is parked.
+So two things changed instead:
+
+  - the refusal says what the view knows: "no such outpoint between height
+    899990 and 900000, and this chain view does not reach further back".
+  - `censusInputsId` commits `firstHeight`. A root taken over a short window is
+    no longer interchangeable with one taken over a long window: the committed
+    inputs differ, so `censusRootMatchesRound` refuses the swap with "not the
+    census entries that were published". Measured in the test.
+
+Mutants: 4 planted, 4 killed - the window not committed, the window committed
+as the tip, a short view still claiming the chain, and the refusal not naming
+the window.
+
+NAMED, NOT BUILT - THE VIEW IS ANCHORED TO NOTHING. Measured:
+
+  a wholly fabricated chain, mined at the easy target
+  -> chainViewOf ok: true, work 50
+
+`chainViewOf` accepts any self-consistent mined chain. Nothing ties its first
+header to Bitcoin. The client does have an anchor - `directory.js` and
+`headers.js` carry `BITCOIN_MAINNET_GENESIS` - and the census does not.
+
+Work comparison is the defence that exists, and it is Bitcoin's own: a
+fabricated chain at a real difficulty is not cheap. But 5A.4 names the other
+one: a browser follows the header chain "far less from a checkpoint", and a
+checkpoint is a VALUE SOMEBODY HAS TO CHOOSE - a height and a block hash, fixed
+once, wrong forever if wrong. That is the same class as BOND_MARKER and
+NETWORK_ID, and writing a plausible one into this tree would settle it by
+accident. Genesis itself is in `chain.js` and is not a workable anchor for a
+census at height 900000: requiring a view to reach block 0 is requiring 900,000
+headers.
+
+So this is a decision, not a task. It is recorded here rather than parked
+silently, and it is the one thing about the chain view that this package
+cannot finish on its own.
+
+  protocol 343 -> 344. blwp-node 70/70, blwp-client 89/89, core 80/80, money
+  guard 12 files clean, determinism guard 19 files clean.

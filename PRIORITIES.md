@@ -70,7 +70,22 @@ TASKBOOK.
                                             negative depth. A reorg after the
                                             census height still moves nothing,
                                             which is what the confirmation
-                                            window is for. Numbers: TASKBOOK.
+                                            window is for. A short view no
+                                            longer claims a bond is absent from
+                                            Bitcoin when it only failed to
+                                            reach back to it, and the window it
+                                            covered is in the committed inputs,
+                                            so a root taken over a short chain
+                                            cannot pass for one taken over a
+                                            long chain. ONE THING IS A DECISION
+                                            AND NOT A TASK: the view is
+                                            anchored to nothing, so a wholly
+                                            fabricated chain is a chain if it
+                                            outweighs the real one. 5A.4's
+                                            answer is a checkpoint, and a
+                                            checkpoint is a value somebody must
+                                            choose - the BOND_MARKER class.
+                                            Numbers: TASKBOOK.
    16  M2.2 contract fields before    M2   done — the signed round contract
        they are used                         names the network it is for, the
                                             config it runs, the confirmation
