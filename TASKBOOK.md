@@ -17508,3 +17508,142 @@ the transcript hash actually WERE, only that every node produced the same ones
 protocol 392/392, core 83/83, blwp-node 82 -> 89, blwp-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. Files in
 blwp-node/src reaching the simulator: exactly replay.js, still.
+
+## Item 22, the four wiring holes: a closed round now replays itself
+
+The machinery was complete and nothing called it. Measured before: `grep` for
+replay|pool|verdict|ReplayPool|resultFrom|verifiedFinal|agreeOnState across
+server.js, main.js and tools/*.mjs returned NOTHING. Tests were the only
+callers of `submit`, which is another way of saying the daemon did not do it.
+
+### 1. The production trigger
+
+  file      packages/blwp-node/src/verify.js, class `Verifier`
+  function  `onRoundClosed(roundId)`
+  call site packages/blwp-node/src/server.js, the socket's `close <round>`
+            handler: `if (shut) verifier.onRoundClosed(id)`
+
+The close is the event section 13 waits for. The promises are deliberately not
+awaited at the socket: the caller is told the round is shut, and the replays
+run on their own threads. Nothing polls, nothing ticks, and `verify.js` does
+not reach the core - it decides which runs are handed to `replay.js`.
+
+### 2. Results are kept and served
+
+  table     `results (round_id, entry_id, node_pubkey, result_id, bytes,
+            seen_ms)`, PK on the first three - one seat, one result
+  stored as the protocol's own 232-byte signed record (body then signature),
+            so what is served is what was signed and not a re-encoding
+  endpoint  `GET /results?round=&entry=`, `x-results` counts them
+
+### 3. The verdict goes through 13C's gate
+
+`Round#canonicalTranscript` is now what produces the object the result is
+hashed over, in the fixture as well as in the daemon. It also returns the
+`roundId` and `entryId` it was built for, which is what makes the binding below
+checkable. A run whose marks the committee has not carried is REPLAYED and NOT
+SIGNED, and the reason is the gate's own words.
+
+### 4. Objection intake
+
+  table     `objections (round_id, entry_id, seen_ms)`
+  endpoint  `POST /objection?round=&entry=` - 201 fresh, 200 already, 404 for a
+            run this node does not hold
+  effect    `Verifier` reads it and submits the job as objected, so the
+            priority rule proved in pool.test.js is exercisable outside tests
+
+What an objection COSTS and who may file one is the objection protocol and is
+not decided here.
+
+### THE HOLE I NAMED LAST TURN, FIXED
+
+Nothing bound the transcript to the entry. The result takes its player and
+round off the ENTRY and its hash off the TRANSCRIPT, so a wrong pairing would
+sign one player's drive under another's name - and the board pays on exactly
+this object. `resultFrom` now refuses a transcript that names another round or
+another entry, and one that names no run at all.
+
+### THE SEED STOPPED BEING BLOCKED, BY DANIEL, MID-TURN
+
+`e942580 feat: world secret on the Entry Contract so nodes can replay` puts
+`worldSecret` on the Entry Contract and has `replay` derive
+H(round_randomness || pubkey || secret || join_tick) itself. What is still
+outside is `round_randomness` - section 5A makes it a FUTURE BITCOIN BLOCK
+HASH, chain state this daemon does not read - so `Verifier` asks for it through
+`randomnessFor` and a node given none runs the whole path and stops there, in
+replay's own words. Nothing defaults it to zeros and nothing draws it.
+
+The fixture score moved 230 -> 257: the world is now the one the entry's secret
+and the round's randomness produce, not the one the fixture's own 7 produced.
+Measured, not adjusted to pass.
+
+### The number that closes the slice
+
+A round taken through the daemon's own doors - POST /round, POST /entry,
+batches and a mark and a receipt over the socket, then `close` - leaves behind:
+
+  GET /results   1 result, 232 bytes
+  player         b32(5), the entry's own
+  node           the daemon's identity, and the signature verifies under it
+  outcome/score  FAILED, 257 - read off the replayed state
+  transcript     the canonical transcript's own hash
+  and a second replay does not rewrite what the seat already signed
+
+Nothing in that test calls `submit`.
+
+### Mutants: 7 planted, 5 killed, 1 retracted, 1 re-aimed
+
+  U1 the close does not trigger the verifier          3 red
+  U2 the objection never reaches the pool             3 red
+  U3 the result signed under nobody's key             1 red
+  U4 the 13C gate stepped around                      1 red, AFTER re-aiming
+  U5 the transcript/entry binding dropped             1 red
+  U6 a seat allowed to replace its own result         RETRACTED
+  U7 the canonical transcript misnames its own run    3 red
+
+U4 survived first at 0 red because it is only reachable when
+`canonicalTranscript` throws, and every fixture had a carried transcript: the
+mutant sat behind a door nothing opened. A round whose mark holds one receipt
+of a needed two now exercises it.
+
+U6 IS RETRACTED, not counted. `INSERT OR REPLACE` and `INSERT OR IGNORE`
+cannot be told apart here: a replay is deterministic, so a seat's second result
+is byte-identical to its first, and the property that matters - one row per
+seat - is held by the primary key, which the mutant does not touch. An
+unkillable mutant measures the fixture, not the code.
+
+### Suites
+
+protocol 394/394, core 83/83, blwp-node 89 -> 94, blwp-client 95/95, money
+guard 12 files clean, determinism guard 20 files clean. Files in
+blwp-node/src reaching the simulator: exactly replay.js.
+
+### Two reds found on the branch while closing this slice, both repaired
+
+Neither came from letter 22's own work; both came from the Entry Contract
+growing a field, and both were repaired rather than parked.
+
+  1. THE CLIENT BUNDLE COULD NOT BUILD AT ALL, since 468b0d9:
+
+       bundle: GENESIS_CONFIG_HASH is declared at the top level of both
+       protocol/src/genesis-ids.js and protocol/src/constants.js
+
+     `constants.js` imported the name aliased and then re-DECLARED it with
+     `export const GENESIS_CONFIG_HASH = GENESIS_CONFIG_HASH_ID`. The bundler
+     flattens every module into one scope and refuses two top-level bindings
+     of one name by design - it is the same rule that caught two private
+     `same` helpers. Now re-exported (`export { GENESIS_CONFIG_HASH } from
+     './genesis-ids.js'`) instead of re-declared. `dist/blwp-client.js` was
+     therefore stale: 0 occurrences of `worldSecret` against the protocol's 2.
+     Rebuilt: 174.2 KB from 18 modules, and the entry id the bundle computes
+     matches the modules' again.
+
+  2. `blwp-client/test/late-join.test.js` had an entry with no `worldSecret`,
+     so four of its six tests died in the encoder ("expected 32 bytes, got
+     nothing"). Field added to the fixture; nothing else touched, since a late
+     join is about which TICK a run starts at.
+
+A note for the next sweep: `blwp-client`'s own `npm test` is
+`node tools/bundle.js && node --test test/*.test.js`. Running `node --test`
+alone skips the rebuild and tests a stale bundle - which is how a broken build
+sat behind a passing-looking suite.

@@ -75,9 +75,24 @@ IN THIS ORDER (unparked):
                                         second protocol - and this package has
                                         a curve, so a signature that does not
                                         verify never reaches the count the
-                                        board can only take on trust. 22 is
-                                        DONE but for a real round, which stays
-                                        blocked on the seed.
+                                        board can only take on trust. Slice 6:
+                                        THE DAEMON DOES IT NOW. Closing a
+                                        round over the socket queues every
+                                        stored entry, replays each in a
+                                        worker, and keeps the signed result in
+                                        a results table it serves; an
+                                        objection recorded over the wire puts
+                                        that run first. A transcript the
+                                        committee has not carried (13C) is
+                                        replayed and NOT signed, and a result
+                                        can no longer be signed over another
+                                        player's transcript. The world secret
+                                        is on the entry (Daniel, e942580), so
+                                        what a real round still waits for is
+                                        the RANDOMNESS BEACON - a future
+                                        Bitcoin block hash this daemon does
+                                        not read - and a node given none stops
+                                        there rather than inventing a world.
                                         Unlocks ghost spawn/subscribe (18),
                                         the daemon 14/8 waited on, and the
                                         board on a screen: 20's rows are built
