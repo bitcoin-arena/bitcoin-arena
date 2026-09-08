@@ -15367,3 +15367,41 @@ letter: 29 planted, 29 killed, none retracted. protocol 333 -> 334.
 
 The client bundle was rebuilt; `bundle.test.js` is the guard that would have
 caught a stale one.
+
+### Third audit of the recognition goal: every door listed, two candidates cleared
+
+The first two audits each found a live defect, so this one was done by
+enumeration rather than by memory. `grep -rn "bondVout\|bondSats\|bondTxid"`
+over `protocol/src`, `blwp-node/src` and `blwp-client/src` gives four places
+that touch a bond outpoint or its value:
+
+  census.js  resolveCensus       recognises. Shape, named outpoint, and the
+                                 amount off the output. Fixed two letters ago.
+  chain.js   acceptAdvert        recognises. Fixed one letter ago; the door
+                                 `blwp-client/src/directory.js` walks through.
+  slash.js   slashHolds* (x6)    binds each proof to the outpoint the accused
+                                 node's own advertisement declared. Already in.
+  slash.js   slashDistribution   takes `bondSats` as an argument.
+
+CLEARED, WITH THE REASON, so it is not rediscovered as a bug:
+
+`slashDistribution` is arithmetic over an amount and has no transaction to
+read. That is the difference from the census: the census WAS handed the
+transaction and used the entry's claim anyway, and the claim went into the leaf
+and became the canonical fact. Here the amount is not committed to anything -
+`slashProofId` commits the bond OUTPOINT (`w.bytes32(p.bondTxid); w.u32(p.bond
+Vout)`), so the value is a public fact anyone holding the chain can look up and
+a wrong distribution is detectable by everyone. Measured: a caller-supplied
+100000000000 on an output worth 60000 does distribute 100000000000, and that is
+the caller lying to itself about a number the proof already pins down.
+
+`blwp-client/src/bond.js` `provenBond` proves INCLUSION and never claims
+recognition; its only in-tree consumer, `askForBond`, feeds `directory.js`,
+which runs `acceptAdvert` - so recognition happens before anything is used. It
+is exported from the bundle under a name that could invite a page author to
+read `.ok` as "this is a bond". Recorded rather than renamed: a public export
+is not churned on a hunch, and no caller is wrong today.
+
+Nothing changed in this audit. Suites re-run to confirm: protocol 334/334,
+blwp-node 70/70, blwp-client 89/89, core 80/80, money guard 12 files clean,
+determinism guard 19 files clean.
