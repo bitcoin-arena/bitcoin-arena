@@ -20057,3 +20057,55 @@ core 83/83, protocol 416/416, blwp-node 198/198, blwp-client 102/102 - 799
 tests, 0 red. Money guard 12 files clean, determinism guard 20 clean. Bundle
 215.3 KB (the client encodes contracts, so the window rule ships with it). No
 Unity, no C#, no genesis byte, no deploy.
+
+## Item 27, slice 4: a fallback is the same beacon or it is nothing
+
+Section 6 lists `randomness_fallback` beside the rule - "first block hash after
+committee_time" - which on a network born reading `bitcoin-block-hash` IS the
+rule. There is nothing else it could name, so the only honest values are
+absent, empty, or the born rule itself. Anything else is a SECOND randomness
+source, and a second source is a second committee: a creator free to fall back
+would fall back to the beacon that seats their own nodes, which is 5A.5's whole
+attack with an extra step.
+
+  absent / null / empty / "bitcoin-block-hash"   accepted, and the seed is
+                                                 unchanged - it is the same
+                                                 beacon by construction
+  "drand", "mock:7", "bitcoin-block-height",     refused: 'names randomness
+  "BITCOIN-BLOCK-HASH"                           fallback "X" where regtest was
+                                                 born reading
+                                                 "bitcoin-block-hash" - a
+                                                 fallback is the same beacon or
+                                                 it is nothing', and no seed
+                                                 comes back
+  over the wire                                  impossible: the field does not
+                                                 encode, so a decoded contract
+                                                 carries none whatever the
+                                                 sender wrote. The check is for
+                                                 a contract OBJECT, the only
+                                                 place one could still appear
+  blwp-node                                      198 -> 199
+
+THE FIELD IS NOT ENCODED, and that is the stronger answer rather than the
+lazier one: encoding it would move every round id again and would CREATE the
+channel the rule then has to close. A value that may only ever equal the born
+rule carries no information, and the born rule is already on the contract.
+
+### Mutants: 3 planted, 3 killed, 1 retracted
+
+  a foreign fallback is accepted                       killed
+  any non-empty fallback passes, whatever it names     killed
+  an empty fallback is refused, so one must be named   killed
+
+RETRACTED: "the fallback is checked against the contract's own rule, not
+genesis". The rule check runs first and refuses any contract whose
+`randomnessRule` is not the network's, so by the time the fallback is read the
+two values are equal - the comparison is the same comparison. Genesis is what
+the code names, because the network's born rule is the authority and the
+contract's claim about it is not.
+
+### Suites
+
+core 83/83, protocol 416/416, blwp-node 199/199, blwp-client 102/102 - 800
+tests, 0 red. Money guard 12 files clean, determinism guard 20 clean, bundle
+215.3 KB unchanged. No Unity, no C#, no genesis byte, no deploy.
