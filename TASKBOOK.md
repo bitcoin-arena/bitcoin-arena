@@ -15341,3 +15341,29 @@ somebody else's money as the bond.
 
 Running total for this letter: 22 mutants planted, 22 killed, none retracted.
 protocol 331 -> 333.
+
+### And the same defect in the OTHER door, the one the player walks through
+
+Asked the question a second time and found `acceptAdvert` had the hole the
+census had just lost. It checked that the declared `bondVout` EXISTED and never
+what it was. Measured on a real, merkle-proven bond transaction whose
+advertisement declares vout 1 as its bond:
+
+  advert names vout 1 = the OP_RETURN, value 0, script 6a20
+  acceptAdvert says ok = true, endpoint wss://attacker.example
+
+A transaction with no bond in it at all, presented to a client as a bonded node
+with a reachable endpoint. `blwp-client/src/directory.js` is the caller, so
+this is 25.1's own path: step 2 is "which nodes count? Bitcoin: bond outputs",
+step 4 reads the endpoint from that same transaction. A node with nothing at
+stake was answering step 2.
+
+Fixed by using the same `recognizeBond` the census uses - one rule, one place,
+both doors - and `acceptAdvert` now hands back `bondVout`, `bondSats` from the
+output, and the three rules it could not read, instead of only an endpoint.
+
+Mutants: 7 more planted, 7 killed, all first time. Running total for the
+letter: 29 planted, 29 killed, none retracted. protocol 333 -> 334.
+
+The client bundle was rebuilt; `bundle.test.js` is the guard that would have
+caught a stale one.
