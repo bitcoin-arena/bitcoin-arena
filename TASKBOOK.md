@@ -16901,3 +16901,67 @@ guard 12 files clean, determinism guard 19 files clean.
 
 NOT DEPLOYABLE: still nothing on screen. The standings rebuild inside
 `interestSet` is still a named remainder and was not hoisted.
+
+## M2.2 item 20, fourth slice: the board says what it did not check
+
+### The bookkeeping first
+
+PRIORITIES said of slice 1 "and no column carries money" while slice 3, two
+sentences later, said each row carries the payout. A working list that
+contradicts itself in adjacent sentences is read at the top of every turn.
+Removed.
+
+### The hole
+
+`provisionallyFinal` counts `{ resultId, nodePubkey }` pairs against the
+round's committee. It does NOT verify a signature, and `result.js` says why:
+"this package carries no curve, so the caller passes what it has checked."
+That boundary is right.
+
+What was wrong is that the BOARD did not say so. Five entries in an array were
+counted as five committee signatures and the answer came back looking exactly
+like a verified one. Every other door names its curve boundary - `resolveCensus`
+returns "advertisement signature (no curve in this package)", `acceptAdvert`
+the same, `provesEquivocation` takes its verify from the caller - and the one
+place that decides whether a row APPEARS was silent about it.
+
+### Measured, before and after
+
+  BEFORE, unchecked: 3 entries
+    1. pseudonym
+    2. cargo statistics
+    3. live run status
+
+  AFTER, unverified: 4 entries
+    1. committee signatures      <- "counted against the round's committee,
+                                     not verified: no curve in this package,
+                                     so a caller passes what it has checked"
+    2. pseudonym
+    3. cargo statistics
+    4. live run status
+
+  AFTER, caller says it verified: 3 entries, the notice gone
+
+  rows identical: true
+
+`signaturesVerified` is a claim about the CALLER's own work, not about the
+data, so it moves the report and nothing else: same rows, same order, same
+ranks, same payouts, same exclusions. Asserted with payouts in play as well as
+without. A caller that lies there has lied to itself.
+
+### Mutants: 5 planted, 5 killed
+
+the notice dropped (2 red), the notice always present regardless of the claim
+(1), the claim inverted (2), the notice reduced to the word "signatures" (2),
+and the claim moving a row rather than only the report (1).
+
+### Suites
+
+protocol 380 -> 381, core 83/83, blwp-node 71/71, blwp-client 95/95, money
+guard 12 files clean, determinism guard 19 files clean. No curve added; nothing
+drawn; the standings rebuild untouched.
+
+### What is still open on 20, in the list's words
+
+nothing on screen - now written as BLOCKED ON 22, because finals reach a client
+through the daemon - and the three 0.11 fields a signed final cannot supply.

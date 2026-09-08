@@ -39,10 +39,10 @@ tick rate, daemon, curve, BOND_MARKER, ghost subscribe, run duration.
                                             every node - score down, then the
                                             player key - from results the
                                             round's committee made final at
-                                            5 of 7; a refund is shown unranked,
-                                            a forfeit keeps its place, and no
-                                            column carries money. Slice 2: the
-                                            standing an interest set uses is
+                                            5 of 7; a refund is shown unranked
+                                            and a forfeit keeps its place.
+                                            Slice 2: the standing an interest
+                                            set uses is
                                             the board's, not the caller's - an
                                             injected rank is ignored, a player
                                             with no final is a neighbour rather
@@ -57,10 +57,18 @@ tick rate, daemon, curve, BOND_MARKER, ghost subscribe, run duration.
                                             disagrees with a signed final is
                                             refused. Zero is a paid amount; a
                                             player the table does not list has
-                                            no amount at all.
+                                            no amount at all. Slice 4: the
+                                            board says it COUNTED committee
+                                            signatures rather than verifying
+                                            them - no curve in this package -
+                                            and a caller that has checked says
+                                            so, which moves the report and not
+                                            a single row.
                                             STILL UNBUILT: nothing is on
-                                            screen, which is the only reason
-                                            this is not deployable; and three
+                                            screen - the only reason this is
+                                            not deployable, and BLOCKED ON 22
+                                            because finals reach a client
+                                            through the daemon; and three
                                             0.11 fields a signed final cannot
                                             supply - pseudonym (a client
                                             rendering of the player key),
