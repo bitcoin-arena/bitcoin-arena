@@ -21106,3 +21106,81 @@ and telling P from it is the discrete log of the curve.
 
 The property 29 buys - a dealer cannot hand out shares that no five seats can
 open - holds whether or not the shares are encrypted.
+
+## Item 29, slice 2: the check is in force, and a seat is the one asking
+
+Slice 1 measured the rule. Nothing called it - 0 callers outside `shares.js`
+and its two test files - which is the shape letter 28 opened with. This is the
+caller.
+
+### What is on the wire now
+
+    Entry Contract   + vssSharesRef, 32 bytes, IN THE SIGNED BYTES
+    TYPE_VSS_HANDOUT 0x12, authority: true - it gates play, so it decides
+                     something, and the frames guard made me say so (17 -> 18)
+    handout.js       encode / decode / handoutId / acceptHandout
+    daemon           POST /handout  checks and keeps, GET /handout serves back
+                     POST /entry    refuses a ref it never accepted
+
+The reference is the tagged hash of the WHOLE handout, so it binds the shares
+and the polynomial together: a dealer cannot swap the polynomial under a
+reference that was already signed.
+
+32 zero bytes is a real value meaning "this entry publishes no shares", which
+is every entry in M2 - there is no stake behind the preimage yet. It is not a
+default the encoder supplies: a caller says which it means, so an entry that
+forgot the field and an entry that has none are never the same bytes.
+
+### Measured on the door, not in the unit
+
+    POST /handout  honest                     201, id == handoutId(handout)
+    POST /entry    naming it                  201, id == entryId(entry)
+    POST /handout  two polynomials            409
+                   "3 of 7 seats refused their share: seat 5 was handed a share
+                    that is not on the polynomial the dealer published; ..."
+    POST /entry    naming that refused id     refused, "that entry names shares
+                   this node has not accepted"
+    POST /entry    naming a handout nobody published   refused, same reason
+    POST /entry    naming a handout of ANOTHER round   refused, "that handout
+                   was published for another round"
+    POST /entry    with 32 zero bytes         201 - M2's ordinary entry
+
+    callers of the check outside shares.js and its tests:  0  ->  server.js:252
+                                                                 round.js:306
+
+### The churn, which was the cost of putting it in force
+
+33 files carried an entry, and every entry id moved. The protocol vectors were
+REGENERATED rather than edited: `contracts.json` is 2 lines different and the
+entry vector is 32 bytes longer, which is the field. No assertion was loosened
+to absorb it.
+
+TWO CASUALTIES OF A BLANKET EDIT, caught and repaired - the same fault as the
+fixture sweep earlier in this project. The regex that added the field to every
+entry literal also hit `seed.js`, where `worldSecret:` is an argument to
+`playerSubSeed`, and `contracts.js`, where it duplicated a key in the decoder.
+Both reverted by hand. A sweep is a tool, not a decision.
+
+### And two guards fired, which is why they exist
+
+The frames registry refused a new type without saying what it decides: 18 !== 17
+until `TYPE_VSS_HANDOUT` was declared authority-bearing. And the client bundler
+refused `toBigInt` declared at the top level of both `shares.js` and
+`handout.js` - two functions with one name in one scope is a program whose
+behaviour depends on file order. They are `scalarFrom32` and `scalarTo32`,
+exported once from `shares.js` and imported by the wire.
+
+### Suites
+
+    core 84/84   protocol 421/421   blwp-node 207 -> 211   blwp-client 118/118
+    money guard 12 clean, determinism guard 20 clean
+    No C# moved: PlayMode 234/209/12/13 and EditMode 190/186/1/3 stand.
+
+### The daily is now older than the protocol, and that is named
+
+The client bundle changed, because the entry encoding did. The page deployed at
+btc-logistics-core.pages.dev still builds entries without `vss_shares_ref`, so
+a current daemon would refuse to decode them. Nothing is broken for a player
+opening the daily alone - the single-player daily names no round - but the
+two-tab join needs a rebuilt player. That is a WebGL build and a deploy, and it
+is named here rather than assumed done.
