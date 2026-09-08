@@ -17,6 +17,8 @@ Nothing stays local. Claude commits as claude after each measured change.
 Top item first. Finish and deploy before starting the next.
 
 LIVE LETTER: 22, the daemon steps the core. 20 and 21 are done.
+2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
+threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
 
 IN THIS ORDER (unparked):
