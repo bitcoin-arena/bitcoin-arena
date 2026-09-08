@@ -46,8 +46,15 @@ discrete-log group. They stay in number order below the last closed item.
                                             `player_run_duration` - one of the
                                             eighteen absent section 6 names -
                                             and `entry_close_time`, which needs
-                                            the parked tick rate. Numbers:
-                                            TASKBOOK.
+                                            the parked tick rate. The check has
+                                            a caller now: a client resuming a
+                                            run fetches its own entry, hashes
+                                            it against the id it asked for, and
+                                            resumes at that entry's join tick
+                                            instead of at zero - a page reload
+                                            between joining at 50 and the first
+                                            batch used to restart the numbering
+                                            from 0. Numbers: TASKBOOK.
    18  M2.2 ghosts / private world    M2   OPEN — other trucks are pictures
                                             from their transcript, never
                                             inputs to my sim, never collide.

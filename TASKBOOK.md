@@ -16537,3 +16537,63 @@ protocol 362 -> 367, core 83/83, blwp-node 71/71, blwp-client 89/89, money
 guard 12 files clean, determinism guard 19 files clean. PlayMode and EditMode
 not re-run: nothing in Unity moved - no spawn, no solid, no second scoring
 path - and `step` still takes one state and one player's five inputs.
+
+### Closing out late join: the check nobody called, and a resume that began at zero
+
+Asked whether item 19 was finished and found two things, both on this letter.
+
+FIRST: `transcriptBelongsToEntry` was called by NOTHING outside its own tests.
+That is the fault `censusRoot` had before item 15 - named by every contract and
+read by no code - and a check nobody calls is a comment.
+
+SECOND, and the reason it mattered. The node enforces the start tick on the way
+IN: `round.batch` asks `nextTick`, which returns the entry's `joinTick` for a
+first batch, and refuses "expected tick 50, got 0". Good, and pre-existing. But
+the CLIENT's resume did this:
+
+  this.nextTick = last ? batchTicks(last).at(-1) + 1 : 0;
+
+That `: 0` is the reconnect of a player who joined at tick 50 and had not
+published anything yet - a page reload between joining and the first batch.
+They resumed numbering from zero, every batch after that carried the inputs of
+one tick under the number of another, and the node would refuse them while the
+page looked healthy.
+
+  before   a fresh client resuming an entry that joined at 50  ->  nextTick 0
+  after    the same client                                     ->  nextTick 50
+  and an entry that joined at 0 still resumes at 0, so this reads the entry
+  rather than adding a constant
+
+THE ENTRY IS FETCHED AND THEN HASHED. An entry id is the hash of its bytes, so
+`entryFor` refuses anything that does not hash to the id it asked for. 25.1's
+rule for chain providers, applied to this one: a node may omit, and it may not
+forge. And a fetched transcript now goes through `transcriptBelongsToEntry`, so
+the check has a caller.
+
+### A node that lies, because an honest one cannot test these
+
+Two mutants survived at 0 red first - the entry not hashed, and the transcript
+not checked against the entry - because the real node CANNOT produce the
+answers those guards exist for: it enforces the start tick on ingest and always
+returns the entry it was asked for. Testing a client's own checks against an
+honest server measures nothing.
+
+So the suite now stands up a small HTTP server that answers `/entry` with
+somebody else's contract, and one that answers `/transcript` with a real,
+correctly formed chain that simply begins at tick 0. Both are refused by name.
+The control for the second is the first test in the file, against the REAL
+node: a player who joined at 50 resumes at 50. It is not repeated against the
+stub, because `resume` goes on to recover receipts and a stub answering those
+would be a second node rather than a lying one.
+
+### Mutants: 3 planted, 3 killed
+
+resume falling back to tick zero; the fetched entry not hashed against the id;
+a transcript not checked against the entry it names. Added to the 8 on the
+protocol side: 11 for this letter, none retracted.
+
+### Suites
+
+protocol 367/367, core 83/83, blwp-node 71/71, blwp-client 89 -> 95, money
+guard 12 files clean, determinism guard 19 files clean, client bundle rebuilt
+(172.5 KB). PlayMode and EditMode not re-run: nothing in Unity moved.
