@@ -16,6 +16,14 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
+   15  M2.2 census from chain         M2   NOT STARTED — every node derives the
+                                            census from the chain the same way,
+                                            and a contract naming a census root
+                                            nobody else computes is refused
+                                            rather than played. IMPLEMENTATION
+                                            stage 5. It is the top item because
+                                            14's own remainder is blocked, not
+                                            because 14 is finished.
    14  M2.1 checkpoints               M2   OPEN — 5b and 5c done: the client
                                             plays the round in the address bar,
                                             asks two declared providers for a

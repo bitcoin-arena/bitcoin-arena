@@ -14586,3 +14586,29 @@ binding.
   suites at this note   protocol 275/275, blwp-node 70/70, blwp-client 89/89,
                         core 80/80, money guard 12 files clean, determinism
                         guard 19 files clean. No code moved for this note.
+
+## Working order: why stage 5 is next and stage 4 is not
+
+Read off IMPLEMENTATION.md rather than chosen. Its build order gives stage 4 as
+"Replay pool, result signing, 5-of-7 finality, objection window, equivocation,
+no-quorum" - and everything in that line except the replay pool is already in:
+result signing, 5-of-7 finality, the objection window, both limbs of 13B and
+13C's no-quorum outcome. The leftover REPLAY POOL is the committee re-run,
+which is parked, and parked for a reason this repo enforces rather than
+inherits: the daemon imports no core and does not step, so a replay pool inside
+it is the second simulator the whole design exists to avoid.
+
+So the next stage that is not one of the five parked items is stage 5:
+
+    | 5 | Chain integration: bond verification, census build, committee
+        publication, timestamp receipts | A contract with a wrong census root
+        is rejected by every node |
+
+Some of it already exists and that is worth naming before anyone starts:
+`chain.js` and `tx.js` verify a bond into a mined chain and `census.js` has
+`buildCensus`. What is absent is the part the "done when" is written around -
+every node deriving the same census from the chain, so a contract that names a
+root nobody else computes is refused rather than played.
+
+The list now carries it as item 15, NOT STARTED, above 14 because 14's own
+remainder is blocked - not because 14 is finished. Item 14 stays OPEN.
