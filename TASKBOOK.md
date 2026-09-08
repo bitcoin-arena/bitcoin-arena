@@ -21363,3 +21363,75 @@ Three more mutants, each 1 test red: the height not compared, the hash not
 compared, the time not compared.
 
     protocol 430 -> 431
+
+## Item 32, slice 2: the headers come off a real chain now
+
+The selection rule judged headers a caller handed in, and "a caller handed
+them in" is the party the rule exists to keep away from the seed. This is the
+reader. It DECIDES NOTHING - no tip preference, no widening window, no cached
+answer - it fetches 80-byte headers over RPC and hands them to
+`beaconFromChain`. There is no second chooser.
+
+### Measured against an isolated regtest
+
+Own datadir under the session scratch, port 29644, rpcport 29643, cookie auth,
+its own wallet. Not the 2-of-2 daemon, not /mnt/bitcoin's data. Stopped when
+the measurements were done.
+
+    regtest at height 40
+    headers read from bitcoind           25, heights 16..40
+    committee_time set to the median at  29 (1788909907000 ms)
+    the chain names block                31, 10 deep
+    its hash                             f82b2031f2fbd916f080d82e7406b486ca5afe113819791dc2a59c5ced7a511a
+    its median time past                 1788909908000 ms
+    a second read from bitcoind names    31, the same hash
+    committee seed                       a9d0ea4b84a8cadc0573d6d8956a3b3d59a6d39c7661d83aeb8c06bedbe819d9
+    same seed twice                      true
+
+And the refusals, against that same real chain rather than a fixture:
+
+    block 32, a real later block   "that beacon is block 32 where this chain
+                                   names 31 as the first after committee time
+                                   1788909907000: a later block is a block
+                                   somebody chose"
+    censusConfirmations 100        "the block that seeds this round is 10 deep
+                                   and this round asks for 100"
+    a nine-header window           "this view is 9 blocks and a median time
+                                   past is taken over 11"
+
+Regtest blocks mined in one batch carry near-identical timestamps, so the
+median arithmetic is compressed here - one second between committee_time and
+the chosen block's median. The rule does not care; it is the ORDER that
+decides, and the fixture test covers the ten-minute spacing.
+
+### Failing closed, and saying why
+
+Measured by stopping bitcoind between two reads. It fails closed either way,
+but the first message was useless: bitcoind deletes its cookie on shutdown, so
+an unwrapped read said `ENOENT: no such file or directory` and a path - true,
+and indistinguishable from a typo in a config.
+
+    before   ENOENT: no such file or directory, open '.../regtest/.cookie'
+    after    "no bitcoind cookie at .../regtest/.cookie: there is nothing to
+              read a chain from, and a beacon is not invented when one is
+              missing (ENOENT)"
+    dead port  "bitcoind at http://127.0.0.1:29699/ did not answer
+                getblockcount: fetch failed"
+
+### What runs with no daemon at all
+
+A suite that needs bitcoind is a suite nobody runs, so the rules are measured
+against a fake node in `blwp-node/test/chain-rpc.test.js`: the window ends at
+the tip and is asked for height by height, the block count is read ONCE and
+then walked so a chain growing mid-read cannot produce a hole, a chain shorter
+than the window is served whole rather than padded, a window of nothing or of
+more than 2016 is refused, an answer that is not 80 bytes is refused by height,
+and what the reader returns is what the rule judges - the same height 112 the
+selection fixture picks.
+
+    core 84/84   protocol 431/431   blwp-node 211 -> 218   blwp-client 118/118
+    money guard 12 clean, determinism guard 20 clean. No C# moved.
+
+Next on this letter, in order: the 0xbe constant leaves `round-2of2.mjs`, then
+seating consults a beacon - `server.js` seats only when it has a chain view and
+the 2-of-2 tool gives none.
