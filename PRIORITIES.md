@@ -79,6 +79,28 @@ tick rate, daemon, curve, BOND_MARKER, ghost subscribe, run duration.
                                             from the client, and none of the
                                             three can reach a row, an order, a
                                             rank or an amount.
+                                            Slice 6: a board is of ONE round.
+                                            The round is computed from the
+                                            contract's own bytes - there is no
+                                            argument and no field a caller
+                                            fills - and a final signed for
+                                            another round is excluded by name
+                                            rather than ranked beside this
+                                            one. Two rounds handed in together
+                                            no longer interleave into a single
+                                            rank sequence.
+                                            Slice 7: one final per player. The
+                                            same final twice is one row and
+                                            the ranks below it hold; two
+                                            DIFFERENT finals for one key show
+                                            neither, because 14 settles a
+                                            contradiction and a board that
+                                            picked the better score would let
+                                            whoever collected a second
+                                            signature set choose a rank. The
+                                            names are reported in key order,
+                                            so shuffled input gives the same
+                                            list and not merely the same rows.
                                             STILL UNBUILT: nothing is on
                                             screen - the only reason this is
                                             not deployable, and BLOCKED ON 22

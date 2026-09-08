@@ -17025,3 +17025,83 @@ Nothing on screen, BLOCKED ON 22. Of the three fields: live run status is
 blocked on 22 with it, cargo statistics waits on M2.3's replay pool, and the
 pseudonym scheme is an external remainder - Daniel chooses it, as with the
 checkpoint and BOND_MARKER.
+
+## Item 20, slices 6 and 7: one round's board, one final per player
+
+Both found by reading the board's own source, not by a failing test. `grep -n
+roundId src/leaderboard.js` returned four hits, all inside comments: every
+signed final carries `roundId` (contracts.js:243/260), the contract has a
+computable id (contracts.js:191), and the board compared neither. There was no
+duplicate-key check either - `payoutsFor`'s `byKey` collapses duplicates for
+the TABLE, which is not the row loop.
+
+### Slice 6, before and after
+
+  BEFORE  3 finals of this round + 2 finals of another, same committee
+          -> 5 rows, ranks 1..5, the foreign 800 sitting second
+  AFTER   -> 3 rows, ranks 1..3, identical to the board this round's
+             finals build alone; 2 exclusions named "final for a different
+             round than this contract"
+
+The foreign player is ABSENT, not paid nothing: a payout that counts them is
+refused outright ("counts a player the committee has made no result final
+for"), because there is no final in this round to check the entry against.
+
+The id is COMPUTED. `roundId(contract)` hashes the encoded contract, so a
+`roundId` field written on the contract object is ignored - measured, N2 below.
+A contract that cannot be hashed refuses to build a board at all, rather than
+building one that cannot say which round it is of.
+
+### Slice 7, before and after
+
+  BEFORE  [A 900, B 800, A 900, C 700] -> 4 rows, A twice, C at rank 4
+  AFTER   -> 3 rows, C at rank 3, one exclusion "handed in more than once"
+
+  BEFORE  [A 900, B 800, C 700, A 950] -> A shown twice, at 1 and at 2
+  AFTER   -> A absent, B and C only, one exclusion "two different results are
+             final for that player, and the board is not the place to choose
+             between them"
+
+A repeat and a contradiction are different things and are told apart by the
+result id. The contradiction shows NEITHER: picking the higher score lets
+whoever obtained a second signature set choose a rank, and picking the first
+arrival lets arrival order choose it - the fault the whole file is built
+against. Section 14 settles a conflict; a board does not.
+
+### Mutants: 8 planted, 8 killed, 0 retracted
+
+  N1 the round check dropped                              1 red
+  N2 the round read off a contract FIELD, not computed    1 red  (see below)
+  N3 a foreign final named but still ranked               1 red
+  N4 the duplicate check dropped                          1 red
+  N5 a contradiction resolved by first arrival            1 red
+  N6 a repeat treated as a contradiction                  1 red
+  N7 conflicts dropped from ranked only, not unranked     1 red  (see below)
+  N8 conflict exclusions in arrival order, not key order  1 red  (see below)
+
+N2, N7 and N8 SURVIVED the first run, at 0 red each, and all three were
+fixtures that could not tell two answers apart:
+
+  N2  no fixture put a `roundId` field on the contract, so computing the id and
+      believing a field looked the same. Added a contract carrying the FOREIGN
+      round's id: the board must still be of its own bytes' round.
+  N7  no fixture had a contradicted VOID player. Refunds live in `unranked`,
+      a different list, and the drop only walked `ranked`.
+  N8  no fixture had TWO contradicted players, so a sort of one element was
+      indistinguishable from no sort.
+
+### Suites
+
+protocol 382 -> 384, core 83/83, blwp-node 71/71, blwp-client 95/95, money
+guard 12 files clean, determinism guard 19 files clean.
+
+`test/interest.test.js` went red on the change (5 tests): its `boardOf` builds
+a REAL board and was handing `{ nodes: COMMITTEE }`, which now has no round to
+hash. Fixed in the fixture - a whole contract and finals carrying its id - and
+no assertion was touched. That the board refused rather than silently built is
+the slice working.
+
+### What is still open on 20
+
+Nothing on screen, BLOCKED ON 22. The three 0.11 fields stand as recorded:
+live status on 22, cargo on M2.3's replay pool, the pseudonym scheme on Daniel.
