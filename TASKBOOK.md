@@ -13983,3 +13983,134 @@ player half, 25 excluded).
 protocol 230/230 (was 228), blwp-node 70/70, blwp-client 89/89, core 80/80,
 money guard 10 files clean, determinism guard 19 files clean. Unity untouched
 and not re-run.
+
+## M2.1 22A: the fee table, and claiming more than it owes
+
+The fee was the one number in this protocol nobody recomputed. Measured before
+writing anything: `grep` for gross volume, a fee rate, a pool share or a per-
+slot share across `packages/*/src` returned **nothing**, and `feeMsat` - which
+every Entry Contract signs and every player pays - was written at
+`contracts.js:128`, decoded at 145, and **read by no code at all**. 5A.3 row 6
+decided WHETHER a node qualifies; nothing said what the share IS, so a
+qualifying node could claim any amount and no predicate contradicted it.
+
+### What went in
+
+`packages/protocol/src/fee.js`, integer BigInt millisatoshi throughout and on
+the money guard, which is now 11 files.
+
+  gross      the sum of stakes of financially ACTIVATED entries. Not a second
+             predicate: `isRefund` is the same one `computePayoutTable` uses
+             for `activated`, because a refunded entry is money that never
+             moved and charging a fee on it would charge for a round the player
+             was refunded out of.
+  the fee    2% of gross, then 1% to each pool - and THE SECOND POOL IS THE
+             REMAINDER OF THE FEE, not a second division. Two floors of the
+             same ragged number lose a millisatoshi between them; measured
+             across 1, 3, 7, 99, 100001, 123457 and 999999999 msat stakes, the
+             pools sum to exactly the fee every time.
+  who earns  the eligible seats of that pool, and an unearned share is
+             redistributed INSIDE the pool - 22A's "keeping the total at 2%".
+             Measured: one eligible seat of seven takes the whole 4000 and the
+             fee does not grow.
+  remainders floored, then handed out one millisatoshi at a time in
+             `remainderOrder` - the rule already in `payout.js`, exported
+             rather than copied, so there is one implementation of it.
+  nobody     a pool no one qualified for is `unallocated`, NOT income. 22A
+             keeps the total at 2% by redistributing inside a role pool, and
+             with nobody eligible there is no inside. The spec hands it
+             nowhere, and nowhere is the only direction that cannot become the
+             operator's.
+
+### A fault the first version had, found by a test that failed honestly
+
+The table was keyed by pubkey alone, so a node sitting in both pools had its
+two shares MERGED - and a settlement claim was then measured against the
+game/verify share and passed. 22A is explicit the other way: "An operator
+selected for both roles earns both shares, because it performs both services."
+Seats are keyed by pool and key now, `feeOwed` takes the role, and `relay` -
+which 22A pays from neither committee - is owed nothing. The mutant that merges
+them is **16 red**, the loudest of the battery.
+
+### The over-claim
+
+`slashHoldsOnFeeClaim` recomputes the claim against the table. Claiming more
+than owed is the same offence as claiming without service - both take fee money
+the round did not earn for that node - and the table is BOUND into the proof by
+`feeInputsId`, because a number an accuser recomputes from an eligibility set
+of their choosing makes every honest claim an over-claim.
+
+  claimed 4000, owed 4000    not slashed
+  claimed 4001, owed 4000    SLASHED, over-claim
+  claimed 1, owed 4000       not slashed - asking for less is not an offence
+  claimed 0                  not slashed, as before
+  claimed for `relay`        SLASHED: owed 0, because no pool pays that role
+
+### Mutants: 16 planted, 15 killed, 1 retracted
+
+| mutant | protocol red |
+|--------|-------------:|
+| the two shares of one seat merge | 16 |
+| a pool is more than one percent | 9 |
+| the fee is more than two percent | 6 |
+| the remainder is dropped | 6 |
+| claiming exactly the owed amount slashes | 5 |
+| relay is paid from a pool | 3 |
+| the ineligible are paid anyway | 2 |
+| the remainder order is the list order | 2 |
+| over-claiming is not an offence | 2 |
+| the second pool is a second division | 1 |
+| refunded stakes are in the fee base | 1 |
+| an idle pool goes to the operator | 1 |
+| the owed amount ignores the role | 1 |
+| any table will do | 1 |
+| the table is left out of the binding | 1 |
+| the table need not add up | **RETRACTED** |
+
+RETRACTED for the same reason as the slash distribution's: `paid + unallocated
+!== fee` cannot fire while the arithmetic above it is right, so no test kills it
+without introducing a second fault. It stays, uncounted.
+
+### THE REPORT ASKED FOR: what checking entry `feeMsat` would need
+
+It needs a decision first, because **the spec contradicts itself**, and the
+contradiction is arithmetic rather than editorial:
+
+  18                "Node fees and the player-selected donation are charged ON
+                    TOP of the stake at entry and therefore do not reduce the
+                    pool."
+  22A, Collection   "*(changed)*... wallet commitment 100 sat; node fee 2 sat;
+                    donation 2 sat; net game stake 96 sat -> the pool. Earlier
+                    versions collected the fee and the donation on top."
+
+They give different fee bases, and 22A's own worked example follows 18 rather
+than its own Collection section:
+
+  22A's example        61 x 100 sat = 6,100 sat gross, so 2% = 122 sat
+  if stake is NET      61 x 96 = 5,856 sat, so 2% = 117.12 sat - and not an
+                       integer number of satoshi
+  what 61 players pay  2 sat each = 122 sat
+
+So the base that makes 22A's own numbers work is the WALLET COMMITMENT, while
+its Collection section calls the pool contribution the stake. This repo follows
+18: `computePayoutTable` says fees are charged on top and never appear in the
+table, and `invoiceMatchesEntry` requires the invoice to be `stakeMsat` exactly.
+
+Checking `feeMsat` therefore needs, in this order:
+  1. A RULING on which section stands. Under 18, `feeMsat` should be 2% of that
+     entry's `stakeMsat`. Under 22A Collection, `stakeMsat` is already net and
+     `feeMsat` is 2% of a commitment the Entry Contract does not carry - which
+     would need a new signed field before the check is even expressible.
+  2. Only then, whether the RATE belongs in the round contract. If 2% is fixed
+     by 22A for everyone - "2%, identical for everyone" - it is a constant like
+     `SLASH_TO_PLAYERS_BPS` and no field is needed. A field would let an
+     operator price its own round's fee, which is the fault contract fields
+     exist to prevent.
+
+Nothing was patched to hide this, and the contract was not touched.
+
+### Suites
+
+protocol 244/244 (was 230), blwp-node 70/70, blwp-client 89/89, core 80/80,
+money guard 11 files clean (fee.js added), determinism guard 19 files clean.
+blwp-node, blwp-client, core and Unity did not move and were not touched.

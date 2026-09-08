@@ -833,8 +833,15 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      Still open here: every number a slash turns on is signed now, not the
      caller's - `slashMinimumServed` and `slashRemainder` are contract fields,
      and the table row reads `minScore` off the contract too. A slashed node
-     receives none of its own bond and its share burns. What is left of M2.1 is enforcement and two missing
-     primitives, each listed above by its blocker; no offence is unwritten.
+     receives none of its own bond and its share burns. 22A's fee is computed
+     now, not merely claimed: 2% of the activated stakes, 1% to each pool,
+     unearned shares staying inside their own pool, and claiming more than the
+     table owes is the same offence as claiming without service. What is left
+     of M2.1 is enforcement and two missing primitives, each listed above by
+     its blocker; no offence is unwritten. Open question, measured and not
+     acted on: 18 says fees are charged ON TOP of the stake and 22A's
+     Collection section says INCLUSIVE, and the two give different fee bases.
+     Numbers: TASKBOOK.
   4. **Entry quotas.** DONE. A funded entry before the node stores a byte.
      Both HTTP doors refuse until something the operator trusts says the stake
      exists, and the default is no - a daemon that assumed funding would be the
