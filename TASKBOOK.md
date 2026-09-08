@@ -13901,3 +13901,85 @@ and not re-run: EditMode 190/186/1/3 and PlayMode 216/192/11/13 stand from
 
 PRIORITIES still said "What is left of M2.1 is 13C's slashing, which needs the
 other six daemons". That stopped being true when the sixth row landed.
+
+## M2.1: two money-law holes on the slash-table work, found by auditing my own push
+
+Both were green and wrong, which is the worst kind. Neither was found by a
+test; both were found by asking what a caller could still choose.
+
+### HOLE A - the score floor was still the prover's
+
+`slashHoldsOnTable({ ..., entries, minScore = 0 })` took the floor as an
+argument, defaulted to zero, while `minScore` has been a signed field of the
+round contract all along. Binding it into `payoutInputsId` stopped an accuser
+SWAPPING it after the fact and did nothing about them CHOOSING it: whoever
+writes the proof picks the floor.
+
+Measured on one set of entries: F is `f5abb801d78b2153` at a floor of 0 and
+`f69f32a60d912403` at 999. Two different honest tables, so a prover naming 999
+slashes a node whose table was right.
+
+Fixed the same way the fee minimum was: read `contract.minScore`, and refuse
+outright when no contract is given. Mutant "the floor is a caller argument
+again" is **7 red**.
+
+### HOLE B - the accused could be paid out of its own bond
+
+`slashDistribution` said "the accused is not one of the remaining honest
+committee members" in a comment and took `honestCommittee` as given. Measured
+before the filter: listing the slashed node returned **25000 of 100000
+satoshi** of its own bond. A documented claim that is not a check is not a
+check, and this one let an operator write itself the bond through a door the
+halves constant does not cover.
+
+AND THE FIRST FIX WAS WRONG, which the numbers caught. Filtering the excluded
+member out and dividing among the rest took the surviving member from 25000 to
+50000 - paying the survivors MORE the more of their colleagues were caught,
+which is a reward for a round going wrong. The divisor is the whole set now and
+the excluded shares BURN: accused 0, survivor 25000 unchanged, burned 25000.
+Every node slashed in the round is out, not only the accused, or two caught
+together would each collect from the other's bond.
+
+### Mutants: 8 planted, 8 killed, none retracted
+
+| mutant | protocol red |
+|--------|-------------:|
+| the floor is a caller argument again | 7 |
+| a contract without a floor is accepted | 1 |
+| the floor is read as zero | 3 |
+| the slashed node is paid its own bond | 2 |
+| only the accused is excluded, not the others | 1 |
+| the excluded share is spread over the rest | 2 |
+| the excluded share is quietly dropped | 2 |
+| an excluded member still takes a leftover satoshi | 1 (was **0**) |
+
+THE LAST ONE SURVIVED AT 0 RED and the reason was in my test, not the code: I
+excluded the member that sorts SECOND, so the leftover satoshi landed on the
+same node whether or not the exclusion was honoured. Measured the order for
+this round - `0x23` is first in `H(roundId || pubkey)` - and excluded that one
+instead. Two more of my own expectations were wrong on the way and were
+corrected against the arithmetic, not around it: the survivor takes 26 and not
+25 (its own 25 plus the leftover), and 75 burns and not 25 (50 for an empty
+player half, 25 excluded).
+
+### Measured after
+
+  the floor          only `contract.minScore` produces a table; a contract
+                     that names none is refused by name, and 0, -1, 1.5 and
+                     '100' are all refused rather than read
+  the accused        share 0, survivor unchanged, difference burned
+  the honest path    a node that served the contract's minimum, and one that
+                     claimed nothing, both keep the bond - unchanged tests
+  the old shape      still unmintable: dropping either field is refused at
+                     encode, so no node can produce a pre-change contract
+  numbers left       none. Every slash entry point now takes `contract` or no
+                     number at all; `grep` finds no numeric default on any of
+                     them. What remains injected is `replayDiffers`, which is
+                     5A.3B's own named residual and is an attester, not a
+                     number.
+
+### Suites
+
+protocol 230/230 (was 228), blwp-node 70/70, blwp-client 89/89, core 80/80,
+money guard 10 files clean, determinism guard 19 files clean. Unity untouched
+and not re-run.

@@ -830,10 +830,10 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      the door is still opening, and this very banner drawn straight across
      the block clock. Both fixed and both now pinned. Unity decides nothing -
      it repeats the word the client holds. Numbers: TASKBOOK.
-     Still open here: the two numbers the slash law used to take as arguments
-     are now signed fields of the round contract - `slashMinimumServed` and
-     `slashRemainder` - because a threshold the caller picks is one the
-     operator picks. What is left of M2.1 is enforcement and two missing
+     Still open here: every number a slash turns on is signed now, not the
+     caller's - `slashMinimumServed` and `slashRemainder` are contract fields,
+     and the table row reads `minScore` off the contract too. A slashed node
+     receives none of its own bond and its share burns. What is left of M2.1 is enforcement and two missing
      primitives, each listed above by its blocker; no offence is unwritten.
   4. **Entry quotas.** DONE. A funded entry before the node stores a byte.
      Both HTTP doors refuse until something the operator trusts says the stake
