@@ -17735,3 +17735,87 @@ names.
 protocol 394/394, core 83/83, blwp-node 94 -> 97, blwp-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. Files in
 blwp-node/src reaching the simulator: exactly replay.js.
+
+## Item 22: the hole in fetch, and the committee seed from a future beacon
+
+### The hole, found and closed before the beacon
+
+`#keepPeerResult` checked the record's ROUND and not its PLAYER, and a
+PlayerResult names no entry. The store keys a result by (round, entry, signer),
+so a record about another player of the same round, signed impeccably by a real
+seat, would take that seat's row under this entry - and the seat's true record,
+arriving later, would be IGNOREd as a duplicate. One peer could stop any seat's
+real answer from ever being stored without forging a signature. The record's
+player is now checked against the entry the node itself holds. Mutant W1
+(the check removed) 1 red.
+
+### The seed, 5A.5's own formula
+
+    committee_seed = H(census_root_game_verify || census_root_settlement
+                       || round_id || round_randomness)
+
+  two nodes, one published hash     the same 32 bytes
+  every input moves it              beacon, round id, and each root
+  the two roots are ordered         not interchangeable
+  the same seed, same committee     7 of 10 selected, identical both times
+  a different beacon                a different committee - which is the whole
+                                    point: grinding round_ids no longer picks
+                                    the seats
+  pinned value                      H(4,5,6,7 filled) =
+                                    9c28512a7b662b84f5b49848bcb9bede9cb6fcac
+                                    da35892687a3c996288ed336
+
+The pinned value exists because every other assertion compares a seed with
+another seat's seed, so a change that moved every seed alike - the roots
+swapped, the tag renamed, the parts joined differently - would pass all of
+them. Mutants X6 and X7 both survived at 0 red until it was added.
+
+### "Published after round_id", and exactly how much of it can be proved
+
+  at or below census_height   refused, "the creator held that chain state
+                              when the round was made"
+  census_height + 1           accepted, provenAfter = census_height
+  no height at all            refused - "I do not know when this was
+                              published" and "it was published late enough"
+                              must never be the same answer
+  a fractional height         refused
+
+WHAT THIS DOES NOT PROVE, said plainly rather than implied: the contract
+carries `census_height` and nothing else about time, so a beacon ABOVE that
+height still cannot be shown to postdate publication. 5A.5 ties the beacon to
+`committee_time`, and this contract has no `committee_time` and no publication
+height. The check refuses what it can prove and names what it cannot.
+
+### TWO CONTRADICTIONS BETWEEN THE TREE AND 5A.5, neither invented away
+
+  1. `committeeSeed` IS A CONTRACT FIELD (contracts.js:112), inside the bytes
+     `roundId` hashes. 5A.5 derives the seed FROM `round_id`. The two cannot
+     both hold: a seed inside the id that is computed from the id is circular.
+     The spec's answer is that the contract commits to WHICH beacon round will
+     be used (`randomness_rule`), not to a seed - so the field should be a rule
+     and not a value. That is a contract-format change, the letter-16 class,
+     and it is not made here.
+  2. The contract carries ONE `censusRoot` where 5A.5 hashes TWO - game/verify
+     and settlement. `committeeSeedFromBeacon` fills both positions from the
+     one root and returns `rootsAreOne: true` rather than hashing 32 fewer
+     bytes in silence.
+
+Both are named because they are the difference between a seed that closes the
+grinding attack and a seed that looks as though it does.
+
+### Mutants: 8 planted, 8 killed, 0 retracted
+
+  W1 a peer's record about another player filed here   1 red
+  X1 the beacon left out of the seed                   2 red
+  X2 the round id left out of the seed                 1 red
+  X3 the census height itself allowed                  2 red
+  X4 no height treated as late enough                  1 red
+  X5 a seed made without the ordering check            1 red
+  X6 the two census roots swapped                      1 red (needed the pin)
+  X7 the seed hashed under another tag                 1 red (needed the pin)
+
+### Suites
+
+protocol 394 -> 398, core 83/83, blwp-node 97/97, blwp-client 95/95, money
+guard 12 files clean, determinism guard 20 files clean. Files in
+blwp-node/src reaching the simulator: exactly replay.js. No Unity, no C#.
