@@ -20776,3 +20776,81 @@ those two doors would serve has to come from somewhere. Either a real node -
 and the standing rule is hands off the live testnet4 and mainnet nodes and off
 /mnt/bitcoin - or a fixture chain of genesis plus one block with the bond mined
 into it, which is what the browser harness already builds for itself.
+
+## Item 28: the two doors a joining page needs, on the daemons
+
+The join URL names four things and the daemons published one of them. `?round=`
+resolved through `GET /round?id=`; `headers=` defaulted to `<node>/headers` and
+`bond=` needed a proof, and NEITHER DOOR EXISTED - so a person typing the URL
+died in `agreedChain` with one source, not on a screen.
+
+Both doors are on the daemons now, and they are OFF by default. A daemon handed
+no view answers 404 and says why, rather than an empty body a client would read
+as a short chain. The objection is recorded rather than argued: a node serving
+the chain that proves its own bond is one source wearing two hats, and 25.1
+asks for independent ones. What makes it hold here is that there are two
+daemons and `agreedChain` counts ORIGINS, and that this is a local test round
+on a fixture chain - Daniel's ruling, and the right one for play money on one
+machine.
+
+    node 18090 /headers   200   160 b   application/octet-stream
+    node 18091 /headers   200   160 b   application/octet-stream
+    node 18090 /bond      200   994 b
+    node 18091 /bond      200   994 b
+    node 18090 /round?id  200   341 b
+    node 18091 /round?id  200   341 b
+
+160 bytes is two 80-byte records: Bitcoin's real genesis header and one block
+mined on top of it carrying the bond. That is enough for every check `Client.at`
+makes - the anchor is genesis and comes from the client, the header must link
+and be mined, the bond must be proven into it by a merkle branch, and the
+advertisement must be signed by the key the committee names - and it is not a
+claim about Bitcoin.
+
+### The advertisement was signed on the wrong curve
+
+Found by running the path, not by reading it: `screen.mjs` signs the
+advertisement with ed25519, and letter 26 made a node's identity ITS BOND KEY.
+The door refused it by name - "the advertisement for 4c0b5211... is not signed
+by the node it names" - and the tool signs BIP-340 under the same key the
+daemon receipts with. (`screen.mjs` is stale in the same way and in one more:
+its contract still carries `committeeSeed`, which 27 removed. Not touched -
+Chromium stays out of this letter.)
+
+### A person-shaped join, measured end to end
+
+`two-tabs.test.js` takes the URL the tool PRINTS, parses it the way index.html
+does, and hands it to `Client.at` the way blwp.jslib does - so the chain is
+asked for from two origins, the bond is proven into it, the advertisement's
+signature is checked, and the node's address is READ OFF the bond rather than
+taken from the query.
+
+    tab two was shown tab one at tick 89: x -6366013 z 668467 heading 16384
+    tab one's own transcript at that tick:  x -6366013 z 668467 heading 16384
+    delta 0 0 0
+
+Two tabs are two entries; the picture is of tab one's entry and of nobody else.
+Order matters and is written into the test: a player with no published inputs
+is nobody to draw, so the driving comes before the asking - which is also the
+order a person arrives in.
+
+A REAL FORK IS REFUSED BY NAME. Not malformed bytes - genesis plus a different
+mined block, so it links and it is work:
+
+    refused: no proven endpoint: no chain: providers 0 and 1 do not agree on
+    the chain: 90636f06... is not in the one with the most work
+
+### Suites
+
+    core 84/84   protocol 416/416   blwp-node 199 -> 201   blwp-client 116 -> 118
+    money guard 12 clean, determinism guard 20 clean
+    PlayMode 234/209/12/13 and EditMode 190/186/1/3 stand: no C# changed.
+
+### The last practical wall, named
+
+The daily is https and the daemons are http on a tailnet. An https page asking
+for `http://127.0.0.1` is a mixed-content request and a browser may block it -
+which looks exactly like a provider that never answered. The tool prints that
+warning with the way out: serve the built page over http from the same machine
+(`BLWP_PAGE=http://host:8000`), or put the daemons behind https. Nothing in the
+protocol changes either way; it is where the page is served from.
