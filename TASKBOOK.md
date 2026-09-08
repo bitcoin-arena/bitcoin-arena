@@ -18491,3 +18491,39 @@ so a full derivation now checks what it read. Its `unchecked` is back to two.
 protocol 408 -> 409, core 83/83, blwp-node 120/120, blwp-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. No Unity, no C#, no
 PlayMode: protocol bytes and chain state only.
+
+## Item 25, slice 2 step 1: the output at the outpoint, and a check that could not fail
+
+Step 1 of the accepted sequence is to read the output at the claimed outpoint
+from the chain rather than from the peer that resolved it. `chainFactsAt` now
+records the output beside the height, so a caller has the script without going
+back to the blocks.
+
+BUT THE CHECK STEP 1 ASKS FOR CANNOT FAIL, and that is the finding. RESOLVE
+already pins a resolved transaction to the entry's TXID, and a transaction with
+that txid cannot carry different outputs - the txid IS the hash of them. A peer
+swapping the output has to change the txid, and is then refused as "a different
+transaction than the entry names".
+
+So the check was written, measured, and REMOVED. Mutant L1 - the script taken
+from the resolver instead of the chain - stayed green at 0 red, because the two
+are the same bytes by construction. A check that can never fail is worse than
+no check: it reads as verification and verifies nothing. The fact is recorded
+where the reader is, and the test now pins the txid binding that does the work.
+
+### Steps 2-4 need a regtest bitcoind, and there is none
+
+Measured on this machine:
+
+  /mnt/bitcoin/bitcoin-31.1/bin/bitcoind -datadir=/mnt/bitcoin/tn4   testnet4
+  /mnt/bitcoin/bitcoin-31.1/bin/bitcoind -datadir=/mnt/bitcoin       mainnet
+
+Both running. Neither is regtest, and steps 2-4 need mining, a funded output
+and a spend - impossible on testnet4 without coins and out of the question on
+mainnet. A third node in an isolated datadir is a process on Daniel's machine,
+so it is asked for rather than started.
+
+### Suites
+
+protocol 409/409, core 83/83, blwp-node 120/120, blwp-client 95/95, money guard
+12 files clean, determinism guard 20 files clean.
