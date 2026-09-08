@@ -15862,3 +15862,61 @@ requiring on the order of 900,000 headers.
   protocol 345/345 (344 before this piece), blwp-node 70/70, blwp-client 89/89,
   core 80/80, money guard 12 files clean, determinism guard 19 files clean.
   Spec vectors unmoved.
+
+### Audit of item 17, again: a tie decided the census, and a header could be emptied
+
+Two findings, both built, neither needing a checkpoint.
+
+A TIE ON WORK WAS DECIDED BY ARRIVAL ORDER. Measured:
+
+  chain with the bond   work 50
+  chain without it      work 50        tie
+  offered [with, without] -> eligible 1, root 86353eb36de01ebf
+  offered [without, with] -> eligible 0, root 0000000000000000
+  same census either way:  FALSE
+
+The same two inputs, two different censuses, chosen by the order a caller
+happened to list them. 5A.2 says "two parties with the same chain compute the
+same census", and that was not true of a tie. Worse, `mostWork`'s own comment
+claimed "ties go to the first source offered, SO THE ANSWER DOES NOT DEPEND ON
+THE ORDER" - which is self-contradictory; taking the first IS depending on it.
+
+`mostWork` is left alone: taking the first of an equal pair is right for a NODE
+choosing its own tip, which is Bitcoin's first-seen rule, and a node is allowed
+to have been somewhere when a block arrived. A CENSUS is not allowed it, so
+`bestChainView` breaks the tie on the TIP HASH - lower wins, arbitrarily but
+fixed. The tip hash is the work itself, so nobody can choose it after the fact,
+and both parties compute the same comparison from the same two chains.
+
+A HEADER COULD BE EMPTIED OF THE TRANSACTIONS IT COMMITS TO. Measured:
+
+  header at 899980 commits to root dce17b40350ec9a1
+  the same block handed over with transactions: []  -> chainViewOf ok TRUE
+  census from it -> eligible 0
+
+The containment check was skipped when no transactions were offered, so a real
+mined header could be presented with its block emptied and the bond in it
+vanished. 25.1 lets a provider OMIT and says omission is answered by asking
+another - but a view that CONTRADICTS ITS OWN HEADER is not omitting, it is
+claiming a block Bitcoin does not have. Every real block has at least a
+coinbase, so the only transaction list consistent with none is a merkle root of
+zero, and that is now the rule.
+
+### Mutants: 6 planted, 6 killed
+
+One survived at 0 red: "the tie compares only the first byte". The fixtures
+differed there, so a one-byte comparison gave the same answer and two tips
+sharing a first byte would have fallen back to whoever spoke first.
+
+The first attempt at that test ASSERTED NOTHING and I caught it before it was
+committed: mining here is deterministic, so 400 "variants" built from identical
+inputs were 400 copies of one chain, the search never found a pair, and the
+assertion sat inside an `if` that never ran. The variants now differ by a
+transaction in the first block, and the test fails loudly if the search comes
+up empty rather than passing quietly.
+
+### Suites
+
+protocol 347/347 (345 before this pass), blwp-node 70/70, blwp-client 89/89,
+core 80/80, money guard 12 files clean, determinism guard 19 files clean.
+Vectors unmoved. The checkpoint is still a decision and still not invented.
