@@ -15647,3 +15647,116 @@ a side path. Case 2 needs nothing.
 
 protocol 336/336, blwp-node 70/70, blwp-client 89/89, core 80/80. No product
 code was written.
+
+## M2.2 item 17, built: the census is a function of a chain
+
+All three named holes, in the order they were named.
+
+### 1. The derivation takes a chain, and most work wins
+
+`deriveCensus(views, { contract, candidates, resolve })`. A view is
+`{ blocks, firstHeight }`, each block `{ header, transactions }`, and
+`chainViewOf` checks four things:
+
+  mined      every header's hash meets the target it claims - `chainWork`,
+             which already refused an unmined header and was never reached
+             from the census
+  linked     each header names the one before it
+  contained  each block's transactions hash to the merkle root ITS OWN header
+             commits to. Without this the headers are decoration: a real mined
+             header with a fabricated transaction list would pass, which is
+             the forgery 25.1 says a provider must not be able to commit.
+  placed     heights are positional from `firstHeight`; the tip is the last
+             block's height
+
+`bestChainView` runs `mostWork`'s rule over competing views. A view that is
+not a chain is not a competing answer, it is a bad source.
+
+`blockMerkleRoot` was added to `tx.js` for the containment check. It DUPLICATES
+on an odd level, which is the rule `merkleRoot` in `census.js` refuses to use -
+because that one is ours to design and this one is a question about a block
+that already exists. Validated against `merkleRootFromProof`, which the chain
+suite proves against mainnet block 100000's real header.
+
+Recognition (`recognizeBond`, `isTaprootOutput`, `BOND_UNCHECKED`) moved from
+`census.js` to `chain.js`: both files need it, so it could not live in one and
+be imported by the other. `census.js` re-exports it; the imports now run one
+way only.
+
+### 2 and 3. The tip is the chain's, and a short chain is refused
+
+`tipHeight` is gone from every signature: `scanCensus`, `commitCensus`,
+`censusInputsId`, `censusRootMatchesRound` and `deriveCensus` all take the
+view. There is no argument left to pass a tip through.
+
+A view claiming to be already checked is not believed on its word. The stamp
+is a module-private Symbol whose VALUE pins `firstHeight:blocks.length:
+tipHeight`, because a symbol alone was not enough: object spread copies
+symbol-keyed properties, so `{ ...verified, tipHeight: 999999 }` would have
+carried an honest stamp onto an invented tip. Found by writing the test, not
+by a mutant.
+
+### Measured, the same three cases
+
+  CASE 1  reorg replacing the census block
+    light chain without the bond   work 50
+    heavy chain with the bond      work 1638425
+    most work wins              -> eligible 1, from work 1638425
+    heavier chain WITHOUT it    -> eligible 0, "no such outpoint at or before
+                                   that height"
+    the lighter chain is not a second census; it is not the chain.
+
+  CASE 2  reorg after census_height, bond block untouched
+    eligible 1 / 1, same root: TRUE.  Unchanged, as required.
+
+  CASE 3  competing tips and unearned work
+    workOf(mainnet block 100000) = 62209952899966   (unchanged)
+    a header claiming mainnet's target, mined at the easy one:
+      "that is not a chain: this header was not mined: its hash does not meet
+       the target it claims"
+
+  TIP BELOW census_height
+    tip 899999 -> "that chain ends at height 899999, before this round's
+                   census height 900000"
+    tip 899990 -> the same, naming 899990
+    tip 900000 -> eligible 1.  The census is the chain UP TO its height, so
+                  the height itself is the boundary and it is fine.
+    No negative depth is printed anywhere.
+
+  THE TIP IS NOT A CALLER'S NUMBER
+    caller says tipHeight 999999 -> census tip 900004, eligible 1
+    caller says tipHeight      0 -> census tip 900004, eligible 1
+    Before: 899999 gave one census and 899000 another.
+
+### Mutants: 21 planted, 20 killed, 1 retracted with its reason
+
+Killed: headers not checked for work (41 red), transactions need not match the
+header (1), a block need not carry a header (2), the tip is the first height
+(35), the tip is one too high (5), heights are all the first height (8), a tip
+below the census allowed (2), the tip boundary excludes the census height (4),
+the lightest chain wins (2), the first chain offered wins (2), a chain that is
+not one still competes (1), derive ignores most work (1), a view need not say
+where it starts (1), a caller's `ok` flag trusted (1), the stamp does not pin
+the tip (1), the stamp is not compared (1), and four more.
+
+RETRACTED, not counted: "the verified stamp is never set". Removing the stamp
+makes `viewOrThrow` re-verify a view it has already verified - identical
+behaviour, more work done. It is a no-op mutant and there is no assertion that
+could kill it without asserting how many times a function is called.
+
+Two survived at 0 red first and both were real: a caller's `ok` flag was
+trusted, because every test passed a real view and none passed a forged one to
+the verifier doors; and the stamp did not pin the tip, which the spread case
+above exposed.
+
+### Suites
+
+protocol 343/343 (was 337 before this letter's tests, 336 before the letter),
+blwp-node 70/70, blwp-client 89/89 (bundle rebuilt, 166.6 KB), core 80/80,
+money guard 12 files clean, determinism guard 19 files clean. The spec vectors
+did not move: the census vector's contract and entries are unchanged and only
+the way its depth rule is supplied changed.
+
+`tools/chainview.js` mines headers for tests and vectors at regtest's target,
+and is not part of the protocol - nothing in `src/` imports it, the same rule
+`tools/bond.js` beside it follows.
