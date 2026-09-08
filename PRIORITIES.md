@@ -16,14 +16,23 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-   15  M2.2 census from chain         M2   NOT STARTED — every node derives the
-                                            census from the chain the same way,
-                                            and a contract naming a census root
-                                            nobody else computes is refused
-                                            rather than played. IMPLEMENTATION
-                                            stage 5. It is the top item because
-                                            14's own remainder is blocked, not
-                                            because 14 is finished.
+   15  M2.2 census from chain         M2   OPEN — the root is checked now: a
+                                            contract's `censusRoot` must be the
+                                            one its published census derives to
+                                            at the contract's own height, and
+                                            the entries are bound so nobody can
+                                            swap the set under it. It was named
+                                            by every contract and read by no
+                                            code at all. Next: 5A.4's SCAN, and
+                                            the rest of 5A.3's filters. Two
+                                            signed-shape divergences recorded
+                                            and deliberately not fixed: the
+                                            leaf carries a pubkey where 5A.4
+                                            wants the advertisement hash, and
+                                            the contract carries one root where
+                                            5A.4 wants one per role. Both move
+                                            every census root or round id.
+                                            Numbers: TASKBOOK.
    14  M2.1 checkpoints               M2   OPEN — 5b and 5c done: the client
                                             plays the round in the address bar,
                                             asks two declared providers for a

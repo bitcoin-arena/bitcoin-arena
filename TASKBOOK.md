@@ -14612,3 +14612,88 @@ root nobody else computes is refused rather than played.
 
 The list now carries it as item 15, NOT STARTED, above 14 because 14's own
 remainder is blocked - not because 14 is finished. Item 14 stays OPEN.
+
+## M2.2 5A.4: a contract's census root is checked against the census it names
+
+The first slice of item 15, and the cut was changed before it was built: the
+letter's original slice bundled "same chain -> same census root" with "a wrong
+root is refused". Those cost very different things. Refusing a wrong root needs
+NOTHING new - the derivation was already here. "Same chain" needs 5A.4's SCAN
+step, and 5A.3B is blunt that a light client cannot be handed a proof of
+unspentness at all. So the slice built is the second half alone.
+
+### Measured before writing anything
+
+`censusRoot` was named by every Round Contract and read by NO CODE - `grep`
+found it only in `contracts.js`, and nothing called `buildCensus` outside the
+tests and the vector tool. A round could name any thirty-two bytes and be
+played, which makes the committee whatever the round's author said it was.
+
+Against 5A.4's five steps: SORT is done and done the spec's way (by
+`(funding_txid, vout)`, not the grindable `H(node_pubkey)` v4.6 had); COMMIT is
+nearly done; FILTER applies height, confirmations and unspent but not the bond
+template, `bond_min(role)`, the advert signature or the declared role; RESOLVE
+has the hash-matching half; SCAN is absent. **One of five complete, one nearly,
+three partial or absent - and the check that ties a contract to any of it was
+0 of 1.**
+
+### What went in
+
+`censusRootMatchesRound(contract, { entries, minConfirmations, tipHeight,
+boundTo })`. The height comes off the CONTRACT, not the asker: recomputing at
+another height is recomputing a different census, and a caller who could choose
+it could make an honest contract look wrong.
+
+`censusInputsId` binds the set, the height and the depth rule, the same
+discipline `payoutInputsId` needed for 5A.3 row 3 - a root is a function of a
+SET, so a caller free to choose the set can make any honest contract look wrong
+by handing in a different list. Sorted by outpoint, the census's own rule, so
+the order a node happened to receive entries in does not move the commitment.
+
+  same entries, either order    one root, 73df1096be9eedf1... over 3 entries
+  the root its census derives   playable
+  a flipped bit, zeroes, or
+    another set's root          refused, and the refusal NAMES `censusRoot`
+                                and says what the root should have been
+  a swapped or shortened set    refused: "not the census entries that were
+                                published"
+  a changed depth rule          same refusal - the commitment covers it
+  a duplicate outpoint          refused with `buildCensus`'s own reason, not
+                                thrown at whoever asked whether a round is
+                                playable
+
+### Two signed-shape divergences, recorded and NOT fixed
+
+  1. The census leaf carries `pubkey`; 5A.4 says the canonical serialization is
+     `outpoint || advertisement hash || bond_amount || role bits`. Changing it
+     moves every census root and the census vector.
+  2. The Round Contract carries ONE `censusRoot`; 5A.4 says `census_root[role]`
+     - one per role pool. A second field is another round-id move.
+
+Both are decisions before they are work, and neither was slipped in under a
+slice about checking a root.
+
+### Mutants: 13 planted, 13 killed, none retracted
+
+| mutant | protocol red |
+|--------|-------------:|
+| any root matches any round | 2 |
+| no root matches any round | 2 |
+| the set is left out of the commitment | 2 |
+| the depth rule is left out of the commitment | 2 |
+| a round need not name a root | 1 |
+| a round need not name a height | 1 |
+| the height is the asker's | 1 |
+| entries need no commitment | 1 |
+| the commitment need not match | 1 |
+| the height is left out of the commitment | 1 |
+| the commitment is order-sensitive | 1 |
+| a spend is left out of the commitment | 1 |
+| an unbuildable census crashes the caller | 1 |
+
+### Suites
+
+protocol 283/283 (was 275), blwp-node 70/70, blwp-client 89/89, core 80/80,
+money guard 12 files clean, determinism guard 19 files clean. JS protocol only:
+no Unity, no C# port, no PhysX, and no vector moved - the census leaf shape was
+not touched.
