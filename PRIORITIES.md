@@ -838,9 +838,12 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      unearned shares staying inside their own pool, and claiming more than the
      table owes is the same offence as claiming without service. What is left
      of M2.1 is enforcement and two missing primitives, each listed above by
-     its blocker; no offence is unwritten. Open question, measured and not
-     acted on: 18 says fees are charged ON TOP of the stake and 22A's
-     Collection section says INCLUSIVE, and the two give different fee bases.
+     its blocker; no offence is unwritten. 18 STANDS on the fee base - fees ride
+     on top of the stake - and an entry whose `feeMsat` is not 2% of its own
+     `stakeMsat` does not stand. The rate is a constant, not a contract field:
+     one rate for every entry, or an operator prices its own round. 22A's
+     Collection clause, which nets the fee out of the stake, contradicts 18 and
+     22A's own worked example and is treated as the error.
      Numbers: TASKBOOK.
   4. **Entry quotas.** DONE. A funded entry before the node stores a byte.
      Both HTTP doors refuse until something the operator trusts says the stake

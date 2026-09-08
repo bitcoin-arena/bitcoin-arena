@@ -14114,3 +14114,74 @@ Nothing was patched to hide this, and the contract was not touched.
 protocol 244/244 (was 230), blwp-node 70/70, blwp-client 89/89, core 80/80,
 money guard 11 files clean (fee.js added), determinism guard 19 files clean.
 blwp-node, blwp-client, core and Unity did not move and were not touched.
+
+## M2.1 22A: an entry's fee, checked against its own stake
+
+18 stands, ruled: fees ride ON TOP of the stake and do not reduce the pool, so
+`stakeMsat` is the gross stake and 2% of it is what the player was charged
+beside it. 22A's Collection clause - a 100 sat commitment giving a 96 sat net
+stake - contradicts 18 and 22A's own worked example, and is treated as the
+error. No commitment field was added and the round contract was not touched.
+
+THE RATE STAYS A CONSTANT. 22A calls it "2%, identical for everyone", so one
+rate covers every entry of every round. A contract field would let an operator
+price its own round's fee, which is the fault a contract field exists to
+prevent rather than one to import - the same shape as a caller argument that
+should have been a signed number, read the other way round.
+
+### What went in
+
+`entryFeeMsat(stakeMsat)` - 2% with the same integer floor `nodeFeeTable`
+already uses, so one rate is applied one way - and `feeMatchesEntry(entry)`,
+which answers rather than throws, like every other decision in this package.
+
+  charged 2000 of 100000   stands
+  charged 2001             does not: "the 1 over is money no fee table
+                           allocates"
+  charged 1999             does not
+  charged 0 on a stake     does not
+  malformed or negative    answered, not thrown
+
+TOO MUCH IS THE DIRECTION THAT BECOMES INCOME, and that is why the refusal is
+worded from it. The fee table computes from the STAKES, so an entry charged
+9999 where 2% is 2000 leaves 7999 that the table allocates to nobody -
+measured: `gross` 100000, `fee` 2000, and paid plus unallocated 2000. The
+excess simply stays with whoever collected it, which is the operator.
+
+### The floor does not aggregate, measured and not reconciled
+
+Each entry pays `floor(2% of its own stake)`; the table owes
+`floor(2% of the sum)`. These are different numbers:
+
+| round | collected per entry | table owes | gap |
+|---|---|---|---|
+| 2 x 149 msat | 4 | 5 | 1 |
+| 7 x 33333 msat | 4662 | 4666 | 4 |
+| 3 x 49 msat | 0 | 2 | 2 |
+| 61 x 100000 msat (22A's example) | 122000 | 122000 | 0 |
+
+The gap is at most one millisatoshi per entry and ALWAYS in the same
+direction - collected <= owed - so it can never become income. It is recorded
+rather than patched: 22A defines the fee on the gross and says nothing about
+which rounding a collector uses, and picking one here would be inventing a
+rule. The spec's own worked example is one of the cases that agrees exactly.
+
+### Mutants: 9 planted, 9 killed, none retracted
+
+| mutant | protocol red |
+|--------|-------------:|
+| an entry fee is not two percent | 3 |
+| the entry fee rounds up instead of down | 1 |
+| any fee matches an entry | 2 |
+| too much is close enough | 2 |
+| too little is close enough | 1 |
+| a fee of nothing is accepted | 1 |
+| a malformed entry throws at the caller | 1 |
+| negative money is money | 1 |
+| the fee is measured against the whole round | 1 |
+
+### Suites
+
+protocol 249/249 (was 244), blwp-node 70/70, blwp-client 89/89, core 80/80,
+money guard 11 files clean, determinism guard 19 files clean. Nothing outside
+`packages/protocol` moved; Unity untouched and not re-run.
