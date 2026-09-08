@@ -19833,3 +19833,81 @@ The M2 remainders that came up alongside stay on their own letters and were
 not pulled into this close: the relayable funding witness, tree-carried
 commitments, `census_min_nodes` per role versus one u16, and testnet4's
 genesis carrying 2 where the spec table says 3.
+
+## Item 27, slice 1: the seed a node seats with is the beacon's
+
+Before: `selectCommittee` read `contract.committeeSeed` - thirty-two bytes the
+round's AUTHOR wrote - so the lottery was a pure function of a value the
+creator chose. THE GRIND, RUN RATHER THAN ASSERTED, on a fixed census of eight
+bonded nodes with two slots:
+
+  offline candidate seeds until a chosen pair was seated   34
+
+Thirty-four. And since letter 26 made the seated set the only trusted list,
+that pair is the whole committee - receipts, verdicts and all. 5A.11's
+"committee cannot be overwritten" passes, because nothing is overwritten: it
+is computed.
+
+After: the seed is an argument the beacon fixes, and the field is not read.
+
+  committee_seed = H(census_root_gv || census_root_settle
+                     || round_id || round_randomness)      5A.5
+
+`selectCommittee` refuses to draw without a 32-byte seed and never reaches for
+the contract; `roster.seedFor` derives it from the network's randomness source
+(`RANDOMNESS_SOURCE = 'bitcoin-block-hash'`) and refuses a round it has no
+beacon for. No fallback: "I have no randomness" and "the committee is whatever
+the contract says" must never be the same answer.
+
+### The instruction changed shape, and here is the measurement that changed it
+
+The letter's sequence said to COMPARE `contract.committeeSeed` against the
+derived hash and refuse a mismatch. That check cannot be satisfied by any
+honest round: `round_id` hashes the contract, so a contract carrying the seed
+derived from its own id has no fixed point. Measured, six iterations, never
+equal and never cycling - finding one would be a 2^256 search, not a
+construction. And the spec agrees: §6's Round Contract carries
+`randomness_rule`, `randomness_fallback`, `committee_time` and
+`entry_open_time`, and NO committee seed. So the field stops being an input
+rather than starting to be checked; removing the field itself moves every
+round id and belongs with slice 2's field work.
+
+### The numbers
+
+  which bytes seating used       contract.committeeSeed verbatim -> the seed
+                                 H(roots || round_id || randomness) produces
+  the ground seed on a contract  seated the chosen pair -> seats nobody: the
+                                 same bytes now decide nothing
+  a different beacon             a different committee, so the randomness is
+                                 not decoration
+  a beacon at or below the       refused: "the creator held that chain state
+  round's census height          when the round was made"
+  no beacon at all               refused by name, no committee
+  no seed passed to the lottery  refused: "drawn on the seed its beacon
+                                 produced, not on one a contract names"
+  blwp-node                      187 -> 193
+
+### Mutants: 5 planted, 5 killed
+
+  the lottery reads the contract's seed again            killed
+  a short seed is a seed                                 killed
+  the daemon seats on the contract's bytes               killed
+  no beacon means seat on whatever is there              killed
+  the beacon's height is not checked                     killed
+
+Four of those survived a first pass, and the gap was one fixture shape: every
+roster test had exactly as many eligible nodes as slots, so ANY seed seats the
+same two and no test could tell which seed was used. There is a six-node
+census with two slots now, where the beacon's seed and the contract's bytes
+seat different pairs - and the test says so, so it cannot quietly stop
+measuring the difference.
+
+### Suites
+
+core 83/83, protocol 416/416, blwp-node 193/193, blwp-client 102/102 - 794
+tests, 0 red. Money guard 12 files clean, determinism guard 20 clean, bundle
+212.0 KB unchanged. No Unity, no C#, no genesis byte, no deploy.
+
+Not in this slice, by ruling: `committee_time` and `randomness_rule` as
+contract fields (slice 2, and they move every round id), and the entry window
+(slice 3).
