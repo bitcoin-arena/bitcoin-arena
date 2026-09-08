@@ -62,7 +62,15 @@ tick rate, daemon, curve, BOND_MARKER, ghost subscribe, run duration.
                                             fields, not blank columns. Next
                                             slice: `interestSet`'s rank comes
                                             from this board instead of from its
-                                            caller. Numbers: TASKBOOK.
+                                            caller - DONE: the standing is
+                                            looked up on the board by player
+                                            key, a rank written on the caller's
+                                            object is ignored, and with no
+                                            board there are no leaders at all.
+                                            A player still driving has no
+                                            standing and is watched as a
+                                            neighbour; a refund is not a place.
+                                            Numbers: TASKBOOK.
    19  M2 late join                   M2   done — a late run begins at the tick
                                             its own signed Entry Contract
                                             names. The Round Contract is never

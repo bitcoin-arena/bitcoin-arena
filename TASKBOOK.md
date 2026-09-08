@@ -16728,3 +16728,75 @@ NOT DEPLOYABLE: a board with no renderer changes no screen.
 every node computes alike, that rank must come from it - a rank a caller picks
 is a rank the operator picks, which is the fault removed from the census depth,
 the committee size, the seed, the bond floor and the protocol version.
+
+## M2.2 item 20, second slice: the standing an interest set uses is the board's
+
+`interestSet` read `rank` straight off the object it was handed. That is the
+fault removed five times before - from the census depth, the committee size,
+the committee seed, the bond floor and the protocol version. A rank a caller
+picks is a rank the OPERATOR picks: say the player about to overtake you is
+nineteenth and they fall out of the twenty you are shown, with nothing forged
+and nothing to notice.
+
+### What is now true
+
+`interestSet(viewer, others, { limit, board })`. `others` carry a
+`playerPubkey`; the standing is looked up on the BOARD by that key, and a
+`rank` written on the caller's object is IGNORED - the treatment RESOLVE gives
+a census entry's claimed roles and key, because the object is somebody's
+summary and the signed thing beside it is what counts.
+
+  the real leaders demoted to 900+ and the stragglers promoted to 0 on the
+    caller's own objects   ->  the same set, unchanged
+  no board at all          ->  no leaders at all; the whole budget goes to the
+                               nearest, because nobody has a standing to be a
+                               leader by
+
+SOMEBODY STILL DRIVING HAS NO STANDING, and that is not a gap. A board is built
+from results the committee has made final; mid-round most players have none.
+They are watchable as neighbours and join the leaders half when their result is
+final - and late join is why finals arrive DURING a round at all, since each
+entrant gets T_run from their own start and they finish at different moments.
+
+A REFUND IS NOT A STANDING either. The board shows it unranked, and unranked is
+not a place.
+
+### Mutants: 6 planted, 6 killed
+
+Two survived at 0 red first, and both were fixtures that could not tell the
+answers apart:
+
+  a refund counts as a standing     the refunded players were placed NEAR, so
+                                    the nearest half took them anyway and a
+                                    leaders half that mistook `rank: null` for
+                                    a standing looked identical. They are far
+                                    away now and the unranked four are close,
+                                    so the two halves disagree about them.
+  the standing is keyed by entry,
+    not by player                   every fixture used the same bytes for
+                                    `entryId` and `playerPubkey`, so a lookup
+                                    on either found the same row. They differ
+                                    now, and the board's number one is placed
+                                    FARTHEST away - a correct lookup gives it
+                                    the leaders seat, a wrong one leaves the
+                                    leaders half empty and the top of the board
+                                    disappears.
+
+The board fixture is built by calling `leaderboard` on real signed finals
+rather than writing rank numbers by hand: hand-written ranks would test this
+file against itself, and the point of the slice is that ONE ordering is
+computed the same way everywhere.
+
+### Suites
+
+protocol 372 -> 375, core 83/83, blwp-node 71/71, blwp-client 95/95, money
+guard 12 files clean, determinism guard 19 files clean. Core untouched; no
+Unity; the three parked 0.11 fields are unchanged.
+
+NOT DEPLOYABLE: still nothing on screen.
+
+### One sentence of truth about BOND_MARKER
+
+The notes above that call BOND_MARKER a blanket park are stale as of e3b8d12:
+regtest and testnet markers are SET, mainnet is still null, and the remaining
+census-scan work is item 24 in the queue rather than a park.
