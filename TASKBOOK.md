@@ -19973,3 +19973,87 @@ core 83/83, protocol 416/416, blwp-node 195/195, blwp-client 102/102 - 796
 tests, 0 red. Money guard 12 files clean, determinism guard 20 clean. The
 client bundle rebuilt at 212.7 KB (it encodes the contract, so its bytes moved
 with the field). No Unity, no C#, no genesis byte, no deploy.
+
+## Item 27, slice 3: a round cannot open entries before its committee, or start without a window
+
+5A.5's ladder, with the two rungs the contract already has times for:
+
+  committee_time   beacon appears -> committees selected & verified
+                   |  ENTRY WINDOW OPENS HERE
+  start_time       round begins
+
+  entry_open_time == committee_time
+  start_time      >= committee_time + min_entry_window   (reference: 60 s)
+
+`MIN_ENTRY_WINDOW_MS` is that reference, taken from the spec's own line rather
+than chosen: 60000.
+
+ENTRY_OPEN_TIME IS NOT A FIELD, AND MUST NOT BE. The spec's line is an
+EQUALITY, so a second field could only disagree with `committee_time` - and
+the reason is 23.1: the preimage shares are encrypted TO the settlement
+committee, so an entry cannot be constructed before there is one. The equality
+therefore holds by construction, and what is checked is the half that can be
+got wrong: `Round#enter` refuses before `committee_time`, at the door, where a
+client that draws no lobby cannot skip it.
+
+### The numbers
+
+  exactly committee_time + 60000ms   accepted: the boundary lives, and a
+                                     mutant moving `<` to `<=` dies
+  one millisecond short              refused: "leaving 59999ms to enter where
+                                     this protocol asks for 60000"
+  a round starting before its own    refused: "leaving -1ms to enter"
+  committee
+  entry closing before it opens      refused by name
+  a round with no committee time     refused: "names no committee time"
+  an entry at 0, 1 or 499            refused: "committee forms at 500 and it
+                                     is N: entry opens then"
+  an entry at exactly 500            taken - the equality is the spec's
+  an entry later                     taken
+  the node's own door                refuses to STORE a round nobody could
+                                     join, rather than storing it and letting
+                                     a player find out
+  fixtures given a window            33 files: startTimeMs 1000 -> 60500, so
+                                     every round in the tree is one somebody
+                                     could actually enter
+  the golden vector                  unmoved: its round already started well
+                                     past the window
+  blwp-node                          195 -> 198
+
+### Mutants: 7 planted, 7 killed
+
+  a round may start before its window has run        killed
+  the boundary itself is refused                     killed
+  the window measured from nothing                   killed
+  entry may close before it opens                    killed
+  a round nobody can join is stored anyway           killed
+  entry opens before the committee exists            killed
+  entry opens one millisecond after it, not at it    killed
+
+### What 27 still does not have
+
+  published_at              THE LIMIT OF THE GRIND FENCE, by ruling: the fence
+                            is `committee_time` - the first Bitcoin block after
+                            that instant - and "the creator did not publish
+                            after seeing the beacon" is only as strong as that
+                            field. 5A.5's other half needs a publication time
+                            and five pre-randomness timestamp receipts
+                            (`committee_time >= published_at +
+                            min_publication_lead`), and this contract carries
+                            no publication time. Not invented mid-letter.
+  randomness_fallback       §6 lists it beside the rule. It does not encode
+                            here, and by ruling it may only ever be absent,
+                            empty, or identical to the network's born rule - a
+                            foreign fallback is refused the way a foreign
+                            randomness_rule is. Left off, noted here.
+  a second randomness source  none. The network was born reading
+                            `bitcoin-block-hash`; there is no drand path, no
+                            height fallback, and no "use census_height if the
+                            beacon is late".
+
+### Suites
+
+core 83/83, protocol 416/416, blwp-node 198/198, blwp-client 102/102 - 799
+tests, 0 red. Money guard 12 files clean, determinism guard 20 clean. Bundle
+215.3 KB (the client encodes contracts, so the window rule ships with it). No
+Unity, no C#, no genesis byte, no deploy.
