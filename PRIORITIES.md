@@ -23,8 +23,18 @@ Top item first. Finish and deploy before starting the next.
                                             the entries are bound so nobody can
                                             swap the set under it. It was named
                                             by every contract and read by no
-                                            code at all. Next: 5A.4's SCAN, and
-                                            the rest of 5A.3's filters. Two
+                                            code at all. SCAN is in for three of
+                                            its four conjuncts: a census reads
+                                            each outpoint's height and its spend
+                                            off the blocks instead of believing
+                                            the entry. The fourth - FINDING
+                                            which outputs are bonds - waits on
+                                            BOND_MARKER, a genesis parameter
+                                            this protocol leaves null on
+                                            purpose, so the candidates come in
+                                            from advertisements. Next: 5A.4's
+                                            RESOLVE and the rest of 5A.3's
+                                            filters. Two
                                             signed-shape divergences recorded
                                             and deliberately not fixed: the
                                             leaf carries a pubkey where 5A.4

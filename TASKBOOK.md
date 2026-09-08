@@ -14697,3 +14697,81 @@ protocol 283/283 (was 275), blwp-node 70/70, blwp-client 89/89, core 80/80,
 money guard 12 files clean, determinism guard 19 files clean. JS protocol only:
 no Unity, no C# port, no PhysX, and no vector moved - the census leaf shape was
 not touched.
+
+## M2.2 5A.4 step 1: SCAN reads the chain instead of believing the entry
+
+**SCAN accounts for 1 of the 3 that is still missing for census from chain.**
+Of 5A.4's five steps, SORT and COMMIT are done; SCAN, RESOLVE and FILTER
+remain. Within SCAN, **3 of its 4 conjuncts are buildable and the fourth is
+not.**
+
+### What was already believed, and now is not
+
+`buildCensus` applied "created at or before census_height", "unspent" and
+"minimum depth" all along - to FIELDS THE CALLER SUPPLIED. A census was a bag
+of entries somebody asserted heights and spends for. `scanCensus` reads both
+off the blocks, so a publisher who lies about either is caught by anyone
+holding the same chain. Measured: entries whose `height` and `spent` claim
+`1` and `true` come back with the chain's own values.
+
+### The fourth conjunct, and its blocker is not a daemon
+
+"whose script matches the bond template (5A.3B)" is a FINDING operation, and
+finding a bond needs `BOND_MARKER` - 25.1's single dust address that puts every
+bond into the compact filters. `BOND_MARKER` is `null` in this protocol by a
+decision already recorded in `constants.js`: it is a genesis parameter, fixed
+once before the first bond exists, and "writing a plausible address into this
+file would be settling it by accident in a source tree". `bondMarker()` throws
+saying so, and a test asserts both.
+
+So the candidate outpoints come IN, from the advertisements a node already
+holds, which name `bondTxid` and `bondVout`. Enumerating from the chain alone
+waits on that parameter - **not** on a daemon, and not on anything a fixture
+could stand in for. That is a third kind of blocker beside the daemon, the tick
+rate and the discrete-log group, and it is named rather than worked around: a
+scanner that guessed which taproot outputs were bonds would be inventing the
+discovery rule 25.1 exists to fix.
+
+### Measured on recorded blocks, no daemon anywhere
+
+  heights            read off the blocks; a claimed height is ignored
+  spends             read off the blocks; a claimed spend is ignored
+  the census block   INCLUDED - "at or before census_height"
+  a later block      not read at all: a block after the census is one the
+                     census did not see, and reading it would make the answer
+                     depend on when a node asked
+  a spend after the
+    census height    does not retire the bond
+  depth              a bond 3 deep at a tip is out where one 13 deep is in
+  an unknown
+    outpoint         NAMED in `missing`, not dropped - a census that quietly
+                     lost a bond and one that never had it look identical from
+                     the root alone
+  end to end         a scanned census satisfies the contract's root, and the
+                     same contract against a chain where one bond was spent
+                     does not
+
+### Mutants: 15 planted, 15 killed, none retracted
+
+Two survived at 0 red first, and both were gaps in my fixtures rather than in
+the code:
+
+  - "blocks at the census height are skipped" - every block in the fixture was
+    strictly earlier than the census, so `>` and `>=` were indistinguishable. A
+    census could have silently dropped every bond funded in its own block. A
+    block at exactly `censusHeight` went in; the mutant then dies at 1.
+  - "outputs are indexed under the wrong key" - every candidate sat at vout 0,
+    so indexing every output under `:0` looked correct and a bond at vout 1
+    would have been read as the output beside it. A vout-1 candidate, a
+    vout-9 miss and a both-vouts case went in; that mutant dies at 1 and
+    dropping the vout from the key dies at 8.
+
+The rest: blocks after the height read 2, the claimed height believed 4, the
+claimed spend believed 3, nothing ever spent 2, an unknown outpoint invented 2,
+one silently dropped 2, and the three input refusals 1 each.
+
+### Suites
+
+protocol 293/293 (was 283), blwp-node 70/70, blwp-client 89/89, core 80/80,
+money guard 12 files clean, determinism guard 19 files clean. JS protocol only:
+no Unity, no C# port, no PhysX, no daemon, and no vector moved.
