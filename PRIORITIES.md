@@ -16,9 +16,12 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-Daniel 2026-09-08 07:44: continue. 17 is closed at the package boundary.
-15/14/8 stay parked (BOND_MARKER, daemon, tick rate, curve). Do not promote
-them. Next live letter is 18: other players as ghosts. No shared physics.
+LIVE LETTER: 20, the leaderboard - 0.11's "presentation, not authority", from
+signed final results. 19 (late join) is closed; its two remainders,
+`player_run_duration` and `entry_close_time`, are parked behind the tick rate
+and written as unchecked rather than assumed. 18 stays OPEN only for its parked
+spawn/subscribe half and is NOT promoted over a live letter. 17 is closed at
+the package boundary, pending a checkpoint chosen outside this work.
 
 NO PARKED ITEM GOES FIRST (Daniel 2026-09-08). 15, 14 and 8 stay parked -
 15 behind BOND_MARKER and a curve, 14 and 8 behind a daemon, a tick rate and a
