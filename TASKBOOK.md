@@ -17819,3 +17819,71 @@ grinding attack and a seed that looks as though it does.
 protocol 394 -> 398, core 83/83, blwp-node 97/97, blwp-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. Files in
 blwp-node/src reaching the simulator: exactly replay.js. No Unity, no C#.
+
+## Item 22: the daemon uses the published hash and height
+
+`beacon.js` had no caller - the protocol could compute a seed and no node asked
+it to. Now a close derives one, and refuses the round when the value cannot be
+shown to postdate it.
+
+### One source, two seeds, kept apart
+
+  world seed      H(round_randomness || pubkey || worldSecret || joinTick),
+                  per player, what `replay` rebuilds the run from
+  committee seed  H(census roots || round_id || round_randomness), 5A.5, what
+                  decides which nodes hold the round
+
+One SOURCE because they must be the same round's randomness; two NUMBERS
+because they answer different questions. Collapsing them would make a player's
+private world a function of the committee's seed - mutant Y3, 3 red.
+
+### The two refusals, with the reason strings
+
+  no height        "that randomness names no height, so nothing says it came
+                   after the round"
+  height 900000
+  against census
+  height 900000    "that randomness is from height 900000, at or below the
+                   round's own census height 900000 - the creator held that
+                   chain state when the round was made"
+
+Both refuse BEFORE a worker is spent: a round whose committee could have been
+ground is not worth replaying, and `verifier.seeds` stays empty for it. The
+refusal is recorded on `queued` so the node can be asked what it decided, and a
+retry does not get round it either.
+
+### Two daemons, one beacon
+
+  seed derived by each          identical, and equal to
+                                committeeSeedFromBeacon's own value
+  seats selected from it        identical, 7 of 10
+  a different published hash    different seats - which is what makes grinding
+                                round_ids worthless
+
+### The replay path did not move
+
+  score                 257
+  transcript hash       the canonical transcript's own
+  2-of-2                needed 2, verified 2, final true, held 2
+  a late receipt        still produces the result the early replay could not
+
+### Mutants: 5 planted, 5 killed, 0 retracted
+
+  Y1 the beacon check skipped entirely              2 red
+  Y2 a missing height invented as census_height + 1 1 red
+  Y3 the committee seed fed to the world seed       3 red
+  Y4 the raw hash kept as if it were the seed       1 red
+  Y5 a retry ignoring the beacon                    1 red
+
+### Still not done on 22, unchanged
+
+Obtaining the hash from bitcoind is 23-27. `committeeSeed` staying a contract
+field inside the hashed contract, and one `censusRoot` filling both formula
+slots, are letter-16 contract-format work. `committee_time` / publication
+height is later M2. The leaderboard `signedBy` clash stays here.
+
+### Suites
+
+protocol 398/398, core 83/83, blwp-node 97 -> 99, blwp-client 95/95, money
+guard 12 files clean, determinism guard 20 files clean. Files in
+blwp-node/src reaching the simulator: exactly replay.js. No Unity, no C#.
