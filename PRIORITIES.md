@@ -16,8 +16,9 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-17 is done. NO LIVE ITEM: everything below is parked, so the next letter is a
-choice rather than a read-off.
+17 is done at the package boundary, pending a checkpoint that is chosen
+outside this work. NO LIVE ITEM: everything below is parked, so the next letter
+is a choice rather than a read-off.
 
 NO PARKED ITEM GOES FIRST (Daniel 2026-09-08). 15, 14 and 8 are all parked -
 15 behind BOND_MARKER and a curve, 14 and 8 behind a daemon, a tick rate and a
@@ -25,28 +26,13 @@ discrete-log group - so none of them is promoted, because a parked item at the
 top would make this order lie. They stay where they are, in number order,
 below the last closed item.
 
-BOND-OUTPUT RECOGNITION (Daniel's pick) is DONE. The package can now say of a
-chain output that it counts as a bond or that it does not, from chain data: the
-output must be P2TR, and the advertisement must name that very outpoint. It
-found two real defects - a zero-value OP_RETURN was being counted as somebody's
-bond, and the census believed the amount an entry CLAIMED rather than the one
-the output holds, which bought a two-million-fold selection weight on a 60000
-sat bond. Both are refused now, and the amount is the chain's. The same
-recognition guards the CLIENT's door: `acceptAdvert` used to hand back an
-endpoint for an advertisement whose declared bond was an OP_RETURN, so a
-transaction with no bond in it answered 25.1's "which nodes count". And an
-output holding NOTHING is not a bond either, whatever its shape - a zero-sat
-taproot output was eligible under a zero floor, and the committee draw then
-threw a division by zero instead of refusing the round. The time boundaries are
-pinned and are 5A.4's own reading rather than a hole: a spend after
-census_height keeps the seat, a spend in the census block does not, and a bond
-funded and spent in one block never had one. The reorg case is not
-recognition's - which chain the blocks came from is headers and most work, and
-it stays on SCAN. Recognition is not enumeration: finding every bond without
-being told where to look still waits on BOND_MARKER, which is the only thing 15
-still waits on the marker for. Ghosts, late join, the
-leaderboard and the eighteen audited section 6 names stay parked. Numbers:
-TASKBOOK.
+BOND-OUTPUT RECOGNITION is DONE. A chain output counts as a bond or does not,
+from chain data, at both doors: P2TR, named by the advertisement that commits
+to it, holding something, and worth what the output holds rather than what an
+entry claims. What it cannot read it names - the marker, the script template,
+the signature. Recognition is not enumeration: finding every bond without being
+told where to look is the one thing 15 still waits on BOND_MARKER for.
+Numbers: TASKBOOK.
 
    17  M2.2 SCAN's chain view         M2   done — a census is a function of a
                                             CHAIN now, not of a bag of blocks.

@@ -15920,3 +15920,24 @@ up empty rather than passing quietly.
 protocol 347/347 (345 before this pass), blwp-node 70/70, blwp-client 89/89,
 core 80/80, money guard 12 files clean, determinism guard 19 files clean.
 Vectors unmoved. The checkpoint is still a decision and still not invented.
+
+### Item 17 closed at the package boundary
+
+Everything about the chain view that this package can decide is decided and
+tested: the derivation takes a chain rather than a bag of blocks, headers must
+be mined and linked and must commit to the transactions offered with them, a
+block offered with none must have a header that says so, most work wins and a
+tie is broken by the tip hash so the same two chains give one census in any
+order, the tip is the chain's, and the view must straddle `census_height` with
+the window it covered committed in `censusInputsId`.
+
+What is left is not an engineering hole: `chainViewOf` is anchored to nothing,
+so a wholly fabricated chain is a chain if it outweighs the real one. Work
+comparison is the defence that exists and it is Bitcoin's own. 5A.4's other
+answer is a checkpoint - a height and a block hash, fixed once and wrong
+forever if wrong - which is the BOND_MARKER and NETWORK_ID class and is chosen
+outside this package. Nothing plausible has been written for it.
+
+The follow-up findings of this letter are recorded above: the arrival-order
+tie, the emptied header, the mutant that compared only the first byte, and the
+test that asserted inside an `if` that never ran.
