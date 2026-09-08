@@ -19376,3 +19376,58 @@ tests, 0 red. Money guard 12 files clean, determinism guard 20 clean. Bundle
 
 Not 18, by ruling: drawing the truck on screen (28), and the Unity consume
 path, which piece 4 landed and no measured hole forced open.
+
+## Item 18, the last check: the rule the consume path had no assertion for
+
+Asked whether everything 18 needs was in, and one thing was not. 0.10's
+sentence is "another player's truck is a picture, NEVER an input to my
+simulation", and this letter pinned it in two of the three places it has to
+hold:
+
+  where the core is called   piece 1: `step` takes one state and one player's
+                             five inputs, and two mutants handing it a seventh
+                             both die
+  in the renderer            piece 4: `GhostTruck` strips every collider and
+                             rigidbody, two ghosts move a physics truck 0 mm
+                             where a solid cube moves it, and `WorldSolids`
+                             refuses to upload a ghost as a wall
+  in the browser consumer    NOTHING - the path this letter added had no
+                             assertion of its own
+
+Now it does. Two identical runs, one of them rained on with pictures, compared
+by everything the client publishes:
+
+  ticks offered / published / held      identical
+  batches, in order, with their words   identical
+  the input chain head                  identical
+  state, ended                          identical
+  pictures seen                         0 in the quiet run, 3 in the busy one
+
+The comparison is of the RUN, not of the bytes: each rig gets its own node
+identity, so the two contracts and therefore the round and entry ids differ,
+and comparing raw frames would have compared the fixture. Measured, not
+guessed - the byte diff started exactly at the `roundId` field, which is what
+said so.
+
+### Mutants: 3 planted, 3 killed
+
+  a picture is fed to the simulation as an input tick    killed
+  a picture moves this run's tick counter                killed
+  a picture moves the input chain head                   killed
+
+### Core versus the old engine, for this letter
+
+There is no C# or PhysX path in what 18 built: a ghost's three words come from
+`replay.js` and the guard that counts the files reaching the simulator still
+answers `['replay.js']`. The engine comparison that belongs to this letter was
+made in piece 4 and stands unchanged, because no Unity file was touched: two
+ghosts sitting on a real physics truck move it not one millimetre while a solid
+cube in the same place does, and removing either guard turns its own test red.
+The numbers this letter added are the other direction of the same rule - the
+picture equals the CORE's truck, at every tick checked: 7 ticks in production,
+the interest set on the socket, and 5 more through the browser client.
+
+### Suites
+
+core 83/83, protocol 404/404, blwp-node 166/166, blwp-client 102/102 - 755
+tests, 0 red. Money guard 12 files clean, determinism guard 20 clean.
