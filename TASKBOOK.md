@@ -20645,3 +20645,76 @@ inch is measured - the pictures are that player's transcript to the integer,
 the field exists in the built player, the body is a truck at the right size,
 the heading is the transcript's, the seat is the local truck's own surface -
 and the last inch is a pair of eyes. No browser harness was built for it.
+
+## Item 28: a round can be named in the URL, so two people can join one
+
+THE PAGE HAD NO WAY IN. `index.html` refuses to invent `BLWP_ROUND` - "a round
+contract is agreed before anyone moves, and inventing one in the page would be
+inventing a lobby" - and that refusal is right and is unchanged. What was
+missing is the other half: nothing could HAND a shipped page a round that
+already exists, so two people could not join one and the whole multiplayer path
+was unreachable from the daily however correct it was underneath.
+
+THE KEY ALREADY EXISTED AND IS REUSED. `blwp.jslib` line 272 already reads
+`?round=` off the address bar and `Client.at` already refuses unless
+`BLWP_ROUND` hashes to it - "the one thing in this whole path that the page did
+not write". So there is no second inventor: the same key now also decides
+whether a session exists at all.
+
+### What the URL names, and what is refused
+
+    ?round=<64 hex>    the id the daemons agreed on. Absent: nothing happens
+                       and the page is the single-player daily.
+    &node=a,b          who holds it. The contract is FETCHED and then HASHED;
+                       a node answering with a different round is refused and
+                       the next is asked.
+    &headers=a,b       optional; defaults to the nodes. Fewer than two
+                       independent origins is refused by name, because
+                       `agreedChain` needs two and quietly trusting one is the
+                       thing 25.1 exists to remove.
+    &bond=<url>        where the bond proof is asked for.
+    &advert=<128 hex|url>
+
+Measured in `packages/blwp-client/test/join.test.js` against two real daemons
+holding one round, and against a node that answers 200 with a well-formed
+contract that is not the one asked for:
+
+    refused: "no node holds the round this URL names: http://liar.test:
+             answered with round <other id>"
+    taken from the second node, and roundId(contract) == the id in the URL
+
+### Two tabs are two players
+
+The player key is in `sessionStorage`, which is per tab. `localStorage` is
+shared by every tab of a browser, so two tabs would be ONE player - and a
+player's own ghost is dropped, so the two tabs would have shown each other
+nothing. A reload keeps the tab's player; rubbish in storage is replaced.
+
+The seat copies the ROUND's `stakeMsat` rather than naming its own, and
+`feeMsat`/`donationMsat` are zero because M2 asks for no money. NAMED, NOT
+GLOSSED: `stakeCommitment` commits to nothing in M2 - in M3 it is the hash of a
+hold invoice's preimage and there is no invoice yet - so it is random per
+entry rather than a constant, and a zeroed one would have looked computed.
+
+### The page is read as a file
+
+The last fault in this letter was a class nothing constructed with green tests
+all around it, so the guard is on the shipped template: it must CALL
+`joinFromQuery`, `entryFor` and `tabIdentity`, must fill all four globals from
+what the URL named, must contain none of `censusRoot`, `simCoreHash`,
+`gameVerifySlots`, `stakeMsat`, `committeeTimeMs`, `blockTicks` - a page that
+wrote its own fields could name its own committee and then satisfy its own
+choice - and must use `sessionStorage` and not `localStorage`.
+
+Resolved BEFORE Unity boots, because `NetSession` reads once at Start whether
+there is a session to open; a fetch landing later is a round nobody joined.
+
+One more thing, out of the same file: the loading page said "Start
+fehlgeschlagen" on a failed boot. a13 closed on "no German string is left in
+any shipping script" and this one was in the template. It now reads "Could not
+start".
+
+### Suites
+
+blwp-client 109 -> 116, core 84/84, protocol 416/416, blwp-node 199/199.
+Money guard 12 files clean, determinism guard 20 clean.
