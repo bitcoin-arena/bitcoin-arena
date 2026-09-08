@@ -19729,3 +19729,88 @@ Next on 26, now unblocked: the seated set becomes the trusted set - verdicts
 and receipts accept a committee only when its keys exact-match the seated
 census keys, `contract.nodes` checked against that, and the 2-of-2 fixture made
 of two identities that are actually bonded and seated.
+
+## Item 26, slice 3 steps 2 and 3: the seated set is the trusted set
+
+Before: a round's committee was `contract.nodes` - the list its author wrote.
+`takeReceipt` checked membership against it and `verifiedFinal` counted
+against it, so a committee nobody bonded was served exactly like one the
+census produced. The census, since slice 2, seated a committee and NOTHING
+read it.
+
+After: seats are a fact of the round, stored where every trust check reads
+them.
+
+  seats table         who the census seated at census_height, written by
+                      `roster.seatRound`
+  takeReceipt         membership is `round.seats(rid)`; an unseated round
+                      refuses by name and does NOT fall back to the author's
+                      list
+  verifiedFinal       counts against `seats`, passed in; no seats, no count
+  POST /round         a node with a chain view seats the round and refuses a
+                      contract the chain does not support, 409, without seats
+
+And the exact match, both ways: a contract naming a stranger, omitting a
+seated node, or naming a different set of the same size is refused by name -
+never rewritten to what the chain says, never accepted on overlap.
+
+### The numbers
+
+  equal to the seated set                     accepted, 2 seats stored
+  a stranger in the list                      refused: "names 2 committee keys
+                                              and the census seats 2: 1 the
+                                              chain did not seat (ee..), 1
+                                              seated node it does not name"
+  a one-name contract, two seats              refused: "names 1 committee key
+                                              and the census seats 2"
+  a different set of the same size            refused, "2 the chain did not
+                                              seat"
+  a refused round                             0 seats stored, so it trusts
+                                              nobody
+  the two refusals, apart                     a SEATED key with a broken
+                                              signature -> "does not verify";
+                                              a well-signed key the census did
+                                              not seat -> "is not on this
+                                              round's committee"
+  2-of-2, the honest way                      two daemons bond THEIR OWN
+                                              identity keys, are seated from
+                                              the chain census, and each seats
+                                              exactly those two - which step 1
+                                              made possible at all
+  blwp-node                                   181 -> 187
+
+### Mutants: 6 planted, 6 killed, 1 retracted
+
+  receipts trust the contract's list again            killed
+  an unseated round trusts everybody                  killed (see below)
+  the verdict counts against the contract's list      killed (see below)
+  a contract naming a stranger is seated anyway       killed
+  overlap is enough: only strangers are refused       killed
+  the door stores a round it could not seat           killed
+
+Two of those survived a first pass and each was a real gap: every fixture
+seats, so "an unseated round accepts anyone" and "no seats falls back to
+contract.nodes" broke nothing. Both are pinned now - a correctly signed
+receipt from a key the CONTRACT names is refused on a round this node never
+seated, and `verifiedFinal` refuses with seats undefined, empty or null while
+the contract carries a full committee.
+
+RETRACTED: "seat the contract's list instead of the census's". By the time
+that line runs the exact-match check has passed, so the two lists hold the
+same keys; storing either stores the same set. It is equivalent code, not a
+rule anything can break.
+
+### The fixtures
+
+`test/seating.js` is one line and says what it is: a fixture declaring who it
+assumes was seated, for files that are about marks, receipts, canonical chains
+and verdicts rather than about seating. Nothing in any `src/` seats from a
+contract - the only writer is `roster.seatRound`, from the census - and the
+seating rule itself is measured in `seated-committee.test.js` against real
+blocks and real bonds.
+
+### Suites
+
+core 83/83, protocol 416/416, blwp-node 187/187, blwp-client 102/102 - 788
+tests, 0 red. Money guard 12 files clean, determinism guard 20 clean, bundle
+212.0 KB unchanged. No Unity, no C#, no genesis byte, no deploy.
