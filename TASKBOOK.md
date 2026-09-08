@@ -14858,3 +14858,102 @@ the unchecked list emptied 1.
 protocol 303/303 (was 293), blwp-node 70/70, blwp-client 89/89, core 80/80,
 money guard 12 files clean, determinism guard 19 files clean. JS protocol only:
 no Unity, no C# port, no PhysX, no daemon, no vector moved.
+
+## M2.2 the five steps become one derivation, and the leaf names the advertisement
+
+Found by re-reading the slice above rather than by a failing test: the five
+steps of 5A.4 never joined, and the parts were reachable in the wrong order.
+
+  - `scanCensus` returned a `census` field of its own. That root was taken
+    with steps 2 and 3 UNRUN, so the shortest path through this package
+    produced a census over nodes whose advertisements nobody had read.
+    RESOLVE was a thing a caller might remember to do.
+  - RESOLVE overrode the entry's ROLES with the advertisement's and left its
+    PUBKEY alone. The leaf hashes the pubkey. So a census could name a key
+    that never bonded - and the committee seed, the receipts and the payout
+    table all read that key afterwards. Same hole as the roles one, one field
+    over, and the field that matters more. I fixed the field a test pointed
+    at instead of the class.
+
+### What is now true
+
+  deriveCensus   SCAN -> RESOLVE -> FILTER -> SORT -> COMMIT, one call, and
+                 the only function that ends in a root.
+  commitCensus   steps 4 and 5, and it REFUSES an entry with no advertisement
+                 id: "that entry has not been resolved". Not a flag - the id
+                 is the hash the bond output committed to, which only step 2
+                 can find. So no root over unresolved nodes from any door,
+                 including `censusRootMatchesRound`.
+  scanCensus     applies its own three conjuncts (created at or before the
+                 height, unspent there, deep enough) and returns
+                 `{entries, excluded}`. No root. It used to hand its findings
+                 to the commit step and let that filter, which made SCAN a
+                 lookup and put the rules in the wrong place.
+
+5A.4 wants the advertisement hash IN the leaf, where this leaf still carries a
+pubkey. That divergence is recorded below and not fixed, because it moves every
+census root. Requiring the hash to be KNOWN costs nothing and moves nothing.
+
+### The measurement asked for: candidate says X, advertisement says Y
+
+  candidate pubkey X          ee ee ee ee ...
+  advertisement key  Y        11 11 11 11 ...
+  census entry key            11 11 11 11 ...   <- Y
+  root, candidate lying       31199edecf53b8bc4617a97022e195a0946c6aa3...
+  root, candidate honest      31199edecf53b8bc4617a97022e195a0946c6aa3...   IDENTICAL
+  the leaf a root over X
+    would have carried        761c34cec2d278abca1912dc2136336f3db3b456...
+
+A wrong transcription does not move the root by one bit, and the leaf the
+transcription would have produced is a different leaf. Both halves matter: the
+first says the lie is inert, the second says the override is load-bearing.
+
+### Mutants: 19 planted, 19 killed, none retracted
+
+Three survived at 0 red first, and all three were real gaps:
+
+  the resolution guard accepts any length   nothing handed it a 16-byte "id".
+                                            A hash is 32 bytes; 16 is not a
+                                            short id, it is not an id.
+  the depth rule is off by one              the fixture was 3 deep and 13 deep
+                                            against a floor of 6 - nothing sat
+                                            on the line. Now a bond EXACTLY
+                                            census_confirmations deep is in and
+                                            one short is out, which is what
+                                            ">=" says.
+  resolveBody hands back no advertisement
+    id                                      nothing checked WHICH id RESOLVE
+                                            passed on, so a placeholder would
+                                            have satisfied the guard and the
+                                            derivation would have claimed a
+                                            resolution it never did.
+
+The other sixteen died first time: the pubkey override dropped (1), the entry's
+key kept when the advert has one (1), the guard removed entirely (1), scan
+handing back a root again (1), scan not dropping a spent output (2), the depth
+rule disabled (2) or unnamed in its reason (2), derive committing the SCANNED
+entries (10), losing what scan dropped (1), losing what resolve dropped (1),
+not saying which step dropped whom (1), swallowing a failed commit (1),
+ignoring a refused resolve (1), refusing without a reason (1), not sorting (6),
+and naming nothing it cannot check (1).
+
+### Suites
+
+protocol 313/313 (was 303), blwp-node 70/70, blwp-client 89/89, core 80/80,
+money guard 12 files clean, determinism guard 19 files clean. The spec vectors
+did not move: `make-vectors.js` regenerates byte-identical output, because
+`advertId` is required to be present and is not encoded.
+
+### DIVERGENCE 3, RECORDED AND NOT BUILT: one bond floor where 5A.3 has two
+
+5A.3 names `bond_min(settlement)` and `bond_min(game_verify)` as two numbers -
+"bond_min(settlement) >= max_round_pool of the rounds it may serve" and the
+same line again for game_verify - and the Round Contract here carries a single
+`bondMinSats`. A node declaring both roles is therefore measured against one
+floor for both, where the spec would measure each role against its own.
+
+NOT FIXED, by ruling: a second field in the round contract moves every round
+id, the same family as the two divergences already recorded (the leaf carries a
+pubkey where 5A.4 wants the advertisement hash; the contract carries one root
+where 5A.4 wants one per role). Inventing a second floor would also settle a
+number nobody has chosen. It is recorded so it is not rediscovered as a bug.

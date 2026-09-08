@@ -46,13 +46,22 @@ Top item first. Finish and deploy before starting the next.
                                             advertisement signature needs a
                                             curve this package does not carry.
                                             Item 15's remaining conjuncts are
-                                            those three. Two
+                                            those three. And the five steps are
+                                            ONE derivation now: `deriveCensus`
+                                            is the only thing that ends in a
+                                            root, a root cannot be taken over
+                                            an entry RESOLVE never read, and
+                                            the leaf names the key the
+                                            advertisement declares, not the key
+                                            a candidate transcribed. THREE
                                             signed-shape divergences recorded
                                             and deliberately not fixed: the
                                             leaf carries a pubkey where 5A.4
-                                            wants the advertisement hash, and
-                                            the contract carries one root where
-                                            5A.4 wants one per role. Both move
+                                            wants the advertisement hash, the
+                                            contract carries one root where
+                                            5A.4 wants one per role, and it
+                                            carries one bond floor where 5A.3
+                                            names one per role. All three move
                                             every census root or round id.
                                             Numbers: TASKBOOK.
    14  M2.1 checkpoints               M2   OPEN — 5b and 5c done: the client
