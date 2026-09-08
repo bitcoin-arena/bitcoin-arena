@@ -34,9 +34,14 @@ endpoint for an advertisement whose declared bond was an OP_RETURN, so a
 transaction with no bond in it answered 25.1's "which nodes count". And an
 output holding NOTHING is not a bond either, whatever its shape - a zero-sat
 taproot output was eligible under a zero floor, and the committee draw then
-threw a division by zero instead of refusing the round. Recognition is not enumeration: finding
-every bond without being told where to look still waits on BOND_MARKER, which
-is the only thing 15 still waits on the marker for. Ghosts, late join, the
+threw a division by zero instead of refusing the round. The time boundaries are
+pinned and are 5A.4's own reading rather than a hole: a spend after
+census_height keeps the seat, a spend in the census block does not, and a bond
+funded and spent in one block never had one. The reorg case is not
+recognition's - which chain the blocks came from is headers and most work, and
+it stays on SCAN. Recognition is not enumeration: finding every bond without
+being told where to look still waits on BOND_MARKER, which is the only thing 15
+still waits on the marker for. Ghosts, late join, the
 leaderboard and the eighteen audited section 6 names stay parked. Numbers:
 TASKBOOK.
 
