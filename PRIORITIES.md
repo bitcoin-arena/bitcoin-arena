@@ -16,7 +16,7 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: 26, census + eligibility. 15, 18 and 20-25 are done.
+LIVE LETTER: 27, committee_time + seed. 15, 18, 20-26 are done.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
 threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
@@ -198,26 +198,20 @@ IN THIS ORDER (unparked):
                                         so two participants at different tips
                                         derive the same census. 734 green.
                                         Numbers: TASKBOOK.
-   26  M2 census + eligibility        LIVE — slices 1 and 2 are in: a census
-                                        below the network's census_min_nodes
-                                        is refused by name and no committee is
-                                        sliced from it; the daemon derives its
-                                        census from the chain through
-                                        src/roster.js - the only caller - and
-                                        refuses a round whose censusRoot is
-                                        not the one the blocks give.
-                                        GET /committee is the door.
-                                        STILL OPEN: the node's own trust still
-                                        rests on contract.nodes - verdict.js
-                                        and receipt counting - rather than on
-                                        the committee the census seats.
-                                        PARKED for slice 3: verifyAdvert, one
-                                        key, BIP-340 on the secp256k1
-                                        node_pubkey, replacing 23's ed25519.
-                                        Numbers: TASKBOOK.
-   27  M2 committee_time + seed       — seed from bitcoin-block-hash after
+   27  M2 committee_time + seed       LIVE — seed from bitcoin-block-hash after
                                         committee_time; committee exists
                                         before first entry
+   26  M2 census + eligibility        M2   done — a node seats its committee
+                                        from the chain census and refuses a
+                                        contract that names anyone else. A
+                                        census below the network's
+                                        census_min_nodes seats nobody; the
+                                        seated keys are the only list receipts
+                                        and verdicts trust; and a node's
+                                        identity IS its bond key, so every
+                                        signature it makes is BIP-340 under
+                                        the key its bond was posted with.
+                                        Numbers: TASKBOOK.
    28  M2 two nodes play              — ghosts on screen, board, 2-of-2
                                         finals on testnet4/regtest
    29  M2 Feldman on the split        — a VSS share must bind to the

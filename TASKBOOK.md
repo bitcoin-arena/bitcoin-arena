@@ -19814,3 +19814,22 @@ blocks and real bonds.
 core 83/83, protocol 416/416, blwp-node 187/187, blwp-client 102/102 - 788
 tests, 0 red. Money guard 12 files clean, determinism guard 20 clean, bundle
 212.0 KB unchanged. No Unity, no C#, no genesis byte, no deploy.
+
+## Item 26 closed
+
+Its own three items are in and measured: the minimum census (a census below
+`census_min_nodes` seats nobody and no committee is sliced from it), the first
+production caller (`src/roster.js`, the only file that reaches the census, with
+`GET /committee` as the door and a round whose `censusRoot` is not the chain's
+refused), and one key (a node's identity IS its bond key, every node signature
+BIP-340 under it, and the seated set the only list receipts and verdicts
+trust).
+
+Suites at the close: core 83/83, protocol 416/416, blwp-node 187/187,
+blwp-client 102/102 - 788 tests, 0 red. Money guard 12 files clean,
+determinism guard 20 clean.
+
+The M2 remainders that came up alongside stay on their own letters and were
+not pulled into this close: the relayable funding witness, tree-carried
+commitments, `census_min_nodes` per role versus one u16, and testnet4's
+genesis carrying 2 where the spec table says 3.
