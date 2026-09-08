@@ -21184,3 +21184,39 @@ a current daemon would refuse to decode them. Nothing is broken for a player
 opening the daily alone - the single-player daily names no round - but the
 two-tab join needs a rebuilt player. That is a WebGL build and a deploy, and it
 is named here rather than assumed done.
+
+### The daily speaks the new entry encoding
+
+The signed entry grew by 32 bytes, so the player that was on the daily built
+entries a current daemon cannot decode. Rebuilt and deployed - the join path
+this letter sits on would otherwise have been broken on the live page while the
+node already enforced the new frame.
+
+    build             Build Finished, Result: Success
+                      [BuildWebGL] result=Succeeded size=19MB errors=0
+                      time=00:03:46, error CS 0
+    after the build   git status on packages/ and the template: EMPTY
+    page client       257,220 b, md5 1d9970f7 - equal to dist, carries
+                      vssSharesRef 3 times and NO_SHARES twice
+    page core         md5 cecf6b18 unchanged, 3600 ticks to the golden hash
+    live              btc-logistics-core.pages.dev 200; the served
+                      blwp-client.js is md5 1d9970f7 and carries vssSharesRef
+    war               200, untouched. No freeze.
+
+AND THE LIVE BYTES WERE DRIVEN, not compared. The deployed file was fetched
+back and asked to encode an ordinary M2 entry:
+
+    the LIVE page encodes an entry of 223 bytes, id c15700aaa989e6064c61a568
+    the modules   encode an entry of 223 bytes, id c15700aaa989e6064c61a568
+
+Same length, same id: the page and the daemon now name one entry.
+
+### The door, re-measured after the deploy
+
+    an honest handout is accepted, and the entry that names it joins      pass
+    a two-polynomial dealer is refused at the door (409), and so is the
+      entry naming it                                                     pass
+    an entry naming shares nobody published is refused, and one naming
+      none (32 zero bytes, M2's ordinary entry) joins with 201            pass
+    a handout published for another round does not let an entry in        pass
+    two tabs on one round: shown at tick 89, delta 0 0 0                  pass
