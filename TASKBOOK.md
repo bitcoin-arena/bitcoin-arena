@@ -15977,3 +15977,109 @@ Closing state of item 17:
 
 No red tests. Nothing loosened. Vectors unmoved. Not a player-facing deploy and
 not an M1 freeze.
+
+## M2.2 item 18, piece 1: a ghost is a picture from a transcript
+
+0.9: "Other trucks are visible ghosts with no collision... Another player must
+not be able to change my financial odds by ramming me, blocking a road,
+pushing me, damaging me, drawing my enemies away, pulling enemies toward me,
+sacrificing themselves for me, or colluding physically."
+
+0.10: `financial_world(p) = deterministic_sim(RoundContract, map, player_seed,
+player_inputs)`, and "Ghost snapshots are never inputs to this calculation."
+
+### What was already true, measured before any code
+
+  step(st, throttle, steer, brake, handbrake, practice)   sim.js:933
+  one truck at one O_TRUCK block, TRUCK_WORDS = 13        state.js
+  grep -i ghost over blwp-node/src, blwp-client/src,
+    protocol/src                                          NOTHING
+  the client has no notion of other players               4 modules, no roster
+
+So nothing coupled, because other players did not exist in the client at all.
+The hazard this letter manages is the coupling BUILDING ghosts would create.
+
+### The frame
+
+`TYPE_GHOST = 0x11`, `TAG.ghost`, 147 bytes fixed:
+
+  u8  type | u16 version | b32 roundId | b32 entryId | b32 playerPubkey
+  u32 tick | b32 inputChainHash | i32 x | i32 z | i32 heading
+
+THREE WORDS OF TRUCK AND NO MORE. `T_X`, `T_Z`, `T_HEADING` draw a truck; the
+core's other ten truck words are not carried, because each would be a claim
+about somebody's run that a 5 Hz picture cannot prove and nothing needs in
+order to render a ghost. Q16.16, unscaled at the boundary for the reason
+`encodeInputBatch` gives.
+
+A TYPE BYTE OF ITS OWN, so an InputBatch and a Ghost differ before a decoder
+has read anything else. A mutant that stopped CHECKING that byte survived at
+first: the test asserted the byte was written and never fed a mistyped frame
+in. It dies now.
+
+### The binding: a picture of a run somebody published inputs for
+
+A node that simply announces coordinates paints competitors wherever it likes,
+including competitors who never drove. Same fault as a payout table before
+`payoutInputsId` and a census before `censusInputsId`, same fix: bind the thing
+shown to the inputs it came from. The binding already existed on the wire -
+§11's input chain - so a ghost names the head it was taken from, as a
+checkpoint does. `ghostBinds(ghost, transcript, entry?)` refuses:
+
+  a head no batch of that transcript hashes to   "taken from inputs nobody
+                                                  published"
+  GENESIS                                        "before any input went out,
+                                                  so there is nothing it could
+                                                  be a picture of"
+  a tick those inputs do not cover               names the range: "at tick 6,
+                                                  and the inputs it names cover
+                                                  0 to 5"
+  another round, another entry                   named separately
+  a transcript whose chain is broken             "input chain is broken"
+  a key that entry was not signed for            and with no entry offered, the
+                                                 key is reported UNCHECKED
+                                                 rather than believed
+
+It does NOT say the truck was at x,z. Only a replay says that, and replay is
+the objection path's job (§13A), not a 5 Hz frame's. What it says is that the
+frame belongs to a run that happened.
+
+### The guarantee is a missing parameter, and it is asserted as one
+
+`packages/core/test/private-world.test.js` imports nothing from the protocol
+package on purpose - a test that reached for a ghost type to prove a ghost
+cannot arrive would be building the door it claims is absent. It asserts
+`step.length === 6`, pins the parameter list verbatim, checks the state exports
+name no second truck, and checks two runs of the same seed and inputs agree
+word for word while different seeds do not.
+
+Two mutants prove it bites: adding a seventh parameter to `step` named
+`ghosts`, and one named `otherTruck`. Both die.
+
+### Mutants: 14 planted, 14 killed, none retracted
+
+Ghost frame (12): typed as an input batch, the type byte not checked, the key
+not on the wire, the head not on the wire, the tick not on the wire, GENESIS
+accepted, any head accepted, the tick range not checked, the range off by one,
+the round not checked, the entry not checked, the entry's key not checked, the
+unchecked key not reported, the transcript's chain not walked.
+
+Core (2): `step` growing a seventh parameter, under two names.
+
+Two survived at 0 red first and both were real gaps: nothing fed a mistyped
+frame to the decoder, and nothing handed `ghostBinds` a transcript whose chain
+was broken.
+
+### Suites
+
+protocol 353/353 (was 347), core 83/83 (was 80), blwp-node 70/70, blwp-client
+89/89, money guard 12 files clean, determinism guard 19 files clean. No wire
+format that existed before moved: a new type byte and a new file, nothing
+else, so no round id, census root or vector changed.
+
+### What piece 1 is NOT
+
+No Unity, no C#, no PhysX, no collider, no renderer, no lobby, no late join, no
+fan-out, no interest management. No ghost array in the core state, and no wire
+path that hands a ghost to the simulation - the missing parameter is the
+guarantee. Pieces 2 to 4 stay on item 18.

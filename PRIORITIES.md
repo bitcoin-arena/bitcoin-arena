@@ -28,6 +28,23 @@ discrete-log group. They stay in number order below the last closed item.
                                             from their transcript, never
                                             inputs to my sim, never collide.
                                             Spec 0.9 / 0.10. Not the lobby.
+                                            Piece 1 is in: a GHOSTS frame is
+                                            147 fixed bytes with its own type
+                                            byte, and it is bound to the head
+                                            of the input chain it was taken
+                                            from - so a node cannot paint a
+                                            competitor who never drove, or one
+                                            at a tick their inputs do not
+                                            cover. That a ghost is never an
+                                            input is asserted as a MISSING
+                                            PARAMETER: `step` takes one state
+                                            and one player's five inputs, and
+                                            two mutants that give it a seventh
+                                            both die. Pieces 2-4 remain: no
+                                            authority and dropped first under
+                                            backpressure, fan-out, and the
+                                            renderer that must never carry a
+                                            collider. Numbers: TASKBOOK.
 
 BOND-OUTPUT RECOGNITION is DONE. A chain output counts as a bond or does not,
 from chain data, at both doors: P2TR, named by the advertisement that commits
