@@ -15405,3 +15405,41 @@ is not churned on a hunch, and no caller is wrong today.
 Nothing changed in this audit. Suites re-run to confirm: protocol 334/334,
 blwp-node 70/70, blwp-client 89/89, core 80/80, money guard 12 files clean,
 determinism guard 19 files clean.
+
+### Fourth audit: an output worth nothing was a bond, and a zero floor threw
+
+The third audit enumerated the doors by NAME. This one asked what the values
+themselves can be, which the names do not show. Measured:
+
+  a P2TR output funded with 0 sats
+  a round naming bondMinSats 0n
+  -> census eligible: 1, bondSats=0
+  -> selectCommittee THREW: Error: bondMin must be positive
+
+Two things wrong, both this goal's own subject.
+
+AN OUTPUT HOLDING NOTHING IS NOT A BOND, whatever shape it is. 5A.3: "The bond
+is what makes identity expensive. Without it, a Sybil attacker creates
+arbitrarily many nodes for free and buys arbitrarily many selection chances -
+the flaw that made v4.4 unsafe." A zero-value P2TR output costs its fee and
+nothing else, so a census counting them is that flaw with extra steps.
+`recognizeBond` refuses it now: "that output holds nothing, so there is no bond
+at stake". One satoshi IS a bond, and a bad one - how small is too small is the
+ROUND's floor, and a round may set it low; nothing may set it to none.
+
+A ZERO FLOOR IS NOT A SMALL FLOOR. The weight is bond/floor, so zero is a
+division by zero, and `weightOf` threw from underneath `selectCommittee` -
+a caller that had only asked who was on the committee got a RangeError-shaped
+surprise from two frames down, against this package's rule everywhere else that
+a malformed round is a refusal with a reason. `selectCommittee` now refuses a
+non-positive floor by name, beside its three other guards.
+
+Mutants: 6 more planted, 6 killed - the value check deleted, tightened to 1n,
+loosened to negative-only, and the floor guard deleted, loosened to bigint-only,
+loosened to negative-only. Running total for the letter: 35 planted, 35 killed,
+none retracted. protocol 334 -> 335.
+
+Note for the next audit: the first three passes each looked at NAMES (which
+doors, which identifiers). This one looked at VALUES (zero, one, negative). The
+angle that has not been tried is TIME - a bond spent between census_height and
+the tip, a bond funded in a reorg - and SCAN owns both of those.

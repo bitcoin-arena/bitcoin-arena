@@ -31,7 +31,10 @@ the output holds, which bought a two-million-fold selection weight on a 60000
 sat bond. Both are refused now, and the amount is the chain's. The same
 recognition guards the CLIENT's door: `acceptAdvert` used to hand back an
 endpoint for an advertisement whose declared bond was an OP_RETURN, so a
-transaction with no bond in it answered 25.1's "which nodes count". Recognition is not enumeration: finding
+transaction with no bond in it answered 25.1's "which nodes count". And an
+output holding NOTHING is not a bond either, whatever its shape - a zero-sat
+taproot output was eligible under a zero floor, and the committee draw then
+threw a division by zero instead of refusing the round. Recognition is not enumeration: finding
 every bond without being told where to look still waits on BOND_MARKER, which
 is the only thing 15 still waits on the marker for. Ghosts, late join, the
 leaderboard and the eighteen audited section 6 names stay parked. Numbers:
