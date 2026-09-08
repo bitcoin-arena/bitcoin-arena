@@ -16,15 +16,18 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-17 is done at the package boundary, pending a checkpoint that is chosen
-outside this work. NO LIVE ITEM: everything below is parked, so the next letter
-is a choice rather than a read-off.
+Daniel 2026-09-08 07:44: continue. 17 is closed at the package boundary.
+15/14/8 stay parked (BOND_MARKER, daemon, tick rate, curve). Do not promote
+them. Next live letter is 18: other players as ghosts. No shared physics.
 
-NO PARKED ITEM GOES FIRST (Daniel 2026-09-08). 15, 14 and 8 are all parked -
+NO PARKED ITEM GOES FIRST (Daniel 2026-09-08). 15, 14 and 8 stay parked -
 15 behind BOND_MARKER and a curve, 14 and 8 behind a daemon, a tick rate and a
-discrete-log group - so none of them is promoted, because a parked item at the
-top would make this order lie. They stay where they are, in number order,
-below the last closed item.
+discrete-log group. They stay in number order below the last closed item.
+
+   18  M2.2 ghosts / private world    M2   OPEN — other trucks are pictures
+                                            from their transcript, never
+                                            inputs to my sim, never collide.
+                                            Spec 0.9 / 0.10. Not the lobby.
 
 BOND-OUTPUT RECOGNITION is DONE. A chain output counts as a bond or does not,
 from chain data, at both doors: P2TR, named by the advertisement that commits
