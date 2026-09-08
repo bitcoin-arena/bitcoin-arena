@@ -16,7 +16,7 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: 27, committee_time + seed. 15, 18, 20-26 are done.
+LIVE LETTER: 28, two nodes play. 15, 18, 20-27 are done.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
 threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
@@ -29,8 +29,8 @@ HARD (Daniel 2026-09-08 12:09): both committee nodes are reachable on
 Tailscale, not LAN. M2 asks for no money and distributes none.
 
 HARD (Daniel 2026-09-08 15:26): close 15 and 18 as soon as they are
-unblocked. 15, 18 AND 26 ARE CLOSED. 27 is live. Drawing another
-player's truck on screen is 28 and was never 18's.
+unblocked. 15, 18, 26 AND 27 ARE CLOSED. 28 is live: drawing another
+player's truck on screen, which was never 18's.
 
 HARD (Daniel 2026-09-08 18:26): when M2 is finished, start M3
 immediately. No pause, no ask, no action=done at the M2 boundary.
@@ -198,9 +198,20 @@ IN THIS ORDER (unparked):
                                         so two participants at different tips
                                         derive the same census. 734 green.
                                         Numbers: TASKBOOK.
-   27  M2 committee_time + seed       LIVE — seed from bitcoin-block-hash after
-                                        committee_time; committee exists
-                                        before first entry
+   28  M2 two nodes play              LIVE — ghosts on screen, board, 2-of-2
+                                        finals on testnet4/regtest
+   27  M2 committee_time + seed       M2   done — a committee is drawn on
+                                        randomness nobody had when the round
+                                        was made: the seed is
+                                        H(roots || round_id || randomness)
+                                        from the network's own beacon, never
+                                        bytes an author wrote, and a beacon at
+                                        or before committee_time is refused. A
+                                        round says when its committee forms
+                                        and which beacon seeds it, cannot open
+                                        entries before that instant, and
+                                        cannot start before the entry window
+                                        has run. Numbers: TASKBOOK.
    26  M2 census + eligibility        M2   done — a node seats its committee
                                         from the chain census and refuses a
                                         contract that names anyone else. A
@@ -212,8 +223,6 @@ IN THIS ORDER (unparked):
                                         signature it makes is BIP-340 under
                                         the key its bond was posted with.
                                         Numbers: TASKBOOK.
-   28  M2 two nodes play              — ghosts on screen, board, 2-of-2
-                                        finals on testnet4/regtest
    29  M2 Feldman on the split        — a VSS share must bind to the
        preimage (23.1)                  polynomial and not only to its seat:
                                         today a player mis-sharing three of

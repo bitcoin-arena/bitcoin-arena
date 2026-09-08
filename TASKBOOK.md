@@ -20109,3 +20109,46 @@ contract's claim about it is not.
 core 83/83, protocol 416/416, blwp-node 199/199, blwp-client 102/102 - 800
 tests, 0 red. Money guard 12 files clean, determinism guard 20 clean, bundle
 215.3 KB unchanged. No Unity, no C#, no genesis byte, no deploy.
+
+## Item 27 closed
+
+Four slices, all measured:
+
+  the seed is the beacon's        a chosen seed seated a chosen pair in 34
+                                  offline tries; the field it sat in is gone
+                                  and the lottery refuses to draw without the
+                                  beacon's seed
+  committee_time, randomness_rule real contract fields; the beacon is bound to
+                                  committee_time, and at or before it - equality
+                                  included - is refused by name
+  the entry window                entry opens at committee_time and not a
+                                  millisecond before; a round that leaves less
+                                  than the protocol's 60 s before start_time is
+                                  refused at the door
+  the fallback                    absent, empty or the born rule; a foreign one
+                                  is refused, and cannot arrive over the wire
+                                  because the field does not encode
+
+WHY THE FALLBACK IS NOT ENCODED, kept here so it is not read later as an
+oversight: a value that may only ever equal the born rule carries no
+information, the born rule is already on the contract, and encoding it would
+move every round id again while OPENING the channel the check then closes. The
+check guards a contract object, which is the only place a foreign fallback can
+still appear.
+
+PARKED, NOT MISSING: `published_at`. The grind fence is `committee_time` - the
+first Bitcoin block after that instant - so "the creator did not publish after
+seeing the beacon" is exactly as strong as that field and no stronger. 5A.5's
+other half wants `committee_time >= published_at + min_publication_lead` and
+five pre-randomness timestamp receipts, and this contract carries no
+publication time. A later letter, by ruling, not a hole in 27.
+
+Also by ruling and not by omission: `entry_open_time` stays off the contract
+(5A.5 states it as an equality with `committee_time`, so a second field could
+only disagree) and is enforced at the door instead; and there is no second
+randomness source anywhere - no drand, no height fallback, no census_height
+substitute.
+
+Suites at the close: core 83/83, protocol 416/416, blwp-node 199/199,
+blwp-client 102/102 - 800 tests, 0 red. Money guard 12 files clean,
+determinism guard 20 clean.
