@@ -19659,3 +19659,73 @@ sentence - independent nodes agreeing who is allowed into a round - and it is
 named here rather than quietly left. It is not slice 3, and it touches letter
 22's closed result path and the running 2-of-2 setup, so it needs a ruling
 before code.
+
+## Item 26, slice 3 step 1: one key - the node identity IS the bond key
+
+Before: a node's identity was ed25519 while 5A.3B derives its bond output from
+`node_pubkey` on secp256k1. Measured over 500 fresh identities:
+
+  a valid secp x-only point   235/500 (by luck)
+  and the secp secret held    0/500
+
+So "the seated census is the trusted committee" was not a rule any node could
+satisfy: the two lists could not hold the same bytes, whatever either said.
+
+After, over 500 fresh identities:
+
+  a valid secp x-only point   500/500
+  can BIP-340 sign under it   500/500, secret in hand
+  a bond can be built for it  500/500
+
+Every signature a NODE makes is BIP-340 under that one key: its receipts
+(`round.js`), its results (`verdict.js`, `verify.js`) and its advertisement
+(`advert.js`). Letter 23's membership check is REPLACED, not weakened - a
+receipt still has to verify, and a peer receipt signed ed25519 by a key that IS
+on the committee is refused for the signature, while a well-signed stranger is
+refused for the membership. The two refusals are pinned apart, so "the curve is
+checked" is not proved by a test that never reached the curve.
+
+THE PLAYER'S SESSION KEY IS UNTOUCHED. It signs marks, bonds nothing, and 26's
+ruling is about `node_pubkey`; `round.js` still verifies a mark with ed25519
+under the entry's session key, and the fixtures that check marks kept their
+ed25519 verifier. Two of them had been swapped to BIP-340 by a blanket edit and
+were put back - a verifier is chosen by WHAT it verifies, not by the file it
+sits in.
+
+### A rotation, named
+
+A daemon that ran before this letter has an ed25519 pubkey in its identity row.
+The SECRET is thirty-two bytes and works on either curve, so the published key
+is recomputed from it and the row rewritten. That node's identity CHANGES:
+receipts it issued under the old key verify under nothing. This is the honest
+consequence of the two key spaces having been wrong, and it is not smoothed
+over - the alternative is a node whose published key cannot sign.
+
+### A defect the curve change exposed
+
+BIP-340 is randomised. `takeReceipt` compared the whole SIGNED BYTES of a
+stored receipt with an offered one, so one node signing one receipt twice -
+which is what a re-send is - was called "has already receipted that
+differently": an equivocation charge against a node that said the same thing
+twice. It compares the BODY now. Equivocation is two different bodies; two
+signatures over one body are two ways of saying it.
+
+### Mutants: 6 planted, 6 killed
+
+  a stored ed25519 pubkey published as if it worked      killed
+  a fresh identity still made on the old curve           killed
+  a receipt signed on the old curve                      killed
+  a peer's receipt signature not checked at all          killed
+  two signatures over one body count as equivocation     killed
+  an advertisement verified on the old curve             killed
+
+### Suites
+
+core 83/83, protocol 416/416, blwp-node 176 -> 181, blwp-client 102/102 - 782
+tests, 0 red. Money guard 12 files clean, determinism guard 20 clean, bundle
+212.0 KB unchanged. No Unity, no C#, no genesis byte touched.
+
+Next on 26, now unblocked: the seated set becomes the trusted set - verdicts
+and receipts accept a committee only when its keys exact-match the seated
+census keys, `contract.nodes` checked against that, and the 2-of-2 fixture made
+of two identities that are actually bonded and seated.
