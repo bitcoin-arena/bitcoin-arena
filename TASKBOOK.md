@@ -19519,3 +19519,85 @@ a network.
 core 83/83, protocol 404 -> 411, blwp-node 166/166, blwp-client 102/102 - 762
 tests, 0 red. Money guard 12 files clean, determinism guard 20 clean, bundle
 212.0 KB unchanged.
+
+## Item 26, slice 2: the daemon asks the chain who may hold a round
+
+Before: everything letter 15 built was library code with no caller. Measured
+again at the start of this slice - not one file under any `src/` called
+`scanCensus`, `resolveCensus`, `deriveCensus`, `commitCensus` or
+`selectCommittee`. A node could serve rounds without ever asking Bitcoin who
+was bonded, which is the whole of why 15 closed with "not deployable".
+
+After: `blwp-node/src/roster.js` is that caller, and the ONLY one. It fetches a
+chain view, hands it to `deriveCensus` with the curve the census requires, and
+hands what comes back to `selectCommittee`. `GET /committee?round=&role=` is
+the door a node actually walks: 200 with the seated keys, or 409 with the
+reason there is no committee.
+
+  which src file reaches the census    roster.js, and a guard test counts them
+                                       the way the simulator's one door is
+                                       counted
+  the curve                            `src/curve.js` - the daemon carried
+                                       ed25519 only; a census root cannot be
+                                       taken with the template unchecked, so
+                                       the node brings tweakPoint and combine,
+                                       and reads the set off genesis
+  the blocks                           injected as `chainFor`, never invented,
+                                       the same shape as verify.js's
+                                       randomness. No source, no census, and
+                                       the refusal says which
+  the advertisement bodies             read out of the same blocks - 5A.2 puts
+                                       the body in the funding witness, so a
+                                       node holding the chain needs nobody to
+                                       serve it one
+
+### The numbers
+
+  two bonds on chain                   census 2, committee 2, and the seats
+                                       are those two keys
+  the template                         CHECKED on that path: not in `unchecked`
+  one bond, two slots                  no committee: "that census carries 1
+                                       game node where regtest was born
+                                       needing 2", HTTP 409 at the door
+  one game and one settlement bond     neither role holds, each refused by its
+                                       own count
+  a caller trying to name a minimum    refused, in all three shapes: on the
+                                       roster, on the call, on the contract
+  no chain view                        "this node has no chain view for that
+                                       round, so it cannot say who is bonded"
+  a round this node does not hold      "this node holds no such round"
+  the minimum applied                  read off genesis in the test too, so a
+                                       different genesis would change the
+                                       fixture rather than hide a mismatch
+  blwp-node suite                      166 -> 175
+
+### Mutants: 7 planted, 7 killed
+
+  the caller filters eligibility itself                    killed
+  the census is taken without the curve                    killed
+  no chain view gives an empty census, not a refusal       killed
+  the short-census refusal is swallowed, committee empty    killed
+  bodies resolved from anywhere, not from those blocks      killed
+  a caller-named minimum                                    killed
+  the committee is seated from entries PLUS excluded        killed, after the
+                                                            gap below
+
+That last one survived the first pass, and the gap was real: every fixture
+here was a bond that PASSED, so seating the excluded list changed nothing. A
+daemon doing that would put a key the chain refuses - unbonded, spent, or
+paying somebody else's output key - on the committee, which is the whole of
+what a census is for. There is now a stranger's bond in the chain: marked,
+committed and funded, and not the taproot tweak of its own advertisement. With
+THREE slots and two eligible, the honest answer is two seats, and the only way
+to fill the third is to seat what the census refused.
+
+### Suites
+
+core 83/83, protocol 411/411, blwp-node 175/175, blwp-client 102/102 - 771
+tests, 0 red. Money guard 12 files clean, determinism guard 20 clean, bundle
+212.0 KB unchanged. No Unity, no C#, no genesis byte touched.
+
+Still parked, by ruling: slice 3 (verifyAdvert, one key, BIP-340 on the
+secp256k1 `node_pubkey`, replacing letter 23's ed25519 check), and the two
+genesis remainders - `census_min_nodes` per role versus one u16, and
+testnet4's genesis carrying 2 where the spec's table says 3.
