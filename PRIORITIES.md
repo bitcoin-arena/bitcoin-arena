@@ -32,6 +32,11 @@ HARD (Daniel 2026-09-08 15:26): close 15 and 18 as soon as they are
 unblocked. BOTH ARE CLOSED. 26 is unparked and live. Drawing another
 player's truck on screen is 28 and was never 18's.
 
+HARD (Daniel 2026-09-08 18:26): when M2 is finished, start M3
+immediately. No pause, no ask, no action=done at the M2 boundary.
+Playable M2 is 28. Then remaining queue (29 Feldman if still open),
+then M3: hold invoices, VSS, FROST, testnet sats. Lightning stays M3.
+
 IN THIS ORDER (unparked):
    22  M2 daemon replays the core     M2   done — slice 1 IS IN: the node reaches the
                                         simulator through src/replay.js and
