@@ -70,9 +70,20 @@ discrete-log group. They stay in number order below the last closed item.
                                             while a solid cube in the same
                                             place does, and no field of it can
                                             reach the simulation. PlayMode
-                                            193 -> 197 passed with no new
+                                            193 -> 199 passed with no new
                                             failure against a measured
-                                            baseline; EditMode unchanged.
+                                            baseline; EditMode unchanged. The
+                                            audit found a SECOND door and shut
+                                            it: `WorldSolids.Gather` uploads
+                                            every scene BoxCollider into the
+                                            core as a wall, and a ghost passed
+                                            all its exclusions - the stripped
+                                            rigidbody was what made it look
+                                            like scenery - so a ghost with any
+                                            collider would have blocked a road
+                                            inside the simulation. Two guards
+                                            now, and removing either turns its
+                                            own test red.
                                             What remains is the daemon
                                             boundary 14 and 8 are parked on:
                                             nothing subscribes a socket and

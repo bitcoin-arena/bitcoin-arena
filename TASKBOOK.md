@@ -16367,3 +16367,69 @@ No lobby. No socket subscribing - that is the parked daemon with 14 and 8. No
 ghost prefab wired into Bootstrap yet: the component and its guarantee exist,
 and what spawns them is the same daemon boundary. C# draws; it does not
 simulate, and `step` still takes one state and one player's five inputs.
+
+### Auditing piece 4: a second door into the simulation, found and closed
+
+Asked whether anything was still missing on the renderer, and compared the core
+path against the old PhysX one again rather than from memory. One hole, and it
+did not go through `step` at all.
+
+`WorldSolids.Gather` scans EVERY BoxCollider in the scene and uploads the
+qualifying ones into the core as boxes the truck cannot drive through. That is
+a door into the simulation through `setSolids`, so piece 1's argument - "step
+has no parameter a ghost could arrive through" - never sees it.
+
+A ghost passes every exclusion `IsWorld` already had:
+
+  not disabled          a ghost is active, it is being drawn
+  not a trigger         a stray collider is a solid one
+  not the yard layer    a ghost is on the map
+  no attachedRigidbody  BECAUSE GhostTruck STRIPPED THE RIGIDBODY. The guard
+                        that makes a ghost safe from PhysX is the same guard
+                        that made it look like scenery here.
+  not a child of the
+    truck               it is a different truck
+
+So a ghost that ever carried a BoxCollider - a streamed model, a prefab edit,
+one careless AddComponent - would have been uploaded to the core as a wall.
+0.9's "blocking a road", exactly.
+
+TWO GUARDS, because one was not enough:
+
+  1. `IsWorld` asks the COMPONENT: anything under a `GhostTruck` is not part of
+     the solid world. Asked of the component rather than a name, a tag or a
+     layer, because those are editable by somebody who does not know what they
+     decide, and this one decides whether a player can wall another player in.
+  2. `GhostTruck.OnTransformChildrenChanged` strips again whenever a child
+     appears. Awake runs once, and this project STREAMS its truck model in -
+     `ModelStreamer` parents it later, with whatever colliders its author gave
+     it - so a ghost that only stripped at Awake would be clean for a second
+     and solid afterwards.
+
+### Both guards bite, measured
+
+Removed both and re-ran PlayMode. The two tests that target them failed and the
+other four passed, which is what disjoint guards should look like:
+
+  AGhostIsNeverUploadedToTheCoreAsASolid        FAILED  (IsWorld guard)
+  AStreamedModelDoesNotGiveAGhostItsPhysicsBack FAILED  (child-change strip)
+  the other four ghost tests                    passed
+
+The solids test carries its own controls: a real building IS gathered before
+the ghost is introduced, the ghost's late collider has no attachedRigidbody
+(so `IsWorld` cannot be excluding it for the wrong reason), and it is not a
+trigger.
+
+### Counts after the fix
+
+  PlayMode  baseline   216 total, 193 passed, 10 failed, 13 skipped
+  PlayMode  with       222 total, 199 passed, 10 failed, 13 skipped
+  EditMode  baseline   190 total, 186 passed,  1 failed,  3 skipped
+  EditMode  with       190 total, 186 passed,  1 failed,  3 skipped
+
+New failures against the baseline: NONE, on both platforms. EditMode was
+re-measured rather than assumed, because `WorldSolids.cs` is runtime code the
+EditMode assembly compiles against.
+
+JS unchanged: protocol 362/362, core 83/83, blwp-node 71/71, blwp-client 89/89,
+money guard 12 files clean, determinism guard 19 files clean.
