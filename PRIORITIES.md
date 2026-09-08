@@ -230,9 +230,12 @@ IN THIS ORDER (unparked):
                                         on. NOT letter 23.
    15/14/8 are this queue, not a later milestone.
 
-DANIEL DECIDES (not a task anyone can take): the PSEUDONYM SCHEME (0.11/0.12
-- clients MAY derive one, no scheme named; two wordlists would name one player
-twice, so it is chosen once, the BOND_MARKER and checkpoint class).
+DISPLAY NAME (Daniel 2026-09-08 18:55, M3): DECIDED. Default =
+`adjective-animal-NNNN` from taggedHash(BLWP/v1/DISPLAY_NAME, player key),
+locked in packages/protocol/src/display-name.js. Name is changeable: custom
+lives in the browser next to the secret, not on the signed final. Board rows
+for others stay the derived default. Donations: current name in LNURL comment.
+Key stored in the browser with backup download/import. Never uploaded.
 
 HARD (Daniel 2026-09-08 10:18): deferred remainders are M2. Do not skip
 tick rate, daemon, curve, BOND_MARKER, ghost subscribe, run duration.
