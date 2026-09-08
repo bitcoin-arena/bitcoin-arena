@@ -18620,3 +18620,62 @@ where a translation gets forgotten.
 
 protocol 413 -> 414, core 83/83, blwp-node 120/120, blwp-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean.
+
+## Item 25, slice 4: a slash commits to the proof that justified it
+
+A five-of-seven spend that pays a wallet address is not a slash. 5A.3B step 4:
+"OP_RETURN = H(fraud_proof) || retrieval hint", and slash.js already fixes the
+hash as the proof's own id - "because the slashing transaction commits to the
+proof, every slash is permanently auditable".
+
+THE MEASUREMENT THAT MATTERS IS THE ONE BITCOIND CANNOT MAKE:
+
+  slash, five of seven, with the commitment
+      bitcoind: allowed          protocol: commits to the proof
+  slash, five of seven, no commitment
+      bitcoind: ALLOWED          protocol: "that spend carries no proof
+                                 commitment, so no slash it makes is auditable"
+
+Consensus does not enforce step 4 - a spend with no OP_RETURN is a perfectly
+valid transaction - which is exactly why the protocol has to. A bond taken with
+no public record of why is the arbitration set's own offence.
+
+And the rest still holds on the same run: honest recovery at maturity allowed,
+one block early refused for the locktime, a stranger's Schnorr refused, four of
+seven refused, a second node from body and genesis alone spending the same
+leaf, and the outpoint read as spent after the recovery was mined.
+
+The retrieval hint rides after the hash and its shape is not invented: the spec
+fixes the hash and leaves the hint open, so bytes a caller appends come back
+unchanged.
+
+### Mutants: 5 planted, 5 killed, 0 retracted
+
+  N1 a slash with no commitment accepted            1 red
+  N2 any proof accepted as the committed one        1 red
+  N3 a short push read as a commitment              1 red, after re-aiming
+  N4 the sighash epoch byte dropped                 1 red
+  N5 amounts and scripts swapped in the sighash     1 red
+
+N3 needed the fixture re-aimed twice. An OP_RETURN of eight bytes is already
+refused by the length check, so the mutant was unreachable; the case that
+reaches it is a LONG script with a SHORT push - two twenty-byte pushes - where
+reading from byte two would take thirty-two bytes spanning both.
+
+### One intermittent failure, named rather than hidden
+
+A blwp-node run showed 119/120 once, with no test named in the output. Three
+subsequent full runs were 120/120. It is not reproducible and I could not
+identify it; it is recorded here rather than smoothed over.
+
+### The tool is self-contained now
+
+`bond-regtest.mjs` assumed a loaded wallet and a funded chain, so it worked
+once and failed on the next fresh datadir. It loads or creates its own wallet
+and mines its own coins.
+
+### Suites
+
+protocol 414 -> 415, core 83/83, blwp-node 120/120, blwp-client 95/95, money
+guard 12 files clean, determinism guard 20 files clean. The regtest node is
+stopped; /mnt/bitcoin and /mnt/bitcoin/tn4 were not touched.
