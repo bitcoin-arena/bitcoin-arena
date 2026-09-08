@@ -853,8 +853,9 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      one instead of being handed an array, and a reordered set is a DIFFERENT
      set because the order decides who takes the remainder. AN LNURL IS BECH32
      AND ITS CASE RULES ARE BECH32'S: mixed case does not stand, a payee is the
-     same payee in upper or lower, and the two spellings of one address cannot
-     be listed as two recipients. The set is still
+     same payee in upper or lower, the two spellings of one address cannot be
+     listed as two recipients, and one set has ONE byte string - a stranger's
+     uppercase encoding of it is refused. The set is still
      not on the round contract: 22A wants it hashed into the contract
      and that moves every round id.
      Numbers: TASKBOOK.

@@ -14441,3 +14441,49 @@ money guard 12 files clean, determinism guard 19 files clean. Nothing outside
 HOLE B STAYS PARKED: nothing binds an entry to a set, and 22A fixes that by
 hashing the set into the Round Contract - which moves every round id and is a
 named contract decision, not this defect.
+
+## M2.1 22A: one set, one byte string - the last of the payee-identity defect
+
+Found auditing the fold that had just been delivered, not by a test.
+
+THE ENCODER FOLDS, SO NOTHING THIS PACKAGE WRITES IS EVER UPPERCASE - measured,
+`encodeDonationSet` typed in either case emits the same bytes. But a stranger
+does not use this encoder. Hand-crafted bytes spelling the payee `LNURL1ABC`
+decoded happily and stood:
+
+    canonical bytes   100001000100096c6e75726c3161...   (lnurl1abc)
+    hand-crafted      100001000100094c4e55524c3141...   (LNURL1ABC)
+    both decoded, both stood
+
+One set with two byte strings. A committee comparing what it received - or
+hashing it directly instead of re-encoding - would see two different sets and
+disagree, which is exactly the disagreement folding was adopted to remove. The
+id was only canonical because `donationSetId` re-encodes; anyone hashing the
+wire bytes got the other answer, `e9173b82ff008c57`.
+
+The decoder refuses them now. REFUSED RATHER THAN QUIETLY FOLDED ON THE WAY IN:
+bytes that are not the set's own encoding are not that set, and folding them
+would make the id depend on who did the hashing. Both mutants die - accepting
+them, and folding instead of refusing, 1 red each.
+
+Our own upper-typed set still round-trips: `encodeDonationSet` lowers it, and
+`decodeDonationSet` returns `lnurl1abc`. Nothing an honest caller does changed.
+
+### Suites
+
+protocol 271/271 (was 270), blwp-node 70/70, blwp-client 89/89, core 80/80,
+money guard 12 files clean, determinism guard 19 files clean. Nothing outside
+`packages/protocol` moved; Unity untouched and not re-run.
+
+### And a check worth recording as clean
+
+`grep` for `Rigidbody`, `PhysX`, `UnityEngine` or `Physics` across
+`packages/protocol/src` returns nothing. No engine value reaches any of this;
+it is protocol money law throughout.
+
+### Still parked, unchanged
+
+Hole B - nothing binds an entry to a set - because 22A fixes it by hashing the
+set into the Round Contract, which moves every round id and is a contract
+decision. And `failed` stays a caller-supplied attestation: nothing here can
+verify a Lightning payment, the same class as `replayDiffers`.
