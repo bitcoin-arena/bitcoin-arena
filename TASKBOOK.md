@@ -18142,3 +18142,49 @@ count.
 protocol 405/405, core 83/83, blwp-node 109 -> 111, blwp-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. No bitcoind, no RPC, no
 Unity, no C#, no chain scan.
+
+## Item 24, slice 3: the control block, and the parity that x-only throws away
+
+Without a control block neither leaf is reachable: the output key hides the
+tree, which is the point of taproot, so the tree has to be handed over at spend
+time. A bond whose control block nobody could build is a bond nobody could
+recover - and path A exists so that arbitration can never freeze one forever.
+
+  shape        (leaf_version | parity) || internal_key || sibling = 65 bytes
+  recovery     sibling is the slash leaf hash
+  slash        sibling is the recovery leaf hash
+
+THE PARITY IS INFORMATION THE 32 BYTES DO NOT CARRY. `lift_x` always returns
+the EVEN point for an x-only key, so a spender that read the output off the
+chain and lifted it would believe the parity is always 0. Measured over 40
+bonds with random keys: 11 odd, 29 even. An assumed parity is a bond that
+cannot be recovered a quarter of the time. So `bondOutputKey` asks the curve
+for both halves and REFUSES a curve that answers with 32 bytes alone.
+
+  re-derived from internal key + leaf + control block, on the real curve:
+  both paths give back the output key on chain, parity included
+  a block naming the wrong sibling gives back something else
+  the right sibling under the wrong leaf gives back something else
+
+`bondTapTree` now returns the internal key it was built with - a caller holding
+the hashes and not the key could not prove a leaf belongs to anything.
+
+### Mutants: 5 planted, 5 killed, 0 retracted
+
+  F1 the sibling is its own leaf                      script + key red
+  F2 the parity left out of the first byte            script red
+  F3 a curve that never says even or odd is accepted  script red
+  F4 the merkle path never walked                     script + key red
+  F5 the internal key read as zeros                   script + key red
+
+### One assertion removed for lying
+
+A line in the real-curve test compared `built.parity` with itself through a
+conditional - always true, proving nothing. Replaced with the fact it was meant
+to state: `lift_x` of the output key is even, so the parity is extra
+information and not derivable from what is on chain.
+
+### Suites
+
+protocol 405 -> 408, core 83/83, blwp-node 111 -> 112, blwp-client 95/95, money
+guard 12 files clean, determinism guard 20 files clean.
