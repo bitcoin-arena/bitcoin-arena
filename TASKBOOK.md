@@ -15820,3 +15820,45 @@ cannot finish on its own.
 
   protocol 343 -> 344. blwp-node 70/70, blwp-client 89/89, core 80/80, money
   guard 12 files clean, determinism guard 19 files clean.
+
+### Item 17 closed: both window boundaries, and the checkpoint left as a decision
+
+THE WINDOW IS CLOSED, at both ends.
+
+  a view ENDING before census_height    refused: "that chain ends at height
+                                        899999, before this round's census
+                                        height 900000"
+  a view BEGINNING after census_height  refused: "that chain begins at height
+                                        900001, after this round's census
+                                        height 900000"
+  a view that does not reach a bond     excluded with what it actually knows:
+                                        "no such outpoint between height 899990
+                                        and 900000, and this chain view does not
+                                        reach further back"
+  and the window is committed           `censusInputsId` covers `firstHeight`,
+                                        so a short-window root does not pass
+                                        under a long-window commitment
+
+The second was found by auditing after the first: a view beginning after the
+census height returned OK, an empty census, and "no such outpoint between
+height 900001 and 900000" - a range that runs backwards, from a view that had
+not seen one block the census is about. It is the mirror of the end rule, and
+three fixtures had been quietly relying on it: they built a one-block view AT
+the tip and called it the chain. They now span the census height, which is what
+a view of a census has to do.
+
+Mutants for this piece: 3 planted, 3 killed - the start rule deleted, its
+boundary made exclusive, and its refusal made vague.
+
+THE CHECKPOINT REMAINS A DECISION, NOT A TASK. `chainViewOf` still accepts any
+self-consistent mined chain; a wholly fabricated one gives ok true, work 50.
+Work comparison is the defence that exists and it is Bitcoin's own. 5A.4's
+other answer is a checkpoint - a height and a block hash, fixed once, wrong
+forever if wrong - which is the BOND_MARKER and NETWORK_ID class and is not
+this package's to settle. Nothing plausible has been written into the census
+package, and genesis is not a substitute: requiring a view to reach block 0 is
+requiring on the order of 900,000 headers.
+
+  protocol 345/345 (344 before this piece), blwp-node 70/70, blwp-client 89/89,
+  core 80/80, money guard 12 files clean, determinism guard 19 files clean.
+  Spec vectors unmoved.
