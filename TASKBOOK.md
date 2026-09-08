@@ -17948,3 +17948,50 @@ unreachable line rather than the check.
 protocol 398/398, core 83/83, blwp-node 99 -> 104, blwp-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. Files in
 blwp-node/src reaching the simulator: still exactly replay.js. No Unity, no C#.
+
+## Item 23, slice 2: the census took a body nobody had signed
+
+The close-out asked whether another accept path still takes an unsigned or
+foreign-key advertisement. One did, and it was the one that matters most.
+
+`census.js` RESOLVE split the signed body and threw the signature away -
+literally `const { body } = splitSignedAdvert(bytes)` - so ELIGIBILITY rested
+on a body that had been committed to and never authored, and the gap was named
+in `unchecked` instead. Naming a gap is right while nothing can close it; it
+stopped being right once a caller could.
+
+The protocol package still carries no curve and must not: it is the one every
+other package reads. So `verifyAdvert` is injected, the way `provesEquivocation`
+takes one. With no verifier the behaviour is exactly as before - the body is
+counted and the gap is named - so nothing that could not check is now pretending
+to.
+
+  with a verifier      a body signed by its own key is eligible; one signed by
+                       another key is excluded, "not signed by the node it
+                       names"; `unchecked` drops to the script template alone
+  without one          the same body is eligible and the signature is still
+                       listed as unchecked
+  the zero key         refused whatever the verifier says
+  the empty signature  refused whatever the verifier says
+
+Measured twice: with a stub verifier in the protocol package, which has no
+curve, and with real ed25519 one package over, where the daemon's own key
+lives.
+
+### Mutants: 5 planted, 5 killed, 0 retracted
+
+  C1 the census signature check removed        1 red
+  C2 the list still claiming it is unchecked   1 red
+  C3 a curve given and ignored                 1 red
+  C4 the zero key allowed                      1 red
+  C5 the empty signature allowed               1 red
+
+C4 SURVIVED the first run: the fixture used a zero key AND a zero signature, so
+the sibling check refused it either way and neither could be shown to matter.
+Each now has a case only it can refuse - a zero key carrying a real signature,
+and a real key carrying none.
+
+### Suites
+
+protocol 398 -> 399, core 83/83, blwp-node 104 -> 105, blwp-client 95/95, money
+guard 12 files clean, determinism guard 20 files clean. No Unity, no C#.
