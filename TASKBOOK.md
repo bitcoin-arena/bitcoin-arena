@@ -18527,3 +18527,58 @@ so it is asked for rather than started.
 
 protocol 409/409, core 83/83, blwp-node 120/120, blwp-client 95/95, money guard
 12 files clean, determinism guard 20 files clean.
+
+## Item 25, slice 2: a bond spends on a real node
+
+### The oracle, and what it is not
+
+This tree carries no BIP-341 vectors offline, so the only way to know a witness
+is right is to hand it to a node. An isolated regtest bitcoind - own datadir
+under the session scratch, port 19444, rpcport 19443, cookie auth, stopped when
+the numbers were in - was that oracle. The two live nodes at /mnt/bitcoin
+(mainnet) and /mnt/bitcoin/tn4 (testnet4) were not touched.
+
+SO THE PINNED BYTES IN `test/bond-spend.test.js` ARE "WHAT BITCOIND ACCEPTED",
+not "what BIP-341's own vectors say". Weaker about the code, stronger about the
+result, and written into the test's own header so nobody reads it as the other
+thing. `packages/blwp-node/tools/bond-regtest.mjs` re-runs the oracle.
+
+### testmempoolaccept, every case
+
+  recovery, honest, at maturity     allowed
+  recovery, a stranger's signature  rejected: "Invalid Schnorr signature"
+  recovery, one block early         rejected: "Locktime requirement not
+                                    satisfied" - which is the whole reason CLTV
+                                    is in that leaf
+  slash, five of seven seats        allowed
+  slash, four of seven              rejected: "Script evaluated without error
+                                    but finished with a false/empty top stack
+                                    element"
+  a second node, from the body and
+  genesis alone                     same leaf, same control block, same output
+                                    key, and its own spend allowed
+  after the honest recovery was
+  broadcast and mined at height 109 chainFactsAt reads the outpoint as SPENT
+
+### Two of my own probes were wrong, and the fixes are the point
+
+  "same bytes"   two signatures over one message DIFFER: BIP-340 signing draws
+                 auxiliary randomness. Byte-identity was the wrong claim. What
+                 must match is everything the two nodes DERIVED - leaf, control
+                 block, output key - and that the second spend is accepted.
+  "spent?"       the census keys outpoints by the txid as it is HASHED, and an
+                 API prints the reverse. The first check compared display order
+                 against internal order and answered false about a spend that
+                 had happened.
+
+### What the sighash commits to, measured by moving each part
+
+version, locktime, sequence, the output amount, the amount BEING SPENT, the
+script being spent, and the leaf: each moves the sighash. The amount and script
+of the input are taproot's own change, and they are why a signer cannot be lied
+to about what it is signing away.
+
+### Suites
+
+protocol 409 -> 413, core 83/83, blwp-node 120/120, blwp-client 95/95, money
+guard 12 files clean, determinism guard 20 files clean.
