@@ -16,23 +16,10 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: 21, the protocol tick rate. 20 is done. The tick is exported
-and the conversion is measured; run duration and entry close are next and
-are NOT this letter.
+LIVE LETTER: 22, the daemon steps the core. 20 and 21 are done.
 Daniel 10:18: everything that was set aside is M2, not later.
 
 IN THIS ORDER (unparked):
-   21  M2 protocol tick rate          — the core publishes TICK_DT (1092
-                                        Q16.16 s) with the ratio 65536:1092
-                                        beside it, never a float and never a
-                                        rounded 60; the protocol converts both
-                                        ways in integers, floors, and names
-                                        every remainder. Sixty ticks is 999.76
-                                        ms, not a second. Three minutes is
-                                        10802 ticks and 21750/34125 of one.
-                                        Still unlocks player_run_duration and
-                                        entry_close_time (19 remainders) -
-                                        those stay unread.
    22  M2 daemon steps the core       — unlocks ghost spawn/subscribe (18),
                                         the daemon 14/8 waited on, and the
                                         board on a screen: 20's rows are built
@@ -53,6 +40,36 @@ twice, so it is chosen once, the BOND_MARKER and checkpoint class).
 HARD (Daniel 2026-09-08 10:18): deferred remainders are M2. Do not skip
 tick rate, daemon, curve, BOND_MARKER, ghost subscribe, run duration.
 
+   21  M2 protocol tick rate          M2   done — the core publishes its own
+                                            tick and everything else reads it.
+                                            TICK_DT is exported from
+                                            packages/core with the rate beside
+                                            it as the exact ratio ONE:TICK_DT
+                                            - never a float, and never a
+                                            rounded sixty, which is a
+                                            different number. The protocol
+                                            converts both ways in integers: it
+                                            floors, hands back every
+                                            remainder with its divisor, and
+                                            refuses rather than guesses when a
+                                            caller needs an exact answer. The
+                                            tick belongs to the core because
+                                            it is a property of the binary
+                                            simCoreHash commits to; a literal
+                                            anywhere else would be a second
+                                            clock. player_run_duration and
+                                            entry_close_time are now
+                                            EXPRESSIBLE and stay unread - they
+                                            are 19's remainders, not this
+                                            letter's. The C# TicksPerSecond
+                                            sets how often a client publishes
+                                            a batch or a mark; it converts no
+                                            contract time and is left alone.
+                                            protocol 389/389, core 83/83,
+                                            blwp-node 71/71, blwp-client
+                                            95/95, both guards clean. No
+                                            client change, so no deploy.
+                                            Numbers: TASKBOOK.
    20  M2.2 leaderboard               M2   done — 0.11: "presentation, not
                                             authority", from signed finals.
                                             Slice 1: `leaderboard` builds the
