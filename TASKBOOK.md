@@ -20365,3 +20365,82 @@ the WebGL player itself - `blwp.jslib` calling `watchGhosts` and
 line are measured against real data (the JS half against two daemons, the C#
 half against the frames those daemons produced), and the line between them is
 three statements long. It is named here rather than implied by a green suite.
+
+## Item 28: the player build, and a bundler that was eating declarations
+
+### The built player carries the hop
+
+WebGL build: `Build Finished, Result: Success`,
+`[BuildWebGL] result=Succeeded size=19MB errors=0 time=00:07:58`. Read out of
+the build rather than assumed - the framework is brotli, so a grep on the
+`.unityweb` proves nothing either way and node's `zlib.brotliDecompressSync`
+was used:
+
+  BlwpNextGhost in webgl.framework.js   3 occurrences, the same count as every
+                                        other bridge function, and the shipped
+                                        body is the drain byte for byte
+  watchGhosts / net.ghosts              1 / 3 in the same framework - the page
+                                        asks, in the player
+  GhostField, GhostTruck, WorldSolids   present in webgl.data (IL2CPP
+                                        metadata), beside BlwpNet
+  the page's blwp-client.js             byte-identical to
+                                        packages/blwp-client/dist
+
+So all three statements are in the player, not PlayMode-only.
+
+### AND THE BUILD FOUND A LIVE DEFECT: the core bundler ate declarations
+
+`packages/core/tools/bundle.js` stripped export lists with
+
+    /^export\s+\{[\s\S]*?\}\s*from\s+[^;]*;\s*$/gm
+
+which crosses lines. In `core/src/sim.js` line 51 is `export { UNITS,
+ARMOUR_MASK };` and line 106 - added when letter 21 gave the core its own tick
+- is `export { TICK_DT } from './tick.js';`. The lazy match ran from the first
+to the second and DELETED THE 55 LINES BETWEEN THEM, including
+
+    export const HALF_X = Math.imul(130, ONE);
+    export const HALF_Z = Math.imul(85, ONE);
+
+The bundle kept NINE USES of `HALF_X` and no declaration, so the page threw
+`HALF_X is not defined` on the first `step`. Nobody had seen it because the
+committed `dist/blwp-core.js` predated the re-export: the suites load the
+committed file, and only a re-bundle - which this WebGL build did - produces
+the broken one.
+
+  the bundler, run by hand      reproduces the build's file exactly, so this is
+                                the bundler and not the Unity build
+  core suite on that bundle     83 -> 75 passed, 8 failed
+  blwp-client on it             109 -> 93 passed, 16 failed
+  after the fix                 core 84/84, blwp-client 109/109
+
+Both bundlers had the rule; both are fixed to a single-line form
+(`\{[^{}]*\}`). The WebGL player built earlier this turn was built FROM the
+broken bundle, so that player is not deployable and a rebuild is needed - which
+is the honest reading of "the build found it".
+
+### Two guards, because both faults were silent
+
+  every exported name in a bundled module is DECLARED in the bundle - scoped
+  to the modules the bundle's own `// ---- ` markers name, so a file nothing
+  imports is not a false alarm. Proven against the fault: with the old rule
+  restored, the core bundle file goes 1 passed / 9 failed; with the fix, 10/10.
+
+  the WebGL template's `blwp-core.js` is byte-identical to
+  `packages/core/dist/blwp-core.js`, the same guard the template's
+  `blwp-client.js` already had - which is how the stale client was caught last
+  slice and how a stale core will be caught next time.
+
+### Suites
+
+core 83 -> 84, protocol 416/416, blwp-node 199/199, blwp-client 109/109 - 808
+tests, 0 red. Money guard 12 files clean, determinism guard 20 clean. No Unity
+tests re-run this turn: no C# changed, and the PlayMode/EditMode counts stand
+at 229/205/11/13 and 190/186/1/3 from the on-screen slice.
+
+### Still unmeasured, named
+
+The WebGL player hop end to end. No browser can be driven here - no chromium,
+no playwright, no puppeteer - so what is measured is that the glue is IN the
+player and that both sides of it are right, not that a human saw the truck. A
+rebuild is also outstanding, since the player on disk carries the broken core.
