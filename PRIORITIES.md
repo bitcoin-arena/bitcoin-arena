@@ -25,6 +25,9 @@ HARD (Daniel 2026-09-08 11:56): everything needed for playable M2 on
 regtest/testnet4 is M2, not M3. Bonds, census, committee_time, bitcoin
 block-hash seed. Lightning hold invoices stay M3. Finish 22, then 23–27.
 
+HARD (Daniel 2026-09-08 12:09): both committee nodes are reachable on
+Tailscale, not LAN. M2 asks for no money and distributes none.
+
 IN THIS ORDER (unparked):
    22  M2 daemon replays the core     — slice 1 IS IN: the node reaches the
                                         simulator through src/replay.js and
