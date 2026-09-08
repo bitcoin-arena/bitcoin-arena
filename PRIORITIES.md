@@ -16,12 +16,23 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: 21, the protocol tick rate. 20 is done.
+LIVE LETTER: 21, the protocol tick rate. 20 is done. The tick is exported
+and the conversion is measured; run duration and entry close are next and
+are NOT this letter.
 Daniel 10:18: everything that was set aside is M2, not later.
 
 IN THIS ORDER (unparked):
-   21  M2 protocol tick rate          — unlocks player_run_duration and
-                                        entry_close_time (19 remainders)
+   21  M2 protocol tick rate          — the core publishes TICK_DT (1092
+                                        Q16.16 s) with the ratio 65536:1092
+                                        beside it, never a float and never a
+                                        rounded 60; the protocol converts both
+                                        ways in integers, floors, and names
+                                        every remainder. Sixty ticks is 999.76
+                                        ms, not a second. Three minutes is
+                                        10802 ticks and 21750/34125 of one.
+                                        Still unlocks player_run_duration and
+                                        entry_close_time (19 remainders) -
+                                        those stay unread.
    22  M2 daemon steps the core       — unlocks ghost spawn/subscribe (18),
                                         the daemon 14/8 waited on, and the
                                         board on a screen: 20's rows are built

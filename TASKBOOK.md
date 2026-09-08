@@ -17105,3 +17105,86 @@ the slice working.
 
 Nothing on screen, BLOCKED ON 22. The three 0.11 fields stand as recorded:
 live status on 22, cargo on M2.3's replay pool, the pseudonym scheme on Daniel.
+
+## Item 21: the protocol tick is the core's TICK_DT, not sixty a second
+
+The spec requires a "fixed protocol tick" (multiplayer_p2p.md:444, in the same
+list as fixed-point arithmetic and canonical serialization) and names NO
+number, no unit and no emitter. Ticks are only ever the unit something else is
+counted in: a checkpoint's `tick` (10), `first_tick`/`last_tick` (11),
+`join_tick`, "the exposure integral accumulated per simulation tick" (1711).
+The contract measures the round in TIME - `start_time`, `entry_close_time`,
+`player_run_duration // T_run`, worked example "T_run: 3 minutes". Nothing
+converted, which is why 15's CLTV floor and 19's two clocks were parked.
+
+### Where the number came from, and where it did not
+
+  core/src/sim.js:103   const TICK_DT = 1092;   // private, not exported
+  core/src/rules/air.js Y_LERP written against the TICK, not a sixtieth:
+                        1-exp(-2/60) gave 2149 where the tick asks for 2148
+  BlwpNet.cs            a comment saying 60 ticks a second - LEFT WHERE IT IS
+
+The owner is the core: the tick is a property of the binary `simCoreHash`
+commits to, so a round signed under one core cannot be replayed under another
+and disagree about how long it was. A literal in the protocol would be a second
+clock. Same shape as hash.js taking sha256bytes off the core.
+
+### The measured numbers
+
+  one tick            1092 / 65536 s = 0.01666259765625 s
+  ticks per second    65536 / 1092 = 60.014652... - NO integer value exists
+  60 ticks            65520 Q16.16 s, 16 short of a second
+                      = 999 ms + 1548/2048 = 999.755859375 ms
+  1000 ms             60 ticks + 500/34125 of a tick
+  10,800 ticks        11,793,600 Q16.16 s = 179956 ms + 112/2048
+                      = 179.9560546875 s - 44 ms SHORT of three minutes
+  180,000 ms          10802 ticks + 21750/34125 of a tick
+                      (rounding would give 10803: a tick nobody simulated)
+  3,600,000 ms        216052 ticks + 25500/34125; back again 3599987 ms +
+                      1124/2048, so the round trip loses 13 ms - under one tick
+
+ms per tick is DERIVED, not typed: TICK_DT x 1000 / ONE, reduced by gcd to
+34125/2048 at load. No third literal exists to drift from the other two.
+
+### The shape of the conversion
+
+  secondsQ16ForTicks  exact always - a tick IS TICK_DT of these units, so it
+                      is a multiplication and nothing is lost
+  msForTicks          floor + { remainder, divisor, exact }
+  ticksForMs          FLOOR, never round + { remainder, divisor, exact }
+  exactTicksForMs     REFUSES with the remainder in the reason
+
+Floor and not round, because 10802.637 rounds to 10803 and a round whose last
+tick exists only in the contract has a transcript one tick short - two honest
+nodes disagreeing with nothing to arbitrate it. Negative durations throw:
+floor and truncation part company below zero, and the answer is to refuse the
+question rather than silently pick one.
+
+### Mutants: 7 planted, 7 killed, 0 retracted
+
+  P1 sixty ticks a second substituted for the ratio      5 red  (required)
+  P2 ms -> ticks rounds instead of flooring              2 red  (required)
+  P3 ticks -> ms rounds instead of flooring              2 red
+  P4 the remainder dropped and `exact` always true       3 red
+  P5 exactTicksForMs serves a guess instead of refusing  1 red
+  P6 the core's TICK_DT moved to 1100                    5 red here, and 2 red
+                                                         in core rules
+  P7 the ratio left unreduced                            5 red
+
+P6 is the pair the sequence asked to measure first. `test/rules.test.js:1185`
+declared its OWN `const TICK_DT = 1092` - a copy, so sim.js could have moved to
+1100 while the test went on checking 1092 against a constant written for 1092.
+It now imports the core's export and asserts the value, so a moved tick fails
+in the file that owns it and in the file that reads it. Y_LERP is unchanged at
+2148: the pair measured the same before and after the export.
+
+### Suites
+
+protocol 384 -> 389, core 83/83 (unchanged), blwp-node 71/71, blwp-client
+95/95. Money guard 12 files clean; determinism guard 19 -> 20 files clean, the
+new core file picked up by the directory walk.
+
+### Out of scope, untouched
+
+player_run_duration and entry_close_time stay unread. No daemon, no advert
+curve, no BOND_MARKER, no Unity, no C#. The BlwpNet.cs comment stays.
