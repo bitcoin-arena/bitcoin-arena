@@ -16,7 +16,7 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: 24, the bond script. 20, 21, 22 and 23 are done.
+LIVE LETTER: 25, bond verification. 20-24 are done.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
 threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
@@ -143,8 +143,24 @@ IN THIS ORDER (unparked):
                                         which signs itself on this curve - are
                                         each refused by name. Numbers:
                                         TASKBOOK.
-   24  M2 bond construction 5A.3B     — P2TR: MuSig2 / CLTV after maturity /
-                                        slash. Two bonds, one LND.
+   24  M2 bond construction 5A.3B     M2   done — a bond is a taproot output
+                                        over two leaves that can actually
+                                        spend: the node alone after the
+                                        network's maturity, or five of seven
+                                        arbitration seats before it. Its key
+                                        is the tweak of the MuSig2 aggregate
+                                        of the keys it names - not one its
+                                        poster chose - and each leaf carries a
+                                        65-byte control block that rebuilds
+                                        that key. The arbitration set, the
+                                        quorum and the maturity are genesis
+                                        facts, so a second node rebuilds the
+                                        whole thing from the published body
+                                        and its own genesis; the census and
+                                        the advert door refuse a bond that
+                                        does not rebuild, and say so when they
+                                        were given nothing to rebuild with.
+                                        Numbers: TASKBOOK.
    25  M2 bond verification           — output is what it claims
    26  M2 census + eligibility        — scan by marker, sort txid/vout,
                                         min census for 2-of-2

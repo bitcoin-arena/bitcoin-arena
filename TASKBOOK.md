@@ -18404,3 +18404,34 @@ Nothing else calls it.
 
 protocol 408/408, core 83/83, blwp-node 116 -> 119, blwp-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. Bundle 198.8 KB.
+
+## Item 24, slice 7: the last two doors that swallowed the option
+
+The fork was whether any live path still accepts a poster-chosen output key
+while holding what it takes to refuse. Two did, and one of them was mine:
+
+  blwp-node/src/advert.js:53   the advert door built in letter 23 - it checked
+                               the signature and dropped the bond option, so a
+                               caller with the network's set could not ask for
+                               the output key to be rebuilt
+  blwp-client/src/directory.js the door a player walks through, same
+
+Both forward it now. The daemon supplying a set is 26's, and that is fine - the
+fault was that the option could not be passed AT ALL, not that nobody passes it
+yet. Measured: a signed advertisement over a stranger's taproot output is
+refused with the set and refused for its signature without one; the node door's
+unchecked list drops the signature it read and the template the set let it
+rebuild, independently.
+
+  J1 the node door swallows the option again    1 red
+
+### Suites
+
+protocol 408/408, core 83/83, blwp-node 119 -> 120, blwp-client 95/95, money
+guard 12 files clean, determinism guard 20 files clean. Bundle 199.0 KB.
+
+### What 24 leaves, each owned elsewhere
+
+Witness assembly and sighash (25); the chain read that gives a daemon a census
+to check, and the wiring that hands the set to these doors (26); real
+arbitration keys on mainnet, which is a decision like BOND_MARKER; Feldman (29).
