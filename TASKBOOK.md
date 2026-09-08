@@ -17188,3 +17188,63 @@ new core file picked up by the directory walk.
 
 player_run_duration and entry_close_time stay unread. No daemon, no advert
 curve, no BOND_MARKER, no Unity, no C#. The BlwpNet.cs comment stays.
+
+## Item 21, close-out sweep: the two leftover sixties inside the core
+
+Asked whether anything logically required was still missing. Measured rather
+than assumed.
+
+### The engine, before and after moving TICK_DT
+
+The change touched `sim.js`, so the simulator had to be compared with itself.
+`test/harness.js`, 36,000 ticks, generated inputs, state hash every thousand:
+
+  before (5b26965~1, extracted with git archive)  358834a4227fe601...
+  after  (working tree)                           358834a4227fe601...
+
+Byte-identical. Moving a constant into its own module changed nothing the
+simulation computes. (IMPLEMENTATION.md's `5d65d265...` table is the historical
+cross-engine record from stage 0, taken before combat and cargo existed; it is
+not a live pin and was not treated as one.)
+
+### What the sweep found
+
+Two labels inside the core, both beside numbers that reach a score:
+
+  rules/score.js:28   "Par time in ticks, at 60 Hz." for REFERENCE_TICKS = 3900
+                      3900 ticks is 64.984 s, not the 65 s that sixty implies
+  test/harness.js:21  "Ten minutes at 60 Hz" for 36000 ticks
+                      36000 ticks is 599.85 s, not 600
+
+NEITHER NUMBER MOVES. A tick count is what the simulation compares against, so
+3900 IS the par: every score, every signed result and every recorded vector is
+against it, and "fixing" it to 65 x 60 = 3900... would be the same number by
+luck here, but the reasoning is the danger - the next person to see "at 60 Hz"
+beside a tick count multiplies. The labels were what was wrong, and they are
+now the arithmetic against the real tick. Harness digest unchanged after the
+edit: 358834a4227fe601...
+
+### What was checked and is NOT a hole
+
+  blwp-node        `seen_ms` / `receivedAtMs` are recorded and reported, never
+                   compared against a tick delta. No tick-to-time conversion
+                   exists in the node, so nothing there was silently using 60.
+  BlwpNet.cs       TicksPerSecond = 60 drives BatchEvery and MarkEvery - how
+                   often a client PUBLISHES. It converts no contract time and
+                   touches no settled state. Left alone, as ruled.
+  client.js:802    a comment about the frame loop's cadence, not settled state.
+  server.js:6      "sixty times a second" describes a frame rate in prose.
+  blockTicks       u16, so at most 65535 ticks = 18m 12s of round. T_run's
+                   worked example is 3 minutes = 10802 ticks. Room enough; not
+                   this letter's to enforce.
+
+Both label corrections were committed by another author as a7cb452 while this
+sweep was being measured; they are not re-committed here. The genesis work of
+468b0d9 is likewise another author's and untouched - it is what took protocol
+from 389 to 392.
+
+### Suites
+
+core 83/83 with the harness digest unchanged, protocol 392/392, blwp-node
+71/71, blwp-client 95/95, money guard 12 files clean, determinism guard 20
+files clean.
