@@ -16,54 +16,57 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-   15  M2.2 census from chain         M2   OPEN — the root is checked now: a
-                                            contract's `censusRoot` must be the
-                                            one its published census derives to
-                                            at the contract's own height, and
-                                            the entries are bound so nobody can
-                                            swap the set under it. It was named
-                                            by every contract and read by no
-                                            code at all. SCAN is in for three of
-                                            its four conjuncts: a census reads
-                                            each outpoint's height and its spend
-                                            off the blocks instead of believing
-                                            the entry. The fourth - FINDING
-                                            which outputs are bonds - waits on
-                                            BOND_MARKER, a genesis parameter
-                                            this protocol leaves null on
-                                            purpose, so the candidates come in
-                                            from advertisements. RESOLVE is in
-                                            with the three 5A.3 filters that
-                                            wait on nothing parked: a body that
-                                            cannot be retrieved is excluded the
-                                            same way for everyone, a bond under
-                                            the ROUND's floor is out, and an
-                                            advertisement that declares no role
-                                            or no version we speak is out. The
-                                            other three are named and not faked:
-                                            the bond script template cannot be
-                                            read off a taproot output, and the
-                                            advertisement signature needs a
+   16  M2.2 contract fields before    M2   OPEN — the next unblocked item.
+       they are used                         5d / spec 27A.4: anything the
+                                            Round Contract carries must be in
+                                            its FIRST version, because adding
+                                            a field to something signed is a
+                                            format break. `network_id`,
+                                            `required_protocol_version` against
+                                            the advertisement's supported set,
+                                            and `config_hash` are named there
+                                            and are not in the contract. The
+                                            donation set field already is. The
+                                            VALUES wait on genesis parameters
+                                            and on keys nobody has generated;
+                                            the FIELDS do not, and that is the
+                                            whole point of 5d. Not started.
+   15  M2.2 census from chain         M2   OPEN — parked, no unblocked work
+                                            left. A contract's `censusRoot` is
+                                            checked against the census it
+                                            derives to at its own height, with
+                                            the entries bound so nobody can
+                                            swap the set. `deriveCensus` is the
+                                            only function that ends in a root
+                                            and it runs all five steps of 5A.4:
+                                            SCAN off the blocks, RESOLVE the
+                                            committed advertisement, FILTER by
+                                            5A.3, SORT by outpoint, COMMIT. A
+                                            root cannot be taken over an entry
+                                            RESOLVE never read, and the leaf
+                                            names the key the advertisement
+                                            declares, not a transcribed one.
+                                            THREE CONJUNCTS REMAIN AND ALL
+                                            THREE ARE PARKED: finding which
+                                            outputs are bonds, and the bond
+                                            script template, both wait on
+                                            BOND_MARKER - a genesis parameter
+                                            left null on purpose; the
+                                            advertisement signature waits on a
                                             curve this package does not carry.
-                                            Item 15's remaining conjuncts are
-                                            those three. And the five steps are
-                                            ONE derivation now: `deriveCensus`
-                                            is the only thing that ends in a
-                                            root, a root cannot be taken over
-                                            an entry RESOLVE never read, and
-                                            the leaf names the key the
-                                            advertisement declares, not the key
-                                            a candidate transcribed. THREE
-                                            signed-shape divergences recorded
-                                            and deliberately not fixed: the
-                                            leaf carries a pubkey where 5A.4
-                                            wants the advertisement hash, the
+                                            Three signed-shape divergences
+                                            accepted, not bugs to fix: the leaf
+                                            carries a pubkey where 5A.4 wants
+                                            the advertisement hash; the
                                             contract carries one root where
-                                            5A.4 wants one per role, and it
-                                            carries one bond floor where 5A.3
-                                            names one per role. All three move
-                                            every census root or round id.
-                                            Numbers: TASKBOOK.
+                                            5A.4 wants one per role; and 5A.3
+                                            names bond_min(settlement) and
+                                            bond_min(game_verify) while the
+                                            contract carries one `bondMinSats`,
+                                            so a node declaring both roles is
+                                            measured against one floor. All
+                                            three move every census root or
+                                            round id. Numbers: TASKBOOK.
    14  M2.1 checkpoints               M2   OPEN — 5b and 5c done: the client
                                             plays the round in the address bar,
                                             asks two declared providers for a
