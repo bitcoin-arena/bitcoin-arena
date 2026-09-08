@@ -20444,3 +20444,76 @@ The WebGL player hop end to end. No browser can be driven here - no chromium,
 no playwright, no puppeteer - so what is measured is that the glue is IN the
 player and that both sides of it are right, not that a human saw the truck. A
 rebuild is also outstanding, since the player on disk carries the broken core.
+
+## Item 28: the daily carries the hop, and 28 is still open
+
+THE REBUILD THAT WAS OUTSTANDING IS IN, AND IT IS THE PROOF OF THE BUNDLER FIX.
+`SyncCore` re-bundles both packages during a WebGL build - line 381 of the
+first build's log, `[SyncCore] dist/blwp-core.js 219.5 KB from 16 modules`, is
+what wrote the broken file over the committed one. So the honest check on the
+fix is not the suite, it is a build: run it again and see what SyncCore writes.
+
+    build 22:41-22:44   Build Finished, Result: Success
+                        [BuildWebGL] result=Succeeded size=19MB errors=0
+                        time=00:03:48
+    after it            git status on packages/ and the WebGL template: EMPTY
+
+The rebuild reproduced the committed `dist/blwp-core.js` and
+`dist/blwp-client.js` byte for byte, so the bundler is now the same function
+twice and the build no longer edits the tree behind the commit.
+
+### The artefact, measured before anything was copied or deployed
+
+    built blwp-core.js      227,592 bytes   md5 cecf6b18052d712e1657f8e5e04380aa
+      HALF_X                10 uses, 1 declaration
+      HALF_Z                10 uses, 1 declaration
+      TICK_DT               14 uses, 1 declaration
+      UNITS                 25 uses, 1 declaration
+      ARMOUR_MASK            5 uses, 1 declaration
+    built blwp-client.js    223,678 bytes   md5 d0545265c66053226b8edb3ff878ba96
+      watchGhosts            2      onGhost 5
+    byte-identical to packages/core/dist and packages/blwp-client/dist, and to
+    the WebGL template's own two copies - all four md5s agree.
+
+`BlwpNextGhost` is not in the page's client and is not supposed to be: it is
+the jslib export, and it lives in the compiled framework. Brotli-decompressed
+out of the built player:
+
+    BlwpNextGhost 3    watchGhosts 1    net.ghosts 3    framework 494,995 bytes
+    GhostField 1, GhostTruck 1, WorldSolids 1 in webgl2.data.unityweb
+
+### The page core RUNS, and the old one does not
+
+Declaration counts are a shape check. The fault was a page that threw, so the
+built file itself was driven through a golden vector - not the modules, not
+dist, the file the browser downloads:
+
+    the 22:27 build   ReferenceError: HALF_X is not defined
+    the 22:44 build   3600 ticks OK, hash 88c39534...891883 == golden
+    the LIVE file     3600 ticks OK, hash 88c39534...891883 == golden
+
+The third line is the deployed page's own bytes, fetched back over HTTPS.
+
+### Deployed
+
+`unity-proto/build/webgl` held the 00:39 tree: a 151,399-byte `blwp-client.js`
+with ZERO occurrences of `watchGhosts`, and a core from before letter 21's
+`tick.js`. That is what `deploy-core.sh` publishes, so it was replaced with the
+22:44 build before deploying.
+
+    btc-logistics-core.pages.dev    200, index 11,975 bytes
+      /blwp-core.js                 200, 227,592, md5 cecf6b18...
+      /blwp-client.js               200, 223,678, md5 d0545265...
+      /Build/webgl2.framework...    BlwpNextGhost 3, watchGhosts 1, net.ghosts 3
+    btc-logistics-war.pages.dev     200, its own page - md5 611ad3d4 against the
+                                    core page's 74fd3e48, and its client is the
+                                    old 5,552-byte file. UNTOUCHED.
+
+No mN freeze URL. 28 is not closed and a freeze is for a closed milestone.
+
+### What the daily does NOT prove
+
+That two nodes play. The hop is in the player and both ends of it are right;
+nobody has yet seen the other truck stand where its transcript put it and move
+with it. That sighting is the close condition for 28 and it needs a human eye
+on this page - Playwright, Chromium and Puppeteer stay out.
