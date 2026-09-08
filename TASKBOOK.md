@@ -18188,3 +18188,71 @@ information and not derivable from what is on chain.
 
 protocol 405 -> 408, core 83/83, blwp-node 111 -> 112, blwp-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean.
+
+## Item 24, slice 4: the internal key is derived, not chosen
+
+5A.3B makes the key path MuSig2(node_key, arbitration_aggregate_key), and it is
+the path that moves the money without revealing anything - "a cooperative
+release and a cooperative slash are the same transaction". The template ACCEPTED
+thirty-two bytes for it, so whoever called it chose that path: a node could post
+a bond whose cooperative spend is a key only it holds, and every check would
+pass, because the key was an input to the check rather than a fact derived from
+the keys the bond names. Census depth, committee size, bond floor, payout table
+- the same fault, on the one path nobody would ever see.
+
+### BIP-327 KeyAgg, coefficients here and the sum in the caller
+
+  L    = H("KeyAgg list", pk1 || pk2 || ...)
+  a_i  = H("KeyAgg coefficient", L || pk_i), and a_i = 1 for the SECOND
+         distinct key - BIP-327's own optimisation, kept because an aggregate
+         that skipped it would agree with no other MuSig2 implementation, and
+         a key path nobody else can sign is a key path that does not exist
+  Q    = sum a_i * P_i, done by the injected curve
+
+Two steps, as the spec names two things: the arbitration keys aggregate to
+`arbitration_aggregate_key`, and the internal key is the node's key aggregated
+with that. Aggregation only - no session, no nonces, nothing signed.
+
+  derived and reproducible          yes, and it is neither the node key nor
+                                    the arbitration aggregate
+  a different node key              a different key path
+  a different arbitration set       a different key path
+  a chosen internal key             refused: "not the MuSig2 aggregate of the
+                                    node and arbitration keys"
+  second key's coefficient          1, and the first's is not
+
+### A BYPASS I HAD LEFT BESIDE THE DOOR
+
+The check only ran when a caller passed the aggregate curve, so passing the
+tweak curve ALONE still built a bond on any internal key. Both are now
+required: anything that can add t*G can add a_i*P_i, so asking for both costs
+a caller nothing and closes it. Found by an assertion I had written to say the
+one-curve path was still served - reading it back made it obvious that it was
+the hole, not a feature.
+
+### The pinned output key moved once, and the root did not
+
+  merkleRoot  4e8367dd... unchanged - the LEAVES did not move
+  outputKey   704bf508... -> 9e0435f6... because the fixture stopped stuffing
+              b32(0x22) as the internal key and started deriving it
+
+The root is what pins the leaf programs; the output key under the stub curve
+also depends on the internal key, so it moved when the fixture stopped
+inventing one. Not a loosening: both are still pinned, and the reason is
+written beside them.
+
+### Mutants: 6 planted, 6 killed, 0 retracted
+
+  G1 the internal key accepted as given            script + key red
+  G2 the aggregate curve made optional again       script + key red
+  G3 the second key's coefficient hashed like the  script + key red
+     rest
+  G3b every coefficient hashed, no second-key rule script + key red
+  G4 the key list left out of the coefficients     script red
+  G5 the node and the set aggregated in the other  script + key red
+     order
+
+### Suites
+
+protocol 408/408, core 83/83, blwp-node 112 -> 114, blwp-client 95/95, money
+guard 12 files clean, determinism guard 20 files clean.
