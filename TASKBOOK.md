@@ -20517,3 +20517,34 @@ That two nodes play. The hop is in the player and both ends of it are right;
 nobody has yet seen the other truck stand where its transcript put it and move
 with it. That sighting is the close condition for 28 and it needs a human eye
 on this page - Playwright, Chromium and Puppeteer stay out.
+
+### The two-daemon path, re-run against the deployed core
+
+`packages/blwp-client/test/two-nodes-play.test.js` loads
+`packages/core/dist/blwp-core.js`, which is byte for byte the file the daily
+now serves (md5 cecf6b18), so this run drives the deployed core.
+
+    the other truck, as shown against as driven
+    tick  59   ghost x -6568339 z 668467 heading 16384
+               transcript x -6568339 z 668467 heading 16384   delta 0 0 0
+    tick 119   ghost x -6409535 z 668336 heading 16413
+               transcript x -6409535 z 668336 heading 16413   delta 0 0 0
+
+The pose was already asserted; it is printed now, because a number nobody can
+read is a number nobody can check.
+
+A FRESH TWO-DAEMON RUN GIVES THE SAME POSE AND A DIFFERENT ENTRY ID. Dumped
+beside the committed fixture the player's `GhostOnScreenTests` draws:
+
+    entry     0a124797...cc69e37a   fresh
+              ad2b306d...64a96f79   committed
+    tick  59  x -6568339 z 668467 heading 16384   both
+    tick 119  x -6409535 z 668336 heading 16413   both
+
+The id moves because the daemons are new keys every run and the round is named
+after them; the pose does not, because it is a function of that player's
+transcript and nothing else. That is the shape the letter wants: two identities
+on one contract, and a picture whose numbers come from the other run.
+
+STILL NOT WITNESSED, and it is the whole close condition for 28: nobody has
+seen the truck on the page. The daily is where that sighting happens.
