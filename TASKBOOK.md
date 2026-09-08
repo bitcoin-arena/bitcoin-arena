@@ -20954,3 +20954,86 @@ the decision on that record since M1.
 
 THE ONE THING LEFT IS NOT CODE. Nobody has opened the two tabs. Every step up
 to the eye is measured on both sides of the renderer.
+
+## Item 29, slice 1: the dealer is checked at handout, not at settlement
+
+23.1 asks for verifiable secret sharing and says what verifiable means: "each
+node can confirm its share is consistent WITHOUT reconstructing P". What was
+there was a hash commitment per share - it catches a share corrupted or swapped
+in transit, and it says nothing at all about the DEALER, because the dealer
+wrote both sides of it. `shares.js` said so in its own header and named the
+price. This is that price paid.
+
+### The figure
+
+The two-polynomial dealer the suite already builds: three of the seven seats
+are handed a share from a second polynomial.
+
+    with the hash commitments alone   0 of 7 refused at handout
+    with the polynomial published     3 of 7 refused at handout, seats 5, 6, 7
+    honest dealer                     0 of 7 refused, 21 of 21 subsets open P
+
+Measured twice: in `protocol/test/shares.test.js` over Z_n, and in
+`blwp-node/test/shares-feldman.test.js` over real secp256k1. Before this, that
+handout reached settlement and 0 of the 21 five-subsets could open the
+committed preimage - a stake nobody could ever settle, dealt by the player who
+staked it. Now the entry never becomes an entry.
+
+### The group, and the constant that had to move with it
+
+Daniel's pick: injected secp256k1, the curve this system already trusts for
+bonds and BIP-340. No second group. Commitments are 33-byte compressed points -
+compressed and not x-only, because g^s = product only holds up to the sign and
+the sign is part of what is being checked. `packages/protocol` still carries no
+curve: `pointFromScalar` and `combinePoints` are injected the way `deriveCensus`
+already takes `tweakPoint` and `combine`, and the daemon's copies live beside
+them in `blwp-node/src/curve.js`.
+
+THE SHARING FIELD IS NOW n, secp256k1's order, and it could not stay 2^521 - 1:
+Feldman's exponents have to be scalars of the group its commitments live in.
+The order is below 2^256, so the room a 32-byte preimage used to have is gone.
+A preimage at or above n is REFUSED AT GENERATION by name - reducing it would
+change the number whose hash the player already put in the Entry Contract, so
+the shares would open a preimage the payment hash does not name.
+
+A SIDE EFFECT WORTH RECORDING, measured rather than guessed. In the old
+521-bit field a mixed interpolation almost never landed inside 32 bytes, so
+most bad subsets were refused for their SIZE and only two came back as
+plausible wrong preimages. In a 256-bit field every element fits:
+
+    mixed subsets: 21 well-formed and wrong, 0 too big, 21 caught by the commitment
+
+The size accident is gone, and the reconstruction-side commitment check - the
+"quieter half" closed earlier - is now the only thing standing between a
+settlement committee and a wrong preimage that looks exactly like a right one.
+It catches all 21.
+
+### Mutants
+
+    seat exponent dropped (every seat checks one equation)   4 tests red
+    only C_0 checked                                         5 tests red
+    a too-large preimage reduced instead of refused          2 tests red
+    "no commitments" answers ok                              SURVIVED, then 1 red
+    "no group" answers ok                                    1 red
+
+THE FOURTH SURVIVED AND THAT WAS A HOLE IN THE TEST, not in the rule: the
+refusals were asserted on their MESSAGE and not on their answer, so a mutant
+that kept every sentence and returned ok:true passed. "I was given no way to
+check" reading as "I checked and it is fine" is the whole layer made optional
+at the dealer's choice. The assertion now reads the answer, and a handout with
+no commitments refuses all 7 seats.
+
+### What this slice did NOT do
+
+Reconstruction is untouched: still 5 of 7, still only against a FINAL result.
+Shamir, `handoutOutcome`, the 5-of-7 constants, the census and committee_time
+are all as they were. Nothing here is Lightning: no hold invoice, no HTLC, no
+CLTV, no FROST, no pool wallet, no share release. §23.1's "encrypts one share
+to each settlement-committee member" is still not done - that needs a key
+agreement nobody has chosen - and it is a named remainder of this letter, not
+a thing this slice quietly skipped.
+
+    core 84/84   protocol 416 -> 420   blwp-node 201 -> 207   blwp-client 118/118
+    money guard 12 clean, determinism guard 20 clean
+    No Unity ran and no C# changed: PlayMode 234/209/12/13 and EditMode
+    190/186/1/3 stand from item 28.
