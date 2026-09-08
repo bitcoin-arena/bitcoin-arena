@@ -16597,3 +16597,29 @@ protocol side: 11 for this letter, none retracted.
 protocol 367/367, core 83/83, blwp-node 71/71, blwp-client 89 -> 95, money
 guard 12 files clean, determinism guard 19 files clean, client bundle rebuilt
 (172.5 KB). PlayMode and EditMode not re-run: nothing in Unity moved.
+
+### Item 19 closed, and what stays parked
+
+Closed in player terms: a late run begins at the tick its own signed Entry
+Contract names; the Round Contract is never rewritten and late joins add Entry
+Contracts only; a transcript starting anywhere but that tick is refused by
+name; and a client that resumes fetches its entry, hashes it against the id it
+asked for, and starts numbering at that entry's tick.
+
+PARKED, behind the same tick rate as 15, 14 and 8, and written as unchecked
+rather than assumed:
+
+  player_run_duration   0.8's "same contract-defined mission duration T_run".
+                        Section 6 names it; this Round Contract does not carry
+                        it - one of the eighteen absent names audited in item
+                        16, and adding one moves every round id.
+  entry_close_time      section 6's "last late join". Carried by every contract
+                        and read by no code. Turning it into a tick needs a
+                        protocol tick rate that does not exist.
+
+Neither was investigated further and neither was folded into the letter as
+live work.
+
+Closing numbers: blwp-client 89 -> 95, protocol 367/367, core 83/83, blwp-node
+71/71, 11 mutants planted and killed across the two halves, none retracted.
+PlayMode and EditMode were not required and were not re-run.
