@@ -21435,3 +21435,71 @@ selection fixture picks.
 Next on this letter, in order: the 0xbe constant leaves `round-2of2.mjs`, then
 seating consults a beacon - `server.js` seats only when it has a chain view and
 the 2-of-2 tool gives none.
+
+## Item 32, slice 3: the 2-of-2 tool no longer invents a seed
+
+`round-2of2.mjs` answered every beacon question with
+`{ hash: 32 x 0xbe, height: 900005, timeMs: 900n }`. It is gone. Given a
+bitcoind (RT= and RPCPORT=), the beacon is the block the chain names; given
+none, `randomnessFor` is not passed at all and the daemons' own defaults answer
+nothing, which 27 turns into "this node has no beacon for that round, so it
+cannot say who the census seats".
+
+### What that constant actually was, measured
+
+It was not seating anybody. The tool's `committee_time` became `Date.now()` in
+slice 2 of letter 28, and 27 refuses a beacon at or before that instant:
+
+    seed from 32 x 0xbe   "that randomness is from 900, at or before this
+                           round's committee time 1788910693000 - the creator
+                           could have held it when the round was made"
+    seed from the chain    d964a1b2a7c2397d82479f0bc741cbb0277e6b95576ec89acc4fa0a1ea3959c8
+
+So what is replaced is not a working stub but a misleading one: a source that
+looked like an answer and was refused downstream. The tool now either holds a
+real block or says it holds none.
+
+### The synchronous question and the asynchronous chain
+
+`roster.seedFor` asks for the beacon in the middle of seating and reading a
+chain is a fetch, so `beacon-source.js` reads AHEAD of the question and holds
+what the rule decided.
+
+HOLDING THE ANSWER IS SAFE AND HOLDING THE TIP WOULD NOT BE, and the difference
+is the whole reason it is allowed: for a given `committee_time`, the first
+block whose median time is after it does not change as the chain grows. A later
+read finds the same block DEEPER, not a different block. A reorg is the one
+thing that could move it, which is what the depth requirement is for.
+
+### Measured
+
+    nothing held before a read           for() is undefined, size 0
+    a read that throws                   nothing held afterwards, the throw
+                                         carries ECONNREFUSED out
+    after a read                         the same block the rule names when
+                                         handed the same headers, hash and
+                                         median time equal
+    two reads                            one block, one hash
+    roster with no beacon                refuses: "has no beacon for that round"
+    roster with the reader               seats on exactly
+                                         committeeSeedFromBeacon(chain answer)
+
+### A WARNING WORTH MORE THAN THE SLICE
+
+The two-tab test's ghost pose is NOT sensitive to the beacon, and I checked
+rather than assumed: a truck driven on throttle alone reaches x -6366013 under
+0xbe and under 0x11 alike, because the seed drives the world - army, terrain,
+strikes - and not that trajectory. So the two-tab test passing after the
+constant was removed says the ghost is the other player's transcript; it says
+NOTHING about which beacon was used. The number that moves is the committee
+seed, and that is what `beacon-source.test.js` asserts. A green suite is not
+evidence for the thing it does not touch.
+
+The two-tab test now stands its daemons up with a mined fixture chain instead
+of the constant - a fake node serving the three RPC calls the reader makes -
+because with no beacon a node cannot replay another player's run and the page
+is shown nobody. That is the honest consequence of removing the stub, and it is
+how the test found it.
+
+    core 84/84   protocol 431/431   blwp-node 218 -> 221   blwp-client 118/118
+    money guard 12 clean, determinism guard 20 clean. No C# moved.
