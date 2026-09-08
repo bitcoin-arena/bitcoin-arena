@@ -18078,3 +18078,67 @@ finds them named rather than discovering them with money in the output.
 protocol 399 -> 405, core 83/83, blwp-node 105 -> 109, blwp-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. No Unity, no C#, no
 bitcoind: this letter builds a key and posts nothing.
+
+## Item 24, slice 2: the leaves are programs that run
+
+A leaf is not documentation. It is the program that moves the money, and its
+hash is inside the output key - so hashing 5A.3B's own bytes would mean either
+a bond that can never pay out, or an output key that has to change later and
+invalidate every bond already posted. The whitepaper is intent, not a licence
+to hash an unspendable script.
+
+  path A  was  <node_key> CHECKSIGVERIFY <maturity> CLTV DROP
+               ends on DROP with an EMPTY stack; Bitcoin needs a true left
+          now  <maturity> CLTV DROP <node_key> CHECKSIG
+  path B  was  <k> <keys> <m> CHECKMULTISIG
+               tapscript removed CHECKMULTISIG (BIP-342): invalid on reveal
+          now  <k1> CHECKSIG <k2> CHECKSIGADD ... <km> CHECKSIGADD <k> NUMEQUAL
+
+### Measured by running them
+
+A stack machine in `blwp-node/test/bond-spend.test.js` executes exactly the six
+opcodes these leaves use. It is a FIXTURE, not a consensus engine: it can show
+a program ends true for one witness and not another, which is the claim; it
+cannot show Bitcoin accepts the transaction, and nothing claims it does.
+
+  recovery, at maturity and after      spends
+  the same witness one block early     refused, "the locktime 99 is before 100"
+  a stranger's signature, any height   refused
+  the SPEC'S OWN ORDER, same opcodes   refused - nothing left on the stack
+  slash, five of seven                 spends
+  four of seven                        refused
+  six of seven                         refused - NUMEQUAL is a count, not a
+                                       floor
+  any other five                       spends
+  five strangers                       refused
+
+### The output key moved, which is the point
+
+  before  2bc846cab3fdca04e588a7eeda4092d4047fac4ba83aa76451956a58f28cb6fe
+  after   704bf508a57b0ec51898ee67a523184ff344025a6f80ff98dbfe4db210d2b4fd
+  root    bcd94355... -> 4e8367dd...
+
+Different leaf bytes are a different tree and therefore a different output key.
+That is the reason to fix them NOW rather than after a bond exists.
+
+THE NETWORK IDS DID NOT MOVE, and were checked rather than assumed: leaf bytes
+are not genesis parameters. Both still equal the pinned values recomputed last
+slice. Nothing was regenerated.
+
+### Mutants: 4 planted, 4 killed, 0 retracted
+
+  E1 the recovery leaf back to the empty-stack order   script + spend red
+  E2 the slash leaf back to CHECKMULTISIG              script + spend red
+  E3 the timelock dropped without being checked        script + spend red
+  E4 the count compared with GREATERTHANOREQUAL        script + spend red
+
+E3 and E4 are the two ways this could look right and be wrong: a leaf that
+drops the maturity without CLTV spends at any height, and a leaf that compares
+with >= lets six seats pass a five-seat quorum, which is a floor rather than a
+count.
+
+### Suites
+
+protocol 405/405, core 83/83, blwp-node 109 -> 111, blwp-client 95/95, money
+guard 12 files clean, determinism guard 20 files clean. No bitcoind, no RPC, no
+Unity, no C#, no chain scan.
