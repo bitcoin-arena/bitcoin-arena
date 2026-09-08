@@ -18435,3 +18435,59 @@ guard 12 files clean, determinism guard 20 files clean. Bundle 199.0 KB.
 Witness assembly and sighash (25); the chain read that gives a daemon a census
 to check, and the wiring that hands the set to these doors (26); real
 arbitration keys on mainnet, which is a decision like BOND_MARKER; Feldman (29).
+
+## Item 25, slice 1: the chain decides unspent and deep, not the entry
+
+5A.2: a node is in the census "if and only if it has a bond output on Bitcoin,
+CONFIRMED AND UNSPENT at census_height". RESOLVE re-applied that rule to the
+entry's own `height` and `spent` - so whoever composed the list decided whether
+a bond was live, on the single criterion the whole of eligibility rests on.
+Re-applying a rule to a claimed fact is not verification. `commitCensus`'s own
+comment even said the filters were "re-applied rather than trusted from
+upstream"; the RULE was, the FACTS were not.
+
+One reader now serves both paths: `chainFactsAt(blocks, censusHeight)`, pulled
+out of SCAN unchanged, because two readers of one chain are two answers waiting
+to differ. Nothing above census_height is looked at - 5A.2 makes the census a
+pure function of the chain up to that height.
+
+### The five, measured
+
+  a spent bond whose entry says spent:false
+      excluded, "that bond was spent at height 899992, so nothing is at stake"
+  a shallow bond whose entry claims an older height
+      excluded, "that entry claims height 899980 and the chain says 899998"
+  the same bond with an honest height, still too shallow
+      excluded, "5 block(s) deep and this round asks for 6" - the claim is not
+      quietly corrected either: a list that lies about the chain is a list to
+      distrust, not to fix
+  an honest set
+      unchanged, and the height that reaches the root is the chain's
+  no chain view
+      exactly today's behaviour, chainChecked false, and the gap named in
+      unchecked: "whether the output is unspent and deep enough at
+      census_height (no chain view was given, so the entry was believed)"
+
+A fixture correction worth keeping: depth is measured from the TIP. The first
+version put the tip ten blocks past the census, where nothing at or below the
+census height can be under six confirmations - it would have proved nothing.
+The tip now sits two blocks above it.
+
+### deriveCensus held a chain and did not pass it
+
+The same door-nobody-walks-through fault one function deeper: DERIVE scans the
+view, then resolved from the entries without handing the view down. Threaded,
+so a full derivation now checks what it read. Its `unchecked` is back to two.
+
+### Mutants: 4 planted, 4 killed, 0 retracted
+
+  K1 the claimed spent flag trusted again      resolve 1 red
+  K2 the depth comparison inverted             resolve 1, derive 7 red
+  K3 the spend index ignored in resolve        resolve 1 red
+  K3b the spend index never built at all       resolve 1, scan 1 red
+
+### Suites
+
+protocol 408 -> 409, core 83/83, blwp-node 120/120, blwp-client 95/95, money
+guard 12 files clean, determinism guard 20 files clean. No Unity, no C#, no
+PlayMode: protocol bytes and chain state only.
