@@ -179,15 +179,13 @@ IN THIS ORDER (unparked):
                                         in; 22 unlocked this. Do not
                                         skip and do not wait for 28.
    15  M2.2 census from chain         M2   done — the census is a function of
-                                        the chain: it finds its own bonds by
-                                        the round's marker, refuses a root
-                                        with the 5A.3B template unchecked or
-                                        a round that names no network, and
-                                        takes spentness, height and depth off
-                                        real blocks - depth at census_height,
+                                        the chain: its own bonds found by the
+                                        round's marker, no root with the
+                                        5A.3B template unchecked, and
+                                        spentness, height and depth off REAL
+                                        BLOCKS with depth at census_height,
                                         so two participants at different tips
-                                        derive the same census. Measured on a
-                                        regtest node, not on fixtures.
+                                        derive the same census. 734 green.
                                         Numbers: TASKBOOK.
    26  M2 census + eligibility        — PARKED until 18 closes. Leftover
                                         after 15: sort txid/vout, min census

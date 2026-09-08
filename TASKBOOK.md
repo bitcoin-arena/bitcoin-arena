@@ -19041,9 +19041,11 @@ the file rather than from a constant.
 
 15 named three things - SCAN by the round's own marker, FILTER by the 24
 template, and chain facts - and all three are measured. What came up alongside
-them is not 15's, and each has an owner so none of it is a silent drop:
+them is not 15's, and each has an owner so none of it is a silent drop. BOTH OF
+THE FIRST TWO ARE M2 REMAINDERS by ruling (Daniel, this turn): not a new live
+letter, and not M3 - they belong to M2 letters that already exist.
 
-  A RELAYABLE WITNESS                 owner: the letter that posts a real bond
+  A RELAYABLE WITNESS       M2        owner: the letter that posts a real bond
     5A.2 puts the advertisement body in the witness of the funding
     transaction. Consensus accepts the carrier spend this tree builds
     (OP_DROP <key> CHECKSIG); mempool POLICY will not relay a tapscript stack
@@ -19052,7 +19054,7 @@ them is not 15's, and each has an owner so none of it is a silent drop:
     play money on regtest/testnet4 and generateblock is the measured funding
     path until that letter exists. Not a design task now, by ruling.
 
-  THE ADVERTISEMENT SIGNATURE         owner: 26, the first production caller
+  THE ADVERTISEMENT SIGNATURE  M2     owner: 26, the first production caller
     The census still parks "the advertisement signature (no curve in this
     package)" unless a caller injects `verifyAdvert`, and no production code
     calls the census yet. The hook gets wired where the first caller is. The
