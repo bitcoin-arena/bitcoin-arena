@@ -19214,3 +19214,89 @@ yet. Not fixed here: slice 2 is socket facts by ruling. It is the next thing
 core 83/83, protocol 404/404, blwp-node 165/165, blwp-client 95/95 - 747 tests,
 0 red. Money guard 12 files clean, determinism guard 20 clean, bundle 201.1 KB
 byte-identical.
+
+## Item 18, slice 2b: the client consumes a push without stealing an answer
+
+Before: `blwp-client/src/client.js` handed EVERY socket message to the next
+queued request. The node had just learned to push GHOSTS frames, and one
+socket carrying both is the intended use - a player publishes inputs and
+watches competitors - so a frame arriving while a batch was in flight WAS the
+answer to that batch. The client would read "the node stored N ticks" off 147
+bytes of somebody's truck, the real answer would go to the next request, and
+every answer after it would be one behind for the rest of the run.
+
+After: the type byte decides. `TYPE_GHOST` goes to `takeGhost`, which decodes
+it, counts it and hands it to `onGhost`; everything else - including a
+RECEIPT, which is binary and IS a reply - keeps its place in the queue. The
+client also gained `watch(round, entry)`, the one word that subscribes.
+
+### The proof: red without the routing, green with it
+
+Not "green after the fix". The same file, the same five tests, on both paths:
+
+  routing removed (frames back on the queue)   0 passed, 5 failed
+  routing in place                             5 passed, 0 failed
+
+The assertion that fires on the unfixed path, in the test written for exactly
+this window:
+
+  a picture arriving while a request is in flight is not that request's answer
+  -> AssertionError: a picture was handed back as the answer to a request:
+     147 bytes
+
+That test had to be built carefully. The end-to-end ones go red on the old
+path too, but for the WEAKER reason - `said.shift()` drops a frame that
+arrives with no request pending, so they fail with "the handler saw nothing".
+The steal only happens while a request is genuinely in flight, and that window
+is the node's to open, not something a test can win by timing. So the frame is
+delivered the way the wire delivers one - a message event on the client's own
+socket, carrying the bytes `node.ghosts.latest()` would have pushed - while a
+`close` for a round this node does not hold is waiting for its answer. Nothing
+inside the client is reached around; the injection point is the socket's own
+event.
+
+### The numbers
+
+  a publish while frames arrive        4 publishes, 4 own answers, 0 held
+  the subscribing push                 1 frame, decoded, on the handler
+  pictures over a run                  5, at ticks 119, 159, 199, 239, 279
+  x, z, heading of each                equal to a direct core drive of THAT
+                                       entry under its own seed
+  a client that never subscribed       0 frames
+  the client's own truck               never delivered, subscribed or not
+  a receipt for a mark                 still read as the reply to that mark
+  bytes claiming TYPE_GHOST and not
+    decoding                           reach nobody; counted as bad, not shown
+  blwp-client suite                    95 -> 100
+
+### Mutants: 5 planted, 5 killed
+
+  the old path: every message answers the next request      killed
+  all bytes are pictures, so a receipt stops being a reply  killed
+  a frame is counted but never handed on                    killed
+  bytes that do not decode are handed on anyway             killed
+  a picture is counted as a reply as well as a picture      killed
+
+The receipt mutant used to read as SURVIVED, and that was the harness lying:
+it made the mark's promise wait forever, the run was killed by its timeout,
+and a run with no output has no failures to count. The receipt test now races
+a five-second timer, so a receipt that never comes back is a named failure
+instead of a hang - and the mutant dies properly.
+
+### Suites
+
+core 83/83, protocol 404/404, blwp-node 165/165, blwp-client 100/100 - 752
+tests, 0 red. Money guard 12 files clean, determinism guard 20 clean.
+
+THE BUNDLE GREW, and this one is earned: 201.1 KB from 19 modules -> 211.1 KB
+from 20, because the client now decodes ghosts and therefore ships
+`protocol/src/ghost.js`. Unlike the block splitter in slice 3, this is code
+the browser actually runs.
+
+### Still open on 18
+
+Nothing on consume that I can measure. The browser can subscribe, is pushed
+pictures of other identities, decodes them and hands them on without losing an
+answer. What is NOT in 18 by ruling: drawing the truck (28), and the Unity
+consume path, which piece 4 already landed and which no measured hole has
+forced open.
