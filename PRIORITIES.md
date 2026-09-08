@@ -16,16 +16,20 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: 20, the leaderboard - 0.11's "presentation, not authority", from
-signed final results. 19 (late join) is closed; its two remainders,
-`player_run_duration` and `entry_close_time`, are parked behind the tick rate
-and written as unchecked rather than assumed. 18 stays OPEN only for its parked
-spawn/subscribe half and is NOT promoted over a live letter. 17 is closed at
-the package boundary, pending a checkpoint chosen outside this work.
+LIVE LETTER: 20, the leaderboard. Finish it, then the deferred M2 queue.
+Daniel 10:18: everything that was set aside is M2, not later.
 
-NO PARKED ITEM GOES FIRST (Daniel 2026-09-08). 15, 14 and 8 stay parked -
-15 behind BOND_MARKER and a curve, 14 and 8 behind a daemon, a tick rate and a
-discrete-log group. They stay in number order below the last closed item.
+AFTER 20, in this order (unparked):
+   21  M2 protocol tick rate          — unlocks player_run_duration and
+                                        entry_close_time (19 remainders)
+   22  M2 daemon steps the core       — unlocks ghost spawn/subscribe (18),
+                                        and the daemon 14/8 waited on
+   23  M2 advert signatures / curve   — the discrete-log 15/14 waited on
+   24  M2 BOND_MARKER + census scan   — genesis marker, then find every bond
+   15/14/8 are this queue, not a later milestone.
+
+HARD (Daniel 2026-09-08 10:18): deferred remainders are M2. Do not skip
+tick rate, daemon, curve, BOND_MARKER, ghost subscribe, run duration.
 
    20  M2.2 leaderboard               M2   OPEN — the live letter. 0.11: "the
                                             leaderboard is presentation, not
@@ -217,8 +221,8 @@ Numbers: TASKBOOK.
                                             other names stay off the wire:
                                             audited remainder in TASKBOOK, each
                                             with what it waits on.
-   15  M2.2 census from chain         M2   OPEN — parked, no unblocked work
-                                            left. A contract's `censusRoot` is
+   15  M2.2 census from chain         M2   OPEN — M2 after 20 (Daniel 10:18).
+                                            A contract's `censusRoot` is
                                             checked against the census it
                                             derives to at its own height, with
                                             the entries bound so nobody can
@@ -373,8 +377,12 @@ HARD (Daniel 2026-09-07 12:58): if PRIORITIES has no open M1 letter, do
 M2. Do not idle. a16 is closed. Current letter is M2.1.
 
 HARD (Daniel 2026-09-08 08:03): keep going until M2 is finished. Do not
-stop mid-milestone. A closed letter is not a halt. Parked 15/14/8 stay
-parked; open the next unblocked M2 letter instead.
+stop mid-milestone. A closed letter is not a halt.
+
+HARD (Daniel 2026-09-08 10:18): everything that was deferred is M2.
+Tick rate, daemon, discrete-log, BOND_MARKER, ghost spawn/subscribe,
+player_run_duration, entry_close_time. Finish 20, then 21–24. Do not
+leave them for M3.
 
 HARD (Daniel 2026-09-06 22:48): when a letter like a13 or a14 is done,
 deploy to btc-logistics-core.pages.dev. Do not wait for Daniel to ask.
