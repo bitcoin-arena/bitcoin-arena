@@ -25,7 +25,8 @@ AFTER 20, in this order (unparked):
    22  M2 daemon steps the core       — unlocks ghost spawn/subscribe (18),
                                         and the daemon 14/8 waited on
    23  M2 advert signatures / curve   — the discrete-log 15/14 waited on
-   24  M2 BOND_MARKER + census scan   — genesis marker, then find every bond
+   24  M2 BOND_MARKER + census scan   — regtest+testnet markers SET (Daniel
+                                        10:22). Mainnet still null. Scan next.
    15/14/8 are this queue, not a later milestone.
 
 HARD (Daniel 2026-09-08 10:18): deferred remainders are M2. Do not skip
