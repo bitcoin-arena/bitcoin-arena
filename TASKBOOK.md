@@ -17248,3 +17248,91 @@ from 389 to 392.
 core 83/83 with the harness digest unchanged, protocol 392/392, blwp-node
 71/71, blwp-client 95/95, money guard 12 files clean, determinism guard 20
 files clean.
+
+## Item 22, slice 1: the daemon replays a finished run
+
+### What the daemon did before, measured
+
+  imports of the core in blwp-node/src   0 files, 0 modules
+  step() call sites outside core         0 (one comment in protocol/ghost.js)
+  init() call sites outside core         0, in the node AND in the client
+  what it is instead                     round.js, 25 methods; store.js, 11
+                                         tables - rounds, entries, ticks,
+                                         batches, checkpoints, equivocations,
+                                         offered_marks, foreign_receipts,
+                                         receipts, identity, liquidations
+
+So it signed receipts over `state_hash` values it could not recompute: five of
+seven agreeing degraded to five of seven being told the same thing.
+
+### The distinction the letter turns on
+
+client.js opened by saying blwp-node imports no core ON PURPOSE, "because a
+daemon that recomputed the state would be a second simulator and then two of
+them could disagree". That argument is against stepping LIVE, beside the
+player. Section 13 asks for the other thing: seven nodes replay a FINISHED run
+and five must agree - one simulator run twice over the same inputs. The header
+of core/tools/replay.js had already said this was coming: "the shape the node's
+replay pool needs". The comment in client.js now says which of the two it
+means; it was committed by another author as part of 043690d.
+
+### The number that closes the slice
+
+  player run, 600 ticks, seed 7, two liquidations
+     9c76f94e75ddd15ba8b0ea7cb35a63f70351ee139eef8485d6621e42ceebf1b4
+  node replay of the same run, rebuilt from Round#transcript()
+     identical, and identical at all 5 marks (120, 240, 360, 480, 600)
+
+The run goes in as encoded InputBatches through `Round#batch`, so the numbers
+came back out through the protocol's own encoder and the node's own tables -
+not from the array the fixture built.
+
+### What the replay refuses
+
+  no seed                a real round is not replayable yet, and the refusal
+                         names the missing clause rather than looking like a
+                         bug (see BLOCKED, below)
+  wrong start            "starts at tick 1 and the entry joins at 0"
+  a gap                  "jumps from tick 99 to 101" - ticks are absolute so a
+                         hole is visible; replaying across one would produce a
+                         state nobody played
+  a tick that is not five words
+
+### Mutants: 7 planted, 7 killed, 0 retracted
+
+  Q1 liquidation applied AFTER its tick instead of before   3 red
+  Q2 replay starts at 0 instead of the entry's joinTick     1 red
+  Q3 the gap check dropped                                  1 red
+  Q4 a mark compared one tick early                         3 red
+  Q5 the LAST disagreement reported instead of the first    1 red
+  Q6 a missing seed defaulted to 0 instead of refusing      1 red
+  Q7 throttle and steer fed to step in the wrong order      3 red
+
+Q1 and Q7 are the two ways a replay can be wrong while looking right: the
+vectors' own note fixes the order - liquidations are "handed to
+submitLiquidation BEFORE that tick" - and batch.js fixes the words, "the same
+five in the same order, so a node's transcript and a golden vector are the same
+list of numbers".
+
+### The guard test got narrower, not weaker
+
+`round.test.js` asserted "nothing here imports the core". It now asserts the
+reaching files are EXACTLY ['replay.js'], and that the door contains no
+setInterval, setTimeout or requestAnimationFrame - a clock there is the live
+second simulator arriving one import at a time.
+
+### BLOCKED ON DANIEL: the private world's secret
+
+A real round cannot be replayed yet. IMPLEMENTATION.md:335 names the player
+sub-seed as H(round_randomness || pubkey || secret || join_tick). Three of the
+four are on signed objects the node holds; `secret` is the player's, and 0.10
+has no reveal message, no entry field and no clause saying it ever reaches a
+verifier. Writing that hash would settle a protocol question by implementing
+it. The fixture owns its 7 the way blwp-client's checkpoint test owns its
+core.init(7); nothing was written as a rule.
+
+### Suites
+
+protocol 392/392, core 83/83, blwp-node 74 -> 79, blwp-client 95/95, money
+guard 12 files clean, determinism guard 20 files clean. (The node's baseline
+moved 71 -> 74 under another author's 043690d, which is untouched here.)

@@ -22,7 +22,27 @@ threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
 
 IN THIS ORDER (unparked):
-   22  M2 daemon steps the core       — unlocks ghost spawn/subscribe (18),
+   22  M2 daemon replays the core     — slice 1 IS IN: the node reaches the
+                                        simulator through src/replay.js and
+                                        nowhere else, rebuilds a finished run
+                                        from the transcript it already stores,
+                                        and reaches the player's own state
+                                        hash at every mark. NOT a live second
+                                        simulator - that is what the client's
+                                        header argues against and what the
+                                        node's own guard test now pins by
+                                        name. BLOCKED ON DANIEL for a real
+                                        round: replay needs the world's seed,
+                                        IMPLEMENTATION names it
+                                        H(round_randomness || pubkey ||
+                                        secret || join_tick), and `secret` is
+                                        the player's with no clause putting it
+                                        in front of a verifier - the
+                                        BOND_MARKER and checkpoint class. A
+                                        fixture owns its own number; no rule
+                                        was written. Still to come: five of
+                                        seven agreeing, and the worker pool.
+                                        Unlocks ghost spawn/subscribe (18),
                                         the daemon 14/8 waited on, and the
                                         board on a screen: 20's rows are built
                                         and nothing draws them, because finals
