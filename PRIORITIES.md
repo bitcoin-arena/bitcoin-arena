@@ -849,7 +849,10 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      first recipient as published - not the fee's hash order - and a payment
      that fails is NOT redirected to the others, because one unreachable
      endpoint must not quietly redistribute other people's money. The set is
-     not on the round contract this turn: 22A wants it hashed into the contract
+     A SET NOW HAS A TAGGED ID from published bytes, so a committee can check
+     one instead of being handed an array, and a reordered set is a DIFFERENT
+     set because the order decides who takes the remainder. The set is still
+     not on the round contract: 22A wants it hashed into the contract
      and that moves every round id.
      Numbers: TASKBOOK.
   4. **Entry quotas.** DONE. A funded entry before the node stores a byte.

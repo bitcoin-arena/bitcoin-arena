@@ -14284,3 +14284,83 @@ money guard 12 files clean, determinism guard 19 files clean. Nothing outside
 `packages/protocol` calls any of this - grep finds `splitDonation`,
 `donationSetStands`, `donationAfterFailures` and `donatedMsat` only in the file
 itself and its test. Unity untouched and not re-run.
+
+## M2.1 22A: the donation set becomes bytes a committee can check
+
+The hole was named in the follow-up before it was coded: `donation.js` had no
+encoder, no tagged hash and no id - measured, `grep` for `encode`, `Id` or
+`taggedHash` in that file returned nothing - so a recipient set was a
+JavaScript array living in one process. Every other object here that decides
+money carries a tagged id precisely so a stranger can re-derive it: the payout
+table, the settlement record, the fee claim, the service record, the slash
+proof. The donation set was the only one that did not, and that is what stopped
+two independent nodes agreeing on WHICH set a player donated under.
+
+`TYPE_DONATION_SET = 0x10` and `BLWP/v1/DonationSet`, next free number, the
+same pattern the fee claim and service record used.
+
+### The order is part of the set, and is deliberately NOT sorted
+
+This is the one place in the package where a vector is left unsorted, and it is
+the opposite of a slip. Everywhere else sorting is what makes two honest
+callers agree - the payout table by pubkey, the committee by key - and here it
+would hide a real difference in who gets paid: 22A gives the remainder to "the
+first recipient in the set AS PUBLISHED", so a reordered set pays somebody else
+the odd millisatoshi and must be a different set with a different id.
+
+  set as published        d201913a094e5b6d...
+  the same three reversed abca72ffcef40139...
+
+The mutant that sorts the recipients - which would make those two ids equal -
+is 1 red.
+
+### A set that does not stand has no id at all
+
+Refused at the encoder AND at the decoder. Without the first there would be
+bytes carrying a real tagged id over shares summing to 9999: an object as
+published-looking as an honest one that hands out a different amount than the
+player chose. Without the second a stranger's bytes would be trusted, and a
+stranger is exactly who might send a set that does not stand - measured with a
+tampered byte that turns 5000 into 4999.
+
+### The zero-donation answer is `owed`, not `ok`
+
+22A says the set is irrelevant to an entry that donates nothing, so a zero
+donation succeeds even against a set that would NOT stand. A field called `ok`
+invited a caller to read that as "this set stands", which it never said. `owed`
+says what the function answers - what each recipient is owed - and whether a
+set stands is `donationSetStands`, a different question with a different name.
+The arithmetic did not change. A test asserts `'ok' in` the answer is false, so
+the old reading cannot come back quietly; the mutant that adds `ok` back is
+1 red.
+
+### Parked, with the reason stated
+
+`failed` is a caller-supplied list of `lnurl`s. Nothing in this package can
+verify that a Lightning payment failed - there is no Lightning here, the same
+way there is no curve - so it is an attestation of the same class as
+`replayDiffers` and 5A.3B's own residual. Not implemented behind a guess.
+
+The set is still NOT on the round contract. 22A wants it hashed into the
+contract hash, and that moves every round id: a decision before it is work, the
+same split the fee table took before `feeMsat`. What this turn adds is the
+hash, which has to exist before anything can carry it.
+
+### Mutants: 8 planted, 8 killed, none retracted
+
+| mutant | protocol red |
+|--------|-------------:|
+| the address is left out of the id | 2 |
+| the share is left out of the id | 2 |
+| a set that does not stand encodes anyway | 2 |
+| any type byte is a donation set | 2 |
+| the set is sorted, so reorder is the same set | 1 |
+| bytes that do not stand decode anyway | 1 |
+| trailing bytes are ignored | 1 |
+| the zero-donation flag is `ok` again | 1 |
+
+### Suites
+
+protocol 265/265 (was 260), blwp-node 70/70, blwp-client 89/89, core 80/80,
+money guard 12 files clean, determinism guard 19 files clean. Nothing outside
+`packages/protocol` calls any of it. Unity untouched and not re-run.
