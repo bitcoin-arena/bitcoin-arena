@@ -18679,3 +18679,46 @@ and mines its own coins.
 protocol 414 -> 415, core 83/83, blwp-node 120/120, blwp-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. The regtest node is
 stopped; /mnt/bitcoin and /mnt/bitcoin/tn4 were not touched.
+
+## Item 25, slice 5: the advert door checks the round's own network too
+
+The census learned this a commit ago and the advert door did not, so the door a
+PLAYER walks through still looked for the regtest dust output whatever network
+the round named. What comes back from that door is an ENDPOINT somebody
+connects to, backed by a bond that could have been posted on another chain.
+
+The network arrives from the caller, exactly as `bond` does: `acceptAdvert` is
+handed a transaction and a merkle proof, never a contract, so it cannot read
+the network off anything it holds. No second marker table, no scan, no
+template.
+
+  before  a testnet round accepted a bond paying the regtest marker
+  after   refused, "that transaction has no dust output to BOND_MARKER"
+  mirror  a regtest round refuses a testnet bond, so the rule is the
+          network's and not a preference for one of them
+  silent  with no network named the behaviour is what it always was - regtest -
+          so nothing that worked stopped working, and the caller that knows the
+          round is the one that says otherwise
+
+That was the twelfth of twelve door-criterion pairs: six criteria across two
+doors, eleven already done, this the last.
+
+  P1 the chain door drops the network again    1 red
+  P2 the node door swallows it                 1 red
+
+Every `recognizeBond` call site now passes it - census.js:783 and
+chain.js:483, and there are no others.
+
+### The one-run 119/120 blwp-node flake, cause unknown
+
+Recorded and left listed. Six further full runs were clean, and neither of the
+two commits around it touched a blwp-node test file - only
+`tools/bond-regtest.mjs`, which the suite does not execute. I could not name
+the failing test and did not guess one. Nine files in that package bind real
+sockets or read the clock, which is the plausible class and not a measurement.
+It is not on the bond-verification path.
+
+### Suites
+
+protocol 415/415, core 83/83, blwp-node 120 -> 121, blwp-client 95/95, money
+guard 12 files clean, determinism guard 20 files clean.
