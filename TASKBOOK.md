@@ -21220,3 +21220,28 @@ Same length, same id: the page and the daemon now name one entry.
       none (32 zero bytes, M2's ordinary entry) joins with 201            pass
     a handout published for another round does not let an entry in        pass
     two tabs on one round: shown at tick 89, delta 0 0 0                  pass
+
+### After 29: what is actually left of M2, checked in the code
+
+The unparked list was re-read against the source rather than against the note.
+
+    tick rate            IN   packages/core exports TICK_DT (21)
+    daemon-steps         IN   the node replays through replay.js (22)
+    advert curve         IN   BIP-340 under the bond key (23, 26)
+    BOND_MARKER + scan   IN   the census is a function of the chain (24, 15)
+    ghost spawn/subscribe IN  produced, delivered, consumed, drawn (18, 28)
+    bonds, census        IN   (24, 25, 15, 26)
+    committee_time       IN   (27)
+    entry_close_time     IN   contracts.js:352 refuses a round that closes
+                              entry before its committee forms (27)
+    player_run_duration  OPEN transcript.js:281 still reports the run length
+                              UNCHECKED; no contract carries it
+    bitcoin block-hash   OPEN every supplier of `randomnessFor` in this tree
+      seed                    hands a constant. roster.js:49 and verify.js:71
+                              default to NO_BEACON and take it from the caller;
+                              tools/round-2of2.mjs answers b32(0xbe) at height
+                              900005. Nothing reads a block hash.
+
+So M2 is not finished and M3 is not next. The beacon goes on top: 27 gave the
+seed its derivation and its refusals, and a derivation fed a constant is a
+committee its operator chose - the exact thing the letter was for.
