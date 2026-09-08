@@ -21339,3 +21339,27 @@ Still to come on this letter: an isolated regtest bitcoind feeding this rule,
 the constant leaving `round-2of2.mjs`, and seating actually consulting a beacon
 - today `server.js` seats only when it has a chain view, and the 2-of-2 tool
 gives none.
+
+### Slice 1b: late is not the same as right
+
+`beaconIsAfterRound` asks only whether a beacon came AFTER committee_time, and
+that is all it can ask - it is handed a height and a time and no chain. A node
+that HAS a chain can ask the other half, and until now nothing did: an operator
+could hand their node any late block and so choose the seed, which is 5A.5's
+attack with one extra step. `roster.js` and `verify.js` both take their beacon
+from a caller, so this is the door that was open.
+
+    height 112 is what the chain names
+    height 113, later than committee_time, passes the old check   ok: true
+    the same 113 against the chain                                REFUSED
+      "that beacon is block 113 where this chain names 112 as the first after
+       committee time ...: a later block is a block somebody chose"
+    the right height with a foreign hash    refused, "carries a hash block 112
+                                            does not have"
+    the right height with a shifted time    refused, names the median
+    no beacon at all                        refused, rather than treated as fine
+
+Three more mutants, each 1 test red: the height not compared, the hash not
+compared, the time not compared.
+
+    protocol 430 -> 431
