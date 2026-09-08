@@ -40,11 +40,22 @@ discrete-log group. They stay in number order below the last closed item.
                                             PARAMETER: `step` takes one state
                                             and one player's five inputs, and
                                             two mutants that give it a seventh
-                                            both die. Pieces 2-4 remain: no
-                                            authority and dropped first under
-                                            backpressure, fan-out, and the
-                                            renderer that must never carry a
-                                            collider. Numbers: TASKBOOK.
+                                            both die. Piece 2 is in: every type
+                                            byte says whether it decides
+                                            anything, a Ghost is the only one
+                                            that does not, and offering one as
+                                            an input, a receipt, a census entry
+                                            or a bond is refused by name
+                                            instead of by the decoder noticing.
+                                            A full queue sheds pictures oldest
+                                            first and never evidence; with no
+                                            picture left the NEWCOMER is
+                                            refused rather than an accepted
+                                            frame discarded. Pieces 3-4 remain:
+                                            fan-out with interest management,
+                                            and the renderer that must never
+                                            carry a collider.
+                                            Numbers: TASKBOOK.
 
 BOND-OUTPUT RECOGNITION is DONE. A chain output counts as a bond or does not,
 from chain data, at both doors: P2TR, named by the advertisement that commits

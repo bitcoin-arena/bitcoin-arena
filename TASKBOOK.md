@@ -16083,3 +16083,93 @@ No Unity, no C#, no PhysX, no collider, no renderer, no lobby, no late join, no
 fan-out, no interest management. No ghost array in the core state, and no wire
 path that hands a ghost to the simulation - the missing parameter is the
 guarantee. Pieces 2 to 4 stay on item 18.
+
+## M2.2 item 18, piece 2: a picture carries no authority, and it is shed first
+
+### What was measured before any code
+
+The node's play socket dispatched on the first byte: checkpoint to its
+handler, receipt to its handler, and EVERYTHING ELSE to `round.batch`. A ghost
+was refused there - `decodeInputBatch` checks its own type byte - so the answer
+was:
+
+    decodeInputBatch(ghost) -> "not an input batch"
+
+Refused, but by the decoder noticing rather than the door deciding, and the
+sentence says what the frame is NOT. The frame is a picture. A rule that only
+knows what a frame is not passes the next non-input the moment one is added.
+
+There was no bounded inbound queue and no drop policy anywhere.
+
+### What is now true
+
+`frames.js` says of every type byte whether it decides anything. The map is
+exhaustive - 17 entries, one per type this package has - and a byte missing
+from it is refused by number rather than assumed harmless.
+
+  0x01 RoundContract      0x08 InputBatch        0x0e FeeClaim
+  0x02 EntryContract      0x09 Transcript        0x0f ServiceRecord
+  0x03 Advert             0x0a CheckpointReceipt 0x10 DonationSet
+  0x04 CensusLeaf         0x0b Objection
+  0x05 Checkpoint         0x0c SlashProof        0x11 Ghost   PICTURE
+  0x06 Result             0x0d SettlementRecord
+  0x07 PayoutTable
+
+`bearsAuthority(bytes, as)` refuses a ghost offered as an input, a receipt, a
+census entry, a bond, an objection, a result or a payout table, and the reason
+names the frame: "a Ghost is a picture and carries no authority, so it cannot
+be an input". The node's door uses it, so the socket answers that instead of
+"not an input batch", and an unused byte is refused as "no frame of this
+protocol begins with 0x7f" rather than handed to the batch reader.
+
+### The drop order, printed rather than asserted from memory
+
+  queue in           : InputBatch, Ghost, Checkpoint, Ghost, CheckpointReceipt
+  limit 4, new InputBatch
+    DROPPED in order : Ghost, Ghost
+    KEPT             : InputBatch, Checkpoint, CheckpointReceipt, InputBatch
+
+  all-evidence queue, limit 3, new InputBatch
+    DROPPED          : InputBatch   (the newcomer, not the evidence)
+    KEPT             : Checkpoint, InputBatch, CheckpointReceipt
+
+Pictures go, oldest first, and nothing else goes. IMPLEMENTATION section 7:
+"above a threshold drop ghost frames first - they are non-authoritative by
+definition - and never receipts." §11 says why it is not a preference:
+"publishing is the client's duty, and unpublished inputs cost the player the
+run", so a node that shed a batch to make room for a picture would be taking a
+run away over rendering. With no picture left, the NEWCOMER is refused rather
+than an accepted frame discarded - refusing the newcomer leaves the sender able
+to publish it again, which is their duty anyway.
+
+An unknown frame is NOT sheddable. Wrong in the safe direction: something this
+package cannot name might be evidence.
+
+### Mutants: 10 planted, 10 killed, none retracted
+
+  (a) accept a ghost as an input or vote   ghost given authority: 4 red
+                                           authority not checked:  1 red
+                                           the node's door removed: 1 red
+  (b) drop inputs before ghosts            anything droppable:      2 red
+                                           nothing droppable:       2 red
+                                           unknown frame sheddable: 1 red
+                                           newest picture first:    1 red
+                                           evidence shed for room:  1 red
+  (c) let a ghost authorise a round        an unknown byte admitted: 1 red
+                                           (the same door: a type nobody
+                                           declared would reach `round.batch`)
+
+The drop list not being reported also dies (2 red): a queue that shed silently
+would be a queue whose order nobody could print.
+
+### Suites
+
+protocol 357/357 (was 353), core 83/83, blwp-node 71/71 (was 70), blwp-client
+89/89, money guard 12 files clean, determinism guard 19 files clean. No wire
+format moved: `frames.js` reads type bytes that already existed.
+
+### Still not this piece
+
+No fan-out, no interest management, no renderer, no lobby. No Unity, no C#, no
+PhysX, no collider. No ghost handed to `step` - the missing parameter from
+piece 1 is untouched and its two mutants still die.
