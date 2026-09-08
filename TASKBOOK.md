@@ -19431,3 +19431,91 @@ the interest set on the socket, and 5 more through the browser client.
 
 core 83/83, protocol 404/404, blwp-node 166/166, blwp-client 102/102 - 755
 tests, 0 red. Money guard 12 files clean, determinism guard 20 clean.
+
+## Item 26, slice 1: a short census is refused by name
+
+Before: `census_min_nodes` was written into `network_id` by `genesis.js` and
+read by NOTHING - not one file in any `src/`, not one test. It was not
+harmless. `selectCommittee` ended in `scored.slice(0, slots)`, so a census with
+one eligible node and a contract naming two slots handed back a COMMITTEE OF
+ONE, silently: the thing section 13 spends five-of-seven preventing, arriving
+through the front door.
+
+After: `censusMinimumFor(contract)` reads the number off genesis via the
+round's `networkId`, and `meetsCensusMinimum(entries, contract, role)` answers
+by name. `selectCommittee` asks it before it scores anybody and refuses rather
+than slicing. A caller cannot name the minimum - not by an option and not by a
+field on the contract - the same discipline the arbitration set needed in 24
+and the confirmation depth in 25.
+
+### The numbers
+
+  the minimum, regtest / testnet4      read off genesis: 2 / 2 (see the gap
+                                       below), never written in a test
+  regtest, 2 eligible                  held; committee of 2
+  regtest, 1 eligible                  refused: "that census carries 1 game
+                                       node where regtest was born needing 2"
+  regtest, 0 eligible                  refused, "carries 0 game nodes"
+  testnet4, one short                  refused, naming testnet4 and its own
+                                       number
+  exactly the minimum                  held, on both networks - the boundary
+                                       from both sides
+  a short census, before / after       slice(0, slots) gave 1 seat of 2 ->
+                                       no committee at all, by name
+  per role                             two bonded nodes, one game and one
+                                       settlement, hold NEITHER role: counted
+                                       whole it is two, counted the way 5A.3
+                                       means eligibility it is one and one
+  a node declaring both roles          counts for both
+  an unknown or unnamed network        refused, not treated as needing nobody
+
+### Mutants: 6 planted, 6 killed
+
+  slice to slots anyway                        killed
+  the minimum is the caller's if it names one  killed
+  one short is enough (< where <= belongs)     killed
+  the minimum applied to the whole census      killed
+  an unknown network needs nobody              killed
+  a round naming no network needs nobody       killed
+
+### Two gaps written down, not closed
+
+1. PER ROLE, ONE FIELD. The spec writes `census_min_nodes per role`; this build
+   carries a single `u16`. The one number is applied to EACH role separately,
+   which is stricter than splitting it and moves no network id. Adding a second
+   genesis field would change `network_id` for every network, so it is a
+   ruling, not a fix to make in passing.
+
+2. TESTNET4'S GENESIS SAYS 2, THE SPEC TABLE SAYS 3. Found while writing the
+   tests: `genesisFor('testnet4')` carries `censusMinNodes: 2`,
+   `gameVerifySlots: 2`, `settlementSlots: 2` - regtest's shape - where the
+   three-networks table gives testnet 3 slots, threshold 2 and minimum census
+   3. A value in genesis cannot be corrected in passing either: every parameter
+   is committed in `network_id`, so changing one moves the network. The tests
+   read the number off genesis rather than asserting 3, so they measure what
+   rounds of this network are actually held against. Owner: whoever rules on
+   testnet4's parameters before it carries a real round.
+
+RECORDED FOR SLICE 3 (Daniel, this turn): one key. `node_pubkey` is
+secp256k1, advertisement signatures are BIP-340 on that same key, which is
+also the bond key. No second bond key. Letter 23's ed25519 check on that field
+is the wrong curve for a Bitcoin-census identity and gets replaced in slice 3 -
+not touched in this slice.
+
+### Fixtures that had to name their network
+
+Six tests broke on the new rule, all of them contracts that named no network
+or a made-up one, and all fixed by naming regtest rather than by loosening
+anything: four sortition tests in `protocol.test.js`, `beacon.test.js` and the
+sortition vector, the daemon's two-node seed test, and the census test for a
+bond spent after the census height - which now carries a second bonded node,
+because the claim it makes (a spend after the census keeps its place, its
+amount and ITS SEAT) needs a census that can hold a round at all. The golden
+contract vector was left exactly as it was; only the lottery's own round names
+a network.
+
+### Suites
+
+core 83/83, protocol 404 -> 411, blwp-node 166/166, blwp-client 102/102 - 762
+tests, 0 red. Money guard 12 files clean, determinism guard 20 clean, bundle
+212.0 KB unchanged.
