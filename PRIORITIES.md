@@ -234,7 +234,8 @@ DISPLAY NAME (Daniel 2026-09-08 18:55, M3): DECIDED. Default =
 `adjective-animal-NNNN` from taggedHash(BLWP/v1/DISPLAY_NAME, player key),
 locked in packages/protocol/src/display-name.js. Name is changeable: custom
 lives in the browser next to the secret, not on the signed final. Board rows
-for others stay the derived default. Donations: current name in LNURL comment.
+for others stay the derived default. Donations: player public key (hex) in
+the LNURL comment, not the name.
 Key stored in the browser with backup download/import. Never uploaded.
 
 HARD (Daniel 2026-09-08 10:18): deferred remainders are M2. Do not skip
