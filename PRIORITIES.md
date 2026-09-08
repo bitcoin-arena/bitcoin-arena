@@ -28,6 +28,12 @@ block-hash seed. Lightning hold invoices stay M3. Finish 22, then 23–27.
 HARD (Daniel 2026-09-08 12:09): both committee nodes are reachable on
 Tailscale, not LAN. M2 asks for no money and distributes none.
 
+HARD (Daniel 2026-09-08 15:26): close 15 and 18 as soon as they are
+unblocked. Do not leave them OPEN while 26-28 run. 15 is next after 25
+(marker scan / template / chain facts). 18 is next after 15 (spawn and
+subscribe; daemon 22 is already in). Ghosts-on-screen in 28 does not
+mop them up.
+
 IN THIS ORDER (unparked):
    22  M2 daemon replays the core     M2   done — slice 1 IS IN: the node reaches the
                                         simulator through src/replay.js and
@@ -162,8 +168,16 @@ IN THIS ORDER (unparked):
                                         were given nothing to rebuild with.
                                         Numbers: TASKBOOK.
    25  M2 bond verification           — output is what it claims
-   26  M2 census + eligibility        — scan by marker, sort txid/vout,
-                                        min census for 2-of-2
+   15  M2.2 census from chain         — remainders now unblocked: SCAN
+                                        by BOND_MARKER, FILTER by the
+                                        24 template, chain facts from 25.
+                                        Close this letter. Do not skip.
+   18  M2.2 ghosts / private world    — spawn and subscribe on the
+                                        daemon socket. Pieces 1-4 are
+                                        in; 22 unlocked this. Do not
+                                        skip and do not wait for 28.
+   26  M2 census + eligibility        — leftover after 15: sort
+                                        txid/vout, min census for 2-of-2
    27  M2 committee_time + seed       — seed from bitcoin-block-hash after
                                         committee_time; committee exists
                                         before first entry
@@ -391,10 +405,11 @@ tick rate, daemon, curve, BOND_MARKER, ghost subscribe, run duration.
                                             inside the simulation. Two guards
                                             now, and removing either turns its
                                             own test red.
-                                            What remains is the daemon
-                                            boundary 14 and 8 are parked on:
-                                            nothing subscribes a socket and
-                                            nothing spawns a ghost yet.
+                                            What remains is spawn and
+                                            subscribe on the daemon socket
+                                            (22 is in). Daniel 15:26: close
+                                            this after 15, do not leave it
+                                            OPEN for 28 to mop up.
                                             Numbers: TASKBOOK.
 
 BOND-OUTPUT RECOGNITION is DONE. A chain output counts as a bond or does not,
@@ -460,7 +475,8 @@ Numbers: TASKBOOK.
                                             other names stay off the wire:
                                             audited remainder in TASKBOOK, each
                                             with what it waits on.
-   15  M2.2 census from chain         M2   OPEN — M2 after 20 (Daniel 10:18).
+   15  M2.2 census from chain         M2   OPEN — next after 25
+                                            (Daniel 15:26, do not skip).
                                             A contract's `censusRoot` is
                                             checked against the census it
                                             derives to at its own height, with
@@ -475,14 +491,17 @@ Numbers: TASKBOOK.
                                             RESOLVE never read, and the leaf
                                             names the key the advertisement
                                             declares, not a transcribed one.
-                                            THREE CONJUNCTS REMAIN AND ALL
-                                            THREE ARE PARKED: finding which
-                                            outputs are bonds, and the bond
-                                            script template, both wait on
-                                            BOND_MARKER - a genesis parameter
-                                            left null on purpose; the
-                                            advertisement signature waits on a
-                                            curve this package does not carry.
+                                            THREE CONJUNCTS WERE PARKED;
+                                            NONE STILL ARE. BOND_MARKER and
+                                            the template are in (24), the
+                                            advert signature is in (23),
+                                            spentness and depth are read off
+                                            the chain (25 / e88f269). What
+                                            this letter still owes is SCAN:
+                                            find the bonds by marker without
+                                            being told the outpoints, then
+                                            FILTER by the template. Close 15
+                                            when that scan is the census.
                                             Three signed-shape divergences
                                             accepted, not bugs to fix: the leaf
                                             carries a pubkey where 5A.4 wants
