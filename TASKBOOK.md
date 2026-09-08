@@ -20718,3 +20718,61 @@ start".
 
 blwp-client 109 -> 116, core 84/84, protocol 416/416, blwp-node 199/199.
 Money guard 12 files clean, determinism guard 20 clean.
+
+### The drawn pose, read out of the shipping player
+
+Not a field the test built - the one `Bootstrap` builds, with the body it chose
+and the seat it wired. The twelve ints are handed in through the field's own
+`Source`, which is the door `Draw` takes either way; the other half of that
+path, where the ints come from, is measured against two real daemons in
+`two-nodes-play.test.js` at delta zero.
+
+    tick  59  drawn (-100.2249, 10.2000) heading 90.0000
+              transcript (-100.2249, 10.2000) heading 90.0000
+              delta x 0.000000  z 0.000000  heading 0.000000
+    tick 119  drawn ( -97.8017, 10.1980)   delta x 0.000000  z 0.000000
+              and it moved 2.423 m between the two pictures
+    solids without the other truck 37, with it drawn 37
+    colliders 0, rigidbodies 0
+    seat: y 4.409 = surface 3.009 + body above ground 1.400
+
+The surface differs run to run because the map is the live fee histogram; what
+does not differ is that y is the surface plus the local truck's own offset.
+
+### Deployed
+
+    build           Succeeded, 19MB, errors 0, 00:03:48, error CS 0
+    page core       md5 cecf6b18, HALF_X 1 declaration, 3600 ticks == golden
+    page client     md5 efe99f86, joinFromQuery present
+    page index      13,868 b, carries joinFromQuery, sessionStorage, BLWP_ENTRY
+    live            btc-logistics-core.pages.dev 200, the deployed index carries
+                    joinFromQuery, and the live blwp-client.js is efe99f86
+    war             200, untouched. No freeze.
+
+### Suites
+
+    core 84/84   blwp-client 116/116   protocol 416/416   blwp-node 199/199
+    money guard 12 clean, determinism guard 20 clean
+    PlayMode  234 total, 209 passed, 12 failed, 13 skipped
+    EditMode  190 total, 186 passed,  1 failed,  3 skipped
+
+The twelfth PlayMode red is NOT one of the eleven and is not this change:
+`RampReadyTests.TheRealTransactionsReplaceTheStandInsWhileNothingIsLoaded`,
+expected 2 and got 10, with `wss://mempool.space/api/v1/ws: Unable to connect
+to the remote server` in its own output - the run had no route to mempool.space,
+so the real transactions never arrived and the stand-ins stayed. The same test
+passed in the run immediately after the Bootstrap change. Listed, not tuned.
+
+### THE ONE THING STILL MISSING FOR A PERSON TO LOOK
+
+The query names four things and the daemons publish only one of them. `?round=`
+is fetched from `GET /round?id=` and that door exists. `headers=` defaults to
+`<node>/headers` and `bond=` needs a bond proof - THE DAEMON SERVES NEITHER
+DOOR. So a person typing the URL today against the two daemons gets a refusal
+from `agreedChain`, not a sighting.
+
+That is the remaining hole on 28 and it is a decision, not a task: the chain
+those two doors would serve has to come from somewhere. Either a real node -
+and the standing rule is hands off the live testnet4 and mainnet nodes and off
+/mnt/bitcoin - or a fixture chain of genesis plus one block with the bond mined
+into it, which is what the browser harness already builds for itself.
