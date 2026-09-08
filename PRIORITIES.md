@@ -21,6 +21,10 @@ LIVE LETTER: 22, the daemon steps the core. 20 and 21 are done.
 threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
 
+HARD (Daniel 2026-09-08 11:56): everything needed for playable M2 on
+regtest/testnet4 is M2, not M3. Bonds, census, committee_time, bitcoin
+block-hash seed. Lightning hold invoices stay M3. Finish 22, then 23–27.
+
 IN THIS ORDER (unparked):
    22  M2 daemon replays the core     — slice 1 IS IN: the node reaches the
                                         simulator through src/replay.js and
@@ -50,9 +54,17 @@ IN THIS ORDER (unparked):
                                         LIVE RUN STATUS (0.11) is here too - a
                                         final is after the run, so it comes
                                         from marks and ghosts.
-   23  M2 advert signatures / curve   — the discrete-log 15/14 waited on
-   24  M2 BOND_MARKER + census scan   — regtest+testnet markers SET (Daniel
-                                        10:22). Mainnet still null. Scan next.
+   23  M2 advert signatures / curve   — sign the body the bond commits to
+   24  M2 bond construction 5A.3B     — P2TR: MuSig2 / CLTV after maturity /
+                                        slash. Two bonds, one LND.
+   25  M2 bond verification           — output is what it claims
+   26  M2 census + eligibility        — scan by marker, sort txid/vout,
+                                        min census for 2-of-2
+   27  M2 committee_time + seed       — seed from bitcoin-block-hash after
+                                        committee_time; committee exists
+                                        before first entry
+   28  M2 two nodes play              — ghosts on screen, board, 2-of-2
+                                        finals on testnet4/regtest
    15/14/8 are this queue, not a later milestone.
 
 DANIEL DECIDES (not a task anyone can take): the PSEUDONYM SCHEME (0.11/0.12
@@ -866,10 +878,10 @@ player, of money, or of an outcome somebody else decided.
 ## M2 - play-money multiplayer             23-33 sessions
 
 **What you can do:** the whole experience with other people, without
-sats. A lobby. Everyone starting the same round at the same time on the
-same map. Joining late and catching up. Ghosts of the other trucks on
-your screen. A leaderboard. And - the part that matters - results that
-seven independent nodes have each replayed and agreed on.
+sats. On regtest/testnet4 that means 2-of-2, two local nodes, two bonds,
+one bitcoind/LND. Ghosts, late join, a leaderboard, and results those two
+nodes have replayed and agreed on. Lobby last. Mainnet 5-of-7 stays the
+long form, not the playable gate.
 
 **Why it is a milestone and not a feature.** This is where determinism
 stops being a claim and starts being load-bearing. Seven machines replay
@@ -1434,9 +1446,11 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
 
 ## M2 is done when
 
-Seven local nodes independently replay a round played by several people,
-agree byte for byte on every result AND on the payout table, and a
-deliberately corrupted node is caught by the other six.
+On regtest or testnet4: two local nodes, two bonds, 2-of-2, independently
+replay a round played by at least one person, agree byte for byte on the
+result and the payout table, and a corrupted node is caught by the other.
+Ghosts visible. Board from signed finals. Lobby may still be a round_id
+URL. Seven-of-seven on mainnet is not this gate.
 
 ## What the spec rules out, and it is worth knowing before building
 
@@ -1472,6 +1486,11 @@ Money. Every step here is one where a bug costs a stake rather than a
 round, which is why testnet comes first and why the order is stricter.
 
 ## M3.1  The chain, on regtest                      stage 5
+
+  Pulled into M2 for playable testnet (Daniel 11:56): items 0–6 (genesis,
+  bond construction/verify, census, eligibility, committee seed,
+  committee_time). This section keeps the money-path reading. Lightning
+  hold invoices, VSS, FROST stay here.
 
   0. **Network parameters first** (27A.6). Everything below depends on
      which network it is running on, so `genesis_parameters` is loaded
