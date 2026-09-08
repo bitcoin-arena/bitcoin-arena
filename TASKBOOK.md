@@ -15521,3 +15521,129 @@ only change is two tests and the one they exposed.
   NOT DONE     the chain view itself - who says which chain the blocks came
                from. SCAN's letter. And the marker, the template and the
                signature, all three still parked where they were.
+
+## M2.2 item 17: SCAN's chain view - the rule, the doors, and what the code does today
+
+Measured before any product code, as instructed. No product code in this pass.
+
+### The rule, quoted rather than guessed from the JS
+
+5A.2, on what a census IS:
+
+  "A node is in the census if and only if it has a bond output on Bitcoin,
+   confirmed and unspent at `census_height`, that commits to its
+   NodeAdvertisement."
+  "The eligible set is therefore a pure function of THE CHAIN up to
+   `census_height`. Two parties with the same chain compute the same census;
+   disagreement about the census reduces to disagreement about Bitcoin, which
+   is out of scope by assumption."
+
+25.1, on which chain that is:
+
+  "block headers        from several independent sources, MOST WORK WINS
+                        80 bytes a block; under 4 MB for all of history"
+  "A list provider can then OMIT but not FORGE, and omission is answered by
+   asking a second one."
+  "A client MUST verify every census entry against block headers it obtained
+   independently. It MUST NOT take a census, a committee or an endpoint on the
+   word of any API, including one operated by the same party that ships the
+   client."
+
+5A.4, on the browser's residual:
+
+  "It verifies the census root by (a) following the block-header chain and
+   checking Merkle inclusion of the bond transactions (SPV), and/or (b)
+   querying several independent chain providers and requiring agreement."
+
+So the rule to implement: the blocks a census is derived from must be tied to a
+header chain that was mined, and where two chains compete the one with the most
+work is the chain. `census_confirmations` is what makes a shallow reorg
+harmless; it is not what decides which chain.
+
+### Every door that decides "which chain", or silently assumes one
+
+  census.js   scanCensus / deriveCensus   takes `blocks`, shaped {height,
+                                          transactions}. NO header, no work,
+                                          no block hash, no link to a
+                                          previous block.            HOLE 1
+  census.js   commitCensus,
+              censusInputsId,
+              censusRootMatchesRound      take `tipHeight`, a bare number.
+                                                                     HOLE 2/3
+  chain.js    chainWork, mostWork         IMPLEMENT the rule. Refuse a header
+                                          that does not meet its target.
+                                          The census never calls them.
+  client      headers.js                  agreement across sources, uses
+                                          chainWork. Client only.
+  client      directory.js                mostWork/chainWork, for the
+                                          ADVERTISEMENT path only.
+  client      bond.js provenBond          re-checks chainWork for one bond
+                                          proof. Client only.
+  blwp-node   (nothing)                   the node has no chain view at all.
+
+### Measured
+
+CASE 1 - a reorg that REPLACES the census block
+
+  chain A, bond present    -> eligible 1, root f81f56739efc0317
+  chain B, bond replaced   -> eligible 0, "no such outpoint at or before that
+                              height"
+  was the derivation told which of A and B is the chain? NO.
+
+Both derive cleanly. The census faithfully reports whichever list of blocks it
+was handed, and has nothing to say about which one Bitcoin agrees with.
+
+CASE 2 - a reorg AFTER census_height that does not touch the bond block
+
+  without the later block          -> eligible 1, root f81f56739efc0317
+  with a replaced block at H+3     -> eligible 1, root f81f56739efc0317
+  same root: TRUE
+
+CLEAN, and correct on purpose: blocks past `census_height` are skipped, so the
+census does not move when the tip does. This is the case `census_confirmations`
+exists for and it needs nothing.
+
+CASE 3 - two competing tips with different work
+
+  workOf(mainnet block 100000)     = 62209952899966
+  chainWork([100000])              = ok true
+  a header whose hash misses its
+    target                         = ok false, "this header was not mined"
+  mostWork picks the heavier       = works
+
+The rule is implemented and correct in `chain.js`. The census cannot use it,
+because `deriveCensus(blocks, { contract, tipHeight, candidates, resolve })`
+has no argument that could carry a header.
+
+AND THE TIP IS A FREE NUMBER:
+
+  tipHeight  900010 -> eligible 1
+  tipHeight  900000 -> eligible 1
+  tipHeight  899999 -> eligible 1
+  tipHeight  899000 -> eligible 0, "that output is -979 confirmations deep
+                       where this round needs 6"
+  tipHeight       0 -> eligible 0, "-899979 confirmations deep"
+  tipHeight      -5 -> eligible 0, "-899984 confirmations deep"
+
+A caller naming a low tip empties the census; one naming a high tip matures a
+shallow bond. The comment in `census.js` says the tip "stays the caller's, and
+that is not the same thing: the tip is OBSERVED chain state, not a rule."
+Observed from WHAT? There is no chain in that function to observe it from, so
+today the tip is asserted, not observed. That comment is half true and this
+letter is what would make it true. A tip BELOW the census height is incoherent
+by construction and is accepted, printing a negative depth instead of refusing.
+
+### The three named holes
+
+  1  the derivation is never shown a chain, so "most work wins" cannot be
+     applied and two disagreeing chains both derive cleanly
+  2  `tipHeight` is a caller number that decides who is deep enough
+  3  a tip below `census_height` is accepted and yields a negative depth
+
+Share: this is the whole remaining recognition-adjacent gap - which chain - not
+a side path. Case 2 needs nothing.
+
+### Suites, unchanged this pass
+
+protocol 336/336, blwp-node 70/70, blwp-client 89/89, core 80/80. No product
+code was written.

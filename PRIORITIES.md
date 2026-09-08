@@ -16,6 +16,8 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
+SCAN's chain view (item 17) is the live item and sits on top.
+
 NO PARKED ITEM GOES FIRST (Daniel 2026-09-08). 15, 14 and 8 are all parked -
 15 behind BOND_MARKER and a curve, 14 and 8 behind a daemon, a tick rate and a
 discrete-log group - so none of them is promoted, because a parked item at the
@@ -45,6 +47,32 @@ still waits on the marker for. Ghosts, late join, the
 leaderboard and the eighteen audited section 6 names stay parked. Numbers:
 TASKBOOK.
 
+   17  M2.2 SCAN's chain view         M2   OPEN — the live item. A census is
+                                            derived from blocks nobody has
+                                            shown to be a chain. 5A.2: "the
+                                            eligible set is a pure function of
+                                            the chain up to census_height. Two
+                                            parties with the same chain compute
+                                            the same census." 25.1 says which
+                                            chain that is: "block headers from
+                                            several independent sources, MOST
+                                            WORK WINS", and a client "MUST
+                                            verify every census entry against
+                                            block headers it obtained
+                                            independently". `chainWork` and
+                                            `mostWork` implement that rule and
+                                            the census never calls them: it
+                                            takes blocks shaped {height,
+                                            transactions} - no header, no work,
+                                            no hash - so two chains that
+                                            disagree both derive cleanly, to
+                                            different roots. And `tipHeight` is
+                                            still a free caller number that
+                                            decides who is deep enough; a tip
+                                            below the census height is accepted
+                                            and prints a negative depth. Not
+                                            started: measured only. Numbers:
+                                            TASKBOOK.
    16  M2.2 contract fields before    M2   done — the signed round contract
        they are used                         names the network it is for, the
                                             config it runs, the confirmation
