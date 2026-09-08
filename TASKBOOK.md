@@ -18763,3 +18763,75 @@ path.
 
 Nothing was deployed for this letter: no client code changed, and no daemon
 holds an arbitration set, a chain view or a network yet.
+
+## Item 15, slice 1: SCAN finds its own candidates
+
+Before: `scanCensus(view, { contract, candidates })` threw without a list. The
+only way to a census root was to hand it the outpoints - so the census was a
+function of whoever assembled that list, and 5A.4 step 1 ("scan the chain for
+outputs paying the round's BOND_MARKER") was not code. 25.1's "discovery IS
+chain state" held for the marker's construction and nothing read it back.
+
+After: `candidates` is optional. Omitted, the scan walks every block at or
+below `census_height` and takes a transaction only when all four hold - it pays
+this round's network's marker, it carries a witness item that decodes to a
+signed advertisement body, that body's `advertId` equals a 32-byte commitment
+the transaction publishes, and the output the body names exists. A non-array is
+still a throw: omitting means "ask the chain", handing something broken means a
+caller built a list and got it wrong, and scanning instead would bury that.
+
+### The numbers
+
+  three bonds among twelve unrelated transactions   3 found, 3 expected
+  a bond that never paid the marker                 not scanned
+  a bond paying another network's marker            not scanned
+  self-found root vs the same outpoints handed in   equal, 3 entries each
+  a body naming the marker (330) as its bond        scanned at vout 1,
+                                                    refused by the floor
+  a body naming a vout that does not exist          no candidate at all
+  a taproot output that does not recompute          scanned, then refused:
+    (blwp-node, where a curve is injected)          "not the taproot tweak of
+                                                    the keys and maturity it
+                                                    declares"
+
+### Mutants: 8 planted, 8 killed, 1 retracted
+
+  scan blocks above census_height                   killed
+  take every transaction, marked or not             killed
+  any decodable witness body is the advert          killed
+  always look for the regtest marker                killed (see below)
+  an omitted list scans nothing                     killed
+  fall back to output 0 when the named one is gone  killed (see below)
+  report output 0 whatever the body named           killed (see below)
+  report the payout key as the node key             killed
+
+Three of those survived the first pass and each named a real gap:
+
+  - THE MARKER'S NETWORK. Hardcoding 'regtest' left every test green, because
+    every round in the file IS regtest: the existing test put a testnet-marked
+    bond in front of a regtest round, never the mirror. A testnet4 round now
+    scans the testnet4 bond and leaves the regtest one, and the mutant dies.
+  - THE OUTPOINT THE BODY NAMED. Recording output 0 whatever the body said
+    passed everything, because in every fixture the bond IS output 0. It is not
+    a normalisation: the marker output is 330 sats, so a body pointing there
+    must fail the round's floor, and a scan that silently points at output 0
+    hands RESOLVE a whole bitcoin and counts the node in.
+  - A VOUT THAT DOES NOT EXIST. Falling back to output 0 turns a body naming
+    vout 9 into a phantom outpoint that RESOLVE then excludes as "no such
+    outpoint" - an outpoint the chain never had, named as if it did.
+
+RETRACTED, not counted: "the scan reports the marker's value as bondSats".
+It survived because it is a no-op - RESOLVE takes `output.valueSats` off the
+funding transaction and overwrites the field before the floor is applied or a
+leaf is hashed, so nothing ever read what the scan wrote there. The scan now
+writes no amount at all, and the scan test asserts the field is absent, so a
+number a later caller might trust cannot come back unnoticed.
+
+### Suites
+
+protocol 418 -> 421, core 83/83, blwp-node 122/122, blwp-client 95/95, money
+guard 12 files clean, determinism guard 20 files clean. 721 tests, 0 red.
+
+Not in this slice, by ruling: 18 spawn/subscribe, 26-28, Lightning, deploy, and
+a second slice against real regtest blocks. Nothing deployed: no client code
+changed and no daemon calls the scan yet.
