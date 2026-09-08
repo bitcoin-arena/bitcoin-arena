@@ -58,9 +58,26 @@ IN THIS ORDER (unparked):
                                         five of seven, with a node counted
                                         twice refused and a node that could
                                         not replay counted as refusing rather
-                                        than agreeing. Still to come: a pool
-                                        that queues objected runs first, and
-                                        signing the agreed state.
+                                        than agreeing. Slice 4: the pool
+                                        serves an OBJECTED run before one
+                                        nobody disputed, whatever arrived
+                                        first - 13A gives an objection a
+                                        window, and a flood of undisputed runs
+                                        would otherwise push it past the end
+                                        of one. Objected, then the board's
+                                        ranked, then the rest; the pool
+                                        computes neither an objection nor a
+                                        rank. Slice 5: a node signs what it
+                                        replayed as SECTION 13'S OWN
+                                        PlayerResult - no new message, because
+                                        the spec has no signed state-hash
+                                        object and a second one would be a
+                                        second protocol - and this package has
+                                        a curve, so a signature that does not
+                                        verify never reaches the count the
+                                        board can only take on trust. 22 is
+                                        DONE but for a real round, which stays
+                                        blocked on the seed.
                                         Unlocks ghost spawn/subscribe (18),
                                         the daemon 14/8 waited on, and the
                                         board on a screen: 20's rows are built

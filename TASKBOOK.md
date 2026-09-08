@@ -17404,3 +17404,107 @@ boundary. The fixture now sends a joinTick-50 run through the worker.
 protocol 392/392, core 83/83, blwp-node 79 -> 82, blwp-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. Files in
 blwp-node/src reaching the simulator: exactly replay.js.
+
+## Item 22, slices 4 and 5: the queue an objection cannot be flooded out of, and the signature
+
+### The pool
+
+Order is not arrival. 13A gives an objection a WINDOW, so first-come-first-
+served is the one rule an attacker can use: flood a node with undisputed runs
+the moment somebody objects and the objection is heard after the window shuts.
+A veto that expires unheard was never there.
+
+  the classes                objected, then the board's ranked, then the rest
+                             (PRIORITIES 1427, the spec's own three)
+  what the pool computes     neither: an objection is a fact the node holds and
+                             a rank is letter 20's board. A pool that sorted
+                             players would be a second leaderboard.
+
+  MEASURED ORDER, one worker, submitted busy / plain-a / ranked / plain-b /
+  objected:      busy, objected, ranked, plain-a, plain-b
+  and with ten undisputed runs already queued when one objection arrives, the
+  objection is served SECOND, not twelfth.
+
+  What this costs, said out loud: a stream of objections starves the rest. That
+  is the accepted trade - an objection has a deadline and an ordinary replay
+  does not.
+
+CAPACITY IS MEASURED, NOT ASSUMED, so `workers` defaults to ONE: a node that
+has measured its own machine says so, and a node that has not gets the number
+that cannot be wrong. Measured here: 36,000 ticks in one worker in 4141 ms =
+8,694 ticks/s, 145x realtime. A three-minute run (10,802 ticks, letter 21) is
+about 1.24 s of one worker.
+
+There is NO argument for what does the replaying. It was going to take one so a
+test could watch the order without starting threads; that is a hole, because a
+caller who can hand in the replayer can hand in one that agrees with anything.
+The order is watched through `pool.order` on real workers instead.
+
+### The signature
+
+Section 13 is explicit: each node replays and signs `PlayerResult { round_id,
+player_pubkey, result, score, transcript_hash, sim_wasm_hash, node_pubkey,
+signature }`, and five IDENTICAL ones are PROVISIONALLY_FINAL.
+
+THERE IS NO SIGNED STATE-HASH OBJECT IN THE SPEC. `state_hash` appears once, on
+the player's own Checkpoint (10). The obvious build - a little attestation
+carrying the agreed hash - would have been a second protocol, two signed things
+both saying what a run came to. So the agreement is signed as the result the
+committee was always going to sign, and letter 20's board already counts
+exactly these signatures. The state hash is WHY two nodes' ids match, not a
+field beside them.
+
+  outcome        read off the replayed state: the core ends a run LIVE,
+                 DELIVERED, WRECKED or MISSED, and DELIVERED is the only one
+                 that delivered; wrecked and missed are both FAILED, which is
+                 the whole of the difference 18 pays on. FORFEIT, VOID and
+                 ENTRY_VOID are facts about a stake or an entry and a replay
+                 must never return one. A run still LIVE at the last stored
+                 tick has NO outcome - calling that FAILED would score a lost
+                 connection as a lost run.
+  score          runScore off the same state. 230 for the fixture run.
+  transcriptHash the canonical transcript's, which is what says WHICH run was
+                 replayed.
+  threshold      receiptsNeeded(contract.gameVerifySlots). Nothing in the file
+                 knows that seven means five.
+
+  SIGNATURE CASES MEASURED
+    five of seven over one result id        final
+    four of the same                        not final
+    four on one result, one on another      not final (5 verified, 4 agreeing)
+    a signature made with the wrong key     dropped as forged, not final
+    one seat's signature listed twice       counted once, not final
+    a stranger's perfectly good signature   not a seat, not final
+    two slots, two signatures               final; one is not
+    slots 5                                 refused, "no committee threshold"
+
+A signature that does not verify never reaches the count. That is the part the
+protocol package says it cannot do - "counted against the round's committee,
+not verified: no curve in this package" - and this one has a curve.
+
+### Mutants: 13 planted, 13 killed, 0 retracted
+
+  Pool     S1 one queue, arrival order                     2 red
+           S2 a rank outranks an objection                 1 red
+           S3 rank 0 read as no rank at all                1 red
+           S4 the worker limit ignored                     2 red
+           S5 the three classes served backwards           2 red
+           S6 the pool edits the verdict it passes back    1 red
+  Verdict  T1 signatures counted without verifying         1 red
+           T2 one seat counted twice                       1 red
+           T3 threshold lowered to four of seven           1 red
+           T4 an unfinished run signed as a result         1 red
+           T5 a LIVE run called FAILED                     1 red
+           T6 the score defaulted to 0                     1 red
+           T7 the transcript hash set to the sim hash      1 red
+
+T6 and T7 SURVIVED the first run at 0 red: nothing asserted what the score or
+the transcript hash actually WERE, only that every node produced the same ones
+- and a zero every node produces alike is still the same. The fixture now pins
+230 and the canonical transcript's own hash.
+
+### Suites
+
+protocol 392/392, core 83/83, blwp-node 82 -> 89, blwp-client 95/95, money
+guard 12 files clean, determinism guard 20 files clean. Files in
+blwp-node/src reaching the simulator: exactly replay.js, still.
