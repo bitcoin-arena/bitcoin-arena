@@ -16,11 +16,34 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-NO LISTED ITEM HAS BUILDABLE WORK RIGHT NOW. 15 is top and parked; 14 and 8
-are one checkpoint item whose unblocked work is finished. The next letter has
-to be chosen rather than read off this list: settle a parked dependency, or
-take one of M2.2's plan items that were never lifted onto it.
+NO PARKED ITEM GOES FIRST (Daniel 2026-09-08). 15, 14 and 8 are all parked -
+15 behind BOND_MARKER and a curve, 14 and 8 behind a daemon, a tick rate and a
+discrete-log group - so none of them is promoted, because a parked item at the
+top would make this order lie. They stay where they are, in number order,
+below the last closed item.
 
+NEXT LETTER, Daniel's pick: BOND-OUTPUT RECOGNITION - which chain outputs count
+as bonds. It is what parks 15, and census-from-chain is how a round knows who
+may sit, which is the money path. Ghosts, late join, the leaderboard and the
+eighteen audited section 6 names stay parked. Not started.
+
+   16  M2.2 contract fields before    M2   done — the signed round contract
+       they are used                         names the network it is for, the
+                                            config it runs, the confirmation
+                                            depth its census uses and how many
+                                            seats each committee has. All four
+                                            are in the round id, and the checks
+                                            read them off the round: no caller-
+                                            chosen number picks the census or
+                                            the committee any more. Neither new
+                                            value is invented - NETWORK_ID and
+                                            GENESIS_CONFIG_HASH are null and
+                                            both accessors refuse, so a build
+                                            that names no network accepts no
+                                            contract. Section 6's eighteen
+                                            other names stay off the wire:
+                                            audited remainder in TASKBOOK, each
+                                            with what it waits on.
    15  M2.2 census from chain         M2   OPEN — parked, no unblocked work
                                             left. A contract's `censusRoot` is
                                             checked against the census it
@@ -57,23 +80,6 @@ take one of M2.2's plan items that were never lifted onto it.
                                             measured against one floor. All
                                             three move every census root or
                                             round id. Numbers: TASKBOOK.
-   16  M2.2 contract fields before    M2   done — the signed round contract
-       they are used                         names the network it is for, the
-                                            config it runs, the confirmation
-                                            depth its census uses and how many
-                                            seats each committee has. All four
-                                            are in the round id, and the checks
-                                            read them off the round: no caller-
-                                            chosen number picks the census or
-                                            the committee any more. Neither new
-                                            value is invented - NETWORK_ID and
-                                            GENESIS_CONFIG_HASH are null and
-                                            both accessors refuse, so a build
-                                            that names no network accepts no
-                                            contract. Section 6's eighteen
-                                            other names stay off the wire:
-                                            audited remainder in TASKBOOK, each
-                                            with what it waits on.
    14  M2.1 checkpoints               M2   OPEN — 5b and 5c done: the client
                                             plays the round in the address bar,
                                             asks two declared providers for a
