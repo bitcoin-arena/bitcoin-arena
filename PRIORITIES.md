@@ -16,42 +16,11 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-NO LISTED ITEM HAS BUILDABLE WORK RIGHT NOW (Claude, after 16 closed). 16 is
-done. 15 is parked: its three remaining conjuncts wait on BOND_MARKER and on a
-curve this package does not carry. 14 and 8 are the same checkpoint item and
-their unblocked work is finished; five remainders wait on a daemon, a protocol
-tick rate, and a discrete-log group. So the next item has to be chosen rather
-than read off this list - either by settling a parked dependency or by taking
-one of M2.2's unlisted plan items (the Round Contract's own fields, a private
-world per player, ghosts, late join, the leaderboard). Daniel's call.
+NO LISTED ITEM HAS BUILDABLE WORK RIGHT NOW. 15 is top and parked; 14 and 8
+are one checkpoint item whose unblocked work is finished. The next letter has
+to be chosen rather than read off this list: settle a parked dependency, or
+take one of M2.2's plan items that were never lifted onto it.
 
-   16  M2.2 contract fields before    M2   done — a signed round contract now
-       they are used                         names the network it is for, the
-                                            config it runs, the confirmation
-                                            depth its census uses and how many
-                                            seats each committee has. All four
-                                            are in the round id. No caller-
-                                            chosen number picks who sits any
-                                            more: the census depth, the seat
-                                            counts, the committee seed and the
-                                            bond floor were all arguments and
-                                            are all the round's. The version
-                                            check is the round's too - the spec
-                                            has no `required_protocol_version`,
-                                            only `protocol_version`, which was
-                                            already on the wire; what was
-                                            missing was the check. Neither new
-                                            value is invented: NETWORK_ID and
-                                            GENESIS_CONFIG_HASH are null and
-                                            both accessors refuse, so a build
-                                            that names no network accepts no
-                                            contract. Section 6's eighteen
-                                            remaining names stay OFF the wire -
-                                            each waits on a parked dependency or
-                                            is already a constant, and adding
-                                            one later is a format break. That
-                                            audit, the round-id movement and the
-                                            mutants are in TASKBOOK.
    15  M2.2 census from chain         M2   OPEN — parked, no unblocked work
                                             left. A contract's `censusRoot` is
                                             checked against the census it
@@ -88,6 +57,23 @@ world per player, ghosts, late join, the leaderboard). Daniel's call.
                                             measured against one floor. All
                                             three move every census root or
                                             round id. Numbers: TASKBOOK.
+   16  M2.2 contract fields before    M2   done — the signed round contract
+       they are used                         names the network it is for, the
+                                            config it runs, the confirmation
+                                            depth its census uses and how many
+                                            seats each committee has. All four
+                                            are in the round id, and the checks
+                                            read them off the round: no caller-
+                                            chosen number picks the census or
+                                            the committee any more. Neither new
+                                            value is invented - NETWORK_ID and
+                                            GENESIS_CONFIG_HASH are null and
+                                            both accessors refuse, so a build
+                                            that names no network accepts no
+                                            contract. Section 6's eighteen
+                                            other names stay off the wire:
+                                            audited remainder in TASKBOOK, each
+                                            with what it waits on.
    14  M2.1 checkpoints               M2   OPEN — 5b and 5c done: the client
                                             plays the round in the address bar,
                                             asks two declared providers for a
