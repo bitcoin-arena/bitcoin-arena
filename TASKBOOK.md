@@ -15443,3 +15443,81 @@ Note for the next audit: the first three passes each looked at NAMES (which
 doors, which identifiers). This one looked at VALUES (zero, one, negative). The
 angle that has not been tried is TIME - a bond spent between census_height and
 the tip, a bond funded in a reorg - and SCAN owns both of those.
+
+## The time pass on bond recognition: measured, and only one case is a hole
+
+Two cases, instrumented before any change.
+
+### CASE A - unspent at census_height, spent between it and the tip
+
+  no spend at all              -> eligible 1, amount 60000, committee 1
+  spent at H+5 (after census)  -> eligible 1, amount 60000, committee 1
+  spent at H itself            -> eligible 0, "already spent at the census height"
+  spent at H-5 (before)        -> eligible 0, "already spent at the census height"
+
+  recognizeBond on the spent output still says ok = true
+
+NOT A HOLE, and correct on purpose. 5A.4 step 1 is "unspent AT census_height",
+so a spend later is not this census's business: if it were, the census would
+change as the chain grows and two participants asking at different tips would
+get different committees. 5A.3 states the consequence itself: "Proven
+misbehaviour removes a node the only objective way - by its bond being spent by
+a slashing transaction, which makes the output no longer unspent AT THE NEXT
+census_height." A node whose bond goes away mid-round is removed by the NEXT
+census, not this one.
+
+`recognizeBond` saying ok on a later-spent output is also right: it answers
+about the output's shape and value and never about spends. The spend is SCAN's
+conjunct and SCAN applies it.
+
+Pinned with a test, because only the COUNT was pinned before - not the amount,
+not the seat. A mutant then survived: "spent, unless it was funded here". Every
+fixture funded its bond well before the census height, so a bond funded AND
+spent in the same block was never tested. One transaction creating an output
+and another spending it in the same block is ordinary Bitcoin, and such a bond
+was never unspent at any height. Tested now.
+
+### CASE B - funded in a block later reorged out
+
+  chain that HAS the funding block   -> eligible 1, root f81f56739efc0317
+  chain where it was reorged out     -> eligible 0, "no such outpoint at or
+                                        before that height"
+  roots differ: true
+
+THE CENSUS FAITHFULLY REPORTS WHATEVER CHAIN IT IS HANDED, which is all it can
+do: `deriveCensus` takes blocks shaped `{height, transactions}` - no header, no
+proof of work, no block hash. It cannot tell a reorged block from a live one
+because it is never shown anything that would say.
+
+RECOGNITION IS NOT WRONG HERE. Which chain is the chain is 25.1's question, and
+25.1 answers it with headers from several independent sources, most work
+winning, plus a merkle proof per transaction. That machinery exists already -
+`chainWork`, `mostWork`, `provesTransaction` in `chain.js`, and `headers.js`
+and `bond.js` in the client - and it is not wired into SCAN's block input.
+Wiring it is SCAN's letter, not this one, and it is not pulled in.
+
+### Share
+
+Of the two time cases: recognition is right on both, so **0 of the 2 is missing
+from recognition**. One of the two - the reorg - is missing from SCAN's chain
+view: **1 of the 2 belongs to SCAN**, and it is named here with its numbers
+rather than fixed.
+
+### Suites
+
+protocol 336/336 (was 335), blwp-node 70/70, blwp-client 89/89, core 80/80,
+money guard 12 files clean, determinism guard 19 files clean. 3 mutants planted
+for this pass, 3 killed. Running total for the letter: 38 planted, 38 killed,
+none retracted. No wire format moved; no fix was needed in recognition, so the
+only change is two tests and the one they exposed.
+
+### What has and has not been looked at, for the next pass
+
+  doors        done (audit 3: every reader of a bond outpoint, enumerated)
+  identifiers  done (audits 1 and 2)
+  values       done (audit 4: zero, one, negative)
+  time         done (this pass: spend after the census, spend in the census
+               block, funded and spent in one block, reorg)
+  NOT DONE     the chain view itself - who says which chain the blocks came
+               from. SCAN's letter. And the marker, the template and the
+               signature, all three still parked where they were.
