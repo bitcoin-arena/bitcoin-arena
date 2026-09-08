@@ -61,9 +61,22 @@ discrete-log group. They stay in number order below the last closed item.
                                             against 3540 if everyone saw
                                             everyone. K is a node's bandwidth
                                             policy, not a signed field - a
-                                            ghost decides nothing. Piece 4
-                                            remains: the renderer that must
-                                            never carry a collider.
+                                            ghost decides nothing. Piece 4 is
+                                            in: `GhostTruck` strips every
+                                            collider and rigidbody it is given
+                                            and reports what it took, two
+                                            ghosts sitting on a real physics
+                                            truck move it not one millimetre
+                                            while a solid cube in the same
+                                            place does, and no field of it can
+                                            reach the simulation. PlayMode
+                                            193 -> 197 passed with no new
+                                            failure against a measured
+                                            baseline; EditMode unchanged.
+                                            What remains is the daemon
+                                            boundary 14 and 8 are parked on:
+                                            nothing subscribes a socket and
+                                            nothing spawns a ghost yet.
                                             Numbers: TASKBOOK.
 
 BOND-OUTPUT RECOGNITION is DONE. A chain output counts as a bond or does not,

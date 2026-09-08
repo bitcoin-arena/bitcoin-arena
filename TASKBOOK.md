@@ -16262,3 +16262,108 @@ decides to call it. No socket subscribes to anything yet; wiring the set into
 the node's send loop needs the daemon that is parked. And piece 4 - the
 renderer that must never carry a collider - is untouched: no Unity, no C#, no
 PhysX.
+
+## M2.2 item 18, piece 4: the renderer, and PhysX is given nothing to work with
+
+0.9: "Other trucks are visible ghosts with no collision. Another player must
+not be able to change my financial odds by ramming me, blocking a road,
+pushing me, damaging me..." 0.10: "Alice's physics cannot change Bob's result."
+
+The protocol already refuses to let a ghost be an input: its own type byte, no
+authority (piece 2), and a core `step` with no argument one could arrive
+through (piece 1). The remaining way a competitor could reach a run is through
+the ENGINE - a ghost with a collider is a truck you can hit, a road you cannot
+pass, a body your wheels climb.
+
+### Measured first
+
+The local truck is a real physics object: `CoreDrivenTruck` holds a Rigidbody
+it switches to kinematic while the core drives, and WheelColliders under it.
+So "ghosts do not collide" cannot be inherited from the scene having no
+physics - the scene has plenty.
+
+### What is now true
+
+`GhostTruck` draws three numbers and carries nothing else. On Awake it strips
+every Collider and Rigidbody in its hierarchy, with `DestroyImmediate` rather
+than `Destroy`: Destroy runs at the end of the frame, so a ghost spawned and
+stepped in the same frame would have had a live collider for exactly one
+physics tick, which is all a collision needs. What it removed is COUNTED and
+NAMED, so a prefab that keeps growing colliders shows up instead of being
+quietly cleaned every frame.
+
+The test fixture builds a ghost the way a careless prefab would - a
+BoxCollider, a Rigidbody, and a SphereCollider on a child wheel - because a
+rule that only held for objects which never had physics would hold for
+nothing: a truck model arrives with colliders.
+
+### The four PlayMode tests
+
+  AGhostCarriesNoPhysicsAtAll          0 colliders, 0 rigidbodies, and the
+                                       strip is reported: 2 colliders and 1
+                                       body found and named
+  OverlappingGhostsMoveTheTruckNot
+    OneMillimetre                      two ghosts placed exactly on a real
+                                       rigidbody truck, 60 fixed updates: 0
+                                       collisions, position unmoved to 1e-4,
+                                       velocity unchanged. THEN A CONTROL: the
+                                       same cube WITH physics does collide, so
+                                       the assertion is not measuring an engine
+                                       that never collides at all
+  AGhostCannotReachTheSimulation       no field or property of GhostTruck has
+                                       the type BlwpCore, CoreDrivenTruck,
+                                       TruckController or Rigidbody - the same
+                                       structural argument the core makes about
+                                       `step`'s parameter list
+  AGhostStandsWhereTheFrameSays        Q16.16 in, metres out, negative and
+                                       fractional words included, and showing a
+                                       ghost never gives it physics back
+
+### A test I broke, found by baselining rather than assuming
+
+First PlayMode run: 220 total, 196 passed, 11 failed. Baseline with the two
+files moved aside: 216 total, 193 passed, 10 failed. One MORE failure with my
+change, and diffing the two result sets named it:
+
+  PostOfficeTests.TheGogglesAnimate
+
+Not a ghost test, and not a coincidence: my fixture is the only one in the
+suite that runs PhysX on bodies of its own, it did 240 fixed updates, and it
+left its cubes for TearDown. The goggles test watches a wall animate within two
+wall-clock seconds, so it is the one a heavier neighbour tips over.
+
+Fixed rather than listed: 120 fixed updates to 60 in each phase, and the
+fixture destroys its own bodies at the end instead of leaving them. Second run:
+
+  220 total, 197 passed, 10 failed - and diffed against the baseline again,
+  NEW FAILURES VS BASELINE: NONE.
+
+### Counts, both platforms, both with and without
+
+  PlayMode  baseline   216 total, 193 passed, 10 failed, 13 skipped
+  PlayMode  with       220 total, 197 passed, 10 failed, 13 skipped
+  EditMode  baseline   190 total, 186 passed,  1 failed,  3 skipped
+  EditMode  with       190 total, 186 passed,  1 failed,  3 skipped
+
+The four new passes are exactly the four ghost tests. EditMode is untouched,
+which is right: the new test file is in the PlayMode assembly.
+
+STILL RED, pre-existing, each proven so by the baselines above and NOT this
+piece's work: PlayMode - FeatureTests.DamageIsFeltInTheDriving,
+ImportedModelTests.SoldiersStandOnTheGroundAndAreAnimated,
+ImportedModelTests.TanksStandOnTheGroundRatherThanInIt,
+TruckHealthTests.CrashingIntoArmourWritesItOff, VehicleTests x5,
+VisibilityTests.ArmiesAreActuallyDrawn. EditMode -
+CombatFxTests.RifleFireProducesAFlashAndATracer.
+
+### JS suites, unchanged by this piece
+
+protocol 362/362, core 83/83, blwp-node 71/71, blwp-client 89/89, money guard
+12 files clean, determinism guard 19 files clean.
+
+### What piece 4 is not
+
+No lobby. No socket subscribing - that is the parked daemon with 14 and 8. No
+ghost prefab wired into Bootstrap yet: the component and its guarantee exist,
+and what spawns them is the same daemon boundary. C# draws; it does not
+simulate, and `step` still takes one state and one player's five inputs.
