@@ -15071,3 +15071,145 @@ names `bond_min_game_verify` and `bond_min_settlement`. Folding them in here
 would have cost one regeneration of the vectors instead of four. Daniel ruled
 they stay parked and pay for their own break: one item at a time. Written down
 so the next letter that moves these shapes knows what it is paying for twice.
+
+## M2.2 item 16, second pass: the two numbers that still picked the committee
+
+Found by auditing the contract against section 6's field list rather than
+against the letter. Two live defects, both the fault the version filter had
+just lost - a caller argument deciding who sits.
+
+### census_confirmations
+
+5A.11: "The Round Contract contains: `census_height, census_confirmations`."
+The height was already taken off the contract ON PURPOSE - `censusRootMatches
+Round` says so in its own comment - and the depth sat beside it as an argument
+on every census function. A caller who picks the depth picks which bonds are in
+the census, and the census picks the committee.
+
+  before   commitCensus(entries,  { censusHeight, minConfirmations, tipHeight })
+           scanCensus(blocks,     { censusHeight, minConfirmations, tipHeight, candidates })
+           deriveCensus(blocks,   { censusHeight, minConfirmations, tipHeight, ... })
+           censusInputsId(        { censusHeight, minConfirmations, tipHeight, entries })
+           censusRootMatchesRound(contract, { entries, minConfirmations, tipHeight, boundTo })
+
+  after    commitCensus(entries,  { contract, tipHeight })
+           scanCensus(blocks,     { contract, tipHeight, candidates })
+           deriveCensus(blocks,   { contract, tipHeight, candidates, resolve })
+           censusInputsId(        { contract, tipHeight, entries })
+           censusRootMatchesRound(contract, { entries, tipHeight, boundTo })
+
+There is no longer a parameter to pass a different depth through. `tipHeight`
+stays the caller's and that is not the same thing: the tip is OBSERVED chain
+state. Two participants at different tips are at different moments; two at
+different depths are under different law.
+
+### game_verify_slots, settlement_slots
+
+Section 6: "echoed for readability; MUST equal genesis_parameters, which
+network_id commits to. A contract disagreeing with the network it names is
+invalid, NOT A SMALLER COMMITTEE." That last clause is the whole point - nobody
+had to forge a census to shrink a committee, they could pass a smaller `slots`.
+
+  before   selectCommittee({ entries, committeeSeed, role, slots, bondMin, exclude })
+  after    selectCommittee({ entries, contract, role, exclude })
+
+All three caller numbers went, not just the one: the seed decides who wins the
+tickets and `bondMin` normalises the weights, so a caller free to choose either
+chose the committee as surely as the slot count. `slotsForRole` imports the
+role-to-pool mapping from 22A's `poolOfRole` rather than writing a second copy;
+a role with no pool has no committee and is refused by name.
+
+### Measured with the contract held fixed
+
+  a caller passing minConfirmations 1, 999, censusConfirmations 1, or
+    censusHeight 1             census unchanged, root identical
+  the ROUND moving it to 999   census empties, root moves, and the refusal
+                               reads "where this round needs 999"
+  a caller passing slots 5,
+    slots 1, another seed, or
+    another bondMin            same two seats, same members
+  the ROUND moving any of
+    those three                different members, so the inertness above is a
+                               fact about ownership and not about dead numbers
+
+  round contract   371 -> 377 bytes
+  round id         dcf58c47881bc906... -> 49d5f0855f9629ec...
+  entry id         a9d0492eb5d5a7f8... -> b87449b49a195b84...
+  vectors          contracts.json only; the sortition vector is byte-identical
+  protocol tests   322 -> 325
+
+### Mutants: 19 planted, 19 killed, none retracted
+
+Four survived at 0 red and each was a real gap, not noise:
+
+  the two slot counts swapped   every fixture used seven and seven, which
+                                proves only that seven is seven. Now tested at
+                                7 and 3, encoded and decoded.
+  commit ignores the depth      every entry in the root file is far deeper than
+                                the rule, and scan catches the rest, so the
+                                re-check in COMMIT was untested. It is there
+                                deliberately: a set arriving by another road
+                                must not smuggle a shallow output into a root.
+  the root check needs no
+    depth                       the assertion matched a SUBSTRING, and the
+                                commit step refuses the same round for the same
+                                reason wrapped as "those census inputs cannot be
+                                committed to: ...". Asserted exactly now.
+  the bond floor is the
+    caller's again              the probe passed `bondMin: 1n`, and weightOf
+                                FLOORS bond/bondMin - scaling the floor scales
+                                every weight alike and cannot reorder anybody.
+                                The probe proved nothing. It now uses the value
+                                proven to move the answer when the round moves
+                                it.
+
+### AUDIT: section 6's Round Contract against this implementation
+
+Carried now (14): protocol_version, network_id, config_hash, sim_wasm_hash,
+start_time, entry_close_time, stake, census_height, census_confirmations,
+game_verify_slots, settlement_slots, objection_window_W, custody_rules, and a
+bond floor. Plus fields section 6 does not name that later sections require:
+slashMinimumServed (22A), slashRemainder (5A.3), donationSetId (22A),
+censusRoot, committeeSeed, blockTicks and the 18A.7 balance constants.
+
+Covered by an existing ruling, deliberately NOT fields (3):
+  node_fee_bps, fee_schedule    section 18: the 2% is a constant, identical for
+                                everyone, not a signed round field.
+  donation_bps_max              a protocol cap (v4.6), not a round's choice.
+
+Recorded divergences, parked and not fixed (2):
+  game_verify_census_root /     one root where 5A.4 wants one per role
+    settlement_census_root
+  bond_min_game_verify /        one bondMinSats where 5A.3 names one per role
+    bond_min_settlement
+
+Absent, and what each waits on (18). NONE of these is invented, and none goes
+on the wire this letter:
+  bond_script_template_version  5A.3B - a taproot output hides its script paths
+  arbitration_set, _k, _m       no arbitration set exists; slash enforcement is
+                                parked on a daemon
+  bond_maturity                 a genesis parameter (27A.6), unchosen
+  randomness_rule, _fallback    randomness_source is a genesis parameter (27A.6),
+                                unchosen
+  timestamp_receipts[]          >=5 receipts from a running network (5A.5)
+  published_at, committee_time,
+    entry_open_time             a live publication flow; nothing publishes yet
+  slashing_rules_hash,
+    equivocation_rule_hash,
+    no_quorum_rule_hash         hashes of rule documents nobody has fixed
+  htlc_cltv_days                parked: needs a protocol tick rate that does
+                                not exist
+  claim_window_days             unchosen
+  map, end_time,
+    player_run_duration,
+    payout_model,
+    selection_algorithm_version no value chosen; several are partly expressed by
+                                fields already carried (blockTicks, the rank
+                                curve), and reconciling them is its own letter
+  disconnect_rule, finality_rule unchosen
+  creator_pubkey,
+    creator_signature           a signature sits BESIDE an object here by house
+                                pattern, so an id does not move when signed
+
+Adding any of these later is a format break, and that is now written down
+rather than discovered.

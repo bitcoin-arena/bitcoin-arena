@@ -47,9 +47,24 @@ Top item first. Finish and deploy before starting the next.
                                             preimages name genesis parameters
                                             and keys nobody has generated, so a
                                             build that names no network accepts
-                                            no contract. Round id moved, one
-                                            vector file regenerated, client
-                                            bundle rebuilt. Numbers: TASKBOOK.
+                                            no contract. And two numbers that
+                                            still picked the committee are the
+                                            round's now: `censusConfirmations`
+                                            (5A.11 pairs it with the height,
+                                            and the height was already the
+                                            contract's) and the two seat counts
+                                            (section 6: a contract disagreeing
+                                            with its network is invalid, NOT a
+                                            smaller committee). There is no
+                                            caller argument left to pass a
+                                            depth, a slot count, a seed or a
+                                            bond floor through. Section 6's
+                                            remaining 18 absences are audited in
+                                            TASKBOOK, none invented, none on the
+                                            wire. Round id moved twice, one
+                                            vector file regenerated each time,
+                                            client bundle rebuilt.
+                                            Numbers: TASKBOOK.
    15  M2.2 census from chain         M2   OPEN — parked, no unblocked work
                                             left. A contract's `censusRoot` is
                                             checked against the census it
