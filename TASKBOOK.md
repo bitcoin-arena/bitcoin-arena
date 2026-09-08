@@ -20548,3 +20548,74 @@ on one contract, and a picture whose numbers come from the other run.
 
 STILL NOT WITNESSED, and it is the whole close condition for 28: nobody has
 seen the truck on the page. The daily is where that sighting happens.
+
+## Item 28: the player drew no ghost at all, and would have drawn it wrong
+
+THREE HOLES, FOUND BY LOOKING AT THE PLAYER RATHER THAN AT THE SUITE. The
+daily carried the hop - `BlwpNextGhost` in the framework, `watchGhosts` in the
+page client - and still could not have shown anybody a truck.
+
+### 1. Nothing constructed the field
+
+`GhostField` is a MonoBehaviour. It is in no scene (`grep` on
+`Assets/Scenes/Prototype.unity`: 0), and until now no shipping script created
+one - `Bootstrap` builds `NetSession`, `CoreDrivenTruck`, `StrikeTheatre` and
+never this. So `Update` never ran, `BlwpNextGhost` was never called from C#,
+and the pictures the JS client had already queued were drained by nobody.
+
+Every test of the field built its own field. That is why the whole set was
+green over a player that drew no ghost: the tests measured the class, and
+nothing measured the WIRING. The new test builds the world the way
+`VehicleTests` does and asks the scene for a field.
+
+### 2. The heading was 360 times too small
+
+`GhostTruck.Show` divided the heading word by 65536, the way a metre is
+divided. The word is the core's own `T_HEADING` and the core measures a heading
+in TURNS - `BlwpCore.Degrees` is `(w & 0xFFFF) * 360 / 65536`, which is why the
+M1 deployment reads out "heading 90" at the start line.
+
+    heading word 16384    drawn 0.25 deg      transcript 90.000 deg
+    after                 drawn 90.000 deg    transcript 90.000 deg
+
+A truck driving east was drawn pointing north. `GhostTests.AGhostStandsWhere\
+TheFrameSays` passed because it asserted the same wrong unit - it fed
+`90 * 65536` and expected 90 degrees. That test is CORRECTED, not loosened: it
+now feeds a quarter turn, still asserts an exact 90, and additionally asserts
+the ghost and `BlwpCore.TruckHeading` read one word the same way.
+
+### 3. It stood 7.58 m under the road
+
+`Show` kept whatever y the object had, and a fresh object has none. A picture
+carries x, z and a heading and CANNOT carry a height - the map is the fee
+histogram and moves under everybody - so the height is this page's fact. The
+field now takes a `Seat` function and the player hands it the surface the local
+truck stands on, `CoreDrivenTruck.Ground` plus its own body offset.
+
+    in the built world, at (-100.22, 10.20)
+      before   y 0.000
+      after    y 8.982    surface 7.582    body above ground 1.400
+
+### And it is still a picture
+
+    solids without the other truck 1, with it drawn 1
+    colliders under the field 0, rigidbodies 0
+
+The ghost body is fitted by the SAME rule as the local truck's - `FitTruckBody`
+split out of `NormaliseTruckModel`, because lifting the wheels out writes
+`_modelWheels`, and that list belongs to the local truck's axles. The streamed
+model when it has arrived, the same proxy box `BuildTruck` falls back to when
+it has not, and `SwapTruckModel` rebuilds the template so ghosts stop being
+boxes at the same moment the local truck does.
+
+### Red first, then green
+
+The four new tests were run against the unfixed player and each failed for its
+own reason - "the player builds no ghost field, so no other truck is ever
+drawn", "the other truck is drawn facing somewhere its transcript never
+pointed", "the drawn truck ignores the ground it was given", "the player builds
+no ghost field". 4 total, 0 passed, 4 failed, 0 error CS.
+
+    ghost tests after the fix       17 / 17
+    PlayMode   229/205/11/13  ->  233/209/11/13   the same eleven reds by name
+    EditMode   190/186/1/3    ->  190/186/1/3     unchanged
