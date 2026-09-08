@@ -18582,3 +18582,41 @@ to about what it is signing away.
 
 protocol 409 -> 413, core 83/83, blwp-node 120/120, blwp-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean.
+
+## Item 25, slice 3: the marker is the one the round's own network uses
+
+5A.2 makes the dust output to BOND_MARKER the whole of findability: "without it
+the census is unfindable in practice", one address per network. The census held
+the round's `networkId` and passed NOTHING to `recognizeBond`, whose parameter
+defaults to regtest - so a testnet4 census looked for the regtest marker and
+would have counted a bond posted on another chain. The two are different
+addresses: 27a1d29c... and b437bfe7...
+
+  a testnet4 round, a regtest bond    excluded, "no dust output to BOND_MARKER"
+  a testnet4 round, a testnet4 bond   eligible
+  a regtest round, a regtest bond     eligible
+  a regtest round, a testnet4 bond    excluded
+  a network with no genesis here      the census REFUSES rather than guessing:
+                                      one that cannot say where to look for a
+                                      bond cannot say a bond is findable
+  a contract with no networkId        unchanged, so nothing that worked stopped
+
+### Two vocabularies for one chain
+
+`networkOf` answers 'testnet4' - the name genesis uses - and `bondMarker` took
+only 'testnet', so the first honest wiring was told no marker had been chosen
+for a network that has one. `networkAnchor` already accepted both. Both names
+are answered at the source now rather than translated at a call site, which is
+where a translation gets forgotten.
+
+### Mutants: 4 planted, 4 killed, 0 retracted
+
+  M1 the network dropped at the call site again    1 red
+  M2 an unknown network guessed instead of refused 1 red
+  M3 every id read as regtest                      1 red
+  M4 testnet4 has no marker again                  1 red
+
+### Suites
+
+protocol 413 -> 414, core 83/83, blwp-node 120/120, blwp-client 95/95, money
+guard 12 files clean, determinism guard 20 files clean.
