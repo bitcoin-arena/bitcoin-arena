@@ -247,6 +247,10 @@ done. Start M2.1 checkpoints. Parked a8/a11/a12 stay parked.
 HARD (Daniel 2026-09-07 12:58): if PRIORITIES has no open M1 letter, do
 M2. Do not idle. a16 is closed. Current letter is M2.1.
 
+HARD (Daniel 2026-09-08 08:03): keep going until M2 is finished. Do not
+stop mid-milestone. A closed letter is not a halt. Parked 15/14/8 stay
+parked; open the next unblocked M2 letter instead.
+
 HARD (Daniel 2026-09-06 22:48): when a letter like a13 or a14 is done,
 deploy to btc-logistics-core.pages.dev. Do not wait for Daniel to ask.
 
