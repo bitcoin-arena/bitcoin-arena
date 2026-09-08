@@ -64,17 +64,26 @@ tick rate, daemon, curve, BOND_MARKER, ghost subscribe, run duration.
                                             and a caller that has checked says
                                             so, which moves the report and not
                                             a single row.
+                                            Slice 5: the
+                                            three 0.11 fields a signed final
+                                            cannot supply are each named on
+                                            the board's own report, with what
+                                            would fill it - pseudonym: the key
+                                            is on the row, the SCHEME is
+                                            unchosen (Daniel's, like the
+                                            checkpoint); cargo statistics:
+                                            replay the transcript, so M2.3's
+                                            replay pool; live run status:
+                                            marks and ghosts, BLOCKED ON 22
+                                            with the screen. None is faked
+                                            from the client, and none of the
+                                            three can reach a row, an order, a
+                                            rank or an amount.
                                             STILL UNBUILT: nothing is on
                                             screen - the only reason this is
                                             not deployable, and BLOCKED ON 22
                                             because finals reach a client
-                                            through the daemon; and three
-                                            0.11 fields a signed final cannot
-                                            supply - pseudonym (a client
-                                            rendering of the player key),
-                                            cargo statistics (no field, not
-                                            derivable), live run status (a
-                                            final is after the run).
+                                            through the daemon.
                                             Numbers: TASKBOOK.
    19  M2 late join                   M2   done — a late run begins at the tick
                                             its own signed Entry Contract

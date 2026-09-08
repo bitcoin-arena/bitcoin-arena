@@ -16965,3 +16965,63 @@ drawn; the standings rebuild untouched.
 
 nothing on screen - now written as BLOCKED ON 22, because finals reach a client
 through the daemon - and the three 0.11 fields a signed final cannot supply.
+
+## Item 20, slice 5: the three 0.11 fields a signed final cannot supply
+
+The board already REFUSED these three; it did not say who owed them. Measured
+first: dressed a result and a row with `pseudonym`, `cargoDelivered` and
+`liveStatus` and read the built row back.
+
+  row keys: outcome, playerPubkey, rank, score, signers
+  fields that leaked from the dressing: none
+
+So no leak existed to fix. What was missing is the other half of the answer:
+"not on a final" tells a caller not to expect the column, not whether anyone is
+coming for it - the difference between a decision somebody owes and a task
+somebody forgot. Each notice now names the source and the blocker.
+
+  1. pseudonym       the key IS on the row; 0.12 says clients MAY derive one
+                     and names no scheme. Two wordlists would name one player
+                     twice, so the scheme is chosen once - the BOND_MARKER and
+                     checkpoint class, Daniel's, not this file's.
+  2. cargo statistics the core holds cargo in its state, so a REPLAY has it;
+                     a final does not. Source: M2.3's replay pool.
+  3. live run status  marks and ghosts, which reach a client through the
+                     daemon. BLOCKED ON 22, the same dependency as the screen.
+
+Reported in the same shape as the committee-signature notice: four strings in
+`unchecked`, signatures first. Nothing is faked from the client.
+
+### Mutants: 7 planted, 6 killed, 1 retracted
+
+  M1 the three notices dropped, committee notice kept        3 red
+  M2 a pseudonym invented from the key (first 8 hex)        10 red
+  M3 a caller's row fields spread onto the built row        10 red
+  M4 the sort reads `cargoDelivered` off the BUILT row     RETRACTED
+  M4b a claimed cargo count added to the score              1 red
+  M4c cargo carried onto the entry, then sorted on          2 red
+  M5 the pseudonym notice stops naming its blocker          1 red
+  M6 a `liveStatus` column taken from the result            2 red
+
+M4 is retracted, not counted: the field is dropped when the row is built, so
+the sort reads `undefined` and the arithmetic is a no-op. It is unkillable
+because M3 already holds the door - a mutant behind a closed door measures the
+door, not the lock. M4b and M4c are the honest forms: they read the injected
+value where it actually lives, on the result.
+
+The first fixture could not tell an order from a column - one dressed row, so a
+reorder had nothing to swap with. Added a second runner at 950 against 900 + 99
+cargo: if any of the three reached the ordering, those two swap. M4c then goes
+red on the ORDER as well as on the score.
+
+### Suites
+
+protocol 381 -> 382, core 83/83, blwp-node 71/71, blwp-client 95/95, money
+guard 12 files clean, determinism guard 19 files clean.
+
+### What is still open on 20
+
+Nothing on screen, BLOCKED ON 22. Of the three fields: live run status is
+blocked on 22 with it, cargo statistics waits on M2.3's replay pool, and the
+pseudonym scheme is an external remainder - Daniel chooses it, as with the
+checkpoint and BOND_MARKER.
