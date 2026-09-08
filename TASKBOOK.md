@@ -19300,3 +19300,79 @@ pictures of other identities, decodes them and hands them on without losing an
 answer. What is NOT in 18 by ruling: drawing the truck (28), and the Unity
 consume path, which piece 4 already landed and which no measured hole has
 forced open.
+
+## Item 18 closed: two holes found on the way, and the numbers
+
+The last check on this letter found two things on the spawn/subscribe/consume
+path that nothing measured, and both are fixed rather than listed.
+
+### 1. A subscription did not survive its socket
+
+The node keys subscribers BY CONNECTION and `reconnect()` opens a new one. It
+already re-did the two things a run needs - connect, and resume from the tick
+it reached - and not the third. So a player who dropped for two seconds came
+back publishing and BLIND: no error, no counter, the pictures simply stopped
+for the rest of the run.
+
+  before   node.watching() 1 -> drop -> 0 -> reconnect -> 0, no frames again
+  after    1 -> 0 -> 1, and the next batch is a picture again
+
+The client remembers what it asked to watch and asks again after resuming;
+`rewatched` counts it, and a refusal is put on `error` rather than swallowed.
+
+### 2. A stalled subscriber was buffered without limit
+
+`showRound` sent to every open socket whatever its backlog. A 5 Hz picture of
+a truck that has moved on is worth nothing by the time a stalled socket drains
+to it, and the node holding it is unbounded memory for one slow player. Piece 2
+already ruled the policy for the queue coming IN - "a full queue sheds pictures
+oldest first and never evidence" - and this is the same rule going out, at the
+same quarter of a megabyte the client uses to decide it is too far behind to
+publish.
+
+AND THE FIRST VERSION OF IT WAS WRONG, which the test written to pin the COUNT
+is what caught. Marking shed frames as delivered lost a truck: a subscriber
+who fell behind while somebody was driving, and that somebody then stopped,
+never saw them at all - the picture was marked shown and never sent. There is
+no queue to go stale here, because `setFor` recomputes the latest picture of
+each truck every time, so a skipped frame is simply sent when the socket
+drains and what goes out then is the newest one that exists. Counted, not
+claimed.
+
+  shed count   3 for two batches landing while behind: the first truck's
+               picture dropped on both and the second's on one. A counter per
+               STALL would say two, and could not show pressure at all.
+
+### Mutants: 5 planted, 5 killed
+
+  a shed picture is marked delivered, so a truck that stops is lost   killed
+  the drop counts stalls rather than pictures                         killed
+  a subscriber that is behind is buffered rather than shed            killed
+  a reconnect does not ask to be shown the others again               killed
+  the client forgets what it asked to watch                           killed
+
+RETRACTED earlier in the same run: "a shed picture is kept for later instead of
+dropped" reads as equivalent while `setFor` always yields the latest picture
+per entry - nothing can be delivered stale, only counted differently. Pinning
+the count is what turned it into the two real findings above.
+
+### Suites
+
+core 83/83, protocol 404/404, blwp-node 166/166, blwp-client 101/101 - 754
+tests, 0 red. Money guard 12 files clean, determinism guard 20 clean. Bundle
+212.0 KB from 20 modules.
+
+### What 18 is, now that it is closed
+
+  PRODUCED   a ghost is a replay of what that player published, through
+             replay.js and nowhere else; bound to the head of their input
+             chain; refused for a tick their inputs do not cover
+  DELIVERED  on the /play socket, to a connection that named itself; never a
+             picture of yourself; within the interest budget; shed rather than
+             buffered for a subscriber too far behind; asked for again when a
+             reconnect brings a new socket
+  CONSUMED   by the browser client, routed by type byte, decoded, handed on -
+             and a publish still gets its own reply while pictures arrive
+
+Not 18, by ruling: drawing the truck on screen (28), and the Unity consume
+path, which piece 4 landed and no measured hole forced open.

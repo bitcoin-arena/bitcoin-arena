@@ -16,7 +16,7 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: 18, ghosts / private world. 15 and 20-25 are done.
+LIVE LETTER: 26, census + eligibility. 15, 18 and 20-25 are done.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
 threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
@@ -29,9 +29,8 @@ HARD (Daniel 2026-09-08 12:09): both committee nodes are reachable on
 Tailscale, not LAN. M2 asks for no money and distributes none.
 
 HARD (Daniel 2026-09-08 15:26): close 15 and 18 as soon as they are
-unblocked. Do not leave them OPEN while 26-28 run. 15 IS CLOSED. 18 is
-live now (spawn and subscribe; daemon 22 is already in). Ghosts-on-screen
-in 28 does not mop them up. 26 stays parked until 18 is closed.
+unblocked. BOTH ARE CLOSED. 26 is unparked and live. Drawing another
+player's truck on screen is 28 and was never 18's.
 
 IN THIS ORDER (unparked):
    22  M2 daemon replays the core     M2   done — slice 1 IS IN: the node reaches the
@@ -174,10 +173,17 @@ IN THIS ORDER (unparked):
                                         both leaves spendable on a real node,
                                         and a slash that carries the proof
                                         justifying it. Numbers: TASKBOOK.
-   18  M2.2 ghosts / private world    LIVE — spawn and subscribe on the
-                                        daemon socket. Pieces 1-4 are
-                                        in; 22 unlocked this. Do not
-                                        skip and do not wait for 28.
+   18  M2.2 ghosts / private world    M2   done — another player's truck is a
+                                        picture from their transcript: made
+                                        by replaying what they published,
+                                        through the one simulator door;
+                                        delivered on the /play socket to a
+                                        connection that said who it is, never
+                                        of yourself, within the round's own
+                                        interest budget; and consumed by the
+                                        browser client without stealing the
+                                        answer to an RPC. Drawing it is 28.
+                                        Numbers: TASKBOOK.
    15  M2.2 census from chain         M2   done — the census is a function of
                                         the chain: its own bonds found by the
                                         round's marker, no root with the
@@ -187,10 +193,10 @@ IN THIS ORDER (unparked):
                                         so two participants at different tips
                                         derive the same census. 734 green.
                                         Numbers: TASKBOOK.
-   26  M2 census + eligibility        — PARKED until 18 closes. Leftover
-                                        after 15: sort txid/vout, min census
-                                        for 2-of-2, and the first production
-                                        caller - which is where the
+   26  M2 census + eligibility        LIVE — leftover after 15: sort
+                                        txid/vout, min census for 2-of-2, and
+                                        the first production caller of the
+                                        census - which is where the
                                         verifyAdvert hook gets wired.
    27  M2 committee_time + seed       — seed from bitcoin-block-hash after
                                         committee_time; committee exists
@@ -359,7 +365,7 @@ tick rate, daemon, curve, BOND_MARKER, ghost subscribe, run duration.
                                             `entry_close_time`, which is
                                             carried by every contract and read
                                             by no code. Numbers: TASKBOOK.
-   18  M2.2 ghosts / private world    M2   OPEN — other trucks are pictures
+   18  M2.2 ghosts / private world    M2   DONE — other trucks are pictures
                                             from their transcript, never
                                             inputs to my sim, never collide.
                                             Spec 0.9 / 0.10. Not the lobby.
@@ -419,11 +425,23 @@ tick rate, daemon, curve, BOND_MARKER, ghost subscribe, run duration.
                                             inside the simulation. Two guards
                                             now, and removing either turns its
                                             own test red.
-                                            What remains is spawn and
-                                            subscribe on the daemon socket
-                                            (22 is in). Daniel 15:26: close
-                                            this after 15, do not leave it
-                                            OPEN for 28 to mop up.
+                                            Pieces 5-7 close it: a ghost is
+                                            PRODUCED by replaying what that
+                                            player published, through
+                                            replay.js and nowhere else;
+                                            DELIVERED on the /play socket to a
+                                            connection that named itself,
+                                            never a picture of yourself,
+                                            within the interest budget, shed
+                                            rather than buffered for a
+                                            subscriber a quarter of a megabyte
+                                            behind, and asked for again when a
+                                            reconnect brings a new socket; and
+                                            CONSUMED by the browser client,
+                                            which routes a picture by its type
+                                            byte instead of handing it back as
+                                            the answer to whatever RPC was in
+                                            flight. Drawing the truck is 28.
                                             Numbers: TASKBOOK.
 
 BOND-OUTPUT RECOGNITION is DONE. A chain output counts as a bond or does not,
