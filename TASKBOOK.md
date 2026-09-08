@@ -18835,3 +18835,106 @@ guard 12 files clean, determinism guard 20 files clean. 721 tests, 0 red.
 Not in this slice, by ruling: 18 spawn/subscribe, 26-28, Lightning, deploy, and
 a second slice against real regtest blocks. Nothing deployed: no client code
 changed and no daemon calls the scan yet.
+
+## Item 15, slice 2: FILTER by the 24 template
+
+Before: a census root could be taken with the 5A.3B template unchecked. The
+template check is a point addition, `packages/protocol` carries no curve, so
+`resolveCensus` ran without one and named the gap - "the bond script template
+(no curve in this package)" in `unchecked` - and counted the entry anyway. That
+is honest for a STEP and wrong for a CENSUS: a root taken that way is a census
+over outputs nobody proved were bonds, and a stranger's taproot key is
+thirty-two bytes like any other.
+
+After: the COMPOSED census refuses. `deriveCensus` returns
+`ok:false, why:"...template unchecked: regtest names an arbitration set and no
+curve was injected"` unless the caller injects the set and both curve
+operations. `resolveCensus` keeps its `unchecked` list - a step that says what
+it did not check is honest, and that is now pinned as its own assertion.
+
+Also in this slice, by ruling: a round that names no network is REFUSED, at
+both doors. It used to fall back to `network || 'regtest'` in SCAN and to
+`recognizeBond`'s own `network = 'regtest'` default in RESOLVE, so a contract
+with no `networkId` was answered with regtest's marker on whatever chain it was
+actually running.
+
+And a set is this network's set or it is not a set: the arbitration keys, the
+threshold and the maturity are compared against genesis before any entry is
+judged, because a caller holding the wrong set would otherwise see every honest
+bond excluded by name and read the chain as full of liars.
+
+### The numbers
+
+  unchecked, no curve injected      2 -> refused (no root at all)
+  unchecked, curve injected         2 -> 1, and the one left is the
+                                    advertisement signature (ed25519,
+                                    letter 23), which leaves the list when a
+                                    caller injects `verifyAdvert`
+  the same three bonds, with the    3 eligible, 0 excluded, same root as
+  set and a curve                   before the slice
+  a stranger's taproot key          counted before -> excluded by name
+  a round with no networkId         scanned as regtest -> refused at SCAN
+                                    and at RESOLVE, by name
+  empty / short / altered set       accepted before -> refused before any
+                                    entry is judged
+  k or maturity of the caller's own accepted before -> refused
+
+### Mutants: 8 planted, 8 killed
+
+  the template refusal cannot fire                  killed
+  it fires only for an explicitly null set-holder   killed
+  an empty arbitration set is a set                 killed
+  a set of the right length is the right set        killed
+  the threshold and maturity are the caller's       killed
+  a missing curve operation is a curve              killed
+  scan answers a nameless round as regtest          killed
+  resolve answers a nameless round as regtest       killed
+
+### Where the census tests live now
+
+A root needs a curve, so the tests that take one moved to the package that has
+one. `protocol/test/census-derive.test.js` and `census-chainview.test.js` are
+now `blwp-node/test/`, on real secp keys and real bond output keys - the old
+fixtures left the builder's 0x77 filler in place, which was invisible while
+nothing recomputed it. Two composed-census tests moved out of
+`protocol/test/bond-recognition.test.js` the same way; recognition itself
+stayed, and needs no curve. `blwp-node/test/curve.js` is the shared injector.
+`protocol/test/census-template.test.js` is new and holds the refusals, measured
+where no curve exists. Nothing was dropped in the move: protocol 421 -> 400 and
+blwp-node 122 -> 147 is 23 tests relocated plus 4 new refusal tests.
+
+`commitCensus` deliberately does NOT carry this rule. It takes entries a caller
+assembled and already believes about `advertId`; a template stamp checked there
+would be a check on the caller's own word rather than on the chain. The
+guarantee lives on the only path that runs all five steps.
+
+### Suites
+
+core 83/83, protocol 400/400, blwp-node 147/147, blwp-client 95/95 - 725 tests,
+0 red. Money guard 12 files clean, determinism guard 20 files clean, client
+bundle 201.1 KB from 19 modules, byte-identical.
+
+### Named remainders (not silent drops)
+
+1. TREE-CARRIED COMMITMENTS, by ruling (Daniel, this letter). 5A.2 allows the
+   advertisement commitment in "an OP_RETURN output of the funding transaction
+   OR the taproot script tree". `commitmentsOf` reads OP_RETURN outputs only,
+   so a tree-committed bond from another implementation is not a candidate and
+   is dropped silently. This build produces and recognizes OP_RETURN only.
+   Checking the tree form means recomputing the output key with a commitment
+   leaf, so it needs the curve and belongs wherever that is wired.
+
+2. `node_pubkey` CANNOT BE BOTH CURVES. Letter 23 verifies the advertisement
+   signature as ed25519 under `node_pubkey` (`blwp-node/src/advert.js:88`);
+   letter 24 feeds the same field into the secp256k1 taproot derivation as the
+   node's key (`protocol/src/chain.js:307` and `:311`). An ed25519 public key
+   is not a valid secp x-only point, so no real node can satisfy both at once.
+   It is invisible today only because no fixture does both: the advert tests
+   sign with ed25519 over a filler output key, and the census fixtures use secp
+   keys whose signatures nobody verifies. Either the advertisement signature
+   becomes BIP-340 on the same key, or the advertisement needs a separate bond
+   key field. 5A.1 names no curve for the field, so this is a ruling, not a
+   defect to pick a side on here.
+
+3. No live bitcoind this slice, by ruling. Chain facts against real blocks are
+   slice 3.
