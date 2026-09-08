@@ -17995,3 +17995,86 @@ and a real key carrying none.
 
 protocol 398 -> 399, core 83/83, blwp-node 104 -> 105, blwp-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. No Unity, no C#.
+
+## Item 24: the bond output key is the taproot tweak, not filler
+
+### What was there
+
+`tools/bond.js` posted `[0x51, 0x20, ...fill(0x77)]` - a P2TR output whose key
+was derived from nothing, so every fixture bond was unfalsifiable and
+`recognizeBond` could only say the output LOOKED like taproot. The last entry
+of `BOND_UNCHECKED` said so: "the bond script template (5A.3B: a taproot output
+hides it until spent)".
+
+### Why recomputing is the only check there can be
+
+A taproot output shows nothing until it is spent, which is exactly why 5A.3B
+chose it - "a cooperative release and a cooperative slash are the same
+transaction". So verification cannot READ the script. It rebuilds the tree from
+what the node declares and asks whether the 32 bytes on chain are the answer.
+Construction and verification are one function used twice.
+
+### The shape, and where the curve is
+
+  leaf A (recovery)  <node_key> CHECKSIGVERIFY <maturity> CLTV DROP
+  leaf B (slash)     <k> <m sorted keys> <m> CHECKMULTISIG
+  branch             BIP-341 TapBranch, children in lexicographic order
+  tweak              TapTweak(internal_key || merkle_root)
+  output key         Q = P + t*G, done by the CALLER's curve
+
+The protocol package does the hashing and refuses the point addition: it is the
+one every other package reads and carries no curve, so `tweakPoint` is injected
+the way 23 injects `verifyAdvert`. A caller with none is told so rather than
+handed a key nobody computed.
+
+The tagged hashes are checked against `@noble/curves`'s own implementation of
+the same construction, not only against themselves - a tree that agreed with
+its own hash would agree with nothing else on the network.
+
+### k and m are genesis, and the network ids moved
+
+`arbitration_k = 5`, `arbitration_m = 7` joined the genesis parameters beside
+`bond_maturity`: the leaf hashes them, so a round that disagreed about k would
+compute a different output key for the same node and refuse a good bond.
+
+Adding a field to a hashed object moves the hash, and it did:
+
+  NETWORK_ID_REGTEST   14ba948f... -> a0115253aaeef3bb71a6bb4d12a6c5e2
+                                      e7653010a6a015d371d1c905dda9e7e0
+  NETWORK_ID_TESTNET4  0f50255b... -> 384dd0dd9750fd4db1accb308db6d5cd
+                                      78d3da9974ef2f54bdba01a8bf70db8e
+
+Recomputed by hand from the SAME public donation keys rather than by rerunning
+`make-genesis.mjs`, which generates new keys every run. A network id that had
+not moved would have meant the new fields were not in it.
+
+### TWO PLACES 5A.3B's BYTES WOULD NOT EXECUTE, written as the spec writes them
+### and named rather than quietly repaired
+
+  1. Path A ends `... CHECKLOCKTIMEVERIFY DROP`, which leaves an EMPTY stack.
+     A script ending empty fails. 5A.3B calls path A "the one to get right"
+     because it is what returns the money if arbitration disappears - so this
+     must be settled before a bond holds value, and not by a library
+     reordering two opcodes on its own.
+  2. Path B uses CHECKMULTISIG, which tapscript (BIP-342) removed; the
+     tapscript spelling is CHECKSIGADD.
+
+Neither affects this letter, which builds an output key and never spends one -
+the leaves are hashed, not run. Both are recorded so whoever writes the spend
+finds them named rather than discovering them with money in the output.
+
+### Mutants: 7 planted, 7 killed, 0 retracted
+
+  D1 the branch not sorted                      protocol red
+  D2 the arbitration keys not sorted            protocol red
+  D3 the maturity left out of the leaf          both red
+  D4 the tree left out of the tweak             both red
+  D5 the recompute comparing nothing            both red
+  D6 the leaf hash without version and length   both red
+  D7 the filler key posted again                both red
+
+### Suites
+
+protocol 399 -> 405, core 83/83, blwp-node 105 -> 109, blwp-client 95/95, money
+guard 12 files clean, determinism guard 20 files clean. No Unity, no C#, no
+bitcoind: this letter builds a key and posts nothing.
