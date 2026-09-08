@@ -21066,3 +21066,43 @@ Two more mutants, both dead:
 
     core 84/84   protocol 420 -> 421   blwp-node 207/207   blwp-client 118/118
     money guard 12 clean, determinism guard 20 clean
+
+### Is 29 finished? NO, and the reason is the fault letter 28 just taught
+
+The rule is in and measured. NOTHING CALLS IT.
+
+    grep for splitSecret / shareOpensTo / checkHandout / shareIsConsistent
+    outside packages/protocol/src/shares.js and the two test files:
+      packages/*/src        0 callers
+      packages/*/tools      0 callers
+      the jslib             0 callers
+    grep for vssShares / vss_shares_ref / commitments in contracts.js:
+      0 - the Entry Contract has no place to carry them
+
+That is the exact shape of the hole 28 opened with: `GhostField` was a correct
+class that no scene and no script constructed, every test of it was green, and
+the deployed page drew nobody. A dealer is refused at handout only if some seat
+actually asks, and today no seat asks anywhere but in a test.
+
+So 29 is NOT closed here, and the missing piece is named rather than parked:
+the commitments have to reach a seat. That means the published shares get a
+place - 23.1's `vss_shares_ref` - and something on the daemon or the client
+runs `checkHandout` before an entry is accepted. It is contract surface, which
+is letter 16's family: adding a field to the Entry Contract moves every entry
+id and every fixture that carries one, so it is Daniel's call whether that is
+slice 2 of 29 or its own letter.
+
+### Encrypting one share to each member: M3, and why that is not parking it
+
+23.1 step 2 also says the player "encrypts one share to each settlement-
+committee member". That is confidentiality, and what it protects is the stake:
+five shares in the clear are a preimage anybody can rebuild. M2 asks for no
+money and distributes none (Daniel 2026-09-08 12:09), so in M2 there is no
+stake behind P and nothing to take by reading a share. It becomes REQUIRED at
+the same moment the hold invoice does - the first letter where P is worth sats
+- and it needs a key agreement nobody has chosen, which is a decision and not a
+task. Feldman does not make it more urgent: C_0 = g^P is published by design
+and telling P from it is the discrete log of the curve.
+
+The property 29 buys - a dealer cannot hand out shares that no five seats can
+open - holds whether or not the shares are encrypted.
