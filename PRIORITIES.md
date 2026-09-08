@@ -16,7 +16,7 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: 23, the advertisement signature. 20, 21 and 22 are done.
+LIVE LETTER: 24, the bond script. 20, 21, 22 and 23 are done.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
 threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
@@ -128,15 +128,21 @@ IN THIS ORDER (unparked):
                                         carry its own seed (16); a peer's
                                         ADDRESS, which is discovery (25.1).
                                         Numbers: TASKBOOK.
-   23  M2 advert signature            — LIVE. Sign the body the bond commits
-                                        to: 5A.1 ends the advertisement with
-                                        "signature - by node_pubkey over all
-                                        of the above", and nothing checks it.
-                                        ed25519 under node_pubkey, the key
-                                        that already signs receipts and
-                                        results; the bond key stays
-                                        secp256k1 and its link to the body is
-                                        the commitment H(advert), not this.
+   23  M2 advert signature            M2   done — an advertisement is accepted
+                                        only when the key it names signed
+                                        that body, and the census counts a
+                                        bonded node only when the same
+                                        signature checks. ed25519 under
+                                        node_pubkey; the bond key stays
+                                        secp256k1 and its link is the
+                                        commitment H(advert). The curve is
+                                        injected, so the protocol package
+                                        still carries none. A foreign key, a
+                                        good signature over another body, an
+                                        unsigned body and the all-zero key -
+                                        which signs itself on this curve - are
+                                        each refused by name. Numbers:
+                                        TASKBOOK.
    24  M2 bond construction 5A.3B     — P2TR: MuSig2 / CLTV after maturity /
                                         slash. Two bonds, one LND.
    25  M2 bond verification           — output is what it claims
