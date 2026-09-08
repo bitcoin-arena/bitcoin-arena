@@ -14559,3 +14559,30 @@ Only the five parked entries, each on its named blocker: the hold invoice,
 slash enforcement and the committee re-run on a DAEMON, CLTV on the absent
 protocol tick rate, and the Feldman residual on a discrete-log group this
 package does not carry.
+
+## M2.1 22A: the set is bound but its bytes are not published - a recorded limit
+
+A round binds `donationSetId` inside the Round Contract and therefore inside
+the round id, so an entry cannot stand under a set the contract did not name
+and a set cannot change after entry. NOTHING PUBLISHES THE PREIMAGE: a verifier
+can say WHICH set a round bound and cannot fetch its recipients.
+
+That is the same shape as a transcript whose inputs were never published - §11
+already has that limit, and §13C's canonical transcript refuses a mark
+committing to inputs the object does not carry for exactly this reason. 22A
+names no channel for the set, and inventing one - gossip, a fetch endpoint, a
+preimage API - would be inventing a second protocol, so none was added.
+
+WHAT IT DOES NOT WEAKEN. The binding stands on its own: a set that does not
+stand has no id at all, a set that is not the round's is refused by name, and
+the round id moved to prove the hash includes it. What the limit costs is the
+ability to CHECK A SPLIT, which nothing does today - the client pays the
+donation outside the pool, no node touches it, and `failed` is already a parked
+attestation because this package has no Lightning.
+
+Parked beside the other data-availability limits, not counted as a hole in the
+binding.
+
+  suites at this note   protocol 275/275, blwp-node 70/70, blwp-client 89/89,
+                        core 80/80, money guard 12 files clean, determinism
+                        guard 19 files clean. No code moved for this note.

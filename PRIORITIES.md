@@ -858,7 +858,9 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      uppercase encoding of it is refused. AND THE ROUND NAMES ITS SET:
      `donationSetId` is a contract field, so an entry cannot stand under a set
      the contract did not name and a set cannot change after entry. A set that
-     does not stand has no id and can never reach a contract.
+     does not stand has no id and can never reach a contract. PARKED with the
+     other data-availability limits: nothing publishes the set's preimage, so
+     a verifier can name the set a round bound and cannot fetch its recipients.
      Numbers: TASKBOOK.
   4. **Entry quotas.** DONE. A funded entry before the node stores a byte.
      Both HTTP doors refuse until something the operator trusts says the stake
