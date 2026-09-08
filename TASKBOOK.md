@@ -14185,3 +14185,102 @@ rule. The spec's own worked example is one of the cases that agrees exactly.
 protocol 249/249 (was 244), blwp-node 70/70, blwp-client 89/89, core 80/80,
 money guard 11 files clean, determinism guard 19 files clean. Nothing outside
 `packages/protocol` moved; Unity untouched and not re-run.
+
+## M2.1 22A: the donation, split and never redirected
+
+`donationMsat` has been on every Entry Contract since it was written and was
+read by NOTHING - measured with the same grep that found `feeMsat` unread a
+turn earlier. This is the arithmetic and the one rule that says where the money
+does not go when a payment fails.
+
+### The rounding here is not the fee's rounding
+
+22A gives the node fee's remainder to ascending `H(round_id || node_pubkey)`
+and gives the donation's to "the first recipient in the set AS PUBLISHED.
+Deterministic, and the amounts are too small for anything cleverer to be worth
+its complexity." Two rules, written separately in one section; copying either
+onto the other would be inventing a third. Two mutants pin it: sending the
+remainder to the last recipient, and sending it to the biggest share, are 1 red
+each.
+
+### What went in
+
+`packages/protocol/src/donation.js`, on the money guard, which is 12 files now.
+
+  the set stands      only when the shares sum to EXACTLY 10000 basis points.
+                      Under anything else money is either left over with nobody
+                      named to receive it or promised twice, and 22A says MUST.
+                      9999 and 10001 are both refused by name.
+  one party, one      the same `lnurl` twice is refused. The set is meant to be
+  share               "a parameter the network can hold an opinion about", and
+                      it cannot form one if an address appears under two
+                      weights.
+  the split is EXACT  floor each share, remainder to the first as published, so
+                      the shares sum to the donation to the millisatoshi.
+                      Measured over 1, 3, 7, 999, 2001, 100003 and 999999999
+                      msat. That is a different property from the node fee,
+                      where each entry's own floor can collect less than the
+                      round's table owes - here there is no gap for anybody to
+                      keep.
+  donations off       pay nothing, and 22A says the set is IRRELEVANT to that
+                      entry, so a zero donation is answered without judging the
+                      set at all - even a set that would not stand.
+
+Measured, and one expectation of mine was wrong on the way: 2001 msat over
+3333/3333/3334 is 668/666/667, and REVERSED it is 669/666/666 rather than the
+668 I had written. Reversing puts the 3334 share first, so its own floor is 667
+and the same two left over make 669. The order decides who is topped up; the
+share decides what they are topped up from. Corrected against the arithmetic.
+
+### The clause this exists for
+
+22A: clients "MUST NOT redirect the share to the remaining recipients, which
+would let one unreachable endpoint quietly redistribute other people's money."
+
+  one of three fails   the other two are paid exactly what they were owed
+                       before - 668 and 667 of a 2001 donation - and the 666
+                       simply does not move
+  all three fail       nobody is paid, 2001 unpaid
+  either way           the entry STANDS: a donation is voluntary and outside
+                       the pool, so a failure can neither void a round nor
+                       touch a stake
+
+It is the money-law clause and not a retry policy: whether a client tries again
+is its business, and where the money may go is not.
+
+### Deliberately not here
+
+22A also says the set "is named in the Round Contract and its hash is part of
+the contract hash". That is a signed field and it moves every round id - the
+same split the fee table took before `feeMsat`, and it is a decision before it
+is work. And there is no Lightning in this package: a recipient is an opaque
+`lnurl` string, because inventing a payment layer to test one would be
+inventing a second protocol.
+
+### Mutants: 15 planted, 15 killed, none retracted
+
+| mutant | protocol red |
+|--------|-------------:|
+| the total is not ten thousand | 6 |
+| the remainder is dropped | 4 |
+| a failed share is redirected to the others | 2 |
+| a failure voids the entry | 2 |
+| any sum of shares stands | 1 |
+| close to 10000 is close enough | 1 |
+| one recipient may be listed twice | 1 |
+| a recipient needs no address | 1 |
+| a share need not be a whole number | 1 |
+| the remainder goes to the last as published | 1 |
+| the remainder goes to the biggest share | 1 |
+| a positive donation needs no set that stands | 1 |
+| donations off still judge the set | 1 |
+| negative money is money | 1 |
+| refunded entries donated after all | 1 |
+
+### Suites
+
+protocol 260/260 (was 249), blwp-node 70/70, blwp-client 89/89, core 80/80,
+money guard 12 files clean, determinism guard 19 files clean. Nothing outside
+`packages/protocol` calls any of this - grep finds `splitDonation`,
+`donationSetStands`, `donationAfterFailures` and `donatedMsat` only in the file
+itself and its test. Unity untouched and not re-run.

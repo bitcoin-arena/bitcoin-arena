@@ -843,7 +843,14 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      `stakeMsat` does not stand. The rate is a constant, not a contract field:
      one rate for every entry, or an operator prices its own round. 22A's
      Collection clause, which nets the fee out of the stake, contradicts 18 and
-     22A's own worked example and is treated as the error.
+     22A's own worked example and is treated as the error. AND THE DONATION IS
+     ARITHMETIC NOW: a recipient set whose shares do not sum to exactly 10000
+     basis points does not stand, the split is exact with the remainder to the
+     first recipient as published - not the fee's hash order - and a payment
+     that fails is NOT redirected to the others, because one unreachable
+     endpoint must not quietly redistribute other people's money. The set is
+     not on the round contract this turn: 22A wants it hashed into the contract
+     and that moves every round id.
      Numbers: TASKBOOK.
   4. **Entry quotas.** DONE. A funded entry before the node stores a byte.
      Both HTTP doors refuse until something the operator trusts says the stake
