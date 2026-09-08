@@ -13806,3 +13806,98 @@ and not re-run: EditMode 190/186/1/3 and PlayMode 216/192/11/13 stand from
   - the slash distribution field, and 22A's minimum-service field. Both are
     Round Contract fields, and a field moves every round id.
   - curve-verify, which is the package boundary and not a hole.
+
+## M2.1: the two slash numbers become signed contract fields
+
+A SIGNED-OBJECT FORMAT CHANGE, made once, the way `objectionWindowMs` was.
+Until this the slash law took its threshold and its payout split as arguments,
+and a number the caller picks is a number the operator picks - the same fault
+the objection window was moved into the contract to fix, and worse here,
+because these decide whether a bond is taken and who gets it.
+
+### Measured first, before touching a signed object
+
+  construction sites   20, by grep for the field that went in last time
+  vectors that move    ONE. `contracts.json` is the only vector that builds a
+                       contract; `checkpoint.json` and `payout.json` carry a
+                       round id as opaque bytes and did not move. Predicted
+                       from the objectionWindowMs entry above, then confirmed
+                       by regenerating: 1 file changed, 4 insertions.
+  round id derived in  one place. `roundId(contract)` in contracts.js, called
+                       from blwp-node/round.js:198, blwp-client/client.js:174
+                       and :279, and the jslib at 276 and 278. No second
+                       derivation anywhere.
+  the contract grew    270 -> 275 bytes
+  the sample round id  99307d45fc3305f5... -> b1cb45543f2d708d...
+
+### The two fields, and the one that is deliberately NOT a field
+
+`slashMinimumServed` (u32). 22A: "A selected node earns its share only if it
+performed the CONTRACT-DEFINED minimum service". Now read off the contract by
+`slashHoldsOnFeeClaim`, which refuses outright when the contract names none.
+
+`slashRemainder` (u8, BURN or COMMITTEE). 5A.3: "half to the affected players
+of that round, half burned or to the remaining honest committee members of the
+round, AS FIXED BY THE ROUND CONTRACT." The alternative in that sentence is
+what a round fixes.
+
+THE HALVES ARE A CONSTANT, `SLASH_TO_PLAYERS_BPS = 5000`, and that is a
+decision made in the open. The spec states them as numbers rather than as a
+range, and a contract field for the proportion would let an operator write
+itself the whole bond - which is the fault a contract field exists to prevent,
+not one to import. Two mutants pin it: setting it to 10000 or to 0 is 3 red
+each.
+
+### The distribution, pure and moving nothing
+
+`slashDistribution` says who is owed what out of a bond that has been spent;
+spending it is 5A.3B steps 3 and 5 and is not here. The accused is not among
+"the REMAINING honest committee members" - a node collects no share of its own
+slashing. Remainders are handed out one satoshi at a time in ascending
+`H(roundId || pubkey)`, the order 22A names for fees and `payout.js` already
+uses for the pool, and with nobody to pay that half is BURNED, which is the
+only direction that cannot quietly become somebody's income.
+
+### Mutants: 14 planted, 13 killed, ONE RETRACTED with its reason
+
+| mutant | protocol red |
+|--------|-------------:|
+| the minimum is not in the round id | 2 |
+| the destination is not in the round id | 1 |
+| a contract without a minimum is accepted | 1 |
+| the caller may still pass a minimum | 5 |
+| the minimum is left out of the binding | 2 |
+| the players' half is a whole bond | 3 |
+| the players' half is nothing | 3 |
+| a burn pays the committee anyway | 1 |
+| nobody to pay means somebody keeps it | 1 |
+| the remainder is dropped | 3 |
+| the remainder order is the list order | 1 |
+| the round is left out of the remainder order | 1 (was **0**, see below) |
+| any contract fixes the destination | 1 |
+| the distribution need not add up | **RETRACTED** |
+
+ONE SURVIVED AT 0 RED and it was a real gap: dropping the round from the
+remainder order left every test green, because the test only checked that the
+total still added up - which it does whoever gets the satoshi. Measured to fix
+it rather than guessed: 101 satoshi over three players is 33 each and two over,
+and round 01 hands them to a1 and a2 while round 02 hands them to a2 and a3.
+Asserted concretely, and the mutant then dies at 1.
+
+RETRACTED, not counted: "the distribution need not add up" removes the
+`paid + burned !== bondSats` guard. That guard cannot fire while the arithmetic
+above it is right, so no test kills it without introducing a second fault. It
+is a defence against a future change - the same shape as `computePayoutTable`'s
+own paid-against-staked throw - and it stays, uncounted.
+
+### Suites
+
+protocol 228/228 (was 220), blwp-node 70/70, blwp-client 89/89, core 80/80,
+money guard 10 files clean, determinism guard 19 files clean. Unity untouched
+and not re-run: EditMode 190/186/1/3 and PlayMode 216/192/11/13 stand from
+8cc7fdd.
+
+### And a stale line fixed
+
+PRIORITIES still said "What is left of M2.1 is 13C's slashing, which needs the
+other six daemons". That stopped being true when the sixth row landed.

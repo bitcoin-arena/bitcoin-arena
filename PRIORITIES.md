@@ -692,9 +692,11 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
          proof, check it mechanically and commit H(proof) are pure, and are
          done for every one of 5A.3's six rows. Signing path B
          with k-of-m arbitration keys and broadcasting it are the arbitration
-         set, which does not exist here. No offence is unwritten now. The slash
-         DISTRIBUTION and 22A's minimum-service number both wait on Round
-         Contract fields, and a field moves every round id.
+         set, which does not exist here. No offence is unwritten, and the two
+         numbers that were the caller's are signed contract fields now:
+         `slashMinimumServed` (22A) and `slashRemainder` (5A.3). The halves
+         stay the spec's own constant, because a contract that could move them
+         would let an operator write itself the whole bond.
        - the committee re-run a suspension waits for - DAEMON: six more
          nodes, and a replay the daemon deliberately does not do
        - CLTV sizing - NO PROTOCOL TICK RATE: the contract measures the
@@ -828,8 +830,11 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      the door is still opening, and this very banner drawn straight across
      the block clock. Both fixed and both now pinned. Unity decides nothing -
      it repeats the word the client holds. Numbers: TASKBOOK.
-     Still open here: nothing unblocked. What is left of M2.1 is 13C's
-     slashing, which needs the other six daemons.
+     Still open here: the two numbers the slash law used to take as arguments
+     are now signed fields of the round contract - `slashMinimumServed` and
+     `slashRemainder` - because a threshold the caller picks is one the
+     operator picks. What is left of M2.1 is enforcement and two missing
+     primitives, each listed above by its blocker; no offence is unwritten.
   4. **Entry quotas.** DONE. A funded entry before the node stores a byte.
      Both HTTP doors refuse until something the operator trusts says the stake
      exists, and the default is no - a daemon that assumed funding would be the
