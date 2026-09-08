@@ -16,7 +16,7 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: 22, the daemon steps the core. 20 and 21 are done.
+LIVE LETTER: 23, advert signatures / curve. 20, 21 and 22 are done.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
 threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
@@ -29,7 +29,8 @@ HARD (Daniel 2026-09-08 12:09): both committee nodes are reachable on
 Tailscale, not LAN. M2 asks for no money and distributes none.
 
 IN THIS ORDER (unparked):
-   22  M2 daemon replays the core     — slice 1 IS IN: the node reaches the
+   23  M2 advert signatures / curve   — the discrete-log 15/14 waited on. NEXT.
+   22  M2 daemon replays the core     M2   done — slice 1 IS IN: the node reaches the
                                         simulator through src/replay.js and
                                         nowhere else, rebuilds a finished run
                                         from the transcript it already stores,
@@ -84,6 +85,18 @@ IN THIS ORDER (unparked):
                                         Bitcoin block hash this daemon does
                                         not read - and a node given none stops
                                         there rather than inventing a world.
+                                        Slice 8: THE BEACON IS USED. A close
+                                        derives 5A.5's committee seed from the
+                                        published hash and the height it came
+                                        at, and refuses the round when that
+                                        pair proves nothing - no height, or a
+                                        height the contract already committed
+                                        to - before a worker is spent. One
+                                        source feeds two seeds and they stay
+                                        two: the world's per player, the
+                                        committee's per round. Two daemons on
+                                        one beacon derive one seed and select
+                                        one set of seats.
                                         Slice 7: NODES FETCH EACH OTHER. A
                                         daemon asks its peers for their
                                         results when a round closes, keeps
@@ -107,6 +120,15 @@ IN THIS ORDER (unparked):
                                         LIVE RUN STATUS (0.11) is here too - a
                                         final is after the run, so it comes
                                         from marks and ghosts.
+                                        WHAT 22 LEAVES, each owned elsewhere:
+                                        reading the hash off bitcoind (23-27);
+                                        checking a round's named committee
+                                        against seats the derived seed picks,
+                                        which needs a census to select from
+                                        (24) and a contract that does not
+                                        carry its own seed (16); a peer's
+                                        ADDRESS, which is discovery (25.1).
+                                        Numbers: TASKBOOK.
    23  M2 advert signatures / curve   — sign the body the bond commits to
    24  M2 bond construction 5A.3B     — P2TR: MuSig2 / CLTV after maturity /
                                         slash. Two bonds, one LND.
