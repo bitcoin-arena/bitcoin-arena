@@ -20170,3 +20170,63 @@ timestamp receipts, and this contract carries no publication time. The grind
 fence in place today is `committee_time` and is exactly as strong as that
 field - no stronger, and it is not claimed to be. Not M3, not silent, and not
 the next coding task: playable M2 is 28.
+
+## Item 28, slice 1: the page asks for the other trucks and keeps them
+
+Measured before this slice, with greps rather than memory:
+
+  onGhost consumers outside tests          0 - only its own declaration and
+                                           call site in `client.js`
+  ghost entry points in `blwp.jslib`       0 - BlwpInit, BlwpStep,
+                                           BlwpReadState, BlwpNetStart... and
+                                           nothing for ghosts or `watch`
+  callers of `GhostTruck.Show` in Unity    0 outside tests (the one `.Show(`
+                                           hit is ModelStreamer's strike)
+  the template's shipped client            151,399 bytes - a build that
+                                           predates `watch` and `takeGhost`
+                                           entirely, so the page could not have
+                                           asked even if something told it to
+
+So a ghost was produced, delivered and decoded - and drawn by nobody, with the
+last hop missing in three places at once.
+
+After this slice, the JS half:
+
+  the template's shipped client            223,678 bytes, byte-identical to
+                                           dist/blwp-client.js, and a test
+                                           compares them so a stale copy cannot
+                                           come back quietly
+  page watch calls                         0 -> 1, in `net.opened` right after
+                                           setRound
+  onGhost consumers in src/                0 -> 1 (`ghost-field.js`), and a
+                                           test pins that the jslib does NOT
+                                           set it - the rule for what is kept
+                                           must not live in the one file
+                                           `node --test` cannot load
+  frames kept, two identities driving      1 on subscribing, decoded, the other
+                                           entry's, at the tick that entry
+                                           reached
+  a picture of your own truck              counted and dropped: 1 seen, 0 kept
+  a page holding 3, sent 6                 keeps 4,5,6 and sheds 3 - oldest
+                                           first, which is piece 2 of letter 18
+                                           stated for a renderer
+  publishing while pictures arrive         1 batch, 1 own answer, 0 held
+
+`watchGhosts` lives in `packages/blwp-client/src/ghost-field.js` and the jslib
+only says WHEN to ask. Nothing in it imports the core: a ghost is a picture,
+never an input, and the page hands the queue to a renderer and to nothing else.
+
+### Mutants: 5 planted, 5 killed
+
+  a page keeps a picture of its own truck              killed
+  a full page sheds the newest instead of the oldest   killed
+  the page holds everything, whatever its budget       killed
+  the page subscribes to nothing                       killed
+  a watch without a round or an entry is allowed       killed
+
+### Suites
+
+core 83/83, protocol 416/416, blwp-node 199/199, blwp-client 102 -> 108 - 806
+tests, 0 red. Money guard 12 files clean, determinism guard 20 clean. Bundle
+218.4 KB from 21 modules. NO UNITY BUILD, no C# touched, no PlayMode or
+EditMode run this slice - the C# half is slice 2.
