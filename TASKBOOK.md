@@ -21245,3 +21245,97 @@ The unparked list was re-read against the source rather than against the note.
 So M2 is not finished and M3 is not next. The beacon goes on top: 27 gave the
 seed its derivation and its refusals, and a derivation fed a constant is a
 committee its operator chose - the exact thing the letter was for.
+
+## Item 32, slice 1: which block seeds the committee
+
+### The divergence, recorded rather than swapped
+
+§5A.5 says `round_randomness = drand.round(committee_time)`. This network does
+not read drand: `genesis.js:52` is `RANDOMNESS_SOURCE = 'bitcoin-block-hash'`,
+and 27 made `beaconIsAfterRound` refuse any round naming a rule that is not the
+network's own. That is a signed-shape divergence of the same family as the
+three on letter 15, and it is written down here rather than quietly reversed.
+
+It has a consequence, which is this slice. `drand.round(committee_time)` names
+a beacon BY TIME, so every node lands on one value without anybody naming it.
+`bitcoin-block-hash` is only a SOURCE. Two honest nodes polling at different
+moments take different tips, derive different seeds and seat different
+committees. The selection rule is the missing half.
+
+### The three picks, as implemented
+
+    which block   the first whose median time past (BIP-113) is after
+                  committee_time
+    how deep      the round's own censusConfirmations - one confirmation
+                  policy for chain-derived facts, not a second constant
+    the height    derived from committee_time and the chain, never read from
+                  the contract, because an author who names the height picks
+                  the block and picking the block is grinding
+
+ONE CORRECTION TO THE INSTRUCTION, and it is not a liberty. The pick said "at
+or after committee_time"; the rule selects STRICTLY after. 27 already refuses a
+beacon AT committee_time - the creator could have held it when the round was
+made - so selecting a block at that instant would hand the validator a block it
+must reject. Selection and validation have to agree and the stricter one wins.
+The mutant that changes `>` to `>=` takes 4 tests red, so the boundary is held
+rather than assumed.
+
+MEDIAN TIME PAST IS ELEVEN INCLUDING ITSELF. Bitcoin Core's
+`GetMedianTimePast` walks back eleven entries starting at the block, so it is
+heights N-10..N. Eleven-with-itself and eleven-before-it are different numbers
+on the same chain, so it is written out.
+
+THE VIEW IS HEADERS, NOT BLOCKS. 25.1's providers serve 80-byte headers and
+`agreedChain` weighs those; a beacon needs a hash and a time, and neither is in
+a transaction. Asking for whole blocks would demand of a provider something the
+protocol never asks it for. Mined and linked are still checked, by `chainWork`,
+which is the same function the work comparison uses.
+
+### Measured
+
+A fifteen-block fixture from height 100, ten minutes apart, with
+committee_time set exactly at the median of height 111:
+
+    the first block whose MTP is after committee_time   112   (not 111, not the tip)
+    its hash                    the hash of that header, not the tip's
+    its depth against tip 114   3
+    two views of the same chain same height, same hash, same committee seed
+    censusConfirmations 4       refused: "is 3 deep and this round asks for 4",
+                                and one more block makes the same choice settled
+    committee_time far ahead    refused: "no block in this view is after this
+                                round's committee time ..."
+    a nine-block view           refused: "9 blocks and a median time past is
+                                taken over 11"
+    beaconHeight/height/randomnessHeight/beacon on the contract
+                                changes nothing - the chosen height is the same
+
+A LYING TIMESTAMP MOVES THE CHOICE BY ONE BLOCK, NOT BY SIX, and the first
+version of this test asserted it moved the choice by NONE, which was wrong.
+With one header two hours ahead:
+
+    against the header's own nTime   the choice would be height 106
+    against the median              111 instead of 112
+
+So the median BOUNDS a miner's influence rather than removing it: moving it
+further takes six of the eleven, and even then a miner picks a height and not a
+hash. The depth rule is the other half - by the time a seed is deep enough to
+use, moving it means re-mining that many blocks. Named here rather than left
+for somebody to discover.
+
+### Mutants
+
+    takes the last qualifying block instead of the first     5 tests red
+    reads the header time instead of the median             4 tests red
+    no depth check                                          1 test red
+    at-or-after instead of after                            4 tests red
+    reads a height off the contract when one is present     1 test red
+
+### Suites
+
+    core 84/84   protocol 421 -> 430   blwp-node 211/211   blwp-client 118/118
+    money guard 12 clean, determinism guard 20 clean. No C# moved.
+
+Still to come on this letter: an isolated regtest bitcoind feeding this rule,
+the constant leaving `round-2of2.mjs`, and seating actually consulting a beacon
+- today `server.js` seats only when it has a chain view, and the 2-of-2 tool
+gives none.
