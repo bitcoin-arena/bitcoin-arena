@@ -16,7 +16,7 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: 23, advert signatures / curve. 20, 21 and 22 are done.
+LIVE LETTER: 23, the advertisement signature. 20, 21 and 22 are done.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
 threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
@@ -29,7 +29,6 @@ HARD (Daniel 2026-09-08 12:09): both committee nodes are reachable on
 Tailscale, not LAN. M2 asks for no money and distributes none.
 
 IN THIS ORDER (unparked):
-   23  M2 advert signatures / curve   — the discrete-log 15/14 waited on. NEXT.
    22  M2 daemon replays the core     M2   done — slice 1 IS IN: the node reaches the
                                         simulator through src/replay.js and
                                         nowhere else, rebuilds a finished run
@@ -129,7 +128,15 @@ IN THIS ORDER (unparked):
                                         carry its own seed (16); a peer's
                                         ADDRESS, which is discovery (25.1).
                                         Numbers: TASKBOOK.
-   23  M2 advert signatures / curve   — sign the body the bond commits to
+   23  M2 advert signature            — LIVE. Sign the body the bond commits
+                                        to: 5A.1 ends the advertisement with
+                                        "signature - by node_pubkey over all
+                                        of the above", and nothing checks it.
+                                        ed25519 under node_pubkey, the key
+                                        that already signs receipts and
+                                        results; the bond key stays
+                                        secp256k1 and its link to the body is
+                                        the commitment H(advert), not this.
    24  M2 bond construction 5A.3B     — P2TR: MuSig2 / CLTV after maturity /
                                         slash. Two bonds, one LND.
    25  M2 bond verification           — output is what it claims
@@ -140,6 +147,14 @@ IN THIS ORDER (unparked):
                                         before first entry
    28  M2 two nodes play              — ghosts on screen, board, 2-of-2
                                         finals on testnet4/regtest
+   29  M2 Feldman on the split        — a VSS share must bind to the
+       preimage (23.1)                  polynomial and not only to its seat:
+                                        today a player mis-sharing three of
+                                        their own seven leaves no five seats
+                                        able to open the preimage while every
+                                        share still passes its holder's check.
+                                        The discrete-log group 15/14 waited
+                                        on. NOT letter 23.
    15/14/8 are this queue, not a later milestone.
 
 DANIEL DECIDES (not a task anyone can take): the PSEUDONYM SCHEME (0.11/0.12
