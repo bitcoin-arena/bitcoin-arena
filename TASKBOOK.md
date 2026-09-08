@@ -16433,3 +16433,107 @@ EditMode assembly compiles against.
 
 JS unchanged: protocol 362/362, core 83/83, blwp-node 71/71, blwp-client 89/89,
 money guard 12 files clean, determinism guard 19 files clean.
+
+## M2 late join: a run begins where the entry says it joined
+
+### The spec, quoted rather than remembered
+
+0.8: "A round supports a dynamically growing number of competitors... Late join
+is a normal feature, not merely reconnect. Each accepted entrant receives the
+same contract-defined mission duration `T_run`, even when wall-clock start
+times differ."
+
+Section 1: "All accepted players belong to the same logical round and payout
+pool." Section 7: "Late joins simply add more Entry Contracts. The Round
+Contract is never rewritten."
+
+Section 6's timeline answers the committee question before it is asked:
+
+  committee_time      beacon value appears -> committees selected & verified
+                      |  ENTRY WINDOW OPENS HERE
+  start_time          round begins for everyone committed so far
+  entry_close_time    last late join
+
+The committee is fixed BEFORE the entry window opens, so a late entrant cannot
+grind a seed that was settled before they could enter. That is the spec's
+answer, not a test's.
+
+WHERE THE SPEC IS SILENT, and it is not invented here:
+
+  - which TICK a late joiner starts at. The spec gives wall-clock times only.
+    `joinTick` is this implementation's field.
+  - how `entry_close_time` becomes a tick. That needs a protocol tick rate,
+    which is parked. `entry_close_time` stays carried and unread.
+  - what outcome a late arrival gets. No clause is specific to them; the
+    nearest are section 14's ladder and "unstarted entries may ENTRY_VOID".
+    Nothing was derived from that.
+
+And a correction: PLAYER_LOST is not a term in this project. `payout.js` says
+so - "PLAYER_LOST IS NOT A WORD HERE. FORFEIT already names the case". The
+outcomes are DELIVERED, FAILED, FORFEIT, VOID, ENTRY_VOID.
+
+### Measured before any code
+
+  the entry says the player joined at tick 50
+    a transcript beginning at tick  50 -> ACCEPTED, 9 ticks
+    a transcript beginning at tick   0 -> ACCEPTED, 9 ticks
+    a transcript beginning at tick 500 -> ACCEPTED, 9 ticks
+
+  checkTranscript's only argument is the transcript. It never sees the entry.
+
+The node DOES read `joinTick` - `round.js` `nextTick` returns it when an entry
+has no ticks yet, so a late player's first batch is expected at 50. But the
+verifier's own check, the one a replay depends on, had no such binding. A
+player could publish a run that started before they joined, or one that skipped
+four hundred ticks, and every protocol check passed.
+
+### What is now true
+
+`transcriptBelongsToEntry(transcript, entry)` refuses:
+
+  a start before the join tick   "begins at tick 0 and that entry joined at 50"
+  a start after it               "begins at tick 500 and that entry joined at 50"
+  one tick either side           49 and 51 are both the wrong start
+  another entry                  "a different entry than the transcript names"
+  another round                  named separately
+  no inputs at all               "carries no inputs, so there is nothing that
+                                  began anywhere"
+
+ITS OWN CHECK, not a fold into `checkTranscript`. The same run beginning at 0
+still passes `checkTranscript` - it IS a chain, it simply is not this entry's -
+and the test asserts that, so the new gate is doing the work rather than
+riding on one that already refused.
+
+### flatten, for a run that did not begin at zero
+
+  a strike at absolute tick 54, run starting at 50 -> index 4
+  firstTick 50, nine rows, first [65536, 50, 0, 0, 0]
+  a gap inside a late run -> "expected tick 56, got 90"
+
+That rebasing already existed and its own comment says why: "a transcript that
+begins at tick 50 would otherwise put a strike at index 51 of a two-element
+array - that is, nowhere - and the replay would be a different round with
+nothing to say it had gone wrong." This letter pins it for the late case.
+
+### Mutants: 8 planted, 8 killed, none retracted
+
+start-tick check deleted, made "at or after", made "at or before", compared
+against `batches[0].firstTick` instead of the entry's `joinTick` (the wrong
+field - it would compare a value to itself), entry-id binding dropped, round
+binding dropped, an empty transcript allowed to begin anywhere, and the run
+length claimed as checked.
+
+### What stays unchecked, named in the answer
+
+The run LENGTH. 0.8's "same contract-defined mission duration `T_run`" needs
+`player_run_duration`, which section 6 names and this Round Contract does not
+carry - one of the eighteen absent names audited in item 16, parked because
+adding one moves every round id. `transcriptBelongsToEntry` reports it rather
+than assuming it.
+
+### Suites
+
+protocol 362 -> 367, core 83/83, blwp-node 71/71, blwp-client 89/89, money
+guard 12 files clean, determinism guard 19 files clean. PlayMode and EditMode
+not re-run: nothing in Unity moved - no spawn, no solid, no second scoring
+path - and `step` still takes one state and one player's five inputs.

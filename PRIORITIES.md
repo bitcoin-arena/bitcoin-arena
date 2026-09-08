@@ -24,6 +24,30 @@ NO PARKED ITEM GOES FIRST (Daniel 2026-09-08). 15, 14 and 8 stay parked -
 15 behind BOND_MARKER and a curve, 14 and 8 behind a daemon, a tick rate and a
 discrete-log group. They stay in number order below the last closed item.
 
+   19  M2 late join                   M2   OPEN — a run begins where the entry
+                                            says it joined. 0.8: "late join is
+                                            a normal feature, not merely
+                                            reconnect", and section 7: "late
+                                            joins simply add more Entry
+                                            Contracts. The Round Contract is
+                                            never rewritten." Measured: an
+                                            entry that joined at tick 50 had
+                                            its transcript accepted beginning
+                                            at 0, at 50 AND at 500, because
+                                            `checkTranscript` is handed a
+                                            transcript and never the entry it
+                                            is for. Bound now, as its own check
+                                            rather than a fold into the chain
+                                            walk. The committee cannot be
+                                            ground by arriving late: section 6
+                                            fixes it at committee_time, before
+                                            the entry window opens. STILL OPEN:
+                                            the run LENGTH, which needs
+                                            `player_run_duration` - one of the
+                                            eighteen absent section 6 names -
+                                            and `entry_close_time`, which needs
+                                            the parked tick rate. Numbers:
+                                            TASKBOOK.
    18  M2.2 ghosts / private world    M2   OPEN — other trucks are pictures
                                             from their transcript, never
                                             inputs to my sim, never collide.
