@@ -16,7 +16,7 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: 28, two nodes play. 15, 18, 20-27 are done.
+LIVE LETTER: 29, Feldman on the split preimage. 15, 18, 20-28 are done.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
 threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
@@ -29,8 +29,9 @@ HARD (Daniel 2026-09-08 12:09): both committee nodes are reachable on
 Tailscale, not LAN. M2 asks for no money and distributes none.
 
 HARD (Daniel 2026-09-08 15:26): close 15 and 18 as soon as they are
-unblocked. 15, 18, 26 AND 27 ARE CLOSED. 28 is live: drawing another
-player's truck on screen, which was never 18's.
+unblocked. 15, 18, 26 AND 27 ARE CLOSED. 28 IS CLOSED TOO (2026-09-09):
+another player's truck is drawn where its transcript put it, on the daily.
+Nobody has LOOKED at it yet; that is a pair of eyes, not a task.
 
 HARD (Daniel 2026-09-08 18:26): when M2 is finished, start M3
 immediately. No pause, no ask, no action=done at the M2 boundary.
@@ -198,8 +199,39 @@ IN THIS ORDER (unparked):
                                         so two participants at different tips
                                         derive the same census. 734 green.
                                         Numbers: TASKBOOK.
-   28  M2 two nodes play              LIVE — ghosts on screen, board, 2-of-2
-                                        finals on testnet4/regtest
+   29  M2 Feldman on the split        LIVE — next M2 item. Do not start it
+       preimage (23.1)                    before Daniel says so.
+   28  M2 two nodes play              M2   done — two players see each other's
+                                        trucks. The picture is that player's
+                                        own transcript replayed through the one
+                                        simulator door; the shipping player
+                                        BUILDS the field that draws it, which
+                                        nothing did before - it was in no scene
+                                        and no script made one, so the hop was
+                                        in the deployed page and drew nobody.
+                                        The heading is the core's T_HEADING in
+                                        turns, the same word the local truck
+                                        reads, and it was 360 times too small;
+                                        a picture carries no height, so the
+                                        ghost stands on the surface the local
+                                        truck stands on, and it stood at y=0
+                                        under the road. It is still a picture:
+                                        no collider, no rigidbody, and the
+                                        world the core is given does not grow
+                                        by one box. A page can be SENT to a
+                                        round the daemons already agreed on -
+                                        ?round= is the key the client always
+                                        read - and it refuses a contract that
+                                        does not hash to that id; absent the
+                                        query the daily is the single-player
+                                        run it always was, and the page still
+                                        writes no contract field. The daemons
+                                        serve the chain and the bond proof a
+                                        joining page asks for, off by default.
+                                        Two tabs are two players, because the
+                                        key is per tab. What is NOT here: a
+                                        lobby, and a human's own look at it.
+                                        Numbers: TASKBOOK.
    27  M2 committee_time + seed       M2   done — a committee is drawn on
                                         randomness nobody had when the round
                                         was made: the seed is
@@ -223,8 +255,9 @@ IN THIS ORDER (unparked):
                                         signature it makes is BIP-340 under
                                         the key its bond was posted with.
                                         Numbers: TASKBOOK.
-   29  M2 Feldman on the split        — a VSS share must bind to the
-       preimage (23.1)                  polynomial and not only to its seat:
+   29  M2 Feldman on the split        — (LIVE, listed above) a VSS share must
+       preimage (23.1)                  bind to the polynomial and not only to
+                                        its seat:
                                         today a player mis-sharing three of
                                         their own seven leaves no five seats
                                         able to open the preimage while every
@@ -239,7 +272,8 @@ IN THIS ORDER (unparked):
                                         the contract carries no published_at.
                                         The grind fence today is
                                         committee_time and is exactly as
-                                        strong as that. M2, after 28.
+                                        strong as that. M2, after 28 - which
+                                        is closed, so this is queued behind 29.
    15/14/8 are this queue, not a later milestone.
 
 DISPLAY NAME (Daniel 2026-09-08 18:55, M3): DECIDED. Default =

@@ -20895,3 +20895,62 @@ address is read off it, two tabs are two entries, the picture is the other
 entry's, its pose equals that player's own transcript at delta zero, and the
 shipping player draws that pose at delta zero with no new solid. Nobody has
 looked at it, and no browser was driven here to look on their behalf.
+
+## Item 28: close-out
+
+WHAT THE DAILY ACTUALLY SERVES, read back over HTTPS rather than assumed:
+
+    Build/webgl4.data.unityweb   GhostField 1, GhostTruck 1, BuildGhostBody 1,
+                                 FitTruckBody 1, DressTruckBody 1
+    Build/webgl4.framework...    BlwpNextGhost 3, watchGhosts 1, net.ghosts 3
+    index.html                   joinFromQuery 1, entryFor 1, tabIdentity 1,
+                                 sessionStorage 2
+                                 censusRoot 0, simCoreHash 0, gameVerifySlots 0,
+                                 stakeMsat 0, committeeTimeMs 0, blockTicks 0,
+                                 localStorage 0
+
+So the field, the body, the hop and the join are all on the daily, and the page
+still writes no contract field and keeps no player in storage every tab shares.
+
+NO PHYSX ON THE GHOST PATH, checked rather than asserted. `GhostTruck` names
+Collider and Rigidbody only where it STRIPS them. The seat is
+`CoreDrivenTruck.Ground` plus its own body offset, and that chain is
+`RoadNetwork.SurfaceHeight` -> `BlwpCore.SurfaceAt` or `terrain.SampleSurface`:
+arithmetic over the road model and the core's own relief. `grep` for `Raycast`,
+`Physics.` or a collider read across `RoadNetwork.cs`, `GhostField.cs` and
+`GhostTruck.cs` finds none. Nothing in the browser simulates the other truck -
+the pose is the frame's, and a frame is a replay of what that player published.
+
+Deltas at close: page path tick 89 delta 0 0 0; shipping player ticks 59 and
+119 delta x 0.000000 z 0.000000 heading 0.000000; solids 37 -> 37, colliders 0,
+rigidbodies 0.
+
+    core 84/84   protocol 416/416   blwp-node 201/201   blwp-client 118/118
+    money guard 12 clean, determinism guard 20 clean
+    PlayMode 234 / 209 passed / 12 failed / 13 skipped
+    EditMode 190 / 186 passed /  1 failed /  3 skipped
+
+The thirteen reds, each with its cause and what it waits on:
+
+    FeatureTests.DamageIsFeltInTheDriving              retired C# engine (e)
+    ImportedModelTests.SoldiersStandOnTheGround...     retired C# engine
+    ImportedModelTests.TanksStandOnTheGround...        retired C# engine
+    TruckHealthTests.CrashingIntoArmourWritesItOff     retired C# engine
+    VehicleTests.ArmiesFightNearTheSeam...             retired C# engine
+    VehicleTests.ArmourBlocksTheTruck                  retired C# engine
+    VehicleTests.BothArmiesAreOnTheFieldAndOnTheGround retired C# engine
+    VehicleTests.TheTruckCanDriveOnAfterHittingTheArmy retired C# engine
+    VehicleTests.UnitsDoNotShoveEachOtherWithPhysics   retired C# engine
+    VisibilityTests.ArmiesAreActuallyDrawn             needs a graphics device
+    VisibilityTests.RoadsAreActuallyDrawn              needs a graphics device
+    RampReadyTests.TheRealTransactionsReplace...       no route to mempool.space
+                                                       in that run; passed in
+                                                       the run before
+    CombatFxTests.RifleFireProducesAFlashAndATracer    EditMode, pre-existing
+
+None of the thirteen asserts anything on the ghost path, and none of them can
+go green without reviving PhysX, attaching a display, or having the network -
+the decision on that record since M1.
+
+THE ONE THING LEFT IS NOT CODE. Nobody has opened the two tabs. Every step up
+to the eye is measured on both sides of the renderer.
