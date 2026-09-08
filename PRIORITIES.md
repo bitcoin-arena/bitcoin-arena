@@ -44,8 +44,20 @@ IN THIS ORDER (unparked):
                                         in front of a verifier - the
                                         BOND_MARKER and checkpoint class. A
                                         fixture owns its own number; no rule
-                                        was written. Still to come: five of
-                                        seven agreeing, and the worker pool.
+                                        was written. Slices 2 and 3 ARE IN:
+                                        the replay runs in a worker started on
+                                        the same file, so the daemon's own
+                                        thread is never the simulator and the
+                                        door is still one file; and seven
+                                        stores each replay what THEY hold, a
+                                        state being final when the contract's
+                                        slots say so through receiptsNeeded -
+                                        five of seven, with a node counted
+                                        twice refused and a node that could
+                                        not replay counted as refusing rather
+                                        than agreeing. Still to come: a pool
+                                        that queues objected runs first, and
+                                        signing the agreed state.
                                         Unlocks ghost spawn/subscribe (18),
                                         the daemon 14/8 waited on, and the
                                         board on a screen: 20's rows are built

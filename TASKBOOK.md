@@ -17336,3 +17336,71 @@ core.init(7); nothing was written as a rule.
 protocol 392/392, core 83/83, blwp-node 74 -> 79, blwp-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. (The node's baseline
 moved 71 -> 74 under another author's 043690d, which is untouched here.)
+
+## Item 22, slices 2 and 3: off the event loop, and five of seven
+
+### The worker
+
+IMPLEMENTATION asks for "worker threads, each importing @blwp/core once". A
+replay is minutes of simulation; on the daemon's own loop the node answers
+nothing while it runs - no batch stored, no receipt issued - and a daemon that
+goes deaf while it thinks drops the run it is witnessing.
+
+THE WORKER ENTRY IS THE SAME FILE. `replayInWorker` starts a Worker on
+`import.meta.url`, so whichever thread opens the door there is still exactly
+one door, and the guard that counts files reaching the core still counts one.
+A separate entry file would be a second place to change when the loop changes.
+
+  600 ticks, two liquidations, seed 7, in the worker
+     9c76f94e75ddd15ba8b0ea7cb35a63f70351ee139eef8485d6621e42ceebf1b4
+  marks 120/240/360/480/600      all five checked, none diverged
+  same answer as the main thread field for field (deepEqual)
+  a late run (joinTick 50, 400 ticks) crosses the thread with its own start
+  a refusal crosses as a refusal, not as a crash
+
+Still not a live second simulator: the transcript is finished before the
+worker starts, and the door contains no setInterval, setTimeout or
+requestAnimationFrame - measured, 0 occurrences.
+
+### Five of seven
+
+Seven independent stores took the same batches through the protocol's encoder.
+Six were honest; the seventh's batches never carried the liquidations, which is
+a real difference in what it HOLDS rather than a doctored answer. Each replayed
+its own tables in its own worker.
+
+  six reached the played state, the seventh did not
+  agreeOnState(seven, slots 7)   final, 6 of 5 needed, on the played hash
+  first five only                final
+  first four only                NOT final, no state named, "4 of 5 agree"
+  one node listed twice          refused: "the same node answered twice"
+  slots 5                        refused: "no committee threshold for 5"
+  four answers + three refusals  NOT final, agreed 4, refused 3
+
+THE THRESHOLD IS NOT WRITTEN HERE. `slots` comes off the round contract -
+letter 16 moved it there so a caller could not shrink a committee - and
+`receiptsNeeded` (another author's, in protocol/src/genesis.js) turns it into
+the count. Nothing in this file knows that seven means five.
+
+Until now a node could only count signatures over a number the player supplied.
+These are answers each node computed for itself, which is the difference
+between five nodes agreeing and five nodes being told the same thing.
+
+### Mutants: 6 planted, 6 killed, 0 retracted
+
+  R1 threshold lowered to four of seven                     2 red
+  R2 the same node counted twice                            1 red
+  R3 refusals tallied as if they were a state               1 red
+  R4 one answer enough to be final                          2 red
+  R5 the worker silently drops the marks                    2 red
+  R6 the worker replays from 0 instead of the entry's tick  1 red
+
+R6 SURVIVED the first run at 0 red: no worker fixture used a late joiner, so
+rebuilding from zero and honouring the entry looked the same across the thread
+boundary. The fixture now sends a joinTick-50 run through the worker.
+
+### Suites
+
+protocol 392/392, core 83/83, blwp-node 79 -> 82, blwp-client 95/95, money
+guard 12 files clean, determinism guard 20 files clean. Files in
+blwp-node/src reaching the simulator: exactly replay.js.
