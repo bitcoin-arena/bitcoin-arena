@@ -2973,6 +2973,18 @@ round, which is why testnet comes first and why the order is stricter.
      by one. Item 10's signature has a caller now. What it does NOT do is
      decide what to spend on: that is item 8's payout half.
 
+ 20. **The entry door does not check the fee** (spec "Node fee", 27A.7).
+     QUEUED, NOT STARTED, and it is ENFORCEMENT rather than a hole any
+     paying round needs to sit. `feeMatchesEntry` says an entry's `feeMsat`
+     must be exactly 2% of its own `stakeMsat` - too little and the round
+     collects less than the fee table will owe its nodes, too much and the
+     excess is income no table allocates - and it has ZERO CALLERS outside
+     its own tests. Letter 15 made the PAGE write the right fee (measured:
+     2% of 100000 msat is 2000, and it wrote 0), so the Daily is correct;
+     what is missing is that `POST /entry` would take a wrong one from
+     anybody else. Not folded into 14, which is about the committee's own
+     key and not about what a door accepts.
+
  17. **The signing round between daemons** (23.5, 20). QUEUED, NOT STARTED.
      `Payouts.pay` is handed five SHARES, and the regtest tool holds all
      seven in one process - which measures the mechanism and not the
@@ -3045,10 +3057,10 @@ round, which is why testnet comes first and why the order is stricter.
      `Assets/Plugins` and `test-vectors`, and all eight golden vectors
      reproduce.
 
-     NAMED, NOT OPENED AS A LETTER: `feeMatchesEntry` still has no caller at
-     the daemon's door, so a wrong fee is written correctly by this page and
-     would not be refused from another. That is enforcement, not something a
-     paying round needs in order to sit.
+     WHAT CAME OUT OF IT AND IS NOW ITS OWN LINE: `feeMatchesEntry` has no
+     caller at the daemon's door, so a wrong fee is written correctly by this
+     page and would not be refused from another. That is M3.3 item 20,
+     enforcement, and not something a paying round needs in order to sit.
 
  14. **Dealerless DKG.** QUEUED, NOT STARTED. Item 10 measured RFC 9591
      Appendix C, a TRUSTED DEALER, so the group secret was known to
