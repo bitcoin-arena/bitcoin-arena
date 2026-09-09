@@ -45,7 +45,59 @@ M2's playable set is finished; 30 (publication lead) stays listed and is
 queued BEHIND M3 on Daniel's word. M3 is live: hold invoices, VSS, FROST,
 testnet sats.
 
+2026-09-09: M3 SLICE 1 - HOLD INVOICES - IS CLOSED, all four steps Daniel
+named. Single-node custody, not §23.5, and said so in TASKBOOK in those words.
+Next up in M3: FROST/threshold custody (§23.5) and the page as a dealer, both
+already named as gaps by 29 and by this slice.
+
 IN THIS ORDER (unparked):
+   M3.1 hold invoices (23.1/23.2)   M3   done — a player's stake is money in
+                                        flight on Lightning and the core's own
+                                        outcome word decides what happens to
+                                        it. The rules were already written in
+                                        `payout.js` and NOTHING RAN THEM:
+                                        `holdSettlement`, `holdAfter` and
+                                        `invoiceMatchesEntry` each had zero
+                                        callers outside their own tests, and a
+                                        grep for an invoice across every source
+                                        and tool found only comments. Now
+                                        `blwp-node/src/custody.js` is the
+                                        caller and the Lightning port is
+                                        injected, the way `sign`, the curve and
+                                        the chain view are - so the state
+                                        machine is measured with no node
+                                        running, and `lnd v0.21.3-beta` is a
+                                        tool. FORFEIT settles, DELIVERED
+                                        cancels, and a VOID gets no call of any
+                                        kind: a cancel is an act an operator
+                                        could withhold, so the default has to
+                                        be the refund. THE FAULT THAT MATTERED
+                                        was found by killing the process: a
+                                        custodian killed inside a settle left
+                                        Lightning holding a preimage its own
+                                        store had no record of, and the node
+                                        that came back released it a second
+                                        time. The intent is on disk before the
+                                        call now, and the port's fourth
+                                        operation - which had no caller - is
+                                        what resolves it: ask Lightning what it
+                                        did. One round then ran for real on an
+                                        isolated regtest with two lnd nodes,
+                                        and what refunds a void stake was
+                                        measured rather than assumed: an
+                                        invoice expiry stops applying once an
+                                        HTLC is accepted, so the refund is
+                                        Bitcoin's timelock in blocks, not a
+                                        courtesy. Alice down 100000 msat, the
+                                        pool up 100000, nobody keeping a
+                                        difference. SINGLE-NODE CUSTODY, NOT
+                                        §23.5 - one node holds everyone's money
+                                        and one operator could run every
+                                        command by hand. FROST closes that; the
+                                        preimage still comes from an injected
+                                        `preimageFor` rather than five of seven
+                                        of 29's Feldman shares, and that is the
+                                        named gap. Numbers: TASKBOOK.
    22  M2 daemon replays the core     M2   done — slice 1 IS IN: the node reaches the
                                         simulator through src/replay.js and
                                         nowhere else, rebuilds a finished run
