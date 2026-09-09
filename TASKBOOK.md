@@ -21735,3 +21735,61 @@ nothing in the simulator moved. The beacon reaches the core only as
 `roundRandomness`, one 32-byte word into `seedWordForEntry`, and that path was
 already measured: the truck's pose does not move with it, which is exactly why
 the seed and not the pose is what these tests assert.
+
+## Item 31: the run ends, and it ends where the core says
+
+### Measured first, against the tree as it stood
+
+    the core ends a run at BLOCK_TICKS = 9000        (rules/gate.js, S_ELAPSED)
+    a round naming blockTicks 9000                   accepted
+    a round naming blockTicks 4500                   ACCEPTED
+    a round naming blockTicks 1                      ACCEPTED
+    9600 ticks published for a 9000-tick run         9600 ACCEPTED and stored
+    transcriptBelongsToEntry                         ok, and it REPORTED the run
+                                                     length as unchecked
+    replay of those 9600 ticks                       ok, 9600 ticks replayed
+
+Two clocks and an open-ended drive, exactly as expected. A contract could name
+1 tick while the simulator ran 9000, and the node bounded batches with the
+contract's number - a header value the simulator does not use.
+
+### After
+
+    a round naming 4500, 1, 8999 or 9001            refused by name: "says a run
+                                                    is N ticks and this core ends
+                                                    one at 9000 ... a second clock
+                                                    is not a shorter round"
+    9600 ticks published                            9000 stored, the batch
+                                                    reaching 9599 refused: "that
+                                                    run ends at tick 8999 - 9000
+                                                    ticks from its join at 0"
+    transcriptBelongsToEntry                        refuses the same, and no
+                                                    longer reports anything as
+                                                    unchecked
+    replay handed 9600 ticks                        refused; handed 9000, replays
+    a late joiner at 3000                           runs to 12999 and not one tick
+                                                    further - 0.8's same duration,
+                                                    counted from its own join
+
+NO NEW CONTRACT FIELD. `player_run_duration` is the core's `BLOCK_TICKS`, which
+`genesis.js` already writes into the config hash a round's network commits to,
+so the round's own `blockTicks` is section 6's "echoed for readability; MUST
+equal genesis_parameters" - the same rule letter 16 wrote for the slot counts.
+No round id moved and no fixture was regenerated.
+
+### What the fixtures had to say instead
+
+Three test files named a 600-tick round to fill a hold quickly. A 600-tick
+round is now invalid, so they name the core's length and overfill at it: the
+bound under test did not change, only the number it is measured at. One of
+them was measuring a CHUNK rather than a run - a drain publishes 600 ticks,
+which was the whole round at 600 and is a fifteenth of it at 9000 - and it now
+drains to the end before asking the node what it holds.
+
+`late-join.test.js` asserted the old truth out loud ("the run length is
+reported as unchecked rather than assumed"). That assertion is turned the right
+way up rather than deleted: a full run is accepted, one tick more is refused,
+and the end is counted from the entry's own join tick.
+
+    core 84/84   protocol 432/432   blwp-node 228 -> 232   blwp-client 118/118
+    money guard 12 clean, determinism guard 20 clean. No C# moved, no Unity ran.
