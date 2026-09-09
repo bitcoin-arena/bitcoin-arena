@@ -22955,3 +22955,80 @@ the verify / result / settlement family, caused by
 changing `packages/core/src/sim.js` and `rng.js` - every fixture state hash
 moved with it. They need their own letter to regenerate those pins, they were
 not weakened, and they block the daily until they are green.
+
+### M3.3-16 — THE RELAY FLOOR IS PER ROW, AND THE SHORTFALL IS A DEBT
+
+THE NUMBER THE NODE ACTUALLY HOLDS, asked of a fresh isolated regtest rather
+than remembered or derived:
+
+    minrelaytxfee                     0.00000100 BTC/kvB
+    a P2TR output of 329 sats         "Transaction amount too small"
+    a P2TR output of 330 sats         accepted, txid returned
+
+An arithmetic derivation from the dust-relay formula gave 796 and was WRONG.
+The node's own boundary is the number, so `DUST_SATS = 330n` stands as a
+DEFAULT a caller overrides with what their chain said - and the regtest tool
+now asks the chain for it by offering one sat at a time from 300 up, rather
+than trusting the constant.
+
+WHAT THE CODE DID BEFORE, instrumented at named amounts through
+`payoutOutputs`:
+
+    owed    1 sat     refused, whole round
+    owed  329 sats    refused, whole round
+    owed  330 sats    paid
+    owed  545 sats    paid
+    owed  331 sats    paid
+
+    one row of 5000 sats beside one row of 100    THE WHOLE ROUND REFUSED
+
+So a sub-dust OUTPUT was already impossible - the fault was the opposite of
+what item 16's line assumed: one player owed 100 sats stopped a player owed
+5000 from being paid at all. That is the number that moved.
+
+    a 5000-sat winner beside a 100-sat one   0 outputs  ->  1 output, 5000 paid
+    a 5000 + 700 + 100 round                 0 outputs  ->  2 outputs, 5700 paid
+    the 100 sats                             lost in a refusal -> recorded as owed
+
+THE RULE, AND THE THREE THINGS IT REFUSES TO DO. Rows at or above the floor are
+paid; rows below it are left owed, named, and returned to the caller, which
+writes the debt on the round. The sats are:
+
+    not bumped to the floor   that pays a player out of other players' winnings
+    not folded into the fee   the miner is not who the round owes
+    not dropped              dropping is the operator keeping money a player
+                             had no part in losing
+
+They stay in the pool with the debt recorded, and the round is NOT `PAID` while
+they are there - it is `PAID_IN_PART`. A round where nobody clears the floor
+builds no transaction at all and keeps the debt.
+
+    payouts.owed_sats / owed_count   round-scoped, on the row that already
+                                     exists. A balance that accumulates ACROSS
+                                     rounds is a policy this letter does not
+                                     invent, and neither is a Lightning payout.
+
+ON A REAL CHAIN, isolated regtest, own datadir, ports 29673/29674, cookie auth,
+stopped and removed:
+
+    the floor this node enforces      330 sats, asked of it directly
+    five of seven                     sendrawtransaction -> txid, block 202
+    the winner's own key holds        1000 sats
+    the round's row                   PAID, owes 0 sats to 0 players
+    a winner owed 329 sats            NOT SENT: "there is no output to make"
+    that round's row                  329 sats owed to 1 player, PAYOUT_QUEUED
+
+MUTATION: 9 mutants against the floor and the debt, ALL 9 KILLED, nothing
+retracted. Dropping a sub-floor row, bumping it to the floor, ignoring the
+floor, building a spend when nobody clears it, hiding the owed rows from the
+answer, calling a short round PAID, and clearing the debt on a later state
+write all died. The last one needed a new test rather than a retraction:
+`putPayout` is called again for every transition and none of those callers
+knows the debt, so a write that reset it would quietly clear what a round owes
+on its way to being marked paid.
+
+WHAT THIS DOES NOT DO, and it is on the list rather than here: the sats are
+owed and there is still nothing that pays them. That needs either a balance
+carried across rounds until it clears the floor, or a Lightning payout - and
+the second would make the pool something other than the taproot output item 13
+proved.
