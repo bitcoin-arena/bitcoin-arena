@@ -16,9 +16,9 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: M3 - hold invoices, VSS, FROST, testnet sats. 15, 18, 20-29,
-31 and 32 are done. 30 (publication lead) is the one M2 remainder left, queued
-behind M3 by Daniel 2026-09-09.
+LIVE LETTER: M2 36 - live ghost pose. Daniel 09:44: the other truck is
+seen at spawn, then does not follow. Stutters, not realtime. Fix on Daily.
+M3 item 16 waits. 30 stays queued behind M3.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
 threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
@@ -37,6 +37,10 @@ Nobody has LOOKED at it yet; that is a pair of eyes, not a task.
 
 HARD (Daniel 2026-09-09 07:56): spawn bays are per player seed. Two
 players never share START_Z. 24 doors, mixer keeps harness seed on bay 13.
+
+HARD (Daniel 2026-09-09 09:44): ghost trucks must follow while the other
+player drives. Seeing them at spawn then losing them, or a stuttering
+picture, is not playable M2. This is letter 36, now, not M3.
 
 HARD (Daniel 2026-09-08 18:26): when M2 is finished, start M3
 immediately. No pause, no ask, no action=done at the M2 boundary.
@@ -551,6 +555,13 @@ IN THIS ORDER (unparked):
                                         09:33: advert verify was Ed25519 vs
                                         schnorr bond key — page now uses
                                         BLWP_CURVE.verify.
+   36  M2 live ghost pose             M2   OPEN — two tabs see the other truck
+                                        at spawn. While one drives, the other
+                                        does not see the current pose. Frames
+                                        land rarely. Not realtime. Daniel 09:44.
+                                        A ghost is still a picture (0.10), never
+                                        an input. The picture has to be this
+                                        run, this tick, on Daily. M3 waits.
    30  M2 publication lead + receipts —  queued behind M3 (Daniel 2026-09-09).
    29  M2 Feldman on the split        M2   done — a crooked dealer is refused at
        preimage (23.1)                    handout, before anybody reconstructs.
