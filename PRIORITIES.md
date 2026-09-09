@@ -67,6 +67,16 @@ in the cargo loadout on dirt. Ghost not at P1's pose. Chip: play · A up
 · 5 players (socket did not drop). Screens: daniel-screens/retest-p1-drive1.png
 retest-p1-drive2.png retest-p2-ghost1.png retest-p2-ghost2.png.
 
+HARD (Daniel 2026-09-09 16:08): SwissClaw two-Chrome close-out FAILED again.
+P1 AUTO 83%/9 parcels, rolled out of the yellow bay, drove into the field
+and caught fire. P2 stayed in cargo loadout (0 parcels). Chip stayed
+play · A up · 2 players (socket did not drop). P2 chip frozen at
+other at -100,-37 m (P1 spawn) while P1 was already in the fighting.
+P2 ghost tick stuck at 4241. Daily index.html still ships
+{{{ LOADER_FILENAME }}} — Unity would not start until webgl5.loader.js
+was injected. 36 stays OPEN. Screens: daniel-screens/m236-p1-drive1.png
+m236-p1-drive2.png m236-p2-ghost1.png m236-p2-ghost2.png.
+
 HARD (Daniel 2026-09-09 11:53): Claude does M3 until the in-flight two-Chrome
 retest is finished. Do not wait on 36. 36 stays open.
 
@@ -631,13 +641,14 @@ IN THIS ORDER (unparked):
                                         PAID_IN_PART, not a blocked round.
                                         329 refused, 330 accepted. 9 mutants
                                         killed. Photographed 12:14.
-   36  M2 live ghost pose             M2   OPEN — SwissClaw two-Chrome 11:51: NO.
-                                        P1 AUTO 86%/8 parcels, rolled out, drove
-                                        in the field (core x -100.4 → -91).
-                                        P2 stayed in cargo loadout on dirt.
-                                        Ghost not at P1's live pose.
-                                        Chip stayed play · A up · 5 players
-                                        (socket did not drop this time).
+   36  M2 live ghost pose             M2   OPEN — SwissClaw two-Chrome 16:08: NO.
+                                        P1 AUTO 83%/9 parcels, left the yellow
+                                        bay, on fire in the field.
+                                        P2 stayed in cargo loadout on dirt
+                                        (0 parcels). Ghost frozen at P1 spawn
+                                        other at -100,-37 m, tick 4241.
+                                        Chip stayed play · A up · 2 players
+                                        (socket did not drop).
                                         Still a picture (0.10), never an input.
                                         Daily must show the live pose. After the
                                         current M3.16 task: Claude fixes 36.
@@ -648,9 +659,9 @@ IN THIS ORDER (unparked):
                                         packages/blwp-node/test/ghost-live.test.js
                                         (consecutive frames keep up).
                                         timeout 180 + --test-timeout=120000.
-                                        Screens: daniel-screens/retest-p1-drive1.png
-                                        retest-p1-drive2.png retest-p2-ghost1.png
-                                        retest-p2-ghost2.png.
+                                        Screens 16:08: daniel-screens/m236-p1-drive1.png
+                                        m236-p1-drive2.png m236-p2-ghost1.png
+                                        m236-p2-ghost2.png.
                                         15:57 (1a16061): the Daily's 18 red were
                                         34's fallout, not hash pins - a fixture
                                         that stopped before its run ended. Green
