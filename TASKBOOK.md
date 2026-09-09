@@ -22899,3 +22899,59 @@ which changed `packages/core/src/sim.js` and `rng.js`. A simulation change
 moves every state hash, so fixtures that pin a pose or a result hash no longer
 match. That is somebody else's letter and this one did not touch it: the same
 18 are red before and after, and the ghost suites are green.
+
+### M2-36 — THE LIVE PATH, MEASURED THROUGH THE DAEMONS A BROWSER TALKS TO
+
+The frame cost was the stutter; this is the rest of what a second tab needs,
+and it was measured against the running daemons rather than in a fixture.
+
+DANIEL'S CHIP SAID `play · A dropped`, `sock=null`, `ghosts.present=0`, so the
+first question was whether the socket survives at all.
+
+    a play socket held idle, direct     150 s, still open
+    a play socket held idle, Funnel     150 s, still open
+    (the 1006 at the end is the probe's own terminate)
+
+So neither the Funnel nor the daemon drops an idle socket. Then two players on
+the live round, one driving at 10 Hz the way the page does and one watching,
+first over the tailnet address and then over the https Funnel:
+
+    600 ticks driven in                 10.8 s
+    ghost frames the watcher received   100 of 100 batches
+    first frame at tick 5, last at 599
+    mean tick step between frames       6.0   (6 is one batch: one behind, live)
+    distinct poses                      95 of 100
+    socket drops during the drive       0
+
+That is the letter's own sentence checked end to end: the picture is this
+tick's, one batch behind, and it moves.
+
+WHAT WAS STILL BROKEN, AND IT WAS THE URL. `round-2of2.mjs` printed
+`node=http://100.74.66.98:8090`, and the page is https - which a browser
+refuses as mixed content. That is Daniel's 07:40 screenshot, and it is why a
+socket that works from a script never came up in a tab. `BLWP_WSS_<port>`
+already named where each daemon is reachable from outside, because the socket
+endpoint hit this first; the same origin serves its http doors, so the URL is
+built from it:
+
+    before   node=http://100.74.66.98:8090,http://100.74.66.98:8091
+    after    node=https://beelink.tail1723e2.ts.net/blwp-a,
+                  https://beelink.tail1723e2.ts.net/blwp-b
+
+and the mixed-content NOTE the tool used to print is gone, because there is
+nothing left to warn about. The client's own two-source rule already counts
+path prefixes (Daniel's 7a4ab40), so one proxy serving both daemons is still
+two sources.
+
+WHAT WAS CHECKED AND WAS NOT A HOLE. Practice mode does not suppress
+publishing: every core tick calls `net.tick` with practice as the fifth input
+word, so a truck driven in practice still publishes and can still be followed.
+`ghosts.js` imports nothing from the core; `RunInProgress` is in `replay.js`,
+the one door.
+
+THE EIGHTEEN REDS ARE NOT THIS LETTER. Same 18 at c389097 and at 78e0fa1, in
+the verify / result / settlement family, caused by
+`20c3950 feat: park each player at a different loading bay from their seed`
+changing `packages/core/src/sim.js` and `rng.js` - every fixture state hash
+moved with it. They need their own letter to regenerate those pins, they were
+not weakened, and they block the daily until they are green.
