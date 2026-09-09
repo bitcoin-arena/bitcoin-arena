@@ -75,6 +75,20 @@ and reconstructing it from five of seven of 29's Feldman shares is what closes
 it. FROST (item 10) is behind that.
 
 IN THIS ORDER (unparked):
+   M3.3-8b the payout half of the    M3   NEXT — the pool can be spent and
+       state machine (9.4)                nothing decides what to spend it on.
+                                        9.4's losing and void branches are in
+                                        and crash-reconciled; the qualifying
+                                        branch stops at CANCELLED, so a
+                                        delivered player gets their own stake
+                                        back and is never paid a winning.
+                                        `AWAITING_INVOICE`, `CANCEL_REQUESTED`,
+                                        `PAYOUT_QUEUED` and `PAID` are in no
+                                        source file. `payout.js` already
+                                        computes the table every node must
+                                        agree on; what is missing is the
+                                        transitions that spend item 13's wallet
+                                        against it. Not started.
    M3.3-13 the pool wallet (23.5)   M3   done — settled stakes have somewhere to
                                         be that no operator can move. Measured
                                         first: no object in any source file
