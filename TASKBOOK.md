@@ -24246,3 +24246,66 @@ the core's by `blwp-node/test/replay-heat.test.js`.
 
 Suites after: core 89/89, guard 21 files clean, protocol 441/441,
 blwp-node 380/380, blwp-client 143/143.
+
+## 2026-09-09  M3.3 item 18 - the daemon asks the chain and pays the winner
+
+`payWithCommittee` had zero callers in `src/`. Measured at the start, by
+reading the source rather than remembering it: one file could ask the chain
+about outputs (`pool-watch.js`), and nothing called the payer, so a close wrote
+PAYOUT_QUEUED and stopped. Every winner in every test was paid by the test
+handing the daemon an outpoint.
+
+`Payouts.settleQueued` is the caller. `PoolSigning.owes` is split out of
+`spendFor` so the asker can size an output before it has one, rounded UP -
+`payoutOutputs` floors each row and drops sub-floor ones, so the transaction
+pays at most the bound, and a bound a satoshi short costs a whole signing round
+to discover.
+
+WHO ASKS: `askerFor(roundId, seats)`, seats in store order (by pubkey, which no
+seat chooses), indexed by four bytes of the round id. 200 rounds asked all 7
+seats. A round id of 0xfffffffe would have picked seats[-x] without the `>>> 0`.
+
+ON AN ISOLATED REGTEST (`tools/settle-regtest.mjs`), seven daemons on seven
+sockets, one share each, and no outpoint given to anybody:
+
+    the round names seat 7 of 7, and 7 of 7 seats agree
+    unfunded pool         refused: 0 confirmed outputs cover the 1000 sats
+    funded, in a mempool  refused: the same sentence, and it is the right one
+    1 conf against 6      refused: 1 output with fewer than 6 confirmations
+    6 of 6 other seats    waited; 0 transactions sent
+    the asker             sendrawtransaction -> a txid, block 202 carries it
+                          the winner's key holds 1000 sats, the row says PAID
+    asking again          already PAID, no second spend of one output
+
+THE FAULT THAT MATTERED was in a fixture and only a real chain could find it.
+The shallow-output message was written believing an unconfirmed pool would read
+as "too shallow"; `scantxoutset` scans the UTXO SET, so a funding transaction
+still in a mempool is not in the answer at all and reads - correctly - as a
+pool holding nothing. The code comment, `pool-watch.test.js`,
+`pool-settle.test.js` and the harness all said the wrong thing until that run.
+The branch is real, but only for `minConfirmations` above one.
+
+WHAT CAME OUT OF IT and is its own line: item 19, nobody takes over when a
+round's asker is down. The round stays PAYOUT_QUEUED and its own start-up sweep
+pays it when it returns, so nothing is lost - but a seat that never returns
+strands the round, and a takeover needs a clock.
+
+Suites after: core 89/89, guard 21 files clean, protocol 441/441,
+blwp-node 386/386, blwp-client 143/143.
+
+## 2026-09-09  the Daily carries 39 and 40
+
+WebGL rebuilt headless from this worktree and deployed to
+btc-logistics-core.pages.dev (btc-logistics-war.pages.dev untouched). Checked
+on the live host rather than assumed - the framework was decompressed and
+counted:
+
+    BlwpSubmitLoad  3      the load door the page now uses
+    BlwpSetHeat     0      gone
+    BlwpSetSolids   0      gone
+
+and the served `blwp-core.js` is byte-identical to `packages/core/dist`. The
+first fetch after the deploy returned the OLD framework from an edge cache; a
+cache-buster and the deployment URL both returned the new one, and the
+`_headers` for `/Build/*` are `max-age=0, must-revalidate`, so a browser
+revalidates rather than keeping it.

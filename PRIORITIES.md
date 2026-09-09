@@ -56,9 +56,14 @@ LIVE LETTER: M2.36 IS CLOSED, and M3 is the live one. 39 and 40 are both in.
   `ghost-live.test.js`; a pair of eyes on the Daily is Daniel's or SwissClaw's.
 
 M3 IS THE LIVE WORK, starting now and with no wait, on Daniel's standing word
-(21:26, 12:58, 18:26). Next in M3 is item 18: nothing in the daemon watches the
-pool's script, so the ASKING half of a settlement has no caller and a close
-still stops at PAYOUT_QUEUED. Items 15 and 16 are open beside it.
+(21:26, 12:58, 18:26).
+
+M3.3 ITEM 18 IS CLOSED: a closed round pays its winner with nobody naming an
+output, proved on an isolated regtest - block 202 carries the spend and the
+winner's own key holds 1000 sats. Item 19 came out of it and is listed: nobody
+takes over when a round's asker is down. Item 15 (the page has no curve it can
+trust, so a visitor cannot sit a paying round) and item 14 (a dealerless DKG)
+are the other open M3 lines.
 
 30 stays queued behind M3.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
@@ -705,15 +710,55 @@ IN THIS ORDER (unparked):
                                         wrong pose - but a round that counts a
                                         reloaded player twice is its own letter.
                                         Behind M3.
-   M3.3-18  the daemon does not know  M3   OPEN — came out of 17, not absorbed
-       which output holds the pool        into it. A close queues the payout and
-                                        stops: `payWithCommittee` has no caller
-                                        in `src/` because nothing in the daemon
-                                        watches the pool's script, and
-                                        `chainSpend` can only `send` and `look`.
-                                        The seat half is wired and any asker can
-                                        reach it; the asking half needs an
-                                        output to name.
+   M3.3-18  the daemon does not know  M3   done — a closed round pays its
+       which output holds the pool        winner with nobody naming an output.
+                                        `payWithCommittee` had ZERO callers in
+                                        `src/`: a close signed the table,
+                                        agreed what was owed, wrote
+                                        PAYOUT_QUEUED and stopped, and every
+                                        winner in every round was paid by a
+                                        test handing the daemon an outpoint.
+                                        `settleQueued` is the caller - this
+                                        node is the round's asker, its own seat
+                                        says what is owed, the watch names the
+                                        one confirmed output that covers it -
+                                        and `settleAllQueued` sweeps on start,
+                                        because `reconcile` only asks whether a
+                                        spend already BUILT went out. EXACTLY
+                                        ONE SEAT ASKS: seven askers over one
+                                        output is seven different transactions,
+                                        so `askerFor` picks one out of the
+                                        round id over the seated keys - no
+                                        message, no election, no clock, and 200
+                                        rounds asked all seven seats. On an
+                                        isolated regtest: 7 of 7 agree who
+                                        asks, 6 of 6 others wait and send
+                                        nothing, an unfunded pool and a
+                                        mempool-only one and a one-deep one
+                                        against a demand for six are each
+                                        refused by name with the row left
+                                        queued, and the asker's spend is in
+                                        block 202 with 1000 sats at the
+                                        winner's own key. THE FAULT THAT
+                                        MATTERED was in a fixture and the real
+                                        chain found it: `scantxoutset` scans
+                                        the UTXO SET, so an unconfirmed pool is
+                                        not "too shallow", it is not there -
+                                        the code and both tests said the wrong
+                                        thing until that run. WHAT IS NOT DONE
+                                        is a takeover when the asker is down;
+                                        it needs a clock and is item 19.
+   M3.3-19  nobody takes over when a   M3   OPEN — came out of 18. The asker is
+       round's asker is down              chosen from the round id, so a seat
+                                        that is offline when its round closes
+                                        leaves the payout at PAYOUT_QUEUED with
+                                        the other six correctly waiting. Its
+                                        own sweep pays it when it comes back,
+                                        so nothing is lost - but a seat that
+                                        never comes back strands the round. A
+                                        takeover needs a clock and a rule for
+                                        how long to wait, which is protocol and
+                                        was not invented inside 18.
    M3.3-17  a signing round between   M3   done — five daemons on five sockets
        daemons                            sign one spend of the pool and a real
                                         bitcoind took it. Measured first: `pay`
