@@ -104,6 +104,9 @@ in the cargo loadout on dirt. Ghost not at P1's pose. Chip: play · A up
 · 5 players (socket did not drop). Screens: daniel-screens/retest-p1-drive1.png
 retest-p1-drive2.png retest-p2-ghost1.png retest-p2-ghost2.png.
 
+HARD (Daniel 2026-09-09 21:26): when 36 is closed, start M3 immediately. In the
+driver script and in every Claude prompt. Do not forget. Do not wait to be asked.
+
 HARD (Daniel 2026-09-09 21:23): yes, heat goes in too. Same shape as the hills:
 it belongs to the round, not Unity. Letter 40. 36 does not close while heat
 is a host input the transcript does not carry.
