@@ -21656,3 +21656,38 @@ so a beacon the creator could have held is refused even by a node that has none.
     money guard 12 clean, determinism guard 20 clean. No C# moved.
 
 Both regtest daemons were stopped when the measurements were done.
+
+### Slice 5b: a view that cannot answer is a refusal, not a pass
+
+The hole I left in 5a, with the number that showed it:
+
+    the no-bitcoind path   census view 2 blocks, seats 2,
+                           checkedAgainstChain FALSE
+
+A round seated while the one check that says "this beacon is my chain's block"
+did not run. An operator handing a deliberately narrow view skipped it. That is
+the letter's own hole wearing a smaller hat, so it is closed rather than
+recorded: a node that HAS a chain and cannot name the block with it refuses.
+A node with no view at all is left to `censusFor`, which refuses it first, and
+to 27's rule, which needs no chain.
+
+Closing it forced the no-bitcoind path onto one chain too. The tool now mines
+its own forty-block chain with a bond in two of them, and reads the beacon off
+the same headers - so there is no arrangement left in this tree where a census
+comes from one chain and a seed from another.
+
+    no bitcoind, after     census view 40 blocks from 0
+                           beacon block 29, 11 deep
+                           node A seats 6eb785f7cbd0b552 93fbbb411f34413d
+                           node B seats 6eb785f7cbd0b552 93fbbb411f34413d
+                           checkedAgainstChain TRUE
+
+THREE TESTS CHANGED THEIR SETUP AND NONE ITS ASSERTION. `seating.test.js` and
+`two-tabs.test.js` stop handing in a header source, because handing one in IS
+the two-chain fault; and the test that compared two stand-ups now measures one
+chain asked twice, since two runs build two chains and naming different blocks
+is correct. A new case takes the old one's place: a header source that is not
+the chain the bonds are on is refused.
+
+    core 84/84   protocol 432/432   blwp-node 227/227   blwp-client 118/118
+    money guard 12 clean, determinism guard 20 clean
