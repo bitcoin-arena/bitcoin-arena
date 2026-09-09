@@ -31,9 +31,22 @@ MISSING, found by asking rather than by another look failing.
       path moves a 600-tick drive 40.233 m, which is more than the 33.500 m the
       ground was worth. Same shape of fix - the map's collision boxes belong to
       the core, Unity draws them - and it is letter 39.
-  (b) NO TWO-CHROME LOOK SINCE THE FIX, AND NOTHING DEPLOYED. The C# and the
-      jslib changed, so the Daily needs a real WebGL build; a template copy
-      does not carry them. 36 has been called done twice and a look has said NO
+  (b) THE LOOK WAS RUN AND IT FOUND TWO MORE THINGS, both measured. A seed
+      RACE - `CoreDrivenTruck.Start` and the bridge both seeded the core and
+      nothing ordered them, so one tab drove the harness world (bay 13,
+      z 10.200 m) while every other page was shown it at its round bay
+      (bay 14, z 17.000 m), a constant 6.800 m that never closed. FIXED in
+      `blwp.jslib`: the round's seed is the world however late anybody asks,
+      pinned by a test against the shipped jslib. And then, on the rebuilt
+      player, the apron is exact and the field still drifts - 6.576 m growing
+      to 28.114 m while the publish lag stays 3-7 ticks - and the cause is
+      HEAT: the page's core carries 57229 and any replay of the same
+      transcript carries 0. `BlwpSetHeat` is a host input in no batch, mark or
+      transcript. That is letter 40. Ruled out by measurement first: identical
+      ground checksums, every stepped tick published, no solids on either
+      side, no liquidations, and P1's own transcript replayed here lands where
+      the daemon's picture says.
+      Earlier: 36 has been called done twice and a look has said NO
       twice, and the field case the ground fix is FOR is exactly what a look
       tests.
 
@@ -746,6 +759,25 @@ IN THIS ORDER (unparked):
                                         same integer generator, so it is a fact
                                         of the round every replayer holds and
                                         never a live read. Not started.
+   40  M2 heat is a host input the    M2   OPEN — found by the two-Chrome look on
+       transcript does not carry          the built ground fix, and it is what
+                                        the field drift now is. `BlwpSetHeat`
+                                        is called from `LoadoutPanel` off live
+                                        mempool danger; the page's core carried
+                                        57229 and every replay of the same
+                                        transcript carries 0. Heat gates the
+                                        army, so the page's truck is fought and
+                                        the replay's is not: 6.576 m growing to
+                                        28.114 m over one drive while the lag
+                                        stayed 3-7 ticks. Same fix shape as the
+                                        ground: it belongs to the round, not to
+                                        the host. Ruled out first, by
+                                        measurement: identical ground
+                                        checksums, 3088 stepped and 3088 seen,
+                                        solids 0 on both sides, no
+                                        liquidations, and the transcript
+                                        replayed here lands where the daemon's
+                                        picture says.
    39  M2 the collision world is      M2   OPEN — the same fault as 36's ground,
        still the host's                   unfixed and larger. The shipped scene
                                         has 0 BoxColliders: every world solid is

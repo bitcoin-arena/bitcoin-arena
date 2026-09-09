@@ -24069,3 +24069,95 @@ template copy carries neither. 36 has been called done twice and a two-Chrome
 look has said NO twice, and the field case the ground fix exists for is exactly
 what a look tests. Marking it done at ddf9e3d on the ground numbers alone is
 the same mistake as the 19:27 close-out.
+
+## M2.36: the two-Chrome look on the built ground fix, 2026-09-09
+
+Real WebGL build (`BuildWebGL.Run`, result=Succeeded, errors=0), deployed to
+btc-logistics-core only; the served `webgl.data.unityweb` and `blwp-core.js`
+matched the build byte for byte. Two real Chrome 150 windows on DISPLAY :0,
+their own user-data-dirs, driven and read over DevTools.
+
+### The look found a fault the suites could not, and it was a race
+
+FIRST ROUND (db86d5c4…), at load, both pages correct: P1 seed 0x040adef9 at
+bay 14 z 17.000 m, P2 seed 0x5b0fb699 at bay 22 z 71.400 m, each tab's picture
+of the other equal to that truck's own core, delta (0.000, 0.000) m.
+
+Then P1 drove, and its picture sat a CONSTANT 6.800 m away - one door's pitch -
+that never closed:
+
+    tick   960  P1 core (-100.357, 10.200)  | picture (-100.396, 17.000)  6.800 m
+    tick  1136  P1 core ( -82.913, 10.200)  | picture ( -83.260, 17.000)  6.809 m
+
+P1's round seed 0x040adef9 parks at bay 14, z 17.000 m - which is where the
+picture put it - and P1's core was on z 10.200, which is bay 13, the harness
+constant. THE PAGE WAS DRIVING THE HARNESS WORLD while the committee replayed
+the round's.
+
+The cause is an ORDER NOBODY FIXED. Two callers seed the core:
+`CoreDrivenTruck.Start` calls `BlwpCore.Init(seed)` with its own constant, and
+the bridge calls `core.init(seedWord)` when the join resolves. Whichever ran
+last won. Both outcomes were in that one look - P2 got the bridge last and was
+right, P1 got C# last and was wrong.
+
+FIXED in `blwp.jslib`: `$blwpWorldSeed` decides it in one place, and the
+argument is only a DEFAULT - once the bridge knows the round's seed, that is
+the world however late anybody else asks. `BlwpInit` and `BlwpRestart` both go
+through it. Pinned by a test that drives the SHIPPED jslib: after a join, two
+late calls with 0x5eed1234 leave the core at the round's z -57.800 m.
+
+The test harness had to grow with it: it bound `$blwpDiscovery` by hand, so a
+new `$`-helper was a ReferenceError there and nowhere else. It binds every
+`$`-prefixed member now, the way Emscripten does.
+
+### Second look, on the rebuilt and redeployed player
+
+Round 6af6755d…, beacon block 256. At load: P1 seed 0x028b8279 at bay 22
+z 71.400 m, P2 seed 0x79991acb at bay 8 z -23.800 m - each core standing where
+its OWN seed parks it, delta (0.000, 0.000) m both ways, both on relief (10176
+of 15360 cells, peaks 6.729 m and 6.898 m), ground under both trucks 0.000 m
+because the apron is level.
+
+P1 loaded 83% / 9 parcels, rolled out and drove. On and just off the apron the
+picture tracked it:
+
+    tick  1568  core (-100.238, 71.400) ground 0.000 | picture 0.037 m behind, 3 ticks
+    tick  1704  core ( -88.087, 71.400) ground 0.000 | picture 0.891 m behind, 7 ticks
+    tick  1736  core ( -82.899, 71.400) ground 0.181 | picture 0.342 m behind, 3 ticks
+
+40 of 40 samples held a picture; worst gap 0.994 m, and it tracks the 3-7 tick
+publish lag rather than sitting at a constant.
+
+### And then the field, where it still fails - measured, not guessed
+
+Driven on into the relief the gap GROWS while the lag does not:
+
+    tick  1904  core (-65.390, 67.172) ground 4.968 | picture (-70.427, 71.400)   6.576 m,  3 ticks
+    tick  2096  core (-45.527, 67.272) ground 4.846 | picture (-61.230, 71.400)  16.237 m,  3 ticks
+    tick  2280  core ( -1.260, 67.272) ground 3.527 | picture (-29.069, 71.400)  28.114 m,  7 ticks
+
+Instrumented rather than guessed at, and every candidate ruled out by
+measurement:
+
+  - THE GROUND IS THE SAME. The page's height field and one generated here from
+    the page's own seed have the identical checksum (-1305074885), the same
+    10176 relief cells and the same 440994 peak. The ground fix holds.
+  - THE INPUTS ARE ALL THERE. The page had stepped 3088 ticks and its client
+    had seen 3088, with 3084 published and 4 in hand. Nothing was dropped.
+  - NO SOLIDS ON EITHER SIDE. The page's core reported `solids: 0`.
+  - NO LIQUIDATIONS. The transcript carries 0, and replaying it here with and
+    without them lands on the same pose.
+  - THE REPLAY IS NOT THE ODD ONE OUT. P1's own transcript replayed here on the
+    current core lands at (28.196, 71.400) m - the same z 71.400 the daemon's
+    picture shows. The PAGE is the outlier.
+
+WHAT IS DIFFERENT IS THE HEAT. The page's core carries heat 57229 - 0.873 in
+Q16.16 - and any core replaying that transcript carries 0. `BlwpSetHeat` is a
+host input to the simulation, called from `LoadoutPanel`, derived from live
+mempool danger, and it is in NO batch, mark or transcript. Heat gates how the
+army behaves, so the page's truck is being fought and the replay's is not, and
+the two drive different lines. That is the 28 m.
+
+So the host still feeds the simulation three things no replayer holds: the
+ground (fixed here), the SOLIDS (letter 39) and the HEAT (letter 40). 36 stays
+open on the last two.
