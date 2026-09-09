@@ -22006,3 +22006,84 @@ equivalent ones as step 2). The six new ones all died:
 STILL SINGLE-NODE CUSTODY, NOT §23.5. `ACTING` is one node's bookkeeping about
 one Lightning node. Under 23.5 the same window exists between a 5-of-7
 threshold signature and the act it authorises, and nothing here addresses that.
+
+### M3 STEP 4 — THE SAME RULES AGAINST `lnd v0.21.3-beta`
+
+`blwp-node/src/lnd-port.js` is the transport; `blwp-node/tools/custody-lnd.mjs`
+starts an isolated regtest of its own - own bitcoind datadir, non-default ports
+(29643/29644, zmq on 29745/29746, lnd on 29650 and 29660), cookie auth - runs
+one round on it, and stops every process when the numbers are in. No mainnet or
+testnet4 datadir is opened, and `/mnt/bitcoin` is read for the two binaries and
+nothing else.
+
+TWO LND NODES, BECAUSE A HOLD CANNOT BE SETTLED UNTIL SOMEBODY HAS PAID IT.
+Alice is the player's wallet; Bob is the daemon's custodian. Alice's three
+payments sit in flight while Bob decides what the core's outcome word means.
+
+    channel active                 alice 996530000 msat, bob 1000000000
+    three stakes in flight         alice 996230000        (300000 msat out)
+    lnd says ACCEPTED x3, this node says HELD x3
+
+    winner   DELIVERED  -> CANCEL   -> CANCELLED
+    loser    FORFEIT    -> SETTLE   -> SETTLED
+    voided   VOID       -> NOTHING  -> EXPIRED
+
+    after the acts                 alice 996330000, bob 1000100000
+    the pool gained                100000 msat, one forfeited stake
+
+THE THIRD ROW IS THE ONE WORTH THE WAIT, and what refunds the player was
+measured rather than assumed. The first run set a 90-second invoice expiry and
+waited 150 seconds: the stake was still held. AN INVOICE EXPIRY STOPS APPLYING
+THE MOMENT AN HTLC IS ACCEPTED. What refunds a player when nobody acts is
+BITCOIN'S timelock, in blocks:
+
+    the void HTLC expires at height 345, the chain was at 262
+    nobody acted; the tool mined
+    at height 332 lnd failed it back  (13 blocks early - lnd's broadcast delta)
+    alice's payment FAILED and her balance went back to 996430000 msat
+
+So "the HTLC expires and the wallet is refunded automatically" is a consensus
+rule and not a courtesy, which is exactly the property the chapter leans on -
+and the tool mines rather than sleeps now.
+
+    alice is down    100000 msat   exactly the forfeited stake
+    bob is up        100000 msat   and nobody is keeping a difference
+
+A SETTLE TAKES THE PREIMAGE, NOT THE HASH. `lncli settleinvoice` wants the 32
+bytes, because releasing them IS the settlement - which is why 23.4 asks for
+five of seven preimage shares first. `Custody` therefore takes an injected
+`preimageFor`, and:
+
+    no preimage             the stake stays HELD and expires to its player;
+                            not being able to settle is not a loss
+    a preimage that is not
+    the one the hold was
+    made for                REFUSED by name, before the port is called
+
+`preimageFor` is the named gap letter 29's Feldman handouts close: reconstruct
+from five shares and hand back 32 bytes. The tool supplies them directly.
+
+LND'S WORDS ARE NOT 23.2'S, mapped in `lnd-port.js` and nowhere else. OPEN and
+ACCEPTED are both HELD - money in flight is in nobody's balance whether or not
+the player has paid yet. lnd has no word for a hold that timed out and calls it
+CANCELED, so this node's own row is the only place EXPIRED is recorded, which
+is what the last line of the tool's output says.
+
+THE ONE-DOOR RULE HELD, and it took a real attempt to weaken it: `custody.js`
+imported `sha256bytes` from `core/src/sha256.js` for a stake commitment, and
+`round.test.js`'s audit failed immediately with
+
+    + 'custody.js'
+      'replay.js'
+
+for exactly the reason its own comment predicted - "one more import, in one
+more place, for one good reason". A hash is not a simulation, so `sha256` is
+named in `protocol/src/hash.js` and the node takes it from there.
+
+MUTATION, 20 mutants against 18 tests (14 custody, 4 port): 18 killed, the same
+2 retracted as equivalent. The three new ones all died: settling with no
+preimage at all, accepting any 32 bytes as one, and not handing it to the port.
+
+STILL SINGLE-NODE CUSTODY, NOT §23.5. Bob is one node holding everyone's money,
+with one macaroon an operator could use by hand. FROST closes that; this does
+not.
