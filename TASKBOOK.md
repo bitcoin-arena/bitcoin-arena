@@ -22087,3 +22087,97 @@ preimage at all, accepting any 32 bytes as one, and not handing it to the port.
 STILL SINGLE-NODE CUSTODY, NOT §23.5. Bob is one node holding everyone's money,
 with one macaroon an operator could use by hand. FROST closes that; this does
 not.
+
+### M3 SLICE 1, STEP 5 — THE DAEMON ACTUALLY HOLDS THE MONEY
+
+The letter was closed on a caller count measured BEFORE `custody.js` existed
+and never measured again after. Re-measured at 97f6c14:
+
+    new Custody / lndPort() constructed in   2 tools, 2 test files, and NO src
+    server.js references to custody          0
+    routes offering an invoice               0 of 16
+    server.js:107                            "there is no payment layer here yet"
+
+Which is the same correct-rule-with-zero-callers hole this session has now
+found six times. Fixed here.
+
+THE NAME COLLISION FIRST. `Verifier.settleRound` is section 13's replay and
+gather and moves nothing; the money word is now `Custody.settleHeldInvoices`.
+Under `blwp-node/src` the two are distinct words, and a close that reads like
+it pays no longer only replays.
+
+    server.js:211   custody.settleHeldInvoices(...)     the money
+    verify.js:210   settleRound(roundIdBytes)           the replay
+    server.js:727   verifier.settleRound(id).then(...)  one then the other
+
+SEAT, QUOTE, CLOSE, START.
+
+    POST /entry     issues the hold for the hash the entry already carries, and
+                    answers `x-hold: HELD`. A Lightning node that is down does
+                    NOT unseat the player: the entry is stored, the reason is
+                    in `x-hold-why`, and `/invoice` retries idempotently.
+    GET /invoice    the payment request, the hash and the amount for one entry.
+                    Asked twice, the same request - one createHeld in the port
+                    log - because a second invoice is a second claim on one
+                    stake. The request is kept in the `holds` row for this, and
+                    a state change no longer erases it.
+    close           `Verifier.settleRound` resolves with BOTH halves now -
+                    `replayed` carrying the core's own outcome word, score,
+                    player and stake, `gathered` carrying whether the committee
+                    agreed - and the daemon feeds exactly those to 23.2.
+    start           `custody.reconcile()` with no round named: a node that has
+                    just started does not know which round it died in.
+
+A STRANGER'S ENTRY IS REFUSED, and the refusal is the honest one: this node
+does not invent invoices for entries it never seated (404). It cannot mean "not
+the player's own" - a hold invoice is a bearer instruction to PAY, so a
+stranger holding it can only fund that player's stake, never take it.
+
+THE MEASUREMENT THAT CHANGED THE CODE. Closing a real round on the daemon
+THREW:
+
+    the operator would keep 100000 msat: a pool of 100000 against 0 handed out
+
+Not a bug in `payout.js` - that refusal is deliberate and its own test says why:
+"declining to make that decision in the operator's favour". The bug was that
+nothing caught it. And it is not a corner case: the only outcomes a transcript
+can produce are DELIVERED and FAILED, and the drive this harness plays WRECKS
+at tick 631, so until somebody delivers EVERY round is a pool with nobody to
+hand it to. `settleHeldInvoices` now answers a refused table with inaction -
+`ok: false`, zero port calls, every hold left HELD to expire back to its own
+player - which keeps nothing for this node and decides nothing.
+
+WHAT IS STILL NOT REACHABLE THROUGH THE DAEMON'S OWN DOORS, said plainly: a
+DELIVERED run. A delivery needs the truck at the gate, and no input stream in
+this harness gets there (`rules.test.js` puts it there by hand). So the settle
+and cancel ACTS are measured in `custody.test.js` and against real lnd in
+`tools/custody-lnd.mjs`, and what the daemon tests measure is that the close
+reaches 23.2's table with this round's own entries - proved by the refusal
+naming this player's own 100000 msat stake - and that nothing moves.
+
+ONE PLACE DECIDES FINALITY. A mutation that made the money's `finalFor` say yes
+to everything survived while the list reported to the operator still said the
+truth. The predicate and the report are now the same function.
+
+MUTATION, 13 mutants against the daemon wiring, all 13 killed:
+
+    the seat issues no hold at all                       KILLED
+    a failed hold unseats the player                     KILLED
+    the quote answers for an entry never seated          KILLED
+    the quote invents a second invoice each time         KILLED
+    the close never reaches the money                    KILLED
+    the money close is fed no outcome at all             KILLED
+    every entry is treated as agreed                     KILLED
+    reconcile is not run on start                        KILLED
+    a refused stake table is stepped past                KILLED
+    the payment request is not kept                      KILLED
+    a state change erases the request                    KILLED
+    the close forgets which entry it gathered for        KILLED
+    the outcome does not travel with the replay          KILLED
+
+Two of those needed new observables rather than new assertions, and both are
+improvements an operator wants: a settlement that moves nothing still reports
+which runs were agreed, and a stake that moved can still say which invoice it
+was.
+
+STILL SINGLE-NODE CUSTODY, NOT §23.5.
