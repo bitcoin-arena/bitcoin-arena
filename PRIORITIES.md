@@ -16,21 +16,14 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: M2.36 OPEN, CAUSE FOUND AND A DECISION IS NEEDED (3f9603b): the
-committee replays every run on FLAT ground while the player drives the relief
-the page uploaded. 0.000 m apart on the level apron, 33.500 m apart after 600
-ticks on relief - which is why the 19:27 look (taken on the apron) and the
-19:31 look (taken in the field) both told the truth. It is not only the ghost:
-the same replay decides the outcome and the score. The ground is in no
-contract and no transcript and is not derivable - Unity's PerlinNoise over a
-live mempool profile - so where it comes from changes the protocol and is not
-Claude's to choose. Numbers in TASKBOOK.
+LIVE LETTER: M3. M2.36 IS DONE - the committee walks the same seeded hills the
+player drove. The core generates the relief from the round's seed in integer
+fixed-point and Unity draws it; the page's upload door is gone from all three
+layers. One drive, 600 ticks: page (-70.212, -32.048) m against replay
+(-70.212, -32.048) m, 0.000 m apart where it was 33.500, on a world that is not
+flat (10176 of 15360 cells carry relief, up to 6.930 m) and differs per round.
+The apron stays 0.000 m. Numbers in TASKBOOK.
 
-Earlier: SwissClaw two-Chrome ghost look 19:31: NO.
-P1 left the yellow bay into the tank field. P2 stayed in cargo loadout.
-P2 chip other-at only crawled -100,-3 → -97,-3 (spawn, not live pose).
-Socket stayed play · A up · 2 players. The 19:27 close-out is not the proof.
-Screens: daniel-screens/2026-09-09-1931-*. Numbers in TASKBOOK.
 30 stays queued behind M3.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
 threshold 2 when the contract has 2 slots (Daniel 11:49).
@@ -718,8 +711,51 @@ IN THIS ORDER (unparked):
                                         PAID_IN_PART, not a blocked round.
                                         329 refused, 330 accepted. 9 mutants
                                         killed. Photographed 12:14.
-   36  M2 live ghost pose             M2   OPEN — CAUSE FOUND (3f9603b), and it
-                                        needs a decision that is not Claude's.
+   38  M2 the map stopped being the   M2   OPEN — came out of 36 and is not part
+       fee histogram                      of it. `MempoolTerrain.HeightAt`
+                                        shaped the hills out of a LIVE mempool
+                                        profile; 36 made the relief the round's
+                                        seed alone, so the live profile now
+                                        reaches only the drawn mesh when there
+                                        is no core. "Every fee, block and
+                                        transaction on this map is the live
+                                        chain" is no longer true of the ground.
+                                        THE SHAPE OF THE FIX: snapshot the fee
+                                        profile into the round contract at
+                                        round start as a SECOND input to the
+                                        same integer generator, so it is a fact
+                                        of the round every replayer holds and
+                                        never a live read. Not started.
+   36  M2 live ghost pose             M2   done — the committee walks the same
+                                        seeded hills the player drove. The core
+                                        generates the relief from the round's
+                                        seed (12x8 lattice, two octaves, peak
+                                        6 m, both aprons levelled) in integer
+                                        fixed-point; `init` makes it, so the
+                                        player's core and every replay are the
+                                        same function of the same seed. The
+                                        upload door is gone: no `BlwpSetGround`,
+                                        no `BlwpCore.SetGround`, no
+                                        `UploadGround`, and `MempoolTerrain`
+                                        draws `BlwpCore.SurfaceAt`.
+                                        MEASURED: 600 ticks of one drive, page
+                                        (-70.212, -32.048) m and replay
+                                        (-70.212, -32.048) m - 0.000 m apart
+                                        where it was 33.500 - on a world with
+                                        10176 of 15360 cells in relief up to
+                                        6.930 m, different per round, aprons
+                                        level. Fixtures re-measured, not
+                                        adjusted: world secret b32(0x16), TICKS
+                                        1000, score 128, nine golden vectors
+                                        regenerated.
+                                        core 88/88, blwp-node 369/369,
+                                        protocol 440/440, blwp-client 138/138,
+                                        guard 20 files clean. PlayMode 237:
+                                        213 pass, 11 red (the documented set),
+                                        13 skipped. EditMode 193: 189 pass,
+                                        1 red (the same C# army), 3 skipped.
+                                        What it cost is letter 38.
+                                        Earlier: CAUSE FOUND (3f9603b).
                                         The committee replays every run on FLAT
                                         ground: `init` leaves a core flat until
                                         a host uploads relief, the page uploads

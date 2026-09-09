@@ -23914,3 +23914,96 @@ Unity's own float maths, which NIGHT-RUN already measured as the thing the
 fixed-point core exists to avoid. No other party can reproduce it, and the page
 telling the core what the world looks like is the simulator leaking back into
 Unity by a door nobody was watching.
+
+## M2.36, closed: the committee walks the same seeded hills the player drove
+
+THE PICK WAS DANIEL'S: the core generates the relief from the round's seed, in
+integer fixed-point, and Unity draws it. Trusting a client-uploaded heightfield
+was rejected as an attack - a player who publishes their own hills chooses the
+world they are scored in - and pinning Unity's Perlin/mempool float grid was
+rejected because that is still C# simulating the ground.
+
+WHAT WAS BUILT
+
+  - `rng.js` gains `hash2(seedWord, i, j)`: splitmix32's finaliser over the
+    three, `Math.imul` and shifts only. A FUNCTION and not a stream, because a
+    stream depends on how many times it has been drawn from and the ground is
+    asked about corners in whatever order a caller walks them. It lives in an
+    arithmetic file because it multiplies.
+  - `rules/ground.js` gains `groundFromSeed`: a 12 x 8 lattice of corner
+    heights from `hash2`, bilinear across it, a second octave at half the scale
+    and a quarter of the height, peak 6 m. Both ends levelled into an apron -
+    level out to 86 m, easing to full relief by 66 m, with 3t^2 - 2t^3 so the
+    join has no crease. `MempoolTerrain` already levelled its aprons and said
+    why: an apron slab is one plane at a single height, and a metre of relief
+    under it is a metre of daylight under one end. The bays are on it - 24
+    doors across 156 m - and a door on a slope is a truck that rolls out of it
+    sideways.
+  - `sim.js`: `init` calls `groundFromSeed` where it called `flatGround`. That
+    one line is the fix: the player's core and every committee's replay are the
+    same function of the same seed, so they agree by construction rather than
+    by agreement. `restart` no longer carries the previous ground over unless
+    it was uploaded, because the seed makes a generated one again.
+  - `setGround` survives for ONE caller that is not a host: the reference
+    tests, which reproduce a published dataset and need the field it was
+    measured on. A ground put there is marked `uploadedGround`.
+
+WHAT WAS TAKEN AWAY, which is the half that makes it a rule
+
+  - `BlwpSetGround` deleted from `blwp.jslib`.
+  - `SetGround` deleted from `BlwpCore`.
+  - `UploadGround` deleted from `CoreDrivenTruck`.
+  - `HasRelief` is set by `Init` now. It used to mean "a host has uploaded
+    one" and was false until it did; a core that is up always holds the round's
+    hills.
+  - `MempoolTerrain.HeightAt` returns `BlwpCore.SurfaceAt` when a core is
+    answering. It is the one place the mesh, `SampleSurface` and the seat all
+    read from, so redirecting it moves all three at once. The mempool relief
+    stays below it as the answer when there is no core - the Editor, where
+    PhysX drives - so the game still looks like something without a browser.
+
+THE NUMBER
+
+    after 20 ticks, still on the level apron    0.000 m apart   (was 0.000)
+    after 600 ticks   page    (-70.212, -32.048) m
+                      replay  (-70.212, -32.048) m
+                                                0.000 m apart   (was 33.500)
+
+And the world they agree on is not a table: 10176 of 15360 cells carry relief,
+up to 6.930 m. Two seeds differ in 10172 of 15360 cells, so it is the ROUND's
+ground and not the game's. Every bay in both rounds stands on level ground.
+
+WHAT THE FIXTURES COST, re-measured and not adjusted. On the new ground the
+daemon fixture's drive DELIVERED where it used to wreck, and those tests are
+about a run that came to nothing. The world secret is the fixture's own to
+choose and it chooses one where the drive still loses: `b32(0x16)` wrecks
+player 5 at tick 547 with a score of 128 and player 6 at 947. TICKS 800 ->
+1000, score 79 -> 128. The score history of that fixture is now 230 (the
+fixture chose the seed) -> 257 (the seed came off the entry) -> 79 (20c3950
+parked the player at their own door) -> 128 (the round got its own relief).
+
+Two core tests changed for cause. `the core drives like the PhysX truck it
+replaces` is the VEHICLE against a PhysX recording made on flat ground, and a
+core left alone is now climbing - 12.95 m/s against the recording's 15.634 at
+5 s - so it is given the recording's own world through the reference door. `a
+wreck banks nothing` needs a run that is still LIVE when it is written off, and
+the drive now arrives at tick 883, so the fixture stops at 800 where it has
+earned 288 and has not arrived.
+
+All nine golden vectors regenerated: the world changed, so they had to.
+
+SUITES: core 88/88. blwp-node 369/369. protocol 440/440. blwp-client 138/138.
+determinism guard 20 files clean. PlayMode 237 - 213 pass, 11 red, 13 skipped,
+and the eleven are the documented set (ten reach the retired C# army that (e)
+does not build, one needs a graphics device). EditMode 193 - 189 pass, 1 red
+(`RifleFireProducesAFlashAndATracer`, the same C# army), 3 skipped.
+
+WHAT THIS COST THE GAME, AND IT IS ITS OWN LETTER. The map has stopped being
+the fee histogram. `MempoolTerrain.HeightAt` shaped the hills out of a live
+mempool profile, and the relief is the seed alone now - the live profile only
+reaches the DRAWN mesh when there is no core at all. "One Bitcoin block is one
+round, and every fee, block and transaction on this map is the live chain" is
+not true of the ground any more. Getting it back means snapshotting the fee
+profile into the round contract at round start, as a second input to this same
+integer generator, so it is a fact of the round that every replayer holds -
+never a live read. Listed as its own letter; not done here.
