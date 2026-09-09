@@ -23032,3 +23032,60 @@ owed and there is still nothing that pays them. That needs either a balance
 carried across rounds until it clears the floor, or a Lightning payout - and
 the second would make the pool something other than the taproot output item 13
 proved.
+
+### M2-36 — THE FIELD TOLD A RENDERER THAT A TRUCK IT HAD JUST DRAWN WAS GONE
+
+Measured in the two files letter 36 now names, no WebGL.
+
+FIRST, WHAT IS NOT WRONG. The 11:51 retest changed the question: the chip read
+`A ok · B ok · play · A up · 5 players`, so the socket did NOT drop and
+delivery stopped being the suspect.
+
+    the node produces live frames        `ghost-live.test.js`: 0.7 ms a frame at
+                                         the end of a 9000-tick round, pose
+                                         byte-identical to a cold replay
+    a watcher who never drives           `two-tabs.test.js`: shown 8 of 8
+                                         batches, ticks 5 -> 47, pose advancing
+
+That second one is the loadout tab: a person who loaded and did not roll out is
+still sent the driver's pose.
+
+THEN THE FAULT, IN `ghost-field.js`. `latest()` read the QUEUE, and the queue is
+what `drain()` empties:
+
+    two frames arrive                 queue 2   present 1   latest() 1 picture
+    the renderer drains 24            queue 0   present 1   latest() 0 pictures
+
+`BlwpNextGhost` takes one picture per call and `GhostField.Draw(PerFrame)`
+calls it up to 24 times a frame, so in a real page the queue is empty almost
+always - and every caller after the first was told there was nothing to draw
+while the trucks were still in the round.
+
+`present` exists for exactly this and says so three lines above the bug: "A
+picture Unity has already drawn is gone from the queue; it is still a player in
+the round." Reading the queue made that comment false. `latest()` reads
+`present` now.
+
+WHY THE EARLIER TEST DID NOT CATCH IT: it called `latest()` and never drained,
+which is not what the page does. The new test drives the field the way the
+bridge drives it - drain up to 24 every frame - and then checks what the field
+still knows:
+
+    pictures the renderer was handed over 8 batches   8
+    the pose advanced, and was not the same twice     yes
+    queue after the frame                             0
+    trucks still in the round                         1
+    latest() after the frame                          1, at the newest tick
+
+MUTATION: 5 mutants against the field, all 5 killed - reading the queue again,
+forgetting a drawn picture from `present`, showing the viewer its own truck,
+draining nothing, and draining without removing.
+
+WHAT IS STILL NOT PROVEN HERE, and it is the only link left: `BlwpNextGhost` in
+`blwp.jslib` and `GhostField.Draw` in C#. `node --test` cannot reach either.
+That is where letter 28's bug lived, and it is where 36 goes next if
+SwissClaw's two Chromes still show a truck in the bay.
+
+Suites: blwp-client 123 -> 125, core 88/88, protocol 440/440, blwp-node 333
+with the same 18 spawn-bay hash pins on their own letter. The bundle changed
+(280.4 KB) and the WebGL template's copy was re-synced.
