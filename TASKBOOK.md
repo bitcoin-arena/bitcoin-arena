@@ -24562,3 +24562,45 @@ an edge cache, not a bad deploy. It agreed twelve seconds later. `/Build/*` is
 
 Suites after: core 89/89, guard 21 files clean, protocol 441/441,
 blwp-node 390/390, blwp-client 154/154.
+
+## 2026-09-10  M3.3 item 14 - the share-count pin, before any code
+
+Daniel's order for this letter: write the share-count pin first and get the
+number into this file before a line of production code. `dkg-dealer.test.js` is
+that pin, and these are the numbers it prints today.
+
+    shares reachable from the dealing process:  7 of 7
+    shares needed to sign alone:                5
+    so the dealer can sign without asking:      TRUE
+
+and it is not a count only - five of the seven, interpolated inside that one
+process, rebuild the group public key byte for byte. The dealer does not merely
+hold enough to sign; it holds the secret.
+
+WHERE THE DEALER IS, measured rather than assumed:
+
+    files under src/ that call trustedDealerSplit:            0
+    files under src/ that DEFINE it:                          protocol/frost.js
+    the daemon's own start path:                              takes `poolSeat`
+                                                              as an argument
+    DKG rounds the daemon runs:                               0
+    start paths that deal all 7 shares in one process:        4
+      payout-committee-regtest.mjs, payout-regtest.mjs,
+      pool-regtest.mjs, settle-regtest.mjs
+
+So the dealer is not a function in this repository at all - it is whatever
+process starts the seven daemons, and it necessarily holds every share. Item 10
+closed FROST as a signature and said so itself; item 17 distributed the
+SIGNING, five daemons on five sockets with no secret on the wire, which is the
+distribution of the signing and not of the key.
+
+THE PIN IS NOT A PROOF OF ANYTHING GOOD. It records the fault so the letter has
+a number to move, and it says in its own assertions that when the DKG lands
+these counts change and the file must be updated rather than deleted.
+
+A NOTE ON WRITING IT: the first version probed the daemon for /dkg|dealerless/i
+and matched the COMMENT that says a dealerless DKG is its own letter - a
+sentence caught by its own regex. It is a call site now, the same distinction
+the pool watcher's pin makes.
+
+Suites with the pin in: blwp-node 392/392.
