@@ -23612,3 +23612,134 @@ build was removed - the page names `webgl.*` and two sets in one Build folder
 is a loader nobody can name. Live checks: the page points at
 Build/webgl.loader.js (200), carries BLWP_NODES, the served blwp-client.js
 carries `worldSeedFor`, and the served framework defines `BlwpRoundSeed`.
+
+## M2.36: what a live round reads of `CoreDrivenTruck.seed`, printed
+
+The constant is still in the player - `public int seed = 0x5eed1234` - and a
+constant that can put this player's core back in the harness world is the 17:05
+fault waiting to happen again. So it was asked of the SHIPPED bridge rather
+than of the source: `blwp.jslib` evaluated the way Emscripten evaluates it,
+`$blwpDiscovery` included, driven against two real daemons, with every call
+into the core's `init` logged and every `record` logged beside it
+(`world-seed-bridge.test.js`).
+
+    every init the shipped bridge asked the core for, in order:
+      1. 0x5eed1234  bay 13  z 10.20 m   <- CoreDrivenTruck.seed, the constant
+      2. 0x0ae8bebb  bay 16  z 30.60 m   <- the round
+    ticks recorded before the round's init: 0
+    BlwpRoundSeed() answers 0x0ae8bebb
+
+THE TWO READ SITES, and what each one does on a live round:
+
+  - `CoreDrivenTruck.Start`, line 112, `BlwpCore.Init(seed)`. READ, once, at
+    scene start, before any round is joined. The truck steps in that world
+    while the page is still discovering the chain and proving the bond - and
+    NOTHING IS RECORDED out of it: `net.tick` returns at its first line while
+    `net.client` is null, and the client is only assigned after `worldSeedFor`
+    has resolved and `b.st = b.core.init(seedWord)` has replaced the state.
+    Measured: 30 steps before the join, 0 records. The state that world
+    produced is discarded, not published.
+  - `CoreDrivenTruck.StartRound`, the roll-out. NOT READ on a live round: it
+    takes `BlwpNet.RoundSeed`, which the bridge answers with the round's own
+    seed. The constant is only the answer when that is zero, which is the daily.
+
+No other reader. `grep` finds no assignment to the field anywhere, and the
+scene serialises no override - `Bootstrap` adds the component at runtime.
+
+### AND THE ROLL-OUT ITSELF WAS THE NEXT HOLE
+
+`StartRound` restarted the core whatever world it named, and on a live round
+that is wrong for a reason that has nothing to do with which seed it uses. The
+run began when the page seeded the core, and the client has recorded every tick
+since the join - the 16:08 report saw tick 4241 while the truck was still in its
+bay. A restart in the middle puts the player's core back at tick zero while the
+transcript they are publishing runs straight through. Measured, 120 ticks of one
+drive with a roll-out at 60:
+
+    the page holds   afa591f29d954df116434c4354c38496d825b4e72cf437c22e66048f87f5bd59
+    the committee    686abbf1bb0bbc441a8187d18c76629d9c12aea95efb7e30fc7b008799f1f0d1
+    z: page 30.589 m, committee 30.308 m
+
+0.28 m apart after two seconds, and growing. Every mark the player signs after
+it commits to a state nobody else computes, and every watcher's picture is of
+the replay rather than of the truck being driven - the same class of fault as
+the seed, by a different road.
+
+`CoreDrivenTruck.RollOutRestarts(roundSeed, dailySeed, out world)` is the rule
+now: the daily restarts into its constant, a live round is never restarted, and
+a round whose own seed happens to BE the constant is still a round. Pure - no
+core, no player - so `RollOutTests` measures it without one.
+
+Suites: PlayMode 237 - 212 pass, 12 red, 13 skipped. Eleven are the documented
+set (ten reach the retired C# army, one needs a graphics device) and the twelfth
+is `PostOfficeTests.TheGogglesAnimate`, one of the three named rotating load
+flakes: run alone, PostOfficeTests is 11 of 11 green. EditMode 193 - 189 pass,
+1 red (`RifleFireProducesAFlashAndATracer`, the same C# army), 3 skipped.
+blwp-client 138/138. Deployed: the served `webgl.data.unityweb` is
+8832f4a9f62342a0f9704d844e6785d0, byte for byte the build that carries the rule.
+
+## M2.36: the two-Chrome look, for whoever runs it
+
+Claude cannot run this. Everything below is what the page now claims, so that a
+look either confirms it or names which claim is false.
+
+STAND THE ROUND UP, then open the printed URL in TWO local Chrome windows -
+real WebGL, not headless, not browser-act:
+
+    node packages/blwp-node/tools/round-2of2.mjs
+
+It prints one URL of the shape
+`https://<page>/?round=<id>&node=<A>,<B>&bond=<A>/bond&advert=<hex>`. Both
+windows get the SAME URL. Two tabs are two players because the key is per tab
+(`sessionStorage`).
+
+WHAT TO SEE, IN THIS ORDER:
+
+  1. THE PAGE STARTS. If it sits on its own loading screen, look at the console
+     for `Build/{{{ LOADER_FILENAME }}}` - that was the 16:08 fault and a deploy
+     now refuses to ship it, so seeing it again means something bypassed
+     `deploy-core.sh`.
+
+  2. BEFORE EITHER TRUCK MOVES - this is the new one, and it is the whole
+     letter. The two trucks must be on DIFFERENT loading bays, both on the
+     apron at x about -100 m, and the console of each window says
+     `[blwp] world seed 0x… from 2 node(s) agreeing on the round randomness`.
+     Two nodes, not one. If either window says one, the page took a single
+     daemon's word for which world it is in.
+     Bays are 6.8 m apart and there are 24 of them, so the two z values can be
+     anything from 6.8 m to 156 m apart. THEY MUST NOT BOTH BE 10.2 m: that is
+     bay 13, the harness constant, and both trucks standing there is the old
+     fault back.
+
+  3. THE CHIPS MUST AGREE, IN METRES. Each window's chip carries
+     `N players in this round · other at X,Z m` - that is where THAT window has
+     drawn the OTHER truck. Hold each chip against the other window's own
+     position readout:
+       - same two numbers  -> the picture is right; if you cannot see the truck,
+         the camera is pointed elsewhere, which is the bays being far apart and
+         is not a fault
+       - different numbers -> the picture is wrong, and the difference is the
+         measurement to report
+     At 17:05 they read `other at -69,-57 m` against a truck standing on the
+     yellow bay - about 30 m out and 10 m across, in a world nobody replayed.
+
+  4. ONE DRIVES PAST THE OTHER. Let P1 load and roll out; P2 stays in the bay
+     and watches. P1's ghost in P2's window must FOLLOW - not appear at spawn
+     and stop, and not jump. Pictures land ten times a second and the page
+     draws sixty times a second, so the ghost WALKS between them: a jump every
+     six frames is the stutter and means the interpolation is not running.
+
+  5. THE ROLL-OUT MUST NOT TELEPORT THE DRIVER. When P1's bay shuts, P1's own
+     truck must carry on from where it stands. If it snaps back to its spawn,
+     the core was restarted in the middle of a live run and every picture after
+     it is of a different run.
+
+  6. NEITHER CHIP SAYS `not publishing`. That line is this tab's own transcript
+     being refused by the node, and it comes first on the chip because nothing
+     else on it can show that fault - the socket stays up and the player keeps
+     driving while every watcher's picture freezes.
+
+WHAT WOULD STILL BE A HOLE even if all six look right: the page takes the
+daemons' word for the round's randomness. It refuses a round where the two of
+them disagree, and it does NOT derive the beacon's height from the chain -
+that is letter 32's work and the page does not do it.
