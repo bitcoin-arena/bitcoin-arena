@@ -24309,3 +24309,77 @@ first fetch after the deploy returned the OLD framework from an edge cache; a
 cache-buster and the deployment URL both returned the new one, and the
 `_headers` for `/Build/*` are `max-age=0, must-revalidate`, so a browser
 revalidates rather than keeping it.
+
+## 2026-09-09  M3.3 item 19 - a payout outlives its asker, and one spend lands
+
+MEASURED BEFORE ANY OF IT WAS WRITTEN, because the answer decided the design.
+Two askers over one output, `PoolSigning.live` still a Map:
+
+    asker A and asker B, same process     signature SAME, raw bytes SAME
+    asker B after a RESTART               signature DIFFERENT, raw DIFFERENT
+
+Same txid both times, because a segwit txid does not cover the witness - so
+this is witness malleability rather than a lost satoshi, and the money would
+have gone to the same outputs either way. It is still two valid transactions
+for one input, which is what a takeover must not create. The nonce pair is a
+`pool_nonces` row now; the same probe after the change reads SAME / SAME.
+
+THE CLOCK. The round's beacon height, which is not a new time source: a round
+with no randomness beacon cannot be seeded, so every seat already holds the
+same number. TAKEOVER_BLOCKS = 2. Seat k in `askerOrder` may ask at
+beacon + k*2. The order is the seats the store keeps sorted BY PUBKEY, rotated
+by four bytes of the round id - a hash of a contract signed before the round
+ran, so a node cannot grind its way up. 7 seats, one eligible at the beacon and
+one more every 2 blocks; handing the list round the other way gives the same
+ring.
+
+Rejected and why: wall clock (per-node; two seats a minute apart both take
+over) and the pool output's own confirmations (a pool funded before the round
+closes is already deep, so every seat is eligible at once).
+
+TWO FAULTS CAME OUT OF THE WIRING, neither foreseen:
+
+  THE COMMITMENT LIST WAS WHOEVER ANSWERED FIRST. `payWithCommittee` broke out
+  of its loop at the first five, so two askers assembled two different lists -
+  and the list goes into the binding factors and therefore into the challenge,
+  so every seat that had already signed refused the second by name ("has signed
+  under another commitment list"). All seats are asked now and the five are the
+  lowest ids: one list whoever asks, at the cost of two more requests. The
+  chosen ids printed 1,2,3,4,5 for every asker afterwards.
+
+  A SEAT THAT HAD PAID REFUSED TO COMMIT AT ALL. `spendFor` demands
+  PAYOUT_QUEUED, and the seat that broadcasts marks its own row PAID - so the
+  takeover could not reassemble the same five, and a spend dropped from a
+  mempool would have stranded the round. A seat holding a pair for that round
+  answers about it whatever its row says; the sighash is still checked against
+  the pair, so it relaxes nothing about starting a spend.
+
+  And a third, one layer up: after the five became the lowest ids, the asker's
+  own seat was asked for a share even when it was not in the list it had built,
+  and "this seat is not in the commitment list" was reported as a withdrawal.
+
+ON AN ISOLATED REGTEST (`tools/settle-regtest.mjs`), the asker never run:
+
+    beacon block 200; 7 of 7 seats agree who asks
+    the order survives being handed round the other way: true
+    height 201   6 of 6 seats waited, nothing broadcast, row still queued
+                 "may ask at height 202; the chain is at 201, 1 block past"
+    height 202   the next seat took over, 5 of 5 signed
+                 sendrawtransaction -> a txid, block 203 carries it
+                 the winner's own key holds 1000 sats
+    same instant the seat behind, that spend still in the MEMPOOL:
+                 "that output is already going: the chain holds no such
+                 unspent output" - `gettxout` sees a mempool, `scantxoutset`
+                 does not, which is why the takeover re-reads through it
+    its own turn the seat behind: refused, the pool holds nothing
+    after a restart  the asker came back and spent nothing
+    on the chain the winner's key holds 1000 sats - ONE payment, not two
+
+TWO HARNESS CHECKS WERE TRUE SENTENCES ABOUT THE WRONG THING and were fixed
+rather than kept: the seat behind was being stopped by the CLOCK, not by the
+output being spent, so it now waits for its own turn first; and the mempool
+window is only open before a block is mined, so that probe moved to the instant
+after the broadcast with `takeoverBlocks: 1`.
+
+Suites after: core 89/89, guard 21 files clean, protocol 441/441,
+blwp-node 390/390, blwp-client 143/143.

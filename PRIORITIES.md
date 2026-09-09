@@ -58,12 +58,18 @@ LIVE LETTER: M2.36 IS CLOSED, and M3 is the live one. 39 and 40 are both in.
 M3 IS THE LIVE WORK, starting now and with no wait, on Daniel's standing word
 (21:26, 12:58, 18:26).
 
-M3.3 ITEM 18 IS CLOSED: a closed round pays its winner with nobody naming an
-output, proved on an isolated regtest - block 202 carries the spend and the
-winner's own key holds 1000 sats. Item 19 came out of it and is listed: nobody
-takes over when a round's asker is down. Item 15 (the page has no curve it can
-trust, so a visitor cannot sit a paying round) and item 14 (a dealerless DKG)
-are the other open M3 lines.
+M3.3 ITEMS 18 AND 19 ARE CLOSED. 18: a closed round pays its winner with nobody
+naming an output. 19: it pays even when the seat the round named is down - the
+next seat takes over after two blocks past the round's own beacon, and only one
+spend lands. Both proved on an isolated regtest, the winner's own key holding
+1000 sats each time.
+
+NEXT IN M3 IS ITEM 15: the page has no curve it can trust. `player_pubkey` is a
+real secp256k1 x-only key because a payout pays to it, and the browser has only
+Ed25519 and P-256 - so a shipped page refuses a seat at a paying round and stays
+the single-player daily. Until it is answered the Daily cannot join a round that
+pays. Item 14 (a dealerless DKG - the group secret still comes from a trusted
+dealer) is the other open M3 line.
 
 30 stays queued behind M3.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
@@ -748,17 +754,46 @@ IN THIS ORDER (unparked):
                                         thing until that run. WHAT IS NOT DONE
                                         is a takeover when the asker is down;
                                         it needs a clock and is item 19.
-   M3.3-19  nobody takes over when a   M3   OPEN — came out of 18. The asker is
-       round's asker is down              chosen from the round id, so a seat
-                                        that is offline when its round closes
-                                        leaves the payout at PAYOUT_QUEUED with
-                                        the other six correctly waiting. Its
-                                        own sweep pays it when it comes back,
-                                        so nothing is lost - but a seat that
-                                        never comes back strands the round. A
-                                        takeover needs a clock and a rule for
-                                        how long to wait, which is protocol and
-                                        was not invented inside 18.
+   M3.3-19  nobody takes over when a   M3   done — a payout survives its asker
+       round's asker is down              going down, and only one spend lands.
+                                        THE CLOCK IS THE ROUND'S OWN BEACON
+                                        HEIGHT and is not a new time source: a
+                                        round with no beacon cannot be seeded,
+                                        so every seat already holds the same
+                                        number. Seat k may ask once the chain
+                                        has advanced k x TAKEOVER_BLOCKS (2)
+                                        past it; the round's own asker is k = 0
+                                        and is alone at the close. No wall
+                                        clock, no election, no contract field,
+                                        and no node can move its own place -
+                                        the order is the seats sorted BY PUBKEY
+                                        rotated by an index from the round id.
+                                        THE NONCE PAIR IS ON DISK, which had to
+                                        be inside this letter: measured first, a
+                                        committee that restarted between two
+                                        asks signed the same spend with
+                                        DIFFERENT bytes - witness malleability,
+                                        not a lost satoshi, because a segwit
+                                        txid does not cover the witness, but two
+                                        valid transactions for one input all the
+                                        same. Identical after. TWO FAULTS CAME
+                                        OUT OF THE WIRING: the commitment list
+                                        was whoever answered first, so two
+                                        askers built two lists and every seat
+                                        that had signed refused the second by
+                                        name (all seats are asked now, the five
+                                        are the lowest ids); and a seat whose
+                                        own row said PAID refused to commit at
+                                        all, which stranded a round whose spend
+                                        a mempool had dropped. On an isolated
+                                        regtest with the asker never run: 7 of 7
+                                        agree who asks, 6 of 6 wait and nothing
+                                        is broadcast, at beacon+2 the next seat
+                                        pays and block 203 carries it, the seat
+                                        behind is refused while that spend is
+                                        still in the MEMPOOL, and the winner's
+                                        key holds 1000 sats - one payment, not
+                                        two. Numbers: TASKBOOK.
    M3.3-17  a signing round between   M3   done — five daemons on five sockets
        daemons                            sign one spend of the pool and a real
                                         bitcoind took it. Measured first: `pay`
