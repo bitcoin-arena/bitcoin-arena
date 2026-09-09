@@ -53,6 +53,10 @@ HARD (Daniel 2026-09-09 10:26): two-Chrome proof FAILED. Put the bugs in
 this letter so they get fixed. Screens: daniel-screens/chrome-p1-drive-a.png
 (P1 WASTED in the field) and chrome-p2-ghost-a.png (P2 still on the bay).
 
+HARD (Daniel 2026-09-09 10:30): when 36 is on Daily, SwissClaw retests with
+two local Chrome WebGL windows before 36 is closed. Claude does not self-close
+on suites alone.
+
 HARD (Daniel 2026-09-08 18:26): when M2 is finished, start M3
 immediately. No pause, no ask, no action=done at the M2 boundary.
 Playable M2 is 28. Then remaining queue (29 Feldman if still open),
@@ -577,6 +581,8 @@ IN THIS ORDER (unparked):
                                         Daily must show the live pose. M3 waits.
                                         Screens: daniel-screens/chrome-p1-drive-a.png
                                         chrome-p2-ghost-a.png chrome-p2-final.png.
+                                        Close-out: SwissClaw two-Chrome retest
+                                        (Daniel 10:30). Not suites alone.
    30  M2 publication lead + receipts —  queued behind M3 (Daniel 2026-09-09).
    29  M2 Feldman on the split        M2   done — a crooked dealer is refused at
        preimage (23.1)                    handout, before anybody reconstructs.
