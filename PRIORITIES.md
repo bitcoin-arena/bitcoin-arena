@@ -16,9 +16,10 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: M2 36 - live ghost pose. Two local Chromes (10:26): P1 left
-spawn and died in the field; P2 stayed in the bay. Play socket dropped.
-Not realtime. Fix on Daily. M3 item 16 waits. 30 stays queued behind M3.
+LIVE LETTER: M2 36 - live ghost pose. SwissClaw two-Chrome retest 11:51:
+P1 left the bay and drove in the field; P2 stayed in the cargo loadout.
+Ghost not at P1's live pose. Chip stayed play · A up. Not realtime.
+Fix on Daily. M3 item 16 waits. 30 stays queued behind M3.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
 threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
@@ -56,6 +57,12 @@ this letter so they get fixed. Screens: daniel-screens/chrome-p1-drive-a.png
 HARD (Daniel 2026-09-09 10:30): when 36 is on Daily, SwissClaw retests with
 two local Chrome WebGL windows before 36 is closed. Claude does not self-close
 on suites alone.
+
+HARD (Daniel 2026-09-09 11:51): SwissClaw retest FAILED. P1 AUTO 86% / 8
+parcels, rolled out, drove in the field (core x -100.4 → -91). P2 stayed
+in the cargo loadout on dirt. Ghost not at P1's pose. Chip: play · A up
+· 5 players (socket did not drop). Screens: daniel-screens/retest-p1-drive1.png
+retest-p1-drive2.png retest-p2-ghost1.png retest-p2-ghost2.png.
 
 HARD (Daniel 2026-09-08 18:26): when M2 is finished, start M3
 immediately. No pause, no ask, no action=done at the M2 boundary.
@@ -570,17 +577,18 @@ IN THIS ORDER (unparked):
                                         09:33: advert verify was Ed25519 vs
                                         schnorr bond key — page now uses
                                         BLWP_CURVE.verify.
-   36  M2 live ghost pose             M2   OPEN — two local Chrome WebGL windows
-                                        10:26: P1 left spawn (~22 m) then WASTED
-                                        in the field. P2 stayed on the bay /
-                                        yellow lines. Ghost not at P1's pose.
-                                        Chip: play · A dropped after the drive.
-                                        sock=null, ghosts.present=0.
-                                        Loadout holds WASD (controlsLocked).
+   36  M2 live ghost pose             M2   OPEN — SwissClaw two-Chrome 11:51: NO.
+                                        P1 AUTO 86%/8 parcels, rolled out, drove
+                                        in the field (core x -100.4 → -91).
+                                        P2 stayed in cargo loadout on dirt.
+                                        Ghost not at P1's live pose.
+                                        Chip stayed play · A up · 5 players
+                                        (socket did not drop this time).
                                         Still a picture (0.10), never an input.
                                         Daily must show the live pose. M3 waits.
-                                        Screens: daniel-screens/chrome-p1-drive-a.png
-                                        chrome-p2-ghost-a.png chrome-p2-final.png.
+                                        Screens: daniel-screens/retest-p1-drive1.png
+                                        retest-p1-drive2.png retest-p2-ghost1.png
+                                        retest-p2-ghost2.png.
                                         Close-out: SwissClaw two-Chrome retest
                                         (Daniel 10:30). Not suites alone.
    30  M2 publication lead + receipts —  queued behind M3 (Daniel 2026-09-09).
