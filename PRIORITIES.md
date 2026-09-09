@@ -16,7 +16,17 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: M2.36 OPEN. SwissClaw two-Chrome ghost look 19:31: NO.
+LIVE LETTER: M2.36 OPEN, CAUSE FOUND AND A DECISION IS NEEDED (3f9603b): the
+committee replays every run on FLAT ground while the player drives the relief
+the page uploaded. 0.000 m apart on the level apron, 33.500 m apart after 600
+ticks on relief - which is why the 19:27 look (taken on the apron) and the
+19:31 look (taken in the field) both told the truth. It is not only the ghost:
+the same replay decides the outcome and the score. The ground is in no
+contract and no transcript and is not derivable - Unity's PerlinNoise over a
+live mempool profile - so where it comes from changes the protocol and is not
+Claude's to choose. Numbers in TASKBOOK.
+
+Earlier: SwissClaw two-Chrome ghost look 19:31: NO.
 P1 left the yellow bay into the tank field. P2 stayed in cargo loadout.
 P2 chip other-at only crawled -100,-3 → -97,-3 (spawn, not live pose).
 Socket stayed play · A up · 2 players. The 19:27 close-out is not the proof.
@@ -708,7 +718,35 @@ IN THIS ORDER (unparked):
                                         PAID_IN_PART, not a blocked round.
                                         329 refused, 330 accepted. 9 mutants
                                         killed. Photographed 12:14.
-   36  M2 live ghost pose             M2   OPEN — SwissClaw 19:31 two-Chrome
+   36  M2 live ghost pose             M2   OPEN — CAUSE FOUND (3f9603b), and it
+                                        needs a decision that is not Claude's.
+                                        The committee replays every run on FLAT
+                                        ground: `init` leaves a core flat until
+                                        a host uploads relief, the page uploads
+                                        `MempoolTerrain.HeightGrid` and the
+                                        solids, and the daemon's replay uploads
+                                        neither - files in src/ that give a
+                                        replay a ground: 0. One seed, one drive,
+                                        600 ticks: 0.000 m apart on the level
+                                        apron, 33.500 m apart once the truck is
+                                        on relief. That is both looks at once -
+                                        19:27 was measured on the apron, 19:31
+                                        watched the chip crawl in the field.
+                                        NOT ONLY THE GHOST: the same replay
+                                        decides the outcome and the score.
+                                        THE GROUND HAS NO HOME: nothing about
+                                        heights is in the contract, the batch,
+                                        the mark or the transcript, and it is
+                                        not derivable - `HeightAt` is Log10 of a
+                                        LIVE mempool profile plus Unity's
+                                        PerlinNoise, the float maths the core
+                                        exists to avoid. WHERE THE GROUND COMES
+                                        FROM IS A DECISION: the core generating
+                                        it from the round's own seed, or the
+                                        grid travelling with a hash in the
+                                        contract, or the round's author pinning
+                                        it. Each changes the protocol.
+                                        Earlier: SwissClaw 19:31 two-Chrome
                                         look: NO. P1 left the yellow bay into
                                         the tank field; P2 stayed in cargo
                                         loadout. P2 chip other-at only crawled
