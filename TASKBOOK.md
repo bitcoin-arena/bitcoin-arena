@@ -24383,3 +24383,63 @@ after the broadcast with `takeoverBlocks: 1`.
 
 Suites after: core 89/89, guard 21 files clean, protocol 441/441,
 blwp-node 390/390, blwp-client 143/143.
+
+## 2026-09-09  M3.3 item 15 - the page deals its own stake
+
+THE LETTER'S OWN PREMISE WAS STALE, and measuring it was the first thing. It
+said the browser has no secp256k1 and the page vendors no curve, so a shipped
+page refuses a seat. On the LIVE Daily:
+
+    blwp-curve.js                     96,493 bytes, HTTP 200
+    index.html:185                    <script src="blwp-curve.js">
+    driving the SERVED file in node   pointX, ecdhShared, pointFromScalar,
+                                      combinePoints, verify
+    a key off it                      84bf7562...a4b0, 32 bytes, real x-only
+
+So the guard at `index.html:308` cannot fire and the missing curve was 0% of
+"cannot sit at a paying round".
+
+WHAT WAS ACTUALLY OPEN, and it is worse than a refusal because it is silent:
+`entryFor` was called with no `stake`, so `stakeCommitment` was `random(32)`
+rather than `sha256(P)` and `vssSharesRef` was 32 zero bytes. `stakeFor` had
+ZERO CALLERS - compiled into the shipped bundle at blwp-client.js:6806 and run
+by nothing. `round.js:309` accepts those zeros on purpose ("32 zero bytes means
+the entry publishes no shares, which is every entry in M2"), so a player was
+seated at a paying round with a commitment nobody holds a preimage for, and
+nothing on screen said so.
+
+WHO TO DEAL TO, measured on nine bonded nodes at 7 game/verify + 7 settlement
+slots rather than read off a comment:
+
+    /committee?role=game           7 seats
+    /committee?role=settlement     7 seats
+    contract.nodes (the union)     9      <- what joinFromQuery hands the page
+    in BOTH committees             5
+    settlement-only                2
+
+`Roster.seatsFor` states it: "a contract carries one flat `nodes` list, so the
+seated set is the union of the role committees". Dealing to that list would
+seal nine shares for a five-of-seven scheme, two of them to seats that could
+never open one. `fetchSettlementSeats` asks EVERY node and refuses
+disagreement, the same rule `fetchRandomness` follows; two nodes listing one
+committee in two orders are one committee, so the sets are compared sorted.
+
+END TO END against real daemons, running the page's own sequence:
+
+    5 settlement seats, 5 accepted the handout, 5 opened their own share
+    a daemon took the entry, and it names the handout rather than 32 zero bytes
+    dealt to the wrong seven: 5 could open a share, 2 refused
+
+THE PIN THAT CAUGHT A MISTAKE OF MINE: `join.test.js` forbids the page from
+naming any contract field - `stakeMsat` included - because a page that carried
+its own could carry its own committee next. The first wiring read
+`named.round.stakeMsat` and turned it red. Not loosened: `roundPays` is in
+`@blwp/client` now, where `node --test` drives it, and the page asks it.
+
+WHAT IS STILL NOT PAID: the hold invoice. bolt11 and the NWC wallet are M3.2
+items 5 and 6. The page says in words that the seat is unpaid rather than
+implying a funded one, and a paying round whose settlement committee it cannot
+learn is refused by name instead of seated.
+
+Suites after: core 89/89, guard 21 files clean, protocol 441/441,
+blwp-node 390/390, blwp-client 148/148.

@@ -64,13 +64,14 @@ next seat takes over after two blocks past the round's own beacon, and only one
 spend lands. Both proved on an isolated regtest, the winner's own key holding
 1000 sats each time.
 
-NEXT IN M3 IS ITEM 15, AND ITS OLD SENTENCE IS RETRACTED. It said the page has
-no curve it can trust; the Daily vendors one and a live x-only key comes off it.
-What is open is a SILENT SEAT: the page calls `entryFor` with no stake, so it is
-seated with `stakeCommitment = random(32)` and 32 zero share bytes, `stakeFor`
-has zero callers, and `round.js` accepts those zeros on purpose for M2. The page
-deals its own stake, or says the seat is free. Item 14 (a dealerless DKG - the
-group secret still comes from a trusted dealer) is the other open M3 line.
+M3.3 ITEM 15 IS CLOSED. The page deals its own stake to the settlement seats
+and says out loud when a seat is free; its old sentence about a missing curve
+was retracted first, because the Daily has vendored one all along.
+
+NEXT IN M3 IS ITEM 14, A DEALERLESS DKG. The group secret still comes from a
+trusted dealer, so "no one of them can steal" holds among the signers and not
+against whoever dealt. Behind it, the hold invoice the page cannot yet pay is
+M3.2 items 5 and 6 (the session flow and the NWC wallet).
 
 30 stays queued behind M3.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
@@ -2987,36 +2988,39 @@ round, which is why testnet comes first and why the order is stricter.
      owed on the round. Across-round balances and Lightning payouts are not
      this letter.
 
- 15. **The page takes a seat without dealing a stake** (23.1, 20). OPEN.
+ 15. **The page deals its own stake.** DONE.
 
-     THE CURVE IS IN AND THE OLD SENTENCE IS RETRACTED. This letter used to
-     read "the page does not vendor a curve, so a shipped page refuses a
-     seat". Measured on the live Daily: `blwp-curve.js` is 96,493 bytes,
-     `index.html` loads it at line 185, and driving the SERVED file produces
-     a real 32-byte x-only key. The guard at `index.html:308` cannot fire.
-     The missing curve is 0% of this hole.
+     THE CURVE WAS NEVER THE HOLE and the old sentence is retracted. This
+     letter read "the page does not vendor a curve, so a shipped page refuses
+     a seat". Measured on the live Daily: `blwp-curve.js` is 96,493 bytes,
+     `index.html` loads it, and driving the SERVED file gives a real x-only
+     key. The guard cannot fire; the missing curve was 0% of it.
 
-     WHAT IS ACTUALLY OPEN IS A SILENT SEAT. `index.html` calls `entryFor`
-     with NO stake, so `stakeCommitment` is `random(32)` rather than
-     `sha256(P)` and `vssSharesRef` is 32 zero bytes. `stakeFor` - the page
-     as dealer, 23.1 steps 1 and 2 - has ZERO CALLERS; it is compiled into
-     the shipped bundle and nothing runs it, the same pattern as heat's
-     integer rule and `payWithCommittee`. And `round.js` accepts those zeros
-     ON PURPOSE for M2, so the page is not refused: it is SEATED, with a
-     commitment nobody holds a preimage for and no shares for anyone to
-     reconstruct, and nothing on screen says so. A silent free seat at a
-     paying round is the bug.
+     WHAT WAS OPEN WAS A SILENT SEAT. `entryFor` was called with NO stake, so
+     every seat the page took carried `random(32)` where `sha256(P)` belongs
+     and 32 zero bytes where the shares belong, and `stakeFor` had ZERO
+     CALLERS - the same pattern as heat's integer rule and `payWithCommittee`.
+     `round.js` accepts those zeros on purpose for M2, so nothing refused and
+     nothing said anything.
 
-     DONE IS: the page deals its own stake - `stakeFor`, one sealed share per
-     SETTLEMENT seat, the handout posted, and real `sha256(P)` plus the
-     handout id on the entry - and a round it cannot pay for is refused by
-     name or shown as a free seat, never seated silently.
+     The page deals now: ask who settles the round, deal, post the handout,
+     and put the real `sha256(P)` and the handout id on the entry.
 
-     DEALT TO `settlementSlots`, NEVER `gameVerifySlots`. Shares sealed to
-     the verify seats are a stake nobody can open at payout.
+     DEALT TO THE SETTLEMENT SEATS, NEVER THE LIST IT HELD. Measured on nine
+     bonded nodes at 7 + 7 slots: game 7, settlement 7, `contract.nodes` (the
+     union, and what the page is handed) 9, five in both and two
+     settlement-only. Dealing to the flat list would seal nine shares for a
+     five-of-seven scheme, two to seats that could never open one.
+     `fetchSettlementSeats` asks every node and refuses disagreement.
 
-     THE HOLD INVOICE IS NOT THIS LETTER. bolt11, paying, and the NWC wallet
-     are M3.2 items 5 and 6.
+     A paying round whose committee cannot be learned is REFUSED BY NAME; a
+     round asking no stake deals none and says it is free. End to end against
+     real daemons: 5 settlement seats, 5 accepted the handout, 5 opened their
+     own share, a daemon took the entry. Dealt to the wrong seven, 2 refused.
+
+     WHAT IS STILL NOT PAID is the hold invoice - bolt11 and the NWC wallet
+     are M3.2 items 5 and 6. The page says so in words rather than implying a
+     funded seat.
 
  14. **Dealerless DKG.** QUEUED, NOT STARTED. Item 10 measured RFC 9591
      Appendix C, a TRUSTED DEALER, so the group secret was known to
