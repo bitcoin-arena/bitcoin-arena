@@ -79,10 +79,14 @@ bay is looking away from one. `none drawn` on the chip separates the two, and
 the chip now also names the newest other truck's place in metres (3d0eb63), so
 the operator can hold it against the other tab's own position readout.
 
-BLOCKED: that chip change reaches Chrome only through a Daily, and the Daily is
-red - the 18 blwp-node spawn-bay hash pins are still failing and they are a
-later letter, not 36. blwp-client 129/129, core 88/88, protocol 440/440,
-blwp-node 315/333.
+UNBLOCKED 2026-09-09 15:57 (1a16061): the Daily is green. The 18 were not hash pins and
+not a daemon fault - four fixture files still drove the 600 ticks that were
+measured from the solo bay, and no entry-derived seed parks there since
+20c3950, so the transcripts stopped while the run was still LIVE and a LIVE
+run has no outcome to sign. 800 ticks and a re-measured score (79, was 257).
+The nineteenth was a one-in-ninety coincidence in the seed/seats draw and now
+asks sixteen hashes. blwp-client 129/129, core 88/88, protocol 440/440,
+blwp-node 333/333.
 
 HARD (Daniel 2026-09-09 12:58): keep going. After Done on an open letter,
 the driver continues that letter. When 36 is closed, M3 is next with no wait.

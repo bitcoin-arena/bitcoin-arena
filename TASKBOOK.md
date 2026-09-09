@@ -23236,3 +23236,48 @@ dropped from the line, an empty field naming 0,0. RETRACTED: `>` to `>=`,
 which differs only when two trucks share the newest tick; which of two right
 answers gets named is not a fact anybody reads, so the test pins the TICK of
 the named pose and leaves the tie free.
+
+THE DAILY WAS RED AND IT WAS NOT A DAEMON FAULT (1a16061). 18 of blwp-node's
+333 were failing and the note on letter 36 called them "spawn-bay hash pins".
+They are not hashes. 20c3950 parks a player at the door their own seed names,
+and four fixture files - verify, verdict, reconstruct, custody-daemon - still
+drove the 600 ticks that were measured FROM the solo bay. Measured at the pre-
+change commit (7a4ab40) and after, over the thirteen player keys this suite
+uses:
+
+    key       before 20c3950            after
+    b32(0)    WRECKED  649  score 232   DELIVERED 1149
+    b32(1)    WRECKED  737  score 425   MISSED    9000
+    b32(2)    WRECKED  492  score 123   DELIVERED 4900
+    b32(3)    WRECKED  520  score 175   WRECKED    483
+    b32(4)    WRECKED  707  score 369   MISSED    9000
+    b32(5)    WRECKED  592  score 257   WRECKED    753  score 79   <- the fixture
+    b32(6)    WRECKED  636  score 315   WRECKED    395
+    b32(7)    WRECKED 1855  score 540   WRECKED    480
+    b32(8)    WRECKED  625  score 314   WRECKED    219
+    b32(9)    WRECKED  675  score 317   DELIVERED 1107
+
+From the solo bay this drive wrecks every one of them; from an arbitrary door
+it does not, and b32(5) - the key every replayed fixture uses - takes 753 ticks
+instead of 592. A transcript that stops at 600 stops while the run is still
+LIVE, and `resultFrom` refuses to sign a LIVE run in those words: "that run is
+still LIVE at its last stored tick, so it came to nothing yet". So the daemon
+close, the objected queue, the 2-of-2 count, custody, reconstruction and the
+threshold all had no result to count, and 18 tests said so in 18 ways.
+
+600 -> 800 in all four fixtures, which is past the end with room, and the state
+latches when a run leaves LIVE - the score is 79 at 753, 760, 800, 900 and 1000
+ticks alike. The score history of this fixture is now 230 (fixture chose the
+seed) -> 257 (seed came off the entry) -> 79 (the player left the solo bay).
+
+THE NINETEENTH WAS NOT THAT. `two daemons given the same published hash and
+height derive the same seed and seats` ended by asking ONE other beacon to pick
+a different committee - two slots drawn from ten equal bonds, ninety ordered
+pairs, so about one run in ninety it agreed by coincidence and the file went
+red with nothing wrong. Measured: the test passes 8/8 alone and failed twice in
+whole-suite runs where the node keys differ every time. It asks sixteen hashes
+now and requires the draw to MOVE with them, which is the claim it was making
+and which a selection ignoring the beacon still fails.
+
+Suites after: blwp-node 315/333 -> 333/333, blwp-client 129/129, core 88/88,
+protocol 440/440.
