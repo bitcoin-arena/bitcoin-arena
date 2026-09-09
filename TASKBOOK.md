@@ -23838,3 +23838,35 @@ STILL NOT PROVEN, unchanged and named again: the page takes the daemons' word
 for the randomness. It refuses a round whose nodes name two different hashes -
 that is what "they agree: true" above is - and it does NOT derive the beacon's
 height from the chain. That is letter 32's work.
+
+
+## M2.36: SwissClaw two-Chrome ghost look 2026-09-09 19:31 — NO
+
+Do not trust 27138a8 / the 19:27 close-out. Two local Chrome 150 windows on
+DISPLAY :0, WebGL 2.0 in each, unique user-data-dir /tmp/blwp-chrome-p1 and p2,
+CDP 9331/9332. Not browser-act, not stealth/headless, not VNC :99.
+
+Round stood with round-2of2.mjs:
+  BLWP_BIND=100.74.66.98 BLWP_PORT_A=8090 BLWP_PORT_B=8091
+  Funnel GET https://beelink.tail1723e2.ts.net/blwp-a/identity 200 32 bytes
+  (local :8090/:8091 identity 200 32 too; finedining already listening on :3001)
+
+Daily loaded blwp-curve.js (hasCurve true). Loader was Build/webgl.loader.js,
+not {{{ LOADER_FILENAME }}}. Unity started without inject.
+
+Chip after Play: A ok · B ok · play · A up · 2 players in this round.
+Socket stayed up (readyState 1) through the drive.
+
+P1: SendMessage Bootstrap Play / Auto / Confirm. AUTO 83%, ROLL OUT, left the
+yellow bay into the tank field (parcels on, fighting visible).
+P1 chip stuck at other at -100,51 m (P2 never left cargo).
+
+P2: stayed in cargo loadout, 0 parcels, NOTHING LOADED.
+P2 chip other-at: -100,-3 → -98,-3 → -97,-3 (spawn crawl, not P1 in the field).
+Drawn ghost not at P1 live pose.
+
+Verdict NO. Letter 36 reopened.
+
+Screens: daniel-screens/2026-09-09-1931-p1-drive1.png
+2026-09-09-1931-p1-drive2.png 2026-09-09-1931-p2-ghost1.png
+2026-09-09-1931-p2-ghost2.png (also media/blwp/ same names).
