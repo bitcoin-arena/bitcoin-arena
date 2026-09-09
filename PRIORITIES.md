@@ -16,17 +16,16 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: M2 36 - the 17:05 split is FIXED and DEPLOYED (a3fccd5), waiting
-on a two-Chrome look. The cause was measured, not guessed: the page seeded its
-core with a CONSTANT (0x5eed1234, bay 13) while the committee replayed every
-entry with `seedWordForEntry` - a different bay AND a different rng stream, so
-the two trucks were in two different worlds. On a real round they stood 47.60 m
-and 34.00 m apart before either moved. The daemon serves the round's randomness
-now, the page asks every node it was given, and the core is put in that world
-before one tick is recorded. Two more found on the way: ghosts were seated on
-one ground sample while a truck is fitted across four (0.58 m), and the stutter
-is 10 Hz pictures on a 60 Hz screen - a ghost walks between them now.
-Then M3 immediately. 30 stays queued behind M3.
+LIVE LETTER: M3. M2 36 IS DONE - the two-Chrome look was run and every item
+of it measured (2026-09-09 19:27, screens in daniel-screens/2026-09-09-1927-*).
+Two real Chrome windows, WebGL 2.0 in each, one round on two daemons: both
+daemons name one randomness, each page seeds the world its own entry is
+replayed in (bays 15 and 9, 40.8 m apart, neither the constant's bay 13), each
+tab's picture of the other is the other's own core pose to (0.000, 0.000) m at
+rest, the picture follows a driving truck on 24 of 24 samples 3-7 ticks behind,
+and a roll-out no longer restarts a run that is already being published (tick
+1880 -> 1944, straight through). Numbers in TASKBOOK.
+30 stays queued behind M3.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
 threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
@@ -641,6 +640,18 @@ IN THIS ORDER (unparked):
                                         09:33: advert verify was Ed25519 vs
                                         schnorr bond key — page now uses
                                         BLWP_CURVE.verify.
+   37  M2 a reload joins twice        M2   OPEN — found by 36's two-Chrome look
+                                        and not part of it. `entryFor` draws a
+                                        fresh `worldSecret` on every page load,
+                                        so a RELOAD is a new entry id and a new
+                                        player: two reloads of two tabs made a
+                                        round of four, each with its own bay,
+                                        and the old entries stay in it holding
+                                        their last picture. The live entries
+                                        were exact throughout - this is not a
+                                        wrong pose - but a round that counts a
+                                        reloaded player twice is its own letter.
+                                        Behind M3.
    M3.3-18  the daemon does not know  M3   OPEN — came out of 17, not absorbed
        which output holds the pool        into it. A close queues the payout and
                                         stops: `payWithCommittee` has no caller
@@ -690,8 +701,24 @@ IN THIS ORDER (unparked):
                                         PAID_IN_PART, not a blocked round.
                                         329 refused, 330 accepted. 9 mutants
                                         killed. Photographed 12:14.
-   36  M2 live ghost pose             M2   OPEN — the 17:05 split is fixed and on
-                                        the Daily; what is left is a look.
+   36  M2 live ghost pose             M2   done — the other player's truck is
+                                        drawn where that truck actually is,
+                                        live, and the two-Chrome look measured
+                                        it (19:27, screens
+                                        daniel-screens/2026-09-09-1927-m236-*).
+                                        Two real Chrome windows, WebGL 2.0 in
+                                        each, two identities, one round: both
+                                        daemons name one randomness (block 253),
+                                        each page seeds the world its own entry
+                                        is replayed in (bays 15 and 9, 40.8 m
+                                        apart, neither bay 13), each tab's
+                                        picture of the other is the other's own
+                                        core pose to (0.000, 0.000) m at rest,
+                                        the picture follows a driving truck on
+                                        24 of 24 samples 3-7 ticks behind, and
+                                        the roll-out carried the run straight
+                                        through (tick 1880 -> 1944).
+                                        Was: the 17:05 split, fixed on the Daily.
                                         Daniel 17:05: ghost on the grass at
                                         -69,-57 m while that truck stood on its
                                         yellow bay. Screen:

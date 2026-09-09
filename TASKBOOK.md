@@ -23743,3 +23743,98 @@ WHAT WOULD STILL BE A HOLE even if all six look right: the page takes the
 daemons' word for the round's randomness. It refuses a round where the two of
 them disagree, and it does NOT derive the beacon's height from the chain -
 that is letter 32's work and the page does not do it.
+
+## M2.36: the two-Chrome look, run — every item measured, none of it by eye
+
+Two real Google Chrome 150 windows on DISPLAY :0, WebGL 2.0 confirmed in each
+(`WebGL 2.0 (OpenGL ES 3.0 Chromium)`), each with its own user-data-dir so the
+two tabs are two identities. Not headless. DevTools was attached to READ the
+pages and take the pictures - the numbers below are the page's own state, not
+an impression of a screenshot - and the clicks that loaded and rolled out the
+truck were dispatched into the canvas the way a mouse dispatches them.
+
+The round: an isolated regtest bitcoind of its own, `round-2of2.mjs`, two
+daemons on 8090/8091, the same build the Daily serves put on 8000 over http so
+there is no mixed content to lose the evidence in.
+
+    round   d48b3c26dacdd8da38470d4f265ae1cf421a5ea605876ce4dce0dc084df5e599
+    beacon  block 253, 10 deep, 2ccb7cc6c258a131d98d8613add8edf2c2971a91395f766b4b91f10456b3017a
+
+1. URL SHAPE. One URL, opened once in each window:
+   `http://127.0.0.1:8000/?round=<id>&node=http://127.0.0.1:8090,http://127.0.0.1:8091&bond=<A>/bond&advert=<hex>`
+   Both pages report `BLWP_NODES.length` 2.
+
+2. BEFORE ANYONE MOVES. Asked of both daemons by the harness, not by the page:
+
+       http://127.0.0.1:8090  2ccb7cc6…  height 253
+       http://127.0.0.1:8091  2ccb7cc6…  height 253      they agree: true
+
+   And each page is in the world its own entry will be replayed in:
+
+       P1  page seeded 0x1d3fd8b6 (bay 15)   committee replays 0x1d3fd8b6 (bay 15)   SAME WORLD
+       P2  page seeded 0xc4eab5b8 (bay  9)   committee replays 0xc4eab5b8 (bay  9)   SAME WORLD
+
+   Own cores, unmoved: P1 (-100.400, 23.800) m, P2 (-100.400, -17.000) m.
+   Different bays, 40.8 m apart - six doors at 6.8 m - and NEITHER is 10.2 m,
+   which is bay 13 and the harness constant.
+   Screens: 2026-09-09-1927-m236-still-p1.png / -still-p2.png
+
+3. CHIP AGAINST READOUT, AT REST. Matched by entry id, not by position in a
+   list:
+
+       P1's picture of P2 (-100.400, -17.000) m at tick 155 | P2's own core
+       (-100.400, -17.000) m at tick 168 | delta (0.000, 0.000) m
+       P2's picture of P1 (-100.400,  23.800) m at tick 257 | P1's own core
+       (-100.400,  23.800) m at tick 200 | delta (0.000, 0.000) m
+
+   Chips: P1 `2 players in this round · other at -100,-17 m`, P2 `… other at
+   -100,24 m`. `stalled false`, `refused null`, ghosts drawn on both.
+
+4. ONE DRIVES PAST THE OTHER. P1 loaded on AUTO (82%, 8 parcels), rolled out,
+   and was driven 3.61 m with the throttle held while P2 sat in its bay:
+
+       P1 core tick 2160 (-100.357, 23.800) | P2's newest picture tick 2153 (-100.396, 23.800) | 0.040 m, 7 ticks
+       P1 core tick 2184 ( -99.780, 23.800) | P2's newest picture tick 2177 ( -99.986, 23.800) | 0.206 m, 7 ticks
+       P1 core tick 2208 ( -98.564, 23.800) | P2's newest picture tick 2201 ( -98.926, 23.800) | 0.362 m, 7 ticks
+       P1 core tick 2224 ( -97.418, 23.800) | P2's newest picture tick 2219 ( -97.729, 23.800) | 0.311 m, 5 ticks
+
+   P2 held a picture of P1 on 24 of 24 samples; worst gap 0.747 m, and the
+   picture's own tick advances with the driver's - three to seven ticks behind,
+   which is `BatchEvery` at a tenth of a second and not a freeze. Driven on
+   further, P1 reached -89.010 m and P2's chip read `other at -89,24 m`.
+   Screens: 2026-09-09-1927-m236-drive-p1.png / -drive-p2.png
+
+   WHAT THE BROWSER CANNOT SHOW AND WHERE IT IS SHOWN INSTEAD: the WALK between
+   two pictures is C# and there is no way to read a Unity transform from the
+   page. It is measured in PlayMode - one frame after a 6.001 m picture the
+   ghost has moved 0.112 m of it, it is closer than it was, it has not arrived,
+   and it arrives exactly. A snap and a freeze both fail that test.
+
+   AND WHY P2'S SCREEN SHOWS NO TRUCK: the two bays are 40.8 m apart across the
+   apron and P1 is eleven metres down the map. P2's camera looks down its own
+   bay. That is the case the chip exists for, and the chip names it correctly -
+   the picture is right and the camera is pointed elsewhere.
+
+5. ROLL-OUT DOES NOT RESTART A RUN THAT IS ALREADY BEING PUBLISHED. Sampled
+   tightly around the click on ROLL OUT:
+
+       before  core tick 1880  (-100.400, 23.800) m  published through 1878
+       after   core tick 1920 … 1944, published through 1914 … 1938
+
+   The tick never went below 1880 and the truck did not move to a spawn. Before
+   9497963 this called `BlwpCore.Restart` and put the core back at tick zero
+   while the transcript ran on.
+   Screen: 2026-09-09-1927-m236-loaded-p1.png (82%, 8 parcels, ROLL OUT live)
+
+WHAT THE LOOK ALSO FOUND, and it is not 36: a page RELOAD joins as a NEW entry
+rather than resuming the one it had. `entryFor` draws a fresh `worldSecret` on
+every load, so the entry id moves; two reloads of two tabs made a round of four
+players, each with its own bay, and the old entries stay in the round holding
+their last picture. It cost this look one restart to notice. Not a wrong pose
+and not a stale ghost - the live entries were exact throughout - but a round
+that counts a reloaded player twice is its own letter.
+
+STILL NOT PROVEN, unchanged and named again: the page takes the daemons' word
+for the randomness. It refuses a round whose nodes name two different hashes -
+that is what "they agree: true" above is - and it does NOT derive the beacon's
+height from the chain. That is letter 32's work.
