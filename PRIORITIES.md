@@ -75,7 +75,14 @@ and binds `_BlwpNextGhost`. The untested hop was the bridge itself, and
 and decodes it as `GhostField.FromBridge` does: 8/8 pictures, field for field,
 7 mutants killed. What is left for the two Chromes is where the truck is
 DRAWN - each player parks at a different bay (20c3950), so a watcher in its own
-bay is looking away from one. `none drawn` on the chip separates the two.
+bay is looking away from one. `none drawn` on the chip separates the two, and
+the chip now also names the newest other truck's place in metres (3d0eb63), so
+the operator can hold it against the other tab's own position readout.
+
+BLOCKED: that chip change reaches Chrome only through a Daily, and the Daily is
+red - the 18 blwp-node spawn-bay hash pins are still failing and they are a
+later letter, not 36. blwp-client 129/129, core 88/88, protocol 440/440,
+blwp-node 315/333.
 
 HARD (Daniel 2026-09-09 12:03): when the current task is done, fix M2.36.
 Claude's own proof is without WebGL: `packages/blwp-client/test/two-tabs.test.js`
