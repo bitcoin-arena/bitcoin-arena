@@ -21941,3 +21941,68 @@ STILL SINGLE-NODE CUSTODY, NOT §23.5. Nothing here is a threshold. `finalFor`
 is a predicate the caller supplies, and today the only thing that could answer
 it honestly is the 5-of-7 verdict the committee already reaches; wiring that in
 is not this step.
+
+### M3 STEP 3 — KILL THE CUSTODIAN AND SEE WHO GOT PAID
+
+`blwp-node/tools/custody-crash.mjs`. Not a unit test: a child process with a
+file-backed store and a Lightning port that appends to a log before it does
+anything, killed with SIGKILL, and then read.
+
+CRASH ONE, WITH THREE STAKES IN FLIGHT.
+
+    holds the dead node left on disk        3, all HELD, 100000 msat each
+    lightning log                           3 calls, of which 0 moved money
+    the node that came back, no FINAL       0 stakes moved
+
+That one passed on the first run, which was expected: the node had not decided
+anything yet.
+
+CRASH TWO, INSIDE THE SETTLE. The only window where the two sides can disagree
+is between telling Lightning and writing down that it was told. Measured:
+
+    lightning was told to settle 1 stake
+    this node's store said                  HELD
+    the restarted node ran the same close   3 settle calls, 1 REPEATED
+
+A REPEATED SETTLE IS A SECOND PREIMAGE RELEASE. That is the measurement's whole
+value - it was not a suspicion, it was printed - and it is the reason the
+kill happens where it happens.
+
+THE FIX IS THE INTENT ON DISK BEFORE THE CALL, not after: a hold goes to
+`ACTING` first, which is the one state in `custody.js` that is not 23.2's. It
+does not say what happened to the stake; it says something may have. A close
+that finds one refuses to act on it and says so by name.
+
+THE FOURTH PORT OPERATION IS WHAT RESOLVES IT. `look` had no caller until now.
+`reconcile({roundId})` asks Lightning about every `ACTING` stake and writes the
+answer down, because the node holding the preimage is the only party that knows:
+
+    Lightning says SETTLED    the act landed; the stake moved, and will not
+                              be settled twice
+    Lightning says HELD       the act never left; the stake is HELD again and
+                              the next close makes it once
+    a port with no `look`     REFUSED - an interrupted act stays ACTING rather
+                              than being resolved by guessing
+    an answer that is not a
+    state a hold can be in    REFUSED, by name
+
+After the fix, the same crash re-run:
+
+    lightning was told to settle 1 stake
+    this node's store said                  ACTING
+    reconciled against Lightning            1 -> SETTLED
+    the whole log after the restart         2 settle calls, 0 repeated
+
+MUTATION, 17 mutants against the 11 tests: 15 killed, 2 retracted (the same two
+equivalent ones as step 2). The six new ones all died:
+
+    the intent is written after the call, not before it         KILLED
+    an interrupted act is treated as if nothing had happened    KILLED
+    reconcile writes SETTLED whatever Lightning says            KILLED
+    reconcile trusts any answer at all                          KILLED
+    reconcile is happy with a port that cannot be asked         KILLED
+    reconcile also touches stakes that were not mid-act         KILLED
+
+STILL SINGLE-NODE CUSTODY, NOT §23.5. `ACTING` is one node's bookkeeping about
+one Lightning node. Under 23.5 the same window exists between a 5-of-7
+threshold signature and the act it authorises, and nothing here addresses that.
