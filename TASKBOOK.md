@@ -21822,3 +21822,46 @@ milestone closes the daily is also frozen to `btc-logistics-core-m<N>`. M2's
 playable set is finished with 31, and no freeze has been made - 30 is still
 open, and a freeze is a deploy nobody asked for. Named here rather than done
 quietly.
+
+## M3 slice 1, the baseline: three rules about a stake, and nobody runs them
+
+Printed rather than assumed, before a line of Lightning is written.
+
+    settlementAction     23.2's table, per entry            1 caller (slash.js:546)
+    holdSettlement       the whole round's settle/cancel    0 callers
+    holdAfter            what state a hold ends in          0 callers
+    invoiceMatchesEntry  should a player pay this invoice   0 callers
+
+Three of the four are called only by their own tests - 3, 2 and 1 test files
+respectively - and by nothing in any `src` or `tools`. The chapter's decisions
+are written and none of them decides anything yet, which is the fifth time this
+session a correct rule turned out to be constructed by nobody: GhostField,
+checkHandout, the verifier's committee seed, beaconIsTheChains, and now the
+whole stake table.
+
+WHAT A NODE DOES AT CLOSE TODAY. `replay.js:193` maps the core's own outcome to
+section 13's `result`: RUN_DELIVERED becomes DELIVERED and anything else that
+ended becomes FAILED, with FORFEIT, VOID and ENTRY_VOID named as NOT reachable
+from a replay. Nothing downstream of that touches money: `server.js:108` says
+in as many words that "a stake is a hold invoice on Lightning and there is no
+payment layer here yet", and the daemon's whole answer to funding is to refuse
+unless an operator says otherwise.
+
+    grep for addholdinvoice / settleinvoice / cancelinvoice / lnd / lightning
+    across every src and tools file:  0 hits that are not a comment
+
+So the starting number for this slice is zero callers and zero invoices, and
+the property to protect is already written down in `payout.js`: a VOID EXPIRES
+rather than being cancelled, "a cancel is an ACT, and it needs five of seven; a
+refund that needed an act is one an operator could withhold".
+
+### SINGLE-NODE CUSTODY, NOT §23.5
+
+Named in those words on Daniel's ruling, so nobody reads a threshold into this
+slice that is not there. This machine has one LND (`lnd v0.21.3-beta`), and the
+2-of-2 has two daemons: one is the custodian and the other is not. §23.5 wants
+every operation on the pool to need 5-of-7, and §23.6 wants the settlement
+committee's own endpoint to issue the invoice. Neither is true here. What this
+slice buys is the state machine - held, settled, cancelled, expired - driven by
+the core's outcome, on worthless regtest coins. FROST closes the custody gap;
+this does not, and does not pretend to.
