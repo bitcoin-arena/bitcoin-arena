@@ -546,7 +546,8 @@ IN THIS ORDER (unparked):
                                         Same noble secp256k1 as the daemons,
                                         loaded as blwp-curve.js. Chip on the page
                                         says 1 player waiting / 2 players.
-                                        Daniel 09:11 / 09:19.
+                                        Chip also names A/B http and the play
+                                        socket (Daniel 09:26).
    30  M2 publication lead + receipts —  queued behind M3 (Daniel 2026-09-09).
    29  M2 Feldman on the split        M2   done — a crooked dealer is refused at
        preimage (23.1)                    handout, before anybody reconstructs.
