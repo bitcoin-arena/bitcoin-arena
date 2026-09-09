@@ -22399,3 +22399,42 @@ core's outcome word, on the fake port here and on real lnd in
 one refunded by the timelock with nobody acting, every process stopped.
 
 Suites: blwp-node 264 -> 269, core 84, protocol 432, blwp-client 120, all green.
+
+### M3.3-9 MUTATION — 13 MUTANTS, 12 KILLED, 1 RETRACTED
+
+    the seat is left out of the key, so one envelope opens another   KILLED
+    a failed decryption is treated as an opened share                KILLED
+    a node opens whichever envelope is first                         KILLED
+    the opened share is not checked against the polynomial           KILLED
+    a stranger may ask for a share                                   KILLED
+    the answer is sealed to this node instead of the asker           KILLED
+    a share is handed out before the result is final                 KILLED
+    a delivered run hands over its preimage too                      KILLED
+    four shares are enough                                           KILLED
+    the reconstruction is not checked against the commitment         KILLED
+    it keeps asking after it has enough                              KILLED
+    a node releases on a peer result it never signed                 KILLED
+    the nonce is derived under the key's tag instead of its own      RETRACTED
+
+RETRACTED WITH A REASON: nothing observable distinguishes a nonce derived under
+one tag from another. Both sides derive it identically, so the seal opens
+either way and no test can tell. It stays two tags because a nonce that equals
+its own key's first twelve bytes is a property nobody should have to disprove -
+the source and `constants.js` both say so - but it is hygiene, not behaviour.
+
+AND ONE MUTANT WAS RIGHT. "the even-y normalisation is skipped" survived every
+test, and it survived because the normalisation was WRONG TO BE THERE:
+x(kP) = x(-kP) on 20 of 20 random pairs, which is the whole reason an x-only
+agreement works. The first version negated a secret whose point has odd y, the
+way BIP-340 signing does, and both ends read the same x either way. The
+ceremony is gone and the comment now says what was measured. Three mutants
+needed a new test rather than a retraction: domain separation by seat, a
+commitment the shares do not open, and a seat that never replayed.
+
+DECISION B, MEASURED. A player who deals shares of P and publishes sha256(Q):
+every seat accepts (Feldman is about one polynomial, not about the hash), five
+answer, and `reconstruct` refuses - "those shares do not open that stake ...
+not the committed preimage". No Lightning call, the hold expires, the player is
+refunded. The cheat gains nothing.
+
+Suites: blwp-node 269 -> 272, core 84, protocol 432, blwp-client 120, all green.
