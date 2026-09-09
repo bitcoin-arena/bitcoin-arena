@@ -540,6 +540,13 @@ IN THIS ORDER (unparked):
                                         The harness seed stays bay 13 / START_Z.
                                         Two different seeds, two different z.
                                         Daniel 07:56. Numbers: TASKBOOK.
+   35  M2 page curve / two-tab ghosts M2   done — Daily fetched the round then
+                                        refused the seat (no BLWP_CURVE), so two
+                                        tabs were two single-player games.
+                                        Same noble secp256k1 as the daemons,
+                                        loaded as blwp-curve.js. Chip on the page
+                                        says 1 player waiting / 2 players.
+                                        Daniel 09:11 / 09:19.
    30  M2 publication lead + receipts —  queued behind M3 (Daniel 2026-09-09).
    29  M2 Feldman on the split        M2   done — a crooked dealer is refused at
        preimage (23.1)                    handout, before anybody reconstructs.
