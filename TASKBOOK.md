@@ -22705,3 +22705,77 @@ secp256k1 it can trust before it can join a round that pays.
 
 Suites: blwp-client 120, core 84, protocol 440, blwp-node 301, all green. The
 bundle changed - 278.7 KB - and the template's copy was re-synced.
+
+### M3.3-8b STEPS 2 TO 4 — A WINNER PAID, AND WHO HAD TO AGREE ON THE WAY
+
+THREE THRESHOLDS, AND THEY ARE NOT THE SAME ONE:
+
+    the results are final    5-of-7 signed results, per run    already built
+    the TABLE is final       5-of-7 signed table ids (20)      this letter
+    the spend is authorised  5-of-7 FROST shares (item 10)     item 13's key
+
+A node can agree that a player lost and still disagree about the arithmetic
+that pays the winner, and money leaves on the second.
+
+SECTION 20 HAS A CALLER NOW. `encodePayoutTable` and `payoutTableId` had zero
+outside their own tests since letter 20.
+
+    six of seven sign the table this node computed   final, 6 with 5 needed
+    a key the census never seated                    a stranger, not a vote
+    four of seven                                    "so nothing is spent"
+    a seat that signed ANOTHER table                 counted separately, because
+                                                     two tables in one round is a
+                                                     disagreement an operator has to see
+    one seat signing twice                           one vote
+    a forged signature from a seated key             not counted
+    a seat computing at another floor                never agrees, which is why
+                                                     20 makes that slashable
+
+The table is recomputed from this node's own inputs every time and never read
+back from the row it wrote: a cached table is a table nobody recomputed.
+
+THE POOL OWES THE WINNINGS, NOT THE STAKE. A qualifier's row is their stake
+plus what they won - that is what they end holding - but the stake came back
+over Lightning on the cancel, so paying the row would pay it twice out of other
+players' money. `winnings` pays the difference and its sum is exactly the pool,
+which is the equality `holdSettlement` already throws on. A below-score
+finisher and a VOID entry draw nothing.
+
+THE STATES ARE ON DISK BEFORE ANYTHING MOVES, the way ACTING already is:
+
+    queued only when the committee agrees   1 of 5 leaves no row at all
+    the raw transaction written first       so a node that died mid-send has the
+                                            exact bytes to ask the chain about
+    asked twice                             sent once
+    four of seven                           refused before a byte is built
+    died mid-send, chain has it             PAID on restart
+    died mid-send, chain never saw it       still PAYOUT_QUEUED, not paid on a guess
+
+AND THEN A REAL CHAIN TOOK IT. Isolated regtest, own datadir, ports
+29673/29674, cookie auth, stopped and the datadir removed:
+
+    the pool held                    1200 sats
+    the table                        PAYOUT_QUEUED, 5 of 5 seats, 1000000 msat owed
+    four of seven ask the daemon     refused: "a pool nobody can move stays where it is"
+    four of seven ask CONSENSUS      REJECTED: mempool-script-verify-flag-failed
+                                     (Invalid Schnorr signature)
+    five of seven                    sendrawtransaction -> a txid, block 202 carries it
+    the winner's own key holds       1000 sats
+    this node's row                  PAID, 1000 paid, 200 to the miner
+
+The daemon's refusal of four is a courtesy; the consensus refusal is the
+property, and both are printed.
+
+THE DUST LIMIT IS THE REAL ONE, and it is on PRIORITIES rather than solved
+here. Measured on a node: 100 and 200 sats "Transaction amount too small", 330
+accepted. At the fixture stake of 100000 msat a whole round's pool is 100 or
+200 sats, so `payoutOutputs` REFUSES by name - "this round cannot be paid on
+chain" - rather than dropping the row. Dropping it would be the operator
+keeping money the player had no part in losing. The regtest tool runs at 1000
+sats to measure the mechanism, and says so in its own header.
+
+MUTATION: 20 mutants against the four new files, ALL 20 KILLED, nothing
+retracted. Five needed new tests rather than a retraction: a table naming a key
+the round never seated, a payout larger than the pool, a forged signature from a
+seated key, a restart that marks paid without asking, and the floor not reaching
+the computation.
