@@ -22602,3 +22602,75 @@ WHAT ALREADY EXISTS TO BUILD ONE WITH, so this is not from nothing:
 `tx.js` parses and hashes transactions, `bond-script.js` builds taproot
 outputs, and `frost-bip340.js` makes a 64-byte signature `schnorr.verify`
 accepts. A key-path spend signed by the committee is those four meeting.
+
+### M3.3-13 STEPS 3 TO 5 — THE POOL IS A KEY, AND CONSENSUS TOOK THE SPEND
+
+`packages/protocol/src/pool.js`. The pool is ONE P2TR output whose key is the
+committee's FROST group key, and there is deliberately no script path: 23.5
+says EVERY operation needs the threshold, and a leaf - a recovery path, a
+timeout, an operator's key - would make that sentence false.
+
+SO THE TWEAK COMMITS TO NOTHING, which is BIP-341's own instruction for a
+key-path-only output: Q = P + H_TapTweak(P)*G with an empty merkle root.
+Skipping it would also spend, but it would publish a raw group key and every
+taproot reader would ask what tree it was hiding.
+
+WHAT A SIGNER DOES ABOUT THE TWEAK IS TWO ADDITIONS AND NO NEW PROTOCOL. Adding
+the same constant to every share adds it to the secret, because the
+interpolating values sum to one over any signing set; negating every share
+negates it. Both measured rather than argued - a committee that skipped the
+tweak holds shares of the INTERNAL key, which no output pays to, and its
+signature verifies against nothing.
+
+IN THE SUITE, against BIP-340's own verifier and not ours:
+
+    five of seven, witness accepted        6 of 6 pools
+    four of seven                          refused by name, 0 of 3 accepted
+    one operator alone                     0 of 7 accepted
+    witness items                          1, and only ever 1
+    the same signature, another
+    destination / amount / input index     refused
+
+AND THEN ON A REAL CHAIN, which is the number that closes 13. Isolated
+regtest - own datadir, ports 29653/29654, cookie auth, stopped and the datadir
+removed when done:
+
+    the pool key                 590b32e2...  read by bitcoind as
+                                 bcrt1pty9n9cn353tzppek2t3tk504r587fqrylgg6zhsfrzkzkf3hjwgqw0e2t8
+    funded                       100000 sats
+    four of seven                REJECTED: mempool-script-verify-flag-failed
+                                 (Invalid Schnorr signature)
+    one operator alone           REJECTED, same words
+    FIVE OF SEVEN                sendrawtransaction -> a txid
+                                 block 202 contains it
+                                 the pool output is spent
+
+    keys that must agree before a satoshi leaves the pool    1  ->  5 of 7,
+                                                             enforced by consensus
+
+THE SIGHASH GAINED A BRANCH, and that is the risky part of this letter.
+`tapSighash` now writes spend_type 0 and omits the leaf hash, key version and
+codeseparator when no leaf is named. Getting it wrong does not produce an
+invalid signature - it produces a VALID signature over a different message,
+which a node rejects with nothing to say about why.
+
+MUTATION: 13 mutants, all 13 killed, nothing retracted. Three needed new tests
+rather than a retraction and one of those is worth naming:
+
+    "the spend type byte is always zero" SURVIVED the whole suite. It is
+    correct for a key path and wrong for a script path, and the two messages
+    still differed because the script path appends a leaf hash - so nothing
+    here could tell. What can tell is a real node: `bond-regtest.mjs` builds
+    that exact spend, broadcasts it, and prints the sighash it signed. That
+    value is pinned in `pool-spend.test.js` now, and its authority is a
+    consensus engine ACCEPTING the transaction, not this suite agreeing with
+    itself.
+
+Two more came from a flaw in the first tests: `spendOf` drew a fresh random
+txid per call, so "another destination is another sighash" passed no matter
+what the message did with the outputs. The input is fixed now, and the mutants
+that dropped the outputs and the input index both died.
+
+WHAT IS STILL OPEN AFTER THIS. The pool can be spent; nothing decides WHAT to
+spend it on. That is item 8's payout half - `PAYOUT_QUEUED -> PAID` - which the
+list now records as open, and it is the first thing this wallet is for.
