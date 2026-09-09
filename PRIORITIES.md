@@ -75,20 +75,40 @@ and reconstructing it from five of seven of 29's Feldman shares is what closes
 it. FROST (item 10) is behind that.
 
 IN THIS ORDER (unparked):
-   M3.3-8b the payout half of the    M3   NEXT — the pool can be spent and
-       state machine (9.4)                nothing decides what to spend it on.
-                                        9.4's losing and void branches are in
-                                        and crash-reconciled; the qualifying
-                                        branch stops at CANCELLED, so a
-                                        delivered player gets their own stake
-                                        back and is never paid a winning.
-                                        `AWAITING_INVOICE`, `CANCEL_REQUESTED`,
-                                        `PAYOUT_QUEUED` and `PAID` are in no
-                                        source file. `payout.js` already
-                                        computes the table every node must
-                                        agree on; what is missing is the
-                                        transitions that spend item 13's wallet
-                                        against it. Not started.
+   M3.3-8b the payout half of the    M3   done — a winner is paid out of the
+       state machine (9.4)                pool, and a real bitcoind took the
+                                        transaction. THE FAULT THAT MATTERED
+                                        was found by asking where a winner gets
+                                        paid: `player_pubkey` was `random(32)`
+                                        handed back as a public key, on no
+                                        curve at all - nothing ever verified
+                                        under it, so nothing caught it. It is a
+                                        real x-only key now and the payout pays
+                                        to it. Three thresholds, and they are
+                                        not one: results final, TABLE final
+                                        (20, whose encoder had zero callers
+                                        since letter 20), spend authorised
+                                        (item 10). The pool owes the WINNINGS
+                                        and not the stake, because the stake
+                                        came back on the cancel - paying the
+                                        row would pay it twice out of other
+                                        players' money. Every state is on disk
+                                        before the call, so a node that died
+                                        mid-send asks the chain rather than
+                                        building a second spend, and a
+                                        transaction the chain never saw stays
+                                        queued rather than paid on a guess. On
+                                        an isolated regtest: four of seven
+                                        REJECTED by consensus, five of seven
+                                        accepted, block 202 carries it, and the
+                                        winner's own key holds 1000 sats. 20
+                                        mutants, all killed. TWO HOLES CAME OUT
+                                        OF IT and are items 15 and 16, not
+                                        absorbed here: the page has no curve to
+                                        make a payable key with, and a
+                                        per-round pool at the fixture stake is
+                                        below the relay floor. Numbers:
+                                        TASKBOOK.
    M3.3-13 the pool wallet (23.5)   M3   done — settled stakes have somewhere to
                                         be that no operator can move. Measured
                                         first: no object in any source file
@@ -2333,13 +2353,12 @@ round, which is why testnet comes first and why the order is stricter.
      be assumed to be interrupted mid-flight. The saving invariant is
      that a repeated settle with the same preimage is harmless.
 
-     PARTLY DONE, AND NOT CLOSED. The losing and void branches are in and
-     crash-reconciled (HELD, ACTING, SETTLED, EXPIRED; the intent is on
-     disk before the call). THE PAYOUT HALF IS OPEN: `AWAITING_INVOICE`,
-     `CANCEL_REQUESTED`, `PAYOUT_QUEUED` and `PAID` are in no source file,
-     so the qualifying branch stops at CANCELLED and no winner is ever
-     paid. It needs item 13's wallet to pay FROM, which is why 13 goes
-     first.
+     THE PAYOUT HALF IS IN. `PAYOUT_QUEUED` and `PAID` are states now: five
+     of seven sign the payout-table hash (20), the pool is spent against
+     that table, and a real bitcoind took it. What is still not built are
+     `AWAITING_INVOICE` and `CANCEL_REQUESTED` - two names for moments the
+     daemon already passes through without writing them down, which is a
+     smaller thing than a winner never being paid.
   9. **VSS custody of the stake preimage.** No single node ever holds it.
      After the state machine, because the machine defines when a share is
      asked for.
@@ -2387,6 +2406,14 @@ round, which is why testnet comes first and why the order is stricter.
      signed by five of seven and refused the same spend signed by four and
      by one. Item 10's signature has a caller now. What it does NOT do is
      decide what to spend on: that is item 8's payout half.
+
+ 16. **Per-round payouts are below the relay floor** (23.5). QUEUED, NOT
+     STARTED. Measured on a node: 100 and 200 sats are refused
+     "Transaction amount too small" and 330 accepted. At the fixture stake
+     of 100000 msat a whole round's pool is 100 or 200 sats, so
+     `payoutOutputs` refuses by name rather than dropping the row. The
+     answers are a per-player balance that accumulates across rounds until
+     it clears dust, or a Lightning payout - neither is invented yet.
 
  15. **A curve the page can trust** (23.1, 20). QUEUED, NOT STARTED.
      `player_pubkey` is a real secp256k1 x-only key now, because a payout
