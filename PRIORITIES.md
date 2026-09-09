@@ -3033,6 +3033,18 @@ round, which is why testnet comes first and why the order is stricter.
      stake - 2000 on the fixture's 100000 - and that rule had zero callers.
      M2's rounds are unchanged: 2% of nothing is nothing.
 
+     AND THE SECOND FOLLOW-UP FOUND THE SAME FAULT ONE LAYER IN: the page
+     posted the handout, counted the acceptances and acted on none of them.
+     With three of seven seats reachable the stake needs five to open, the
+     node the page joined seated the player 201 and every other node refused
+     the entry 400. `postHandout` decides now - fewer than five is a refusal
+     by name and no seat is taken.
+
+     CORE AGAINST THE OLD ENGINE: nothing to compare, and it is measured. The
+     whole letter changed zero lines under `packages/core`, `Assets/Scripts`,
+     `Assets/Plugins` and `test-vectors`, and all eight golden vectors
+     reproduce.
+
      NAMED, NOT OPENED AS A LETTER: `feeMatchesEntry` still has no caller at
      the daemon's door, so a wrong fee is written correctly by this page and
      would not be refused from another. That is enforcement, not something a

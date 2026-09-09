@@ -24512,3 +24512,53 @@ sit, and it is named here rather than made into a letter.
 
 Suites after: core 89/89, guard 21 files clean, protocol 441/441,
 blwp-node 390/390, blwp-client 152/152.
+
+## 2026-09-09  item 15, second follow-up - the acceptance count was a number, not a decision
+
+Asked again whether the goal needs anything else. It did, and it was the same
+fault one layer further in.
+
+The page posted the handout, counted the acceptances and acted on NONE of them.
+Its own comment claimed "a seat that refuses it is counted rather than
+ignored", which overstated what the code did. Measured with three of seven
+seats reachable:
+
+    settlement seats holding the handout   3 of 7
+    the threshold to open it               5
+    reconstructable                        false
+    the node the page joined               201, the player is seated
+    every other node                       400, "that entry names shares this
+                                           node has not accepted"
+
+So a player was seated at a paying round with a stake that could never be
+settled, most of the committee had no record of them at all, and the page had
+the number in a local variable. `postHandout` publishes and DECIDES: fewer than
+five acceptances is a refusal by name and no seat is taken. Pinned both ways so
+the threshold is measured rather than the network - 3 of 5 refuses, 5 of 5
+seats and a daemon takes the entry.
+
+CORE AGAINST THE OLD ENGINE: there is nothing to compare, and that is measured
+rather than assumed. The whole of letter 15 - 0d4310b..7e57bb0 - changed ZERO
+lines under `packages/core`, `unity-proto/Assets/Scripts`,
+`unity-proto/Assets/Plugins` and `test-vectors`. All eight golden vectors
+reproduce. No simulation ran differently, in either engine, at any point in
+this letter.
+
+CHECKED AND CLEAN: `donationMsat: 0n` is right - the donation is
+player-selected (24A) and no rule requires one; nothing in `donation.js` is a
+constraint on an entry. The preimage is deliberately forgotten by the page,
+which is `stakeFor`'s own rule. A seat refused mid-way leaves `BLWP_ROUND` set
+and `BLWP_ENTRY` unset, and the bridge refuses without an entry, so nothing
+half-joins.
+
+ONE PIN CHANGED AND IT WAS NOT LOOSENED: it asserted the page contains the
+string "/handout", which only proved a URL was written down; it asserts now
+that the page calls `postHandout` and branches on the answer.
+
+A NOTE ON THE DEPLOY: the first fetch of `blwp-client.js` from the Daily after
+this deploy differed from `dist`, and the deployment URL matched immediately -
+an edge cache, not a bad deploy. It agreed twelve seconds later. `/Build/*` is
+`max-age=0, must-revalidate`, so a browser revalidates.
+
+Suites after: core 89/89, guard 21 files clean, protocol 441/441,
+blwp-node 390/390, blwp-client 154/154.
