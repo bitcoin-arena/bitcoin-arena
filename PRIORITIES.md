@@ -45,6 +45,11 @@ M2's playable set is finished; 30 (publication lead) stays listed and is
 queued BEHIND M3 on Daniel's word. M3 is live: hold invoices, VSS, FROST,
 testnet sats.
 
+2026-09-09: M3.3 ITEM 13 - THE POOL WALLET - IS CLOSED. The committee's key is
+a taproot output with no script path, and a real bitcoind accepted a spend of it
+signed by five of seven and rejected four and one. Item 10's signature has a
+caller. Item 8's payout half is what decides where the money goes, and is open.
+
 2026-09-09: M3.3 ITEM 10 - FROST - IS CLOSED AS A SIGNATURE, NOT AS A SPEND
 PATH. Five of seven operators now produce one BIP-340 signature that Bitcoin
 accepts and four produce nothing, measured against RFC 9591's own vectors. AND
@@ -70,6 +75,42 @@ and reconstructing it from five of seven of 29's Feldman shares is what closes
 it. FROST (item 10) is behind that.
 
 IN THIS ORDER (unparked):
+   M3.3-13 the pool wallet (23.5)   M3   done — settled stakes have somewhere to
+                                        be that no operator can move. Measured
+                                        first: no object in any source file
+                                        held a wallet, `payout.js` named one in
+                                        three comments, and a settled stake
+                                        ended up in the channel balance of the
+                                        one lnd node `lndPort` names - one
+                                        macaroon, one operator. The pool is ONE
+                                        P2TR output whose key is the
+                                        committee's FROST group key, tweaked by
+                                        BIP-341's own rule for an output with
+                                        no scripts, and there is NO SCRIPT PATH
+                                        on purpose: 23.5 says every operation
+                                        needs the threshold and a leaf is a
+                                        second way in. Each seat adds the tweak
+                                        to its own share, which adds it to the
+                                        secret because the interpolating values
+                                        sum to one - a committee that skipped
+                                        it signs for the internal key, which no
+                                        output pays to. THE NUMBER THAT CLOSES
+                                        IT is a real chain, not a test: on an
+                                        isolated regtest, four of seven and one
+                                        alone were REJECTED by consensus
+                                        ("Invalid Schnorr signature") and five
+                                        of seven were accepted -
+                                        sendrawtransaction returned a txid, a
+                                        block carried it, the output is spent.
+                                        THE FAULT THAT MATTERED was in the
+                                        sighash: `tapSighash` gained a key-path
+                                        branch, and writing the wrong spend_type
+                                        makes a VALID signature over the wrong
+                                        message. A mutant that always wrote 0
+                                        survived the whole suite, so the
+                                        script-path sighash a real node ACCEPTED
+                                        is pinned now. 13 mutants, all killed.
+                                        Numbers: TASKBOOK.
    M3.3-10 FROST                    M3   done as a SIGNATURE, and its first
                                         caller is missing — measured before
                                         anything was written: there is no pool
@@ -2326,10 +2367,12 @@ round, which is why testnet comes first and why the order is stricter.
      The same shape as the player payout, and for the same reason: every
      node must compute the identical table from the same inputs.
 
- 13. **The pool wallet** (spec 23.5). QUEUED, NOT STARTED. Settled loser
-     stakes need a wallet the FROST group actually spends from, and there
-     is none: `payout.js` names one in comments and nothing holds one, so
-     nothing on the spend path calls the signature item 10 built.
+ 13. **The pool wallet** (spec 23.5). DONE. One P2TR output whose key is
+     the committee's, with NO script path - every operation needs the
+     threshold, so there is no second way in. A real bitcoind took a spend
+     signed by five of seven and refused the same spend signed by four and
+     by one. Item 10's signature has a caller now. What it does NOT do is
+     decide what to spend on: that is item 8's payout half.
 
  14. **Dealerless DKG.** QUEUED, NOT STARTED. Item 10 measured RFC 9591
      Appendix C, a TRUSTED DEALER, so the group secret was known to
