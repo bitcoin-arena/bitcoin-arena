@@ -66,6 +66,17 @@ retest-p1-drive2.png retest-p2-ghost1.png retest-p2-ghost2.png.
 HARD (Daniel 2026-09-09 11:53): Claude does M3 until the in-flight two-Chrome
 retest is finished. Do not wait on 36. 36 stays open.
 
+2026-09-09 (36): the C# hop is NOT the fault. `GhostField` is in no scene and
+no prefab; `Bootstrap.Start` builds it at line 287 with `Model` and `Seat`, and
+that wiring (708a005, 23:22) is inside the 01:00 build that shipped - the
+brotli `.data` carries "Ghosts"/"GhostBody"/"ghost:" and the framework defines
+and binds `_BlwpNextGhost`. The untested hop was the bridge itself, and
+`two-tabs.test.js` now drives the shipped `BlwpNextGhost` with two real tabs
+and decodes it as `GhostField.FromBridge` does: 8/8 pictures, field for field,
+7 mutants killed. What is left for the two Chromes is where the truck is
+DRAWN - each player parks at a different bay (20c3950), so a watcher in its own
+bay is looking away from one. `none drawn` on the chip separates the two.
+
 HARD (Daniel 2026-09-09 12:03): when the current task is done, fix M2.36.
 Claude's own proof is without WebGL: `packages/blwp-client/test/two-tabs.test.js`
 and `packages/blwp-node/test/ghost-live.test.js` (`timeout 180` +

@@ -23144,3 +23144,77 @@ and that is the answer.
 Suites: blwp-client 125 -> 128, core 88/88, protocol 440/440, blwp-node 333
 with the same 18 spawn-bay hash pins on their own letter. Bundle 281.7 KB,
 template copy re-synced.
+
+## M2.36 - the hop is in the shipped player, and the bridge carries the pose
+
+The entry above said the last hop could not be seen without WebGL. It can: the
+player that was deployed is four files on disk, and three of them answer it.
+
+WHERE THE FIELD COMES FROM. `GhostField` is in NO scene and NO prefab - a grep
+of every `.unity` and `.prefab` for its script guid `a25b7840cc2d9dfa48d5d8f9d
+9cb20da` finds nothing - so the only thing that can build it is `Bootstrap`,
+and `Bootstrap.Start` does, at line 287, with no early return and no platform
+guard between the top of `Start` and it:
+
+    _ghosts = new GameObject("Ghosts");
+    var ghosts = _ghosts.AddComponent<Blwp.GhostField>();
+    ghosts.Model = BuildGhostBody();
+    ghosts.Seat  = (x, z) => driver.Ground(x, z) + driver.BodyAboveGround;
+
+`AddComponent` returns an enabled component on an active object, and
+`GhostField.Update` is `Draw(PerFrame)`, so the field runs.
+
+AND IT IS IN THE BUILD THAT SHIPPED. That wiring is 708a005, 2026-09-08 23:22;
+`Build/webgl5.wasm.unityweb` was written 2026-09-09 01:00. The two `.unityweb`
+files are brotli, so they can be read here:
+
+    webgl5.data.unityweb      21,851,926 bytes    "Ghosts" 1, "GhostBody" 2,
+                                                  "ghost:" 1, "GhostField" 1
+    webgl5.framework.js.unityweb 494,995 bytes    _BlwpNextGhost defined and
+                                                  bound, exactly like the
+                                                  _BlwpNetStart the chip proves
+
+So P2's player at 11:51 held a `GhostField`, running `Update`, with a `Model`
+that carries a renderer, over a bridge that is linked. None of those is the
+fault.
+
+THE HOP THAT HAD NO MEASUREMENT was `BlwpNextGhost` itself. `bridge.test.js`
+evaluates `blwp.jslib` and always could, but it never called the ghost export -
+that is the one export writing through the BARE `HEAP32`, and the harness only
+named `Module.HEAPU8`, so the call threw a ReferenceError nobody made. Between
+a queue `two-tabs.test.js` proved full and a `GhostField` the build proves
+present, the twelve ints were untested.
+
+They are now, in `two-tabs.test.js`, against two real tabs on a real 2-of-2
+round: the driver drives, the watcher's field fills over its own socket, and
+the SHIPPED `BlwpNextGhost` writes into a real `Int32Array` which is then
+decoded the way `GhostField.FromBridge` decodes it - eight words as
+`ToString("x8")`, then x, z, heading, tick - transcribed off the C# and not off
+the jslib, so an encoder and a decoder that agree only with each other fail.
+
+    8 batches, 8 pictures decoded, all 8 the driver's entry id
+    entry, x, z, heading, tick equal to what the page handed over, field for
+    field, every picture
+    farthest decoded pose 171.8 m from the origin in that run, so it is a
+    place and not a word in the wrong units - the bay is drawn from the
+    entry's seed, so the number moves run to run
+    backlog of 3 handed over one per call, whole
+
+MUTATION: 7 against the jslib, all 7 killed - heading dropped, tick dropped,
+x written where z belongs, entry bytes big-endian to little, `return 11`
+instead of 12, the `cap < 12` refusal dropped, and `drain(2)` handing over the
+first and losing the second. The last two needed a BACKLOG to die: with one
+picture per frame in flight, a bridge that takes two and drops one looks
+exactly like a bridge that takes one.
+
+WHAT IS LEFT for the two Chromes. Every link from the daemon's replay to the
+twelve ints C# reads is measured, and the C# after them is in the build. What
+is not measured here is what a camera sees: a `GhostTruck` is placed at
+`x / 65536` on `Seat(x, z)`, and 20c3950 parks each player at a DIFFERENT
+loading bay from their seed - so a watcher sitting in its own bay is looking at
+a truck that starts somewhere else and drives away from it. `stalled` on the
+chip separates the two answers: `none drawn` means the renderer never ran, no
+`none drawn` with no truck on screen means it ran and the truck is elsewhere.
+
+Suites: blwp-client 128 -> 129, jslib clean after the mutants. core 88/88,
+protocol 440/440, blwp-node 333 with the same 18 spawn-bay hash pins.
