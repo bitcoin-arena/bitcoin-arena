@@ -584,7 +584,7 @@ IN THIS ORDER (unparked):
                                         09:33: advert verify was Ed25519 vs
                                         schnorr bond key — page now uses
                                         BLWP_CURVE.verify.
-   M3.3-16 dust / relay floor         M3   done — 17a5873. Floor is 330 sats on
+   M3.3-16  dust / relay floor        M3   done — 17a5873. Floor is 330 sats on
                                         this node. Sub-floor rows are debt,
                                         PAID_IN_PART, not a blocked round.
                                         329 refused, 330 accepted. 9 mutants
