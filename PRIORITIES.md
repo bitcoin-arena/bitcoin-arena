@@ -73,11 +73,14 @@ contribution each, one share kept, and no process holding a threshold at any
 point. The pin that opened the letter read 7 of 7 shares in the dealing
 process; it reads 0 launch paths now.
 
-NEXT IN M3 IS ITEM 20: `POST /entry` does not check that an entry's fee is the
-2% the round asks, so a wrong one would be taken from anybody - letter 15 fixed
-the page that writes them, not the door that accepts them. Behind it, the hold
-invoice the page cannot yet pay is M3.2 items 5 and 6 (the session flow and the
-NWC wallet).
+M3.3 ITEM 20 IS CLOSED. The entry door refuses a wrong fee and a wrong stake,
+both against the round contract rather than against the entry's own story - a
+free seat satisfied the 2% rule perfectly and would have been paid its whole
+table row out of other players' money.
+
+WHAT IS LEFT IN M3 is the hold invoice the page cannot yet pay: M3.2 items 5
+and 6, the session flow and the NWC wallet. Every M3.3 line - 8b, 9, 10, 13,
+14, 15, 16, 17, 18, 19, 20 - is closed.
 
 30 stays queued behind M3.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
@@ -2979,17 +2982,37 @@ round, which is why testnet comes first and why the order is stricter.
      by one. Item 10's signature has a caller now. What it does NOT do is
      decide what to spend on: that is item 8's payout half.
 
- 20. **The entry door does not check the fee** (spec "Node fee", 27A.7).
-     QUEUED, NOT STARTED, and it is ENFORCEMENT rather than a hole any
-     paying round needs to sit. `feeMatchesEntry` says an entry's `feeMsat`
-     must be exactly 2% of its own `stakeMsat` - too little and the round
-     collects less than the fee table will owe its nodes, too much and the
-     excess is income no table allocates - and it has ZERO CALLERS outside
-     its own tests. Letter 15 made the PAGE write the right fee (measured:
-     2% of 100000 msat is 2000, and it wrote 0), so the Daily is correct;
-     what is missing is that `POST /entry` would take a wrong one from
-     anybody else. Not folded into 14, which is about the committee's own
-     key and not about what a door accepts.
+ 20. **The entry door checks the fee AND the stake.** DONE.
+
+     `POST /entry` took anything. Measured on a round asking 100000 msat
+     where 2% is 2000: six of six fees taken - 0, 1999, 2001, 20000 and the
+     whole stake among them - and `feeMatchesEntry` had zero callers.
+
+     AND THE FEE RULE ALONE WOULD NOT HAVE CLOSED IT, which is why the
+     stake is on this letter. `feeMatchesEntry` is SELF-REFERENTIAL: it
+     compares the fee to the entry's OWN stake and the entry names both, so
+     an entry claiming `stakeMsat: 0, feeMsat: 0` satisfies it perfectly -
+     and all four self-named stakes were taken. `custody.hold` invoices
+     `entry.stakeMsat`, so that player pays nothing; `winnings` pays
+     `amountMsat - stake`, so their whole table row comes out of other
+     players' money. A door checking only the fee would look checked and
+     still pass a free seat.
+
+     Both are checked against the ROUND CONTRACT in `round.enter`, where
+     `committeeTimeMs` and `vssSharesRef` already are - "the same rule at
+     the door, where it cannot be skipped by a client that does not draw a
+     lobby". After: 1 of 6 fees and 1 of 4 stakes, the same entry, and each
+     refusal names both numbers. The rate is `entryFeeMsat` off
+     `NODE_FEE_BPS`, which `genesis.js` writes into the genesis parameters,
+     so a round naming a config has committed to it; there is no second
+     copy in JS or C#.
+
+     A round that asks no stake is unchanged and it is asserted: 0/0 taken,
+     0/1 and 100000/2000 refused. 2% of nothing is nothing.
+
+     43 fixtures carried `feeMsat: 1000n` beside a 100000 stake. Setup, so
+     they derive it from `entryFeeMsat(stake)` rather than swap one
+     constant for another. No assertion touched.
 
  17. **The signing round between daemons** (23.5, 20). QUEUED, NOT STARTED.
      `Payouts.pay` is handed five SHARES, and the regtest tool holds all

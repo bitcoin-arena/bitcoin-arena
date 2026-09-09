@@ -24681,3 +24681,60 @@ new committee is a new epoch and runs a new DKG, which mints a new pool address
 
 Suites: core 89/89, guard 21 files clean, protocol 444/444, blwp-node 401/401,
 blwp-client 154/154.
+
+## 2026-09-10  M3.3 item 20 - the entry door, and the check the fee rule could not make
+
+THE PIN, WRITTEN AND COMMITTED BEFORE ANY PRODUCTION CHANGE. Two matrices, on a
+round asking 100000 msat where 2% is 2000:
+
+    THE FEE                          before   after
+      2000  the right 2%              201      201
+      0     no fee at all             201      400
+      1999  one msat too little       201      400
+      2001  one msat too much         201      400
+      20000 ten times the fee         201      400
+      100000 the whole stake again    201      400
+                                      6 of 6   1 of 6
+
+    THE STAKE - every one of these SATISFIES the 2% rule
+      100000 / 2000    the round's own      201      201
+      1 / 0            one msat             201      400
+      0 / 0            A FREE SEAT          201      400
+      1e8 / 2000000    a thousand times     201      400
+                                            4 of 4   1 of 4
+
+THE SECOND MATRIX IS THE POINT. `feeMatchesEntry` is self-referential - it
+compares the fee to the entry's OWN stake, and the entry names both - so a free
+seat passes it perfectly. `custody.hold` invoices `entry.stakeMsat`, so that
+player pays nothing, and `winnings` pays `amountMsat - stake`, so a zero stake
+is paid its whole table row out of the pool. Enforcing only the fee would have
+shipped a door that refuses 1999 msat and waves a free seat through, which is
+worse than the open door because it looks checked.
+
+WHERE. `round.enter`, beside `committeeTimeMs` and `vssSharesRef`, whose own
+comment says why: "the same rule at the door, where it cannot be skipped by a
+client that does not draw a lobby". A test calls `enter()` directly with no
+socket in between and gets both refusals.
+
+THE DOOR AND THE RULE AGREE ON EVERY FEE, asserted rather than assumed: a door
+refusing something the rule allows would be a second opinion about the thing it
+is enforcing. Each refusal names both numbers - "that round asks a stake of
+100000 msat and that entry names 0", "was charged 0 where 2% of 100000 is 2000"
+- so a log says which way it was wrong.
+
+THE RATE IS ONE NUMBER. `NODE_FEE_BPS = 200`, and `genesis.js` writes it into
+the genesis parameters, so a round naming a config has already committed to it.
+Grepped for a second copy in JS and in C#: none, and the only other "2%" in the
+tree is `slash.js` describing the same pool share in prose.
+
+43 FIXTURES carried `feeMsat: 1000n` beside a 100000 stake, in three shapes
+(`100000n`, `contract.stakeMsat`, `STAKE_MSAT`). They derive it now -
+`entryFeeMsat(stake)` - rather than swapping 1000n for 2000n, so a future rate
+change cannot silently break them. Setup only; no assertion was touched.
+
+Nothing downstream moved: both regtests still print "Every number came out as
+claimed", and the page's own sequence from letter 15 still seats through the
+tightened door.
+
+Suites: core 89/89, guard 21 files clean, protocol 444/444, blwp-node 406/406,
+blwp-client 154/154. No client bundle changed, so the Daily was not redeployed.
