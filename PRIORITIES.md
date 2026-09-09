@@ -45,6 +45,10 @@ M2's playable set is finished; 30 (publication lead) stays listed and is
 queued BEHIND M3 on Daniel's word. M3 is live: hold invoices, VSS, FROST,
 testnet sats.
 
+2026-09-09: M3.3 ITEM 9 - VSS CUSTODY OF THE STAKE PREIMAGE - IS CLOSED. No
+single node holds it any more: the page deals it, one share travels sealed to
+each seat, and a settle takes five of seven. Next in M3 is M3.3 item 10, FROST.
+
 2026-09-09: M3 SLICE 1 - HOLD INVOICES - IS CLOSED. It was marked done once
 too early, on a caller count measured before `custody.js` existed and never
 measured again: the rules were in and the DAEMON reached none of them. The
@@ -57,28 +61,53 @@ and reconstructing it from five of seven of 29's Feldman shares is what closes
 it. FROST (item 10) is behind that.
 
 IN THIS ORDER (unparked):
-   M3.3-9 VSS custody of the stake  M3   NEXT — no single node ever holds the
-       preimage                          preimage. `custody.js` takes an
-                                        injected `preimageFor` today and the
-                                        one caller that exists hands it the 32
-                                        bytes directly, which is single-node
-                                        custody by another name: a settle
-                                        releases the preimage, so whoever holds
-                                        it can settle alone. 29 already refuses
-                                        a crooked dealer at handout and binds
-                                        the commitments into the entry's SIGNED
-                                        bytes; what is missing is the other
-                                        half - reconstruct from five of seven
-                                        accepted shares and hand back 32 bytes
-                                        that hash to the entry's own
-                                        stakeCommitment, and refuse rather than
-                                        settle when fewer than five exist.
-                                        23.4's "at least 5 preimage shares" is
-                                        the condition, and `settleHeldInvoices`
-                                        already refuses a preimage that is not
-                                        the one the hold was made for. FROST
-                                        (M3.3 item 10) is behind this, not
-                                        beside it.
+   M3.3-9 VSS custody of the stake  M3   done — no single node holds the
+       preimage                          preimage. THE FAULT THAT MATTERED was
+                                        measured before any of it was written:
+                                        a stranger holding only the entry's
+                                        public `vss_shares_ref` read all seven
+                                        shares off `GET /handout` and rebuilt
+                                        the stake - 21 of the 21 five-subsets
+                                        opened it - which `handout.js` had
+                                        warned about itself ("a build that pays
+                                        sats must not use this file as it
+                                        stands"). Every share now travels
+                                        SEALED to one seat: ECDH on the curve
+                                        this system already injects, then
+                                        AES-GCM through WebCrypto, no new
+                                        dependency, and the key and nonce are
+                                        tagged hashes so one deal always
+                                        encodes to one id - which matters
+                                        because that id sits inside a signed
+                                        entry. A stranger now opens ZERO. The
+                                        page deals: `stakeFor` chooses P,
+                                        publishes sha256(P) where a random 32
+                                        bytes used to sit, splits 5-of-7 and
+                                        seals - and it is an input device, the
+                                        curve injected exactly like `sign`, the
+                                        bundle still carrying no crypto.
+                                        Settling asks: a seat opens its own
+                                        share, asks the others over `/share`,
+                                        and gets 1 of 5 alone, 4 of 5 from
+                                        three peers, 5 of 5 from four - and
+                                        stops there. Two conditions on
+                                        answering and they are the safety: the
+                                        asker must be a SEATED key, and the run
+                                        must be final with an outcome 23.2
+                                        settles, so a DELIVERED run's preimage
+                                        never leaves. The answer is sealed to
+                                        the asker, which is why the request
+                                        needs no signature: claiming another
+                                        seat's key returns an envelope only
+                                        that seat can open. A dealer who
+                                        committed to sha256(Q) and dealt shares
+                                        of P is caught at reconstruction rather
+                                        than by a proof system - nothing
+                                        settles, the hold expires, the player
+                                        is refunded. AND A MUTANT WAS RIGHT:
+                                        the even-y normalisation in the ECDH
+                                        was ceremony, because x(kP) = x(-kP);
+                                        it is gone. Numbers: TASKBOOK.
    M3.1 hold invoices (23.1/23.2)   M3   done — a player's stake is money in
                                         flight on Lightning and the core's own
                                         outcome word decides what happens to
