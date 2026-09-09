@@ -108,7 +108,9 @@ IN THIS ORDER (unparked):
                                         nothing retracted. WHAT IS MISSING IS
                                         THE CALLER: zero outside tests, no pool
                                         wallet to spend, and a trusted dealer
-                                        rather than a DKG. Numbers: TASKBOOK.
+                                        rather than a DKG - queued as M3.3
+                                        items 13 and 14, and the caller as
+                                        item 8. Numbers: TASKBOOK.
    M3.3-9 VSS custody of the stake  M3   done — no single node holds the
        preimage                          preimage. THE FAULT THAT MATTERED was
                                         measured before any of it was written:
@@ -2315,6 +2317,17 @@ round, which is why testnet comes first and why the order is stricter.
 
      The same shape as the player payout, and for the same reason: every
      node must compute the identical table from the same inputs.
+
+ 13. **The pool wallet** (spec 23.5). QUEUED, NOT STARTED. Settled loser
+     stakes need a wallet the FROST group actually spends from, and there
+     is none: `payout.js` names one in comments and nothing holds one, so
+     nothing on the spend path calls the signature item 10 built.
+
+ 14. **Dealerless DKG.** QUEUED, NOT STARTED. Item 10 measured RFC 9591
+     Appendix C, a TRUSTED DEALER, so the group secret was known to
+     whoever dealt it. "No one of them can steal" holds among the signers
+     and not against the dealer, and closing that gap is a key generation
+     the RFC does not specify.
 
 ## What is honestly not trustless
 
