@@ -45,6 +45,15 @@ M2's playable set is finished; 30 (publication lead) stays listed and is
 queued BEHIND M3 on Daniel's word. M3 is live: hold invoices, VSS, FROST,
 testnet sats.
 
+2026-09-09: M3.3 ITEM 10 - FROST - IS CLOSED AS A SIGNATURE, NOT AS A SPEND
+PATH. Five of seven operators now produce one BIP-340 signature that Bitcoin
+accepts and four produce nothing, measured against RFC 9591's own vectors. AND
+NOTHING CALLS IT: zero callers outside tests, there is still no pool wallet,
+and the group secret comes from a trusted dealer rather than a DKG. The first
+caller on the spend path is MISSING and is the next thing to name - paying
+winners is item 8's PAYOUT_QUEUED -> PAID, and a dealerless DKG is its own
+letter.
+
 2026-09-09: M3.3 ITEM 9 - VSS CUSTODY OF THE STAKE PREIMAGE - IS CLOSED. No
 single node holds it any more: the page deals it, one share travels sealed to
 each seat, and a settle takes five of seven. Next in M3 is M3.3 item 10, FROST.
@@ -61,6 +70,45 @@ and reconstructing it from five of seven of 29's Feldman shares is what closes
 it. FROST (item 10) is behind that.
 
 IN THIS ORDER (unparked):
+   M3.3-10 FROST                    M3   done as a SIGNATURE, and its first
+                                        caller is missing — measured before
+                                        anything was written: there is no pool
+                                        wallet at all, `payout.js` names one in
+                                        comments only, and the number of keys
+                                        that must agree before a settled
+                                        satoshi moves was ONE - the macaroon of
+                                        whichever Lightning node `lndPort` was
+                                        pointed at. `aggregateKeys` next door
+                                        does not help and was checked rather
+                                        than assumed: BIP-327 MuSig2 needs
+                                        EVERY signer, so it cannot say five of
+                                        seven. `frost.js` is RFC 9591 with the
+                                        curve injected, and the vectors are
+                                        fetched from the RFC Editor and pulled
+                                        out by a script - no digit typed. All
+                                        nine values of Appendix E.5 reproduce
+                                        byte for byte, shares through to the
+                                        65-byte aggregate. That suite is NOT
+                                        BIP-340 - its own challenge tag, a
+                                        33-byte R, no even-y rule - so nothing
+                                        on the Bitcoin network would check what
+                                        it makes; `frost-bip340.js` is the same
+                                        threshold over x-only keys, and the
+                                        verifier is NOT ours: `schnorr.verify`,
+                                        the one a taproot spend gets. Five of
+                                        seven verify in 8 of 8 dealings and any
+                                        five of the seven sign for the same
+                                        key; four are refused by name and
+                                        accepted 0 of 3 times if they sign
+                                        anyway; one node alone, 0 of 7. R's
+                                        parity is fixed by every signer off the
+                                        public commitment list - measured a
+                                        coin over 24 signatures, 24 of 24
+                                        verified. 20 mutants, all 20 killed,
+                                        nothing retracted. WHAT IS MISSING IS
+                                        THE CALLER: zero outside tests, no pool
+                                        wallet to spend, and a trusted dealer
+                                        rather than a DKG. Numbers: TASKBOOK.
    M3.3-9 VSS custody of the stake  M3   done — no single node holds the
        preimage                          preimage. THE FAULT THAT MATTERED was
                                         measured before any of it was written:
