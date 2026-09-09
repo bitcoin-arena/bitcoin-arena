@@ -637,7 +637,7 @@ IN THIS ORDER (unparked):
                                         too, so this is queued behind 31.
    15/14/8 are this queue, not a later milestone.
 
-HTTPS PLAY (Daniel 2026-09-09 07:34): Web Crypto (crypto.subtle.generateKey)
+HTTPS PLAY (Daniel 2026-09-09 07:40): Safari blocks HTTP nodes from an https page (Load failed). Nodes are Funnel-proxied at /blwp-a and /blwp-b. join sourceKey counts path prefixes as two sources.\n\nHTTPS PLAY (Daniel 2026-09-09 07:34): Web Crypto (crypto.subtle.generateKey)
 only exists in a secure context. HTTP on the Tailscale IP is not one. The
 play page must be https://btc-logistics-core.pages.dev (or another HTTPS
 origin). The local :8000 build is for same-scheme daemons, not for iPhone.
