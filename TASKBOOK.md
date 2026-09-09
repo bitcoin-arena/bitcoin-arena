@@ -22559,3 +22559,46 @@ There is no spend path for this to sign yet. Paying winners is item 8's
 `PAYOUT_QUEUED -> PAID` and was ruled out of this letter; a dealerless DKG is
 its own letter and is named rather than faked. What is true now is that the
 signature exists, it is the RFC's, and Bitcoin accepts it at five of seven.
+
+### M3.3-13 STEP 1 — WHERE A SETTLED SATOSHI ACTUALLY IS, AND WHAT ITEM 8 STILL OWES
+
+Two baselines, printed before a line of the pool wallet is written.
+
+ITEM 8 IS NOT CLOSED, and the list said nothing either way. Its own state names,
+grepped against every source file:
+
+    HELD, SETTLED, EXPIRED, ACTING      built and crash-reconciled
+    AWAITING_INVOICE                    0 files
+    CANCEL_REQUESTED                    0 files
+    PAYOUT_QUEUED                       0 files
+    PAID                                0 files as a state; 3 hits, all prose
+
+So 9.4's losing and void branches are in and the QUALIFYING BRANCH STOPS AT
+CANCELLED. A delivered player gets their own stake back and is never paid a
+winning, because there is nothing to pay them from. That is item 13, which is
+why 13 goes before the rest of 8.
+
+AND THE POOL WALLET DOES NOT EXIST.
+
+    callers of the FROST signer outside its own tests
+      trustedDealerSplit  0      signShare340   0      aggregate340  0
+      enoughToSign        0      evenGroupSecret 0
+
+    "pool wallet" in payout.js                 3 mentions, all comments
+    an object that holds a wallet              none: no class, no address,
+                                               no key, anywhere in src
+    where a settled satoshi goes today         `lncli settleinvoice --preimage`,
+                                               into the channel balance of the
+                                               one lnd node `lndPort` names
+    who can spend it                           whoever holds that macaroon
+    who cannot                                 the other six committee seats
+
+So a settled loser stake lands in one operator's Lightning balance and stops.
+There is no on-chain key, no output, and nothing that would ever need a 5-of-7
+signature - which is why item 10 closed with zero callers.
+
+WHAT ALREADY EXISTS TO BUILD ONE WITH, so this is not from nothing:
+`bond-spend.js` has `tapSighash`, `serializeSpend` and the witness machinery,
+`tx.js` parses and hashes transactions, `bond-script.js` builds taproot
+outputs, and `frost-bip340.js` makes a 64-byte signature `schnorr.verify`
+accepts. A key-path spend signed by the committee is those four meeting.

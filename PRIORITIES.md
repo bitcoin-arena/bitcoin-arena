@@ -2277,6 +2277,14 @@ round, which is why testnet comes first and why the order is stricter.
      reconciled against the backend on startup. Lightning operations must
      be assumed to be interrupted mid-flight. The saving invariant is
      that a repeated settle with the same preimage is harmless.
+
+     PARTLY DONE, AND NOT CLOSED. The losing and void branches are in and
+     crash-reconciled (HELD, ACTING, SETTLED, EXPIRED; the intent is on
+     disk before the call). THE PAYOUT HALF IS OPEN: `AWAITING_INVOICE`,
+     `CANCEL_REQUESTED`, `PAYOUT_QUEUED` and `PAID` are in no source file,
+     so the qualifying branch stops at CANCELLED and no winner is ever
+     paid. It needs item 13's wallet to pay FROM, which is why 13 goes
+     first.
   9. **VSS custody of the stake preimage.** No single node ever holds it.
      After the state machine, because the machine defines when a share is
      asked for.
