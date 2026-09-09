@@ -2388,6 +2388,13 @@ round, which is why testnet comes first and why the order is stricter.
      by one. Item 10's signature has a caller now. What it does NOT do is
      decide what to spend on: that is item 8's payout half.
 
+ 15. **A curve the page can trust** (23.1, 20). QUEUED, NOT STARTED.
+     `player_pubkey` is a real secp256k1 x-only key now, because a payout
+     pays to it - but the browser has only Ed25519 and P-256, and the page
+     does not vendor a curve. So a shipped page refuses a seat at a paying
+     round and stays the single-player daily. Until this is answered the
+     daily cannot join a round that pays.
+
  14. **Dealerless DKG.** QUEUED, NOT STARTED. Item 10 measured RFC 9591
      Appendix C, a TRUSTED DEALER, so the group secret was known to
      whoever dealt it. "No one of them can steal" holds among the signers

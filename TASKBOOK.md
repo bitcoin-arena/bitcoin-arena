@@ -22674,3 +22674,34 @@ that dropped the outputs and the input index both died.
 WHAT IS STILL OPEN AFTER THIS. The pool can be spent; nothing decides WHAT to
 spend it on. That is item 8's payout half - `PAYOUT_QUEUED -> PAID` - which the
 list now records as open, and it is the first thing this wallet is for.
+
+### M3.3-8b STEP 1 — THE PLAYER'S KEY WAS NOT A KEY
+
+Asking where a winner gets paid found it. A payout is an output, an output
+pays to a key, and `player_pubkey` was 32 random bytes:
+
+    join.js tabIdentity, before   stored random(32) and returned the SAME bytes
+                                  as the public key
+    on a curve                    no - not a point, not a scalar's point,
+                                  nothing verified under it
+    what caught it                nothing could: no signature is ever checked
+                                  against player_pubkey, so it never had to be
+                                  a key until it had to receive money
+
+Now it stores the SECRET and returns its x-only point, with the curve injected
+the way `sign` and the dealer's are. A stored value that is not a scalar - which
+is what the old version wrote - is replaced rather than trusted.
+
+AND THE SHIPPED PAGE REFUSES A SEAT IT CANNOT BE PAID AT. The browser's own
+crypto has Ed25519 and P-256 and no secp256k1, and this page does not vendor a
+curve - `blwp.jslib` says why about the session key: "the key that signs a
+player's commitments should not be handled by an implementation nobody audits."
+So a page given no `BLWP_CURVE` logs that it is not taking a seat and stays the
+single-player daily. Seating somebody at a paying round under a key nobody can
+spend from is worse than not seating them.
+
+THAT IS A HOLE AND IT GOES ON THE LIST, not into this letter: the page needs a
+secp256k1 it can trust before it can join a round that pays.
+
+Suites: blwp-client 120, core 84, protocol 440, blwp-node 301, all green. The
+bundle changed - 278.7 KB - and the template's copy was re-synced.
