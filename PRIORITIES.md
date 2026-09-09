@@ -613,6 +613,19 @@ IN THIS ORDER (unparked):
                                         09:33: advert verify was Ed25519 vs
                                         schnorr bond key — page now uses
                                         BLWP_CURVE.verify.
+   M3.3-17  a signing round between   M3   OPEN — the letter after 36. Measured
+       daemons                            first: `pay` takes five SECRET shares
+                                        as an argument and makes every nonce and
+                                        every signature share in one `map`, it
+                                        has zero callers outside tests, the
+                                        daemon holds no share at all (`poolKey`
+                                        is never set), and no door serves a
+                                        nonce commitment or a signature share.
+                                        So the keys that must agree before a
+                                        settled satoshi moves is still ONE: 13
+                                        moved it off a macaroon onto a group
+                                        KEY, not onto a group. A dealerless DKG
+                                        stays its own letter. Numbers: TASKBOOK.
    M3.3-16  dust / relay floor        M3   done — 17a5873. Floor is 330 sats on
                                         this node. Sub-floor rows are debt,
                                         PAID_IN_PART, not a blocked round.

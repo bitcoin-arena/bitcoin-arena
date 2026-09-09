@@ -23335,3 +23335,38 @@ A test that demanded the two be close would be demanding the bays go away.
 DEPLOYED 15:59: btc-logistics-core.pages.dev, the chip of 3d0eb63 live. The
 served index.html and blwp-client.js are byte-for-byte the built ones
 (62bcef8b855fab8fc9f34ba5546206cc, 4cfc3b5e4c9508e4595c5cb220e9039c).
+
+## M3.3 item 17: what a payout signature costs today, measured before anything is written
+
+The 8b row names it: "one process still holds five shares, and a real payout
+needs a signing round between daemons". Measured rather than assumed:
+
+  - `Payouts#pay` takes `signers`, an array of `{ id, share }`. `share` is a
+    SECRET scalar. `test/payout-pay.test.js` hands it `dealt.shares.slice(0, 5)`
+    straight off `trustedDealerSplit`, so five secrets are in one process, and
+    that process generates all ten nonces and all five signature shares in one
+    `map`. Five of seven is arithmetic there, not a threshold: whoever runs that
+    map can sign anything.
+  - CALLERS OF `pay` OUTSIDE TESTS: zero. `grep -rn "\.pay(" src/` finds
+    nothing. The same shape FROST had when it landed.
+  - THE DAEMON HOLDS NO SHARE. `serve` takes `poolKey` and passes it to
+    `Payouts` as `pool`; it defaults to null and NOTHING in `src/` or
+    `src/main.js` ever sets it. There is no seat share anywhere in the daemon.
+  - NO DOOR CARRIES A SIGNATURE. The 21 doors `server.js` answers are the
+    census, the round, the entry, the transcript, the receipts, the results,
+    the objection, the committee, the invoice, the handout and `/share` - which
+    is 29's VSS share of the STAKE PREIMAGE, a different secret for a different
+    purpose. Nothing serves a nonce commitment and nothing serves a signature
+    share.
+
+So the number of keys that must agree before a settled satoshi moves is still
+ONE - the process that calls `pay`. 13 moved it off a single Lightning macaroon
+and onto a group key; it did not move it onto a group.
+
+WHAT THE LETTER HAS TO BE, and what it must not quietly become: a dealerless
+DKG is its own letter (the FROST row says so) and this is not it. The seats are
+still dealt their shares. What changes is that a share never leaves the seat
+that holds it, and that a seat signs only a spend IT built from the round's own
+final table - a seat that signed whatever sighash it was handed would make the
+threshold decorative, because five signatures over an attacker's transaction
+spend the pool exactly as well as five over a real one.
