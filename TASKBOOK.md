@@ -23089,3 +23089,58 @@ SwissClaw's two Chromes still show a truck in the bay.
 Suites: blwp-client 123 -> 125, core 88/88, protocol 440/440, blwp-node 333
 with the same 18 spawn-bay hash pins on their own letter. The bundle changed
 (280.4 KB) and the WebGL template's copy was re-synced.
+
+### M2-36 — READING THE BRIDGE AND THE C# AGAINST THE DRAIN BUG
+
+Measured from source, no Unity run.
+
+    blwp.jslib BlwpNextGhost      takes ONE picture per call off `field.drain(1)`
+                                  and writes twelve ints; 0 when the queue is empty
+    GhostField.Update             `Draw(PerFrame)`, PerFrame = 24, every frame
+    GhostField.Show               one truck per entry, made on the first picture
+                                  and MOVED by every one after it
+    anything that removes a truck none. An empty queue does not despawn anybody,
+                                  so "empty queue = nobody on the field" is NOT
+                                  in the C#
+
+So the bridge and the renderer are honest about a drawn truck, and the JS bug
+fixed at db41ebf - `latest()` reading the queue `drain` empties - was the only
+lie on that path.
+
+AND THE CHIP READS `present`, NOT THE QUEUE: `index.html` takes
+`net.ghosts.others`, which is `present.size` and survives a drain. That makes
+the 11:51 chip a hard number rather than a guess:
+
+    "5 players in this round"  ->  others = 4  ->  the watcher's field HELD
+                                   four other trucks while the screen showed one
+
+So pictures were arriving and something downstream was not drawing them. The
+page could not say that, because `others` counts trucks in the round whether or
+not anybody draws them - "nobody is here" and "nobody is drawing" read
+identically, and they are different faults with different fixes.
+
+WHAT WAS ADDED, and it is the number that would have named 11:51 from the page:
+
+    field.drawn      how many pictures somebody actually took to draw
+    field.stalled    sent pictures of somebody else and took none of them
+    playersLine      "5 players in this round · none drawn"
+
+One frame of a working page clears it, because `Draw(PerFrame)` runs every
+frame - so `stalled` means the renderer is not wired, not that it is busy. A
+viewer's own pictures never set it: the field drops those before the queue, so
+a solo round does not wear a fault.
+
+MUTATION: 5 mutants against the field, all 5 killed - reading the queue again,
+forgetting a drawn picture from `present`, showing the viewer its own truck,
+draining nothing, and draining without removing.
+
+STILL NOT PROVEN, and it is now one hop: whether `GhostField` is in the scene
+and its `Update` runs at all in the shipped build. `node --test` cannot see
+that, and neither can source reading - `Bootstrap` constructs the field, but
+whether the component is enabled in the player is a Unity fact. If SwissClaw's
+two Chromes still show a truck in the bay, the chip will now say `none drawn`
+and that is the answer.
+
+Suites: blwp-client 125 -> 128, core 88/88, protocol 440/440, blwp-node 333
+with the same 18 spawn-bay hash pins on their own letter. Bundle 281.7 KB,
+template copy re-synced.
