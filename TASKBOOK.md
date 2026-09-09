@@ -22336,3 +22336,66 @@ different client from the one the suites measure is a page running a different
 program.
 
 Suites: blwp-client 118 -> 120, blwp-node 264, core 84, protocol 432, all green.
+
+### M3.3-9 STEPS 3 AND 4 — FIVE SEATS, OR THE STAKE STAYS IN FLIGHT
+
+`packages/blwp-node/src/preimage.js` is what asks. Seven daemons, seven real
+identities, one player dealing to all of them, and every seat replaying the run
+through its own doors - because a node hands out its share only for a run IT
+signed a result for, and a committee where six seats never replayed is a
+committee of one.
+
+THE THREE NUMBERS THIS ITEM CLOSES ON, measured end to end:
+
+    (a) one node alone         held 1 of 5   "a stake nobody can open stays in flight"
+    (c) four answers           held 4 of 5   refused by name
+    (b) five answers           held 5 of 5   reconstructed, and sha256(P) IS the
+                                             entry's own stakeCommitment
+    and it stops at five       held 5 with six peers reachable
+
+Asking a sixth seat for a secret five already opened is spreading it for
+nothing, so the loop breaks at the threshold.
+
+TWO CONDITIONS ON ANSWERING, and they are the whole safety of the door:
+
+    the asker is a seat    `round.seats` is the CENSUS's list, so a stranger
+                           cannot make itself one by asking:
+                           "not a seat of this round, and a share is not a
+                           public thing"                          409
+    the run settles        FINAL, and an outcome 23.2 SETTLES. A DELIVERED run
+                           is cancelled and its preimage must never leave -
+                           releasing it would let anyone settle an invoice that
+                           has to go back to its player            refused
+    four of seven agreeing not final, so no share moves            refused
+
+AND THE ANSWER IS SEALED TO THE ASKER, with a fresh one-time key per answer.
+Those two together are why the request needs no signature, and it is measured
+rather than argued: a caller that claims another seat's key gets a 200 and an
+envelope it cannot open -
+
+    impostor opening it     refused, "sealed to somebody else"
+    that seat opening it    opens, seat number intact
+
+WHAT A DEALER WHO LIED IS CAUGHT BY, as ruled: nothing at handout beyond
+Feldman. Five seats open, `reconstruct` checks sha256 against the entry's
+stakeCommitment and throws, `open` returns "those shares do not open that
+stake", no Lightning call is made, the hold expires and the player is refunded.
+No proof system.
+
+STEP 4 - WHERE A SETTLE'S 32 BYTES COME FROM. `serve()` now defaults
+`preimageFor` to the committee. An operator can still inject one and the
+regtest tool does, but the DEFAULT is five seats, because a default that
+settles alone is the custody this letter exists to end.
+
+    (d) five seats reachable    the loser SETTLED, one settle call, and the
+                                bytes handed to Lightning ARE the ones the page
+                                committed to
+        four seats reachable    the loser stays HELD, ZERO settle calls,
+                                "this node has no preimage for that stake"
+
+The hold path itself did not move: settle, cancel and expire still follow the
+core's outcome word, on the fake port here and on real lnd in
+`tools/custody-lnd.mjs` - re-run at this HEAD, one stake settled, one cancelled,
+one refunded by the timelock with nobody acting, every process stopped.
+
+Suites: blwp-node 264 -> 269, core 84, protocol 432, blwp-client 120, all green.
