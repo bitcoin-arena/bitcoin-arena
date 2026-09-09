@@ -594,9 +594,15 @@ IN THIS ORDER (unparked):
                                         Chip stayed play · A up · 5 players
                                         (socket did not drop this time).
                                         Still a picture (0.10), never an input.
-                                        Daily must show the live pose. Parked:
-                                        Claude does M3 until the retest lands
-                                        (Daniel 11:53).
+                                        Daily must show the live pose. After the
+                                        current M3.16 task: Claude fixes 36.
+                                        Claude's own proof, no WebGL (Daniel 12:03):
+                                        packages/blwp-client/test/two-tabs.test.js
+                                        (two clients, one drives, other is shown
+                                        a picture) and
+                                        packages/blwp-node/test/ghost-live.test.js
+                                        (consecutive frames keep up).
+                                        timeout 180 + --test-timeout=120000.
                                         Screens: daniel-screens/retest-p1-drive1.png
                                         retest-p1-drive2.png retest-p2-ghost1.png
                                         retest-p2-ghost2.png.
