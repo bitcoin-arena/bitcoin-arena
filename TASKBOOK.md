@@ -22438,3 +22438,48 @@ not the committed preimage". No Lightning call, the hold expires, the player is
 refunded. The cheat gains nothing.
 
 Suites: blwp-node 269 -> 272, core 84, protocol 432, blwp-client 120, all green.
+
+### M3.3-10 STEP 1 — WHO CAN MOVE THE POOL TODAY, AND THE VECTORS TO MEASURE AGAINST
+
+Printed before a line of FROST is written.
+
+THERE IS NO POOL WALLET. `payout.js` names one twice - "the stake enters the
+pool wallet" - and nothing in this repo holds one. Settled stakes land in
+whatever Lightning node `lndPort` was pointed at, and `lnd-port.js` says what
+that means in its own header: "one `lncli`, one macaroon, one operator who
+could run every one of these commands by hand."
+
+    keys that must agree before a satoshi leaves the pool     1
+    FROST code in packages/*/src                             0 files
+                                                             3 grep hits, ALL prose
+    RFC 9591 vectors reproduced                              0 of 0 - no test file
+    a 4-of-7 attempt                                         no such thing to refuse
+
+AND `aggregateKeys` IS NOT A THRESHOLD, checked rather than assumed. It is
+BIP-327 MuSig2 key aggregation for the bond key path (5A.3B), and MuSig2 needs
+EVERY signer. It cannot express five of seven and is not going to be dressed up
+as though it can. It also has no caller outside `bond-script.js`.
+
+WHAT §23.5 ACTUALLY ASKS FOR: "Settled loser stakes accumulate in a wallet
+whose every operation requires a 5-of-7 threshold signature of the settlement
+committee. No node and no minority can move a satoshi, at any moment, including
+during payout."
+
+THE VECTORS ARE FETCHED, NOT TYPED. `test-vectors/protocol/rfc9591-secp256k1.json`
+was extracted mechanically from the RFC text - no hex was retyped:
+
+    source        https://www.rfc-editor.org/rfc/rfc9591.txt
+    sha256        928d0142da7c30f6e4acab8164dd5d610cc52381ba348e229d7ce7f2f567ae30
+    section       E.5.  FROST(secp256k1, SHA-256)
+    fields        30, wrapped hex re-joined by the extractor
+    config        MAX 3, MIN 2, NUM 2; signers 1 and 3
+    signature     65 bytes (33-byte R element || 32-byte scalar)
+
+TWO CIPHERSUITES, IN ORDER, AND THE REASON. RFC 9591's secp256k1 suite is NOT
+BIP-340: it hashes a different challenge, serialises R as a 33-byte compressed
+point rather than 32 x-only bytes, and has no even-y rule. Those vectors prove
+the ALGEBRA - Lagrange interpolation over the signer set, binding factors,
+share aggregation - and Bitcoin will not verify a signature they produce. So
+the RFC suite is measured first because it is the only thing with published
+numbers, and then the BIP-340 variant is measured the only way that matters:
+`schnorr.verify` accepts a 5-of-7 signature against one 32-byte key.
