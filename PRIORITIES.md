@@ -45,6 +45,15 @@ M2's playable set is finished; 30 (publication lead) stays listed and is
 queued BEHIND M3 on Daniel's word. M3 is live: hold invoices, VSS, FROST,
 testnet sats.
 
+2026-09-09: M3.3-8b - THE PAYOUT HALF OF 9.4 - IS CLOSED AND ON THE DAILY. A
+delivered player is paid their winnings out of the pool on five of seven, and a
+real bitcoind refused the same payout signed by four. Deployed to
+btc-logistics-core.pages.dev at client dc68bd7aa23a141968bb0a8b59fff109;
+btc-logistics-war.pages.dev untouched and no M3 snapshot frozen, because M3 is
+not closed. Two limits came out of it and stay their own lines: item 15 (the
+page has no curve it can trust, so a visitor cannot sit a paying round yet) and
+item 16 (a per-round pool at the fixture stake is below the relay floor).
+
 2026-09-09: M3.3 ITEM 13 - THE POOL WALLET - IS CLOSED. The committee's key is
 a taproot output with no script path, and a real bitcoind accepted a spend of it
 signed by five of seven and rejected four and one. Item 10's signature has a
