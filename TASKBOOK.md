@@ -21865,3 +21865,79 @@ committee's own endpoint to issue the invoice. Neither is true here. What this
 slice buys is the state machine - held, settled, cancelled, expired - driven by
 the core's outcome, on worthless regtest coins. FROST closes the custody gap;
 this does not, and does not pretend to.
+
+### M3 STEP 2 — THE INJECTED CUSTODY PORT, AND WHAT THE FOUR OUTCOMES DO
+
+`blwp-node/src/custody.js`. The port has the four operations Daniel named -
+`createHeld`, `look`, `settle`, `cancel` - and it is injected exactly the way
+`sign`, the curve, `chainFor` and `randomnessFor` are: the protocol decides,
+the transport is handed in. The suite uses a fake port that keeps a call log
+and no money, so all of this is measured with no Lightning node running at all.
+
+CALLERS, BEFORE AND AFTER. The whole point of the step-1 baseline:
+
+    settlementAction     1 caller  (slash.js:546)      ->  1  (unchanged)
+    holdSettlement       0 callers                     ->  1  (custody.js:117)
+    holdAfter            0 callers                     ->  1  (custody.js:137)
+    invoiceMatchesEntry  0 callers                     ->  1  (custody.js:106)
+
+THE FIVE TRANSITIONS, MEASURED.
+
+    create on seat        one createHeld per entry, against the entry's own
+                          stakeCommitment and stakeMsat - never an argument
+    held while live       state HELD, "in nobody's balance"; asked twice, one
+                          invoice (a second would be a second claim on one stake)
+    DELIVERED             CANCELLED - one cancel call, the stake returns
+    FORFEIT               SETTLED   - one settle call, the stake enters the pool
+    VOID                  EXPIRED   - ZERO port calls of any kind
+
+The VOID row is the one that matters. It is asserted as an absence: the void
+player's payment hash appears in no `settle` and no `cancel` in the port's log.
+23.2 says the HTLC expires and the wallet is refunded automatically, and a
+cancel is an act an operator could withhold.
+
+NOT FINAL, NOT MOVED. `settleRound` takes `finalFor`, and an entry it cannot
+answer for stays HELD with zero port calls - not a refusal, because a hold
+nobody may act on expires back to its payer on its own. That is step 3's
+property arriving early: not acting is safe, acting early is not.
+
+MUTATION, 11 mutants against the 7 tests:
+
+    hold with no port goes ahead anyway                        KILLED
+    settleRound with no port goes ahead anyway                 KILLED
+    a second hold is issued for the same entry                 KILLED
+    the invoice is trusted without checking it                 KILLED
+    a stake that has already moved is acted on again           KILLED
+    every result is treated as final                           KILLED
+    a VOID is cancelled instead of left to expire              KILLED
+    settle and cancel are swapped                              KILLED
+    minScore is ignored                                        KILLED
+    the row stores the entry's amount, not the invoice's       RETRACTED
+    the row stores the entry's hash, not the invoice's         RETRACTED
+
+The two retracted are equivalent, and the reason is one line above them in the
+file: `invoiceMatchesEntry` has already refused unless the invoice's hash and
+amount ARE the entry's, so by the time the row is written the two values are
+the same value and no test can tell which was copied.
+
+Three mutants survived a first pass and were killed by new tests rather than
+retracted: a settlement replayed on a restarted daemon released a second
+preimage; `minScore` was dropped on the way into 23.2's table, so a cautious
+player placed anyway; and a hold that had already moved was moved again.
+
+ONE MUTANT WAS FIXED IN THE SOURCE INSTEAD. `holdAfter` was being handed
+`nobodyActs: action === NOTHING`, which is the same condition its own first
+branch already tests - dropping either one changed nothing, and the mutant
+lived because the other still held. It is gone: `nobodyActs` names a node that
+did not act, and a node that did not act never reaches that line, because it is
+not running.
+
+THE MONEY GUARD REACHES OUT OF THE PROTOCOL PACKAGE for the first time.
+`custody.js` is on its list (12 files -> 13): it is what actually runs 23.2
+against a Lightning node, and a float msat there would settle a hold for an
+amount no player ever signed.
+
+STILL SINGLE-NODE CUSTODY, NOT §23.5. Nothing here is a threshold. `finalFor`
+is a predicate the caller supplies, and today the only thing that could answer
+it honestly is the 5-of-7 verdict the committee already reaches; wiring that in
+is not this step.
