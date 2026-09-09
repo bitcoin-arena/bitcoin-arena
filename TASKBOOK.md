@@ -24007,3 +24007,65 @@ not true of the ground any more. Getting it back means snapshotting the fee
 profile into the round contract at round start, as a second input to this same
 integer generator, so it is a fact of the round that every replayer holds -
 never a live read. Listed as its own letter; not done here.
+
+## M2.36 was marked done on half the goal, and here is the other half
+
+Asked after the ground was closed: does 36 have everything its own words need?
+No. Two things, both measured rather than felt.
+
+### The core against the engine it replaces, since it was asked for again
+
+Both on an empty battlefield, the way the vehicle fixture drives, full
+throttle, no steering. The left column is the PhysX recording:
+
+     t     PhysX    core(flat)    err     core(seeded hills)    err
+     1s    3.811       4.023    + 5.6%          4.023         + 5.6%
+     3s    9.594      10.317    + 7.5%         10.062         + 4.9%
+     5s   15.634      14.756    - 5.6%         12.952         -17.2%
+     8s   18.695      18.996    + 1.6%         18.120         - 3.1%
+    10s   19.986      20.745    + 3.8%         19.849         - 0.7%
+    13s   22.478      22.375    - 0.5%         23.171         + 3.1%
+    tolerance 15%
+
+On the recording's own flat world the core is inside 7.5% everywhere - and
+inside 4% from 8 s on. On the round's seeded hills it is 17.2% down at 5 s and
+back to 3% by 8 s: that is a truck going up a hill and over it, which is the
+relief doing its job and is exactly why the reference fixture is given a flat
+world rather than being loosened.
+
+FIRST MEASUREMENT OF THIS WAS WRONG AND IS WRITTEN DOWN AS SUCH: run without
+clearing the field, the core read 2.925 m/s at 13 s, -87%. That was the army
+shooting the truck, not the vehicle. The fixture clears the field every tick
+and says why; a comparison that does not is measuring a damaged truck.
+
+### The solids are still the host's, and it is worse than the ground was
+
+  - The shipped scene carries 0 BoxColliders. Every world solid is built at
+    RUNTIME - `Bootstrap` makes the four map-edge walls, models stream in
+    later - so the collision world is a product of Unity code in the browser,
+    exactly as the height field was.
+  - `CoreDrivenTruck.UploadSolids` still sends them, and it re-sends WHENEVER
+    THE COUNT CHANGES. So the world the core resolves against changes during a
+    run as models arrive, and two pages at the same tick need not agree.
+  - No replay anywhere sets solids: `grep setSolids packages/*/src` is empty.
+    A committee resolves every drive against nothing.
+  - Measured: one box on the path moves a 600-tick drive 40.233 m. The ground
+    was worth 33.500 m.
+
+Whether a particular drive touches one cannot be settled from here, because the
+set is built at runtime - the four `Wall_*` boxes are the map's edges and a
+normal run stays inside them, but `IsWorld` admits everything else with a
+collider that is not the truck, not a trigger, not on the yard layer and not a
+ghost. That is the point: it is not knowable without a browser, which is what
+makes it a fault and not a detail.
+
+The fix is 36's own, again: the map's collision boxes belong to the core and
+Unity draws them. Letter 39.
+
+### And nothing has been looked at
+
+The C# and the jslib changed, so the Daily needs a real WebGL build - a
+template copy carries neither. 36 has been called done twice and a two-Chrome
+look has said NO twice, and the field case the ground fix exists for is exactly
+what a look tests. Marking it done at ddf9e3d on the ground numbers alone is
+the same mistake as the 19:27 close-out.

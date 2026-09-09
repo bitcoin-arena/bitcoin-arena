@@ -16,8 +16,28 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: M3. M2.36 IS DONE - the committee walks the same seeded hills the
-player drove. The core generates the relief from the round's seed in integer
+LIVE LETTER: M2.36, STILL OPEN. The ground half is done and measured - the
+committee walks the same seeded hills the player drove - but the goal is "the
+other truck is drawn where that truck actually is, live" and TWO THINGS ARE
+MISSING, found by asking rather than by another look failing.
+
+  (a) THE SOLIDS ARE STILL THE HOST'S, which is the same fault as the ground
+      and is bigger. `WorldSolids.Gather` collects every BoxCollider Unity has
+      BUILT AT RUNTIME - the shipped scene carries none, they are all made by
+      `Bootstrap` and by streamed models - `CoreDrivenTruck.UploadSolids` sends
+      them to the core, and no replay anywhere sets solids. `UploadSolids`
+      re-sends whenever the count changes, so the collision world the core is
+      simulating CHANGES MID-RUN as models arrive. Measured: one box on the
+      path moves a 600-tick drive 40.233 m, which is more than the 33.500 m the
+      ground was worth. Same shape of fix - the map's collision boxes belong to
+      the core, Unity draws them - and it is letter 39.
+  (b) NO TWO-CHROME LOOK SINCE THE FIX, AND NOTHING DEPLOYED. The C# and the
+      jslib changed, so the Daily needs a real WebGL build; a template copy
+      does not carry them. 36 has been called done twice and a look has said NO
+      twice, and the field case the ground fix is FOR is exactly what a look
+      tests.
+
+The ground half, for the record: The core generates the relief from the round's seed in integer
 fixed-point and Unity draws it; the page's upload door is gone from all three
 layers. One drive, 600 ticks: page (-70.212, -32.048) m against replay
 (-70.212, -32.048) m, 0.000 m apart where it was 33.500, on a world that is not
@@ -726,8 +746,29 @@ IN THIS ORDER (unparked):
                                         same integer generator, so it is a fact
                                         of the round every replayer holds and
                                         never a live read. Not started.
-   36  M2 live ghost pose             M2   done — the committee walks the same
-                                        seeded hills the player drove. The core
+   39  M2 the collision world is      M2   OPEN — the same fault as 36's ground,
+       still the host's                   unfixed and larger. The shipped scene
+                                        has 0 BoxColliders: every world solid is
+                                        built at RUNTIME by `Bootstrap` and by
+                                        streamed models, `UploadSolids` sends
+                                        whatever Unity gathered, and no replay
+                                        sets any - so a committee resolves a
+                                        drive against nothing. `UploadSolids`
+                                        re-sends when the count changes, so the
+                                        simulated collision world moves mid-run.
+                                        MEASURED: one box on the path moves a
+                                        600-tick drive 40.233 m, against the
+                                        33.500 m the ground was worth. The fix
+                                        is 36's, again: the core owns the map's
+                                        boxes and Unity draws them.
+   36  M2 live ghost pose             M2   OPEN — the ground half is done and
+                                        measured; the solids half (39) and a
+                                        two-Chrome look are not. Was marked done
+                                        at ddf9e3d on the ground numbers alone,
+                                        which is the same mistake as the 19:27
+                                        close-out.
+                                        THE GROUND HALF: the committee walks the
+                                        same seeded hills the player drove. The core
                                         generates the relief from the round's
                                         seed (12x8 lattice, two octaves, peak
                                         6 m, both aprons levelled) in integer
