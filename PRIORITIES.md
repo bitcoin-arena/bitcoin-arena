@@ -16,11 +16,9 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: M3.3-16 dust / relay floor. Daniel 12:03: when that current
-task is done, fix M2.36. Claude can measure ghosts without WebGL:
-two-tabs.test.js (two clients, one drives, other is shown a picture) and
-ghost-live.test.js (consecutive frames keep up). SwissClaw still does the
-two-Chrome close-out. 30 stays queued behind M3.
+LIVE LETTER: M2 36 - live ghost pose. M3.3-16 is done (17a5873, Daniel 12:14).
+Claude measures 36 without WebGL: two-tabs.test.js and ghost-live.test.js.
+SwissClaw two-Chrome close-out. 30 stays queued behind M3.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
 threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
@@ -586,6 +584,11 @@ IN THIS ORDER (unparked):
                                         09:33: advert verify was Ed25519 vs
                                         schnorr bond key — page now uses
                                         BLWP_CURVE.verify.
+   M3.3-16 dust / relay floor         M3   done — 17a5873. Floor is 330 sats on
+                                        this node. Sub-floor rows are debt,
+                                        PAID_IN_PART, not a blocked round.
+                                        329 refused, 330 accepted. 9 mutants
+                                        killed. Photographed 12:14.
    36  M2 live ghost pose             M2   OPEN — SwissClaw two-Chrome 11:51: NO.
                                         P1 AUTO 86%/8 parcels, rolled out, drove
                                         in the field (core x -100.4 → -91).
@@ -2516,13 +2519,11 @@ round, which is why testnet comes first and why the order is stricter.
      made by one machine holding a threshold of the key, which is the
      custody this milestone dismantles everywhere else.
 
- 16. **Per-round payouts are below the relay floor** (23.5). QUEUED, NOT
-     STARTED. Measured on a node: 100 and 200 sats are refused
-     "Transaction amount too small" and 330 accepted. At the fixture stake
-     of 100000 msat a whole round's pool is 100 or 200 sats, so
-     `payoutOutputs` refuses by name rather than dropping the row. The
-     answers are a per-player balance that accumulates across rounds until
-     it clears dust, or a Lightning payout - neither is invented yet.
+ 16. **Per-round payouts are below the relay floor** (23.5). DONE (17a5873).
+     Floor is 330 sats on this node. Sub-floor rows are debt / PAID_IN_PART.
+     A 100-sat winner no longer blocks a 5000-sat one. Sub-floor rows stay
+     owed on the round. Across-round balances and Lightning payouts are not
+     this letter.
 
  15. **A curve the page can trust** (23.1, 20). QUEUED, NOT STARTED.
      `player_pubkey` is a real secp256k1 x-only key now, because a payout
