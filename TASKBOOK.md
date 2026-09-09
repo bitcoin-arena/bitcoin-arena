@@ -21691,3 +21691,47 @@ the chain the bonds are on is refused.
 
     core 84/84   protocol 432/432   blwp-node 227/227   blwp-client 118/118
     money guard 12 clean, determinism guard 20 clean
+
+### Item 32, the audit after it was marked done: the closing door asked less
+
+Asked whether anything was still missing, the beacon's consumers were counted
+rather than remembered:
+
+    roster.seedFor      seats a committee          CHECKED against the chain
+    /committee door     reads roster.committeeFor  the same checked path
+    ghosts.js           a player's world picture   27's rule (a picture decides
+                                                   nothing - 0.10)
+    verify.js           closes a round             27's rule ONLY
+
+And the last one is not idle. `replay` derives every player's world from that
+beacon, so a node closing on a late-but-wrong block computes a different world,
+a different state hash, and a result no honest node will agree with. It also
+derived a committee seed into `this.seeds` - a map with two writers and, by
+grep, ZERO readers: `seeds.get` appears nowhere. A committee seed nobody reads,
+computed from a beacon nobody checked, is the shape of fault this letter and
+the two before it each had to fix once already.
+
+So the verifier takes the node's chain view and asks the same question the
+seat does. Measured:
+
+    closing: chain names 900001; block 900002 offered -> refused
+      "that beacon is block 900002 where this chain names 900001 as the first
+       after committee time ...: a later block is a block somebody chose"
+    the honest beacon goes through the same door and queues its entry
+
+A node with no view is left as it was on both doors: it has no chain to ask,
+27's rule has already run, and refusing there would refuse every node that
+closes without one.
+
+    core 84/84   protocol 432/432   blwp-node 227 -> 228   blwp-client 118/118
+    money guard 12 clean, determinism guard 20 clean. No C# moved.
+
+CORE VERSUS THE OLD C# ENGINE DOES NOT APPLY TO THIS LETTER, and saying so is
+the honest answer rather than inventing a comparison: 32 is protocol and
+daemon only. No file under `unity-proto/` was touched, the core's own suite is
+unchanged at 84/84, the determinism guard covers the same 20 files, and the
+recording comparison that M1 closed (78 of 78 quantities) is untouched because
+nothing in the simulator moved. The beacon reaches the core only as
+`roundRandomness`, one 32-byte word into `seedWordForEntry`, and that path was
+already measured: the truck's pose does not move with it, which is exactly why
+the seed and not the pose is what these tests assert.
