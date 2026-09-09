@@ -23281,3 +23281,57 @@ and which a selection ignoring the beacon still fails.
 
 Suites after: blwp-node 315/333 -> 333/333, blwp-client 129/129, core 88/88,
 protocol 440/440.
+
+WHERE THE TRUCK IS DRAWN (beeb20f). 36's last unmeasured step. `two-tabs.test.js`
+writes what the shipped `BlwpNextGhost` wrote over a real 2-of-2 round - twelve
+ints a line, `DUMP_GHOSTS_DRIVE=<path>` - and `GhostDrawnPoseTests` drives the
+real `Bootstrap` field with exactly those pictures, through `Source`, the door
+`FromBridge` comes in by. Read back off the transform, one picture per frame:
+
+    tick  5  ints x -6578659 z 1114112 h 16384 -> (-100.382, 4.225, 17.000)  90.000 deg
+    tick 11  ints x -6575533 z 1114112 h 16384 -> (-100.335, 7.669, 17.000)  90.000
+    tick 17  ints x -6570459 z 1114112 h 16390 -> (-100.257, 7.669, 17.000)  90.033
+    tick 23  ints x -6563461 z 1114112 h 16403 -> (-100.151, 7.669, 17.000)  90.104
+    tick 29  ints x -6554563 z 1114102 h 16424 -> (-100.015, 7.669, 17.000)  90.220
+    tick 35  ints x -6543789 z 1114073 h 16452 -> ( -99.850, 7.669, 16.999)  90.374
+    tick 41  ints x -6531163 z 1114009 h 16490 -> ( -99.658, 7.670, 16.998)  90.582
+    tick 47  ints x -6516709 z 1113890 h 16537 -> ( -99.437, 7.670, 16.997)  90.840
+
+Tolerances: 1 mm in x and z, 50 mm in y (the page's own ground under that x/z),
+0.01 degrees in heading. The capture moves 0.945 m ACROSS THE GROUND - measured
+on x/z and not in 3D, because the first frame is drawn before the terrain has
+settled and a truck that never left its door still gains 3.4 m of height between
+picture one and picture two. Renderer bounds centre (-99.437, 8.670, 16.997)
+against a root at (-99.44, 7.67, 17.00), size 6.23 x 2.20 x 2.49.
+
+THE CAPTURE HAD TO STEER. It was full throttle and nothing else, so every
+heading word was 16384 and a bridge that dropped the heading was indistinguish-
+able from one that carried it. With steer 22000 the word moves 16384 -> 16537.
+
+THE TEST'S OWN FIRST FAULT WAS 36's IN MINIATURE. It handed the field the whole
+capture as a queue; `Update` calls `Draw(PerFrame)` and PerFrame is 24, so frame
+one drained all eight and every assertion read the LAST pose - x -99.437 where
+the first picture says -100.382, which reads exactly like a renderer drawing the
+wrong place. A page holds what arrived since the last frame, and at 5 Hz that is
+one or none. One per frame now, and the test asserts exactly one was taken.
+
+MUTATION: 7 against it, 7 killed.
+  x written where z belongs                  -> not at the x its ints name
+  raw words instead of metres                -> not at the x its ints name
+  the page's ground ignored                  -> not standing on the ground
+  the heading dropped (identity rotation)    -> faces somewhere its ints never pointed
+  the heading divided like a metre           -> faces somewhere its ints never pointed
+    (16384/65536 = 0.25 deg for a quarter turn - the M1 fault, pinned again)
+  a truck placed once and never moved again  -> not at the x its ints name
+  the clone left inactive                    -> not active, so nobody sees it
+The last one is why the test asks `activeInHierarchy` and not `renderer.enabled`:
+an inactive clone HAS an enabled renderer and is on nobody's screen.
+
+PRINTED, NOT ASSERTED, because it is the round's business and not the renderer's:
+local truck (-100.40, 10.20), other truck (-99.44, 17.00), 6.9 m apart - one of
+34's 24 doors at 6.8 m pitch - and the chase camera has the body in frustum.
+A test that demanded the two be close would be demanding the bays go away.
+
+DEPLOYED 15:59: btc-logistics-core.pages.dev, the chip of 3d0eb63 live. The
+served index.html and blwp-client.js are byte-for-byte the built ones
+(62bcef8b855fab8fc9f34ba5546206cc, 4cfc3b5e4c9508e4595c5cb220e9039c).

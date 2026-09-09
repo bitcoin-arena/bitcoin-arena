@@ -16,7 +16,11 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: M2 36 - live ghost pose. M3.3-16 is done (17a5873, Daniel 12:14).
+LIVE LETTER: M2 36 - live ghost pose. Everything Claude can measure without a
+browser is green and DEPLOYED (15:59): the Daily is unblocked, the chip that
+names the other truck's metres is live, and the renderer's own PlayMode test
+puts the truck where the shipped bridge's ints say (beeb20f). What is left is
+the two-Chrome pair of eyes. M3.3-16 is done (17a5873, Daniel 12:14).
 Claude measures 36 without WebGL: two-tabs.test.js and ghost-live.test.js.
 SwissClaw two-Chrome close-out. 30 stays queued behind M3.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
@@ -634,6 +638,29 @@ IN THIS ORDER (unparked):
                                         Screens: daniel-screens/retest-p1-drive1.png
                                         retest-p1-drive2.png retest-p2-ghost1.png
                                         retest-p2-ghost2.png.
+                                        15:57 (1a16061): the Daily's 18 red were
+                                        34's fallout, not hash pins - a fixture
+                                        that stopped before its run ended. Green
+                                        now, and the chip that names the other
+                                        truck's metres is DEPLOYED (15:59,
+                                        btc-logistics-core, index.html byte-for-
+                                        byte the built one).
+                                        16:02 (beeb20f): the last unmeasured step
+                                        is measured. A PlayMode test drives the
+                                        real Bootstrap field with the twelve ints
+                                        the SHIPPED bridge wrote and reads the
+                                        transform back: 8/8 pictures to a mm in
+                                        x and z, a hundredth of a degree in
+                                        heading, standing on the page's ground,
+                                        0.945 m of travel. 7 mutants, 7 killed.
+                                        The test's own first fault was 36's in
+                                        miniature - it drained all 8 pictures in
+                                        one frame and read the last pose, which
+                                        looks exactly like drawing the wrong
+                                        place. Printed, not asserted: two trucks
+                                        6.9 m apart (one door) and the ghost in
+                                        the chase camera's frustum.
+                                        WHAT IS LEFT IS THE PAIR OF EYES.
                                         Close-out: SwissClaw two-Chrome retest
                                         (Daniel 10:30). Not suites alone.
    30  M2 publication lead + receipts —  queued behind M3 (Daniel 2026-09-09).
