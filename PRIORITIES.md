@@ -3019,8 +3019,24 @@ round, which is why testnet comes first and why the order is stricter.
      own share, a daemon took the entry. Dealt to the wrong seven, 2 refused.
 
      WHAT IS STILL NOT PAID is the hold invoice - bolt11 and the NWC wallet
-     are M3.2 items 5 and 6. The page says so in words rather than implying a
-     funded seat.
+     are M3.2 items 5 and 6. The chip says so in the NODE's words, not the
+     page's: `POST /entry` already answers `x-hold`, and `Client.join` kept
+     none of it, so the first close printed "the stake is not paid" as a
+     constant.
+
+     THE FOLLOW-UP FOUND FOUR MORE, all on the player's side of the glass and
+     all now closed: a refused seat and a free seat both read on the chip
+     exactly like an ordinary one; the page invented the funding word; the seat
+     hold was written over the tick buffer and every suite stayed green by luck
+     of ordering; and EVERY PAYING ENTRY THE PAGE BUILT DID NOT STAND, because
+     `entryFor` wrote `feeMsat: 0n` where `feeMatchesEntry` asks for 2% of the
+     stake - 2000 on the fixture's 100000 - and that rule had zero callers.
+     M2's rounds are unchanged: 2% of nothing is nothing.
+
+     NAMED, NOT OPENED AS A LETTER: `feeMatchesEntry` still has no caller at
+     the daemon's door, so a wrong fee is written correctly by this page and
+     would not be refused from another. That is enforcement, not something a
+     paying round needs in order to sit.
 
  14. **Dealerless DKG.** QUEUED, NOT STARTED. Item 10 measured RFC 9591
      Appendix C, a TRUSTED DEALER, so the group secret was known to

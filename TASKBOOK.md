@@ -24443,3 +24443,72 @@ learn is refused by name instead of seated.
 
 Suites after: core 89/89, guard 21 files clean, protocol 441/441,
 blwp-node 390/390, blwp-client 148/148.
+
+## 2026-09-09  item 15 follow-up - four holes on the player's side of the glass
+
+Asked at the close of 15: red tests, deployability as the player sees it, host
+or PhysX values in the stake path, and anything a paying round still needs.
+Four holes came out of it, all inside 15's own "never seated silently".
+
+1. THE REFUSAL AND THE STAKE WENT TO THE CONSOLE ONLY. The chip reads
+   `playersLine`, which returned:
+
+       a refused seat      "round named · not seated"   <- identical to a page
+                                                           nobody sent a round
+       a free seat         "1 player · waiting"         <- identical to funded
+
+   and the bridge then threw "the page did not say which round to play", which
+   names the wrong cause. It reads `not seated · <why>` and ` · free seat` /
+   ` · stake dealt, unpaid (<why>)` now.
+
+2. THE PAGE INVENTED THE FUNDING WORD. `POST /entry` calls `custody.hold` and
+   answers `x-hold`, or `x-hold-why` when there is none. `Client.join` dropped
+   both, so the first close printed "THE STAKE IS NOT PAID" as a CONSTANT.
+   Measured against a real daemon: `x-hold: none (this node reaches no
+   Lightning, so it holds no stakes)`. The chip prints the node's word.
+
+3. `this.hold` WAS ALREADY THE TICK BUFFER, and the seat hold was written over
+   it. Every suite stayed green by luck of ordering - the jslib calls
+   `setRound` after `join` and `setRound` puts the array back - so a page that
+   joined and published without one in between would have called `.push` on an
+   object and lost the run. `seatHold` now, with a test that the buffer
+   survives a join.
+
+   And the funding word was missing from the branch a player looks at longest:
+   `playersLine` returned early for a lone player, so "1 player · waiting" was
+   the one line that never said the seat was unpaid.
+
+4. EVERY PAYING ENTRY THE PAGE BUILT DID NOT STAND. `entryFor` wrote
+   `feeMsat: 0n`; `feeMatchesEntry` says a fee must be exactly 2% of its own
+   stake, and it had ZERO CALLERS outside its own tests.
+
+       2% of 100000 msat        2000
+       the page wrote           0        -> "does not stand"
+       now                      entryFeeMsat(round.stakeMsat)
+       a free round             0, and it stands
+
+   M2's rounds are byte-identical: 2% of nothing is nothing, so there is no
+   branch. `fee.js` also carried a private `fromHex` - hash.js's loop without
+   its odd-length check - which is two of one decoder and is what made the file
+   unbundleable beside hash.js; it imports the exported one now.
+
+WHAT WAS CLEAN: no path in C# or the jslib reads a host or PhysX value for
+stake, committee or entry - the entry lives entirely in the page's JS and the
+bridge treats `BLWP_ENTRY` as opaque. No drift either: dist == template ==
+build == LIVE for blwp-core.js, blwp-client.js and blwp-curve.js, and the built
+page is byte-identical to the served one.
+
+TWO PINS CHANGED AND NEITHER WAS LOOSENED. One asserted the page contains the
+words "THE STAKE IS NOT PAID"; it asserts now that the page hands the chip the
+node's word and contains no such constant. The other asserted `feeMsat === 0n`
+with "M2 asks for no money" beside a fixture naming a 100000 msat stake - the
+assertion and its own setup disagreed - and it pins 2% for a paying round and 0
+for a free one.
+
+STILL OPEN AND NOT MINE TO PLACE: `feeMatchesEntry` has no caller at the
+daemon's door, so a wrong fee is written correctly by this page and would not
+be REFUSED from another. That is enforcement, not what a paying round needs to
+sit, and it is named here rather than made into a letter.
+
+Suites after: core 89/89, guard 21 files clean, protocol 441/441,
+blwp-node 390/390, blwp-client 152/152.
