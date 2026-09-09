@@ -22779,3 +22779,49 @@ retracted. Five needed new tests rather than a retraction: a table naming a key
 the round never seated, a payout larger than the pool, a forged signature from a
 seated key, a restart that marks paid without asking, and the floor not reaching
 the computation.
+
+### M3.3-8b, THE AUDIT AFTER IT WAS CALLED DONE
+
+Asked whether the letter had everything it needs, and the caller count was
+measured again rather than assumed. It had not:
+
+    new Payouts in packages/*/src        0   (8 in tests, 2 in one tool)
+    server.js references to a payout     0
+    the /payout door `gather` fetches    DID NOT EXIST
+    payouts.reconcile on start           not called
+    the `fetcher` the constructor takes  never accepted, so `gather` could only
+                                         reach the global fetch
+
+So the eighth time this session: the rules were right, measured and green, and
+the running daemon did none of them. A close settled the stakes and stopped -
+no seat ever signed what the round owed, and five of seven could only be
+reached by a test writing the rows in by hand.
+
+Wired, and measured through the daemon's own doors:
+
+    a round closes                 the node signs the table it computed, without
+                                   being asked: 1 signature stored
+    GET /payout?round=             128 bytes, its own record, byte-identical to
+                                   what it stored - the door `gather` reads on
+                                   every other seat
+    one of seven                   no row at all, and x-payout-state "none"
+    a daemon with no chain         asks it nothing, and says so
+
+    new Payouts in src             0 -> 1 (server.js)
+    server.js payout references    0 -> 6
+
+WHAT IS STILL NOT THERE, and it is named rather than parked: **one process
+holds five shares**. `Payouts.pay` takes `signers` carrying five SHARES, and
+the regtest tool holds all seven in one process - that measured the mechanism,
+not the distribution. A real payout needs a two-round FROST signing exchange
+between daemons: commitments first, then shares over the same peer list
+`gather` already uses. Until that exists the spend can only be made by a
+machine holding a threshold of the key, which is the single-node custody this
+milestone is dismantling everywhere else.
+
+That is not a hole this letter can quietly leave inside itself, so it is on
+PRIORITIES as its own line.
+
+Suites: blwp-node 319 -> 321, core 84, protocol 440, blwp-client 120, all green.
+No client bytes changed, so the daily still serves
+dc68bd7aa23a141968bb0a8b59fff109.

@@ -116,7 +116,17 @@ IN THIS ORDER (unparked):
                                         absorbed here: the page has no curve to
                                         make a payable key with, and a
                                         per-round pool at the fixture stake is
-                                        below the relay floor. Numbers:
+                                        below the relay floor. AND THE AUDIT
+                                        AFTER IT WAS CALLED DONE FOUND A THIRD:
+                                        `new Payouts` was in no src file and
+                                        `gather` fetched a `/payout` door that
+                                        did not exist, so a close settled the
+                                        stakes and never signed what the round
+                                        owed. Wired: a close signs the table
+                                        and the door serves it. What remains is
+                                        item 17 - one process still holds five
+                                        shares, and a real payout needs a
+                                        signing round between daemons. Numbers:
                                         TASKBOOK.
    M3.3-13 the pool wallet (23.5)   M3   done — settled stakes have somewhere to
                                         be that no operator can move. Measured
@@ -2415,6 +2425,15 @@ round, which is why testnet comes first and why the order is stricter.
      signed by five of seven and refused the same spend signed by four and
      by one. Item 10's signature has a caller now. What it does NOT do is
      decide what to spend on: that is item 8's payout half.
+
+ 17. **The signing round between daemons** (23.5, 20). QUEUED, NOT STARTED.
+     `Payouts.pay` is handed five SHARES, and the regtest tool holds all
+     seven in one process - which measures the mechanism and not the
+     distribution. A real payout needs a two-round FROST exchange between
+     seats: commitments, then signature shares, over the same peer list
+     `/payout` and `/results` already use. Until then a spend can only be
+     made by one machine holding a threshold of the key, which is the
+     custody this milestone dismantles everywhere else.
 
  16. **Per-round payouts are below the relay floor** (23.5). QUEUED, NOT
      STARTED. Measured on a node: 100 and 200 sats are refused
