@@ -23458,3 +23458,56 @@ WHAT IS NOT HERE, NAMED RATHER THAN ABSORBED:
     does not pretend to be it.
 
 Suites: blwp-node 333 -> 354, blwp-client 129/129, core 88/88, protocol 440/440.
+
+## M2.36, after the 16:08 two-Chrome close-out: two faults, both named and both fixed
+
+THE FIRST STOPPED THE PAGE FROM STARTING AT ALL. The Daily shipped
+`script.src = 'Build/{{{ LOADER_FILENAME }}}'` - seven unfilled template tokens,
+not one - so Unity never started and the page sat on its own loading screen
+looking like a slow download. SwissClaw found it by injecting webgl5.loader.js
+by hand. How it got there is not carelessness: the WebGL TEMPLATE is where the
+page is edited, and an edit reaches a deploy by being copied over Unity's built
+index.html, which brings the tokens back. `unity-proto/tools/fill-template.mjs`
+fills them from the build that is there - four names read out of `Build/`, the
+company/product/version out of ProjectSettings - and `--check` exits non-zero if
+any is left. Both deploy scripts fill and then check before they upload, so an
+unfilled page cannot reach Cloudflare again.
+
+THE SECOND IS WHY THE GHOST FROZE, and the measurement came before the fix.
+
+  - THE DAEMON PATH IS NOT THE FAULT. A watcher on a real socket was driven
+    through 6000 published ticks in 40 batches and held the newest tick every
+    single time: published through 149 -> holds 149, ... published through 5999
+    -> holds 5999. Not one batch behind.
+  - A GAP IS NOT POSSIBLE. `Round#batch` refuses a non-contiguous batch at
+    intake - "expected tick N, got M" - so the stored ticks have no holes for a
+    warm ghost run to refuse to step across.
+  - THE CLIENT RETRIED THE SAME BATCH FOREVER. On a refusal the words went back
+    at the head of the hold and nothing else changed, so the next `drain` built
+    the identical batch. `nextTick` never moved again. Every watcher's picture
+    of that truck stopped at the last tick that landed - 4241 - while the driver
+    drove on, and from outside the run looked healthy: socket up, player count
+    right, chip reading play · A up · 2 players.
+
+THE FIX IS THAT A REFUSAL IS A DISAGREEMENT ABOUT WHERE THE RUN IS. The two
+numbers that could be wrong - `nextTick` and `batchHead` - are re-read from the
+node ONCE through `resume`, the same door a reconnect uses, which checks what it
+is given rather than adopting it. A batch refused after that is not about the
+numbers, and the run ends with the node's own words. A player whose inputs
+nobody stores is not driving a round.
+
+AND THE PAGE SAYS SO: `not publishing · <the node's own sentence>`, first on the
+chip, above the count and the place, because it is the one fault none of the
+other numbers can show.
+
+MUTATION: 6 against it, 6 killed. Mutant 1 IS the behaviour this letter
+replaces - "a refusal changes nothing" - and it fails two of the four tests,
+which is what makes them a measurement rather than a description. Also killed:
+resyncing on every refusal instead of once; ending without ever resyncing;
+building a batch while the numbers are being re-read; a recovered run still
+reporting a refusal; a chip with no line for it.
+
+Suites: blwp-client 129 -> 133, blwp-node 354/354, core 88/88, protocol 440/440.
+Bundle 282.9 -> 286.6 KB. Deployed to btc-logistics-core: the served
+index.html carries no tokens, /Build/webgl5.loader.js answers 200, and the
+served blwp-client.js contains the new line.

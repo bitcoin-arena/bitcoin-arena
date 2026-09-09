@@ -680,7 +680,29 @@ IN THIS ORDER (unparked):
                                         PAID_IN_PART, not a blocked round.
                                         329 refused, 330 accepted. 9 mutants
                                         killed. Photographed 12:14.
-   36  M2 live ghost pose             M2   OPEN — SwissClaw two-Chrome 16:08: NO.
+   36  M2 live ghost pose             M2   OPEN — two faults found by the 16:08
+                                        close-out, both fixed and DEPLOYED
+                                        (2c57cfe, 566105e), awaiting a retest.
+                                        (1) The Daily shipped seven unfilled
+                                        template tokens, so Unity never started
+                                        until the loader was injected by hand.
+                                        A deploy now fills them and REFUSES to
+                                        upload a page that still carries one.
+                                        (2) The frozen ghost is the PUBLISHING
+                                        side, measured: the daemon path keeps
+                                        up tick-for-tick through 6000 published
+                                        ticks and the store refuses a gap at
+                                        intake, but a REFUSED batch was put back
+                                        on the hold and re-sent unchanged for
+                                        the rest of the round - `nextTick` never
+                                        moved again and every watcher's picture
+                                        froze at the last tick that landed. A
+                                        refusal now re-reads the two numbers off
+                                        the node once and, if it is still
+                                        refused, ends the run in the node's own
+                                        words. The chip says `not publishing ·
+                                        <why>` first. 6 mutants, 6 killed.
+                                        Earlier report, 16:08: NO.
                                         P1 AUTO 83%/9 parcels, left the yellow
                                         bay, on fire in the field.
                                         P2 stayed in cargo loadout on dirt
