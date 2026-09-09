@@ -23870,3 +23870,47 @@ Verdict NO. Letter 36 reopened.
 Screens: daniel-screens/2026-09-09-1931-p1-drive1.png
 2026-09-09-1931-p1-drive2.png 2026-09-09-1931-p2-ghost1.png
 2026-09-09-1931-p2-ghost2.png (also media/blwp/ same names).
+
+## M2.36, why 19:27 and 19:31 both told the truth: the replay is flat
+
+The 19:27 look measured each tab's picture of the other against that truck's own
+core at (0.000, 0.000) m. The 19:31 look watched P2's chip crawl -100,-3 to
+-97,-3 while P1 was out in the tank field. Both happened, and the difference is
+the ground.
+
+`init` leaves a core "flat until the host uploads the relief". The PAGE uploads
+one - `CoreDrivenTruck.UploadGround` calls `BlwpCore.SetGround` with
+`MempoolTerrain.HeightGrid`, and `UploadSolids` does the same for the boxes.
+THE DAEMON'S REPLAY DOES NEITHER: `RunInProgress` calls `init(seedWord)` and
+steps. Counted rather than remembered: files in `src/` that give a replay a
+ground, 0.
+
+Measured, one seed, one drive, six hundred ticks, the only difference being the
+ground the core was given:
+
+    after 20 ticks, still on the apron        0.000 m apart
+    after 600 ticks   flat    (-77.322, -45.794) m
+                      relief  (-65.947, -14.285) m
+                                             33.500 m apart
+
+The apron is level by construction - `MempoolTerrain.HeightAt` flattens both
+ends of the map on purpose, "a metre of remaining relief anywhere under it is a
+metre of daylight under one end" - so the two worlds agree EXACTLY while the
+truck is standing at its bay or rolling off it. That is the whole of the 19:27
+measurement: it was taken on the apron, over 3.6 m of it. The moment the truck
+is on relief the replayed truck drives a different map, which is a chip that
+crawls while the real truck is in the field.
+
+IT IS NOT ONLY THE GHOST. The same replay decides the outcome and the score the
+round pays on, so a run that leaves flat ground is judged in a world nobody
+drove.
+
+AND THE GROUND HAS NO HOME IN THE PROTOCOL. Checked: `contracts.js`,
+`transcript.js`, `batch.js` and `checkpoint.js` carry nothing about heights,
+terrain or relief. A replay cannot ask for it because there is nowhere to ask.
+Worse, it is not derivable: `MempoolTerrain.HeightAt` is `Mathf.Log10` of a
+LIVE mempool fee profile plus `Mathf.PerlinNoise` - a host's live data through
+Unity's own float maths, which NIGHT-RUN already measured as the thing the
+fixed-point core exists to avoid. No other party can reproduce it, and the page
+telling the core what the world looks like is the simulator leaking back into
+Unity by a door nobody was watching.
