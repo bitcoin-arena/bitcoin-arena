@@ -22299,3 +22299,40 @@ disk and the share is re-opened from it when needed, so a stolen database is a
 pile of envelopes. The `holds` table gained nothing.
 
 Suites: blwp-node 258 -> 264, core 84, protocol 432, blwp-client 118, all green.
+
+### M3.3-9 STEP 2b — THE PAGE DEALS
+
+Letter 29 named it: "the page is not a dealer, which arrives with the hold
+invoice". It arrived. Measured before: `join.js:213` set
+`stakeCommitment: random(32)` - a commitment to NOTHING, with no preimage
+anywhere in the system - and `vssSharesRef: NO_SHARES`.
+
+`stakeFor(round, { seats, curve, random, playerPubkey })` now does 23.1 steps 1
+and 2 in the page: choose P, publish `sha256(P)`, split it 5-of-7 over the
+settlement committee, seal one share to each seat, and hand back the handout to
+POST. P never leaves the page.
+
+    stakeCommitment === sha256(preimage)        true   (was: random bytes)
+    vssSharesRef === handoutId(handout)         true   (was: 32 zero bytes)
+    seats that open their own share             7 of 7
+
+THE CURVE IS INJECTED, exactly like `sign` and `verify`. `bundle.js` says why:
+"a vendored curve would be an implementation of the thing that pins money,
+sitting in the page, that nobody audits." So the page hands in
+`pointFromScalar`, `combinePoints`, `ecdhShared` and `pointX`, and the bundle
+still carries no crypto - it grew from 25 to 27 modules and none of them is a
+curve.
+
+AND IT IS AN INPUT DEVICE. Nothing in `stakeFor` computes an outcome, reads a
+truck or decides what a run came to. It generates key material and encodes it.
+
+P IS NOT REDUCED. `splitSecret` refuses a preimage at or above the group order
+rather than taking it modulo n, because reducing would change the number the
+payment hash already commits to; `stakeFor` draws another instead.
+
+THE BUNDLE CHANGED, for the first time in this slice: 277.2 KB from 27 modules,
+and the WebGL template's copy was re-synced, because a template that ships a
+different client from the one the suites measure is a page running a different
+program.
+
+Suites: blwp-client 118 -> 120, blwp-node 264, core 84, protocol 432, all green.
