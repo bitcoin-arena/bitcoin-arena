@@ -16,9 +16,9 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: M2 36 - live ghost pose. Daniel 09:44: the other truck is
-seen at spawn, then does not follow. Stutters, not realtime. Fix on Daily.
-M3 item 16 waits. 30 stays queued behind M3.
+LIVE LETTER: M2 36 - live ghost pose. Two local Chromes (10:26): P1 left
+spawn and died in the field; P2 stayed in the bay. Play socket dropped.
+Not realtime. Fix on Daily. M3 item 16 waits. 30 stays queued behind M3.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
 threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
@@ -48,6 +48,10 @@ without two browsers is not done.
 
 HARD (Daniel 2026-09-09 09:58): the proof browsers are local Chrome with
 WebGL. Not browser-act, not stealth/headless. Two Chrome windows.
+
+HARD (Daniel 2026-09-09 10:26): two-Chrome proof FAILED. Put the bugs in
+this letter so they get fixed. Screens: daniel-screens/chrome-p1-drive-a.png
+(P1 WASTED in the field) and chrome-p2-ghost-a.png (P2 still on the bay).
 
 HARD (Daniel 2026-09-08 18:26): when M2 is finished, start M3
 immediately. No pause, no ask, no action=done at the M2 boundary.
@@ -562,13 +566,17 @@ IN THIS ORDER (unparked):
                                         09:33: advert verify was Ed25519 vs
                                         schnorr bond key — page now uses
                                         BLWP_CURVE.verify.
-   36  M2 live ghost pose             M2   OPEN — two tabs see the other truck
-                                        at spawn. While one drives, the other
-                                        does not see the current pose. Frames
-                                        land rarely. Not realtime. Daniel 09:44.
-                                        A ghost is still a picture (0.10), never
-                                        an input. The picture has to be this
-                                        run, this tick, on Daily. M3 waits.
+   36  M2 live ghost pose             M2   OPEN — two local Chrome WebGL windows
+                                        10:26: P1 left spawn (~22 m) then WASTED
+                                        in the field. P2 stayed on the bay /
+                                        yellow lines. Ghost not at P1's pose.
+                                        Chip: play · A dropped after the drive.
+                                        sock=null, ghosts.present=0.
+                                        Loadout holds WASD (controlsLocked).
+                                        Still a picture (0.10), never an input.
+                                        Daily must show the live pose. M3 waits.
+                                        Screens: daniel-screens/chrome-p1-drive-a.png
+                                        chrome-p2-ghost-a.png chrome-p2-final.png.
    30  M2 publication lead + receipts —  queued behind M3 (Daniel 2026-09-09).
    29  M2 Feldman on the split        M2   done — a crooked dealer is refused at
        preimage (23.1)                    handout, before anybody reconstructs.
