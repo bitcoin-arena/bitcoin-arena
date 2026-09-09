@@ -16,13 +16,11 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: M2 36 - live ghost pose. Everything Claude can measure without a
-browser is green and DEPLOYED (15:59): the Daily is unblocked, the chip that
-names the other truck's metres is live, and the renderer's own PlayMode test
-puts the truck where the shipped bridge's ints say (beeb20f). What is left is
-the two-Chrome pair of eyes. M3.3-16 is done (17a5873, Daniel 12:14).
-Claude measures 36 without WebGL: two-tabs.test.js and ghost-live.test.js.
-SwissClaw two-Chrome close-out. 30 stays queued behind M3.
+LIVE LETTER: M2 36 - ghost pose is wrong and not realtime. Daniel 17:05:
+the ghost updates, but it is not where the other truck is. Left draws it
+on the grass (chip other at -69,-57 m). Right is the real truck on the
+yellow bay (chip other at -99,-47 m). Stutters. No WebGL test after the
+fix. Then M3 immediately. 30 stays queued behind M3.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
 threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
@@ -66,6 +64,12 @@ parcels, rolled out, drove in the field (core x -100.4 → -91). P2 stayed
 in the cargo loadout on dirt. Ghost not at P1's pose. Chip: play · A up
 · 5 players (socket did not drop). Screens: daniel-screens/retest-p1-drive1.png
 retest-p1-drive2.png retest-p2-ghost1.png retest-p2-ghost2.png.
+
+HARD (Daniel 2026-09-09 17:05): ghost pose is WRONG, not missing. Photographed:
+left tab sees the other truck on the grass at -69,-57 m; right tab is that
+truck on the yellow bay. Chip other-at disagrees. Stutters, not realtime.
+Claude fixes 36 without a WebGL test after. Then M3 immediately.
+Screen: daniel-screens/2026-09-09-1705-ghost-wrong-pose.jpg
 
 HARD (Daniel 2026-09-09 16:08): SwissClaw two-Chrome close-out FAILED again.
 P1 AUTO 83%/9 parcels, rolled out of the yellow bay, drove into the field
@@ -680,9 +684,16 @@ IN THIS ORDER (unparked):
                                         PAID_IN_PART, not a blocked round.
                                         329 refused, 330 accepted. 9 mutants
                                         killed. Photographed 12:14.
-   36  M2 live ghost pose             M2   OPEN — two faults found by the 16:08
-                                        close-out, both fixed and DEPLOYED
-                                        (2c57cfe, 566105e), awaiting a retest.
+   36  M2 live ghost pose             M2   OPEN — Daniel 17:05: the ghost
+                                        UPDATES but the pose is wrong and it
+                                        stutters. Left: ghost on the grass,
+                                        chip other at -69,-57 m. Right: the
+                                        real truck on the yellow bay, chip
+                                        other at -99,-47 m. Screen:
+                                        daniel-screens/2026-09-09-1705-ghost-wrong-pose.jpg
+                                        No WebGL test after the fix. Then M3.
+                                        16:08 faults (template tokens, refused
+                                        batch retry) were 2c57cfe / 566105e.
                                         (1) The Daily shipped seven unfilled
                                         template tokens, so Unity never started
                                         until the loader was injected by hand.
