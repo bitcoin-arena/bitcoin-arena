@@ -23218,3 +23218,21 @@ chip separates the two answers: `none drawn` means the renderer never ran, no
 
 Suites: blwp-client 128 -> 129, jslib clean after the mutants. core 88/88,
 protocol 440/440, blwp-node 333 with the same 18 spawn-bay hash pins.
+
+AND THE CHIP NAMES THE PLACE. `stalled` separates a renderer that never ran
+from one that did; it says nothing about a renderer that ran and drew the
+truck 100 m away, and that is the likelier answer now - 20c3950 parks each
+player at their own door, 24 of them at 6.8 m, so two tabs on one round start
+up to 156 m apart along one apron. `newestPose(field)` divides the newest
+picture by 65536 and the line reads
+
+    2 players in this round · other at -91,-71 m
+
+which the operator holds against the other tab's own position readout. Same
+two numbers: the picture is right and the camera is pointed elsewhere.
+Different: it is not. MUTATION: 6 against it, 5 killed - last-wins instead of
+newest, x written where z belongs, raw words instead of metres, the place
+dropped from the line, an empty field naming 0,0. RETRACTED: `>` to `>=`,
+which differs only when two trucks share the newest tick; which of two right
+answers gets named is not a fact anybody reads, so the test pins the TICK of
+the named pose and leaves the tie free.
