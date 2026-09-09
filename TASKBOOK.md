@@ -23511,3 +23511,104 @@ Suites: blwp-client 129 -> 133, blwp-node 354/354, core 88/88, protocol 440/440.
 Bundle 282.9 -> 286.6 KB. Deployed to btc-logistics-core: the served
 index.html carries no tokens, /Build/webgl5.loader.js answers 200, and the
 served blwp-client.js contains the new line.
+
+## M2.36, the 17:05 split: the two trucks were in two different worlds
+
+MEASURED FIRST, on a real 2-of-2 round with two tabs joined the way the page
+joins, before anything was changed:
+
+    the seed the page gives its own core   0x5eed1234  bay 13  z  10.20 m
+    the seed the committee replays with (left tab)     bay 20  z  57.80 m
+    the seed the committee replays with (right tab)    bay 18  z  44.20 m
+
+`CoreDrivenTruck.seed` is a CONSTANT - `public int seed = 0x5eed1234` - and
+`grep` finds no assignment to it anywhere. So every player of every round
+stepped their core in the harness world while the committee replayed each entry
+with `seedWordForEntry(entry, randomness)`. That is not a bay offset: the seed
+drives the whole rng stream after it, so the replayed truck is a different run
+in a different world, which is why it "updates" and never matches. 17:05: a
+ghost on the grass at -69,-57 m while the truck it pictured stood on its bay.
+
+THE PAGE COULD NOT HAVE DONE BETTER. The seed is H(randomness || pubkey ||
+world secret || join tick) and NOTHING SERVED THE RANDOMNESS - there was no
+door for it. There is one now, `GET /randomness?round=`, serving the same value
+the ghost replay uses, and the page asks EVERY node the URL named and refuses a
+round where two of them name two worlds. That is not proof the hash is the
+block 5A.5 names; deriving the height is letter 32's work and the page does not
+do it, which is written down rather than implied.
+
+THE ORDERING IS THE FIX, NOT A DETAIL. Every `BlwpStep` is published from the
+moment there is a client - loading in the bay included, which is why the 16:08
+report saw tick 4241 with the truck still on its apron - so a core reseeded at
+roll-out would already have published thousands of ticks of the wrong world.
+The bridge derives the seed and calls `init` BEFORE `net.client` exists, and
+`net.tick` records nothing until it does. C# stopped throwing it away too:
+`StartRound` restarted with its own constant and takes `BlwpNet.RoundSeed` now,
+zero meaning the daily and the constant that holds the solo apron on bay 13.
+
+THE END-TO-END TEST IS NOT CIRCULAR. One tab drives, the other is shown
+pictures the daemon's own replay produced, and those are held against a core
+the test steps itself in the seed `worldSeedFor` returns - and against a second
+core in the harness world:
+
+    the ghost the watcher was shown           (-99.437, 57.797) m at tick 47
+    a core in the driver's own world          (-99.437, 57.797) m   delta 0
+    a core in the harness world               (-99.437, 10.197) m   47.60 m away
+
+x, z and heading to the word. The fixture DRAWS an identity whose world is not
+the harness's, because one player in 24 lands on the solo bay by chance and a
+fixture that agreed by accident every 24th run would be a test that passes on
+the fault.
+
+### The second fault, found by the test written for the first
+
+A new PlayMode test hands the field the LOCAL truck's own core pose as somebody
+else's picture and requires the ghost to be drawn where the local truck is
+drawn. x and z matched to the millimetre. The HEIGHT did not, by 0.58 m: the
+local truck at y 6.840 and a ghost at its own x, z and heading at 7.422, same
+ground, same frame. The ghosts were seated on ONE ground sample under their
+middle while a truck is fitted across its FOUR contact points. One rule now -
+`CoreDrivenTruck.RideAt(x, z, heading)` - called by `Apply` and by the ghosts,
+which is why `Seat` grew a heading: four points rotate and a centre sample does
+not.
+
+What that test asserts about height is not "the same y as the local truck", and
+the difference is the Editor rather than the code: there is no core there, so
+`Driving` is false and PhysX places the local truck. The claim is that a ghost
+is seated by the same function a core-driven truck is seated by - which a y of
+zero, a centre sample, or a dropped body offset all fail.
+
+### The stutter, with its arithmetic
+
+`BlwpNet.BatchEvery` is `TicksPerSecond / 10`. A picture lands at most ten times
+a second; the page draws sixty times a second. `Show` placed the truck and left
+it, so it stood still for six frames and jumped - 1.5 m at 15 m/s. The local
+truck has never looked like that: `Apply` interpolates between its own last two
+ticks every frame.
+
+A ghost walks from its last picture onto its newest over one picture interval
+and is then exactly on it. Measured: one frame after a 6.001 m picture it has
+moved 0.112 m of it. `k` is clamped at one, so it never predicts - a ghost is a
+picture (0.10) and an extrapolated one would be the page inventing somebody
+else's position.
+
+WRITTEN AS AN EXPONENTIAL FIRST, AND THAT WAS WRONG for a reason worth keeping:
+an exponential never arrives, and how far it got depends on the FRAME RATE
+rather than on the clock. A headless batch run puts frames a third of a
+millisecond apart, and 600 of them closed a 6 m gap only to within 20 mm.
+`Settled` was "within a millimetre" too, which is looser than the callers'
+ten-thousandth of a metre - so a ghost could be settled and 0.3 mm short, and it
+showed up as a red test that came and went with the frame rate. Arrival is the
+end of the walk now, and `SnapToPicture` puts it exactly on the words.
+
+Suites: PlayMode 237 - 213 pass, 11 red, 13 skipped, and the eleven are the
+documented set (ten reach the retired C# army, one needs a graphics device).
+EditMode 190 - 186 pass, 1 red (the same C# army), 3 skipped. blwp-client
+135/135, blwp-node 354/354, core 88/88, protocol 440/440.
+
+DEPLOYED: a real WebGL build, because the seed path is C# and jslib and a
+template copy does not carry those. The stale `webgl5.*` set from the 01:00
+build was removed - the page names `webgl.*` and two sets in one Build folder
+is a loader nobody can name. Live checks: the page points at
+Build/webgl.loader.js (200), carries BLWP_NODES, the served blwp-client.js
+carries `worldSeedFor`, and the served framework defines `BlwpRoundSeed`.
