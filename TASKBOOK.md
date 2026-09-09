@@ -23370,3 +23370,91 @@ that holds it, and that a seat signs only a spend IT built from the round's own
 final table - a seat that signed whatever sighash it was handed would make the
 threshold decorative, because five signatures over an attacker's transaction
 spend the pool exactly as well as five over a real one.
+
+## M3.3 item 17, built: a signing round between daemons, and a chain that took it
+
+The measurement above said the number of keys that had to agree before a
+settled satoshi moved was ONE - the process that ran `pay`'s `map` over five
+secret shares. It is five now, on five sockets.
+
+TWO DOORS, both fixed-width so a stranger can read them and neither carrying a
+sighash:
+
+    POST /pool/commit?round=  <- one output (78 bytes)        -> one commitment
+    POST /pool/share?round=   <- that output + the list       -> one scalar
+
+THE RULE UNDERNEATH is that a seat signs only a spend IT built. The obvious
+door takes a sighash and returns a share, and it is worth nothing: five
+signatures over an attacker's 32 bytes spend the pool exactly as well as five
+over a real payout, so a committee that signs what it is handed has a threshold
+on paper and one key in practice. The asker names the round and the OUTPUT it
+wants spent - both facts anybody can check - and every seat rebuilds the rest
+from its own store: its own results, its own entries, its own table, §20's five
+of seven over that table, the pool's own script, and only then a sighash it
+computed for itself.
+
+NONCES IN MEMORY, ON PURPOSE. Two messages under one nonce pair is two
+equations in two unknowns and publishes the share. A pair that is never written
+down cannot come back after a restart to be used again - a restart costs the
+asker a seat and it asks another. While the process lives the pair remembers
+which message it was made for: a retry gets the SAME commitment and the SAME
+share back, a different spend is refused while a pair is live, and a different
+COMMITMENT LIST over the same spend is refused too, because the list is hashed
+into the binding factors and therefore into the challenge.
+
+ON A REAL CHAIN (`tools/payout-committee-regtest.mjs`), seven daemons on seven
+sockets, one share each, isolated regtest:
+
+    a rogue asker naming its own output   7 of 7 seats REFUSED, 409, by name
+    four of seven                          nothing sent, row stays PAYOUT_QUEUED
+    five of seven                          sendrawtransaction -> a txid,
+                                           block 202 carries it, the winner's
+                                           own key holds 1000 sats, the asker's
+                                           store says PAID signed by 5 seats
+
+THE ROGUE LINE IS THE LETTER. There is no door that takes a sighash, so the
+attack an asker would want has no shape; the nearest it can do is name an
+output of its own, and seven seats say no with a sentence each.
+
+THE FAULT THAT MATTERED was in the injection and not the crypto. The daemon
+built its `Payouts` with `fetcher: (u) => fetch(u)`, which drops the second
+argument, so every POST to a peer left as a GET and came back "no such door".
+The first run had one of five seats committing - the local one. A fetcher that
+silently changes the method of every request it forwards is the kind of thing
+only a real socket finds.
+
+AND ONE FOUND BY ITS OWN TEST: `poolOwns` answers with an object, so
+`if (!poolOwns(...))` is always false. The check that stops a seat signing a
+spend of anybody's coin never fired.
+
+MUTATION: 11 against it, 10 killed, ONE RETRACTED. `spendFor` also compared the
+recomputed table id with the one on the payout row. No test could tell that
+check on from off, and the reason is that it is not load-bearing: the
+verification underneath asks the SEATS about the recomputed id, so a node whose
+own results moved already fails with "0 of 5". The only state it caught was a
+committee that had all moved to the same new table while this node's row was
+stale, where refusing refuses a spend the committee agrees on.
+
+  killed: the pool-ownership check skipped; a queued row standing in for five
+  of seven; a retry given a fresh nonce pair; a second live pair allowed; a
+  spent pair signing again under a new list; round two not checking what round
+  one committed to; the seat not checking it is in the list; the seat not
+  checking the list quotes its own commitment; the asker sending below the
+  threshold; the wire half-reading a truncated commitment list.
+
+WHAT IS NOT HERE, NAMED RATHER THAN ABSORBED:
+
+  - `payWithCommittee` HAS NO CALLER IN `src/`. A close queues the payout and
+    stops, because the daemon does not know WHICH OUTPUT holds the pool - there
+    is no watcher for the pool's script and `chainSpend` can only `send` and
+    `look`. The seat half is fully wired and any asker can reach it; the asking
+    half needs an output to name. That is item 18 and it is its own line.
+  - `pay` - the one-process path that takes five secret shares as an argument -
+    is still in the file. It has zero callers in `src/` and nothing in the
+    daemon can reach it; `payout-regtest.mjs` and `payout-pay.test.js` are what
+    use it, and those legitimately hold the whole dealt pool. Removing it is
+    tidying, not this letter.
+  - The shares are still DEALT. A dealerless DKG is its own letter and this one
+    does not pretend to be it.
+
+Suites: blwp-node 333 -> 354, blwp-client 129/129, core 88/88, protocol 440/440.

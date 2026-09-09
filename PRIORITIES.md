@@ -120,6 +120,14 @@ M2's playable set is finished; 30 (publication lead) stays listed and is
 queued BEHIND M3 on Daniel's word. M3 is live: hold invoices, VSS, FROST,
 testnet sats.
 
+2026-09-09: M3.3 ITEM 17 - A SIGNING ROUND BETWEEN DAEMONS - IS CLOSED. Five
+daemons on five sockets, one share each, produce one signature a real bitcoind
+accepted; the asker holds one share and no secret crosses the wire. Neither
+door carries a sighash, so an asker's best attempt is to name an output of its
+own and be refused seven times. What came out of it and stays its own line is
+item 18: nothing in the daemon watches the pool's script, so the ASKING half
+has no caller and a close still stops at PAYOUT_QUEUED. Next in M3 is 18.
+
 2026-09-09: M3.3-8b - THE PAYOUT HALF OF 9.4 - IS CLOSED AND ON THE DAILY. A
 delivered player is paid their winnings out of the pool on five of seven, and a
 real bitcoind refused the same payout signed by four. Deployed to
@@ -623,19 +631,50 @@ IN THIS ORDER (unparked):
                                         09:33: advert verify was Ed25519 vs
                                         schnorr bond key — page now uses
                                         BLWP_CURVE.verify.
-   M3.3-17  a signing round between   M3   OPEN — the letter after 36. Measured
-       daemons                            first: `pay` takes five SECRET shares
-                                        as an argument and makes every nonce and
-                                        every signature share in one `map`, it
-                                        has zero callers outside tests, the
-                                        daemon holds no share at all (`poolKey`
-                                        is never set), and no door serves a
-                                        nonce commitment or a signature share.
-                                        So the keys that must agree before a
-                                        settled satoshi moves is still ONE: 13
-                                        moved it off a macaroon onto a group
-                                        KEY, not onto a group. A dealerless DKG
-                                        stays its own letter. Numbers: TASKBOOK.
+   M3.3-18  the daemon does not know  M3   OPEN — came out of 17, not absorbed
+       which output holds the pool        into it. A close queues the payout and
+                                        stops: `payWithCommittee` has no caller
+                                        in `src/` because nothing in the daemon
+                                        watches the pool's script, and
+                                        `chainSpend` can only `send` and `look`.
+                                        The seat half is wired and any asker can
+                                        reach it; the asking half needs an
+                                        output to name.
+   M3.3-17  a signing round between   M3   done — five daemons on five sockets
+       daemons                            sign one spend of the pool and a real
+                                        bitcoind took it. Measured first: `pay`
+                                        took five SECRET shares as an argument
+                                        and made every nonce and every share in
+                                        one `map`, no daemon held a share, and
+                                        no door carried one - so the keys that
+                                        had to agree before a settled satoshi
+                                        moved was ONE. Two doors now,
+                                        /pool/commit and /pool/share, and
+                                        NEITHER CARRIES A SIGHASH: a seat that
+                                        signed what it was handed would make the
+                                        threshold decorative, so the asker names
+                                        an output and each seat rebuilds the
+                                        spend from its own store - own results,
+                                        own table, §20's five of seven over it,
+                                        the pool's own script - before it
+                                        commits. Nonces live in memory and die
+                                        with the process, and a pair remembers
+                                        which message it was made for: a retry
+                                        gets the same bytes, a second spend or a
+                                        second commitment list is refused.
+                                        ON AN ISOLATED REGTEST: a rogue asker
+                                        naming its own output was refused by 7
+                                        of 7 with a sentence each, four of seven
+                                        sent nothing and left the row queued,
+                                        five of seven put a txid in block 202
+                                        and the winner's own key holds 1000
+                                        sats. THE FAULT THAT MATTERED was the
+                                        daemon's `fetcher: (u) => fetch(u)`,
+                                        which drops the options and turned every
+                                        POST to a peer into a GET. 11 mutants,
+                                        10 killed, 1 RETRACTED. Shares are still
+                                        DEALT - a dealerless DKG is its own
+                                        letter. Numbers: TASKBOOK.
    M3.3-16  dust / relay floor        M3   done — 17a5873. Floor is 330 sats on
                                         this node. Sub-floor rows are debt,
                                         PAID_IN_PART, not a blocked round.
