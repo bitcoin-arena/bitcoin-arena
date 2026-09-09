@@ -78,9 +78,17 @@ both against the round contract rather than against the entry's own story - a
 free seat satisfied the 2% rule perfectly and would have been paid its whole
 table row out of other players' money.
 
-WHAT IS LEFT IN M3 is the hold invoice the page cannot yet pay: M3.2 items 5
-and 6, the session flow and the NWC wallet. Every M3.3 line - 8b, 9, 10, 13,
-14, 15, 16, 17, 18, 19, 20 - is closed.
+M3.2 ITEM 5 IS CLOSED. The client can ask what a seat owes and refuse a quote
+its own entry did not sign - the protocol's own rule, imported, against the
+entry the client holds. It sends nothing: 0 methods move a satoshi.
+
+NEXT IN M3 IS ITEM 6, THE NWC WALLET - the only thing left that moves a
+satoshi, and the thing that makes the ask worth showing. The page deliberately
+does not call `invoice` yet: a screen that quotes an amount it cannot pay is
+worse than no screen, so the page's half goes with the wallet.
+
+Every M3.3 line - 8b, 9, 10, 13, 14, 15, 16, 17, 18, 19, 20 - is closed, and so
+is M3.2 item 5.
 
 30 stays queued behind M3.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
@@ -2861,7 +2869,42 @@ round, which is why testnet comes first and why the order is stricter.
 
   4. **The Unity bridge**, hardened for real sessions - it exists already
      for single player.
-  5. **`@blwp/client`.** The session flow: enter, pay, play, settle.
+  5. **`@blwp/client`.** The session flow: enter, pay, play, settle. DONE,
+     with pay meaning ASK AND CHECK - not send.
+
+     `Client.invoice(entry)` fetches the node's quote and runs the
+     protocol's own `invoiceMatchesEntry` over it. THE RULE IS IMPORTED,
+     NOT RESTATED: `server.js` said at its own /invoice door that the rule
+     "lives on their side too" and it did not - 0 callers in the client -
+     and a second formula would be a second opinion about the one number a
+     player parts with money over.
+
+     Measured against a real daemon with a fake Lightning port: the honest
+     pair accepted; a lying node asking 200000 msat against a 100000 stake
+     refused; a hash the entry never signed refused ("nobody could ever
+     settle it"); rubbish refused; a stranger's entry 404 and a node with
+     no Lightning 503, both by name. The port saw `createHeld` and nothing
+     else, and the client has ZERO methods that send money.
+
+     AND A QUOTE FOR A DIFFERENT SEAT IS REFUSED AS TWO SEATS. A crossed
+     pair was already refused by the hashes differing - right answer, wrong
+     reason - and that fails when two entries share a commitment: one
+     player re-entering a round keeps their preimage and changes only their
+     world secret, so two ids, one hash, one amount.
+
+     `Client.settle()` is renamed `awaitPublishes()`. It waited for two
+     promises and settled nothing, while 9.4's settle is a stake moving
+     after a round is final - and it was squatting on the fourth word of
+     this very item.
+
+     THE PAGE DOES NOT CALL IT, and that is the split rather than a gap:
+     `index.html` and the jslib name no invoice. There is nothing for a
+     player to do with a quote until something can pay it, and a screen
+     that asks for money it cannot take is worse than no screen. The page
+     calling `invoice` belongs to item 6, with the wallet.
+
+     NOT A PLAYER-FACING FACT ON THE DAILY. The method is in the served
+     bundle; nothing on screen changed.
   6. **NWC wallet.** Comes after the client because the client defines
      what the wallet is asked to do.
 

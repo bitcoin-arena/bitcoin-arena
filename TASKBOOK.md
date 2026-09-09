@@ -24738,3 +24738,58 @@ tightened door.
 
 Suites: core 89/89, guard 21 files clean, protocol 444/444, blwp-node 406/406,
 blwp-client 154/154. No client bundle changed, so the Daily was not redeployed.
+
+## 2026-09-10  M3.2 item 5 - the client asks what it owes, and checks the answer
+
+THE PIN BEFORE: enter 3 methods, play 6, pay 0, and `invoice`/`bolt11`/
+`paymentHash` in blwp-client/src only inside comments - 0 files named one in
+code. `invoiceMatchesEntry` had 0 callers on the player's side, while
+`server.js` said at its own door that the rule "lives on their side too".
+
+AFTER: enter 3 · ask 1 · play 6 · sends money 0 · `settle` undefined.
+
+    honest quote     100000 msat against the entry's OWN stakeCommitment,
+                     state HELD - "the hash and the amount are the ones this
+                     entry signed"
+    a lying node     200000 msat against a 100000 stake: refused
+                     a hash the entry never signed: "nobody could ever settle
+                     it", and the refusal hands the quote back
+                     a 200 carrying rubbish: "not an invoice quote"
+    the door's own   an entry the node never took: 404
+                     a node with no Lightning: 503
+    the LN port saw  createHeld, and nothing else
+
+THE HOLE THE CLOSE-OUT FOUND. A crossed pair - one seat's contract, another
+seat's id - was refused by the payment hashes differing. Right answer, wrong
+reason, and it stops being right when two entries share a commitment: a player
+re-entering one round keeps their preimage and changes only their world secret,
+so TWO IDS, ONE HASH, ONE AMOUNT, and the other seat's quote would have been
+accepted as this one's. `invoice()` checks the contract IS the entry being
+asked about: "they are two seats".
+
+AND THE REFUSAL TESTS WERE MEASURING THE WRONG THING. They mutated the client's
+own entry, which is not the threat and is caught earlier anyway - changing an
+entry changes its id. A stub node answering the right id with wrong numbers is
+the threat, and that is what they stand up now.
+
+THREE MISTAKES OF MY OWN, all caught by tests:
+  - the `settle` rename's regex hit `viewer.settle()` in ghost-socket.test.js,
+    which is a raw socket helper and not a Client
+  - the "can it send money" probe listed `send`, which is `Client.send` putting
+    a protocol message on the play socket
+  - the 404 test asked about an id its own entry was not, so the new check
+    refused it before the door was reached
+
+THE SPLIT, SAID PLAINLY: the client method is the whole of item 5. The page does
+not call `invoice` - index.html and the jslib name it 0 times - because there is
+nothing for a player to do with a quote until something can pay it, and a screen
+that asks for money it cannot take is worse than no screen. The page's half goes
+with item 6.
+
+NOT PLAYER-FACING. The method is in the served bundle - checked on the live file
+twice, behind twice, rebuilt and verified both times - and nothing on screen
+changed.
+
+Suites: core 89/89, protocol 444/444, blwp-node 406/406, blwp-client 162/162,
+guard 21 files clean. PlayMode and EditMode were not in this letter: no C#
+changed, and Unity ran only as a WebGL build.
