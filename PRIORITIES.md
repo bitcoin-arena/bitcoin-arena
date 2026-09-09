@@ -16,11 +16,17 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: M2 36 - ghost pose is wrong and not realtime. Daniel 17:05:
-the ghost updates, but it is not where the other truck is. Left draws it
-on the grass (chip other at -69,-57 m). Right is the real truck on the
-yellow bay (chip other at -99,-47 m). Stutters. No WebGL test after the
-fix. Then M3 immediately. 30 stays queued behind M3.
+LIVE LETTER: M2 36 - the 17:05 split is FIXED and DEPLOYED (a3fccd5), waiting
+on a two-Chrome look. The cause was measured, not guessed: the page seeded its
+core with a CONSTANT (0x5eed1234, bay 13) while the committee replayed every
+entry with `seedWordForEntry` - a different bay AND a different rng stream, so
+the two trucks were in two different worlds. On a real round they stood 47.60 m
+and 34.00 m apart before either moved. The daemon serves the round's randomness
+now, the page asks every node it was given, and the core is put in that world
+before one tick is recorded. Two more found on the way: ghosts were seated on
+one ground sample while a truck is fitted across four (0.58 m), and the stutter
+is 10 Hz pictures on a 60 Hz screen - a ghost walks between them now.
+Then M3 immediately. 30 stays queued behind M3.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
 threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
@@ -684,14 +690,44 @@ IN THIS ORDER (unparked):
                                         PAID_IN_PART, not a blocked round.
                                         329 refused, 330 accepted. 9 mutants
                                         killed. Photographed 12:14.
-   36  M2 live ghost pose             M2   OPEN — Daniel 17:05: the ghost
-                                        UPDATES but the pose is wrong and it
-                                        stutters. Left: ghost on the grass,
-                                        chip other at -69,-57 m. Right: the
-                                        real truck on the yellow bay, chip
-                                        other at -99,-47 m. Screen:
+   36  M2 live ghost pose             M2   OPEN — the 17:05 split is fixed and on
+                                        the Daily; what is left is a look.
+                                        Daniel 17:05: ghost on the grass at
+                                        -69,-57 m while that truck stood on its
+                                        yellow bay. Screen:
                                         daniel-screens/2026-09-09-1705-ghost-wrong-pose.jpg
-                                        No WebGL test after the fix. Then M3.
+                                        MEASURED: `CoreDrivenTruck.seed` is the
+                                        constant 0x5eed1234 and nothing ever set
+                                        it from a round, so the page drove the
+                                        harness world (bay 13, z 10.20 m) while
+                                        the committee replayed each entry with
+                                        `seedWordForEntry` (bay 20 at 57.80 m,
+                                        bay 18 at 44.20 m) - two different
+                                        WORLDS, not an offset, because the seed
+                                        drives the rng stream too. The page
+                                        could not have known: nothing served the
+                                        randomness. `GET /randomness?round=`
+                                        does, the page asks every node the URL
+                                        named and refuses two answers, and the
+                                        core is seeded BEFORE one tick is
+                                        recorded - a reseed at roll-out would
+                                        already have published thousands of
+                                        ticks of the wrong world.
+                                        END TO END: the ghost a watcher is shown
+                                        is at (-99.437, 57.797) m and a core in
+                                        the driver's own world is at the same
+                                        word; the harness world is 47.60 m away.
+                                        TWO MORE, found by the test written for
+                                        the first: ghosts were seated on one
+                                        ground sample while a truck is fitted
+                                        across four (0.58 m apart, one rule now),
+                                        and the stutter is 10 Hz pictures on a
+                                        60 Hz screen - a ghost walks between them
+                                        and arrives exactly.
+                                        PlayMode 237: 213 pass, 11 red (the
+                                        documented set), 13 skipped. EditMode
+                                        190: 186 pass, 1 red (the same), 3
+                                        skipped. Then M3.
                                         16:08 faults (template tokens, refused
                                         batch retry) were 2c57cfe / 566105e.
                                         (1) The Daily shipped seven unfilled
