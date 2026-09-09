@@ -16,10 +16,9 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: M2 36 - live ghost pose. SwissClaw two-Chrome retest 11:51:
-P1 left the bay and drove in the field; P2 stayed in the cargo loadout.
-Ghost not at P1's live pose. Chip stayed play · A up. Not realtime.
-Fix on Daily. M3 item 16 waits. 30 stays queued behind M3.
+LIVE LETTER: M3.3-16 dust / relay floor. Daniel 11:53: Claude works M3
+until the SwissClaw two-Chrome ghost retest finishes. 36 stays OPEN,
+not live. 30 stays queued behind M3.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
 threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
@@ -63,6 +62,9 @@ parcels, rolled out, drove in the field (core x -100.4 → -91). P2 stayed
 in the cargo loadout on dirt. Ghost not at P1's pose. Chip: play · A up
 · 5 players (socket did not drop). Screens: daniel-screens/retest-p1-drive1.png
 retest-p1-drive2.png retest-p2-ghost1.png retest-p2-ghost2.png.
+
+HARD (Daniel 2026-09-09 11:53): Claude does M3 until the in-flight two-Chrome
+retest is finished. Do not wait on 36. 36 stays open.
 
 HARD (Daniel 2026-09-08 18:26): when M2 is finished, start M3
 immediately. No pause, no ask, no action=done at the M2 boundary.
@@ -585,7 +587,9 @@ IN THIS ORDER (unparked):
                                         Chip stayed play · A up · 5 players
                                         (socket did not drop this time).
                                         Still a picture (0.10), never an input.
-                                        Daily must show the live pose. M3 waits.
+                                        Daily must show the live pose. Parked:
+                                        Claude does M3 until the retest lands
+                                        (Daniel 11:53).
                                         Screens: daniel-screens/retest-p1-drive1.png
                                         retest-p1-drive2.png retest-p2-ghost1.png
                                         retest-p2-ghost2.png.
