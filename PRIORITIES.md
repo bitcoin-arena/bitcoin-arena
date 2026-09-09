@@ -82,10 +82,15 @@ M3.2 ITEM 5 IS CLOSED. The client can ask what a seat owes and refuse a quote
 its own entry did not sign - the protocol's own rule, imported, against the
 entry the client holds. It sends nothing: 0 methods move a satoshi.
 
-NEXT IN M3 IS ITEM 6, THE NWC WALLET - the only thing left that moves a
-satoshi, and the thing that makes the ask worth showing. The page deliberately
-does not call `invoice` yet: a screen that quotes an amount it cannot pay is
-worse than no screen, so the page's half goes with the wallet.
+M3.2 ITEM 6 IS DONE AS THE CLIENT'S HALF. A connected wallet pays the hold
+invoice this seat owes and no other: 1 request on the honest path, 0 on a
+crossed seat or a lying node, and the one method that moves a satoshi takes an
+entry rather than an invoice.
+
+NEXT IN M3 IS THE PAGE'S HALF OF 6: paste a connection, show the amount, show
+the running total §24A.1 requires. Nothing in index.html touches any of it yet,
+and that is on purpose - a screen that quotes money it cannot take is worse
+than no screen. Behind it, 6b (donations) and 6d (where a payout goes).
 
 Every M3.3 line - 8b, 9, 10, 13, 14, 15, 16, 17, 18, 19, 20 - is closed, and so
 is M3.2 item 5.
@@ -2905,8 +2910,36 @@ round, which is why testnet comes first and why the order is stricter.
 
      NOT A PLAYER-FACING FACT ON THE DAILY. The method is in the served
      bundle; nothing on screen changed.
-  6. **NWC wallet.** Comes after the client because the client defines
-     what the wallet is asked to do.
+  6. **NWC wallet.** DONE as the client's half: a connected wallet pays the
+     hold invoice this seat owes, and no other.
+
+       methods that move a satoshi                 0 -> 1 (payStake)
+       requests reaching a wallet on a bad quote   0, counted
+       blwp-client                                 162 -> 172
+
+     IT TAKES AN ENTRY, NOT AN INVOICE - a signature rather than a check,
+     so no caller can walk the client into paying something. `payStake`
+     asks its own `invoice()`, which refuses an amount, a hash or a seat
+     the entry did not sign, and hands only the survivor to the wallet.
+     Against a fake relay and a fake NIP-47 wallet: the honest path sends
+     1 request and it is the quote byte for byte; a crossed seat and three
+     lying quotes send 0 - not declined, never sent; QUOTA_EXCEEDED comes
+     back in the wallet's own words; "paid" with no preimage is not
+     believed; a dead relay times out by name.
+
+     The wallet stays outside - what is held is a CONNECTION secret the
+     player's wallet issued and can revoke (§24). The budget proves
+     nothing and is not asked to (§24A.1): the binding is `payment_hash`
+     in the Entry Contract. NIP-04 and not NIP-44, named in the file so it
+     does not look decided forever.
+
+     WHAT IS NOT DONE HERE and is the next line: the PAGE. Nothing in
+     `index.html` pastes a connection, shows the amount or shows the
+     running total §24A.1 requires. That is the visible half and it is
+     deliberately separate - a half-wired screen does not go on the Daily.
+     6a's budget display belongs with it.
+
+     Still open under this heading: 6b donations, 6d where a payout goes.
 
   6a. **Budgeted play** (24A.1). A two-minute round means a wallet
      approval every two minutes, which is the thing that makes people

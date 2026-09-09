@@ -24793,3 +24793,60 @@ changed.
 Suites: core 89/89, protocol 444/444, blwp-node 406/406, blwp-client 162/162,
 guard 21 files clean. PlayMode and EditMode were not in this letter: no C#
 changed, and Unity ran only as a WebGL build.
+
+## 2026-09-10  M3.2 item 6 - the client's half of the wallet
+
+    methods that move a satoshi                  0 -> 1 (payStake)
+    requests reaching the wallet on a bad quote  0, counted
+    blwp-client                                  162 -> 172
+    core / protocol / blwp-node                  89 / 444 / 406, unmoved
+
+THE SAFETY PROPERTY IS A SIGNATURE, NOT A CHECK. `payStake` takes an ENTRY.
+There is no argument that could carry an arbitrary bolt11, so no caller - page,
+test, or a script somebody pastes - can walk this client into paying something.
+The invoice comes from its own `invoice()`, which refuses an amount, a hash or a
+seat the entry did not sign.
+
+Against a fake relay and a fake NIP-47 wallet that records every request:
+
+    the honest path      1 request, and it is the quote byte for byte;
+                         the wallet's preimage comes back; /invoice then
+                         reports the hold HELD
+    a crossed seat       0 requests - "they are two seats", never sent
+    3 lying quotes       0 requests - wrong amount, wrong hash, rubbish
+    QUOTA_EXCEEDED       "the wallet refused: QUOTA_EXCEEDED budget spent for
+                         this hour", and no preimage invented
+    "paid", no preimage  "the wallet said it paid and produced no preimage"
+    a dead relay         "the wallet did not answer in 300 ms"
+    7 broken connection strings   each refused by name
+
+ZERO IS THE NUMBER THAT MATTERS and it is only visible by counting. "The wallet
+declined it" and "the wallet was never asked" look the same from the outside;
+the fake wallet records every request so the difference is a figure.
+
+NIP-04 AND NOT NIP-44, named in the file. NIP-47 was specified over NIP-04 and
+it is what wallets in the field still accept; NIP-44 is newer and some now
+prefer it. AES-256-CBC over the ECDH x-coordinate through WebCrypto - the same
+door `seal.js` opens for AES-GCM, and the same agreement `page-curve.ecdhShared`
+already computes for the sealed VSS shares. No new dependency. `page-curve`
+gained `signSchnorr`: the one operation NIP-01 needs, and the page had no reason
+to sign on this curve before - its session key is Ed25519 and the player key was
+only ever a public point.
+
+SUBSCRIBE BEFORE PUBLISH. The wallet answers as soon as it sees the request, so
+a client that published first and listened afterwards would miss an answer that
+arrived in between - on a fast relay, most of them. The event id is known before
+it is sent, so the filter can name it.
+
+TWO COLLISIONS THIS REPO ALREADY KNEW ABOUT caught the first draft: `subtle` is
+declared at the top level of `seal.js` too, and `tools/bundle.js` refuses two
+private names that collide (the same guard the `fromHex` duplicate tripped); and
+`discovery.test.js` refuses any `globalThis.` in blwp-client/src - a client that
+reads anything off the page is a client that can be told where to send things -
+so the crypto and the socket are reached the way `fetch` and `WebSocket` already
+are in the neighbouring file.
+
+NOT PLAYER-FACING. Nothing in index.html pastes a connection, shows the amount,
+or shows the running total §24A.1 requires. That is the next line, deliberately:
+a screen that quotes money it cannot take is worse than no screen. PlayMode and
+EditMode are not in this letter - no C# changed.
