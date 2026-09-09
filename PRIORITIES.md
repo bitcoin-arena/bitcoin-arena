@@ -16,7 +16,9 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: 31, player_run_duration. 15, 18, 20-29 and 32 are done.
+LIVE LETTER: M3 - hold invoices, VSS, FROST, testnet sats. 15, 18, 20-29,
+31 and 32 are done. 30 (publication lead) is the one M2 remainder left, queued
+behind M3 by Daniel 2026-09-09.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
 threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
@@ -38,10 +40,10 @@ immediately. No pause, no ask, no action=done at the M2 boundary.
 Playable M2 is 28. Then remaining queue (29 Feldman if still open),
 then M3: hold invoices, VSS, FROST, testnet sats. Lightning stays M3.
 
-2026-09-09: 29 AND 32 ARE CLOSED. What is left of M2 is 31
-(player_run_duration, 19's last remainder) and 30 (publication lead).
-`entry_close_time` - the other of 19's two - was closed by 27: a round that
-closes entry before its committee forms is refused by name.
+2026-09-09: 29, 31 AND 32 ARE CLOSED. `entry_close_time` was closed by 27.
+M2's playable set is finished; 30 (publication lead) stays listed and is
+queued BEHIND M3 on Daniel's word. M3 is live: hold invoices, VSS, FROST,
+testnet sats.
 
 IN THIS ORDER (unparked):
    22  M2 daemon replays the core     M2   done — slice 1 IS IN: the node reaches the
@@ -204,12 +206,22 @@ IN THIS ORDER (unparked):
                                         so two participants at different tips
                                         derive the same census. 734 green.
                                         Numbers: TASKBOOK.
-   31  M2 player_run_duration         LIVE — 19's last open remainder. Section 6
-                                        names the run length and no contract
-                                        carries it, so `transcript.js` reports
-                                        it UNCHECKED: a run's own length is
-                                        taken on the client's word. Do not
-                                        start it before Daniel says so.
+   31  M2 player_run_duration         M2   done — a run lasts the core's named
+                                        duration and a round that names another
+                                        length is refused. There is no new
+                                        field: section 6's `player_run_duration`
+                                        is the core's own BLOCK_TICKS, which
+                                        genesis already writes into the config
+                                        hash a round's network commits to, so
+                                        the contract's `blockTicks` is the
+                                        spec's echo and must equal it. The core
+                                        stays the only clock - S_ELAPSED while
+                                        LIVE, so a late joiner gets a whole
+                                        mission rather than the stub left of the
+                                        round - and the node refuses what the
+                                        core would already have ended: inputs
+                                        past a player's own run end are neither
+                                        stored nor replayed. Numbers: TASKBOOK.
    32  M2 the block-hash seed         M2   done — a node seeds its committee
                                         from the block ITS OWN CHAIN names.
                                         5A.5 wants randomness published after
@@ -234,7 +246,7 @@ IN THIS ORDER (unparked):
                                         same round - so a view that cannot see
                                         the first block says so. Numbers:
                                         TASKBOOK.
-   30  M2 publication lead + receipts —  queued behind 31.
+   30  M2 publication lead + receipts —  queued behind M3 (Daniel 2026-09-09).
    29  M2 Feldman on the split        M2   done — a crooked dealer is refused at
        preimage (23.1)                    handout, before anybody reconstructs.
                                         A share must lie on the ONE polynomial

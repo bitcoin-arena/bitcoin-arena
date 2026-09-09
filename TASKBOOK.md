@@ -21793,3 +21793,32 @@ and the end is counted from the entry's own join tick.
 
     core 84/84   protocol 432/432   blwp-node 228 -> 232   blwp-client 118/118
     money guard 12 clean, determinism guard 20 clean. No C# moved, no Unity ran.
+
+### Item 31 close-out: the doors counted
+
+Asked whether anything else could store or replay an open-ended drive, the
+doors were counted rather than remembered:
+
+    writers of the ticks table   ONE - round.js:372, inside batch(), which
+                                 carries the bound
+    callers of replay()          ghosts.js:90 (a picture), replay.js:252 (the
+                                 worker), and through it the verifier's pool -
+                                 all bounded by the one check inside replay
+    checkTranscript              NOT bounded and cannot be: it walks the batch
+                                 chain and never sees the entry, so it has no
+                                 join tick to measure a run from. The bound
+                                 lives where the entry is.
+
+WHAT IS LEFT OF M2 AND IS NOT THIS LETTER: item 30, the publication lead and
+its five pre-randomness timestamp receipts, which needs a `published_at` the
+contract does not carry. Daniel queued it behind M3 on 2026-09-09. Item 14's
+own remainder list is now three, not five: the Feldman residual closed with 29
+and the CLTV sizing's missing tick rate closed with 21; the hold invoice, the
+slash enforcement and the committee re-run remain, and all three are M3's
+subject rather than M2's.
+
+AND A MILESTONE BOUNDARY IS BEING CROSSED. The standing rule is that when a
+milestone closes the daily is also frozen to `btc-logistics-core-m<N>`. M2's
+playable set is finished with 31, and no freeze has been made - 30 is still
+open, and a freeze is a deploy nobody asked for. Named here rather than done
+quietly.
