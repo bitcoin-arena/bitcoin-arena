@@ -22181,3 +22181,56 @@ which runs were agreed, and a stake that moved can still say which invoice it
 was.
 
 STILL SINGLE-NODE CUSTODY, NOT §23.5.
+
+### M3.3-9 STEP 1 — WHO CAN OPEN A STAKE TODAY
+
+Printed before a line of this item is written, the way the hold-invoice
+baseline was - and this time the caller count is the FIRST thing measured, not
+the thing that was assumed.
+
+THE ARITHMETIC IS ALL THERE AND NOTHING RUNS IT. `packages/protocol/src/shares.js`,
+callers outside its own file and its own tests:
+
+    splitSecret         who cuts the polynomial            0
+    reconstruct         five shares back to 32 bytes       0
+    openStake           and does it hash to the stake      0
+    shareIsConsistent   one share against the commitments  0
+    handoutOutcome      what a handout amounts to          0
+    checkHandout        the crooked-dealer door            2   (letter 29)
+
+The four grep hits for "reconstruct" outside `shares.js` are all COMMENTS. So
+letter 29 built the door and the arithmetic, and the only thing in the system
+that ever produced 32 bytes for a settle is `tools/custody-lnd.mjs`, which
+hands them over directly. `serve()`'s `preimageFor` defaults to null, so a
+shipped daemon settles nothing at all.
+
+AND THE SHARES ARE IN THE CLEAR, which `handout.js` says about itself: "anybody
+who reads a handout reads five shares and rebuilds P... It becomes REQUIRED at
+the same moment the hold invoice does... A build that pays sats must not use
+this file as it stands." The hold invoice went live at c545c36. Measured
+against a running daemon, by a stranger holding nothing but the public
+`vss_shares_ref` that the entry contract carries:
+
+    POST /handout                                   201
+    GET  /handout?id=      shares a stranger reads    7
+    subsets of 5 that open the stake                 21 of 21
+    the stranger reconstructed the preimage          true
+    and it hashes to the entry's stakeCommitment     true
+
+So today the answer to "who holds the 32 bytes" is EVERYONE. Reconstruction
+from five of seven, added on top of this, would change nothing: one node
+settles alone and so does a passer-by. Encrypting one share to each seat is not
+a refinement of this item, it is the item.
+
+NOBODY DEALS EITHER. `blwp-client/src/join.js:213` sets
+`stakeCommitment: random(32)` - a commitment to nothing, not `sha256(P)` - and
+`vssSharesRef: NO_SHARES`. Letter 29 wrote that "the page is not a dealer,
+which arrives with the hold invoice". It has arrived.
+
+AND THERE IS NO WAY FOR SEATS TO ASK EACH OTHER. Seventeen routes and none of
+them carries a share; `gather` fetches `/results` from peers and there is no
+equivalent. Once a seat holds only its own share, five can never meet.
+
+THE THREE MEASURES THIS ITEM CLOSES ON: a stranger opens ZERO shares, four
+answers refuse by name, five reconstruct and hash to that entry's own
+stakeCommitment. All three are false today - 7, opens, opens.
