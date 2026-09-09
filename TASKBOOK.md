@@ -22483,3 +22483,79 @@ share aggregation - and Bitcoin will not verify a signature they produce. So
 the RFC suite is measured first because it is the only thing with published
 numbers, and then the BIP-340 variant is measured the only way that matters:
 `schnorr.verify` accepts a 5-of-7 signature against one 32-byte key.
+
+### M3.3-10 STEP 2 — THE RFC'S OWN NUMBERS, THEN THE ONE BITCOIN CHECKS
+
+`packages/protocol/src/frost.js` is RFC 9591 with the curve injected, and every
+number below is the RFC's rather than this implementation's opinion of itself.
+Appendix E.5, FROST(secp256k1, SHA-256), reproduced byte for byte:
+
+    the trusted dealer's three shares          3 of 3
+    the group public key                       matches
+    both nonces of both signers, from the
+    RFC's own randomness                       4 of 4
+    the nonce commitments                      4 of 4
+    the binding factor INPUTS (129 bytes each) 2 of 2
+    the binding factors                        2 of 2
+    the signature shares                       2 of 2
+    the aggregate signature (65 bytes)         matches
+    Appendix B's own check on it               g^z is R + PK*c
+
+    RFC 9591 vectors reproduced                0 of 9  ->  9 of 9
+
+expand_message_xmd is written out rather than imported, because this package
+carries no hashing library either - `sha256` comes from the core the way every
+other hash here does, and the rest is byte plumbing. L is 48 and not 32: the
+extra 128 bits are what make the reduction's bias unexploitable, and a mutant
+setting it to 32 died against the vectors.
+
+### AND THEN THE SIGNATURE A TAPROOT OUTPUT CAN CHECK
+
+RFC 9591's secp256k1 suite is NOT BIP-340 - its own challenge tag, a 33-byte
+compressed R, no even-y rule - so nothing on the Bitcoin network would verify
+what it produces. `frost-bip340.js` is the same threshold over BIP-340's
+conventions, and THE VERIFIER IS NOT OURS: `schnorr.verify`, the one a taproot
+spend gets.
+
+    a 5-of-7 signature BIP-340 accepts         8 of 8 dealings, 64 bytes each
+    any five of the seven, same key            4 of 4 signing sets
+    four of seven, refused by name             "4 of 5 signers: a pool nobody
+                                               can move stays where it is"
+    four of seven that sign anyway             0 of 3 accepted
+    ONE NODE ALONE                             0 of 7 accepted
+    the same signature over another message    refused
+    a share from another dealing               refused
+
+    keys that must agree before a satoshi
+    leaves the pool                            1  ->  5 of 7
+
+TWO PARITY FIXES AND ONLY ONE AT SIGNING TIME. The group key is normalised when
+it is dealt, so P is even and stays even. R cannot be - it depends on whoever
+turned up - so every signer reads its parity off the public commitment list and
+negates its own nonces when it is odd. Measured rather than argued: over 24
+signatures the group commitment came out odd 4 to 20 times (a coin), and 24 of
+24 verified. A mutant deleting the flip killed four tests.
+
+MUTATION: 20 mutants against the two files, ALL 20 KILLED, nothing retracted.
+The vectors do most of the work - dropping the DST length byte, skipping the
+b_0 XOR, sharing a label between H1 and H2, leaving the identifier out of the
+binding factor input, and putting the dealer's secret at the wrong end of the
+polynomial each died against numbers nobody here chose.
+
+THE MONEY GUARD REACHES BOTH FILES (13 -> 15), for `slash.js`'s reason rather
+than a stake's: what they decide is whether an output may be spent away from
+the pool.
+
+WHAT THIS DOES NOT DO, and it is the seventh time this session that a correct
+rule has arrived with nobody constructing it - said here rather than
+discovered later:
+
+    callers of trustedDealerSplit outside tests   0
+    callers of signShare340 outside tests         0
+    a pool wallet                                 still does not exist
+    who holds the group secret                    a trusted dealer, not a DKG
+
+There is no spend path for this to sign yet. Paying winners is item 8's
+`PAYOUT_QUEUED -> PAID` and was ruled out of this letter; a dealerless DKG is
+its own letter and is named rather than faked. What is true now is that the
+signature exists, it is the RFC's, and Bitcoin accepts it at five of seven.
