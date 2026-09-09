@@ -84,6 +84,9 @@ red - the 18 blwp-node spawn-bay hash pins are still failing and they are a
 later letter, not 36. blwp-client 129/129, core 88/88, protocol 440/440,
 blwp-node 315/333.
 
+HARD (Daniel 2026-09-09 12:58): keep going. After Done on an open letter,
+the driver continues that letter. When 36 is closed, M3 is next with no wait.
+
 HARD (Daniel 2026-09-09 12:03): when the current task is done, fix M2.36.
 Claude's own proof is without WebGL: `packages/blwp-client/test/two-tabs.test.js`
 and `packages/blwp-node/test/ghost-live.test.js` (`timeout 180` +
