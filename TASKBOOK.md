@@ -21575,3 +21575,84 @@ or before committee_time (27), and derives its own when it has a view.
 
     core 84/84   protocol 431/431   blwp-node 221 -> 225   blwp-client 118/118
     money guard 12 clean, determinism guard 20 clean. No C# moved.
+
+## Item 32, slice 5: one chain, and the roster asks it
+
+The check existed and nothing called it. `beaconIsTheChains` refuses a block
+that is late but is not the one the chain names, and the roster - the thing
+that actually seats - could not use it, because in the 2-of-2 tool the CENSUS
+came from a two-block fixture and the BEACON from a bitcoind. Asking the
+fixture about a regtest block would refuse every time. Daniel's ruling: one
+chain, not a recorded gap.
+
+### The bonds moved onto the beacon's chain
+
+`regtest-bond.mjs` is the bond-posting half of `census-regtest.mjs`, lifted out
+so two tools can use it: fund a carrier, spend it with the advertisement body
+in the witness, `generateblock` it in, read the blocks back. The 2-of-2 tool
+now posts a bond for EACH daemon on the same regtest it reads the beacon from,
+derives its census root from those blocks, and hands the daemons that view.
+
+### FOUR FAULTS, EACH FOUND BY RUNNING IT ON A REAL CHAIN
+
+    the census height was the bond block   depth is measured AT census_height,
+                                           so a bond in that very block is one
+                                           confirmation deep and a round asking
+                                           for six excludes it: "0 game nodes
+                                           where regtest was born needing 2"
+    committee_time from the wall clock     the tip's median was SIXTEEN SECONDS
+                                           behind Date.now() on a fresh regtest,
+                                           so no block could ever be after it.
+                                           It is set from the chain's own median
+                                           now, and the tool mines until the
+                                           rule can name a block
+    the census view started too late       "this view begins at height 150 and
+                                           its earliest median time is ...,
+                                           already after committee time ..."
+    the answer was WINDOW-DEPENDENT        the big one, below
+
+### THE SELECTION RULE WAS NOT WINDOW-INDEPENDENT, AND THAT IS A REAL FAULT
+
+Measured, not read: a node reading 64 headers to the tip named block 69; a node
+whose view began at 103 named block 112 - the same chain, the same round. "The
+first block in THIS VIEW after committee_time" is not "the first block after
+committee_time" unless the view starts before that instant, so two honest nodes
+with different windows would have seated different committees. That is the
+whole property the letter exists for, and it was broken.
+
+`beaconFromChain` now refuses a view whose EARLIEST computable median is
+already after committee_time: it cannot say which block is the first, only
+which is the first it holds. A view that reaches back before the instant can
+answer, and every such view answers the same.
+
+### And the fixture chains had one clock
+
+Every header `chainview.js` mined carried the same timestamp, which was fine
+while nothing read it. Letter 32 reads it: on a chain where every block claims
+the same second there is no first-after and no order to find it in. Ten minutes
+a block now, which is Bitcoin's own average, and the two fixtures that seat
+committees moved their `committee_time`, `entry_close` and their node clock
+into that range - they were at 500 ms and 1234 ms, which is 1970.
+
+### Measured on one chain
+
+    chain height         242
+    census height        230, confirmations 6
+    beacon               block 235, 8 deep
+    node A seats         17ef0965040d9fb4 d44578a760ad1d79
+    node B seats         17ef0965040d9fb4 d44578a760ad1d79
+    contract names       17ef0965040d9fb4 d44578a760ad1d79
+    seedFor              ok true, checkedAgainstChain TRUE
+    a late-but-wrong block
+      "that beacon is block 236 where this chain names 235 as the first after
+       committee time 1788912748000: a later block is a block somebody chose"
+
+`checkedAgainstChain` is on the answer because a green seat that skipped the
+check looks exactly like one that made it. A node with no chain view still
+refuses `POST /round` by name, and 27's rule is asked FIRST - it needs no chain,
+so a beacon the creator could have held is refused even by a node that has none.
+
+    core 84/84   protocol 431 -> 432   blwp-node 225 -> 227   blwp-client 118/118
+    money guard 12 clean, determinism guard 20 clean. No C# moved.
+
+Both regtest daemons were stopped when the measurements were done.
