@@ -22825,3 +22825,77 @@ PRIORITIES as its own line.
 Suites: blwp-node 319 -> 321, core 84, protocol 440, blwp-client 120, all green.
 No client bytes changed, so the daily still serves
 dc68bd7aa23a141968bb0a8b59fff109.
+
+### M2-36 — THE PICTURE KEEPS UP WITH THE TRUCK
+
+Daniel 09:44: two tabs see the other truck at spawn, it does not follow, frames
+land rarely, it stutters. Letter 28 got a ghost DRAWN; this is that the picture
+has to be this tick's.
+
+MEASURED FIRST, one watcher, one driver publishing every 100 ms (`BatchEvery`
+is 6 ticks at 60 Hz, `BlwpNet.cs:59`):
+
+    tick     5      one frame   11.8 ms
+    tick  1085      one frame   94.6 ms     the whole budget, eighteen seconds in
+    tick  2165      one frame  175.9 ms
+    tick  3599      one frame  568.9 ms     five batches behind, per watcher
+    600 frames of a 60-second run          110 SECONDS of simulation
+    frames served from the cache            0 of 600
+
+So it kept up for about eighteen seconds and then fell behind for good. That is
+the whole complaint, and it is not a network fault: every frame replayed the
+run from tick zero, and the per-tick cache was never hit because a live watcher
+never asks for yesterday's tick.
+
+THREE THINGS COST O(run) PER FRAME, and each was measured separately at tick
+3599 rather than guessed at:
+
+    the replay from init(seed)              the bulk
+    round.transcript(round, entry)          8.5 ms   the whole run, for 6 new ticks
+    round.handOver(round, entry)           18.0 ms   decoding 600 batches
+    decodeTranscript of that                3.6 ms
+
+FIXED, ONE AT A TIME, WITH THE NUMBER AFTER EACH:
+
+    keep the run warm and step it forward     568.9 -> 17.2 ms at tick 3599
+      (`RunInProgress` in replay.js, the one
+       file that may touch the core)
+    read only the ticks not yet stepped        `Round.ticksFrom`
+    check the input chain once per batch       83.4 -> 0.7 ms at tick 8999
+      instead of once per frame
+      (`Round.batchesFrom`, and the walk kept
+       in `Ghosts`)
+
+    ONE FRAME AT THE END OF A FULL 9000-TICK ROUND:  568.9+ ms  ->  0.7 ms
+    THE WHOLE ROUND'S FRAME PRODUCTION:              ~1000 s    ->  1.3 s
+
+    ticks stepped for 100 frames of a 600-tick run:  30,300  ->  600
+
+NOTHING ABOUT THE SIMULATION CHANGED, and that is the assertion that matters
+rather than the speed. `ghost-live.test.js` compares the live pose against a
+full cold replay at all 100 published ticks of a run and the bytes are
+identical; a liquidation still lands BEFORE its own tick and exactly once; a
+late joiner still starts at their own join tick and steps 300 ticks, not 1500.
+A GHOST IS STILL A PICTURE (0.10): this runs on the node, off the transcript
+the node stored, and produces x, z and heading. No browser computes any of it.
+
+WHAT WAS NOT WEAKENED. The chain is still walked link by link from GENESIS and
+every batch is still checked against the one before it - once each, rather than
+once per batch per frame - and the head must still be a batch whose ticks cover
+the picture. The entry key check that was the other half of `ghostBinds` is
+still made per frame. The refusals kept their words: no randomness, a gap, a
+tick past the end of a run, a head before any input went out.
+
+### THE BRANCH WAS ALREADY RED WHEN THIS LETTER STARTED
+
+Measured at HEAD c389097 with none of this letter's work applied:
+
+    core 88/88   protocol 440/440   blwp-client 123/123
+    blwp-node 303 of 321, EIGHTEEN RED
+
+They are the verify / result / settlement family, and the cause is
+`20c3950 feat: park each player at a different loading bay from their seed`,
+which changed `packages/core/src/sim.js` and `rng.js`. A simulation change
+moves every state hash, so fixtures that pin a pose or a result hash no longer
+match. That is somebody else's letter and this one did not touch it: the same
+18 are red before and after, and the ghost suites are green.
