@@ -45,12 +45,40 @@ M2's playable set is finished; 30 (publication lead) stays listed and is
 queued BEHIND M3 on Daniel's word. M3 is live: hold invoices, VSS, FROST,
 testnet sats.
 
-2026-09-09: M3 SLICE 1 - HOLD INVOICES - IS CLOSED, all four steps Daniel
-named. Single-node custody, not §23.5, and said so in TASKBOOK in those words.
-Next up in M3: FROST/threshold custody (§23.5) and the page as a dealer, both
-already named as gaps by 29 and by this slice.
+2026-09-09: M3 SLICE 1 - HOLD INVOICES - IS CLOSED. It was marked done once
+too early, on a caller count measured before `custody.js` existed and never
+measured again: the rules were in and the DAEMON reached none of them. The
+remainder is in too - the daemon quotes a hold on seat, serves it again on
+/invoice, closes a round into 23.2's table with the core's own outcome word,
+and asks Lightning on start about anything it died in the middle of. Single-node
+custody, not §23.5, and said so in TASKBOOK in those words. Next in M3 is
+M3.3 item 9, VSS custody of the stake preimage: `preimageFor` is injected today
+and reconstructing it from five of seven of 29's Feldman shares is what closes
+it. FROST (item 10) is behind that.
 
 IN THIS ORDER (unparked):
+   M3.3-9 VSS custody of the stake  M3   NEXT — no single node ever holds the
+       preimage                          preimage. `custody.js` takes an
+                                        injected `preimageFor` today and the
+                                        one caller that exists hands it the 32
+                                        bytes directly, which is single-node
+                                        custody by another name: a settle
+                                        releases the preimage, so whoever holds
+                                        it can settle alone. 29 already refuses
+                                        a crooked dealer at handout and binds
+                                        the commitments into the entry's SIGNED
+                                        bytes; what is missing is the other
+                                        half - reconstruct from five of seven
+                                        accepted shares and hand back 32 bytes
+                                        that hash to the entry's own
+                                        stakeCommitment, and refuse rather than
+                                        settle when fewer than five exist.
+                                        23.4's "at least 5 preimage shares" is
+                                        the condition, and `settleHeldInvoices`
+                                        already refuses a preimage that is not
+                                        the one the hold was made for. FROST
+                                        (M3.3 item 10) is behind this, not
+                                        beside it.
    M3.1 hold invoices (23.1/23.2)   M3   done — a player's stake is money in
                                         flight on Lightning and the core's own
                                         outcome word decides what happens to
@@ -97,7 +125,40 @@ IN THIS ORDER (unparked):
                                         preimage still comes from an injected
                                         `preimageFor` rather than five of seven
                                         of 29's Feldman shares, and that is the
-                                        named gap. Numbers: TASKBOOK.
+                                        named gap. THE REMAINDER IS IN TOO: the
+                                        letter was closed once on a caller count
+                                        taken before `custody.js` existed, and
+                                        re-measuring found the daemon reaching
+                                        none of it - zero references in
+                                        server.js, no route offering an invoice,
+                                        and a close that only replayed. Now a
+                                        seat issues the hold the entry names, a
+                                        reloaded page gets the SAME request
+                                        rather than a second claim on one stake,
+                                        the close hands 23.2's table the core's
+                                        own outcome word and the committee's
+                                        own finality, and a node that starts
+                                        asks Lightning about any act it died in
+                                        the middle of. The money word and the
+                                        replay word are no longer the same word.
+                                        THE FAULT THAT MATTERED, again found by
+                                        running it: a real close THREW, because
+                                        `payout.js` refuses to hand a pool to
+                                        nobody rather than decide it in the
+                                        operator's favour, and nothing caught
+                                        that - and it is not a corner, since
+                                        every round is one of those until a
+                                        player delivers. A refused table now
+                                        means inaction: no stake moves and every
+                                        hold expires to its own player. STILL
+                                        OPEN, and it is a missing DRIVE and not
+                                        missing custody code: no input stream in
+                                        the test harness reaches the gate, so a
+                                        DELIVERED close cannot be played through
+                                        the daemon's own doors and the settle
+                                        and cancel acts stay measured in
+                                        `custody.test.js` and against real lnd.
+                                        Numbers: TASKBOOK.
    22  M2 daemon replays the core     M2   done — slice 1 IS IN: the node reaches the
                                         simulator through src/replay.js and
                                         nowhere else, rebuilds a finished run
