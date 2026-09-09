@@ -16,7 +16,9 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: M2.36, STILL OPEN. The ground half is done and measured - the
+LIVE LETTER: M2.36, STILL OPEN. Daniel 21:23: heat goes in too, same as the
+hills - in the round/transcript, not a live host write. 40 is that. 39 is
+the boxes. 36 is not done without them. The ground half is done and measured - the
 committee walks the same seeded hills the player drove - but the goal is "the
 other truck is drawn where that truck actually is, live" and TWO THINGS ARE
 MISSING, found by asking rather than by another look failing.
@@ -101,6 +103,10 @@ parcels, rolled out, drove in the field (core x -100.4 → -91). P2 stayed
 in the cargo loadout on dirt. Ghost not at P1's pose. Chip: play · A up
 · 5 players (socket did not drop). Screens: daniel-screens/retest-p1-drive1.png
 retest-p1-drive2.png retest-p2-ghost1.png retest-p2-ghost2.png.
+
+HARD (Daniel 2026-09-09 21:23): yes, heat goes in too. Same shape as the hills:
+it belongs to the round, not Unity. Letter 40. 36 does not close while heat
+is a host input the transcript does not carry.
 
 HARD (Daniel 2026-09-09 17:05): ghost pose is WRONG, not missing. Photographed:
 left tab sees the other truck on the grass at -69,-57 m; right tab is that
@@ -794,8 +800,9 @@ IN THIS ORDER (unparked):
                                         is 36's, again: the core owns the map's
                                         boxes and Unity draws them.
    36  M2 live ghost pose             M2   OPEN — the ground half is done and
-                                        measured; the solids half (39) and a
-                                        two-Chrome look are not. Was marked done
+                                        measured. Daniel 21:23: heat goes in
+                                        too (40), same as hills. Solids (39)
+                                        still host. Two-Chrome look still due. Was marked done
                                         at ddf9e3d on the ground numbers alone,
                                         which is the same mistake as the 19:27
                                         close-out.
