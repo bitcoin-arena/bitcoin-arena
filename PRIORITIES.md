@@ -35,6 +35,9 @@ unblocked. 15, 18, 26 AND 27 ARE CLOSED. 28 IS CLOSED TOO (2026-09-09):
 another player's truck is drawn where its transcript put it, on the daily.
 Nobody has LOOKED at it yet; that is a pair of eyes, not a task.
 
+HARD (Daniel 2026-09-09 07:56): spawn bays are per player seed. Two
+players never share START_Z. 24 doors, mixer keeps harness seed on bay 13.
+
 HARD (Daniel 2026-09-08 18:26): when M2 is finished, start M3
 immediately. No pause, no ask, no action=done at the M2 boundary.
 Playable M2 is 28. Then remaining queue (29 Feldman if still open),
@@ -532,6 +535,11 @@ IN THIS ORDER (unparked):
                                         same round - so a view that cannot see
                                         the first block says so. Numbers:
                                         TASKBOOK.
+   34  M2 spawn bays                  M2   done — each player parks at a door
+                                        from their seed (24 bays, pitch 6.8 m).
+                                        The harness seed stays bay 13 / START_Z.
+                                        Two different seeds, two different z.
+                                        Daniel 07:56. Numbers: TASKBOOK.
    30  M2 publication lead + receipts —  queued behind M3 (Daniel 2026-09-09).
    29  M2 Feldman on the split        M2   done — a crooked dealer is refused at
        preimage (23.1)                    handout, before anybody reconstructs.
