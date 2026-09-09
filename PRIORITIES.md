@@ -68,10 +68,16 @@ M3.3 ITEM 15 IS CLOSED. The page deals its own stake to the settlement seats
 and says out loud when a seat is free; its old sentence about a missing curve
 was retracted first, because the Daily has vendored one all along.
 
-NEXT IN M3 IS ITEM 14, A DEALERLESS DKG. The group secret still comes from a
-trusted dealer, so "no one of them can steal" holds among the signers and not
-against whoever dealt. Behind it, the hold invoice the page cannot yet pay is
-M3.2 items 5 and 6 (the session flow and the NWC wallet).
+M3.3 ITEM 14 IS CLOSED. The committee makes its own key: seven daemons, one
+contribution each, one share kept, and no process holding a threshold at any
+point. The pin that opened the letter read 7 of 7 shares in the dealing
+process; it reads 0 launch paths now.
+
+NEXT IN M3 IS ITEM 20: `POST /entry` does not check that an entry's fee is the
+2% the round asks, so a wrong one would be taken from anybody - letter 15 fixed
+the page that writes them, not the door that accepts them. Behind it, the hold
+invoice the page cannot yet pay is M3.2 items 5 and 6 (the session flow and the
+NWC wallet).
 
 30 stays queued behind M3.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
@@ -3062,11 +3068,48 @@ round, which is why testnet comes first and why the order is stricter.
      page and would not be refused from another. That is M3.3 item 20,
      enforcement, and not something a paying round needs in order to sit.
 
- 14. **Dealerless DKG.** QUEUED, NOT STARTED. Item 10 measured RFC 9591
-     Appendix C, a TRUSTED DEALER, so the group secret was known to
-     whoever dealt it. "No one of them can steal" holds among the signers
-     and not against the dealer, and closing that gap is a key generation
-     the RFC does not specify.
+ 14. **Dealerless DKG.** DONE. The committee makes its own key and no
+     process ever holds a threshold of it.
+
+     MEASURED FIRST, and the pin is in the repo: the dealing process held
+     7 of 7 shares, five of them interpolate to the group secret, and
+     `trustedDealerSplit` had ZERO CALLERS under any `src/` - so the dealer
+     was not code here at all, it was whatever process started the seven
+     daemons, and four start paths did exactly that.
+
+     Pedersen, which is n parallel Feldman deals. Every seat splits a
+     secret of its own to all seats and adds up what it was dealt; the sum
+     is a share of a group secret equal to the sum of everybody's, which
+     nobody computes. Nothing cryptographic is new - `splitSecret`,
+     `sealShare`/`openShare` and `shareOpensTo` are letter 29's - and the
+     new work is the round, the two doors and the key on disk.
+
+     THE EPOCH IS THE SEATS THEMSELVES, hashed sorted under their own tag.
+     A DKG runs once per committee and not once per round: the pool is one
+     P2TR output across rounds (item 13), so a per-round key would mint a
+     new address every round. A changed committee is a different epoch by
+     construction, and nothing was added to any contract.
+
+     THE PARITY IS WHERE A DEALERLESS KEY DIFFERS. `signShare340` refuses
+     an odd-y group key by name, and `evenGroupSecret` used to fix that
+     with the secret in hand. Nobody holds it now, so every seat negates
+     its OWN share, decided alone from a key it computed from public data -
+     the move `poolShare` already makes for the taproot tweak. Measured
+     under both parities.
+
+     ON AN ISOLATED REGTEST, both committee launch paths converted: seven
+     daemons make one key, hold seven distinct shares, and the harness
+     holds none; a rogue asker is refused 7 of 7; four of seven refused;
+     five of seven in a block with 1000 sats at the winner's key. And
+     item 19's whole path runs over it - the asker down, the next seat pays
+     at beacon+2, one payment not two.
+
+     WHAT STILL SPLITS IN ONE PROCESS is the two harnesses that are ABOUT a
+     transaction rather than custody - `payout-regtest` proves a payout's
+     bytes, `pool-regtest` proves the sighash - and the pin names them so a
+     third cannot appear quietly. A trusted dealer over a committee that
+     rotates would also want a resharing protocol; that is not this letter
+     and nothing depends on it yet.
 
 ## What is honestly not trustless
 

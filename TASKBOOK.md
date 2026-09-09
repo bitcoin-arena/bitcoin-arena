@@ -24604,3 +24604,80 @@ sentence caught by its own regex. It is a call site now, the same distinction
 the pool watcher's pin makes.
 
 Suites with the pin in: blwp-node 392/392.
+
+## 2026-09-10  M3.3 item 14 - the committee makes its own key
+
+THE PIN THIS LETTER OPENED ON, written before any code and recorded above:
+
+    shares reachable from the dealing process   7 of 7
+    shares needed to sign alone                 5
+    the dealer can sign without asking          TRUE
+    files under src/ calling trustedDealerSplit 0
+    launch paths dealing all seven              4
+
+and it reads, now:
+
+    launch paths dealing all seven              0
+    the daemon                                  runs its own DKG, keeps 1 share
+    harnesses still splitting in one process    2, and both are about a
+                                                transaction rather than custody
+
+THE ROUND. Pedersen: every seat splits a secret of its own to all seats and
+adds up what it was dealt. Nothing cryptographic is new - `splitSecret` cuts
+the polynomial and publishes Feldman commitments, `sealShare`/`openShare` seal
+one share to one seat's key, `shareOpensTo` is letter 29's check. Seven seats,
+in one process first:
+
+    7 distinct shares, one each
+    every seat computed the same group key from public data alone
+    five of seven interpolate to the secret nobody held
+    a crooked dealer: refused by seat 4, accepted by the other six, AT THE DEAL
+    six of seven contributing: refused - "a key a subset chose is a key that
+      subset can steer"
+    one seat contributing twice: refused - "it dealt after seeing the others"
+
+THE PARITY, which is the thing that nearly got missed. `signShare340` refuses
+an odd-y group key BY NAME and `evenGroupSecret` fixed that by negating the
+SECRET before splitting - which needs a dealer. Nobody holds it now, so every
+seat negates its own share instead: the sum of -x_i is -(sum x_i), decided
+alone from the parity of a key computed from public data, and it is the move
+`poolShare` already makes for the taproot tweak. Tested under BOTH parities,
+because a test that only saw even keys would pass with the normalisation
+deleted: 1 even, 1 odd, all verified by `schnorr.verify`.
+
+SEVEN DAEMONS ON SEVEN SOCKETS:
+
+    7 distinct shares, one key, each holding 1 of the 5 needed
+    5 of 7 verify, 4 of 7 do not, and any five will do
+    dealt once: a second call returns the same bytes, and GET /dkg serves them
+    a stranger contributes nothing; rubbish is refused by name
+
+ON AN ISOLATED REGTEST, both committee launch paths converted:
+
+    settle-regtest        "each made its own share; 1 distinct group key(s)
+                          across 7 daemons", "7 distinct shares, one each, and
+                          this process holds none" - then item 19's whole path
+                          over that key: asker down, next seat pays at
+                          beacon+2, block 203, 1000 sats, ONE payment
+    payout-committee      one key across all seven, rogue asker refused 7 of 7,
+                          four of seven refused, five of seven in block 202
+
+THREE FIXTURE FAULTS OF MY OWN, all worth writing down:
+
+  - the group-key assertion compared against the RAW sum where `groupKeyOf`
+    hands back the EVEN-Y form. It passed on a lucky draw and failed on the
+    next one.
+  - a three-daemon committee cannot carry a threshold of five, so the
+    deal-once test was measuring an arity check rather than the rule it names.
+  - a "stranger" committee of four included the node itself, so the refusal
+    came from the threshold and not from membership.
+
+AND THE PIN'S OWN REGEX caught its own comment: /dkg|dealerless/i matched the
+sentence saying a dealerless DKG is its own letter. It is a call site now.
+
+WHAT IS NOT DONE AND IS NOT NEEDED YET: resharing when a committee rotates. A
+new committee is a new epoch and runs a new DKG, which mints a new pool address
+- moving an existing pool to it is a protocol question nothing depends on.
+
+Suites: core 89/89, guard 21 files clean, protocol 444/444, blwp-node 401/401,
+blwp-client 154/154.
