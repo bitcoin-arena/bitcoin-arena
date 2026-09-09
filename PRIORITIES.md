@@ -16,9 +16,11 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: M3.3-16 dust / relay floor. Daniel 11:53: Claude works M3
-until the SwissClaw two-Chrome ghost retest finishes. 36 stays OPEN,
-not live. 30 stays queued behind M3.
+LIVE LETTER: M3.3-16 dust / relay floor. Daniel 12:03: when that current
+task is done, fix M2.36. Claude can measure ghosts without WebGL:
+two-tabs.test.js (two clients, one drives, other is shown a picture) and
+ghost-live.test.js (consecutive frames keep up). SwissClaw still does the
+two-Chrome close-out. 30 stays queued behind M3.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
 threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
@@ -65,6 +67,11 @@ retest-p1-drive2.png retest-p2-ghost1.png retest-p2-ghost2.png.
 
 HARD (Daniel 2026-09-09 11:53): Claude does M3 until the in-flight two-Chrome
 retest is finished. Do not wait on 36. 36 stays open.
+
+HARD (Daniel 2026-09-09 12:03): when the current task is done, fix M2.36.
+Claude's own proof is without WebGL: `packages/blwp-client/test/two-tabs.test.js`
+and `packages/blwp-node/test/ghost-live.test.js` (`timeout 180` +
+`--test-timeout=120000`). Close-out on Daily is still two local Chromes.
 
 HARD (Daniel 2026-09-08 18:26): when M2 is finished, start M3
 immediately. No pause, no ask, no action=done at the M2 boundary.
