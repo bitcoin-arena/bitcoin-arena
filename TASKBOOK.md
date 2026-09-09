@@ -22234,3 +22234,68 @@ equivalent. Once a seat holds only its own share, five can never meet.
 THE THREE MEASURES THIS ITEM CLOSES ON: a stranger opens ZERO shares, four
 answers refuse by name, five reconstruct and hash to that entry's own
 stakeCommitment. All three are false today - 7, opens, opens.
+
+### M3.3-9 STEP 2 — ONE SHARE, ONE SEAT, AND NOBODY ELSE
+
+`packages/protocol/src/seal.js` is the missing half of 23.1 step 2 - "encrypts
+one share to each settlement-committee member" - and `handout.js` now carries
+envelopes instead of scalars.
+
+THE PICK, as ruled: ECDH on the curve this system already injects, then AES-GCM
+through WebCrypto. No new dependency: `@noble/ciphers` is not vendored and does
+not need to be, and both ends of this - a browser dealing and a daemon opening -
+already have `crypto.subtle`.
+
+    key    taggedHash(BLWP/v1/VssShareKey,   ecdh(x) || seat)
+    nonce  taggedHash(BLWP/v1/VssShareNonce, ecdh(x) || seat)[0..12]
+    seal   AES-GCM over the 32-byte scalar   -> 48 bytes with the tag
+
+TWO TAGS AND NOT ONE, because a key and a nonce derived from the same bytes
+under one tag would BE the same bytes. THE NONCE IS DERIVED, NOT DRAWN: a
+random nonce would travel on the wire and make the handout - and therefore its
+id, and therefore the `vss_shares_ref` inside a SIGNED entry - different on
+every re-encode of one deal.
+
+THE EVEN-Y NORMALISATION IS THE SUBTLETY, and it is measured rather than
+argued. An x-only key names the point with even y, so a secret whose own point
+has odd y is negated before multiplying, exactly as BIP-340 signing does:
+
+    both ends derive the same secret       32 of 32 key pairs
+    two different pairs derive one secret   0 of 32
+
+WHAT MOVED, in the numbers this item closes on:
+
+                                        before      after
+    shares a stranger can read              7           7   (the wire is public)
+    shares a stranger can OPEN              7           0
+    five-subsets that open the stake       21 of 21     0
+    a stranger reconstructs the preimage  true       false
+    a seat opens its own share              -           7 of 7 seats
+    a seat opens somebody else's            -           0 of 42 attempts
+
+The refusal is by name, because GCM authenticates: a wrong key does not decrypt
+to a garbage scalar that then fails the Feldman check, it does not decrypt at
+all - "seat N's share does not open under this key: it was sealed to somebody
+else".
+
+WHO CATCHES A CROOKED DEALER CHANGED, and that is worth stating plainly. A node
+holds one share now, so it refuses when IT is the one cheated:
+
+    seats that refused a dealer who cheated seat 5    1 of 7  (seat 5)
+    seats that accepted                                6 of 7
+
+That is not weaker than letter 29. A handout five seats accepted is a handout
+five seats can open, which is the only property 5-of-7 needs; and a dealer who
+cheats enough seats to break reconstruction is refused by every one of them.
+What is gone is one seat catching a cheat aimed at another - it cannot see it,
+which is the point.
+
+A NODE THAT WAS DEALT NOTHING KEEPS NOTHING: `/handout` refuses with "this node
+is not one of the seats that handout was dealt to" rather than storing an
+envelope addressed to somebody else and calling it custody.
+
+AND THE OPENED SHARE IS NEVER WRITTEN DOWN. Only the sealed handout goes to
+disk and the share is re-opened from it when needed, so a stolen database is a
+pile of envelopes. The `holds` table gained nothing.
+
+Suites: blwp-node 258 -> 264, core 84, protocol 432, blwp-client 118, all green.
