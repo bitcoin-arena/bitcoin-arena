@@ -42,6 +42,13 @@ HARD (Daniel 2026-09-09 09:44): ghost trucks must follow while the other
 player drives. Seeing them at spawn then losing them, or a stuttering
 picture, is not playable M2. This is letter 36, now, not M3.
 
+HARD (Daniel 2026-09-09 09:48): prove it in two real browsers. One drives
+past the other; the ghost must be the current pose, realtime. A test
+without two browsers is not done.
+
+HARD (Daniel 2026-09-09 09:58): the proof browsers are local Chrome with
+WebGL. Not browser-act, not stealth/headless. Two Chrome windows.
+
 HARD (Daniel 2026-09-08 18:26): when M2 is finished, start M3
 immediately. No pause, no ask, no action=done at the M2 boundary.
 Playable M2 is 28. Then remaining queue (29 Feldman if still open),
