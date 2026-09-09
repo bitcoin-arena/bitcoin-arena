@@ -24161,3 +24161,88 @@ the two drive different lines. That is the 28 m.
 So the host still feeds the simulation three things no replayer holds: the
 ground (fixed here), the SOLIDS (letter 39) and the HEAT (letter 40). 36 stays
 open on the last two.
+
+## 2026-09-09  letter 39 - the collision boxes are the core's, and one was 0.4 m out
+
+The map's solids are generated in `core/src/rules/map.js` from the map's own
+geometry and the relief the core generated. 37 boxes: four map edges, the post
+office shell of 25 pillars on the bays' 6.8 m pitch with its two ends and its
+lintel, the miner's facade, lintel and both tunnel sides. `BlwpSetSolids` is
+gone from the jslib, `SetSolids` from `BlwpCore`, `UploadSolids` and its two
+bookkeeping fields from `CoreDrivenTruck`.
+
+THE FAULT IN THE FIRST WRITING, found by running the pin rather than reading
+it: `MINER_X` was 7471104 (114 m), off `DeliveryGate.gateX`'s field
+initialiser. `Bootstrap` overwrites it - `gate.gateX = _terrain.width * 0.44f`
+on a 260 m map is 114.4 - so the facade, the lintel and both tunnel sides all
+stood 0.4 m from where Unity draws them. 7497318 now. The post office's own
+-7497318 was right, which is what made the pair look consistent.
+
+AND THE PROBE BOX MEASURED NOTHING. The test showing what a host box was worth
+put its slab at (-85, -20), spanning z -60..20, while the drive it measures
+never gets west of x -63.9 below z 20 - 0.000 m, and it would have read 0.000 m
+however broken the door was. A slab across the road out of the bay, at x -60 on
+the straight run:
+
+    with the host's box   (-68.275, 71.400) m      the truck stops at the wall
+    without it            (-16.256, 71.400) m
+    one box a host could add: 52.019 m over 600 ticks
+
+And the page and a committee on a drive that meets the post office shell:
+
+    page   (-76.638, 80.457) m
+    replay (-76.638, 80.457) m      0.000 m apart, both holding 37 boxes
+
+Two rounds: all 37 boxes stand in the same place, 35 of 37 at the same height -
+the shells are seated on the round's own relief, which is why two move.
+
+Vectors regenerated: the simulated world deliberately changed, so
+`liquidation`'s hash moved and four vector files with it. Suites after:
+core 88/88, guard 21 files clean, blwp-node 372/372, blwp-client 139/139,
+protocol 440/440.
+
+## 2026-09-09  letter 40 - the bed travels, not the wanted level
+
+The 28 m above, closed. `CargoBay.Heat` worked the level out in floats and
+`BlwpSetHeat` wrote the answer into the page's own core; a host write is in no
+batch, mark or transcript, so the page carried 57229 and every replay carried
+0. A GHOST IS A REPLAY, which is the whole of the wrong pose.
+
+Measured on one drive, page against a heat-blind replay of the same words:
+
+    they part at tick 420
+    tick 300  0.000 m
+    tick 600  2.320 m
+    tick 900 13.553 m       and still growing
+
+The ghost of a loaded run at tick 899:
+
+    with the load in the transcript   (-11.485, -2.569) m   0.000 m from the truck
+    without it                        13.553 m away         what watchers were shown
+
+On the live path (`RunInProgress`, 100 slices of a 600-tick run, the load in
+every slice): byte-identical to a cold replay, and at tick 899 a loaded run is
+drawn 5.257 m from the same inputs unloaded.
+
+THE LOAD CROSSES, NOT THE ANSWER: `[tick, feeSats, btcHundredths]` on the input
+batch, 12 bytes each, MAX_INPUT_BATCH_BYTES 1835087 -> 2621509. `submitLoad` in
+the core runs `rules/cargo.js`, which had ZERO CALLERS since the port while the
+float copy decided the game.
+
+AND THAT UNCALLED RULE WAS BROKEN. `Math.imul(feeSats, ONE)` wraps at 32,768
+sats: a 40,000-sat bed - twice what the rule calls full - scaled to
+-2,147,483,648 and clamped to ZERO, so the fattest loads would have been the
+ones the war ignored. Both terms are ratios that cap at one, so the numerators
+are capped first. Pinned: 20000 sats -> 65536, 40000 -> 65536, 2e9 -> 65536,
+0 BTC at 2500 hundredths -> 29491, at 100000 -> 29491.
+
+Three host doors into the simulated world are off the browser bundle's export
+list now - `setHeat` (40), `setGround` (36), `setSolids` (39). They stay in
+`src/` for the tests that measure what a host world was worth.
+
+`CargoBay.Heat` stays as the yard's preview gauge and decides nothing once a
+round starts; its three constants (20000 sats, 25 BTC, 0.45) are pinned against
+the core's by `blwp-node/test/replay-heat.test.js`.
+
+Suites after: core 89/89, guard 21 files clean, protocol 441/441,
+blwp-node 380/380, blwp-client 143/143.

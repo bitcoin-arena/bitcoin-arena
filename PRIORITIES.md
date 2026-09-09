@@ -16,48 +16,49 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: M2.36, STILL OPEN. Daniel 21:23: heat goes in too, same as the
-hills - in the round/transcript, not a live host write. 40 is that. 39 is
-the boxes. 36 is not done without them. The ground half is done and measured - the
-committee walks the same seeded hills the player drove - but the goal is "the
-other truck is drawn where that truck actually is, live" and TWO THINGS ARE
-MISSING, found by asking rather than by another look failing.
+LIVE LETTER: M2.36 IS CLOSED, and M3 is the live one. 39 and 40 are both in.
 
-  (a) THE SOLIDS ARE STILL THE HOST'S, which is the same fault as the ground
-      and is bigger. `WorldSolids.Gather` collects every BoxCollider Unity has
-      BUILT AT RUNTIME - the shipped scene carries none, they are all made by
-      `Bootstrap` and by streamed models - `CoreDrivenTruck.UploadSolids` sends
-      them to the core, and no replay anywhere sets solids. `UploadSolids`
-      re-sends whenever the count changes, so the collision world the core is
-      simulating CHANGES MID-RUN as models arrive. Measured: one box on the
-      path moves a 600-tick drive 40.233 m, which is more than the 33.500 m the
-      ground was worth. Same shape of fix - the map's collision boxes belong to
-      the core, Unity draws them - and it is letter 39.
-  (b) THE LOOK WAS RUN AND IT FOUND TWO MORE THINGS, both measured. A seed
-      RACE - `CoreDrivenTruck.Start` and the bridge both seeded the core and
-      nothing ordered them, so one tab drove the harness world (bay 13,
-      z 10.200 m) while every other page was shown it at its round bay
-      (bay 14, z 17.000 m), a constant 6.800 m that never closed. FIXED in
-      `blwp.jslib`: the round's seed is the world however late anybody asks,
-      pinned by a test against the shipped jslib. And then, on the rebuilt
-      player, the apron is exact and the field still drifts - 6.576 m growing
-      to 28.114 m while the publish lag stays 3-7 ticks - and the cause is
-      HEAT: the page's core carries 57229 and any replay of the same
-      transcript carries 0. `BlwpSetHeat` is a host input in no batch, mark or
-      transcript. That is letter 40. Ruled out by measurement first: identical
-      ground checksums, every stepped tick published, no solids on either
-      side, no liquidations, and P1's own transcript replayed here lands where
-      the daemon's picture says.
-      Earlier: 36 has been called done twice and a look has said NO
-      twice, and the field case the ground fix is FOR is exactly what a look
-      tests.
+  36's goal was "the other truck is drawn where that truck actually is, live",
+  and it stayed open because THE HOST STILL FED THE SIMULATION THREE THINGS NO
+  REPLAYER HELD. All three are closed now and each was worth a number:
 
-The ground half, for the record: The core generates the relief from the round's seed in integer
-fixed-point and Unity draws it; the page's upload door is gone from all three
-layers. One drive, 600 ticks: page (-70.212, -32.048) m against replay
-(-70.212, -32.048) m, 0.000 m apart where it was 33.500, on a world that is not
-flat (10176 of 15360 cells carry relief, up to 6.930 m) and differs per round.
-The apron stays 0.000 m. Numbers in TASKBOOK.
+  (a) THE GROUND, closed earlier. The core generates the relief from the
+      round's seed in integer fixed-point and Unity draws it. One drive, 600
+      ticks: page (-70.212, -32.048) m against replay (-70.212, -32.048) m,
+      0.000 m apart where it was 33.500, on a world that is not flat (10176 of
+      15360 cells carry relief, up to 6.930 m) and differs per round.
+  (b) THE SOLIDS - letter 39, closed. The map's 37 collision boxes are the
+      core's, made from the map's own geometry and the relief it generated;
+      `BlwpSetSolids`, `SetSolids` and `UploadSolids` are all gone. A drive
+      that meets the post office shell: page (-76.638, 80.457) m, replay the
+      same, 0.000 m apart. One box a host could once have added was worth
+      52.019 m over 600 ticks. THE FAULT THAT MATTERED was found by running
+      the pin rather than reading it: `MINER_X` was taken off `gateX`'s field
+      initialiser and `Bootstrap` overwrites it, so every miner box stood
+      0.4 m off; and the probe box that was meant to show what a host box was
+      worth sat off the drive's path and read 0.000 m.
+  (c) THE HEAT - letter 40, closed. The BED travels now, not the wanted level:
+      `[tick, feeSats, btcHundredths]` on the input batch, and the core's own
+      `rules/cargo.js` decides the cost. The page carried 57229 and every
+      replay carried 0; a ghost IS a replay, which is the whole of the wrong
+      pose. They part at tick 420 and are 13.553 m out by tick 900. The ghost
+      of a loaded run is now 0.000 m from where that truck is, and 13.553 m
+      out without the load. THE FAULT THAT MATTERED: the integer rule had ZERO
+      CALLERS since the port and was broken - a 40,000-sat bed wrapped to
+      negative and clamped to zero, so the fattest loads were the ones the war
+      ignored.
+
+  Three host doors into the simulated world are off the browser bundle now:
+  `setGround` (36), `setSolids` (39), `setHeat` (40).
+
+  NOT LOOKED AT IN TWO CHROMES. Daniel 17:05: "Claude fixes 36 without a WebGL
+  test after. Then M3 immediately." Claude's own proof is the suites and
+  `ghost-live.test.js`; a pair of eyes on the Daily is Daniel's or SwissClaw's.
+
+M3 IS THE LIVE WORK, starting now and with no wait, on Daniel's standing word
+(21:26, 12:58, 18:26). Next in M3 is item 18: nothing in the daemon watches the
+pool's script, so the ASKING half of a settlement has no caller and a close
+still stops at PAYOUT_QUEUED. Items 15 and 16 are open beside it.
 
 30 stays queued behind M3.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
