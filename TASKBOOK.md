@@ -26285,3 +26285,37 @@ daemon holds a stake, or one lnd per daemon), not a wiring step.
 AND THE DAILY'S DAEMONS ARE DOWN: `ss -ltnp` at ~19:30 shows nothing on
 8080/8081/8090/8091 except `signal-cli` on 127.0.0.1:8080. Not restarted from
 this session.
+
+CORRECTION, SAME EVENING: the shared lnd is not a design question - the spec
+answers it. §23.1 step 3: "The settlement committee's Lightning endpoint
+(§23.6) issues a hold invoice for payment_hash"; step 5: STAKE_COMMITTED "once
+>=5 settlement nodes have seen the held HTLC". One endpoint, several daemons,
+which is exactly the 2-of-2's shape.
+
+### A second daemon on the committee's one endpoint takes up the hold instead of colliding
+
+Measured first, `custody-restart-lnd.mjs` with a second daemon (its own store)
+holding each entry on bob's lnd right after the first:
+
+    before   the run stopped: lncli addholdinvoice refused: [lncli] rpc error:
+             code = Unknown desc = invoice with payment hash already exists
+
+- thrown out of `custody.hold`, not even a refusal. `lndPort.createHeld` now
+reads lnd's own "already exists" as the endpoint having issued it: it looks the
+invoice up and takes it up only while it is OPEN or ACCEPTED, with lnd's own
+`payment_request` and amount, so `invoiceMatchesEntry` still checks what comes
+back. A SETTLED or CANCELED invoice for that hash is refused by name; any other
+lncli error still throws.
+
+Pins (lnd-port.test.js): an OPEN and an ACCEPTED hold are taken up, read back;
+SETTLED and CANCELED are refused; "connection refused" still throws. Mutant
+"take up whatever state" killed (5/6). lnd-port + custody 30/30.
+
+After, on the real lnd, both kill points: the second daemon holds each entry
+"HELD, the same invoice" (2 of 2 entries), and the rest of the run is
+unchanged - point 1 HELD then SETTLED on the next close, point 2 SETTLED, bob
+gains exactly 98000 msat once, "no problems" x2. blwp-node 432/432.
+
+NOT YET: "seen by >=5" as a recorded STAKE_COMMITTED, and which daemon's hold
+settles or cancels - both daemons now hold the same invoice, and 23.4's five of
+seven decides the settle.

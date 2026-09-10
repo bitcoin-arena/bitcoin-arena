@@ -62,11 +62,17 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   restarted as main.js ends in lnd's own state at both kill points - HELD
   when the act never left, SETTLED when it landed, one stake moved once. It
   stayed ACTING at both before.
-  THE DAILY'S LAUNCHERS ARE NOT WIRED, AND IT IS A QUESTION, NOT A LINE:
-  run-2of2 and round-2of2 run two daemons on ONE lnd, and the client posts
-  each entry to every daemon's /entry, which issues a hold - the second
-  addholdinvoice on the same payment hash collides. Which daemon holds a
-  stake on a shared lnd has to be decided before either launcher takes one.
+  THE DAILY'S LAUNCHERS ARE NOT WIRED YET: run-2of2 and round-2of2 run two
+  daemons on ONE lnd, and the client posts each entry to every daemon's
+  /entry, which issues a hold - so both ask one lnd for the same hash. THE
+  SPEC ALREADY SAYS WHAT THAT IS (§23.1): one "settlement committee's
+  Lightning endpoint issues a hold invoice", and STAKE_COMMITTED is ">=5
+  settlement nodes have seen the held HTLC". DONE AS ISSUANCE: a second
+  daemon on the same lnd now takes up the endpoint's hold (only while it is
+  still a hold, checked against the entry) where it threw "invoice with
+  payment hash already exists" - on a real lnd, same invoice, both kill
+  points still recover. NOT YET: STAKE_COMMITTED as ">=5 have seen it", and
+  handing the Daily's launchers their lnd.
   AND THE DAILY'S TWO DAEMONS ARE DOWN (2026-09-10 ~19:30): nothing listens
   on 8080/8081/8090/8091 but signal-cli on 127.0.0.1:8080. Not restarted
   from here.
