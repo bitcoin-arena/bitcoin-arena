@@ -42,21 +42,25 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   first (580629c). Rehearsal, AB and BA: the first to close
                   re-gathers ~2 s later and both end with P1 and P2 final and
                   the table PAYOUT_QUEUED, 2 of 2 seats signed.
-    code, NEXT    M3.3-26: the preimage opening asks for 5 shares whatever
-                  the stake was dealt with - both daemons now reach P2's
-                  settle and stop at "no preimage"; A held both of a 2-of-2
-                  stake's shares and stopped at "2 of 5".
+    code, DONE    M3.3-26 (item 23 folded in): a stake opens at the ROUND'S
+                  threshold (2 of 2, 5 of 7) - the door refuses any other by
+                  name, the settle opens at it, the page deals it. Rehearsal,
+                  AB and BA: P2 SETTLED on both daemons, alice -98000 msat,
+                  the operator +98000; P1 and P3 cancelled back to alice.
     flake         M3.3-27: `Client.at` sometimes refuses "only 1 of 2
                   providers gave a chain" while both /headers answer 200 at
-                  once (2 of 7 rehearsals). Not the close; not investigated.
+                  once (4 of 12 rehearsals, one of them run alone). Not the
+                  close; not investigated.
     ruling        how a settled stake reaches the pool; the owed-sats fee
                   rate; htlc_cltv_days (all below, unchanged).
     inbound       testnet4: 196000 msat needed, 0 offered.
   Two daemons CANCELLING one invoice on the shared endpoint is measured: both
-  wrote CANCELLED, lnd CANCELED once. Behind 24 and 25, not yet measurable:
-  two daemons SETTLING one invoice, the objection window before finality,
-  the pool payout. Node 451/451, client 219/219, core 91/91, golden vectors
-  8/8 (0 engine files touched).
+  wrote CANCELLED, lnd CANCELED once. Two daemons SETTLING one is measured
+  too: lnd settled once; the second `settleinvoice` is logged by lnd as
+  "invoice already settled" and still returns success, so both write
+  SETTLED (reported, left as is). Not yet measurable: the objection window
+  before finality, the pool payout. Node 453/453, client 222/222, core
+  91/91, golden vectors 8/8 (0 engine files touched).
 
   M3.3-21 IS DONE - STAKE COMMITTED, AS THE PLAYER SEES IT (§23.1 step 5):
   from the seat of a paying round, the page asks every settlement seat and
@@ -3388,9 +3392,9 @@ round, which is why testnet comes first and why the order is stricter.
      one-shot: a peer down AT the close gives nothing, and that run gets no
      result on that node - its hold expires to the player (the safe side).
  23. **The page's share threshold on a seven-seat round** (§23.1: 5 of 7).
-     LATER. The page deals the stake's shares with `needed:
-     settlementSlots`, which on seven seats would ask all seven. Not
-     measured; a two-slot round is unaffected.
+     DONE in M3.3-26: the page deals and posts at `sharesNeededFor(round)`,
+     the rule the node's door and settle read (2 of 2, 5 of 7); the door
+     refuses 7-of-7 on seven seats by name.
   9. **VSS custody of the stake preimage.** No single node ever holds it.
      After the state machine, because the machine defines when a share is
      asked for.

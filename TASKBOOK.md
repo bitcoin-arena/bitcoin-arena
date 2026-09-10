@@ -26956,3 +26956,82 @@ chain", while each daemon's /headers, asked straight after, answered 200 with
 stopped an earlier run (rehearsal-3). It is the client's chain agreement, not
 the close. blwp-node 451/451, blwp-client 219/219, core 91/91, golden vectors
 8/8 (0 engine files touched).
+
+### M3.3-26 (item 23 folded in) measured first: a stake opens at 5, whatever it was dealt at
+
+Rehearsal, before any change (P2 is the loser whose stake must settle):
+
+    P2's handout on both daemons   dealt 2-of-2 (needed 2, 2 shares)
+    shares held                    A holds seat 2's, B holds seat 1's
+    the settle's open() asks for   5 (SHARES_NEEDED), not the round's 2
+    A, after a PROBE gather        "2 of 5 shares" -> no preimage
+    P2's settle                    HELD on both; alice +0, operator +0 msat
+
+The door (unit probe, a two-seat round, handouts crafted the way a cheating
+player would send them - `dealHandout` refuses to make them):
+
+    2-of-2 -> 201     3-of-2 -> 409 (already: its own check)
+    1-of-2 -> 201     TAKEN: one seat opens that stake alone
+    seven seats: 7-of-7 -> 201   TAKEN: what the page dealt, needing every seat
+
+`acceptHandout` checks a handout only against itself, so the threshold was the
+player's. The page dealt `needed: settlementSlots` (7 of 7 on seven seats) and
+posted at `postHandout`'s default 5 (on a 2-of-2).
+
+### M3.3-26 after: one threshold, the round's - P2's stake SETTLES in both close orders
+
+The rule is one function, `receiptsNeeded(settlementSlots)`, moved to
+`protocol/src/threshold.js` (genesis.js re-exports it) so the client bundle
+carries it without genesis.js reaching into the engine. The door
+(`POST /handout`) refuses a handout whose `needed` is not the round's, by
+name; the settle's `open()` asks the round's number, never the handout's; the
+page deals and posts at `BLWPCLIENT.sharesNeededFor(round)`.
+
+The door, the same unit probe:
+
+    two seats     2-of-2 -> 201   3-of-2 -> 409   1-of-2 -> 409 "that handout is
+                  dealt 1 of 2, and this round's stakes open at 2 of 2"
+    seven seats   5-of-7 -> 201   7-of-7 -> 409 "... open at 5 of 7"
+
+Rehearsal (rehearsal-8-BA side by side with an AB that stopped on the M3.3-27
+`Client.at` flake before play; rehearsal-9-AB rerun alone):
+
+    order  daemon  P2's settle
+    BA     B       first to close: HELD, "1 of 2 shares" (A not final yet),
+                   then SETTLED on its re-gather ("the preimage was released")
+    BA     A       SETTLED at its close
+    AB     A       first to close: HELD, "1 of 2 shares" (B not final yet),
+                   then SETTLED on its re-gather
+    AB     B       SETTLED at its close
+
+    money, both orders       before        after         change
+      alice (paying)         996530000     996432000     -98000 msat
+      bob (the operator)    1000000000    1000098000     +98000 msat
+    P2 FAILED  lnd SETTLED  -> the operator's lnd (the timelock refund is gone)
+    P1 DELIVERED, P3 VOID   lnd CANCELED -> back to alice
+    both tables PAYOUT_QUEUED, 2 of 2 seats signed
+
+Before: P2 HELD on both, "2 of 5 shares", alice +0, operator +0.
+
+THE SECOND `settleinvoice` ON THE SHARED lnd, reported and left: bob's lnd
+settled the HTLC once (BA 01:27:33.813, AB 01:29:52.800) and logged the other
+daemon's call 2.1 s later as `[ERR] INVC: SettleHodlInvoice ... invoice already
+settled` - but lncli returned success (the port rejects on a non-zero exit and
+custody writes SETTLED only after `settle` returns), so both daemons wrote
+SETTLED. One settlement, no throw, no double count.
+
+UNCHANGED, AND LISTED: the settled stake lands in the operator's lnd, not the
+pool (the pool ruling); the queued payout stops at "this node reaches no
+chain, so it spends nothing"; the Client.at flake (M3.3-27) hit the AB run
+started side by side again.
+
+The harness's own PROBE called `open` without a threshold and so still printed
+"2 of 5" (rehearsal-8, -9) - the harness, not the daemon path. It now asks at
+`sharesNeededFor(round)`. rehearsal-10-AB: A holds seat 1's share, B seat 2's
+(dealt 2-of-2); PROBE A and PROBE B each "OPENED with 2 shares"; P2 SETTLED on
+both, alice -98000, operator +98000; lnd settled at 01:31:40.277 and logged
+the second call "invoice already settled" at 01:31:42.364. rehearsal-10-BA,
+run ALONE right after it, stopped before play on the M3.3-27 flake ("only 1
+of 2 providers gave a chain") - so the flake is not only two runs side by
+side (now 4 of 12 rehearsals: 2 of 7 before this letter, and 8-AB and 10-BA
+of this letter's 5).
