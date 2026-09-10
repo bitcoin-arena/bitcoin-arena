@@ -25303,3 +25303,44 @@ wallet-nwc) are handed a READY preflight - setup, no assertion touched.
 
 SUITES  blwp-node 416 -> 422, blwp-client 184, protocol 463 and core 89 not
 touched. No bundle changed. Nothing opened, paid or signed on the node.
+
+
+## M3 finish line, steps 3 and 2 - the daemon on the committed tree, and the free seat in two real Chromes (2026-09-10)
+
+STEP 3, THE RESTART. The 2-of-2 that was pid 2168318 (started 11:19:59 on a
+mid-edit tree, d16c9cd's coercion) was stopped at 12:17 and started again from
+/tmp/btc-phase0 with its own environment (ports 8090/8091, bind 100.74.66.98,
+wss names on the tailnet, the Daily as page). At launch: HEAD fb3b652, 0 dirty
+files. New round 267a9de5a407eb74...; /identity 200, 32 bytes, on both binds and
+both Funnel names. Old log kept as /tmp/blwp-round-2of2.log.prev.
+
+STEP 2, THE LOOK. Two google-chrome windows on DISPLAY :0, WebGL2 true in both,
+own user-data-dirs, DevTools 9301/9302. The Daily, the round URL the daemon
+printed. What was ON SCREEN and what the page itself said:
+
+    both, loaded     the splash (PLAY / SPECTATE), block #966346, 2:26 left; chip
+                     "A ok · B ok / play · A up / 2 players in this round · other
+                     at ... · free seat"; BLWP_STAKE { free: true }, no seat
+                     refused, no wallet box drawn
+    at rest          P1's own core (-100.400, -10.200) m, P2 shows it at
+                     (-100.400, -10.200); P2's own (-100.400, 57.800), P1 shows
+                     it at (-100.400, 57.800) - to the millimetre, both ways
+    P1 Play/Auto     loaded 7 parcels, 22,011 sat on the bed
+    P1 ROLL OUT      THREW: "heatForLoad is not defined" - and then barely moved:
+                     W held 6 s took x from -100.4 to -99.04; P2's chip followed
+                     to "other at -97,-10 m" while P2 sat in its loadout
+    Screens: daniel-screens/2026-09-10-1219-freeseat-p{1,2}-load.png,
+             2026-09-10-1224-freeseat-p{1,2}-rollout.png
+
+THE FAULT, and it is letter 40 reaching the Daily broken: `core/src/sim.js`
+imports `heat as heatForLoad`; the core bundler strips imports and concatenates,
+so the flat bundle had `heat` and no `heatForLoad`, and `submitLoad` - the ROLL
+OUT path - threw on every loaded truck. Every suite loads the modules; the
+bundle test checked exported names only and never ran a load through the bundle.
+
+THE FIX: the bundler turns an aliased import into `var heatForLoad = heat;` where
+the import stood (sim.js is the only alias in the core). Two bundle tests: every
+aliased import is declared in the bundle, and a load through the BUILT bundle
+heats and hashes exactly as the modules do. Against the committed bundle: 2 red.
+Rebuilt: green. Core 89 -> 91, determinism guard 21 clean, blwp-client 184
+(the template must ship the built bundle byte for byte: md5 4a337755).

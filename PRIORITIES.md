@@ -32,6 +32,10 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   AND A DAEMON THAT HOLDS STAKES NOW REFUSES TO OPEN A PAYING ROUND UNTIL THAT
   PREFLIGHT SAYS READY: measured on the real node, 100000 msat -> 503 with the
   196000 vs 0 shortfall, 0 msat -> 201. It fails closed without a preflight.
+  THE 2-OF-2 RUNS THE COMMITTED TREE (restarted 12:17 on fb3b652, round
+  267a9de5). THE LOOK FOUND ROLL OUT THROWING ON THE DAILY - "heatForLoad is not
+  defined", the core bundler dropping an aliased import - fixed in the bundler
+  and pinned by a test that runs a load through the built bundle.
 
   M3.3-19: a round that asks no stake seats on a node with NO Lightning, as
   x-hold FREE with no fault named, and the other player's ghost follows at the
@@ -41,7 +45,9 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   door did not yet pass it, so every entry refused. The 11:20 coercion
   (d16c9cd) seated it by hiding that and turned two pinned tests red; it is
   retracted, the checks are strict again, and a mutant that stops the door
-  passing the donation is killed (4 red). Not looked at in two Chromes.
+  passing the donation is killed (4 red). LOOKED AT in two real Chromes
+  (2026-09-10 12:19): both seats FREE, no wallet box, each ghost at the other
+  tab's own core pose to the millimetre at rest, and following P1's truck.
 
 M3.2-6e IS DONE AS THE ARITHMETIC: one subtraction (`netStakeMsat`), and the
 hold, the pool, winnings and the page all read it - the wallet is asked 98 of a
