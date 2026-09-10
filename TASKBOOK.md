@@ -26424,3 +26424,26 @@ entry. A silent wallet with a node that never sees it -> still "did not answer
 in 400 ms". The honest path (a wallet that answers with a preimage) unchanged.
 stake-committed 3/3. blwp-node 435/435, blwp-client 210/210. Bundle rebuilt,
 template copy equal.
+
+### The hold's refund timelock is lnd's default, and sizing it is a ruling
+
+§23.1: "CLTV is sized in days, comfortably beyond round + objection window +
+result window + claim window, so that delay is never loss." The spec lists
+`htlc_cltv_days` among the round contract's fields (line 1289).
+
+What a hold gets today: `lndPort.createHeld` passes `--expiry` (the invoice's
+own expiry) and nothing for the HTLC timelock, so lnd's default applies. The
+real-lnd run (custody-lnd.mjs) measured it: the void HTLC expired at height
+345 with the chain at 262 - 83 blocks, ~14 h at ten minutes a block. lncli
+offers `addholdinvoice --cltv_expiry_delta`, so passing a value is mechanical.
+
+WHY NOTHING WAS CHANGED. The old blocker - no tick rate - is gone:
+`protocol/src/tick.js` converts `blockTicks` to milliseconds exactly, and the
+contract carries `startTimeMs`, `entryCloseMs` and `objectionWindowMs`. But
+two things remain a choice, not a derivation:
+  - a CLTV counts BLOCKS, which can come faster than ten minutes; the spec's
+    answer to that variance is a margin "in days"
+  - the result window and the claim window are not in the contract, and
+    `claim_window_days` is listed as unchosen
+So `htlc_cltv_days` is a value for Daniel, like the node fee rate - not a
+constant to invent in the money path. Named in PRIORITIES as a ruling.

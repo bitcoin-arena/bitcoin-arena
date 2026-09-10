@@ -57,6 +57,14 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   RULING NEEDED (Daniel): the owed sats leave as miner fee (900 in, 336 out,
   564 fee), against item 16's own rule. Keeping them means a change output to
   the pool, and that needs a fee rate nobody has set.
+  RULING NEEDED (Daniel): htlc_cltv_days. §23.1 sizes a hold's CLTV "in days,
+  comfortably beyond round + objection window + result window + claim
+  window"; the spec makes it a round-contract field. Today lnd picks its own:
+  83 blocks measured (~14 h at 10 min), not days. The round's span is now
+  computable (the tick rate exists), but blocks can come fast, and the result
+  and claim windows are not in the contract - so the margin is a value to
+  choose, not derive. With it: the contract carries it, the hold passes it as
+  --cltv_expiry_delta, and a hold below it is refused.
   AND THE LIGHTNING HALF: src/main.js takes its lnd (four settings, all or
   none, testnet4 or regtest). A custodian SIGKILLed inside a settle and
   restarted as main.js ends in lnd's own state at both kill points - HELD
