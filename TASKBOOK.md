@@ -25952,3 +25952,26 @@ THE FOLLOW-UP, answered:
 (c) REMAINDER: Daniel maps /blwp-a -> 100.74.66.98:8090 and /blwp-b -> :8091 as
 root; then the two-Chrome look on round f10ec0ec (ghost vs own core in mm, input
 transcripts and checkpoint chains on both daemons).
+
+### (c) blocked on root: the two funnel paths
+
+Measured: GET https://beelink.tail1723e2.ts.net/blwp-a/identity 502, /blwp-b/identity
+502. This shell is uid 1000; serve config needs root. Daniel, as root, adds only
+(leave `/` -> finedining on 3001):
+
+    sudo tailscale serve --bg --set-path /blwp-a http://100.74.66.98:8090
+    sudo tailscale serve --bg --set-path /blwp-b http://100.74.66.98:8091
+
+Gate for the two-Chrome millimetre look: 200 on both identity URLs.
+
+The look is not a named command in the repo (`tools/screen.mjs` is one browser
+against a local node). Once both are 200, from the session scratchpad:
+
+    for N in blwp-a blwp-b; do curl -s -o /dev/null -w "$N %{http_code}\n" \
+      https://beelink.tail1723e2.ts.net/$N/identity; done            # 200 200
+    grep '^https://btc-logistics-core' /tmp/blwp-round-2of2.log      # round URL (f10ec0ec)
+    DISPLAY=:0 node cdp.mjs launch '<round URL>'                     # two Chromes, CDP 9301/9302
+    DISPLAY=:0 node look5.mjs 3 400    # P2 ghost vs P1 own core, mm at rest / driving, per reload
+    DISPLAY=:0 node look11.mjs '<?round=...>' https://btc-logistics-core.pages.dev \
+      https://btc-logistics-core.pages.dev                            # checkpoints + inputs on A and B
+    node final.mjs                     # A/B transcript ticks and hashes per seat
