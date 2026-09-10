@@ -25595,3 +25595,52 @@ THE CAUSE, read in the code and the spec (not changed):
   - consequence: no Daily run builds a checkpoint chain with a quorum of
     receipts, so by 13C none has a canonical transcript; a paying round would
     end in the no-quorum rule until checkpoints reach the committee.
+
+### (b) after: every checkpoint reaches both daemons, and the chain grows on A and on B (c3d8659, on the Daily)
+
+The client now seats the entry on every node the round named and sends each
+checkpoint to all of them at once, verifying each receipt; the head moves when
+the mark is live. The node list reaches `Client.at` as `discovery.nodes` from
+the page's own wrapper (`index.html`, `window.BLWP_NODES`); no client src file
+reads the page (the source guard is unchanged and passes). Page counters:
+`marksAccepted` (went live), `marksRefused` with the refusing node's words.
+
+Two real daemons (`checkpoint-quorum.test.js`, the round-2of2 tool):
+
+                         with the node list        without (the old Daily)
+    ticks 60..240        receipted by both, live   first receipted by A only
+    stored A / B         1/1 2/2 3/3 4/4           1 / 0
+    links                each names the one before second refused: chain head
+    counters             marks 4 accepted 4        marks 1 accepted 0 refused 1
+
+The Daily, two real Chromes (P1 at 400 ms), round 267a9de5, deployment
+d546c9d6 (bundle md5 4bd75cf9, page byte-identical to the build), ~25 s after
+roll-out:
+
+                         P1 a1e70fa1               P2 b51ba682
+    peers / B seated     blwp-b / ok               blwp-b / ok
+    per checkpoint       4 accepted, 0 refused     5 accepted, 0 refused
+    label = core tick    4 of 4 (60/60 .. 240/240) 5 of 5
+    stored A / B         4 / 4                     5 / 5
+    page counters        sent 4 skipped 0 accepted 4 refused 0   (P2: 5 0 5 0)
+    status line          ready batches 33 marks 4 tick 264 held 6 accepted 4
+    published = core     264 = 264                 304 = 304
+
+Asked again with both tabs still driving: A / B store 9 / 9 and 10 / 10.
+
+blwp-client 198/198 (76 + 75 + 47). No C# changed, so Unity was not rerun: the
+last counts stand - PlayMode 239 (215 pass, 11 documented red, 13 skipped),
+EditMode 193 (189 pass, 1 documented red, 3 skipped).
+
+A NEW HOLE, NAMED AND NOT FIXED: DAEMON B RECEIPTS CHECKPOINTS OF RUNS IT
+CANNOT REPLAY. Same moment, `/transcript` for each seat:
+
+                         A                         B
+    a1e70fa1             588 ticks                 0 ticks
+    b51ba682             630 ticks                 0 ticks
+
+Batches still go to the client's own node only, and `round.checkpoint` checks
+no batch - so B signs a receipt for a state hash over inputs it has never
+seen. The chain is now carried by both keys; what one of them witnessed is the
+signature on a claim, not a replay. Section 11 has the client send batches as
+well as checkpoints; the same fan-out would carry them.
