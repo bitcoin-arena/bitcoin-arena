@@ -25885,3 +25885,32 @@ socket's close answers its waiting batch with `error the socket closed`, the
 same shape as a node's refusal. A disconnect is not a refusal, and VOID is
 decided here for a player who only lost the link twice. The peer side was
 split in 12ce726; this is the same mix-up on the client's own connection.
+
+### The player's own socket closing mid-batch is a disconnect, not a refusal - two drops leave the run alive (cut (c) still OPEN on the funnel map)
+
+The client's own socket, closing with a batch in flight, now answers with the
+same `closed: ...` word the peers use, never the `error ...` a node says. The
+drain holds the batch and counts it "interrupted"; it does not count a refusal
+and does not resync towards VOID. On the reconnect, `resume` now drops from the
+hold any words the node already took (a batch whose answer was lost) and feeds
+the peers every batch the node holds.
+
+One real daemon, the page's reconnect, two drops with no batch landing between
+(scratchpad/m-drop2.mjs; pinned by test/own-socket-drop.test.js). Every tick
+carries its own index, so a misplaced tick shows:
+
+                              before (583c4a6)                 after
+    A. frame lost x2          VOID at tick 60 ("the node       alive; refusals 0,
+                              refuses this run's inputs ...    interrupted 2;
+                              error the socket closed");       node 150 of 150
+                              refusals 2; node 60 of 120       ticks, each in place
+    B. answer lost x2         VOID at tick 90; node 150        alive; refusals 0,
+       (node took the batch)  ticks for 120 recorded, tick     interrupted 2, landed
+                              90 holding the input for 60      unheard 2; 150 of 150,
+                                                               each in place
+    a node that says no       -                                refused 1, interrupted 0,
+       (wrong batch head)                                      one resync, run goes on
+
+A node that keeps refusing still ends the run VOID by name (refused-batch.test.js,
+unchanged and green). blwp-client 206/206 (81 + 78 + 47); blwp-node 422/422
+(131 + 88 + 118 + 85). No C#.
