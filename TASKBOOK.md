@@ -25734,3 +25734,17 @@ THE DAILY CANNOT REACH THEM: https://beelink.tail1723e2.ts.net/blwp-a and
 nothing listens on :3001 (finedining's nodemon is running with no port). At
 14:xx the same paths served the Daily (look10/look11). Neither the serve config
 nor :3001 was touched from here. Both tabs sit on the page with no round.
+
+### Funnel restore denied - Daily look still blocked (round f10ec0ec)
+
+Ran exactly the two accepted commands as the session user:
+  tailscale serve --bg --set-path /blwp-a http://100.74.66.98:8090   -> exit 1
+  tailscale serve --bg --set-path /blwp-b http://100.74.66.98:8091   -> exit 1
+Both: "sending serve config: Access denied: serve config denied. Use 'sudo
+tailscale serve ...'. To not require root, use 'sudo tailscale set
+--operator=$USER' once." (Each first printed "Removing Funnel for
+beelink.tail1723e2.ts.net:443"; the config send was refused.)
+Checked after: `tailscale serve status` and `tailscale funnel status` are
+identical to before - Funnel on, `/ -> http://localhost:3001`, the 18789 and
+8443 tailnet-only mappings, no /blwp-a or /blwp-b. Nothing changed. Stopped
+there: no sudo, no other proxy, port or funnel.
