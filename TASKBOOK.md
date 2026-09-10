@@ -25862,3 +25862,26 @@ Tests: checkpoint-quorum 7/7 - the new one pins the table above; two earlier
 expectations changed because they pinned the mix-up (test 5 asserted "inputs
 refused" for a stopped B; test 6 counted the down B in `refused`). blwp-client
 203/203 (7 + 74 + 75 + 47); blwp-node 422/422 (131 + 88 + 118 + 85).
+
+### MEASURED, NOT FIXED: the client's own socket closing mid-batch counts as the node refusing, and two such drops end an honest run VOID
+
+One real daemon, the page's reconnect wired as the bridge wires it
+(`client.onDrop = () => client.reconnect(...)`); the batch frame in flight is
+swallowed and the socket closed 5 ms later (scratchpad/m-drop.mjs):
+
+    baseline      batch answer 60, nextTick 60, ready
+    drop 1        answer "error the socket closed" -> refusals 1, refusedWhy
+                  "error the socket closed", resynced true, drops 1;
+                  reconnect -> ready, "resumed 60", 30 held
+    drop 2        (no batch landed between the drops) answer "error the socket
+                  closed" -> refusals 2 -> ENDED VOID: "the node refuses this
+                  run's inputs at tick 60: error the socket closed - and it
+                  still refused after resyncing, so this client cannot publish
+                  and nothing from here can be replayed"
+
+The node refused nothing. `drain` treats every non-count answer as a refusal
+and `#afterRefusal` resyncs once, then ends the run on the next; the main
+socket's close answers its waiting batch with `error the socket closed`, the
+same shape as a node's refusal. A disconnect is not a refusal, and VOID is
+decided here for a player who only lost the link twice. The peer side was
+split in 12ce726; this is the same mix-up on the client's own connection.
