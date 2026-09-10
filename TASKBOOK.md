@@ -25220,3 +25220,47 @@ alias btc-logistics-core.pages.dev serves blwp-client.js md5 ae41dc8b - the
 committed bundle, byte for byte - and the served page calls `owedLine` 1 time.
 The first check read the old 4a6805b9: a cached copy, gone on a re-fetch, and
 /index.html answers 308 to /. btc-logistics-war untouched.
+
+
+## M3 finish line - can the operator's testnet4 lnd hold a round? The preflight (2026-09-10)
+
+"M3 is done when a round is played for testnet sats, the stake is held rather
+than spent." Every custody rule so far ran on an isolated regtest; the node a
+real round would use is the operator's testnet4 lnd at /mnt/bitcoin/lnd-testnet4,
+and nothing had asked it whether it could take a stake.
+
+MEASURED, read-only (its `readonly.macaroon`, which cannot move a satoshi):
+
+    network            testnet4, block 151773, synced_to_chain true
+    channels           1 active, capacity 400000 sat, we opened it
+    ours / theirs      396530 sat / 0 sat
+    usable inbound     0 msat  (the peer's balance less its reserve)
+    on-chain wallet    1133585 sat confirmed;  tn4 bitcoind wallet: 0
+    lncli              offers addholdinvoice
+
+    a round of 2 at 100000 msat   each hold 98000 msat (net of the 2% fee),
+                                  196000 msat inbound in all -> NOT READY
+
+A hold invoice is RECEIVED money, so a node that funded its only channel alone
+cannot take one stake, and a player's payment would simply have failed.
+
+WHAT WENT IN
+    src/preflight.js            `lightningPreflight`: pure, from `getinfo` and
+                                `listchannels`; mainnet refused before anything is
+                                computed; a free round is ready with no channel
+                                (M3.3-19); the inbound needed is seats x netStakeMsat
+    tools/testnet4-preflight.mjs  asks the node with the read-only macaroon; refuses
+                                any lnddir whose own lnd.conf is not testnet4 -
+                                /mnt/bitcoin/lnd-mainnet: "refused", exit 2, before
+                                any lncli call
+
+MUTANTS, 5 of 5 killed: the peer's reserve counted as inbound (1 red), mainnet
+refusal removed (1), a free round made to need a channel (1), one seat counted
+for all (3), the gross held instead of the net (3).
+
+SUITES  blwp-node 410 -> 416 (preflight.test.js, 6). Protocol 463, blwp-client
+184, core 89 not touched. No bundle changed; the Daily was not redeployed.
+
+DECISION NEEDED, and it is the operator's money on a real network: inbound
+liquidity on that node - a channel opened TO it, or funds pushed across the
+existing one. Nothing in this letter opened, paid or signed anything.

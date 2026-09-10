@@ -16,8 +16,19 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: M3.3-19 (optional stake / ghost without money) IS CLOSED. Next M3
-is the 22A weighting ruling (below, under 6e), then 6b's amounts and 6d.
+LIVE LETTER: M3 - A ROUND FOR TESTNET SATS ("M3 is done when"). M3.3-19 is
+closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
+(below, under 6e), so the live work is the finish line itself.
+
+  THE TESTNET4 PREFLIGHT IS IN, and it says the node cannot hold one stake.
+  `tools/testnet4-preflight.mjs` asks the operator's testnet4 lnd, with its
+  READ-ONLY macaroon, and refuses any lnddir whose own lnd.conf is not
+  testnet4 (the mainnet lnd one directory over: refused, exit 2). Measured:
+  synced at 151773, one active channel, 396530 sat ours and 0 usable inbound.
+  A hold is received money, so 2 seats at 100 sat need 196000 msat of inbound
+  (98 sat each, the net of the fee) and the node offers 0 - NOT READY.
+  DECISION NEEDED (Daniel): inbound liquidity on that node - a channel opened
+  TO it, or funds pushed across the existing one. Nothing here moves its money.
 
   M3.3-19: a round that asks no stake seats on a node with NO Lightning, as
   x-hold FREE with no fault named, and the other player's ghost follows at the
