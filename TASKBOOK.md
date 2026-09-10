@@ -25027,3 +25027,98 @@ nothing, and it stays that way here: no money moves, no LNURL is paid, no
 donation touches the page's stake path, and `feeMatchesEntry` and the entry door
 are not opened. Charging a donation at all waits on 6e, because the code
 charges on top and 6b says inclusive.
+
+
+M3.2 ITEM 6b, THE OBJECT AND THE KEY. 27A.4's DonationSet exists.
+
+    packages/protocol/src/authority.js          new
+    packages/protocol/test/donation-authority.test.js    12 tests, stub curve
+    packages/blwp-node/test/donation-rotation.test.js     3 tests, real BIP-340
+
+    protocol      444 -> 456
+    blwp-node     406 -> 409
+    blwp-client   184, core 89
+    money guard   19 -> 20 files clean   (authority.js is on the list: its
+                                          serial is the ordering a theft is
+                                          undone by)
+    determinism guard  21 files clean
+
+WHAT THE FOUR MISSING FIELDS BUY, each measured as a refusal:
+
+    network_id    a set for another network is refused. 27A.9's anchor is the
+                  client's own built-in id, and someone who forks the code and
+                  writes their own address in "has not captured the donations -
+                  they have left".
+    serial        the highest validly signed one wins; the same set re-offered
+                  at an older serial after a newer one changes nothing, whatever
+                  order the objects arrive in.
+    valid_from    a set published for height 900000 is not in force at 899999
+                  and is at 900000. Arrival is not a time two nodes agree on.
+    signature     an unsigned set is refused (64 bytes expected, none present),
+                  and one signed by a stranger is refused by key. Before this,
+                  both stood.
+
+TWO SETS AT ONE SERIAL. 27A.4 does not say, because an honest authority does
+not do it. Two deterministic answers were available and the contested serial is
+dropped rather than decided by bytes: picking the lower hash pays whichever
+list a key that has already signed twice managed to shape, and does it
+silently. So serial 5 signed twice leaves serial 4 in force, from either order
+of arrival, and the refusal says which serial died. That is where 27A.4's "both
+lost" row already puts the network - "the set freezes at its last published
+serial" - and a frozen set is a bounded failure where paying a thief is not.
+
+THE ROTATION, ON REAL KEYS. blwp-node/test/donation-rotation.test.js signs with
+@noble's BIP-340, the same curve the daemon signs adverts and payout tables
+with, because "the recovery key revokes the authority" is a sentence about a
+signature and a stub cannot speak it.
+
+    height 200, no rotation     the thief's serial 500 wins and lnurl1thief is
+                                paid. The damage is shown before the remedy.
+    height 299, rotated at 300  still the thief: a rotation applies from its
+                                own height, not on arrival
+    height 300                  ok false. EVERY set the old key signed is
+                                refused - 2 of 2, the honest serial 2 included
+    new authority republishes    serial 3, the network's own recipients
+    old key tries serial 9000    refused, 3 of 4 by signature
+
+A ROTATION BLANKS THE LIST, and that is the section's own reading rather than a
+strictness of taste: "from valid_from, sets signed by the old authority are
+rejected". The alternative was measured on paper and is worse - grandfathering
+what the old key published before the rotation keeps the THIEF'S set alive too,
+because the thief published before the rotation as well. A revocation that
+leaves the stolen list in force is not a revocation. The price is that the
+network pays nobody between the rotation and the new authority's first
+publication.
+
+WHAT THE TWO KEYS CANNOT DO, checked rather than stated: the authority key
+signing its own rotation produces a real signature by the wrong key and is
+refused, so the working key cannot promote itself; the recovery key signing a
+donation set is refused, so the cold key cannot publish payees; and a rotation
+has four fields, none of them a new recovery key - one theft of the cold key
+cannot close the door behind itself.
+
+CALLERS, the count this letter was opened on:
+
+    encodeDonationSet        0 -> 1   (the body the authority signs)
+    decodeDonationSet        0 -> 1   (a publication inherits every list check)
+    donationSetStands        0 -> 1   (before the key, so the refusal names the
+                                       actual fault)
+    donationSetMatchesRound  0 -> 1   (the round's binding is unchanged: the
+                                       contract names the RECIPIENTS' hash,
+                                       which is a different id from the
+                                       publication's)
+    splitDonation            0 -> 1   (a zero donation, to pin that it stays 0)
+    AUTHORITY_PUBKEY_*       0 -> 1   donationKeysFor(network)
+    RECOVERY_PUBKEY_*        0 -> 1
+
+AND NO MONEY MOVED. donationMsat is written 0n by join.js and read by nothing,
+feeMatchesEntry and the entry door are untouched, no LNURL is paid, nothing was
+mixed into the page's stake path, and a test refuses payInvoice, pay_invoice,
+lnbc, fetch( and WebSocket in both donation files. Nothing in packages/core.
+The shipped bundle grew 1387 bytes - the two new type bytes and the comment
+that says why they are two - and the template's copy is the bundle again.
+
+STILL NOT BUILT HERE: publication. 27A.4 says a set is "published like an
+advertisement - a marked output committing to H(DonationSet)", and nothing
+writes one, so a node is handed sets rather than finding them. Parked with the
+other data-availability limits, beside the set preimage nobody publishes.

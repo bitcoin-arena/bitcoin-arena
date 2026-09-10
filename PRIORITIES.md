@@ -97,7 +97,13 @@ connection spend - asked of the wallet over three read-only calls, never read
 off the connection string, because NIP-47's URI carries no budget and the field
 that pretended it did is deleted.
 
-NEXT UNDER THIS HEADING: 6b donations, 6d where a payout goes.
+M3.2 ITEM 6b IS DONE AS THE OBJECT AND THE KEY. 27A.4's DonationSet has a
+network, a serial, a valid_from and a signature, so the network's own set is
+distinguishable from a stranger's - and the cold recovery key ends a stolen
+authority, exercised on real BIP-340 keys and not described. No money moves:
+the amounts are 6e's letter.
+
+NEXT UNDER THIS HEADING: 6b's amounts behind 6e, 6d where a payout goes.
 
 Every M3.3 line - 8b, 9, 10, 13, 14, 15, 16, 17, 18, 19, 20 - is closed, and so
 is M3.2 item 5.
@@ -2993,7 +2999,8 @@ round, which is why testnet comes first and why the order is stricter.
      ON THE DAILY, counted on the served page: the budget line rendered 1,
      asked of the wallet 1, invented URI field 0.
 
-     Still open under this heading: 6b donations, 6d where a payout goes.
+     Still open under this heading: 6b's amounts - behind 6e - and 6d,
+     where a payout goes.
 
   6a. **Budgeted play** (24A.1). A two-minute round means a wallet
      approval every two minutes, which is the thing that makes people
@@ -3026,6 +3033,40 @@ round, which is why testnet comes first and why the order is stricter.
      Rotation via the cold recovery key is part of this task, not a later
      one: a key with no exercised revocation path is a key whose
      revocation does not work.
+
+     THE OBJECT AND THE KEY ARE DONE. `authority.js` is 27A.4's
+     DonationSet - network_id, serial, entries, valid_from, signature -
+     and before it the repo had the third field and none of the others,
+     so a set stood on its own shares and anybody could publish one.
+     Measured: the highest validly signed serial wins and an older one
+     published later takes nothing back; a set applies from its own
+     valid_from and not on arrival; a set for another network is refused;
+     two different sets signed at one serial make that serial unusable
+     and the last uncontested one stays in force, because picking by
+     bytes would pay whichever list hashed lower - chosen by a key that
+     has already signed twice.
+
+     AND THE THEFT IS UNDONE, on real BIP-340 keys one package over: the
+     thief signs serial 500 pointing at their own LNURL and IS PAID, the
+     recovery key names a new authority from a height, and from that
+     height every set the old key signed is refused whatever serial it
+     carries - the honest one it signed before the theft included. That
+     blanks the list until the new authority republishes and it has to:
+     grandfathering what the old key published keeps the thief's set
+     alive too. No fork, no census lost, nothing else touched.
+
+     The two pubkeys that have been hashed into `network_id` since letter
+     24 have a reader for the first time: `donationKeysFor(network)`.
+
+     WHAT IS STILL OPEN HERE: the amounts. `donationMsat` is written 0n
+     and read by nothing, no LNURL is paid, and the player has no control
+     to choose a percentage with. The first of those cannot move until
+     6e settles inclusive versus on top, because the number the player
+     approves and the split shown under it have to be the same money.
+     PARKED with the other data-availability limits: publication is
+     specified as a marked output committing to H(DonationSet) and
+     nothing here writes one, so a node is handed sets rather than
+     finding them.
 
   6c. **No session balances, ever** (24A.3). Specified once and removed.
      If it comes back as a request: money is in flight during a round and
