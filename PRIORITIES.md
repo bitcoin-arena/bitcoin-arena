@@ -16,7 +16,9 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: M2.36 IS CLOSED, and M3 is the live one. 39 and 40 are both in.
+LIVE LETTER: M3 optional stake / ghost without money (Daniel 11:15).
+A 2-of-2 play round must seat with stake 0 and no Lightning. Photographed:
+play refused 22A BigInt msat on a free seat. 36 stays closed. Then remaining M3.
 
   36's goal was "the other truck is drawn where that truck actually is, live",
   and it stayed open because THE HOST STILL FED THE SIMULATION THREE THINGS NO
@@ -920,6 +922,11 @@ IN THIS ORDER (unparked):
                                         33.500 m the ground was worth. The fix
                                         is 36's, again: the core owns the map's
                                         boxes and Unity draws them.
+   M3.3-19  optional stake / ghost     M3   OPEN — Daniel 11:15. Satoshis are
+       without money                      optional. A free round (stake 0) seats
+                                        without Lightning. Ghosts must be
+                                        testable with no wallet. Screen:
+                                        daniel-screens/2026-09-10-1115-free-seat-refused.png
    36  M2 live ghost pose             M2   OPEN — the ground half is done and
                                         measured. Daniel 21:23: heat goes in
                                         too (40), same as hills. Solids (39)
