@@ -25790,3 +25790,44 @@ The four earlier two-daemon tests pass unchanged and still mean the same: in
 them every wait ends in milliseconds, far inside 10 s. Tests after the tool
 change: client files using standUpRound 17/17, blwp-node seating 4/4; nothing
 red (last full runs: blwp-client 201/201, blwp-node 422/422).
+
+### An honest next checkpoint no longer becomes a fork proof because a peer was down (cut (c) still OPEN on the funnel map)
+
+The client keeps a checkpoint that some node stored but the committee did not
+carry (`pendingLink`). Before any new checkpoint it re-sends those same bytes
+to every node - a node that has it answers with the receipt it already issued,
+a node that missed it stores it - and the new checkpoint chains onto it once it
+is live. If it still is not live, the new checkpoint is NOT sent (it would name
+the head before the pending link: the second child of one parent), it is
+counted as skipped, and the line says "pending link T". "relinked N" counts
+links carried after a re-send.
+
+Two real daemons, the page's markNow path, B down after it holds mark 60's
+inputs, then restarted (same store and port):
+
+                                  before (75d0756)          after
+    mark 60                       A stores, not live        A stores, not live
+    mark 120 after B returns      names the zero head       mark 60 re-sent first:
+                                                            witnessed 2, live;
+                                                            120 names mark 60, live
+    checkpoints A / B             [60] / [120]              2 / 2, then 3 / 3
+    same chain on A and B         no                        yes, byte for byte
+    /equivocation A / B           200 x1, then x2 / x1      204 / 204
+    later marks                   refused by both           live on both
+    status line                   accepted 0 refused 3      accepted 2 refused 1 relinked 1
+
+Still cannot go live (one daemon of two, no node list): mark 60 on A only; mark
+120 is not sent - skipped 1, "pending link 60", A /equivocation 204; the head
+stays where A has it. This is test 2 of `checkpoint-quorum.test.js`, whose
+expectation CHANGED: it pinned the second link going out and being refused for
+the chain head - which A kept as a fork proof. It now pins that the link is not
+sent and A holds no proof. The other three earlier two-daemon tests pass
+unchanged, meaning the same.
+
+blwp-client 202/202 (two-daemon file 6 + 74 + 75 + 47); blwp-node 422/422
+(131 + 88 + 118 + 85); all under timeout 180 with --test-timeout=120000.
+
+STILL TRUE, NOT THIS FIX: the status words reach `NetSession.Status` and no HUD
+draws them (console/CDP only); while B was down its connection failures were
+counted as "inputs refused" (20 in 2 s) - a closed socket reads like a node
+saying no.
