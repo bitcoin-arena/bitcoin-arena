@@ -26032,3 +26032,36 @@ before the PAID row is written:
                               known -> PAID; sweep nothing; still 1 spend
     no rival                  the spend in the block is the raw on disk, byte
                               for byte
+
+### Kill point 4: the takeover seat SIGKILLed with its spend on disk - one spend, and the returning asker spends nothing
+
+`--point=4`. The round's asker is down; the chain passes beacon + 2; the next
+seat settles and is killed with its spend written and not sent:
+
+    at the kill               row PAYOUT_QUEUED with the raw; 0 spends; winner 0
+    restart (a) as main.js    canSpend false; 0 spends; winner 0
+    restart (b) chain + seat  reconcile -> queued, sweep -> PAID; 1 spend; winner
+                              980; the landed spend is the raw on disk, byte for byte
+    the asker comes back      (restored as (b)) sweep refused: "the pool holds 0
+                              confirmed output(s) and none of them covers the 980
+                              sats"; still 1 spend; its row stays PAYOUT_QUEUED
+
+ALL FOUR KILL POINTS, what holds and what does not:
+
+    point   spends  winner  no rival  killed seat row  other rows    as main.js
+    1       1       980     (no raw)  PAID             6 QUEUED      recovers nothing
+    2       1       980     yes       PAID             6 QUEUED      recovers nothing
+    3       1       980     yes       PAID after (b)   6 QUEUED      nothing; row stale
+    4       1       980     yes       PAID             6 QUEUED      recovers nothing
+                                                       (asker too)
+
+Never a second spend and never a rival transaction at any point; the winner
+always ends with the table's 980 sats once a seat with its chain comes back.
+Debt: this fixture pays the winner in full (PAID, not PAID_IN_PART), so there
+is no recorded debt to survive a restart - that check needs a fixture under
+the relay floor.
+
+H1 - a daemon restarted as src/main.js starts one recovers nothing at any
+point (no chain handed over, seat and key never read back from its store).
+H2 - no seat but the one that sent the spend ever moves its row off
+PAYOUT_QUEUED; the returning asker at point 4 included.
