@@ -27039,4 +27039,4 @@ both daemons SETTLED P2 at their own close (no HELD step this time; B's
 re-gather found its hold "already moved"); PROBE A and PROBE B each "OPENED
 with 2 shares" (A seat 1, B seat 2, dealt 2-of-2); alice -98000, operator
 +98000; lnd settled at 01:34:42.079 and logged the other call "invoice
-already settled" 22 ms later. 5 of 13 rehearsals flaked before play.
+already settled" 22 ms later. 4 of 13 rehearsals have flaked before play.

@@ -47,9 +47,9 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   name, the settle opens at it, the page deals it. Rehearsal,
                   AB and BA: P2 SETTLED on both daemons, alice -98000 msat,
                   the operator +98000; P1 and P3 cancelled back to alice.
-    flake         M3.3-27: `Client.at` sometimes refuses "only 1 of 2
+    flake, NEXT   M3.3-27: `Client.at` sometimes refuses "only 1 of 2
                   providers gave a chain" while both /headers answer 200 at
-                  once (4 of 12 rehearsals, one of them run alone). Not the
+                  once (4 of 13 rehearsals, one of them run alone). Not the
                   close; not investigated.
     ruling        how a settled stake reaches the pool; the owed-sats fee
                   rate; htlc_cltv_days (all below, unchanged).
