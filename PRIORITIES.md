@@ -78,6 +78,10 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   full, and remembers it once seen. Before: an unpaid batch was taken, on a
   node with Lightning and on one with none. Free rounds are unchanged. Each
   node gating its own receipts makes the spec's >=5 the receipt threshold.
+  AND ITS OWN REGRESSION IS CLOSED: a player whose wallet paid a few seconds
+  after they started driving had the run ended VOID (refused, resynced,
+  refused). "Stake not seen" is a wait now - the ticks are held and sent once
+  the stake is seen. The Daily's page bundle is rebuilt, not deployed.
   AND THE DAILY'S TWO DAEMONS ARE DOWN (2026-09-10 ~19:30): nothing listens
   on 8080/8081/8090/8091 but signal-cli on 127.0.0.1:8080. Not restarted
   from here.

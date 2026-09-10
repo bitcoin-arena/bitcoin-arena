@@ -26366,3 +26366,27 @@ daemon's fake port now reports its holds paid in full. Nothing in src/ writes
 THE DAILY: its rounds are free (M3.3-19), and a free round passes without
 Lightning - unchanged. A PAYING round on a daemon with no Lightning can no
 longer be played, which is the rule: nobody's stake is held there.
+
+### The gate's own regression, found and closed: a player paying at wallet speed lost the run
+
+The page pays from a button (`payTheStake`, WebGL index.html) and nothing
+stops the player driving first, so ticks go out before the HTLC is accepted.
+The client treats a refused batch as a disagreement: resync once, and a second
+refusal ends the run. Measured, test/stake-wait.test.js (blwp-client), before:
+
+    the node refuses this run's inputs at tick 0: error the stake is not paid
+    and held: 0 of 98000 msat, Lightning says HELD - and it still refused after
+    resyncing ...                                                -> VOID
+
+So 1c0f9ed made a late payer lose the round. Now the wait has a word of its
+own, `STAKE_NOT_SEEN` in protocol/src/constants.js, which the node puts on the
+gate's refusal and the client matches - neither side reads the other's prose.
+On the client's own drain the ticks stay held and are sent again on the next
+drain (`stakeWaits`, not `refusals`, no resync); on a peer feed the feed stops
+uncounted and the next batch asks again. A stake never paid still ends the run
+when the hold is full - that rule is unchanged.
+
+After: 60 ticks driven unpaid -> not ended, 0 refusals, 0 taken, 60 held; the
+port reports paid -> the next drain publishes all 60. refused-batch 4/4
+unchanged (a node that keeps refusing for a real reason still ends the run).
+blwp-node 434/434, blwp-client 208/208.
