@@ -25644,3 +25644,54 @@ no batch - so B signs a receipt for a state hash over inputs it has never
 seen. The chain is now carried by both keys; what one of them witnessed is the
 signature on a claim, not a replay. Section 11 has the client send batches as
 well as checkpoints; the same fan-out would carry them.
+
+### Both daemons hold the run's inputs, not only its checkpoints (ed5a517, on the Daily)
+
+Every input batch this client's node takes is kept and fed, in order, to every
+other node the page's node list names (the §11 send). A peer that refuses for a
+missing seat is seated again; any refusal stops that peer's feed until the next
+batch or checkpoint retries, and shows as "inputs refused N" on the status
+line. A batch answer is an unsigned count of new ticks - the protocol has no
+batch receipt - so what is checked is that each node answers a count for it.
+
+Two real daemons (`checkpoint-quorum.test.js`): held ticks A/B at
+60/120/180/240 are 60/60 120/120 180/180 240/240, same x-transcript-hash;
+checkpoints still live on both, 1..4 stored on each. Late peer (node list after
+60 ticks): before A 60 B 0, B refuses once for the seat, is seated and caught
+up from the first batch: after A 120 B 120.
+
+The Daily, two real Chromes (P1 at 400 ms), round 267a9de5, deployment 63b3677a
+(bundle md5 23e3abe2). Input ticks held, read from each daemon's /transcript:
+
+                          A held         B held         match / lag
+    BEFORE (d546c9d6)
+      a1e70fa1            588            0              B 0
+      b51ba682            630            0              B 0
+      e241deae (run 2)    726            0              B 0
+    AFTER (63b3677a)
+      1109406e (run 1)    60             60             same hash (run VOID at 60, below)
+      274b8aff (run 1)    300            300            same hash
+      f101bb87 (run 2)    690            690            same hash 4015f50c4311
+      4e913c3f (run 3)    258 -> 270     258 -> 270     same hash 729330c7b920
+      c11f9e91 (run 3)    294            294            same hash 5bffddb5f968
+
+The client's own feed reads lag 0 or one batch (6 ticks) in flight, 0 refused.
+Checkpoints on the same seats: 1/1, 5/5, 4/4, 4/4 stored on A/B, every one
+accepted by both, labels = core tick on every one, counters sent = accepted,
+refused 0.
+
+IS B'S RECEIPT NOW A REPLAY? NO - STILL A SIGNATURE ON A CLAIM. B now holds
+the inputs, so it COULD replay the run; but `round.checkpoint` checks the
+round, the entry, the session signature, equivocation, the chain head and the
+tick, and nothing about inputs. Measured: the first quorum test sends no batch
+at all and both daemons receipt all four checkpoints. The accept-without-inputs
+path is the next cut on this letter.
+
+SEEN ONCE, NOT REPRODUCED, CAUSE UNKNOWN: in run 1 (both tabs on 63b3677a)
+both tabs' sockets to A dropped (P1 once, P2 twice) and resumed. P1's drop came
+during its slow join and the run ended VOID: "48 ticks offered but 60 published
+and 6 held" - `offered` below `nextTick`, which only `setRound` running after
+the resume can produce. The daemons did not restart (one process since 12:17),
+their log names no dropped connection (the frame cap's 1009 would), and runs 2
+and 3 - one with the new build on one tab, one on both - had 0 drops with every
+socket's close logged. No close code was captured for run 1.
