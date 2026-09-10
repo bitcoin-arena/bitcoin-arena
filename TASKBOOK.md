@@ -26640,3 +26640,24 @@ client. blwp-client 218/218.
 Engines: 0 files changed under packages/core, unity-proto/Assets/Scripts,
 unity-proto/Assets/Plugins and test-vectors from 6557aad through this change;
 core 91/91, golden vectors 8/8.
+
+### M3.3-21 re-checked a third time: a seat with no hold keeps the node's reason
+
+THE GAP: the count starts from the seat whatever the joined node answered. A
+node with no Lightning answers `x-hold: none` with its reason, and letter 15
+put that reason on the chip ("stake dealt, unpaid (...)") so a stake that can
+never be held does not read like one waiting to be. The first poll replaced it.
+
+Before (stake-seen.test.js, 1 new test red on 7e3bd0a):
+    no hold, 0 of 2 seen   " · stake seen by 0 of 2 nodes (2 needed)"
+                           - the reason gone
+
+Now: while the joined node issued no hold AND no seat has seen the stake, the
+line keeps " · stake dealt, unpaid (this node reaches no Lightning, so it
+holds no stakes)". Once any seat has seen it - a hold issued later and paid -
+the count is the line. A held seat's zero is still a count ("seen by 0 of 2").
+blwp-client 219/219.
+
+Engines: 0 files changed under packages/core, unity-proto/Assets/Scripts,
+unity-proto/Assets/Plugins and test-vectors from 6557aad through this change;
+core 91/91, golden vectors 8/8.
