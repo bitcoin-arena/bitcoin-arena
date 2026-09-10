@@ -26541,3 +26541,54 @@ Suites, foreground: blwp-node 439/439, blwp-client 210/210. One run under load
 (lnd harness and both suites at once) failed bond-key "the internal key is the
 MuSig2 aggregate" once; alone it passed 13/13 twice, and the quiet rerun of the
 whole node suite is 439/439.
+
+### M3.3-21: the player sees how many settlement nodes have seen their stake held
+
+§23.1 step 5: "STAKE_COMMITTED is recorded once >=5 settlement nodes have seen
+the held HTLC." Each node already answered `GET /stake` from its own Lightning;
+the page asked only the node it joined, and printed something else.
+
+MEASURED FIRST (blwp-client test/stake-seen.test.js, red 0/4 on 6557aad):
+- the seat-time line, for an invoice nobody has paid: " · stake held". The
+  node's seat-time `x-hold` word is HELD for lnd's OPEN as well as ACCEPTED,
+  and `stakeLine` printed it - page-stake.test.js pinned exactly that string.
+- no count of the seats that had seen the stake; no way to watch one.
+
+NOW:
+- `join.js` `stakeSeenNeeded(contract)`: 2 on a two-slot round, else 5
+  (SHARES_NEEDED) - the shape `receiptsForLive` has, read off settlementSlots.
+- `join.js` `stakeSeenBy({ entryId, seats, nodes, contract })`: the seats are
+  KEYS (from `fetchSettlementSeats`) and the page holds URLS, so each URL is
+  asked `GET /identity`, and only a settlement seat's `GET /stake` is counted,
+  once per key. A seat no URL answers for counts as not seen, in `unanswered`.
+- `stakeLine`: "stake seen by N of M nodes (T needed)", ", U did not answer"
+  when U > 0, " · committed" only at N >= T. With no count yet a hold reads
+  "stake dealt, not yet counted" - the word "held" is gone from the line.
+- `Client.watchStake`: polls every 2 s until committed, the run ends, or the
+  client closes; `stakeCount`, `stakeCommitted`, `stakePolls`.
+- the page keeps the seat keys and node URLs on BLWP_STAKE, starts the watch
+  after `payStake` succeeds, and hands `stakeCount` to the chip.
+
+MEASURED AFTER:
+    7 seats, the 7th's node down    4 paid -> 4 of 7 (5 needed), 1 did not
+                                    answer, not committed
+                                    5 paid -> 5 of 7, committed
+    2 seats                          0 / 1 / 2 paid -> 0, 1, 2 of 2 (2 needed);
+                                    committed only at 2
+    watch, 1 of 2 seen               not committed; 20 ticks driven and all 20
+                                    published - driving is not gated below T
+    watch, 2 of 2                    committed, and no poll after it
+Mutant "T is always 5": the 2-seat test red, and the watch never reaches
+committed at 2 of 2 - the freeze the contract-read T exists to prevent.
+
+A FAULT OF MINE ON THE WAY: the count was first a field named `stakeSeen`,
+which hid the `stakeSeen()` method `payStake` asks the node with - 7 of 24
+wallet-nwc tests threw "this.stakeSeen is not a function". Renamed
+`stakeCount`; wallet-nwc 24/24.
+
+A round whose seats can never reach T keeps polling (every 2 s) until the run
+ends or the client closes - the line keeps saying how many did not answer.
+
+Suites, foreground: blwp-client 215/215 (+5), blwp-node 439/439 (no node
+change). Bundle rebuilt, template copy equal; not deployed - the Daily's
+daemons are down.

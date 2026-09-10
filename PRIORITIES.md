@@ -20,10 +20,12 @@ LIVE LETTER: M3 - A ROUND FOR TESTNET SATS ("M3 is done when"). M3.3-19 is
 closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
 (below, under 6e), so the live work is the finish line itself.
 
-  NEXT, UNBLOCKED: M3.3-21 - STAKE COMMITTED, AS THE PLAYER SEES IT (§23.1
-  step 5). Done means: the page asks every committee node's `GET /stake`
-  and shows "stake seen by N of M nodes (T needed)", and play is not called
-  committed below the threshold. Not started.
+  M3.3-21 IS DONE - STAKE COMMITTED, AS THE PLAYER SEES IT (§23.1 step 5):
+  after paying, the page asks every settlement seat and shows "stake seen by
+  N of M nodes (T needed)", "committed" only at N >= T, T = 2 on a two-slot
+  round and 5 otherwise; a seat that does not answer is named. The seat-time
+  line no longer says "held" for an unpaid invoice. Driving is not gated.
+  Client 215/215, node 439/439. Not deployed (the Daily is down).
   M3.3-8's 9.4 NAMES ARE DONE (765147c): AWAITING_INVOICE, CANCEL_REQUESTED,
   SETTLE_REQUESTED; node 439/439, client 210/210.
 
@@ -3305,11 +3307,11 @@ round, which is why testnet comes first and why the order is stricter.
      each call. Node 439/439, client 210/210. Numbers: TASKBOOK. Not built:
      `SHARES_REQUESTED` and `PREIMAGE_READY` (the preimage reconstruction,
      not a Lightning call).
- 21. **Stake committed, as the player sees it** (§23.1 step 5). NEXT.
-     Each node already refuses play until it has seen the stake held, and
-     answers `GET /stake`; the page asks only the node it joined. Done
-     means the page asks every committee node and shows "seen by N of M
-     (T needed)", and does not call the stake committed below T.
+ 21. **Stake committed, as the player sees it** (§23.1 step 5). DONE.
+     The page counts the settlement seats that have seen the stake held and
+     shows "stake seen by N of M nodes (T needed)"; committed only at
+     N >= T (T 2 on two slots, else 5). A label, not a gate. Numbers:
+     TASKBOOK.
   9. **VSS custody of the stake preimage.** No single node ever holds it.
      After the state machine, because the machine defines when a share is
      asked for.
