@@ -26004,3 +26004,15 @@ TWO HOLES ON THIS LINE, measured:
 - H2: after the asker pays, 6 of 6 other seats still say PAYOUT_QUEUED while
   the chain carries the payment - no path moves a non-asker's row.
 The harness lists both as problems and exits 1; it does not hide them.
+
+### Kill point 1: a seat SIGKILLed right after it queues the signed table - pays once when restarted with its chain and seat
+
+`tools/settle-crash-regtest.mjs --point=1` (each point now runs on its own
+ports; the child learns its point from KILL_POINT). The seat queues the table
+itself and is SIGKILLed before it settles:
+
+    at the kill               row PAYOUT_QUEUED, no raw; 0 spends; winner 0
+    restart (a) as main.js    canSpend false, "reaches no chain"; 0 spends; winner 0
+    restart (b) chain + seat  reconcile asked nothing (no raw); sweep -> PAID;
+                              1 spend; winner 980 sats (the table's amount)
+    rows                      killed seat PAID; 6 of 6 others PAYOUT_QUEUED (H2)
