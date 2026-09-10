@@ -26871,3 +26871,41 @@ FOUND, NOT FIXED:
 
 blwp-node 446/446, blwp-client 219/219, core 91/91, golden vectors 8/8
 (0 engine files touched).
+
+### M3.3-25 measured first: the first daemon to close is short, whichever it is
+
+`tools/round-rehearsal-lnd.mjs --close-order=AB|BA` (BA on ports +100, so the
+two ran side by side). Each daemon's own result store and gather are wrapped
+and timed from the first close; the close path is the daemons' own.
+
+    close order AB (A told at +0 ms, B at +356 ms)
+      +780   A stores its own P1        +1312  B stores its own P1
+      +960   A stores its own P2        +1500  B stores its own P2
+      +1030  A gathers P1 -> FINAL        (answered +1326: B's P1 had landed)
+      +1180  A gathers P2 -> "1 of 2 agree on any one run"
+                                          (answered +1329 - B's P2 lands at +1500)
+      +1545  B gathers P1 -> FINAL        +1679  B gathers P2 -> FINAL
+      tables  A "1 of 2 seats signed this table"; B final (NOTHING_OWED)
+
+    close order BA (B told at +0 ms, A at +376 ms)
+      +852   B stores its own P2        +1187  A stores its own P2
+      +1287  B stores its own P1        +1680  A stores its own P1
+      +1287  B gathers P2 -> FINAL        (answered +1552)
+      +1418  B gathers P1 -> "1 of 2 agree on any one run"
+                                          (answered +1554 - A's P1 lands at +1680)
+      +1680  A gathers P2 -> FINAL        +1789  A gathers P1 -> FINAL
+      tables  B "1 of 2 seats signed this table"; A PAYOUT_QUEUED (2 of 2)
+
+So the daemon left short switches sides with the close order, and it is short
+by a race it cannot win: its one gather answers 126-171 ms before the other
+seat has stored the result it is asking for, and nothing asks again. Which
+RUN falls short is replay timing; which DAEMON is the close order.
+
+Two observations on the way, neither the race:
+- in the AB run P1's delivering world scored 0, under the round's minScore 1,
+  so nobody qualified and both closes refused ("a pool of 98000 against 0
+  handed out") - the harness now picks a delivering world that also
+  qualifies, or the table is not a payout;
+- a daemon sometimes stores its OWN result for a run twice (B's P1 at +1312
+  and +1800 in AB; A's P2 at +1187 and +2018 in BA) - the receipt-completes-
+  a-replay retry path; the store keeps one row, recorded here only.
