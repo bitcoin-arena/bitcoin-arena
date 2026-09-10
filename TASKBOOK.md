@@ -26661,3 +26661,82 @@ blwp-client 219/219.
 Engines: 0 files changed under packages/core, unity-proto/Assets/Scripts,
 unity-proto/Assets/Plugins and test-vectors from 6557aad through this change;
 core 91/91, golden vectors 8/8.
+
+### A round for sats, rehearsed on regtest through the real daemons: where every msat went, and the holes
+
+`tools/round-rehearsal-lnd.mjs`: its own bitcoind and two lnd v0.21.3-beta
+(alice pays; bob is the committee's one Lightning endpoint). Two daemons from
+`standUpRound` - bonded, censused, the beacon off this chain - both on bob
+through BLWP_LND_* (the launchers' own parse), a 100000-msat round. Three
+players take the page's own steps (settlement seats, stakeFor, postHandout,
+entryFor, Client.at, join): P1 drives a world secret the verifier's own
+`replay()` says DELIVERS, P2 one it says FAILS, P3 pays and never plays. Both
+daemons close; the committee's own result decides. Nothing on testnet or
+mainnet is touched.
+
+THE FIRST GAP, as predicted, with its number: a regtest daemon given Lightning
+had NO preflight (`askLnd` knows only a testnet4 lnd.conf), and a node with a
+port and no preflight opens no paying round -
+
+    POST /round 100000 msat  -> 503 "this node holds stakes and has no preflight"
+    POST /round      0 msat  -> 201
+
+Closed (code): `askLndRegtest` / `lndPreflightRegtest` ask the regtest lnd with
+the port's own flags and `readonly.macaroon`, refusing any node that answers as
+another network; `lightningFromEnv` hands it out on regtest. `standUpRound`
+takes `stakeMsat` (default 0 - every caller unchanged). The rehearsal's round
+opened at 100000 msat.
+
+THE REHEARSAL (two runs; the second instrumented):
+
+    settlement seats              2, agreed by 2 daemons
+    P1 world                      #7 tried, DELIVERED by tick 1260 (score 33)
+    P2 world                      #1 tried, FAILED by tick 480 (score 45)
+    x-hold at the seat            HELD for all three
+    stake seen (M3.3-21, real lnd) 2 of 2 (2 needed), committed - all three
+    in flight after paying        294000 msat (3 x 98000)
+    published                     P1 1260/1260, P2 480/480, 0 refused
+    close                         "closed" on both daemons
+
+    what each daemon's close saw (A and B identical):
+      P1 replay   stored false - "no checkpoint of that entry is carried by 2
+                  committee members: the first has 1"
+      P2 replay   stored false - the same
+      P3 replay   stored false - "that transcript carries no ticks"
+      the close   "that round produced no result to pay on"; agreed []
+
+    WHERE THE MSAT WENT
+      P1 DELIVERED   lnd CANCELED -> back to alice (by expiry, not by the close)
+      P2 FAILED      lnd CANCELED -> back to alice (by expiry, not by the close)
+      P3 VOID        lnd CANCELED -> back to alice (HTLC expiry 366, chain 283)
+      alice 996530000 -> 996530000 msat (0); bob (the operator) +0
+
+So today a real round settles NOTHING: the loser keeps the stake, the winner is
+paid nothing, and every hold goes home on its own timelock. The safe direction,
+and not settlement.
+
+THE HOLES, each with its kind:
+- [code, OPEN, the next piece] NO DAEMON EVER CARRIES A CHECKPOINT'S RECEIPTS
+  ACROSS THE COMMITTEE. Each daemon stores only its own receipt, so 13C's
+  canonical transcript ("receipts from at least T committee nodes") never
+  exists on any node, and no run is ever replayed to a signed result. The
+  client COLLECTS both receipts (every mark went live at the client) and
+  forwards none; the node ACCEPTS a peer's receipt on the socket (`takeReceipt`)
+  and serves its own on `GET /receipts`, and nothing in any daemon ever fetches
+  a peer's. The only receipt gossip in the repo is a test handing one over by
+  hand. It belongs on the daemons, not the client: a losing player who simply
+  did not forward receipts would reach no-quorum and a VOID refund, which 13C
+  says a player cannot manufacture. Every earlier settlement proof handed the
+  node its second receipt or result directly.
+- [code, CLOSED] the regtest preflight, above.
+- [ruling] how a settled stake reaches the pool - unchanged, and NOT reached by
+  this rehearsal: nothing was settled, so nothing was owed and no seat asked
+  for a spend. The earlier measurement (a loser's settle lands in the
+  operator's lnd; the pool is harness-funded) stands.
+- [ruling] the owed-sats fee rate and htlc_cltv_days - unchanged; this hold
+  again carried lnd's default timelock (expiry 83 blocks past payment).
+- [inbound] the same round on testnet4 needs 196000 msat of inbound on the
+  operator's node, which has 0.
+- NOT YET MEASURABLE, behind the receipts hole: two daemons settling ONE
+  invoice on the shared endpoint (the second settle), the objection window
+  before finality, and the pool payout path.

@@ -20,6 +20,25 @@ LIVE LETTER: M3 - A ROUND FOR TESTNET SATS ("M3 is done when"). M3.3-19 is
 closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
 (below, under 6e), so the live work is the finish line itself.
 
+  THE ROUND FOR SATS IS REHEARSED ON REGTEST, through the real daemons and a
+  real lnd (`tools/round-rehearsal-lnd.mjs`; numbers: TASKBOOK). A paying
+  round opened, all three stakes were seen 2 of 2 and committed, two runs
+  played - and THE CLOSE SETTLED NOTHING: every hold, the loser's too, went
+  home on its own timelock; the operator gained 0 msat, the winner was paid
+  nothing. The holes, by kind:
+    code, CLOSED  a regtest daemon with Lightning had no preflight, so no
+                  paying round opened (503) - it has one now.
+    code, NEXT    M3.3-22: no daemon carries a checkpoint's receipts across
+                  the committee, so no run ever has 13C's canonical transcript
+                  and none is replayed to a result ("carried by 2 committee
+                  members: the first has 1", both daemons, both played runs).
+    ruling        how a settled stake reaches the pool; the owed-sats fee
+                  rate; htlc_cltv_days (all below, unchanged).
+    inbound       testnet4: 196000 msat needed, 0 offered.
+  Behind 22, not yet measurable: two daemons settling one invoice on the
+  shared endpoint, the objection window before finality, the pool payout.
+  Node 440/440, client 219/219.
+
   M3.3-21 IS DONE - STAKE COMMITTED, AS THE PLAYER SEES IT (§23.1 step 5):
   from the seat of a paying round, the page asks every settlement seat and
   shows "stake seen by N of M nodes (T needed)", "committed" only at N >= T,
@@ -3317,6 +3336,19 @@ round, which is why testnet comes first and why the order is stricter.
      shows "stake seen by N of M nodes (T needed)"; committed only at
      N >= T (T 2 on two slots, else 5). A label, not a gate. Numbers:
      TASKBOOK.
+ 22. **Receipts carried across the committee** (§10, §13C). NEXT. Each
+     daemon stores only its own receipt for a checkpoint, so no node ever
+     holds receipts from T members, no run has a canonical transcript, and
+     no result is ever signed - measured in the regtest rehearsal, where the
+     close settled nothing. The client collects every receipt and forwards
+     none; nodes accept a peer's receipt (`takeReceipt`) and serve their own
+     (`GET /receipts`), and no daemon fetches a peer's. It belongs on the
+     daemons: a losing player who withheld receipts would reach no-quorum
+     and a VOID refund, which 13C says a player cannot manufacture.
+ 23. **The page's share threshold on a seven-seat round** (§23.1: 5 of 7).
+     LATER. The page deals the stake's shares with `needed:
+     settlementSlots`, which on seven seats would ask all seven. Not
+     measured; a two-slot round is unaffected.
   9. **VSS custody of the stake preimage.** No single node ever holds it.
      After the state machine, because the machine defines when a share is
      asked for.
