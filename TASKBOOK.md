@@ -26144,3 +26144,32 @@ BLWP_BITCOIND_COOKIE only; winner owed 980 sats:
 
 Still open, next on this item: H2 - 6 of 6 other seats stay PAYOUT_QUEUED while
 the chain carries the payment. blwp-node 422/422 (131 + 88 + 118 + 85).
+
+### H2: every seat's payout row now matches the chain at all four kill points
+
+`PoolWatch.spentBy({ fromHeight })` reads blocks from the round's beacon height
+to the tip (`getblock` verbosity 3, inputs with their previous outputs) and
+returns each transaction spending an output with the pool's script. The sweep
+(`settleQueued`) asks it BEFORE whose turn it is: if a spend pays exactly the
+outputs this seat's own `spendFor` computes for that input, the seat records
+PAID (PAID_IN_PART when its table leaves rows owed under the relay floor); a
+spend paying anything else is refused by name and changes nothing; a watch that
+cannot scan changes nothing either (the unit fakes are untouched).
+
+Isolated regtest, restarted as the real src/main.js with the two chain settings
+only, winner owed 980 sats, then every running seat's next sweep:
+
+    point  killed seat          other seats' next sweep     asker back   rows    spends winner
+    1      PAID (signed via      6 of 6 PAID                 -            7 PAID  1      980
+           chain-read seats)
+    2      PAID (sent written    6 of 6 PAID                 -            7 PAID  1      980
+           bytes, same bytes)
+    3      PAID (chain had it)   6 of 6 PAID                 -            7 PAID  1      980
+    4      PAID (sent written    5 of 5 PAID                 PAID off the 7 PAID  1      980
+           bytes, same bytes)                                chain, no
+                                                             second spend
+
+Before (76ea398): 6 of 6 other seats stayed PAYOUT_QUEUED at every point, the
+returning asker included. Every harness run now ends "no problems".
+blwp-node 422/422 (131 + 88 + 118 + 85). No debt in this fixture (paid in full),
+so a debt surviving a restart is still unmeasured.
