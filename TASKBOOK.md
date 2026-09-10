@@ -26478,3 +26478,66 @@ one party in the middle of the path the pool exists to make threshold-only.
 So it is a construction ruling, named in PRIORITIES with three options: an
 interim single-operator bridge said out loud, a federation (the spec's advice
 for V1), or a threshold Lightning node. Nothing was built around it.
+
+### 9.4's names on the seats: AWAITING_INVOICE and CANCEL_REQUESTED, and SETTLE_REQUESTED where the same stand-in sat
+
+IMPLEMENTATION.md 9.4 (quoted in PRIORITIES item 8):
+
+    AWAITING_INVOICE -> HELD -> (result FINAL)
+       qualifying: CANCEL_REQUESTED -> CANCELLED -> PAYOUT_QUEUED -> PAID
+       losing:     SHARES_REQUESTED -> PREIMAGE_READY -> SETTLE_REQUESTED -> SETTLED
+
+Current labels, measured before the change:
+
+    the moment before an invoice exists   not written at all - the first row
+                                          was HELD, after the endpoint answered
+    a cancel, before the call             ACTING
+    a settle, before the call             ACTING  (custody.js called it "the only
+                                          state in this file that is not 23.2's")
+
+The settle seat is in this change because it wore the same stand-in: leaving
+it on ACTING would leave the old label written, and no test could say "no seat
+is left on it".
+
+THE PIN (custody.test.js), red before on today's code - 6 of 19 custody tests:
+- a cancel is on disk as CANCEL_REQUESTED and a settle as SETTLE_REQUESTED at
+  the moment the port is called, and neither is ACTING;
+- AWAITING_INVOICE is on disk when the endpoint is asked, HELD after the check;
+- a node that died awaiting its invoice asks again and holds, rather than
+  answering "already has a hold" with no invoice;
+- the three mid-settle assertions read SETTLE_REQUESTED where they read ACTING.
+Mutant "write ACTING for both acts": 4 red. Mutant "skip the AWAITING_INVOICE
+write": 2 red.
+
+WHAT ELSE THE NAMES NEEDED, each measured:
+- STORES ALREADY ON DISK: ACTING is still READ, never written. `MID_ACT` is the
+  three labels meaning "asked, never answered"; reconcile (on start and per
+  round) and the close's refusal both use it. Pinned: a row written as ACTING
+  is still asked about and resolved.
+- A REFUSED INVOICE: writing AWAITING_INVOICE first turned an old test red -
+  "an invoice that is not the entry's is refused, and nothing is stored" left a
+  row. A refused answer is known, so the row is dropped (`Round.dropHold`); a
+  call that never came back keeps it and is asked again.
+- A CLOSE REACHING AN AWAITING_INVOICE ROW acts on nothing and says "no invoice
+  was ever confirmed for that stake".
+- THE CLIENT reads only the node's `x-hold` word, and a hold still answers
+  HELD, a refusal `none` - unchanged.
+
+ON A REAL LND (custody-restart-lnd.mjs, both kill points): the killed node's
+row reads SETTLE_REQUESTED on disk (was ACTING), restart (a) leaves it,
+restart (b) resolves it to lnd's own HELD / SETTLED, 98000 msat moved once,
+"no problems" x2. One harness fix on the way: under load lnd refused the
+channel open ("channels cannot be created before the wallet is fully synced")
+after the balance was visible, so the open is retried until lnd takes it.
+
+custody-crash.mjs (fake port, SIGKILL inside a settle) had not reached its
+settle since 22A: its close entries carried no fee or donation, so the table
+refused the whole close and the child "survived" - the same failure on a clean
+copy of 70d35e1, so not this change. Given the fields, it dies inside the
+settle, the store says SETTLE_REQUESTED, the restart reconciles 1 -> SETTLED,
+2 settle calls in the whole log, 0 repeated.
+
+Suites, foreground: blwp-node 439/439, blwp-client 210/210. One run under load
+(lnd harness and both suites at once) failed bond-key "the internal key is the
+MuSig2 aggregate" once; alone it passed 13/13 twice, and the quiet rerun of the
+whole node suite is 439/439.

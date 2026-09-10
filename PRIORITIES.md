@@ -3292,10 +3292,13 @@ round, which is why testnet comes first and why the order is stricter.
 
      THE PAYOUT HALF IS IN. `PAYOUT_QUEUED` and `PAID` are states now: five
      of seven sign the payout-table hash (20), the pool is spent against
-     that table, and a real bitcoind took it. What is still not built are
-     `AWAITING_INVOICE` and `CANCEL_REQUESTED` - two names for moments the
-     daemon already passes through without writing them down, which is a
-     smaller thing than a winner never being paid.
+     that table, and a real bitcoind took it. AND 9.4'S NAMES ARE ON THE
+     SEATS: `AWAITING_INVOICE` is written before the endpoint is asked,
+     `CANCEL_REQUESTED` / `SETTLE_REQUESTED` before each act, where the
+     first moment was not written at all and both acts wore the stand-in
+     `ACTING` (still read from old stores, never written). Not built:
+     `SHARES_REQUESTED` and `PREIMAGE_READY`, which name the preimage
+     reconstruction rather than a Lightning call.
   9. **VSS custody of the stake preimage.** No single node ever holds it.
      After the state machine, because the machine defines when a share is
      asked for.
