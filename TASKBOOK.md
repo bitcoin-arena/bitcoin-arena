@@ -25117,6 +25117,9 @@ mixed into the page's stake path, and a test refuses payInvoice, pay_invoice,
 lnbc, fetch( and WebSocket in both donation files. Nothing in packages/core.
 The shipped bundle grew 1387 bytes - the two new type bytes and the comment
 that says why they are two - and the template's copy is the bundle again.
+Deployed for that reason alone: btc-logistics-core.pages.dev serves
+blwp-client.js md5 4a6805b9a72afa6d50130f0647c97a56, the repo's byte for byte,
+HTTP 200. Nothing the page DOES changed in this letter.
 
 STILL NOT BUILT HERE: publication. 27A.4 says a set is "published like an
 advertisement - a marked output committing to H(DonationSet)", and nothing
