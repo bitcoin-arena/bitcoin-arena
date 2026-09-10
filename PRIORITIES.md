@@ -71,8 +71,12 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   daemon on the same lnd now takes up the endpoint's hold (only while it is
   still a hold, checked against the entry) where it threw "invoice with
   payment hash already exists" - on a real lnd, same invoice, both kill
-  points still recover. NOT YET: STAKE_COMMITTED as ">=5 have seen it", and
-  handing the Daily's launchers their lnd.
+  points still recover. The Daily's two launchers take the same four
+  settings, opt-in - unset, nothing changes.
+  LIVE: STAKE_COMMITTED. Nothing gates play on a stake being PAID: an unpaid
+  OPEN invoice reads HELD, and `paidMsat` has no caller outside the port.
+  §23.1 step 5 and §9 step 7 say play begins only once >=5 settlement nodes
+  have seen the held HTLC.
   AND THE DAILY'S TWO DAEMONS ARE DOWN (2026-09-10 ~19:30): nothing listens
   on 8080/8081/8090/8091 but signal-cli on 127.0.0.1:8080. Not restarted
   from here.
