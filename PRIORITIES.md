@@ -87,10 +87,13 @@ invoice this seat owes and no other: 1 request on the honest path, 0 on a
 crossed seat or a lying node, and the one method that moves a satoshi takes an
 entry rather than an invoice.
 
-NEXT IN M3 IS THE PAGE'S HALF OF 6: paste a connection, show the amount, show
-the running total §24A.1 requires. Nothing in index.html touches any of it yet,
-and that is on purpose - a screen that quotes money it cannot take is worse
-than no screen. Behind it, 6b (donations) and 6d (where a payout goes).
+M3.2 ITEM 6 IS DONE, BOTH HALVES. A player can paste a connection their wallet
+issued, see what this seat owes and what they have spent, and pay it - and the
+one method that moves a satoshi takes an entry, so there is no second money
+path. On the Daily and counted on the served page.
+
+NEXT UNDER THIS HEADING: 6a's budget display, 6b donations, 6d where a payout
+goes.
 
 Every M3.3 line - 8b, 9, 10, 13, 14, 15, 16, 17, 18, 19, 20 - is closed, and so
 is M3.2 item 5.
@@ -2933,13 +2936,29 @@ round, which is why testnet comes first and why the order is stricter.
      in the Entry Contract. NIP-04 and not NIP-44, named in the file so it
      does not look decided forever.
 
-     WHAT IS NOT DONE HERE and is the next line: the PAGE. Nothing in
-     `index.html` pastes a connection, shows the amount or shows the
-     running total §24A.1 requires. That is the visible half and it is
-     deliberately separate - a half-wired screen does not go on the Daily.
-     6a's budget display belongs with it.
+     AND THE PAGE'S HALF IS IN. Four things on screen and no rule among
+     them: a paste field, the amount this seat owes, the running total, and
+     one call to `payStake`. `tabWallet` holds the connection in
+     sessionStorage - per tab, gone with the tab, never localStorage, which
+     every tab shares and would make one paste spend from all of them - and
+     `spendLog` is §24A.1's "MUST show the running total and what it was
+     spent on", one entry per payment with its amount, hash and round. A
+     refused payment records nothing. The page renders `spentLine`; it adds
+     nothing up itself.
 
-     Still open under this heading: 6b donations, 6d where a payout goes.
+     There is no second way to pay: `payStake` takes an ENTRY, and a pin
+     refuses lnbc, bolt11, payInvoice, nwcCall and pay_invoice anywhere in
+     the page's code. `paintWallet` is extracted from the shipped file and
+     DRIVEN - a free round gets no payment box, a paying round with no quote
+     shows a dead button, and a quote becomes "this seat owes 100 sat ·
+     HELD".
+
+     ON THE DAILY, counted on the served page: 1 paste field, 1 amount, 1
+     total, 1 call.
+
+     Still open under this heading: 6a's budget display (the connection's
+     own budget is carried but not shown), 6b donations, 6d where a payout
+     goes.
 
   6a. **Budgeted play** (24A.1). A two-minute round means a wallet
      approval every two minutes, which is the thing that makes people

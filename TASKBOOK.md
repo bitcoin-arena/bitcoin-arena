@@ -24850,3 +24850,56 @@ NOT PLAYER-FACING. Nothing in index.html pastes a connection, shows the amount,
 or shows the running total §24A.1 requires. That is the next line, deliberately:
 a screen that quotes money it cannot take is worse than no screen. PlayMode and
 EditMode are not in this letter - no C# changed.
+
+## 2026-09-10  M3.2 item 6, the page's half - a player can pay from the browser
+
+FOUR PLAYER-FACING THINGS AND NO RULE AMONG THEM: a paste field, the amount this
+seat owes, the running total, and one call to `payStake`. Everything that
+decides is in `@blwp/client` - the lesson `roundPays` and `postHandout` already
+paid for, and the only way these counts are measured rather than grepped.
+
+    the page          1 paste field, 1 amount, 1 total, 1 call, 0 bolt11
+    blwp-client       172 -> 177
+    core / protocol / blwp-node   89 / 444 / 406, unmoved
+
+WHERE THE CONNECTION LIVES: `sessionStorage`, the same home as the player key.
+Per tab, so two tabs are two players and neither spends from the other's wallet;
+gone when the tab closes; NOT localStorage, which every tab shares and would
+make one paste spend from every round open in the browser. It survives a reload
+on purpose - a budget re-authorised every refresh is a budget that buys nothing,
+which is the friction §24A.1 exists to remove. Measured: one tab connects, a
+second inherits nothing, rubbish is not kept, forget clears it.
+
+THE RUNNING TOTAL IS §24A.1's REQUIREMENT, not a string: "a client MUST show the
+running total and what it was spent on". One entry per payment carrying the
+amount, the payment hash and the round, kept next to the thing that spends.
+
+    1 payment logged   100000 msat against its own stakeCommitment, in its round
+    a refused payment  still 1 entry, still 100000 msat
+    the rendered line  "250 sat over 3 stakes in 2 rounds" from 250000 msat
+
+Sats and not millisats, and that conversion is in the client for the reason it
+is the kind of thing a screen gets wrong quietly.
+
+NO SECOND WAY TO PAY. `payStake` takes an ENTRY - a signature, not a check - so
+there is no argument on the page that could carry an invoice. A pin refuses
+lnbc, bolt11, payInvoice, nwcCall and pay_invoice anywhere in the page's code,
+and the page still names no contract field and still never touches localStorage.
+
+AND THE PAGE'S ONE DECISION IS DRIVEN, NOT GREPPED. `paintWallet` is extracted
+from the shipped index.html and run with a stubbed DOM, the way
+`world-seed-bridge.test.js` drives the shipped jslib:
+
+    a free round           the box is hidden
+    paying, no quote yet   shown, button disabled
+    paying, with a quote   "this seat owes 100 sat · HELD", button live
+
+After a payment the quote is asked again rather than remembered, so the state a
+player sees is the node's and not the page's memory of it.
+
+ON THE DAILY, counted on the SERVED page: 1 paste field, 1 amount, 1 total, 1
+call to payStake. A plain `grep -ci lnbc` on the served file returns 2 - both
+are comment lines, which the pin strips and a crude grep does not; worth
+recording because the crude number looks like a fault and is not.
+
+PlayMode and EditMode were not in this letter: no C# and no jslib changed.
