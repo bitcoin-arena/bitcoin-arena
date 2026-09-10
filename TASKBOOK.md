@@ -26740,3 +26740,32 @@ THE HOLES, each with its kind:
 - NOT YET MEASURABLE, behind the receipts hole: two daemons settling ONE
   invoice on the shared endpoint (the second settle), the objection window
   before finality, and the pool payout path.
+
+### M3.3-22 measured first: each daemon holds only its own receipts, and neither verifier has a peer
+
+The regtest rehearsal, instrumented before any code change (two harness
+fixes on the way, both timing: seating now waits for the round's committee
+time - "that round's committee forms at 1789077484000 and it is
+1789077472424" when the world search was quick - and a failing `Client.at` now
+prints each daemon's /headers answer):
+
+    per played run, on each daemon, before the close
+      P1 on A   20 checkpoints, 20 receipts - 20 its own, 0 from B
+      P1 on B   20 checkpoints, 20 receipts - 20 its own, 0 from A
+      P2 on A    7 checkpoints,  7 receipts -  7 its own, 0 from B
+      P2 on B    7 checkpoints,  7 receipts -  7 its own, 0 from A
+    verifier peers                A [], B []
+    replay P1, P2 (A and B)       stored false - "no checkpoint of that entry
+                                  is carried by 2 committee members: the first
+                                  has 1"
+    replay P3 (A and B)           stored false - "that transcript carries no
+                                  ticks"
+    where the msat went           all three CANCELED by expiry; alice +0,
+                                  operator +0
+
+So every mark is receipted by BOTH daemons (the client saw each go live) and
+each daemon keeps only its own half. And a verifier with no peers could not
+fetch the other half even if it asked: `serve()`'s `peers` defaults to none,
+neither `standUpRound` nor `main.js` passes any, and only the payout path
+derives addresses from the census (server.js, for rounds owing a payout at
+start).
