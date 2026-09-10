@@ -26823,3 +26823,51 @@ Next code holes, by the same rule (census endpoints of the round being
 closed): the preimage opening and the payout table have no peers at a close;
 and finality should not depend on the order the committee closes in.
 blwp-node 443/443, blwp-client 219/219.
+
+### M3.3-24 done: at a close the preimage ask and the payout gather reach the other settlement seat
+
+Code (2afa399): `Preimages.open` and `Payouts.gather` ask `peersOf(round)` - a
+list the operator gave wins, else `settlementPeers()`: the round's SETTLEMENT
+committee endpoints off the census, through the `endpointsOf` rule the receipt
+pull uses. blwp-node test/close-peers.test.js red 0/3 before, green 3/3 after:
+the preimage ask reaches the census peer and its refusal carries that seat's
+own words; the payout gather asks the census peer; a given list still wins; a
+daemon seated from a census names the other seat for both.
+
+THE REHEARSAL (regtest, two real daemons, a real lnd), before -> after:
+
+    B's share ask (its close, P2 final on B)
+      before  "[custody] 1 of 5 shares: a stake nobody can open stays in
+              flight" - no peer in the reason: it asked nobody
+      after   "1 of 5 shares ... (http://127.0.0.1:18701: no share is handed
+              out before the result is final: 1 of 2 agree on any one run)"
+              - A's own words; A refuses because P2 is not final on A (25)
+    A's share ask (probe - P2 is not final on A, so A's close never asks)
+      after   asks ["http://127.0.0.1:18702"] -> 2 held: B handed its share
+              (P2 is final on B) - and "2 of 5 shares" (see 26 below)
+    payout table
+      before  "1 of 2 seats signed this table" on BOTH daemons
+      after   B: PAYOUT_QUEUED (2 of 2 seats signed); A: "1 of 2 seats
+              signed" - A closes first and gathers before B has signed (25)
+    peers per round   preimage and payout: A ["http://127.0.0.1:18702"],
+                      B ["http://127.0.0.1:18701"]
+
+Money, unchanged: P1 (DELIVERED) cancelled back AT the close (+98000 msat to
+alice), P2 (FAILED) and P3 (VOID) expired back; alice +0, operator +0.
+
+FOUND, NOT FIXED:
+- [code] M3.3-26: THE PREIMAGE OPENING ASKS FOR 5 SHARES WHATEVER THE STAKE WAS
+  DEALT WITH. The close's `open` passes no threshold, so it is SHARES_NEEDED =
+  5; this round's stake was dealt 2-of-2 (the page and the harness deal with
+  `needed = settlementSlots`), and the handout records its own threshold
+  (`handout.needed`). Measured: A held both shares that exist and stopped at
+  "2 of 5". So no 2-of-2 round can open a stake even once 25 makes it final on
+  both seats. The mirror of item 23 (the page deals 7-of-7 on seven seats).
+- [code/ruling] B's queued payout stopped at "this node reaches no chain, so
+  it spends nothing": `standUpRound`'s daemons are given no chain spend and no
+  pool key - behind the pool-construction ruling.
+- [code] M3.3-25 unchanged: A (first to close) holds P2 "1 of 2 agree", so it
+  neither settles, nor releases its share, nor reaches 2 of 2 on the table.
+
+blwp-node 446/446, blwp-client 219/219, core 91/91, golden vectors 8/8
+(0 engine files touched).

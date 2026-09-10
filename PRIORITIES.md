@@ -33,17 +33,24 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   on each daemon (was 26/14, all own); P1 DELIVERED and P2
                   FAILED replayed and stored on both; the close considers 2.
                   The winner's stake is now cancelled back AT the close.
-    code, NEXT    M3.3-24: the preimage opening and the payout table have no
-                  peers at a live close - P2's settle: "no preimage"; the
-                  table: "1 of 2 seats signed". M3.3-25: finality depends on
-                  which daemon closes first (A: P2 "1 of 2 agree"; B: final).
+    code, DONE    M3.3-24: at a close the preimage ask and the payout gather
+                  reach the other settlement seat (2afa399). B's ask now
+                  returns A's own words ("no share ... before the result is
+                  final"), A's reaches B and gets B's share, B's table is
+                  2 of 2 (PAYOUT_QUEUED); A's stays 1 of 2.
+    code, NEXT    M3.3-25: finality depends on which daemon closes first
+                  (A: P2 "1 of 2 agree"; B: final) - so A neither settles,
+                  releases its share, nor reaches 2 of 2 on the table.
+    code          M3.3-26: the preimage opening asks for 5 shares whatever
+                  the stake was dealt with - A held both of a 2-of-2 stake's
+                  shares and stopped at "2 of 5".
     ruling        how a settled stake reaches the pool; the owed-sats fee
                   rate; htlc_cltv_days (all below, unchanged).
     inbound       testnet4: 196000 msat needed, 0 offered.
   Two daemons CANCELLING one invoice on the shared endpoint is measured: both
   wrote CANCELLED, lnd CANCELED once. Behind 24 and 25, not yet measurable:
   two daemons SETTLING one invoice, the objection window before finality,
-  the pool payout. Node 443/443, client 219/219, core 91/91, golden vectors
+  the pool payout. Node 446/446, client 219/219, core 91/91, golden vectors
   8/8 (0 engine files touched).
 
   M3.3-21 IS DONE - STAKE COMMITTED, AS THE PLAYER SEES IT (§23.1 step 5):
@@ -3355,8 +3362,14 @@ round, which is why testnet comes first and why the order is stricter.
      (`GET /receipts`), and no daemon fetches a peer's. It belongs on the
      daemons: a losing player who withheld receipts would reach no-quorum
      and a VOID refund, which 13C says a player cannot manufacture.
+ 26. **The preimage opening uses the stake's own threshold.** The close's
+     `open` asks for SHARES_NEEDED = 5 whatever the handout was dealt with
+     (`handout.needed`): on the 2-of-2 rehearsal A held both shares that
+     exist and stopped at "2 of 5". No 2-of-2 round can open a stake until
+     this is the handout's number. The mirror of 23.
  24. **The preimage opening and the payout table reach the other seats at a
-     close.** NEXT. `Preimages` asks the `peers` option only ([] on the real
+     close.** DONE (2afa399): both ask the round's census settlement seats
+     when no peers are given. The measurement that opened it: `Preimages` asks the `peers` option only ([] on the real
      daemons), so a final loser's settle finds one share of two: "this node
      has no preimage for that stake". The payout path derives census peers
      only at start, for rounds already owing, so a live close gathers "1 of 2
