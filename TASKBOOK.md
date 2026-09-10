@@ -25748,3 +25748,45 @@ Checked after: `tailscale serve status` and `tailscale funnel status` are
 identical to before - Funnel on, `/ -> http://localhost:3001`, the 18789 and
 8443 tailnet-only mappings, no /blwp-a or /blwp-b. Nothing changed. Stopped
 there: no sudo, no other proxy, port or funnel.
+
+### Cut (c) OPEN, blocked on the funnel map - the checkpoint wait bound, checked (99a538a)
+
+(c) itself - the Daily two-Chrome look on round f10ec0ec - still waits for
+/blwp-a and /blwp-b to be mapped as root and answer 200. What follows was
+measured without them, against two real daemons from round-2of2.mjs (which now
+has `restartB()`: the same store, identity, options and port, served again),
+through the page's own `markNow` path (`scratchpad/m-restart.mjs`).
+
+A DAEMON THAT RESTARTS INSIDE THE BOUND STILL GETS THE CHECKPOINT:
+    mark 60 live; B stopped; mark 120 waits - status "... accepted 1 waiting 120"
+    B restarted at 2018 ms; mark 120 receipted by both and live at 2049 ms
+    after: A checkpoints 2, inputs 240 | B checkpoints 2, inputs 240;
+    /equivocation 204 on both; status "... accepted 2 inputs refused 20"
+The 20 are the feed's connection failures while B was down, counted as
+refusals - true, but a closed socket reads the same as a node saying no.
+
+A TIMEOUT LEAVES NO HALF-PUBLISHED LINK (it sends nothing - 99a538a's test: A
+stores 1, the head stays). BUT A CHECKPOINT SENT WHILE A PEER IS DOWN DOES, and
+the next honest checkpoint then becomes a fork proof. B goes down after it
+already holds the inputs for tick 60, so mark 60 is not held back:
+    mark 60: A receipts, B "no socket" - not live; A checkpoints 1, B down
+    B restarted; mark 120 names the old head (zeros), not mark 60:
+      A refuses "does not follow the chain head" AND KEEPS IT -
+      A /equivocation 200 x1; B, which never had mark 60, accepts mark 120
+      -> A holds [60], B holds [120]: two chains for one run
+    mark 180 (zeros again): refused by both; A x2, B x1 equivocation proofs
+    status "... marks 1 tick 180 accepted 0 refused 3" - the chain is frozen
+One missed delivery makes an honest player's own client publish 13B's fork
+proof against them and ends the chain. Not caused by the bound; it comes from
+the head moving only on a live mark while a non-live mark stays stored.
+
+THE STATUS WORDS ARE NOT ON THE DAILY'S SCREEN: `BlwpNet.Status()` is copied
+into `NetSession.Status` and no HUD reads it. "waiting T", "timed out N",
+"refused N" are readable through the console/CDP only. The Daily serves
+bundle 676b503d, so a stopped peer does unblock the publisher there - visible
+to an operator with devtools, not to a player.
+
+The four earlier two-daemon tests pass unchanged and still mean the same: in
+them every wait ends in milliseconds, far inside 10 s. Tests after the tool
+change: client files using standUpRound 17/17, blwp-node seating 4/4; nothing
+red (last full runs: blwp-client 201/201, blwp-node 422/422).
