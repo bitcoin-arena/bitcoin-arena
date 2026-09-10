@@ -16,9 +16,24 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: M3 optional stake / ghost without money (Daniel 11:15).
-A 2-of-2 play round must seat with stake 0 and no Lightning. Photographed:
-play refused 22A BigInt msat on a free seat. 36 stays closed. Then remaining M3.
+LIVE LETTER: M3.3-19 (optional stake / ghost without money) IS CLOSED. Next M3
+is the 22A weighting ruling (below, under 6e), then 6b's amounts and 6d.
+
+  M3.3-19: a round that asks no stake seats on a node with NO Lightning, as
+  x-hold FREE with no fault named, and the other player's ghost follows at the
+  core's own pose (tick 119, both seats FREE). THE 11:15 REFUSAL WAS NOT THE
+  FREE SEAT: the 2-of-2 daemon imports this worktree's source and was started
+  between two 6e edits - the fee rule already asked for the donation and the
+  door did not yet pass it, so every entry refused. The 11:20 coercion
+  (d16c9cd) seated it by hiding that and turned two pinned tests red; it is
+  retracted, the checks are strict again, and a mutant that stops the door
+  passing the donation is killed (4 red). Not looked at in two Chromes.
+
+M3.2-6e IS DONE AS THE ARITHMETIC: one subtraction (`netStakeMsat`), and the
+hold, the pool, winnings and the page all read it - the wallet is asked 98 of a
+100 sat round and the page says so. OPEN, AND IT IS A RULING: 22A's net-stake
+weighting does not spend the pool as written. NOT BUILT: anything that collects
+the fee or the donation (23.5's separate entry-time commitment).
 
   36's goal was "the other truck is drawn where that truck actually is, live",
   and it stayed open because THE HOST STILL FED THE SIMULATION THREE THINGS NO
@@ -3135,6 +3150,29 @@ round, which is why testnet comes first and why the order is stricter.
      example has to be re-derived rather than patched. It closes when both
      readings cannot coexist in the code: one door, one arithmetic, and
      the page showing what the wallet is actually asked for.
+
+     DONE AS THE ARITHMETIC (2026-09-10). Measured first: a loser who donated
+     2% credited the pool 100000 msat where 96000 was game money, an invoice
+     for the net was REFUSED, and the fee rule took a 200000 donation on a
+     100000 stake. Now `netStakeMsat` is the one subtraction and the hold,
+     the pool, the table, `winnings`, the slash inputs and the page read it;
+     fee + donation over the stake is refused at the door. THE HOLD IS THE
+     NET because 23.2 cancels a winner's hold whole and 23.5 keeps the fee out
+     of the pool - a hold for 100 would hand every winner their own fee back.
+     22A's 61 x 100 re-derived: 6,100 gross, 122 fee, 122 donated, 5,856 to
+     the game; `fee.js`'s 117.12 objection is RETRACTED - it was 2% of the
+     net, a base 22A never uses.
+
+     WHAT 6e HANDS ON, each its own line:
+       - THE WEIGHTING RULING. "Each rank's share is scaled by that player's
+         net stake against the mean net stake of the qualifiers" does not
+         spend the pool: literal, one winner at 98 over three at 93 takes 104%
+         of it; normalised over the paying ranks, a sole paying rank (every
+         round of four qualifiers or fewer) keeps the donor's double reward.
+         Until ruled, qualifiers with different nets and a pool are REFUSED -
+         no stake moves, every hold expires. Nothing live reaches it.
+       - THE FEE AND DONATION COLLECTOR. Nothing collects either, on either
+         reading; the wallet is asked 98 of 100 and the page shows the split.
 
 ## M3.3  Settlement                                 stage 7
 

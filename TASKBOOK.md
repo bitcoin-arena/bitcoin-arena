@@ -25125,3 +25125,92 @@ STILL NOT BUILT HERE: publication. 27A.4 says a set is "published like an
 advertisement - a marked output committing to H(DonationSet)", and nothing
 writes one, so a node is handed sets rather than finding them. Parked with the
 other data-availability limits, beside the set preimage nobody publishes.
+
+
+## M3.3-19 - a round that asks no stake seats with no Lightning, and the ghost follows (2026-09-10)
+
+WHAT WAS PHOTOGRAPHED, 11:15 (daniel-screens/2026-09-10-1115-free-seat-refused.png):
+"play · the node refused the entry: stakes must be BigInt millisatoshi, and an
+entry names its stake, its fee and its donation: the net stake is the first
+less the other two (22A)" - on a free seat of the 2-of-2 round.
+
+THE CAUSE, measured, and it was not the free seat:
+
+    daemon          node packages/blwp-node/tools/round-2of2.mjs, cwd /tmp/btc-phase0,
+                    importing the worktree's source directly
+    the fault       started between two 6e edit batches: `feeMatchesEntry` already
+                    ran `netStakeMsat` (which asks for the donation) and
+                    `round.enter` did not yet pass `donationMsat` - so EVERY entry,
+                    free or paid, reached the rule with the donation undefined
+    today           the door hands the entry's own decoded donation; free 0/0 stands
+
+THE 11:20 COERCION IS RETRACTED. d16c9cd made `netStakeMsat` and
+`feeMatchesEntry` turn a missing, Number or string amount into BigInt (missing
+-> 0n). It seated the free seat by hiding the wiring fault and turned two tests
+pinned before 6e red - "a malformed entry is answered" ({ stakeMsat: 100000,
+feeMsat: 2000 } as Numbers must be refused) and "a float stake is refused
+outright". Both strict again; the free seat still seats, because every entry
+the door judges is decoded from signed bytes and a free seat is three BigInt
+zeros. That commit also carried 6e's half-written `payout.js` and `fee.js`; this
+one is the consistent version on top of it.
+
+WHAT WENT IN FOR THE LETTER
+
+    custody.hold   a round that asks no stake answers FREE, BEFORE the Lightning
+                   question. Before: 'none' plus "this node reaches no Lightning"
+                   on a node without one; d16c9cd's `net === 0n` branch would also
+                   have called a PAID entry free once its donation took its net.
+    door           free seat on a daemon given no Lightning port: 201, x-hold
+                   FREE, no x-hold-why            (entry-fee-door.test.js)
+    ghost          stake-0 round, no Lightning: 2 seats FREE, the watcher's ghost
+                   at tick 119 is the core's own truck, (-6409535, -668599)
+                                                  (ghost-socket.test.js)
+
+M3.2-6e IN THE SAME TREE, done as the arithmetic
+
+    netStakeMsat              stake - fee - donation, strict BigInt, the only subtraction
+    hold invoice              NET: 98000 of a 100000 commitment
+    pool from one loser       100000 -> 96000 msat (2000 fee, 2000 donation)
+    invoice for the net       refused -> stands; for the commitment: stands -> refused
+    fee rule, donations       0 / 2000 / 98000 / 98001 / 200000 on 100000:
+                              5 of 5 stood -> 3 of 5
+    payoutInputsId            now commits fee and donation
+    page                      "100 sat round: 2 sat fee and 0 sat donation out of it,
+                              98 sat staked · the wallet is asked 98 sat · HELD"
+    22A 61 x 100              gross 6,100, fee 122, donated 122, game 5,856 sat;
+                              117.12 = 2% of the net, never 22A's base (retracted)
+    payout.json vector        entries at the door's fee: pool 2500000 -> 2450000,
+                              total paid 10000000 -> 9800000; no other vector moved
+
+    OPEN, A RULING: 22A's net-stake weighting. Literal (against the qualifiers'
+    mean): one winner at 98 over three at 93, K = 1, is paid 104% of the pool.
+    Normalised over the paying ranks: conserves, but a sole paying rank takes
+    the whole pool whatever it donated. Qualifiers with different nets and a
+    pool are refused - holds expire to their players. Nothing live reaches it.
+    NOT BUILT: anything that collects the fee or the donation.
+
+ASSERTIONS THAT CHANGED, because the hold is now the net and not by tuning:
+custody quote 100000 -> 98000, round-nobody-finished pool 100000 -> 98000, pool
+takeover paid 1000 -> 980 sat, wallet paid and logged 100000 -> 98000, and the
+invoice tests - each derived from `netStakeMsat` rather than a new literal.
+Fixtures that exercise only arithmetic carry explicit feeMsat 0n, donationMsat 0n.
+
+MUTANTS, 6 of 6 killed:
+
+    free-seat branch gone                         2 red
+    door stops passing the donation (11:15)       4 red
+    net stake = the whole commitment              6 red
+    slash inputs forget the donation              1 red
+    fee rule forgets the donation                 1 red
+    hold invoices the commitment                 16 red
+
+SUITES (each chunk under timeout 180 + --test-timeout=120000)
+
+    protocol      456 -> 463   (inclusive.test.js, 7)
+    blwp-node     409 -> 410   (the free-round ghost)
+    blwp-client   184 -> 184
+    core          89
+    money guard 20 files clean, determinism guard 21 files clean
+
+NOT LOOKED AT IN TWO CHROMES. The running 2-of-2 daemon (started 11:19:59)
+runs d16c9cd's coerced code until it is restarted.
