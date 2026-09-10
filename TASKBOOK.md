@@ -25575,3 +25575,23 @@ one is refused for not following the chain head. The page's counters hide it -
 `marksSent` counts receipts and a refusal is counted as neither sent nor
 skipped, which is why "sent 1, skipped 0" read as quiet. Daemon B stores none:
 checkpoints go to the socket's node only.
+
+THE CAUSE, read in the code and the spec (not changed):
+  - the client moves its chain head only on a LIVE checkpoint (client.js:629),
+    and `receiptsForLive` is 2 on the Daily's 2-of-2 (gameVerifySlots 2) - both
+    daemons must receipt it (13C: the canonical chain carries receipts from a
+    quorum of the committee)
+  - the client sends each checkpoint on its one socket, to one node (daemon A);
+    B stored 0. Section 10's "receipt gossip" is committee members exchanging
+    digests of receipts they issued - it does not carry checkpoints - and
+    `recoverReceipts` asks the client's own node only
+  - so the first checkpoint never goes live, `this.head` never moves, and every
+    later checkpoint names the old parent: A refuses "does not follow the chain
+    head". Both builds.
+  - the spec's reading of delivery: section 10 "a checkpoint is accepted when
+    enough nodes receive it ... nodes return a signed CheckpointReceipt";
+    section 11 "the client periodically sends batches and checkpoints" - the
+    CLIENT delivers checkpoints to the committee.
+  - consequence: no Daily run builds a checkpoint chain with a quorum of
+    receipts, so by 13C none has a canonical transcript; a paying round would
+    end in the no-quorum rule until checkpoints reach the committee.
