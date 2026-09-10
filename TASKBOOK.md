@@ -25914,3 +25914,41 @@ carries its own index, so a misplaced tick shows:
 A node that keeps refusing still ends the run VOID by name (refused-batch.test.js,
 unchanged and green). blwp-client 206/206 (81 + 78 + 47); blwp-node 422/422
 (131 + 88 + 118 + 85). No C#.
+
+### A checkpoint that wakes after the player's own link went is skipped, not refused and not half-sent - (c) now BLOCKED only on the funnel map
+
+The last disconnect-vs-refusal path on (c): a mark waits for B; the player's
+own socket drops; B returns and is fed without it (the peer feed needs no own
+socket) and the mark wakes with no socket to its own node. Two real daemons,
+no reconnect wired (scratchpad/m-wait-drop.mjs; pinned as checkpoint-quorum
+test 8, which also reconnects and carries on):
+
+                            before (71271bf)                 after
+    mark 60's answer        "error there is no socket"       "closed: the link to this
+                                                             client's own node went ..."
+    counted as              refused 1                        skipped 1, refused 0
+    sent to                 B alone (stored on B, pending)   nobody; A 0 B 0, no pending link
+    after the reconnect     -                                mark 120 live on both, 1/1,
+                                                             same chain, /equivocation 204/204
+
+THE FOLLOW-UP, answered:
+- Disconnect vs refusal, every path: the node treats a player's socket close as
+  nothing but the end of its ghost watch. Client: batch in flight (71271bf),
+  resync (only on a node's own "error ..."), hold and republish (resume trims
+  what the node already took), peer fan-out and peer checkpoints (12ce726), a
+  mark in flight on the own socket (unreached), and now a mark that wakes
+  without the own socket (skipped). `send()` on no socket still answers
+  "error there is no socket" to a direct caller (checkpoint.test.js pins that
+  literal); markNow no longer reaches it.
+- The Daily does not show interrupted vs refused to a player: the words reach
+  `NetSession.Status` and no HUD draws them - the later status-words item.
+- Red tests: none. blwp-client 207/207 (quorum 8 + 74 + 78 + 47), blwp-node
+  422/422 (131 + 88 + 118 + 85); refused-batch.test.js unchanged and green.
+- Deployable: the live Daily bundle carries every one of these, and the page's
+  reconnect is the same `onDrop -> reconnect` the measurements wire. But no
+  player can play the Daily until the funnel is mapped, so "drop twice and
+  still finish" is proven on local real daemons only, not on the Daily.
+
+(c) REMAINDER: Daniel maps /blwp-a -> 100.74.66.98:8090 and /blwp-b -> :8091 as
+root; then the two-Chrome look on round f10ec0ec (ghost vs own core in mm, input
+transcripts and checkpoint chains on both daemons).

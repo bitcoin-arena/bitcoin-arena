@@ -48,6 +48,13 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   both driving, 3 reloads - 18 of 18 samples with 0 unrecorded, published =
   core on both tabs, and both directions 0.0 mm at the same tick.
   STOPPED: no held-sats round until the preflight prints READY.
+  CUT (c) - THE DAILY TWO-CHROME LOOK ON ROUND f10ec0ec - IS BLOCKED on Daniel
+  mapping, as root, /blwp-a -> 100.74.66.98:8090 and /blwp-b -> :8091 on the
+  funnel (serve config needs root here; / stays the finedining app). All of
+  (c) that can be measured without it is in and pinned - checkpoints and inputs
+  on both daemons, the bounded wait, the re-sent half-published checkpoint, and
+  a dropped link never counted as a refusal (TASKBOOK). The undrawn status
+  words are a later item, not (c).
 
   M3.3-19: a round that asks no stake seats on a node with NO Lightning, as
   x-hold FREE with no fault named, and the other player's ghost follows at the
