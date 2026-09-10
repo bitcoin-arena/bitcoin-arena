@@ -28,10 +28,15 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   nothing. The holes, by kind:
     code, CLOSED  a regtest daemon with Lightning had no preflight, so no
                   paying round opened (503) - it has one now.
-    code, NEXT    M3.3-22: no daemon carries a checkpoint's receipts across
-                  the committee, so no run ever has 13C's canonical transcript
-                  and none is replayed to a result ("carried by 2 committee
-                  members: the first has 1", both daemons, both played runs).
+    code, DONE    M3.3-22: the committee carries a checkpoint's receipts at
+                  the close (3d78220). Rehearsal: 52 and 28 receipts per run
+                  on each daemon (was 26/14, all own); P1 DELIVERED and P2
+                  FAILED replayed and stored on both; the close considers 2.
+                  The winner's stake is now cancelled back AT the close.
+    code, NEXT    M3.3-24: the preimage opening and the payout table have no
+                  peers at a live close - P2's settle: "no preimage"; the
+                  table: "1 of 2 seats signed". M3.3-25: finality depends on
+                  which daemon closes first (A: P2 "1 of 2 agree"; B: final).
     ruling        how a settled stake reaches the pool; the owed-sats fee
                   rate; htlc_cltv_days (all below, unchanged).
     inbound       testnet4: 196000 msat needed, 0 offered.
@@ -3336,7 +3341,10 @@ round, which is why testnet comes first and why the order is stricter.
      shows "stake seen by N of M nodes (T needed)"; committed only at
      N >= T (T 2 on two slots, else 5). A label, not a gate. Numbers:
      TASKBOOK.
- 22. **Receipts carried across the committee** (§10, §13C). NEXT. Each
+ 22. **Receipts carried across the committee** (§10, §13C). DONE
+     (3d78220): each daemon pulls its peers' receipts at the close through
+     `takeReceipt`, peers from the census when none are given. What follows
+     is 24 and 25. The measurement that opened it: each
      daemon stores only its own receipt for a checkpoint, so no node ever
      holds receipts from T members, no run has a canonical transcript, and
      no result is ever signed - measured in the regtest rehearsal, where the
@@ -3345,6 +3353,16 @@ round, which is why testnet comes first and why the order is stricter.
      (`GET /receipts`), and no daemon fetches a peer's. It belongs on the
      daemons: a losing player who withheld receipts would reach no-quorum
      and a VOID refund, which 13C says a player cannot manufacture.
+ 24. **The preimage opening and the payout table reach the other seats at a
+     close.** NEXT. `Preimages` asks the `peers` option only ([] on the real
+     daemons), so a final loser's settle finds one share of two: "this node
+     has no preimage for that stake". The payout path derives census peers
+     only at start, for rounds already owing, so a live close gathers "1 of 2
+     seats signed this table". The same census rule 22 uses.
+ 25. **Finality that does not depend on which seat closes first.** The
+     gather runs once, at the close: the first daemon to close found P2 at
+     "1 of 2 agree" because the second had not stored it yet; the second
+     found it final. Nothing asks again.
  23. **The page's share threshold on a seven-seat round** (§23.1: 5 of 7).
      LATER. The page deals the stake's shares with `needed:
      settlementSlots`, which on seven seats would ask all seven. Not

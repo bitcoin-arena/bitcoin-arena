@@ -26769,3 +26769,57 @@ fetch the other half even if it asked: `serve()`'s `peers` defaults to none,
 neither `standUpRound` nor `main.js` passes any, and only the payout path
 derives addresses from the census (server.js, for rounds owing a payout at
 start).
+
+### M3.3-22 done: the committee carries a checkpoint's receipts at the close, and both played runs are replayed to a result
+
+Code (3d78220): `Verifier.carryReceipts` - at the close, before a run's
+canonical transcript is taken, every committee peer's `GET /receipts` for that
+entry, each record through `takeReceipt` unchanged (mark held, signer seated,
+signature verified); a peer that is down is named and skipped. `peersOf(round)`
+- a list the operator gave wins; otherwise `peersFor`, which the daemon wires
+to the round's GAME committee endpoints from the census advertisements
+(`endpointsOf`, now one rule shared with the payout path). The results gather
+asks the same peers. The client forwards nothing.
+
+Unit (blwp-node test/receipt-carry.test.js), red 3/3 before, green 3/3 after:
+two daemons that each receipted the run themselves both replay it (FAILED) and
+hold 2 receipts per checkpoint; a down peer is named, a forged and a stranger's
+receipt add nothing and a daemon with only those stays at "the first has 1";
+with no peers given the verifier's list is the other seat's census endpoint,
+and a given list still wins. Mutant "fetch no peer receipts": 2 red.
+
+THE REHEARSAL (regtest, two real daemons, a real lnd) - the done criterion:
+
+    before the close   P1 on A/B 26 checkpoints, 26 receipts, 26 own, 0 other
+                       P2 on A/B 14 checkpoints, 14 receipts, 14 own, 0 other
+    per-round peers    A ["http://127.0.0.1:18702"], B ["http://127.0.0.1:18701"]
+                       (was [] and [])
+    carried            A took 26 (P1) and 14 (P2); B 52 and 28; 0 refused, 0 down
+    after the close    P1 on A/B 52 receipts - 26 own, 26 from the other
+                       P2 on A/B 28 receipts - 14 own, 14 from the other
+    replay             P1 DELIVERED, P2 FAILED - stored, on BOTH daemons
+                       (was "the first has 1"); P3 "no ticks" (VOID, correct)
+    the close          considered 2 on both daemons
+
+WHAT THE CLOSE THEN DID - found, NOT fixed here:
+- P1 (DELIVERED): CANCEL -> CANCELLED on both daemons; alice got 98000 msat
+  back AT the close (996236000 -> 996334000), not by expiry. The winner's own
+  stake now comes home by the act 23.2 names.
+- FINALITY DEPENDS ON WHICH DAEMON CLOSES FIRST. A closed first: gather P1
+  final, P2 "1 of 2 agree on any one run" - B had not stored P2 yet. B closed
+  second and saw both final. The gather runs once, at the close, and nothing
+  asks again.
+- P2 (FAILED) was NOT settled: on A because it was not final (above); on B,
+  final but "this node has no preimage for that stake" - the preimage opening
+  (`Preimages`) still asks the `peers` option only, which is [], so one share
+  of two. It expired back to alice.
+- The payout: "1 of 2 seats signed this table, so nothing is spent" on both -
+  the payout path's census peers are derived only at START, for rounds already
+  owing a payout, so at a live close it has none.
+- P3 (VOID): expired back to alice at the timelock, as before.
+- Net: alice +0, the operator +0, the winner paid nothing.
+
+Next code holes, by the same rule (census endpoints of the round being
+closed): the preimage opening and the payout table have no peers at a close;
+and finality should not depend on the order the committee closes in.
+blwp-node 443/443, blwp-client 219/219.
