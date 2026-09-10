@@ -40,9 +40,11 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
     ruling        how a settled stake reaches the pool; the owed-sats fee
                   rate; htlc_cltv_days (all below, unchanged).
     inbound       testnet4: 196000 msat needed, 0 offered.
-  Behind 22, not yet measurable: two daemons settling one invoice on the
-  shared endpoint, the objection window before finality, the pool payout.
-  Node 440/440, client 219/219.
+  Two daemons CANCELLING one invoice on the shared endpoint is measured: both
+  wrote CANCELLED, lnd CANCELED once. Behind 24 and 25, not yet measurable:
+  two daemons SETTLING one invoice, the objection window before finality,
+  the pool payout. Node 443/443, client 219/219, core 91/91, golden vectors
+  8/8 (0 engine files touched).
 
   M3.3-21 IS DONE - STAKE COMMITTED, AS THE PLAYER SEES IT (§23.1 step 5):
   from the seat of a paying round, the page asks every settlement seat and
@@ -3362,7 +3364,9 @@ round, which is why testnet comes first and why the order is stricter.
  25. **Finality that does not depend on which seat closes first.** The
      gather runs once, at the close: the first daemon to close found P2 at
      "1 of 2 agree" because the second had not stored it yet; the second
-     found it final. Nothing asks again.
+     found it final. Nothing asks again. The receipt pull of 22 is the same
+     one-shot: a peer down AT the close gives nothing, and that run gets no
+     result on that node - its hold expires to the player (the safe side).
  23. **The page's share threshold on a seven-seat round** (§23.1: 5 of 7).
      LATER. The page deals the stake's shares with `needed:
      settlementSlots`, which on seven seats would ask all seven. Not
