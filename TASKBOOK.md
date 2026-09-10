@@ -26173,3 +26173,56 @@ Before (76ea398): 6 of 6 other seats stayed PAYOUT_QUEUED at every point, the
 returning asker included. Every harness run now ends "no problems".
 blwp-node 422/422 (131 + 88 + 118 + 85). No debt in this fixture (paid in full),
 so a debt surviving a restart is still unmeasured.
+
+### A debt survives the kill: a table the spend cannot pay in full reads PAID_IN_PART on every seat at all four kill points
+
+`tools/settle-crash-regtest.mjs --part` (own ports, +50): a 300-sat stake, five
+qualifiers and two forfeits, so the table owes 336 + 252 sats and the floor is
+DUST_SATS (330, imported). The pool is funded with 900. Every seat's row is now
+checked for state AND debt, and each row's key is scanned for what it received.
+
+Before, HEAD's payout.js against the new harness: the seat that restarts is
+the one that loses the debt.
+
+    point  killed seat (restarted as main.js)   the other six          problems
+    1      PAID, owed 0/0                        PAID_IN_PART 252/1     2
+    2      PAID, owed 0/0                        PAID_IN_PART 252/1     2
+    3      PAID, owed 0/0                        PAID_IN_PART 252/1     2
+    4      PAID, owed 0/0                        PAID_IN_PART 252/1     2
+
+Why: `payWithCommittee` wrote PAID whatever the table left owed, and its
+PAYOUT_QUEUED row carried no debt, so `reconcile` - which only has the row -
+could only write PAID. The sweep that finds the spend on the chain computes
+the table itself, which is why the six were right.
+
+Now: the debt goes on disk with the bytes (`owedSats`/`owedCount` on the
+PAYOUT_QUEUED row, in `pay` and `payWithCommittee`), `payWithCommittee` writes
+PAID_IN_PART when rows are owed, and `reconcile` writes the state the debt
+beside the bytes says. The start-up log counts a PAID_IN_PART recovery too; it
+printed nothing for one.
+
+    point  every seat's row               spends  each row owed -> received
+    1-4    7 of 7 PAID_IN_PART, 252/1     1       336 -> 336, 252 -> 0
+
+Pin: payout-pay "a node that died mid-send on a table it cannot pay in full
+comes back PAID_IN_PART, debt intact". Mutant reconcile-writes-PAID: killed
+(23/24). The paid-in-full fixture, re-run at points 1-4: 7 of 7 PAID, one spend,
+winner 980, "no problems" each time. blwp-node 423/423.
+
+FOUND, AND IT IS NOT THIS LETTER'S TO DECIDE: THE OWED SATS DO NOT STAY IN THE
+POOL. The spend on the chain is 900 sats in, 336 out to 1 output, fee 564 - the
+252 owed sats go to the miner. Item 16's own rule (above) says they are "not
+folded into the fee - the miner is not who the round owes" and "stay in the
+pool with the debt recorded". `payoutOutputs` makes no change output on purpose
+("the alternative is an output an operator chooses the destination of"), so
+every sub-floor debt is recorded against money that has already left. A change
+output back to the pool's own script is chosen by nobody - but it needs a fee
+the committee agrees on, and there is no fee rate in the contract, the code or
+the spec (grepped). That is a MONEY-class value: Daniel's ruling.
+
+AND THE NEXT GAP ON THE FINISH LINE: NO LAUNCH PATH REACHES LIGHTNING.
+`lndPort` has callers only in `tools/custody-lnd.mjs`; `serve()` defaults
+`lightning` to NO_LIGHTNING; `src/main.js` reads only the two bitcoind settings
+and `tools/run-2of2.mjs` passes no port ("lnd: 'shared'" is a label). So a real
+daemon holds no stake, and one restarted mid-settle reconciles no ACTING hold -
+`custody.reaches` is false and the start-up reconcile is skipped by name.

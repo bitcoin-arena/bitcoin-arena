@@ -48,6 +48,18 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   both driving, 3 reloads - 18 of 18 samples with 0 unrecorded, published =
   core on both tabs, and both directions 0.0 mm at the same tick.
   STOPPED: no held-sats round until the preflight prints READY.
+
+  A NODE KILLED MID-SETTLEMENT RECOVERS, THE PAYOUT HALF: at all four kill
+  points, restarted as the real src/main.js with its two chain settings, one
+  spend lands and every seat's row matches it - PAID paid in full, and
+  PAID_IN_PART with the debt intact when rows are under the floor (the
+  restarted seat used to drop the debt and write PAID).
+  RULING NEEDED (Daniel): the owed sats leave as miner fee (900 in, 336 out,
+  564 fee), against item 16's own rule. Keeping them means a change output to
+  the pool, and that needs a fee rate nobody has set.
+  NEXT: the Lightning half. No launch path gives a daemon a Lightning port -
+  main.js and run-2of2 pass none - so a real daemon holds no stake and a
+  restart reconciles no hold.
   CUT (c) - THE DAILY TWO-CHROME LOOK ON ROUND f10ec0ec - IS BLOCKED on Daniel
   mapping, as root, /blwp-a -> 100.74.66.98:8090 and /blwp-b -> :8091 on the
   funnel (serve config needs root here; / stays the finedining app). All of
@@ -3329,6 +3341,9 @@ round, which is why testnet comes first and why the order is stricter.
      A 100-sat winner no longer blocks a 5000-sat one. Sub-floor rows stay
      owed on the round. Across-round balances and Lightning payouts are not
      this letter.
+     MEASURED 2026-09-10: the owed sats do NOT stay in the pool - they leave
+     as miner fee, because the spend has no change output. RULING NEEDED: a
+     fee rate, so a change output can return them to the pool.
 
  15. **The page deals its own stake.** DONE.
 
