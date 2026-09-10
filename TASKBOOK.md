@@ -25344,3 +25344,32 @@ aliased import is declared in the bundle, and a load through the BUILT bundle
 heats and hashes exactly as the modules do. Against the committed bundle: 2 red.
 Rebuilt: green. Core 89 -> 91, determinism guard 21 clean, blwp-client 184
 (the template must ship the built bundle byte for byte: md5 4a337755).
+
+THE SECOND DRIVE, on the fixed Daily (core md5 4a337755 served, ede64f9).
+Both tabs reloaded with the HTTP cache disabled - which joins each as a NEW entry
+(known since 09-09), so the round counts 4. P1's pose recorded on EVERY core
+step by wrapping `Module.blwp.core.step` (152 of 152 ticks; a timer caught 15
+of 312 the first time, the windows being throttled).
+
+    P1 ROLL OUT         "sent" - no throw; the truck rolled out with 7 parcels
+                        (screens 2026-09-10-1229-fixed-p{1,2}-drive.png: P1 in the
+                        apron under WANTED, block 966,348, 2:14 left, models still
+                        streaming; P2 in its loadout, NOTHING LOADED)
+    P2's ghost of live P1 (entry c0a1f569) against P1's own core:
+        at rest   tick 659 (-93.723, 57.800) m   core (-93.723, 57.800)   0.0 mm
+        at rest   tick 665 (-93.723, 57.800) m   core (-93.723, 57.800)   0.0 mm
+        driving   tick 689 (-93.519, 57.800) m   core (-93.519, 57.800)   0.0 mm
+                  - read at the recorder's 690, which keys a pose by the tick
+                    counter AFTER step; its own 689 is -93.541, one tick's travel
+    P1 ahead of the published picture by 7-15 ticks
+
+A NEW FINDING, NOT FIXED HERE: both chips said "other at -97,-10 m" through the
+whole drive, and that is a DEAD truck - P1's pre-reload entry 200105f1, frozen
+at tick 4229. `newestPose` picks the ghost with the highest tick, and an
+abandoned run that got further outranks the live one (tick 659). P2 held three
+ghosts: 200105f1 t4229, c509c003 t4227 (P2's own old seat), c0a1f569 t659 (live).
+The drawn ghosts were not measured apart from the chip; the chip line is wrong
+after any reload.
+
+STOPPED at step 4: no held-sats round is opened until the preflight prints
+READY, and it prints NOT READY.

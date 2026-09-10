@@ -35,7 +35,12 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   THE 2-OF-2 RUNS THE COMMITTED TREE (restarted 12:17 on fb3b652, round
   267a9de5). THE LOOK FOUND ROLL OUT THROWING ON THE DAILY - "heatForLoad is not
   defined", the core bundler dropping an aliased import - fixed in the bundler
-  and pinned by a test that runs a load through the built bundle.
+  and pinned by a test that runs a load through the built bundle. ON THE FIXED
+  DAILY: ROLL OUT sends, the truck drives out, and P2's ghost of it equals
+  P1's own core at the same tick - 0.0 mm at rest and 0.0 mm driving.
+  NEW, ON THE LIST: after a reload the chip's "other at" names a DEAD entry
+  (`newestPose` takes the highest tick, and an abandoned run went further).
+  STOPPED: no held-sats round until the preflight prints READY.
 
   M3.3-19: a round that asks no stake seats on a node with NO Lightning, as
   x-hold FREE with no fault named, and the other player's ghost follows at the
