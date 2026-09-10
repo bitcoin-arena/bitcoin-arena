@@ -25831,3 +25831,34 @@ STILL TRUE, NOT THIS FIX: the status words reach `NetSession.Status` and no HUD
 draws them (console/CDP only); while B was down its connection failures were
 counted as "inputs refused" (20 in 2 s) - a closed socket reads like a node
 saying no.
+
+### A peer's closed connection is no longer counted as a refusal (cut (c) still OPEN on the funnel map)
+
+A connection to a peer that could not be made or dropped now answers
+`closed: ...`, never the `error ...` a node says. The input feed counts it as
+closed and as one "peer drop" per time the peer went away; a checkpoint a peer
+never received is "unreached", not "refused".
+
+Same B-down setup that hit /equivocation 200 before the re-send fix: B holds
+mark 60's inputs, goes down, mark 60 reaches A alone, mark 120 waits while the
+page keeps playing for 2 s, B restarts inside the bound (scratchpad/d-counters.mjs):
+
+                               before (e3f24c2)       after
+    inputs refused (from B)    20                     0
+    inputs closed              - (no such count)      20
+    peer drops                 -                      1
+    checkpoints refused        1                      0
+    checkpoints unreached      -                      1
+    status line                "refused 1 inputs      "unreached 1 peer drops 1
+                               refused 20 waiting     waiting 120 pending link 60"
+                               120 pending link 60"
+    after B returns            mark 60 re-sent, 120 chains on it, checkpoints 2/2,
+                               /equivocation 204 on both - unchanged by the split
+
+A node that really says no still counts as one: B without the seat, the node
+list arriving late -> inputs refused 1, closed 0, "error no such entry".
+
+Tests: checkpoint-quorum 7/7 - the new one pins the table above; two earlier
+expectations changed because they pinned the mix-up (test 5 asserted "inputs
+refused" for a stopped B; test 6 counted the down B in `refused`). blwp-client
+203/203 (7 + 74 + 75 + 47); blwp-node 422/422 (131 + 88 + 118 + 85).
