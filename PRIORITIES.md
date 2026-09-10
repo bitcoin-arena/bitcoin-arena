@@ -20,6 +20,13 @@ LIVE LETTER: M3 - A ROUND FOR TESTNET SATS ("M3 is done when"). M3.3-19 is
 closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
 (below, under 6e), so the live work is the finish line itself.
 
+  NEXT, UNBLOCKED: M3.3-21 - STAKE COMMITTED, AS THE PLAYER SEES IT (§23.1
+  step 5). Done means: the page asks every committee node's `GET /stake`
+  and shows "stake seen by N of M nodes (T needed)", and play is not called
+  committed below the threshold. Not started.
+  M3.3-8's 9.4 NAMES ARE DONE (765147c): AWAITING_INVOICE, CANCEL_REQUESTED,
+  SETTLE_REQUESTED; node 439/439, client 210/210.
+
   THE TESTNET4 PREFLIGHT IS IN, and it says the node cannot hold one stake.
   `tools/testnet4-preflight.mjs` asks the operator's testnet4 lnd, with its
   READ-ONLY macaroon, and refuses any lnddir whose own lnd.conf is not
@@ -3292,13 +3299,17 @@ round, which is why testnet comes first and why the order is stricter.
 
      THE PAYOUT HALF IS IN. `PAYOUT_QUEUED` and `PAID` are states now: five
      of seven sign the payout-table hash (20), the pool is spent against
-     that table, and a real bitcoind took it. AND 9.4'S NAMES ARE ON THE
-     SEATS: `AWAITING_INVOICE` is written before the endpoint is asked,
-     `CANCEL_REQUESTED` / `SETTLE_REQUESTED` before each act, where the
-     first moment was not written at all and both acts wore the stand-in
-     `ACTING` (still read from old stores, never written). Not built:
-     `SHARES_REQUESTED` and `PREIMAGE_READY`, which name the preimage
-     reconstruction rather than a Lightning call.
+     that table, and a real bitcoind took it.
+     THE HOLD NAMES ARE DONE (765147c): `AWAITING_INVOICE`,
+     `CANCEL_REQUESTED`, `SETTLE_REQUESTED` are what a seat writes before
+     each call. Node 439/439, client 210/210. Numbers: TASKBOOK. Not built:
+     `SHARES_REQUESTED` and `PREIMAGE_READY` (the preimage reconstruction,
+     not a Lightning call).
+ 21. **Stake committed, as the player sees it** (§23.1 step 5). NEXT.
+     Each node already refuses play until it has seen the stake held, and
+     answers `GET /stake`; the page asks only the node it joined. Done
+     means the page asks every committee node and shows "seen by N of M
+     (T needed)", and does not call the stake committed below T.
   9. **VSS custody of the stake preimage.** No single node ever holds it.
      After the state machine, because the machine defines when a share is
      asked for.
