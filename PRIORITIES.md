@@ -57,6 +57,18 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   RULING NEEDED (Daniel): the owed sats leave as miner fee (900 in, 336 out,
   564 fee), against item 16's own rule. Keeping them means a change output to
   the pool, and that needs a fee rate nobody has set.
+  RULING NEEDED (Daniel), AND IT IS THE LARGEST: HOW A SETTLED STAKE REACHES
+  THE POOL. Nothing does. A loser's stake settles into one operator's lnd
+  channel balance; the winner is paid from the pool's taproot output, which
+  only a harness has ever funded. The spec has no gap here because its pool
+  IS the Lightning endpoint - a 5-of-7 wallet that receives the settle and
+  pays qualifiers over Lightning (§23.2, §23.5), built as a threshold LN node
+  or a Fedimint-class federation (§23.6, "the Round Contract names which").
+  Item 13 built the pool on-chain instead. Moving channel sats on-chain is a
+  channel close or a swap by that one operator, so a bridge is itself single
+  custody. The choice: (a) an interim bridge, one operator, said so; (b) a
+  federation (spec: "V1 should use the mature one"); (c) threshold LN.
+  Until then a real round's winner is paid with money no round put there.
   RULING NEEDED (Daniel): htlc_cltv_days. §23.1 sizes a hold's CLTV "in days,
   comfortably beyond round + objection window + result window + claim
   window"; the spec makes it a round-contract field. Today lnd picks its own:

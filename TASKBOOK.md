@@ -26447,3 +26447,34 @@ two things remain a choice, not a derivation:
     `claim_window_days` is listed as unchosen
 So `htlc_cltv_days` is a value for Daniel, like the node fee rate - not a
 constant to invent in the money path. Named in PRIORITIES as a ruling.
+
+### Where a loser's settled stake goes, and why the pool never receives it
+
+Measured: nothing in `blwp-node/src` or `protocol/src` sends a settled
+stake anywhere after `settleinvoice`. A grep for sendcoins, sendtoaddress,
+sweep and any pool funding finds no code; every pool output ever spent
+(payout-regtest, payout-committee-regtest, settle-regtest,
+settle-crash-regtest) was funded by the HARNESS with `sendtoaddress` to the
+pool address. So:
+
+    a loser's stake     settled by lnd into ONE operator's channel balance
+    a winner's payout   spent from the pool's P2TR output, 5 of 7
+    between the two     nothing - no code, no letter
+
+THE SPEC HAS NO SUCH GAP, and that is the finding. §23.2: a loser is
+"Settle the HTLC -> stake enters the pool wallet", and a qualifier's payout is
+"Lightning payment from the pool wallet". §23.5: "Settled loser stakes
+accumulate in a wallet whose every operation requires a 5-of-7 threshold
+signature". §23.6 builds that wallet as a threshold-signed Lightning node or a
+Fedimint-class federation, "and the Round Contract names which construction it
+uses". In the spec the Lightning endpoint that settles IS the pool.
+
+Item 13 built the pool as an on-chain taproot output with no script path, and
+custody as one lnd (`lnd-port.js`: "SINGLE-NODE CUSTODY, NOT §23.5"). A bridge
+between them is not a send: settled sats are channel balance, and getting them
+on-chain is a channel close or a swap that one operator performs - custody by
+one party in the middle of the path the pool exists to make threshold-only.
+
+So it is a construction ruling, named in PRIORITIES with three options: an
+interim single-operator bridge said out loud, a federation (the spec's advice
+for V1), or a threshold Lightning node. Nothing was built around it.
