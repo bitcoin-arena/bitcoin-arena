@@ -26065,3 +26065,42 @@ H1 - a daemon restarted as src/main.js starts one recovers nothing at any
 point (no chain handed over, seat and key never read back from its store).
 H2 - no seat but the one that sent the spend ever moves its row off
 PAYOUT_QUEUED; the returning asker at point 4 included.
+
+### H1, measured: a main.js restart reads its seat back and finishes a spend it already sent - and a restart that must sign again stops at 1 of 5 seats
+
+Now in the tree:
+- `serve()` reads its seat and pool key back from its own store on start
+  (`Dkg.seatFor` over the committee of a round it still owes a payout on, else
+  the newest committee it holds a share of); a seat or key passed in wins.
+- `serve()`'s default pool curve carries `tweakPoint` - without it a daemon
+  started with no curve of its own could not name the pool output at all.
+- `src/main.js` takes chain access from BLWP_BITCOIND_URL and
+  BLWP_BITCOIND_COOKIE, both or neither, and derives from that one RPC the
+  pool watch, send and look (`chainSpendOver`, in `pool-watch.js` - the one
+  file the output guard allows to ask the chain), and each round's beacon
+  (read before start for every queued payout round; others on first miss).
+- The harness's restart (a) is now the real `src/main.js` with those two
+  settings on the same store and port; the round's committee time is a real
+  instant on the regtest's clock and every daemon reads the beacon off the
+  chain (a fixed 2026-09-06 date before the chain existed made the real
+  launcher refuse: "already after this round's committee time").
+
+Kill points, restarted as the real src/main.js (isolated regtest, winner owed
+980 sats):
+
+    point  what main.js did                              spends  winner  row
+    1      "1 of 5 seats committed to this spend"        0       0       QUEUED
+    2      "1 of 5 seats committed to this spend"        0       0       QUEUED
+    3      "the chain already had 1 payout(s) this       1       980     PAID
+           node died sending"; same bytes as on disk
+    4      "1 of 5 seats committed to this spend";       0       0       QUEUED
+           the returning asker: "the pool holds 0
+           confirmed output(s)..." - no second spend
+
+Restart (b) (harness-given peers) still pays 1 spend / 980 at points 1, 2, 4.
+
+WHAT STOPS 1, 2 AND 4: a payout that must be signed again needs five of seven
+seats, and a main.js daemon knows no other seat's address. The store keeps
+only seated pubkeys (`seats` is round_id + pubkey); `peers` is a serve()
+option that main.js does not pass. H2 (6 of 6 other rows stay PAYOUT_QUEUED)
+is untouched and still listed by the harness. blwp-node 422/422.
