@@ -82,6 +82,10 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   after they started driving had the run ended VOID (refused, resynced,
   refused). "Stake not seen" is a wait now - the ticks are held and sent once
   the stake is seen. The Daily's page bundle is rebuilt, not deployed.
+  AND THE PAGE ASKS THE NODE WHETHER IT PAID: a real wallet answers a hold
+  invoice only when the round settles or cancels it, so the page would have
+  said "the wallet did not answer" while the stake sat held. `GET /stake`
+  answers from the node's own Lightning, and a stake it has seen held is paid.
   AND THE DAILY'S TWO DAEMONS ARE DOWN (2026-09-10 ~19:30): nothing listens
   on 8080/8081/8090/8091 but signal-cli on 127.0.0.1:8080. Not restarted
   from here.

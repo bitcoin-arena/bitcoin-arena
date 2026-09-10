@@ -26390,3 +26390,37 @@ After: 60 ticks driven unpaid -> not ended, 0 refusals, 0 taken, 60 held; the
 port reports paid -> the next drain publishes all 60. refused-batch 4/4
 unchanged (a node that keeps refusing for a real reason still ends the run).
 blwp-node 434/434, blwp-client 208/208.
+
+### A hold invoice is paid long before the wallet says so: the page asks the node
+
+`Client.payStake` believed only the wallet: `pay_invoice`'s answer with a
+preimage, or nothing. A real wallet answers when the payment COMPLETES, and a
+hold invoice completes only when the round settles or cancels it - minutes
+later, and as a failure for every winner (whose stake is cancelled back). So
+in a real round the page would have said "the wallet did not answer" (30 s
+default) while the stake sat held, and the spending log would never have
+counted it. The fixture that answered at once with a preimage is the unusual
+wallet, not the usual one.
+
+Measured first (wallet-nwc.test.js, a wallet that takes pay_invoice and never
+answers, the node's port showing the HTLC paid once asked):
+
+    before   ok false: "the wallet did not answer in 3000 ms"  (node: held)
+    GET /stake                                                  404, no door
+
+Now:
+- `GET /stake?entry=` on the node: 200 {state, paidMsat} when this node has
+  seen the stake held (`Custody.seenPaid`, the same answer the play gate
+  uses), 409 "stake not seen: ..." when not, 404 for an entry it never seated
+  and 400 for a malformed id - neither of those two asks Lightning.
+- `payStake` races the wallet's answer against the node's: a stake the node has
+  seen held IS paid (`held: true`, `preimage: null` - the wallet's preimage
+  arrives with its answer, which for a hold may be minutes away), and the log
+  records it. Before reporting a wallet failure it asks the node once more,
+  because a wallet that timed out may have paid anyway.
+
+After: the silent wallet -> ok, paid, held, 98000 msat, 1 request, 1 log
+entry. A silent wallet with a node that never sees it -> still "did not answer
+in 400 ms". The honest path (a wallet that answers with a preimage) unchanged.
+stake-committed 3/3. blwp-node 435/435, blwp-client 210/210. Bundle rebuilt,
+template copy equal.
