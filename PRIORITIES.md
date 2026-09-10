@@ -29,6 +29,9 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   (98 sat each, the net of the fee) and the node offers 0 - NOT READY.
   DECISION NEEDED (Daniel): inbound liquidity on that node - a channel opened
   TO it, or funds pushed across the existing one. Nothing here moves its money.
+  AND A DAEMON THAT HOLDS STAKES NOW REFUSES TO OPEN A PAYING ROUND UNTIL THAT
+  PREFLIGHT SAYS READY: measured on the real node, 100000 msat -> 503 with the
+  196000 vs 0 shortfall, 0 msat -> 201. It fails closed without a preflight.
 
   M3.3-19: a round that asks no stake seats on a node with NO Lightning, as
   x-hold FREE with no fault named, and the other player's ghost follows at the

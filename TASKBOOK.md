@@ -25264,3 +25264,42 @@ SUITES  blwp-node 410 -> 416 (preflight.test.js, 6). Protocol 463, blwp-client
 DECISION NEEDED, and it is the operator's money on a real network: inbound
 liquidity on that node - a channel opened TO it, or funds pushed across the
 existing one. Nothing in this letter opened, paid or signed anything.
+
+
+## M3 finish line, step 1 - a paying round is not opened on a node that cannot hold it (2026-09-10)
+
+POST /round, on a daemon given a Lightning port, now asks an injected
+`preflight` before `round.open` whenever the round asks a stake. The daemon's
+preflight is `lndPreflight`: `askLnd` (read-only macaroon, testnet4 lnd.conf or
+refused before any call) fed to `lightningPreflight`, sized at 27A.7.1's
+`min_players_per_round` = 2 seats, each the round's stake with the fee out and
+no donation - the largest hold a seat can ask.
+
+MEASURED against the operator's testnet4 lnd (tools/testnet4-gate.mjs: the real
+preflight, and a Lightning port that THROWS on every call, so no spending
+macaroon is loaded by the process at all):
+
+    round asking 100000 msat -> 503 this node's Lightning cannot hold this
+                               round's stakes: 2 holds of 98000 msat need
+                               196000 msat of inbound, and the channels offer 0
+    round asking      0 msat -> 201 opened
+
+    tools/testnet4-preflight.mjs, same node: block 151774, synced, 1 active
+    channel, usable inbound 0 msat -> NOT READY (exit 1)
+    --lnddir /mnt/bitcoin/lnd-mainnet -> refused by its own lnd.conf (exit 2)
+
+FAILS CLOSED: a node given a port and NO preflight opens no paying round (503,
+"has no preflight"); a preflight that throws is a refusal with its words. A
+round asking nothing never asks the preflight (M3.3-19). A node with no
+Lightning at all opens a paying round as before - it holds nothing, and the
+2-of-2 on the Daily is that node.
+
+MUTANTS, 6 of 6 killed: gate removed (3 red), no-preflight fails open (1), a
+free round made to ask (2), a thrown preflight read as ready (1), askLnd with
+the admin macaroon (1), askLnd's testnet4 check removed (1).
+
+Three test daemons that hold stakes (custody-daemon x6, session-pay,
+wallet-nwc) are handed a READY preflight - setup, no assertion touched.
+
+SUITES  blwp-node 416 -> 422, blwp-client 184, protocol 463 and core 89 not
+touched. No bundle changed. Nothing opened, paid or signed on the node.
