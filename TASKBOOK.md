@@ -26104,3 +26104,43 @@ seats, and a main.js daemon knows no other seat's address. The store keeps
 only seated pubkeys (`seats` is round_id + pubkey); `peers` is a serve()
 option that main.js does not pass. H2 (6 of 6 other rows stay PAYOUT_QUEUED)
 is untouched and still listed by the harness. blwp-node 422/422.
+
+### A main.js restart with only the two chain settings reaches the other seats and finishes every kill point
+
+The other seats' addresses come from the chain (pick (a)): when a daemon has no
+peers, `serve()` takes the settlement committee's endpoints from the census of
+each round it still owes a payout on - the signed advertisements in the bonds,
+read the way a first seating reads them - and uses them as payout peers.
+`src/main.js` pre-reads each such round's census blocks over the one RPC
+(`blocksOver`, over `getblock`), from CENSUS_LOOKBACK (2016) blocks before the
+census height up to the beacon plus the round's confirmation depth, capped at
+the tip. And `reconcile()` now sends this seat's own fully signed spend when the
+chain does not have it - the pin "a restart asks the chain, and a transaction
+it never saw stays queued" is unchanged and green (a failed send stays queued).
+
+The harness now bonds all seven on its regtest with their real endpoints, derives
+the census root from the chain, seats the round through `chainFor` (no
+`assumeSeated`), takes the committee time from the chain's own median time at
+the census height (beacon 223 after census 214 - the normal order), and waits for
+the wall clock, which the entry door reads, to pass it.
+
+Found on the way, each measured: a census view stopping at the census height -
+"no block in this view is after this round's committee time"; one stopping at the
+beacon - "the block that seeds this round is 1 deep and this round asks for 6".
+
+Kill points, restarted as the real src/main.js with BLWP_BITCOIND_URL and
+BLWP_BITCOIND_COOKIE only; winner owed 980 sats:
+
+    point  what main.js did                                  spends winner row   bytes
+    1      read 6 seat addresses off the census, 5 signed;   1      980    PAID  -
+           "[payout] ... PAID"   (was: "1 of 5 seats committed")
+    2      "sent 1 payout(s) this node had signed and        1      980    PAID  same
+           written but not sent" (was: 1 of 5 seats)
+    3      "the chain already had 1 payout(s) this node      1      980    PAID  same
+           died sending"
+    4      sent its written bytes; the returning asker:      1      980    PAID  same
+           "the pool holds 0 confirmed output(s)..." -
+           no second payment (was: 1 of 5 seats)
+
+Still open, next on this item: H2 - 6 of 6 other seats stay PAYOUT_QUEUED while
+the chain carries the payment. blwp-node 422/422 (131 + 88 + 118 + 85).
