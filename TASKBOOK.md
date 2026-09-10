@@ -26226,3 +26226,40 @@ AND THE NEXT GAP ON THE FINISH LINE: NO LAUNCH PATH REACHES LIGHTNING.
 and `tools/run-2of2.mjs` passes no port ("lnd: 'shared'" is a label). So a real
 daemon holds no stake, and one restarted mid-settle reconciles no ACTING hold -
 `custody.reaches` is false and the start-up reconcile is skipped by name.
+
+### A custodian SIGKILLed inside a settle, restarted as the real src/main.js with its lnd, ends in lnd's state
+
+`tools/custody-restart-lnd.mjs --point=1|2`: isolated regtest, its own
+bitcoind and two lnd v0.21.3-beta (alice pays, bob holds), a real channel. Two
+stakes of 100000 msat (98000 net) held on bob and paid; the round final, one
+DELIVERED and one FORFEIT. A child runs the close with bob's real port and is
+SIGKILLed inside the forfeit's settle - point 1 after ACTING is written and
+before `settleinvoice` leaves, point 2 after lnd took it and before SETTLED is
+written. Then `node src/main.js <port> <store>`, (a) as every launch path
+started it and (b) with the four new settings.
+
+    point  after the kill        restart (a)          restart (b), before   restart (b), now
+    1      ACTING / lnd HELD     ACTING / HELD        ACTING / HELD         HELD / HELD
+    2      ACTING / lnd SETTLED  ACTING / SETTLED     ACTING / SETTLED      SETTLED / SETTLED
+
+Now (b) logs "[custody] asked Lightning about 1 stake(s) this node died in the
+middle of". At point 1 the next close makes the act once (CANCELLED, SETTLED);
+at both points bob gained exactly 98000 msat - one forfeited net stake, no
+second settle - and the delivered stake is CANCELLED at lnd. "no problems" x2.
+
+`src/main.js` reads BLWP_LNCLI, BLWP_LND_DIR, BLWP_LND_RPC, BLWP_LND_NETWORK,
+all four or none (exit 2, naming the missing ones), network testnet4 or regtest
+(`PLAYABLE`; mainnet exit 2), and hands `serve()` an `lndPort` over them. On
+testnet4 it also passes `lndPreflight`; on regtest none, because `askLnd` knows
+only testnet4 - so a regtest main.js reconciles and settles but opens no paying
+round (the gate fails closed). Pin: test/main-settings.test.js, 1/3 before and
+3/3 after. blwp-node 426/426.
+
+Found on the way, the harness's own: a zmq port on bitcoind's p2p+1 stops
+bitcoind at start ("Unable to bind"), and a run that threw printed "no
+problems" - now a listed problem.
+
+NOT DONE HERE: `tools/run-2of2.mjs`, the Daily's own launcher, still passes no
+Lightning; switching it changes the live daemons and is its own step. And the
+preimage in the child is a stand-in for 23.4's five of seven - what is measured
+is the restart.

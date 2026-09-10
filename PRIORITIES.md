@@ -57,9 +57,12 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   RULING NEEDED (Daniel): the owed sats leave as miner fee (900 in, 336 out,
   564 fee), against item 16's own rule. Keeping them means a change output to
   the pool, and that needs a fee rate nobody has set.
-  NEXT: the Lightning half. No launch path gives a daemon a Lightning port -
-  main.js and run-2of2 pass none - so a real daemon holds no stake and a
-  restart reconciles no hold.
+  AND THE LIGHTNING HALF: src/main.js takes its lnd (four settings, all or
+  none, testnet4 or regtest). A custodian SIGKILLed inside a settle and
+  restarted as main.js ends in lnd's own state at both kill points - HELD
+  when the act never left, SETTLED when it landed, one stake moved once. It
+  stayed ACTING at both before.
+  NEXT: run-2of2 (the Daily's launcher) still passes no Lightning.
   CUT (c) - THE DAILY TWO-CHROME LOOK ON ROUND f10ec0ec - IS BLOCKED on Daniel
   mapping, as root, /blwp-a -> 100.74.66.98:8090 and /blwp-b -> :8091 on the
   funnel (serve config needs root here; / stays the finedining app). All of
