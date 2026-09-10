@@ -25695,3 +25695,42 @@ the resume can produce. The daemons did not restart (one process since 12:17),
 their log names no dropped connection (the frame cap's 1009 would), and runs 2
 and 3 - one with the new build on one tab, one on both - had 0 drops with every
 socket's close logged. No close code was captured for run 1.
+
+### The node now refuses a checkpoint past the inputs it holds (ebd5e2d) - Daily look BLOCKED by the funnel
+
+Rule (hold-through-tick): a checkpoint at tick T is refused unless the node
+holds every input before T: "the checkpoint is at tick T and this node holds
+this run's inputs only before tick N: send the batches first". The client's
+markNow waits until its node took those inputs and every other committee node
+answered that it holds them, draining the hold at once for a waiting mark.
+Replay-to-state-hash is NOT in this cut; it is the next one.
+
+Two real daemons (`checkpoint-quorum.test.js`):
+
+                               before (0e75ba6)       after (ebd5e2d)
+    no batch, 4 checkpoints    receipted by both      refused by both
+      stored A / B             4 / 4                  0 / 0
+    page order (record, mark)  -                      4 of 4 waited, then live
+      inputs A / B             -                      60/60 .. 240/240, same hash
+      checkpoints A / B        -                      1/1 2/2 3/3 4/4, chained
+      counters                 -                      sent 4 accepted 4 refused 0
+    B behind                   B signed over 0 ticks  B refuses ("before tick 0"),
+                                                      caught up 120/120, then signs
+                                                      the same bytes; end 180/180,
+                                                      checkpoints 2/2
+
+Rigs that sent checkpoints over no inputs now publish them first (blwp-node
+equivocation and no-quorum; 12 client checkpoint tests; one backpressure test);
+no assertion weakened. blwp-node 422/422 (131 + 88 + 118 + 85), blwp-client
+200/200 (78 + 75 + 47). No C#.
+
+DEPLOYED: client 838aeff0 (bundle md5 4a45e5e6, served on the alias). The 2-of-2
+was restarted on ebd5e2d (clean tree) at 15:27:37 with its previous env; new
+round f10ec0ec. The daemons answer on 100.74.66.98:8090 and :8091 (200).
+
+THE DAILY CANNOT REACH THEM: https://beelink.tail1723e2.ts.net/blwp-a and
+/blwp-b answer 502 on every door. `tailscale serve status` now maps only
+`/ -> http://localhost:3001` on the funnel - no /blwp-a or /blwp-b path - and
+nothing listens on :3001 (finedining's nodemon is running with no port). At
+14:xx the same paths served the Daily (look10/look11). Neither the serve config
+nor :3001 was touched from here. Both tabs sit on the page with no round.
