@@ -21,11 +21,13 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
 (below, under 6e), so the live work is the finish line itself.
 
   M3.3-21 IS DONE - STAKE COMMITTED, AS THE PLAYER SEES IT (§23.1 step 5):
-  after paying, the page asks every settlement seat and shows "stake seen by
-  N of M nodes (T needed)", "committed" only at N >= T, T = 2 on a two-slot
-  round and 5 otherwise; a seat that does not answer is named. The seat-time
-  line no longer says "held" for an unpaid invoice. Driving is not gated.
-  Client 215/215, node 439/439. Not deployed (the Daily is down).
+  from the seat of a paying round, the page asks every settlement seat and
+  shows "stake seen by N of M nodes (T needed)", "committed" only at N >= T,
+  T = 2 on a two-slot round and 5 otherwise; a seat that does not answer is
+  named. Counted whatever payStake answered - a late wallet is still counted.
+  The seat-time line no longer says "held" for an unpaid invoice. Driving is
+  not gated. Client 217/217, node 439/439, core 91/91 and golden vectors 8/8
+  (0 engine files touched). Not deployed (the Daily is down).
   M3.3-8's 9.4 NAMES ARE DONE (765147c): AWAITING_INVOICE, CANCEL_REQUESTED,
   SETTLE_REQUESTED; node 439/439, client 210/210.
 

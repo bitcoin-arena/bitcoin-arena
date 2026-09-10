@@ -26592,3 +26592,29 @@ ends or the client closes - the line keeps saying how many did not answer.
 Suites, foreground: blwp-client 215/215 (+5), blwp-node 439/439 (no node
 change). Bundle rebuilt, template copy equal; not deployed - the Daily's
 daemons are down.
+
+### M3.3-21 re-checked: the count runs from the seat, not only from a successful payStake
+
+THE GAP, found asking what the goal needs: the page started `watchStake` only
+when `payStake` answered ok. A wallet can answer after `payStake` has given up
+(wallet-nwc.test.js pins "did not answer in 400 ms") and still have paid - so
+the stake would sit held on the committee while the line said "not yet
+counted" for the rest of the round, because nothing would ever count it.
+
+Before (stake-seen.test.js, 2 new tests red on 1838c9d):
+    a second watchStake call      a second watch, polling every seat twice
+    the page                      started the count only on `said.ok`
+
+Now: `watchStake` keeps one running count and a second start returns it; the
+chip's 500 ms paint starts it from the seat of a paying round (not committed,
+run not ended, client not closed), and the payment starts it whatever
+`payStake` answered. After: a watch started at 0 of 2 before anybody paid
+reaches 2 of 2, committed, when the stake lands; the second start is the same
+promise. blwp-client 217/217.
+
+CORE AGAINST THE OLD ENGINE, in numbers: 6557aad..1838c9d and this change touch
+0 files under packages/core, unity-proto/Assets/Scripts,
+unity-proto/Assets/Plugins and test-vectors - every change is the client
+package, the WebGL template and the docs. Core 91/91; golden vectors 8/8
+(straight, slalom, handbrake, reverse, idle, practice, liquidation, fallout).
+Nothing in either engine moved, so there is no pose to compare.
