@@ -26263,3 +26263,25 @@ NOT DONE HERE: `tools/run-2of2.mjs`, the Daily's own launcher, still passes no
 Lightning; switching it changes the live daemons and is its own step. And the
 preimage in the child is a stand-in for 23.4's five of seven - what is measured
 is the restart.
+
+### One parse of the four settings, and why the Daily's launchers do not take it yet
+
+`src/lnd-settings.js` (`lightningFromEnv`) is now the only place the four
+settings are read; `src/main.js` calls it. Pinned by test/lnd-settings.test.js
+(each of the four missing alone is refused by name; mainnet, "testnet" and
+"Testnet4" refused; regtest gets a port and no preflight, testnet4 both) beside
+test/main-settings.test.js (3/3). The regtest harness re-run through the
+helper: point 1 HELD then SETTLED on the next close, point 2 SETTLED, 98000 msat
+moved once each, "no problems" x2. blwp-node 430/430.
+
+THE DAILY'S LAUNCHERS SHARE ONE LND BETWEEN TWO DAEMONS, and that is why they
+are not wired. `run-2of2.mjs` and `round-2of2.mjs` start A and B in one process
+against "one bitcoind/LND". The client posts each entry to every daemon's
+`/entry` (`client.js` 513), and `/entry` calls `custody.hold` (`server.js` 626)
+- so both daemons would `addholdinvoice` the same payment hash on the same lnd,
+and the second collides. Handing both the same port is a design choice (which
+daemon holds a stake, or one lnd per daemon), not a wiring step.
+
+AND THE DAILY'S DAEMONS ARE DOWN: `ss -ltnp` at ~19:30 shows nothing on
+8080/8081/8090/8091 except `signal-cli` on 127.0.0.1:8080. Not restarted from
+this session.

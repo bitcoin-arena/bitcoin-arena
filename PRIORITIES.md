@@ -62,7 +62,14 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   restarted as main.js ends in lnd's own state at both kill points - HELD
   when the act never left, SETTLED when it landed, one stake moved once. It
   stayed ACTING at both before.
-  NEXT: run-2of2 (the Daily's launcher) still passes no Lightning.
+  THE DAILY'S LAUNCHERS ARE NOT WIRED, AND IT IS A QUESTION, NOT A LINE:
+  run-2of2 and round-2of2 run two daemons on ONE lnd, and the client posts
+  each entry to every daemon's /entry, which issues a hold - the second
+  addholdinvoice on the same payment hash collides. Which daemon holds a
+  stake on a shared lnd has to be decided before either launcher takes one.
+  AND THE DAILY'S TWO DAEMONS ARE DOWN (2026-09-10 ~19:30): nothing listens
+  on 8080/8081/8090/8091 but signal-cli on 127.0.0.1:8080. Not restarted
+  from here.
   CUT (c) - THE DAILY TWO-CHROME LOOK ON ROUND f10ec0ec - IS BLOCKED on Daniel
   mapping, as root, /blwp-a -> 100.74.66.98:8090 and /blwp-b -> :8091 on the
   funnel (serve config needs root here; / stays the finedining app). All of
