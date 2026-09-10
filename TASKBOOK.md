@@ -25494,3 +25494,28 @@ on both tabs, each tab's pick 0.0 mm from the other tab's own core at that tick.
     Screens: daniel-screens/2026-09-10-1346-gap-fixed-p{1,2}.png - each tab's
     own loaded truck in the field, another red truck drawn in each view, chips
     "2 players in this round · other at -98,31 m" / "-93,58 m".
+
+
+## Two-tab ghost, hole (a): abandoned seats stand frozen on the Daily - MEASURED BEFORE ANY CHANGE (2026-09-10)
+
+Two real Chromes on the Daily (1a30fa9 build), P1 at 400 ms, both reloaded,
+both rolled out. A hook installed before load wraps `watchGhosts` so every
+picture `BlwpNextGhost` drains to Unity is logged by seat.
+
+    tab  seats handed to Unity  live other           abandoned seats of the other player   own player
+    P1   9                      b43e26cf, 16 pics    8, one picture each, tick frozen      0 (10 refused as self)
+    P2   11                     e340ef89, 16 pics    10, one picture each, tick frozen     0 (8 refused as self)
+
+`GhostField.cs` makes a truck per seat on its first picture and has no Remove,
+no Destroy and no staleness rule - so P1 draws 9 trucks, 8 frozen; P2 11, 10
+frozen, standing where each abandoned run stopped (e.g. -100.4,23.8 and
+-91.5,57.8). Screens 2026-09-10-1357-seats-before-p{1,2}.png: three extra red
+trucks around P1's own, two to three around P2's; both chips correct.
+
+THE WATCHER-STAYS CASE, the one that decides whether Unity must change: P2 kept
+its page, P1 reloaded. P1's old seat e340ef89 had reached P2's Unity with 105
+pictures (ticks 5..881); 27.8 s after its last picture it still stands at
+(-100.4, 30.6) m, beside the new live seat afeff501 (15 pictures, last 0.8 s
+ago). P2 has handed Unity 12 distinct seats. A truck Unity has already made
+cannot be taken back by the page: Unity has to retire trucks, so this is a
+WebGL rebuild, and this count is why.
