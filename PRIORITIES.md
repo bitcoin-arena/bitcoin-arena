@@ -44,13 +44,21 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   the table PAYOUT_QUEUED, 2 of 2 seats signed.
     code, DONE    M3.3-26 (item 23 folded in): a stake opens at the ROUND'S
                   threshold (2 of 2, 5 of 7) - the door refuses any other by
-                  name, the settle opens at it, the page deals it. Rehearsal,
-                  AB and BA: P2 SETTLED on both daemons, alice -98000 msat,
-                  the operator +98000; P1 and P3 cancelled back to alice.
+                  name, the settle opens at it (pinned: a mutant reads "2 of
+                  5"), the page and the client's defaults and "committed"
+                  count read it. Rehearsal, AB and BA: P2 SETTLED on both
+                  daemons, alice -98000 msat, the operator +98000; P1 and P3
+                  cancelled back to alice.
     flake, NEXT   M3.3-27: `Client.at` sometimes refuses "only 1 of 2
                   providers gave a chain" while both /headers answer 200 at
                   once (4 of 13 rehearsals, one of them run alone). Not the
                   close; not investigated.
+    code          M3.3-28: the POOL's threshold is still a flat 5 - the pool
+                  DKG (`new Dkg` in server.js, default SHARES_NEEDED),
+                  `payWithCommittee` (default) and `enoughToSign` (payout.js,
+                  hard 5) - so a 2-of-2 round's pool would ask 5 signers of 2.
+                  Read, not yet run: the rehearsal's payout stops earlier, at
+                  "this node reaches no chain". Same rule as M3.3-26.
     ruling        how a settled stake reaches the pool; the owed-sats fee
                   rate; htlc_cltv_days (all below, unchanged).
     inbound       testnet4: 196000 msat needed, 0 offered.
@@ -59,7 +67,7 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   too: lnd settled once; the second `settleinvoice` is logged by lnd as
   "invoice already settled" and still returns success, so both write
   SETTLED (reported, left as is). Not yet measurable: the objection window
-  before finality, the pool payout. Node 453/453, client 222/222, core
+  before finality, the pool payout. Node 454/454, client 225/225, core
   91/91, golden vectors 8/8 (0 engine files touched).
 
   M3.3-21 IS DONE - STAKE COMMITTED, AS THE PLAYER SEES IT (§23.1 step 5):

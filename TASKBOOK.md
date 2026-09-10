@@ -27040,3 +27040,40 @@ re-gather found its hold "already moved"); PROBE A and PROBE B each "OPENED
 with 2 shares" (A seat 1, B seat 2, dealt 2-of-2); alice -98000, operator
 +98000; lnd settled at 01:34:42.079 and logged the other call "invoice
 already settled" 22 ms later. 4 of 13 rehearsals have flaked before play.
+
+### M3.3-26, checked again: three gaps in the goal, closed
+
+Asked whether M3.3-26 had everything "one threshold from the contract"
+needs, every threshold source was grepped and the settle was mutated.
+
+1. THE SETTLE'S THRESHOLD HAD NO TEST. With `fromTheCommittee` reverted to
+   `open()`'s default 5, in a scratch copy, the node suite's only failures
+   were four files that read fixtures outside `packages/` (frost-vectors,
+   replay-ground/heat/solids) - nothing about the settle. New
+   `settle-threshold.test.js`: two daemons, a real 2-of-2 handout on both,
+   one wrecking run final on both, and each daemon's settle hook
+   (`custody.preimageFor`, which is `fromTheCommittee`) must open the dealt
+   preimage off its own share and the other seat's. Green; on the mutant red
+   with the rehearsal's own words, "2 of 5 shares". (A lone loser moves no
+   stake - "the operator would keep 98000 msat" - so the hook is called
+   directly; the rehearsal, with a winner, covers the whole close.)
+2. THE CLIENT KEPT A SECOND RULE. `stakeSeenNeeded` ("committed" at N of M)
+   was its own copy - 2 on two slots, 5 otherwise - and called a stake
+   committed on a 3-slot committee the node has no threshold for. It is now
+   `receiptsNeeded`; its two pinned values (7 -> 5, 2 -> 2) are unchanged.
+3. THE CLIENT'S DEFAULTS WERE A FLAT 5. `stakeFor` dealt 5 whatever the round
+   and `postHandout` counted against 5: a 2-of-2 whose both seats took the
+   handout was "2 of the 5 seats needed". `stakeFor` now deals at the round's
+   threshold and refuses any other by name ("this round's stakes open at 2
+   of 2"), and a round naming no settlement slots; `postHandout` counts
+   against the threshold the stake was dealt at. Three new client tests, red
+   before (5, 5, and no throw), green after. The two `join.test.js` rounds
+   that deal to seven seats now say `settlementSlots: 7`.
+
+Read, listed, not this letter: the POOL's threshold is still a flat 5 - the
+pool DKG (`new Dkg`, default SHARES_NEEDED), `payWithCommittee` (default) and
+`enoughToSign` (hard 5) - so a 2-of-2 round's pool would ask 5 signers of 2
+(M3.3-28 on PRIORITIES). The rehearsal's payout stops earlier, at "this node
+reaches no chain". No core or Unity engine file was touched, so there is no
+engine comparison to redo. blwp-node 454/454, blwp-client 225/225, core
+91/91, golden vectors 8/8.
