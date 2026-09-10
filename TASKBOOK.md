@@ -25519,3 +25519,35 @@ pictures (ticks 5..881); 27.8 s after its last picture it still stands at
 ago). P2 has handed Unity 12 distinct seats. A truck Unity has already made
 cannot be taken back by the page: Unity has to retire trucks, so this is a
 WebGL rebuild, and this count is why.
+
+AFTER (2bfee1d, build 0.0.936 in 101819a, deployment fdd1562c - all seven
+served files equal to the build on the deployment and on the alias: index
+c7a98293, client e08dfd8b, core 4a337755, loader b91f8337, framework ee46d84f,
+wasm 645bf184, data b49a7753). Same two-Chrome setup, P1 at 400 ms, fresh
+framework each load; every item the page drained to Unity - pictures AND
+retires - replayed through GhostField.Show's rule:
+
+    case                 tab  seats pictured  retires  held back  trucks left in Unity
+    both reloaded        P1   10              10       0          1 - only the live other
+    both reloaded        P2   13              12       0          1 - only the live other
+    watcher stays        P2   14              13       1          1 - only the live other
+        P1's seat before its reload d513b93e (16 pictures): RETIRED; P1 live now 030c69df
+
+    before: 9 and 11 trucks, 8 and 10 frozen; the watched old seat beside the new
+    after:  1 and 1, 0 abandoned; the watched old seat retired
+
+Screens 2026-09-10-1422-seats-after-{,watcher-}p{1,2}.png: each tab shows only
+its own truck - no extra red trucks where the before frames had three and two
+to three; chips "2 players in this round".
+
+SUITES: blwp-client 189 -> 196 (six page tests for the rule plus one through a
+real daemon's subscribe burst; on the old rule the six fail, four on the rule
+and two on the missing counter). PlayMode 239: 215 pass, 11 red, 13 skipped -
+GhostFieldTests.ARetiredSeatLeavesNoTruckBehind passed, the eleven reds the
+documented set by name. EditMode 193: 189 pass, 1 red (CombatFxTests.RifleFire-
+ProducesAFlashAndATracer), 3 skipped. WebGL: result=Succeeded size=20MB errors=0.
+
+WHAT STAYS BOUNDED, NOT CLOSED: for up to one batch interval after subscribing
+(0.1 s on the Daily) the drawn seat can be whichever seat the burst sent last -
+measured in the end-to-end test, which left abandoned seat e1557f2c standing
+until the live seat's next picture, sent over /play, replaced it.
