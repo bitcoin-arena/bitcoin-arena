@@ -25975,3 +25975,32 @@ against a local node). Once both are 200, from the session scratchpad:
     DISPLAY=:0 node look11.mjs '<?round=...>' https://btc-logistics-core.pages.dev \
       https://btc-logistics-core.pages.dev                            # checkpoints + inputs on A and B
     node final.mjs                     # A/B transcript ticks and hashes per seat
+
+### Kill point 2: a daemon SIGKILLed after writing its payout spend - recovers only when restarted with its chain and seat
+
+`tools/settle-crash-regtest.mjs`: isolated regtest, seven daemons on their own
+store files and ports 18300-18306, the round's asker run as a REAL child
+process on its store and port. It settles, and is SIGKILLed inside the send -
+the spend signed by five of seven and already written to its row. The table
+owes the winner 980 sats (a 1000-sat stake, net of the 2% fee under 6e); the
+pool holds 1200.
+
+    at the kill               row PAYOUT_QUEUED, raw on disk = the signed bytes;
+                              0 spends of the pool output; winner 0 sats
+    restart (a), exactly as   canSpend false - "this node reaches no chain, so it
+      src/main.js starts it   asks it nothing"; row PAYOUT_QUEUED; 0 spends;
+      (same store and port)   winner 0 sats, with a block mined after
+    restart (b), with its     start-up reconcile: the raw is unknown to the chain
+      chain, its pool RPC,    -> stays queued; sweep -> PAID. 1 spend in a block,
+      and the seat and key    0 in the mempool; winner 980 sats; the spend that
+      read from its own store landed IS the one written before the kill, byte
+                              for byte - no rival
+
+TWO HOLES ON THIS LINE, measured:
+- H1: a daemon restarted as `src/main.js` starts one recovers nothing. `serve`
+  runs its payout recovery only when handed `chainSpend` and `poolKey`, and it
+  never reads the seat and key back from its own key-ceremony store
+  (`Dkg.seatFor`); `main.js` (and `round-2of2.mjs`) pass neither.
+- H2: after the asker pays, 6 of 6 other seats still say PAYOUT_QUEUED while
+  the chain carries the payment - no path moves a non-asker's row.
+The harness lists both as problems and exits 1; it does not hide them.
