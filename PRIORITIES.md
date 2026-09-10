@@ -26,8 +26,9 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   T = 2 on a two-slot round and 5 otherwise; a seat that does not answer is
   named. Counted whatever payStake answered - a late wallet is still counted.
   The seat-time line no longer says "held" for an unpaid invoice. Driving is
-  not gated. Client 217/217, node 439/439, core 91/91 and golden vectors 8/8
-  (0 engine files touched). Not deployed (the Daily is down).
+  not gated. A finished count (committed, ended, closed) is never restarted -
+  a client rule, tested. Client 218/218, node 439/439, core 91/91 and golden
+  vectors 8/8 (0 engine files touched). Not deployed (the Daily is down).
   M3.3-8's 9.4 NAMES ARE DONE (765147c): AWAITING_INVOICE, CANCEL_REQUESTED,
   SETTLE_REQUESTED; node 439/439, client 210/210.
 

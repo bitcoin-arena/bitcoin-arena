@@ -26618,3 +26618,25 @@ unity-proto/Assets/Plugins and test-vectors - every change is the client
 package, the WebGL template and the docs. Core 91/91; golden vectors 8/8
 (straight, slalom, handbrake, reverse, idle, practice, liquidation, fallout).
 Nothing in either engine moved, so there is no pose to compare.
+
+### M3.3-21 re-checked again: a finished count is not started again
+
+THE GAP: the chip's 500 ms paint starts the count from the seat, and what kept
+it from restarting a FINISHED count - committed, run ended, client closed -
+was only a condition in index.html, the one file node --test cannot run. Drop
+one clause and every settlement seat would be polled twice a second after the
+stake was committed, for the rest of the round, with no test red.
+
+Before (stake-seen.test.js, 1 new test red on 917c769): after the count
+committed, a second `watchStake` call polled every seat again ("a committed
+count was started again"). `watchStake` also reset the closed flag on start, so
+a closed client could count again.
+
+Now the rule is in the client: committed, ended or closed, `watchStake` hands
+back the last count and asks no node; the closed flag is no longer reset. After:
+0 more polls and 0 more requests after committed, 0 requests from a closed
+client. blwp-client 218/218.
+
+Engines: 0 files changed under packages/core, unity-proto/Assets/Scripts,
+unity-proto/Assets/Plugins and test-vectors from 6557aad through this change;
+core 91/91, golden vectors 8/8.
