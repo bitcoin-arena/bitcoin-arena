@@ -38,19 +38,24 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   returns A's own words ("no share ... before the result is
                   final"), A's reaches B and gets B's share, B's table is
                   2 of 2 (PAYOUT_QUEUED); A's stays 1 of 2.
-    code, NEXT    M3.3-25: finality depends on which daemon closes first
-                  (A: P2 "1 of 2 agree"; B: final) - so A neither settles,
-                  releases its share, nor reaches 2 of 2 on the table.
-    code          M3.3-26: the preimage opening asks for 5 shares whatever
-                  the stake was dealt with - A held both of a 2-of-2 stake's
-                  shares and stopped at "2 of 5".
+    code, DONE    M3.3-25: finality no longer depends on which daemon closes
+                  first (580629c). Rehearsal, AB and BA: the first to close
+                  re-gathers ~2 s later and both end with P1 and P2 final and
+                  the table PAYOUT_QUEUED, 2 of 2 seats signed.
+    code, NEXT    M3.3-26: the preimage opening asks for 5 shares whatever
+                  the stake was dealt with - both daemons now reach P2's
+                  settle and stop at "no preimage"; A held both of a 2-of-2
+                  stake's shares and stopped at "2 of 5".
+    flake         M3.3-27: `Client.at` sometimes refuses "only 1 of 2
+                  providers gave a chain" while both /headers answer 200 at
+                  once (2 of 7 rehearsals). Not the close; not investigated.
     ruling        how a settled stake reaches the pool; the owed-sats fee
                   rate; htlc_cltv_days (all below, unchanged).
     inbound       testnet4: 196000 msat needed, 0 offered.
   Two daemons CANCELLING one invoice on the shared endpoint is measured: both
   wrote CANCELLED, lnd CANCELED once. Behind 24 and 25, not yet measurable:
   two daemons SETTLING one invoice, the objection window before finality,
-  the pool payout. Node 446/446, client 219/219, core 91/91, golden vectors
+  the pool payout. Node 451/451, client 219/219, core 91/91, golden vectors
   8/8 (0 engine files touched).
 
   M3.3-21 IS DONE - STAKE COMMITTED, AS THE PLAYER SEES IT (§23.1 step 5):
@@ -3374,7 +3379,9 @@ round, which is why testnet comes first and why the order is stricter.
      has no preimage for that stake". The payout path derives census peers
      only at start, for rounds already owing, so a live close gathers "1 of 2
      seats signed this table". The same census rule 22 uses.
- 25. **Finality that does not depend on which seat closes first.** The
+ 25. **Finality that does not depend on which seat closes first.** DONE
+     (580629c): the first to close keeps gathering its short runs until
+     final or the objection window passes. What opened it: the
      gather runs once, at the close: the first daemon to close found P2 at
      "1 of 2 agree" because the second had not stored it yet; the second
      found it final. Nothing asks again. The receipt pull of 22 is the same

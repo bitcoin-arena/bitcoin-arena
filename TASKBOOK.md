@@ -26909,3 +26909,50 @@ Two observations on the way, neither the race:
 - a daemon sometimes stores its OWN result for a run twice (B's P1 at +1312
   and +1800 in AB; A's P2 at +1187 and +2018 in BA) - the receipt-completes-
   a-replay retry path; the store keeps one row, recorded here only.
+
+### M3.3-25 done: finality no longer depends on which daemon closes first
+
+Code (580629c): after a close, `watchFinality` gathers every stored run that
+is not final again from the round's peers every `everyMs` (2 s; a `finality`
+serve option for tests) until it is final or the round's objection window has
+passed (600000 ms from the contract), and says which. While the payout table
+is short, or when a run turns final, the round's OWN close logic runs again -
+settle and cancel, then the table's gather and queue; `stakes()` reports the
+latest. Two guards the rerun needs, both pinned: a hold that moved is not
+moved again (custody.test.js) and `Payouts.queue` no longer rewrites a row
+that has moved on - measured before: a PAID round put back to PAYOUT_QUEUED
+(payout-pay.test.js). close-order.test.js, red 3/3 before ("final false,
+table none, 1 signature" for the first to close, in both orders; "asked again
+only 1 times"), green 3/3 after. Mutant "no re-gather": 3 red.
+
+THE REHEARSAL, both orders, after:
+
+    close order AB (A first)
+      +1122  A gathers P2 -> "1 of 2 agree" (answered +1246)
+      +1422  B stores its own P2          +1573  B gathers P2 -> FINAL
+      +3419  A gathers P2 AGAIN -> FINAL (answered +3546)
+      A ends: final 2 of 2; table PAYOUT_QUEUED, 2 of 2 seats signed
+      B ends: final 2 of 2; table PAYOUT_QUEUED, 2 of 2 seats signed
+    close order BA (B first)
+      +1205  B gathers P2 -> "1 of 2 agree" (answered +1329)
+      +1582  A stores its own P2          +1704  A gathers P2 -> FINAL
+      +3528  B gathers P2 AGAIN -> FINAL (answered +3650)
+      A ends: final 2 of 2; table PAYOUT_QUEUED, 2 of 2 seats signed
+      B ends: final 2 of 2; table PAYOUT_QUEUED, 2 of 2 seats signed
+
+Before (93aa246): the first to close stayed "1 of 2 agree" and its table
+"1 of 2 seats signed", in either order.
+
+UNCHANGED, AND LISTED: P2's settle on BOTH daemons now reaches the preimage
+and stops at "this node has no preimage for that stake" - the opening asks for
+5 shares of a 2-of-2 stake (M3.3-26); both queued payouts stop at "this node
+reaches no chain, so it spends nothing" (no chain spend, no pool key on these
+daemons - behind the pool ruling); alice +0, operator +0; P3 expires.
+
+A FLAKE, NOT INVESTIGATED: the first AB run (both orders side by side) stopped
+before play - `Client.at` refused after 9 ms, "only 1 of 2 providers gave a
+chain", while each daemon's /headers, asked straight after, answered 200 with
+240 bytes (3 headers) in 2 ms. The AB rerun alone passed. The same refusal
+stopped an earlier run (rehearsal-3). It is the client's chain agreement, not
+the close. blwp-node 451/451, blwp-client 219/219, core 91/91, golden vectors
+8/8 (0 engine files touched).
