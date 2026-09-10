@@ -92,8 +92,12 @@ issued, see what this seat owes and what they have spent, and pay it - and the
 one method that moves a satoshi takes an entry, so there is no second money
 path. On the Daily and counted on the served page.
 
-NEXT UNDER THIS HEADING: 6a's budget display, 6b donations, 6d where a payout
-goes.
+M3.2 ITEM 6a IS DONE. The page shows what the wallet will still let this
+connection spend - asked of the wallet over three read-only calls, never read
+off the connection string, because NIP-47's URI carries no budget and the field
+that pretended it did is deleted.
+
+NEXT UNDER THIS HEADING: 6b donations, 6d where a payout goes.
 
 Every M3.3 line - 8b, 9, 10, 13, 14, 15, 16, 17, 18, 19, 20 - is closed, and so
 is M3.2 item 5.
@@ -2956,9 +2960,40 @@ round, which is why testnet comes first and why the order is stricter.
      ON THE DAILY, counted on the served page: 1 paste field, 1 amount, 1
      total, 1 call.
 
-     Still open under this heading: 6a's budget display (the connection's
-     own budget is carried but not shown), 6b donations, 6d where a payout
-     goes.
+  6a. **Budgeted play** (24A.1). DONE as the display half: the page shows
+     what the wallet will still let this connection spend.
+
+     THE FIELD IT WAS GOING TO BE READ OFF IS GONE, and deleting it was
+     half the letter. `parseConnection` carried `budget:
+     searchParams.get('budget')` "for display only", read by nothing -
+     NIP-47's URI carries `relay`, `secret` and optionally `lud16`, and no
+     wallet attaches a budget to it. That field was blank for every wallet
+     in the world, and putting it on screen would have shipped a
+     working-looking panel showing nothing.
+
+     So it is ASKED FOR, which is what 24A.1 means by wallet-side policy.
+     Three read-only calls: `get_info` first, because its `methods` list is
+     the wallet saying what it implements - `get_budget` is a later NIP-47
+     addition and asking blind turns "not implemented" into an error a
+     player reads as a fault - then `get_budget`, else `get_balance`.
+
+       with get_budget    "750 of 1000 sat budget left", and get_balance is
+                          not asked
+       without it         "wallet balance 4200 sat"
+       neither            "this wallet does not report a budget", 1 call
+       no budget set      "this connection has no budget set" - a different
+                          sentence from a wallet that cannot say
+       any of them        0 invoices paid
+
+     A BALANCE IS NOT A BUDGET and the line says which it is: a balance is
+     what the wallet holds, a budget is what THIS connection may spend
+     before the player is asked again, and on a payment screen they must
+     never read alike. No branch renders a bare number.
+
+     ON THE DAILY, counted on the served page: the budget line rendered 1,
+     asked of the wallet 1, invented URI field 0.
+
+     Still open under this heading: 6b donations, 6d where a payout goes.
 
   6a. **Budgeted play** (24A.1). A two-minute round means a wallet
      approval every two minutes, which is the thing that makes people

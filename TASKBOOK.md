@@ -24903,3 +24903,56 @@ are comment lines, which the pin strips and a crude grep does not; worth
 recording because the crude number looks like a fault and is not.
 
 PlayMode and EditMode were not in this letter: no C# and no jslib changed.
+
+## 2026-09-10  M3.2 item 6a - the budget, asked for rather than parsed
+
+    "budget" on the served Daily      0 -> 1 (rendered) and 1 (asked)
+    invented URI budget field         1 -> 0, deleted
+    wallet methods the client calls   1 -> 3, all read-only
+    blwp-client                       177 -> 184
+    core / protocol / blwp-node       89 / 444 / 406, unmoved
+
+HALF THIS LETTER WAS DELETING SOMETHING I WROTE. `parseConnection` carried
+`budget: url.searchParams.get('budget')` with the comment "carried for DISPLAY
+only" - and NIP-47's connection URI has no such parameter. It carries `relay`,
+`secret` and optionally `lud16`. No wallet attaches a budget to it, nothing in
+the repo read the field, and displaying it would have put a panel on the Daily
+that reads blank for every wallet in the world while looking like a feature.
+The premise of the letter as proposed was that field; measuring it first is what
+caught it.
+
+THE BUDGET IS WALLET-SIDE POLICY (§24, §24A.1), so it is asked for. Three
+read-only calls over the same relay and encryption a payment uses:
+
+    get_info      first, because `methods` is the wallet saying what it
+                  implements. `get_budget` is a later NIP-47 addition; asking
+                  blind turns "not implemented" into an error a player reads as
+                  a fault.
+    get_budget    where offered
+    get_balance   where it is not
+
+Measured against the fake relay and wallet:
+
+    with get_budget       get_info then get_budget, get_balance NOT asked
+                          "750 of 1000 sat budget left"
+    without it            get_info then get_balance
+                          "wallet balance 4200 sat"
+    reporting neither     1 call, "this wallet does not report a budget"
+    budget set to nothing "this connection has no budget set"
+    every one of them     0 invoices paid
+
+A BALANCE IS NOT A BUDGET. A balance is what the wallet holds; a budget is what
+THIS connection may spend before the player is asked again. On a screen somebody
+is about to spend from, showing one where the other is meant is the wrong number
+in the worst place - so the line names which it is, and no branch renders a bare
+figure: "not asked for yet", "budget unknown: …", "this wallet does not report a
+budget" are all words.
+
+`paintWallet` is driven off the shipped page as before: a connected wallet with
+an allowance renders the client's own line, one that cannot say renders the
+words, and a DISCONNECTED wallet renders nothing at all - "not asked for yet"
+beside an empty box is noise.
+
+Display only. No new spend path; the pin refusing lnbc, bolt11, payInvoice,
+nwcCall and pay_invoice in the page's code is unchanged. PlayMode and EditMode
+were not in this letter - no C# and no jslib.
