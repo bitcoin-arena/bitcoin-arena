@@ -25214,3 +25214,9 @@ SUITES (each chunk under timeout 180 + --test-timeout=120000)
 
 NOT LOOKED AT IN TWO CHROMES. The running 2-of-2 daemon (started 11:19:59)
 runs d16c9cd's coerced code until it is restarted.
+
+ON THE DAILY (2026-09-10): deployment 5b8dd7c3.btc-logistics-core.pages.dev,
+alias btc-logistics-core.pages.dev serves blwp-client.js md5 ae41dc8b - the
+committed bundle, byte for byte - and the served page calls `owedLine` 1 time.
+The first check read the old 4a6805b9: a cached copy, gone on a re-fetch, and
+/index.html answers 308 to /. btc-logistics-war untouched.
