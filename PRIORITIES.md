@@ -73,10 +73,11 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   payment hash already exists" - on a real lnd, same invoice, both kill
   points still recover. The Daily's two launchers take the same four
   settings, opt-in - unset, nothing changes.
-  LIVE: STAKE_COMMITTED. Nothing gates play on a stake being PAID: an unpaid
-  OPEN invoice reads HELD, and `paidMsat` has no caller outside the port.
-  §23.1 step 5 and §9 step 7 say play begins only once >=5 settlement nodes
-  have seen the held HTLC.
+  NO PLAY ON A STAKE NOBODY PAID (§23.1 step 5, §9 step 7): a node signs no
+  batch or mark for an entry until its own lnd shows that stake held in
+  full, and remembers it once seen. Before: an unpaid batch was taken, on a
+  node with Lightning and on one with none. Free rounds are unchanged. Each
+  node gating its own receipts makes the spec's >=5 the receipt threshold.
   AND THE DAILY'S TWO DAEMONS ARE DOWN (2026-09-10 ~19:30): nothing listens
   on 8080/8081/8090/8091 but signal-cli on 127.0.0.1:8080. Not restarted
   from here.

@@ -26319,3 +26319,50 @@ gains exactly 98000 msat once, "no problems" x2. blwp-node 432/432.
 NOT YET: "seen by >=5" as a recorded STAKE_COMMITTED, and which daemon's hold
 settles or cancels - both daemons now hold the same invoice, and 23.4's five of
 seven decides the settle.
+
+### No play on a stake nobody paid: a node signs nothing for an entry until its lnd shows the stake held in full
+
+§23.1 step 5: "STAKE_COMMITTED is recorded once >=5 settlement nodes have seen
+the held HTLC. Play begins only after this." §9 step 7 puts it between the
+wallet paying and play.
+
+Measured first: nothing gated play on payment. An unpaid OPEN invoice reads
+HELD (lnd's OPEN and ACCEPTED both map to it), `paidMsat` had no caller outside
+`lnd-port.js`, and test/stake-committed.test.js failed 0/2 - an input batch for
+an unpaid stake was taken ('1'), and so was play in a paying round on a node
+with no Lightning at all.
+
+Now:
+- `Custody.seenPaid(entryId)`: a free round (stake 0) passes without asking; a
+  stake already seen answers from its row; otherwise it asks Lightning and passes
+  only when the state is HELD and `paidMsat` covers the hold's amount, then
+  writes that once (`stake_seen`, a new table, so a store written before it
+  gains it).
+- The socket gates every input batch and checkpoint for a seated entry on it,
+  refused by name ("the stake is not paid and held: 0 of 98000 msat, Lightning
+  says HELD"; "this node reaches no Lightning, so it cannot see this stake
+  held"). THE FRAMES ARE ORDERED: every frame on a socket waits for the one
+  before it, so a batch cannot overtake the batch it chains to because
+  Lightning answered one faster.
+- Each node gates its own receipts, so the spec's >=5 is the receipt threshold
+  the client already needs.
+
+After: stake-committed 2/2. Mutant "seen held whatever was paid" killed.
+
+On a real lnd (custody-restart-lnd.mjs --point=1), both stakes: before alice
+pays, "the stake is not paid and held: 0 of 98000 msat, Lightning says HELD";
+after, "HELD, 98000 msat" - lnd's ACCEPTED with amt_paid_msat. The rest of the
+run unchanged, "no problems".
+
+THE FALLOUT WAS FIXTURES, AND EVERY ONE WAS THE GATE: 26 blwp-node and 38
+blwp-client tests played a 100000-msat round with no stake paid, and each
+failure read one of the two refusals above (sampled per group; no ordering
+failure). They are about marks, ghosts and verdicts, not payment, so they
+state the premise the way they already state `assumeSeated`:
+`assumeStakeSeen(round, entry)` in test/seating.js, after the seat. custody-
+daemon's fake port now reports its holds paid in full. Nothing in src/ writes
+`stake_seen` except `seenPaid`. blwp-node 434/434, blwp-client 207/207.
+
+THE DAILY: its rounds are free (M3.3-19), and a free round passes without
+Lightning - unchanged. A PAYING round on a daemon with no Lightning can no
+longer be played, which is the rule: nobody's stake is held there.
