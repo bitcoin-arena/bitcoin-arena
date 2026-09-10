@@ -24956,3 +24956,74 @@ beside an empty box is noise.
 Display only. No new spend path; the pin refusing lnbc, bolt11, payInvoice,
 nwcCall and pay_invoice in the page's code is unchanged. PlayMode and EditMode
 were not in this letter - no C# and no jslib.
+
+
+M3.2 ITEM 6b - THE SET 27A.4 SPECIFIES DOES NOT EXIST. Pinned before any code
+was written for it, and the numbers are the reason the letter is worth writing.
+
+27A.4 gives the object:
+
+    DonationSet {
+      network_id
+      serial          monotonic; the highest validly signed one wins
+      entries[]       lnurl + share_bps, summing to 10000
+      valid_from      block height
+      signature       by donation_authority_pubkey
+    }
+
+`donation.js` implements ENTRIES AND NOTHING ELSE. Counted in the file:
+occurrences of serial, validFrom or signature, 0. So what the repo calls a
+donation set is the third line of a five-line object, and every property the
+other four carry is missing:
+
+    no serial       nothing orders two sets, so there is no "highest wins"
+                    and no rollback to refuse. A thief's older set and an
+                    honest newer one are indistinguishable objects.
+    no valid_from   nothing says from when a set applies, so two nodes
+                    paying at different moments can pay different lists.
+    no signature    ANYBODY CAN PUBLISH A SET. The bytes stand or fail on
+                    their shares alone; nothing ties them to the authority
+                    key whose whole job in this protocol is to sign this
+                    one object.
+
+AND THE AUTHORITY KEY HAS NO CODE AT ALL. `AUTHORITY_PUBKEY_REGTEST`,
+`RECOVERY_PUBKEY_REGTEST` and their testnet4 twins are in `genesis-ids.js` and
+are hashed into `network_id` by `computeNetworkId`. Readers of those four
+constants outside `genesis-ids.js`, `make-genesis.mjs` and their own test: 0.
+Occurrences of AuthorityRotation, authorityRotation, donationAuthority or
+donation_authority anywhere in `packages/*/src`: 0, all of them in a comment
+quoting 27A.4. The two keys define the network and neither can do anything.
+
+27A.4's recovery path is the sharper half of that: "recovery CAN name a new
+authority", "from valid_from, sets signed by the old authority are rejected and
+only the new one is accepted, whatever serial the old key publishes". None of
+those sentences is code. PRIORITIES 6b says why that is not acceptable to
+defer - "a key with no exercised revocation path is a key whose revocation does
+not work" - and the row it answers is the one that matters: authority stolen,
+the thief signs a higher serial pointing at their own LNURLs, and the remedy is
+a rotation with no fork and no census lost.
+
+CALLERS OUTSIDE donation.js AND ITS OWN TESTS, counted across every package,
+the client bundle and the served page:
+
+    donationSetStands        0
+    splitDonation            0
+    donationAfterFailures    0
+    donatedMsat              0
+    encodeDonationSet        0
+    canonicalLnurl           0
+    decodeDonationSet        0
+    donationSetMatchesRound  0
+    donationSetId           17   the contract field only
+    anything paying an LNURL 0
+
+Six helpers with a full test suite each and nobody calling them, which is the
+same shape `heat()`, `payWithCommittee`, `feeMatchesEntry`, `invoiceMatchesEntry`
+and `trustedDealerSplit` were all found in: rules written against a spec
+paragraph, correct in isolation, wired to nothing.
+
+WHAT THIS LETTER IS NOT. `donationMsat` is written `0n` by `join.js` and read by
+nothing, and it stays that way here: no money moves, no LNURL is paid, no
+donation touches the page's stake path, and `feeMatchesEntry` and the entry door
+are not opened. Charging a donation at all waits on 6e, because the code
+charges on top and 6b says inclusive.

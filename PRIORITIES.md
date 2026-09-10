@@ -3019,7 +3019,9 @@ round, which is why testnet comes first and why the order is stricter.
          zero is valid. No node, lobby or creator may rewrite it.
        - the donation is **inclusive** in the round amount, exactly like
          the node fee: it comes out of the stake, never on top of it, and
-         the player approves one number with the split shown.
+         the player approves one number with the split shown. THE CODE
+         DOES THE OPPOSITE TODAY and that is 6e, which blocks the first
+         donation millisatoshi ever charged.
 
      Rotation via the cold recovery key is part of this task, not a later
      one: a key with no exercised revocation path is a key whose
@@ -3041,6 +3043,50 @@ round, which is why testnet comes first and why the order is stricter.
 
      A payout unclaimed inside `claim_window` follows the existing
      expiry path. It does not become a balance.
+
+  6e. **One number leaves the wallet: inclusive versus on top.** BLOCKS
+     every later donation line. No donation millisatoshi may be charged
+     and no LNURL may be paid until this closes.
+
+     The spec says both things and the code implements one of them:
+
+       18, and 22A's worked example   "Node fees and the player-selected
+                                      donation are charged ON TOP of the
+                                      stake at entry and therefore do not
+                                      reduce the pool" - 61 x 100 sat
+                                      gross gives a 122 sat fee, exactly
+                                      what 61 players paying 2 sat each
+                                      hand over
+       22A Collection (changed)       a 100 sat commitment: 2 fee, 2
+                                      donation, 96 net stake to the pot
+       6b, this file                  "the donation is inclusive in the
+                                      round amount, exactly like the node
+                                      fee: it comes out of the stake,
+                                      never on top of it"
+
+     `entryFeeMsat`, `feeMatchesEntry`, `stakeMsat`, `winnings` and F() are
+     ON TOP today, and `fee.js` names the clash in its own comment: it
+     calls Collection's 96 the error, on the ground that the net reading
+     turns 22A's own 61 x 100 example into 117.12 sat, which is not a
+     whole satoshi. That call was taken when nothing read `donationMsat`
+     and nothing paid anybody, so it cost nothing to be wrong.
+
+     IT STOPS COSTING NOTHING THE FIRST TIME A DONATION IS CHARGED. The
+     player approves ONE number, and the breakdown shown under it has to
+     be the breakdown that happens: a donation taken on top of a stake the
+     page displayed as inclusive is a player charged 104 for a 100 they
+     agreed to, and the reverse is a pool 4 short of what it was told to
+     pay out.
+
+     WHEN THIS LETTER OPENS, Collection (changed) and 6b are the money
+     law: 100 sat leaves the wallet, the fee and the donation come out of
+     that amount, the net stake enters the pool, and nothing is charged on
+     top. That is a settlement change and not an edit - the pool shrinks,
+     the fee table's `gross` stops being the sum of what players paid, the
+     hold invoice's amount stops being `stakeMsat`, and 22A's 61 x 100
+     example has to be re-derived rather than patched. It closes when both
+     readings cannot coexist in the code: one door, one arithmetic, and
+     the page showing what the wallet is actually asked for.
 
 ## M3.3  Settlement                                 stage 7
 
