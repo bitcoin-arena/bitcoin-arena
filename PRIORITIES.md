@@ -41,11 +41,12 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   AFTER A RELOAD THE CHIP NAMES THE LIVE OTHER (b3e81c4, on the Daily): one
   picture per player, this player's own earlier seats refused - "2 players",
   not 4, and the pick at the other tab's own core pose, 0.0 mm.
-  NEW, ON THE LIST, A JSLIB LETTER (WebGL rebuild): ticks Unity steps between
-  the core's re-init at the world seed and `setRound` are simulated and never
-  published - 8 on one reload - so that tab's ghost runs 8 ticks late by label
-  (283-623 mm by tick while driving, 0.0 mm along the path) and its marks name
-  the wrong tick.
+  A TAB PUBLISHES THE TICK ITS CORE IS ON, HOWEVER SLOW ITS JOIN (1a30fa9, on
+  the Daily, WebGL rebuilt). Before: 16-24 ticks stepped between the seed reset
+  and `setRound` and never sent, on a tab at 400 ms. Now the bridge resets the
+  core in the same step that starts recording: two real Chromes, P1 slowed,
+  both driving, 3 reloads - 18 of 18 samples with 0 unrecorded, published =
+  core on both tabs, and both directions 0.0 mm at the same tick.
   STOPPED: no held-sats round until the preflight prints READY.
 
   M3.3-19: a round that asks no stake seats on a node with NO Lightning, as

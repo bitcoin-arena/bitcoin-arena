@@ -25426,3 +25426,71 @@ closed. The live ghost while both drive is 0.0 mm along its path and 8 ticks
 late by label on the tab that lost ticks at join - open, on the list. Also not
 covered: a player who LEAVES (no reload) with a longer run than the live other
 is a different player and still wins the highest tick.
+
+
+## M3 - a tab publishes the tick its core is on, however slow its join (2026-09-10, 1a30fa9)
+
+BEFORE, today's build, two real Chromes, hooks installed before load
+(Page.addScriptToEvaluateOnNewDocument, trapping BLWP and BLWPCLIENT as they
+are defined):
+
+    tab   latency  reload  steps never recorded  settled core vs published
+    P1    400 ms   1-3     16, 16, 16            144 vs 128 (gap 16) each time
+    P1    400 ms   4       24                    152 vs 128 (gap 24)
+    P2    0        1-2     0, 0                  128 vs 128
+
+    Every load: two resets, both BEFORE recording - C#'s _BlwpInit
+    (CoreDrivenTruck.Init) then the bridge's seed reset. BlwpCore.Restart never
+    fired; no reset after the first recorded tick. So nothing to stop on in C#.
+
+THE FIX, blwp.jslib only, (a): the seed callback only learns the seed; the
+core's `init(seedWord)`, `net.seen = 0` and `setRound` run together in
+net.opened with no await between them.
+
+PINNED (world-seed-bridge.test.js, shipped bridge, two real daemons):
+openRound held while the game steps 24 times.
+    HEAD's bridge  first recorded tick published as 1 with the core at 25;
+                   90 offered vs core 114                        -> red
+    fixed          1 at 1; offered 90 = published 6+84 = 90 = core 90;
+                   checkpoint labelled 60 with the core on 60    -> green
+    "published" is read with no batch in flight: `drain` slices a batch out of
+    the hold and `nextTick` moves on the node's answer, so next+held is short
+    by exactly the batch mid-air (6) - measured, and why the pin waits for it.
+
+WHAT THE FILE ALSO NEEDED, found by making it hang and tracing it:
+  - tests 1 and 2 wait for recording to begin, not for the client to exist -
+    the round's world is entered there now; assertions unchanged
+  - a test's client must be ENDED before it is closed: `close()` only closes the
+    socket and the close handler reads any close of an unended run as a drop, so
+    the reconnect loop (1-8 s backoff) kept `node --test` alive with no output.
+    Found with an async_hooks preload listing live resources with their
+    creation stacks: the survivor was `Client.sleep` in `reconnect`
+  - test 2's `Module` was `const` inside its try, so its `finally` threw a
+    ReferenceError its own catch swallowed and never closed that client - moved
+    out; harmless until the test waited for recording
+    Whole file, no --test-force-exit: 5/5, exits in 3 s.
+
+SUITES
+    blwp-client  188 -> 189
+    EditMode     193: 189 pass, 1 red, 3 skipped (CombatFxTests.RifleFire-
+                 ProducesAFlashAndATracer - the documented C# army)
+    PlayMode     238: 214 pass, 11 red, 13 skipped (the documented eleven by
+                 name; one test more than the 237 on record, and it passes)
+    protocol 463, blwp-node 422, core 91 - not touched by this letter
+    WebGL build  Succeeded, 20 MB, 0 errors; the framework carries the fix
+DEPLOYED 57f9e6c7: index 6b82a757, client 5b31d4b3, core 4a337755, loader
+d5fd7455, framework ee46d84f, wasm 541bba77, data 9f246918 - all seven served
+files equal to the build.
+
+AFTER, the Daily, two real Chromes, P1 at 400 ms, both rolled out and driving
+together, 3 reloads, fresh framework each load (83139-83145 B transferred):
+18 of 18 samples - never recorded 0, late resets 0, core = offered = published
+on both tabs, each tab's pick 0.0 mm from the other tab's own core at that tick.
+
+    reload 1  rest  P1 core 64 = 60+4, names P2 t101 0.0 mm | P2 104 = 102+2, names P1 t59 0.0 mm
+              9 s   P1 144 = 138+6, P2 t173 0.0 mm          | P2 176 = 174+2, P1 t137 0.0 mm
+    reload 2  9 s   P1 144 = 138+6, P2 t173 0.0 mm          | P2 176 = 174+2, P1 t137 0.0 mm
+    reload 3  9 s   P1 144 = 138+6, P2 t161 0.0 mm          | P2 168 = 162+6, P1 t137 0.0 mm
+    Screens: daniel-screens/2026-09-10-1346-gap-fixed-p{1,2}.png - each tab's
+    own loaded truck in the field, another red truck drawn in each view, chips
+    "2 players in this round · other at -98,31 m" / "-93,58 m".
