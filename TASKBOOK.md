@@ -25551,3 +25551,27 @@ WHAT STAYS BOUNDED, NOT CLOSED: for up to one batch interval after subscribing
 (0.1 s on the Daily) the drawn seat can be whichever seat the burst sent last -
 measured in the end-to-end test, which left abandoned seat e1557f2c standing
 until the live seat's next picture, sent over /play, replaced it.
+
+
+## Two-tab ghost, hole (b): checkpoints on the old and the new Daily (2026-09-10)
+
+Same round, both tabs at 400 ms: P1 on the current Daily (fdd1562c), P2 on the
+last deployment before the jslib relabel (164b5b2c, b3e81c4). A hook installed
+before load wraps `Client.markNow` and records each call's label, the core's
+own tick at that moment, and the node's answer; then each daemon is asked
+`/checkpoints` for that seat. ~25 s after roll-out:
+
+                         NEW Daily                      OLD Daily
+    labels = core tick   4 of 4 (60/60 120/120 180/180) 0 of 4 (60/68 120/128 180/188)
+    node's answers       1 receipted, 3 refused         1 receipted, 3 refused
+    refusal              "error the checkpoint does not follow the chain head" (both)
+    page counters        sent 1, skipped 0              sent 1, skipped 0
+    stored A / B         1 / 0                          1 / 0
+
+THE RELABEL IS RIGHT: every checkpoint now names the tick its core is on (the
+old build's are 8 ticks off). THE CHAIN IS BROKEN ON BOTH BUILDS, and it is not
+this letter's change: only a run's FIRST checkpoint is accepted; every later
+one is refused for not following the chain head. The page's counters hide it -
+`marksSent` counts receipts and a refusal is counted as neither sent nor
+skipped, which is why "sent 1, skipped 0" read as quiet. Daemon B stores none:
+checkpoints go to the socket's node only.
