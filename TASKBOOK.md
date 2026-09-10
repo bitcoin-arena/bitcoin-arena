@@ -25373,3 +25373,56 @@ after any reload.
 
 STOPPED at step 4: no held-sats round is opened until the preflight prints
 READY, and it prints NOT READY.
+
+
+## M3 - after a reload the chip names the live other (2026-09-10, b3e81c4)
+
+BEFORE, measured in two real Chromes (step 1): each tab held three pictures -
+its own pre-reload seat 200105f1 (t4229, -96.703,-10.200, NOT updating), the
+other's pre-reload seat c509c003 (t4227, NOT updating) and the other live
+(t3041, +30 ticks in 3 s). `newestPose` took t4229. Both chips: "4 players in
+this round · other at -97,-10 m" - a frozen truck, and the tab's own.
+
+THE CAUSE: a reload keeps the player's key (sessionStorage) and draws a new
+entry; the field was keyed by entry and knew only its own entry id. FIX:
+`Client.join` keeps the key; the field refuses any picture of this player as
+self and keeps one picture per player, the last to arrive. `newestPose`'s
+highest-tick rule across DIFFERENT players and its pinned test are unchanged.
+
+PINNED (ghost-field.test.js, 9 -> 13): the measured burst -> others 1, "other
+at -100,24 m"; a dead seat arriving after the live one is replaced by its next
+picture; two players stay two; a real client and daemon refuse this player's
+pre-reload seat (run to 199) as self and name the other at 59. HEAD's
+ghost-field.js: 3 red; HEAD's client.js: 1 red. blwp-client 184 -> 188.
+Deployed: blwp-client.js md5 5b31d4b3 served.
+
+AFTER, two real Chromes reloaded with the cache disabled (step 3), both tabs
+rolled out and driving together (screens 2026-09-10-1240-reload-p{1,2}.png):
+
+    both chips   "2 players in this round · other at ..." - self 2 (both own
+                 earlier seats refused), others 1, the pick IS the live entry
+    rest         P1 names P2 at t65 (-100.400,-37.400) = P2's core: 0.0 mm
+                 P2 names P1 at t69 (-100.400,-57.800) = P1's core: 0.0 mm
+    both drove   P1's ghost of P2: 0.0 mm at t113 and at t149
+    5 s / 9 s    P2's ghost of P1: 283.2 mm at t105, 622.7 mm at t147 - BY TICK LABEL
+
+THE 283/623 mm IS A CONSTANT 8-TICK OFFSET, not a wrong path: P2's ghost of P1
+labelled 105 is P1's core pose at core tick 113 (-99.702) exactly, and 147 is
+155 (-97.106) exactly; parked, t651 = P1's core (-91.520,-57.800). Both entries
+join at tick 0 and the daemon numbers from the join tick. It is P1's PAGE:
+core 632 while publishing 622 with 2 held (P2: 624 / 618 / 6 held).
+
+WHY, read in blwp.jslib: when the round's seed resolves the core is re-inited
+(`b.core.init(net.seedWord)`, tick 0), then four network round trips run -
+Client.at, openRound, join, connect - before `setRound`. `net.tick` returns
+while `!net.client` and `client.record` returns false while `!this.where`, so
+every tick Unity steps in that window is simulated and never published: 8 on
+P1's reload, 0 on P2's. `net.seen` counts only recorded ticks while `markNow`
+hashes the live core, so a checkpoint from such a tab names the wrong tick too.
+A NEW LETTER, and it is in the jslib - a WebGL rebuild to ship.
+
+WHAT IS CLOSED AND WHAT IS NOT: the chip after a reload names the live other -
+closed. The live ghost while both drive is 0.0 mm along its path and 8 ticks
+late by label on the tab that lost ticks at join - open, on the list. Also not
+covered: a player who LEAVES (no reload) with a longer run than the live other
+is a different player and still wins the highest tick.

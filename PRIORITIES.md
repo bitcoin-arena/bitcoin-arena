@@ -38,8 +38,14 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   and pinned by a test that runs a load through the built bundle. ON THE FIXED
   DAILY: ROLL OUT sends, the truck drives out, and P2's ghost of it equals
   P1's own core at the same tick - 0.0 mm at rest and 0.0 mm driving.
-  NEW, ON THE LIST: after a reload the chip's "other at" names a DEAD entry
-  (`newestPose` takes the highest tick, and an abandoned run went further).
+  AFTER A RELOAD THE CHIP NAMES THE LIVE OTHER (b3e81c4, on the Daily): one
+  picture per player, this player's own earlier seats refused - "2 players",
+  not 4, and the pick at the other tab's own core pose, 0.0 mm.
+  NEW, ON THE LIST, A JSLIB LETTER (WebGL rebuild): ticks Unity steps between
+  the core's re-init at the world seed and `setRound` are simulated and never
+  published - 8 on one reload - so that tab's ghost runs 8 ticks late by label
+  (283-623 mm by tick while driving, 0.0 mm along the path) and its marks name
+  the wrong tick.
   STOPPED: no held-sats round until the preflight prints READY.
 
   M3.3-19: a round that asks no stake seats on a node with NO Lightning, as
