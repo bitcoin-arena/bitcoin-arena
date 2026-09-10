@@ -26016,3 +26016,19 @@ itself and is SIGKILLed before it settles:
     restart (b) chain + seat  reconcile asked nothing (no raw); sweep -> PAID;
                               1 spend; winner 980 sats (the table's amount)
     rows                      killed seat PAID; 6 of 6 others PAYOUT_QUEUED (H2)
+
+### Kill point 3: a seat SIGKILLed after bitcoind took its spend, before it wrote PAID - one spend, and only a restart with its chain fixes its row
+
+`--point=3`. The seat hands the spend to bitcoind (accepted), then is killed
+before the PAID row is written:
+
+    at the kill               row PAYOUT_QUEUED with the raw; 1 spend in the
+                              mempool; winner 0 until a block
+    restart (a) as main.js    canSpend false; the node does nothing - the spend
+                              confirms anyway in the next block: 1 spend in a
+                              block, winner 980 - and its row STAYS
+                              PAYOUT_QUEUED, disagreeing with the chain
+    restart (b) chain + seat  reconcile asks the chain for the raw's txid:
+                              known -> PAID; sweep nothing; still 1 spend
+    no rival                  the spend in the block is the raw on disk, byte
+                              for byte
