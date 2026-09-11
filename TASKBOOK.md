@@ -30003,3 +30003,53 @@ M3, P2 FINDING (b): A PAYING ROUND NAMING NO PUBLICATION RELAY - MEASURED BEFORE
   READING           The node takes stakes into a round none of whose results can
                     ever be final: every player's money waits in a hold that
                     can only expire back to them.
+
+M3, P2 FINDING (b): FIXED - A NODE THAT HOLDS STAKES TAKES NONE INTO A ROUND NAMING NO PUBLICATION RELAY
+  CHANGE            protocol contracts.js publicationRelaysAreValid: every
+                    relay an http(s)/ws(s) URL, each once (moved out of
+                    custodyFieldsAreValid, which now calls it), and at least one
+                    on a round that takes a stake. The daemon: POST /round
+                    refuses such a round (409, nothing stored) where it already
+                    asks a paying round for its preflight - a node that holds
+                    stakes; POST /entry reads the stored round's contract and
+                    refuses (409) before the entry is kept and before any hold,
+                    so a round stored before the rule seats no stake either.
+  SCOPE             Only a node that holds stakes (Lightning) refuses: it is
+                    the only one that can take a stake it cannot settle. A node
+                    with no Lightning opens the round and issues no hold. First
+                    built refusing on every node: 20 client tests and a hung
+                    client run (orphaned node --test children, 484 s), since ~60
+                    fixtures open paying rounds naming no relay on daemons
+                    without Lightning. Scoped to what the letter names.
+  FACTS (after)     a node with Lightning: /round 409 "takes a stake and names
+                    no publication relay", round not stored, 0 holds asked; a
+                    node without: 201. Entry into a stored no-relay paying
+                    round: 409, entry not kept, 0 holds asked, no hold row. The
+                    same round naming a relay: 201; a free round naming none:
+                    201.
+  MUTANTS           /round check removed -> red; /entry check removed -> red;
+                    the rule ignores the stake -> the new protocol test red
+                    (through the door it is invisible: the door checks only
+                    paying rounds on a node that holds stakes).
+  FIXTURES          11 fixtures that open paying rounds on a daemon with
+                    Lightning name a relay nothing posts to (http://127.0.0.1:9,
+                    commented); tools/testnet4-gate.mjs the same, so it reaches
+                    the preflight it measures. P2's "never final" test stores
+                    its no-relay round AND seats its players directly (window-
+                    fixture sevenSeats storedBeforeTheRule, seatAndPlay direct),
+                    as a round and stakes kept before the rule: the door now
+                    refuses both, and that test's assertion is unchanged.
+  P2 TEST TIMING    objection-window "a player can ask where their stake
+                    stands" failed once in the full run (519/520): it waited
+                    for agreement, then asked for the window's end - and since
+                    P2 the window opens only when both seats have posted, which
+                    can land a tick later; B named none (null). It now waits
+                    until every seat names a window end for every run, still a
+                    second inside the window; its assertions are unchanged.
+  FOUND, NOT THIS   blwp-client wallet-nwc "a third key opened an envelope it
+                    was not sealed to" failed once in 1 of 5 lone runs: NIP-04
+                    is AES-CBC with no MAC, so a stranger's key passes the
+                    padding check about 1 in 256 and the assertion expects a
+                    refusal. A flake in the test's premise, not in this slice.
+  COUNTS STOOD ON   protocol 487/487, node 520/520 (sequential chunks; chunk 40
+                    rerun after the objection-window wait fix), client 246/246.

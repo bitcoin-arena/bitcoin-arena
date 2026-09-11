@@ -102,8 +102,13 @@ unblocked work. Park only inbound, which-guardians, and named rulings.
   FOUND BY P2, NOT BUILT: (a) §13A's "a seat that cannot retrieve the
   transcript within the result window treats the entry as VOID" needs a result
   window, and the contract has none - until then an unposted result stays
-  provisional and its hold expires to its player; (b) a paying round naming no
-  relay still seats stakes it can never settle - refuse it at seat time.
+  provisional and its hold expires to its player. PARKED: a contract field.
+  DONE (b): a node that holds stakes refuses a paying round naming no relay at
+  /round and refuses to seat a stake in one at /entry, before any hold. Before:
+  both stakes held, nothing final after the window. protocol 487/487, node
+  520/520, client 246/246.
+  FOUND: client wallet-nwc's "a third key opened an envelope" flakes about 1 in
+  256 (NIP-04 has no MAC) - the test's premise, TASKBOOK.
   DONE (18:15 conform): the only already-coded thing v4.6.2 made wrong was
   constants.js's §23.6 custody comment (still "a Fedimint-class federation
   with a Lightning gateway") - conformed to the stake-lock wording; behaviour
