@@ -30094,3 +30094,21 @@ M3, NO-RELAY DOOR: CLOSED ON EVERY PATH THAT TAKES MONEY INTO A ROUND
                     no assertion changed.
   COUNTS STOOD ON   protocol 487/487, node 522/522 (sequential chunks; chunk 10
                     rerun after the custody fixture), client 246/246.
+
+M3, 13A COMMITTEE RE-RUN OF A SUSPENDED RESULT - MEASURED BEFORE
+  SPEC              §13A: a valid objection suspends finality; the full
+                    committee re-runs the canonical transcript and the replay
+                    outcome is authoritative; the contradicted signers are
+                    slashed; if the re-run cannot reach 5-of-7, §13C applies
+                    (after the result window - the parked contract field).
+  TEST              blwp-node/test/rerun.test.js: seven seats (the holder and
+                    six keys), five sign a result with the score rewritten, the
+                    holder's own replay contradicts it, an objection is filed
+                    inside an 800 ms window.
+  FACTS             SUSPENDED at once and still SUSPENDED 1700 ms later (two
+                    windows); no share released; 6 results held (the holder's
+                    and the five contradicted); 0 re-run results - there is no
+                    re-run in the node (no Verifier.rerun, no door, no object).
+  READING           A suspended result waits for ever: nothing asks the
+                    committee to re-run, so the honest outcome never becomes
+                    authoritative and every stake in it can only expire back.
