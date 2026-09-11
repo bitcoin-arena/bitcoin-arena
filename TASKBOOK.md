@@ -30158,3 +30158,18 @@ M3, 13A COMMITTEE RE-RUN: THE UNBLOCKED HALF BUILT - 5 OF 7 ON THE RE-RUN REPLAC
                     REPLAY_CONTRADICTS (slash.js); the node files no proof.
   COUNTS STOOD ON   protocol 487/487, node 528/528 (sequential chunks, 0
                     cancelled), client 246/246. No Unity/WebGL (not in scope).
+
+M3, SLASH PROOF AGAINST A CONTRADICTED SIGNER (REPLAY_CONTRADICTS) - MEASURED BEFORE
+  SPEC              §13A: "Every node that signed the contradicted result is
+                    slashed (§5A.3)". §5A.3B step 1: anyone publishes the fraud
+                    proof (transcript + receipts + replay); step 2: it is
+                    mechanically checkable. protocol slash.js has the proof and
+                    slashHolds. Steps 3 and 5 are the arbitration set.
+  TEST              blwp-node/test/slash-filing.test.js on the re-run fixture
+                    (f522ad6): seven seats, five sign a rewritten score, the
+                    holder's replay contradicts it, an objection holds, the
+                    holder and four seats re-run.
+  FACTS             the run is FINAL on the re-run; 5 seats signed the
+                    contradicted result; slash proofs filed by the node: 0 (no
+                    store); GET /slash-proofs: 404 (no door). No file in
+                    blwp-node/src calls encodeSlashProof or slashHolds.
