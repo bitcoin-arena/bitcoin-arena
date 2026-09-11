@@ -28743,3 +28743,61 @@ THE LEFTOVER, in the same table:
   have to read the commitment it signs - it cannot tell them apart by name.
 
 Not touched: FROST, a threshold node, Fedimint, Unity, §22, the parked items.
+
+## A LOSER'S STAKE INTO THE COMMITTEE'S POOL BY A SUBMARINE SWAP (2026-09-11)
+
+Why: the committee-signed lnd measured NO (above). Daniel's rule keeps
+invoice, hold and cancel allowed on one replaceable node; the settle and the
+spend of settled money must not be. A submarine swap - Lightning Loop Out's
+shape: an off-chain payment for an on-chain HTLC under ONE hash - is a
+recognised procedure that asks nothing of lnd but a hold invoice and an
+on-chain send. MEASURED ONLY; not a pick, not wired into the daemons.
+
+  bash packages/blwp-node/tools/swap-into-pool-probe.sh [stake-sats=980] [claim-fee=200]
+  (tools/swap-into-pool.mjs builds the output, the claim and the refund)
+
+The swap output (P2TR, internal key BIP-341's NUMS point - NO key path):
+  claim leaf   OP_SIZE 32 OP_EQUALVERIFY OP_SHA256 <stake hash> OP_EQUALVERIFY
+               <committee group key x> OP_CHECKSIG
+  refund leaf  <height> OP_CHECKLOCKTIMEVERIFY OP_DROP <operator key x> OP_CHECKSIG
+  claim pays   the pool's own key-path output (pool.js), the committee's 2 of 2
+
+Two runs, own regtest (ports 30321-30332), 39 s each, identical results:
+  alice pays a 980-sat hold invoice on bob's lnd     ACCEPTED; bob's channel 0 msat
+  bob locks 980 sat on-chain to the swap output      1 confirmation
+  bob's refund BEFORE the height (263 < 406)         REJECTED: non-final
+  committee claim signed 1 of 2                      REJECTED: Invalid Schnorr signature
+                                                     (verifies locally: false)
+  committee claim 2 of 2, a WRONG secret             REJECTED: Script failed an
+                                                     OP_EQUALVERIFY operation
+    - after all three: alice's invoice still ACCEPTED, bob's channel 0 msat
+  committee claim 2 of 2 with the secret             ACCEPTED, mined; the output is
+                                                     780 sat at the POOL key
+  bob reads the secret from the claim's witness      sha256 = the stake's hash
+  bob settles with it                                invoice SETTLED, alice SUCCEEDED
+
+WHERE THE MONEY IS, both runs:
+  bob's channel    0 -> 980000 msat     (alice's stake, for the coins he locked)
+  bob's on-chain   1000000 -> 998710 sat  (980 locked + 310 his own send fee)
+  the pool         +780 sat at the committee's 2-of-2 key (980 - 200 claim fee)
+
+WHAT THIS SHOWS:
+  - The settle's secret reaches the chain only by the committee's 2-of-2
+    claim, and the claim puts the stake's value in the pool. Bob alone has no
+    secret, so he cannot settle; his locked coins come back to him only by
+    the refund leaf, after the height.
+  - After the claim, bob's settle only repays his own coins; the stake's
+    value is at the pool key, which only the committee spends (the payout
+    path, measured in payout-regtest and the --pool rehearsal).
+  - Invoice, hold and cancel stay on bob's replaceable node, as allowed.
+
+WHAT IT DOES NOT SHOW (the next pieces, if chosen):
+  - A harness committee (trusted dealer) and a harness-supplied secret; the
+    daemons' pool-signing signs only key-path payouts it rebuilt, and nothing
+    in blwp-node yet claims a script path or asks the operator to lock.
+  - The timing rule: the refund height must fall before alice's HTLC expires,
+    with the committee's claim inside that gap - else a claim after the HTLC
+    expiry takes bob's coins while alice is refunded. Not measured.
+  - Fees: 310 sat on bob's lock at 2 sat/vB and a 200-sat stand-in claim fee
+    taken from the stake (the owed-sats fee-rate ruling, parked). At 100-sat
+    stakes (98 net) there is no swap output at all: under the 330-sat floor.

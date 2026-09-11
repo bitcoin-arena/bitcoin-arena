@@ -139,6 +139,12 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   committee signs only FROST Schnorr over spends it rebuilt.
                   One macaroon still settles; bob's lnd shuts down without its
                   signer (TASKBOOK).
+    measured      a submarine swap puts a loser's stake in the pool without
+                  one node holding it: the operator locks the stake on-chain,
+                  the committee's 2-of-2 claim with the secret moves it to the
+                  pool key and only that publishes the secret the operator
+                  settles with. 1 of 2, a wrong secret and an early refund are
+                  refused. Harness committee; not wired; not a pick (TASKBOOK).
     measured      Fedimint 0.12.0's STANDARD Lightning path (LNv2) settles
                   a stake AT ONCE, it does not hold it: alice's 1000 sats
                   were a completed settle in bob's (the gateway's) channel
