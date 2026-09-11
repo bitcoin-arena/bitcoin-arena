@@ -28263,3 +28263,44 @@ rehearsal's two seats cannot be a Fedimint federation; 4 is the smallest
 
 blwp-node 482/482, blwp-client 233/233, protocol 464/464, core 91/91 -
 unchanged; no src file changed.
+
+### The 4-guardian floor, and where 0.12.0 releases the secret
+
+THE FLOOR (Daniel 2026-09-11): a test-net Fedimint federation is 4 guardians,
+threshold 3. 0.12.0 answers "Federation size must be 1 or at least 4" to 2,
+and 1 guardian is single custody. The rehearsal's two seats are the committee
+that signs the 2-of-2 pool payout and are not turned into a federation.
+5-of-7 is the production shape, not the probe's.
+
+THE SURFACE, read from the v0.12.0 source (the GitHub tag's archive, in
+scratch beside the builds; nothing built):
+  guardian   modules/fedimint-lnv2-server/src/lib.rs
+               process_output, LightningOutput::Incoming: `contract.verify()`
+               (555), expiry `expiration_or_fee <= consensus time` refused
+               (559), then in the SAME transaction
+               `create_decryption_key_share(&self.cfg.private.sk)` (586) and
+               `DecryptionKeyShareKey(outpoint)` stored (588)
+               DECRYPTION_KEY_SHARE_ENDPOINT (666-679): `wait_key_exists`,
+               then the share - no other condition
+  contract   modules/fedimint-lnv2-common/src/contracts.rs
+               Commitment { payment_image, amount, expiration_or_fee,
+               claim_pk, refund_pk, ephemeral_pk }: a deadline to fund, no
+               time before which to release
+  gateway    modules/fedimint-gwv2-client/src/receive_sm.rs
+               await_decryption_shares (139-188): asks every guardian up front
+             gateway/fedimint-lightning/src/lnd.rs
+               create_invoice -> AddHoldInvoiceRequest on the gateway's own
+               lnd (1341-1366); complete_htlc -> settle_hold_invoice /
+               cancel_hold_invoice (1273-1310) - the gateway, one operator,
+               could only ever delay its own settle
+  daemon     fedimintd/src/lib.rs
+               default_modules() attaches the modules in code (542-562);
+               run(module_init_registry, ...) (319) takes a registry built
+               by whoever compiles it
+
+THE NOTE: THERE IS NO HOOK. The secret leaves every guardian the moment the
+contract is funded, with nothing between. The hold is therefore a custom
+lnv2 server module - the smallest delay being that the share is not made at
+funding but only once the round's result is FINAL and its window has closed -
+in a fedimintd built from source. This machine has no Rust toolchain (`cargo`:
+command not found).

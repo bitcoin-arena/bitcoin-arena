@@ -136,10 +136,17 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   did not move (1000000 sat throughout); the receiver got
                   990 sat of the gateway's ecash. Two runs, the same. Holding
                   it is the next named piece (`tools/federation-hold-probe.sh`).
-    decision      Fedimint 0.12.0 refuses a 2-guardian federation ("1 or at
-                  least 4"), so the rehearsal's 2 seats cannot be one; the
-                  probe ran 4 guardians, threshold 3 - Daniel's call for the
-                  test nets' seat count.
+    DECIDED       (Daniel 2026-09-11) any test-net Fedimint federation is 4
+                  guardians, threshold 3 (0.12.0 forms no 2; 1 is single
+                  custody). The rehearsal's 2 seats stay the committee that
+                  signs the 2-of-2 pool payout - not a federation. 5-of-7
+                  stays the production shape.
+    measured      0.12.0 HAS NO HOOK to delay the secret: each guardian makes
+                  its decryption share the moment the incoming contract is
+                  funded (fedimint-lnv2-server lib.rs:586) and the endpoint
+                  hands it out as soon as it exists (lib.rs:666-679). The
+                  hold is a custom lnv2 server module - a fedimintd built
+                  from source - and this machine has no Rust toolchain.
     ruling        the owed-sats fee rate; htlc_cltv_days (below, unchanged).
     inbound       testnet4: 196000 msat needed, 0 offered.
   Two daemons CANCELLING one invoice on the shared endpoint is measured: both
