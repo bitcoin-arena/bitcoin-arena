@@ -149,13 +149,19 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   the build STOPS AT libclang (missing: bindgen in
                   aws-lc-sys, and librocksdb-sys needs it too). The only
                   libclang here is inside Unity's Emscripten - not used.
-    code, DONE    the federation HOLDS the stake for the window: with LLVM's
-                  libclang in scratch, a patched fedimintd makes and serves
-                  a guardian's decryption share only 30 s after it saw the
-                  contract funded. Bob's HTLC held 31 s (was 3 s); inside
-                  the window bob's channel is unchanged and his invoice
-                  ACCEPTED. Time-based, not yet tied to FINAL
+    code, DONE    the federation holds the PAYER'S LEG for the window: a
+                  patched fedimintd (v3) serves a guardian's decryption
+                  share only 30 s after it saw the contract funded. Bob's
+                  HTLC held 31 s (was 3 s), his invoice ACCEPTED inside the
+                  window, and the gateway still settles after it. Time-based
                   (tools/fedimint-lnv2-hold.patch).
+    measured      THE POOL'S LEG IS NOT HELD: the receiver claims the
+                  gateway's ecash at funding (pay +16 s under a 30 s hold).
+    blocked       routing the round's stakes through the federation needs
+                  two decisions (TASKBOOK): whose secret the invoice carries
+                  (LNv2's receiver makes its own; entries commit to the
+                  player's), and a held, non-single-party claim on the
+                  pool's leg.
     ruling        the owed-sats fee rate; htlc_cltv_days (below, unchanged).
     inbound       testnet4: 196000 msat needed, 0 offered.
   Two daemons CANCELLING one invoice on the shared endpoint is measured: both

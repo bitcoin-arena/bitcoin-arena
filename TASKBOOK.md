@@ -28478,3 +28478,33 @@ Patched v2, guardians' hold 30 s, 1000-sat stake:
   receiver has claimed, the gateway never gets a share, never learns the
   preimage, and never settles - the gateway is out 1000 sat and alice's HTLC
   waits for its own timeout.
+
+HOLD PATCH v3 - the funded-at record keeps the contract too (value
+(u64, IncomingContract)), because a claim runs `remove_entry(&IncomingContract
+Key)` in process_input; the share is still not made at funding. Release build
+217 s. tools/fedimint-lnv2-hold.patch regenerated; dry-run applies to a pristine
+v0.12.0 tree. Same probe, receiver driven inside the window, hold 30 s:
+    INSIDE WINDOW (pay +10 s)  bob channel 1000000, invoice ACCEPTED
+    receiver's claim           "Claimed" at pay +16052 ms (inside); ecash 990
+    alice's payinvoice         SUCCEEDED in 30689 ms
+    AFTER PAY                  bob channel 1001000; HTLC held 31 s
+    federation on-chain        walletv2 +1000000 throughout
+  The payer's leg is held for the window and the gateway settles after it,
+  whether or not the receiver has claimed. The pool's leg is not held.
+
+WHAT ROUTING THE ROUND'S STAKES THROUGH THE FEDERATION STILL LACKS - the
+share that decides what comes next:
+  1. THE HASH. An LNv2 invoice's secret is its receiver's; a round entry
+     commits to sha256 of the player's own secret, dealt as shares to the
+     settlement seats. Either the entry commits to the federation invoice's
+     hash (the invoice comes first, and the dealt shares have no job for a
+     federation round), or the incoming contract is built around the
+     player's secret (the page, or a patched receiver, encrypts it to the
+     guardians' key). Protocol either way.
+  2. THE POOL'S LEG. The receiver claims the gateway's ecash at funding
+     (measured, inside the hold), with a key only it holds. 23.2 needs that
+     claim held until the round is final - a guardian CONSENSUS rule on the
+     claim, on consensus time, not the per-guardian clock the share hold uses
+     - and a claim key that is not one party's.
+  Until 1 and 2 are settled, the round's stakes cannot pass these guardians
+  and close still acts on bob's own hold invoices.
