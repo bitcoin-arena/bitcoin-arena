@@ -28436,3 +28436,45 @@ client bundle rebuilt (`tools/bundle.js`), dist/blwp-client.js (432807 bytes)
 copied into unity-proto/Assets/WebGLTemplates/BtcLogistics/; blwp-curve.js and
 blwp-core.js already equalled their dist and were not touched. blwp-client
 233/233, the two template-equals-dist tests included. Nothing deployed.
+
+### Routing round stakes through the federation - what LNv2 decides first (source)
+
+Daniel's sequence (2026-09-11): the rehearsal's round stakes through the
+patched federation, measured with the hold table; then a release keyed to
+the round becoming final; then winner-cancel. Read before any routing code,
+v0.12.0 modules/fedimint-lnv2-client:
+  THE SECRET IS THE RECEIVER'S. lib.rs create_contract_and_fetch_invoice
+    (1009-1017): `encryption_seed` from an ephemeral tweak of the receiver's
+    static key, `preimage = sha256(encryption_seed)`, invoice hash
+    sha256(preimage) (1061). No call takes a caller-chosen secret or hash.
+    A round entry commits to sha256 of the PLAYER'S secret and deals that
+    secret to the settlement seats - so a stock LNv2 invoice cannot carry an
+    entry's own hash.
+  THE RECEIVER CLAIMS WITHOUT THE GUARDIANS. lib.rs recover_contract_keys
+    (1130-1160) derives the aggregate decryption key from the receiver's own
+    seed (1151); receive_sm.rs transition_incoming_contract (111-134) claims
+    as soon as the incoming contract is confirmed funded. The guardian hold
+    delays the gateway's settle of the payer's HTLC - it does not, by this
+    reading, delay the receiver taking the gateway's ecash.
+  The hold table's "receiver ecash 990 only after the hold" was read with
+  `fedimint-cli info`, which exits before a claim can run: to be measured,
+  not assumed.
+
+MEASURED - THE RECEIVER'S CLAIM IS NOT HELD, AND AN EARLY CLAIM STRANDS THE
+GATEWAY UNDER HOLD PATCH v2. The probe now drives the receiver inside the
+window (its own await-receive, 8 s max, one client process at a time).
+Patched v2, guardians' hold 30 s, 1000-sat stake:
+    INSIDE WINDOW (pay +10 s)  bob channel 1000000, invoice ACCEPTED - the
+                               payer's leg held, as before
+    receiver's claim           "Claimed" at pay +16202 ms, INSIDE the hold;
+                               receiver ecash 990 then
+    alice's payinvoice         gave up after 180009 ms, still IN_FLIGHT
+    AFTER PAY / AFTER WINDOW   (+186 s / +220 s) bob channel 1000000, invoice
+                               ACCEPTED, HTLC never resolved; gateway ecash
+                               998579 (its 1000 sat went to the receiver)
+  CORRECTION: the hold table's "receiver ecash only after the hold" was a
+  reading artifact. The guardian hold holds the PAYER'S leg only; the pool's
+  side is paid out of the gateway's ecash at funding. And with v2, once the
+  receiver has claimed, the gateway never gets a share, never learns the
+  preimage, and never settles - the gateway is out 1000 sat and alice's HTLC
+  waits for its own timeout.
