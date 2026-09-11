@@ -28080,3 +28080,58 @@ is in src only. Shipping it is `node tools/bundle.js` and one copy into
 unity-proto/Assets/WebGLTemplates/BtcLogistics/: Daniel's OK.
 
 blwp-node 480/480, blwp-client 233/233 (+3), protocol 464/464, core 91/91.
+
+### The winner paid by the daemons' own 2-of-2 pool, inside the real-lnd rehearsal
+
+The finish line says "the winners are paid by a threshold signature no single
+node could have produced", and PRIORITIES said "the lnd rehearsal itself
+still has no chain to spend on". Neither needs the open ruling to be
+measured: the pool can be funded as a STAND-IN (accepted at M3.3-28), and the
+rest is the daemons' own close.
+
+THE REHEARSAL, NEW FLAGS (all opt-in; the default run is unchanged):
+  --pool          `standUpRound({ poolChain: true })` gives both daemons the
+                  regtest bitcoind as `poolCall` and `chainSpend`; the two
+                  daemons run the pool's key ceremony themselves (dkg.run
+                  twice, no dealer, this process holds no share); THIS HARNESS
+                  sends --pool-sats (1200) to the pool's address - a STAND-IN,
+                  printed as one; then the report waits for a seat to write
+                  the payout PAID and reads the winner's own key on the chain.
+  --stake-msat=N  the round's stake (a rehearsal number, not a rule).
+
+BEFORE THE FIX, measured with --pool:
+    100-sat stakes (BA): both seats queue the table (98000 msat owed), and
+      both refuse to sign: "every one of the 1 player(s) this round owes is
+      under 330 sats, so there is no output to make: the sats stay in the
+      pool and the debt stands" - the existing floor rule, right.
+    1000-sat stakes (AB): both seats queue it (980000 msat owed), and the
+      round's asker stops at "1 of 2 seats committed to this spend".
+
+THE CAUSE: `Payouts.settleQueued` handed `payWithCommittee` `this.peers`, the
+operator's list only, where the table's `gather` beside it asks `peersOf` -
+the list, else the round's settlement seats off the census (M3.3-24). A
+daemon given no list (the rehearsal's, the Daily's, `main.js` at a live
+close) asked nobody for the second signature. Now `seats: this.peersOf(roundId)`.
+
+    pool-settle.test.js, the new pin: seven daemons, operator lists emptied,
+      only `peersFor` naming the other seats. Before: "1 of 5 seats committed
+      to this spend". After: PAID, 5 signed, one transaction, the winner's
+      output in it. (The old line is the mutant: it fails the pin.) The file
+      11 of 11.
+
+AFTER, the real-lnd rehearsal, --pool --stake-msat=1000000:
+    AB   pool 1200 sats, one key made by the two daemons; 0 of 4 acts before
+         the window; P2 SETTLED to the operator (+980000 msat), P1 and P3 back
+         to alice (-980000 net); VOID rows HELD 0; HELD after lnd settled 0;
+         B PAID "paid by 2 of 2 seats"; THE WINNER'S OWN KEY HOLDS 980 sats
+         (the table owes 980), the payout in a block, 1200 in, outputs [980],
+         fee 220
+    BA   the same, A the payer: 980 sats to the winner's key, in a block
+  The holes left: the ruling (P2's stake is in the operator's lnd, and the
+  pool was the harness's), and testnet4 inbound.
+
+FOUND ON THE WAY, NEXT: in both runs the seat that did not send keeps its row
+PAYOUT_QUEUED - "1 of 2 seats committed to this spend" - after the chain
+carried the payment. The payout's twin of M3.3-29's second closer.
+
+blwp-node 481/481 (+1), blwp-client 233/233, protocol 464/464, core 91/91.

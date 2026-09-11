@@ -28,8 +28,10 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   settles to the operator (+98000 msat), the winner's and the VOID one go
   back to the player, and no daemon's row says HELD on money no longer in
   flight. The pool pays the winner on regtest (a harness-funded stand-in
-  pool, 2 of 2 and 5 of 7); the lnd rehearsal itself still has no chain to
-  spend on. The rest, by kind:
+  pool, 2 of 2 and 5 of 7) - and, with `--pool`, inside the real-lnd
+  rehearsal itself: the daemons make the pool's key, and after the window
+  their own close pays the winner's key 980 sats by one 2-of-2 signature.
+  The rest, by kind:
     code, DONE    M3.3-28: a two-seat committee's pool has a key and pays
                   its winner - the pool's key ceremony and signing take the
                   committee's own threshold (2 of 2, 5 of 7), not a flat 5.
@@ -103,6 +105,15 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   m:ss left · refunds at block H if nobody acts", then
                   "settled", "handed back" or "refunded". Before: the chip
                   stopped at "committed".
+    code, DONE    a launched daemon's close pays the winner from the pool:
+                  the payout's signing round asks the round's own seats (a
+                  given list, else the census), as the table's gather does.
+                  Before: "1 of 2 seats committed to this spend" on a daemon
+                  given no peer list. Rehearsal, 1000-sat stakes, AB and BA:
+                  the winner's key holds 980 sats, in a block. At 100-sat
+                  stakes the 98-sat row stays owed, under the dust floor.
+    code, OPEN    the seat that did not send the payout keeps its row
+                  PAYOUT_QUEUED after the chain carried it (2 of 2 runs).
     decision      the PAGE runs the WebGL template's copy of the client
                   bundle (unity-proto/Assets/WebGLTemplates/BtcLogistics),
                   which must equal dist; both are left as they were because
