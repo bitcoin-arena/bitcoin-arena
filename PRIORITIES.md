@@ -31,8 +31,8 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   on-chain pool, invoice-first through the patched fedimintd, the guardian
   hold patch. The uncommitted swap work (round.js, store.js, swap.js at
   14:19) is not this path.
-  NEXT: rehearsal step 6 - one guardian down: everything still completes
-  (FEDERATION.md's 7-step rehearsal on regtest -
+  NEXT: rehearsal step 7 - no single key and no macaroon moves a round's
+  money (FEDERATION.md's 7-step rehearsal on regtest -
   unpatched fedimintd, 4 guardians 3 of 4, two gateways, a 2-of-2
   committee). Then FROST and DKG bit-matched against Zcash Foundation
   frost-secp256k1-tr; contract fields federation_id and stake_expiry_blocks
@@ -56,6 +56,10 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   STEP 5 DONE: with gateway A stopped, the stock client, told no gateway,
   deposited and withdrew through gateway B, and the B deposit funded a
   stake lock the guardians hold (tools/stake-lock-step5.sh; TASKBOOK).
+  STEP 6 DONE: with one of four guardians stopped, deposit, four stake
+  locks, the 2-of-2 forfeit, a committee settlement, the refund after expiry
+  and a withdrawal all complete on three of four
+  (tools/stake-lock-step6.sh; TASKBOOK).
   LATER, DAEMON WORK (not a rehearsal step, not opened): each committee seat
   rebuilds the settlement transaction from the public payout table and signs
   only the id it rebuilt; its nonce is a fixed rule (e.g. from round_id),

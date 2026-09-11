@@ -29154,3 +29154,63 @@ NOT IN STEP 5: the fallback walk pinned (A first in the list, then B);
 step 6 (a guardian down). Not deployable: regtest, tools only; the page has
 no LNv2 client, and the committee's signing is not bit-matched to an
 audited FROST.
+
+## THE STAKE LOCK, REHEARSAL STEP 6: ONE GUARDIAN DOWN, EVERYTHING STILL COMPLETES (2026-09-11)
+
+FEDERATION.md step 6: "one guardian down: everything still completes".
+"Everything" is every path steps 1-5 showed. Stock released fedimintd
+0.12.0, unpatched; four guardians, threshold 3; gateways A (bob's lnd) and
+B (carol's lnd); the 2-of-2 committee key. Guardian 3 was stopped BEFORE any
+money moved, so all six paths ran on three of four. No refusals (steps 1-5).
+
+  FEDIMINT_BIN=<released builds> LOCK_BIN=<blwp-stake-lock> \
+    bash packages/blwp-node/tools/stake-lock-step6.sh
+
+MEASURED, one run (367 s, nothing left running):
+  setup         230 s; threshold 3 of 4; gateways [30180, 30170]
+  GUARDIAN 3    process group stopped; API port 30151 closed (1 process of the
+  DOWN          group still exiting at the first look, 0 at the end); a direct
+                admin request: "Federation rpc error { method => audit, 3 =>
+                Connection failed: Failed to connect to peer }"; guardians 0-2's
+                API ports 30121, 30131, 30141 open
+  1 DEPOSIT     6403 ms; no gateway named -> B (carol's lnd); alice SUCCEEDED;
+                ecash 0 -> 4977664 msat (receive fee 22336 msat on 5000000)
+  2 LOCKS       4 locks in 5719 ms (861-989 ms each), all stored = computed,
+                980000 msat each, expiring at block 515 (144 left at count 371):
+                  1 e4319277...d1a0:0  contract 577de8f299481e400380be70d8b572ad6abc5128ae3631fbaf758ddbe9c61dc7
+                  2 e8b2eaaa...5372:0  contract fc1c170d71ecc2618c54a9595dddd903c6ec9cb59ea6ad4f4541d2c8f2629b1a
+                  3 66efc7e1...2317:0  contract 64f93b2679aafda4275d09322e608dd54e7d0761f18fbf58723cebcad58accb0
+                  4 995578f2...b122:0  contract b8c36016f222fc7c8a5c622315d66ca3717af72d1713f3fbb8ee5796109dba4c
+                ecash 4977664 -> 1045504 msat (4 x 980000 + 12160 msat fees)
+                claim_pk 0296b30aae4a559a3bb884e7ce989fc46b5770e7d0685e7f6085959fbd66d6a031
+  3 FORFEIT     lock 1, 2-of-2, redeemed by the player: ACCEPTED at count 371,
+                tx db883c4d32b456ea8043df62085425370b57c96a947912d26149dc34b8e024ba;
+                lock gone; ecash +977920 (2080 msat fees); 41663 ms including
+                the wait for the notes
+  4 SETTLE      locks 2 and 3: ACCEPTED at count 371,
+                tx feae2d2554b268877020a1b470e07c039599536dd7acca3a456db85917ecffa8;
+                both locks gone; payout fb3b41a5f746b2e0111fd01558d68f0485407162b95978f5795c771c01af075f,
+                1957000 msat, 0 blocks left; fees 2000 + 1000 msat; 1206 ms
+  5 REFUND      the guardians' count 371 with guardian 3 down; mined 146 blocks
+                (bitcoin height -> 516); the count read 421 at +321 ms and 517
+                at +49666 ms (lock 4: 0 left). It rose past 371 with guardian
+                3's vote frozen, so three votes stood above that vote: the
+                third-highest was a live guardian's. The player's Refund:
+                ACCEPTED at count 517,
+                tx 43cb642c383a1ba8811d7856aab90b1454c087ce39f56becb69de4df30aacf50;
+                lock gone; ecash +977920 (2080 msat fees); 70966 ms including
+                the mining and the wait
+  6 WITHDRAW    4346 ms; no gateway named -> A (bob's lnd; both gateways up in
+                this step); 500 sat to alice's lnd, SETTLED; ecash -508928
+                (8928 msat fees)
+  at the end    guardian 3's API port still closed, 0 processes
+
+AGAINST THE EARLIER STEPS, where they timed the same thing:
+  the guardians' count reaching the expiry after mining: 49666 ms here,
+  7150 ms in step 4 with all four up; a settlement's payout stored at once
+  here and in step 3a; the forfeit's notes: step 2 timed only the notes
+  (5930 ms after its redeem), this run timed redeem + notes together
+  (41663 ms). The slower count is measured, not explained.
+
+Not in step 6: refusals (steps 1-5), step 7. Not deployable: regtest, tools
+only; the committee's signing is not bit-matched to an audited FROST.
