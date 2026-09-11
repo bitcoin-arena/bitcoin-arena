@@ -112,7 +112,10 @@ unblocked work. Park only inbound, which-guardians, and named rulings.
   DONE (wallet-nwc's "a third key opened an envelope"): nip04Decrypt refuses
   plaintext that is not UTF-8, so a key the envelope was not sealed to opens
   nothing - 0 of 4096 deterministic stranger keys (was 15, told ok with
-  garbage). Numbers: TASKBOOK.
+  garbage). Numbers: TASKBOOK. ON THE PAGE TOO: the shipped bundle and the
+  WebGL template were stale (15 of 4096, the pinned hash); rebuilt, copied,
+  re-pinned (0 of 4096), and bundle-fresh.test.js now fails when dist or the
+  template is not the build of the source.
   FOUND: nwcCall does not check that a wallet's answer event is signed by the
   wallet's key and names the request (NIP-01); it trusts the relay's filter.
   DONE (13A re-run, the half that needs no new field): a valid objection's

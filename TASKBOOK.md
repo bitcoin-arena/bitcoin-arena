@@ -30260,3 +30260,33 @@ M3, NIP-04 ON THE PAGE: THE SHIPPED BUNDLE STILL HAS THE OLD DECRYPT - MEASURED
                     blwp-client.js in known-good-clients.json - the known-good
                     list vouches for the flawed decrypt. client-hash.mjs on the
                     template: blwp-client.js  match  a87ae8617e67625698b57361ebb20db898183cb0618d85416d4de22c7944892c|blwp-curve.js   match  2492e155b859766f3502f09c7b4e8b16bbe841cde08aea5213b077f1a445c105|blwp
+
+M3, NIP-04 ON THE PAGE: FIXED - THE PAGE SHIPS THE STRICT DECRYPT, AND A STALE BUNDLE IS NOW A RED TEST
+  CHANGE            dist/blwp-client.js rebuilt (tools/bundle.js) and copied
+                    into the WebGL template; known-good-clients.json gains its
+                    hash fe7dd77bc88d1f21... (known-clients.js; by its policy the
+                    earlier a87ae861... stays listed - see RULE). The three
+                    bundlers take BLWP_BUNDLE_OUT, and blwp-client
+                    bundle-fresh.test.js builds blwp-client.js, blwp-curve.js and
+                    blwp-core.js from this tree and requires dist AND the template
+                    to be those bytes.
+  FACTS (after)     shipped bundle and template: 0 of 4096 strangers opened
+                    (was 15 each), both sha256 fe7dd77bc88d1f21..., which
+                    client-hash.mjs finds on the known-good list. The rebuild
+                    also carried four slices of protocol code the page bundle
+                    had missed (type bytes 0x17-0x19 and their tags,
+                    publicationRelaysAreValid) - none is called by the page
+                    (0 uses in client src or index.html), so the decrypt is the
+                    only behaviour that changed. blwp-curve.js and blwp-core.js
+                    were fresh.
+  MUTANT            the template put back to the stale bundle -> bundle-fresh
+                    red ("the WebGL template is not the build of this source").
+  RULE              known-clients.js keeps every hash it ever listed, so a page
+                    serving the old bundle still passes client-hash.mjs. Kept:
+                    the old decrypt's false open is garbage that nwcCall's
+                    JSON.parse refuses, so it moves no money; and dropping the
+                    hash would fail any page already deployed from it.
+  NOT DEPLOYED      the Daily is a WebGL build; it carries the fix after the
+                    next WebGL build from this template.
+  COUNTS STOOD ON   protocol 487/487, node 531/531 (sequential chunks, 0
+                    cancelled), client 249/249, core 91/91. No Unity/WebGL run.
