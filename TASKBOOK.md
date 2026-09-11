@@ -30245,3 +30245,18 @@ M3, NIP-04: FIXED - A KEY THE ENVELOPE WAS NOT SEALED TO OPENS NOTHING
                     secret still binds the content.
   COUNTS STOOD ON   protocol 487/487, node 531/531 (sequential chunks, 0
                     cancelled), client 247/247. No Unity/WebGL (not on the page).
+
+M3, NIP-04 ON THE PAGE: THE SHIPPED BUNDLE STILL HAS THE OLD DECRYPT - MEASURED
+  WHY               967cf30 fixed src/nwc.js. The page runs
+                    blwp-client/dist/blwp-client.js (tools/bundle.js,
+                    concatenated source) and the WebGL template ships a byte copy;
+                    neither was rebuilt - the suites were run without the bundle
+                    step, and the template/pin checks compare the two stale files.
+  TEST              nip04-stranger.test.js, MEASURED: each shipped file's own
+                    bytes evaluated with nip04Decrypt exposed in memory only,
+                    the same 4096 deterministic stranger keys.
+  FACTS             dist: 15 of 4096 opened; template: 15 of 4096 opened; both
+                    sha256 a87ae8617e676256..., the hash pinned for
+                    blwp-client.js in known-good-clients.json - the known-good
+                    list vouches for the flawed decrypt. client-hash.mjs on the
+                    template: blwp-client.js  match  a87ae8617e67625698b57361ebb20db898183cb0618d85416d4de22c7944892c|blwp-curve.js   match  2492e155b859766f3502f09c7b4e8b16bbe841cde08aea5213b077f1a445c105|blwp
