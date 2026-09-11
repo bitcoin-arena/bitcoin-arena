@@ -29790,3 +29790,37 @@ M3, FROST/DKG SLICE: ROUND-1 PROOF OF KNOWLEDGE - THE ROGUE DKG DEAL IS REFUSED
   client 246/246. Out of scope, left: GET /dkg still serves a node's own
   contribution to anyone and POST /dkg still takes a late deal - with the
   proof required, that window no longer lets a seat choose the key.
+
+M3, FROST/DKG SLICE: AGREEMENT - EVERY SEAT MUST HAVE COMBINED THE SAME CONTRIBUTION SET
+  MEASURED BEFORE   blwp-node/test/dkg-equivocation.test.js, 5 of 7: six honest
+                    daemons deal and exchange; the seventh seat (off-daemon)
+                    deals TWO contributions, both with valid proofs of knowledge
+                    and valid shares for every seat, posts one to honest seats
+                    1-3 and the other to 4-6. Posted 201 x6, honest finished 6,
+                    distinct group keys 2, distinct pool addresses 2.
+  DESIGN            protocol dkg.js: TYPE_DKG_AGREEMENT 0x17, TAG
+                    BLWP/v1/DkgAgreement; a seat's statement = (epoch, seat,
+                    [(dealer, contribution id)] sorted by dealer), signed by the
+                    seat's key; agreementHolds needs one valid statement per
+                    seat, all naming the same set - two that differ refuse at
+                    once, naming the dealer they differ on; a missing seat is
+                    waited for, by name. Daemon: GET /dkg-agreement serves this
+                    seat's signed statement (only once it holds all n); finish()
+                    gathers its own + every peer's and writes the share only if
+                    the agreement holds. Liveness, not money: a silent seat stops
+                    the key from forming, as not dealing always could.
+  AFTER             5 of 7 equivocating: posted 201 x6 (each contribution is
+                    valid alone), honest finished 0, keys 0, addresses 0; every
+                    refusal names the dealer (1fc76836...). No equivocation:
+                    2 of 2 -> 2 kept a share, 1 key; 7 of 7 -> 7 kept, 1 key.
+                    Ownership re-checked: the rogue first commitment is still
+                    refused at accept, open, combine and on the daemon (409).
+                    Existing dkg, dkg-daemons (7 seats, 5-of-7 signing) green.
+  MUTANT            finish() ignores a failed agreement -> 6 finished on 2 keys,
+                    2 addresses; the equivocation test red. Restored (cmp).
+  MEASURED: protocol 485/485, node 504/504 (250+254, run one chunk after the
+  other, both exit 0, 0 cancelled), client 246/246.
+  FOUND, NOT THIS SLICE: with all four suites run at once, node chunk 1
+  reported 229 tests (21 fewer) and 0 failures - some node test files register
+  fewer tests under heavy load, so a "green" run can have skipped coverage.
+  Likely the earlier off-by-one too. Counts here are from the sequential run.

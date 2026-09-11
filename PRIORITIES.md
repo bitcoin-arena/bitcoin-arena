@@ -93,8 +93,11 @@ unblocked work. Park only inbound, which-guardians, and named rulings.
   has no proof of knowledge, and a dishonest 2-of-2 seat makes the group key
   its own (measured 734a2ec; facts in TASKBOOK). Round 1 now carries ZF's
   proof of knowledge and a contribution without a valid one is refused: the
-  same rogue deal is refused at every step and on the daemon (409). Still
-  OPEN until this item's close review.
+  same rogue deal is refused at every step and on the daemon (409). And a
+  seat keeps its share only when every seat signed the same contribution set:
+  a dealer sending two valid contributions to two halves of a 5-of-7 no
+  longer splits the committee onto two keys. Still OPEN until this item's
+  close review.
   DONE (18:15 conform): the only already-coded thing v4.6.2 made wrong was
   constants.js's §23.6 custody comment (still "a Fedimint-class federation
   with a Lightning gateway") - conformed to the stake-lock wording; behaviour
