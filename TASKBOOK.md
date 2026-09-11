@@ -29848,3 +29848,28 @@ M3, FROST/DKG LETTER CLOSED (close review, HEAD 3011a6e)
                     0 cancelled), client 246/246. Unity not run. Listed, not
                     this letter: the second-closer 800 ms load flake, and the
                     node test-count drop when four suites run at once.
+
+M3, FROST/DKG REOPENED: MEASURED - ONE GARBAGE SIGNATURE SHARE ON A 5-OF-7 PAYOUT
+  TEST              blwp-node/test/pool-bad-share.test.js: seven daemons (the
+                    pool-committee setup), one queued payout; seat 2 - always
+                    among the lowest five - answers /pool/share with a random
+                    scalar. The fake chain rejects an invalid witness signature
+                    as bitcoind would.
+  FACTS             first attempt paid: no | sent to the chain: 1, invalid |
+                    payout row: PAYOUT_QUEUED holding that invalid raw tx |
+                    cheater named: no (the only reason is the chain's
+                    rejection) | retry leaving the cheater out (asker + seats
+                    3-7, five honest): refused - "this seat withdrew: this seat
+                    has signed under another commitment list and will not sign
+                    twice" | sent total 1 | final row PAYOUT_QUEUED.
+  READING           One bad share locks the round's payout for good: the asker
+                    (and every honest seat that signed) refuses any second list.
+                    That rule is right about nonces - reusing one nonce pair
+                    under two lists leaks the share - so the fix is not to drop
+                    it but to retry with FRESH nonces, never the spent ones. And
+                    naming the cheater needs each seat's public share, computable
+                    from the DKG commitments every seat already stores.
+  NEXT              verify the aggregate before anything is written or sent; on
+                    failure verify each share against that seat's public share
+                    (even-normalised, pool-tweaked), name the cheater, discard
+                    the spent nonces, retry with fresh ones and a set without it.
