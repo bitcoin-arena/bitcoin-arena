@@ -28603,3 +28603,53 @@ In an earlier 4-way parallel run two timing tests fell (second-closer 800 ms;
 the restart test cancelled at 135 s) and passed alone (2/2, 6/6);
 blwp-client once failed headers.test.js "0 of 4 providers" and passed alone
 15/15 twice.
+
+## 13:13 - NO CENTRAL PAYMENT ENDPOINT: where each Lightning act stands (2026-09-11)
+
+Daniel 13:13: a single lnd gateway is forbidden; invoice, hold, settle and
+pay need the same quorum as the mint (5 of 7, or 2 of 2). "No threshold-LN
+until it hardens" is gone from the letter.
+
+STOPPED: keying the guardians' release to the round's deadline (entry close
++ run length + window). It was half written (a protocol deadline function, a
+node door serving an entry and its round contract by payment hash, the
+guardian patch asking it) and is out of the tree, kept in scratch. Whatever
+clock the guardians used, the payer's HTLC would still sit in bob's lnd, and
+bob's gateway would settle it - the construction 13:13 forbids.
+
+WHO CAN DO EACH ACT TODAY, from the code and the measured rehearsals:
+    act       daemon path (M3.3)                    federation path (step 2)
+    invoice   one daemon asks one lnd (bob),        one gateway (bob) makes it
+              custody.js:181
+    hold      the HTLC sits in bob's channel        the HTLC sits in bob's
+                                                    channel (the gateway's)
+    settle    PREIMAGE: 2 of 2 shares               PREIMAGE: 3 of 4 guardians
+              (custody.js:305); the act and the     (decryption shares); the
+              msat: bob's lnd (+98000 msat)         gateway settles, bob's lnd
+                                                    (+2940000 msat)
+    cancel    one daemon, on its own FINAL check    bob's lnd; the gateway
+              (custody.js:318), no second seat's
+              signature - 23.2 asks 5 of 7
+    pay       none over Lightning; the pool pays    the gateway
+              on-chain by FROST 2 of 2
+  Only the settle's preimage is quorum-bound. Anything with bob's macaroon can
+  issue, cancel, and spend what was settled.
+
+WHAT EXISTS TO BUILD ON:
+  - Fedimint 0.12.0: modules ln, lnv2, mint(v2), wallet(v2), meta, and one
+    `gateway`. Every Lightning payment in or out passes one gateway's node;
+    there is no federation-run gateway in the tree.
+  - lnd v0.21.3 (the one here): --remotesigner.enable (all key operations in
+    another process) and --protocol.simple-taproot-chans (MuSig2 channel
+    funding keys). That signer is one process today; a committee signer
+    behind it would be 23.6's threshold-signed Lightning node.
+
+DECISION NEEDED (Daniel), which quorum-run Lightning:
+  (a) a threshold-signed Lightning node: lnd with its remote signer answered
+      by the settlement committee (FROST for Schnorr/MuSig2 paths, taproot
+      channels), so no invoice, HTLC settle or payment is signed without the
+      quorum. 23.6 calls it emerging; nothing here does it yet.
+  (b) the federation's own quorum without Lightning in front: stakes pegged in
+      (on-chain or ecash), no invoice at all. Meets "no single node", drops
+      Lightning hold invoices (M3's stated path).
+  (c) something else Daniel names.

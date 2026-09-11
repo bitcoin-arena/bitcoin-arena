@@ -122,11 +122,17 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   deployed; the Daily is untouched.
     remainder     a SUSPENDED run has no committee re-run (13A) yet; it
                   cannot happen on 2 of 2, so it is not built on this slice.
-    code, NEXT    the pool is a FEDERATION (DECIDED, below): the settled
-                  stake and the payout go through a Fedimint-class
-                  federation whose quorum is the round's settlement
-                  committee, with a Lightning gateway - not one lnd's
-                  channel and not a harness-funded pool.
+    code, NEXT    the pool is a FEDERATION (DECIDED, below) whose quorum is
+                  the round's settlement committee - and since 13:13 its
+                  Lightning is too: invoice, hold, settle and pay by that
+                  quorum, not one lnd and not one gateway.
+    measured      against 13:13: only the settle's PREIMAGE needs the quorum
+                  today (2 of 2 shares; 3 of 4 guardians). The invoice, the
+                  hold and a cancel sit on one lnd (bob's); settled msat land
+                  in bob's channel; there is no Lightning pay. Fedimint 0.12.0
+                  has no Lightning path without one gateway. The guardian hold
+                  keyed to the round's deadline is stopped: it keys bob's hold.
+    DECISION      which quorum-run Lightning construction (TASKBOOK).
     measured      Fedimint 0.12.0's STANDARD Lightning path (LNv2) settles
                   a stake AT ONCE, it does not hold it: alice's 1000 sats
                   were a completed settle in bob's (the gateway's) channel
