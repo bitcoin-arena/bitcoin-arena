@@ -27537,3 +27537,16 @@ answer the node cannot get - left alone.
 
 blwp-node 464/464 (+4), blwp-client 230/230, core 91/91, golden vectors 8/8,
 0 core or Unity files. The rehearsals follow.
+
+THE REHEARSAL WITH THE UNPAID EXPIRY IN (m30b-1..4, AB and BA side by side):
+
+    AB  played 4 of 4; VOID rows HELD after lnd cancelled and the chain past the expiry: 0 of 8; EXPIRED 8 of 8; second closer HELD after lnd settled: 0
+    BA  played 4 of 4; VOID rows HELD after lnd cancelled and the chain past the expiry: 0 of 8; EXPIRED 8 of 8; second closer HELD after lnd settled: 0
+
+    0 of 16 VOID rows HELD, both orders - the paid VOID hold still follows the
+    chain height. Money in all 8: P2 SETTLED, alice -98000 msat, the operator
+    +98000, P3 back with alice. Every rehearsal player pays and a run lasts
+    minutes, so the unpaid rule never fires here - its pins are the unit ones
+    above; this shows it does not touch the paying path.
+
+M3.3-30 IS DONE, the unpaid invoice with it.
