@@ -116,11 +116,10 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   row PAYOUT_QUEUED after the chain carried it (2 of 2
                   rehearsal runs did): a queued payout a seat has not seen
                   paid keeps its watch asking, and the chain answers PAID.
-    decision      the PAGE runs the WebGL template's copy of the client
-                  bundle (unity-proto/Assets/WebGLTemplates/BtcLogistics),
-                  which must equal dist; both are left as they were because
-                  Unity stays untouched. Shipping it is one rebuild and one
-                  copy into that folder - Daniel's OK.
+    code, DONE    the page's copy of the client bundle (the WebGL template)
+                  equals dist again and carries the settlement-wait words -
+                  copied once the hold probe passed, as Daniel set. Not
+                  deployed; the Daily is untouched.
     remainder     a SUSPENDED run has no committee re-run (13A) yet; it
                   cannot happen on 2 of 2, so it is not built on this slice.
     code, NEXT    the pool is a FEDERATION (DECIDED, below): the settled

@@ -28430,3 +28430,9 @@ Release build 214 s. The patch: packages/blwp-node/tools/fedimint-lnv2-hold.patc
 WHAT IT IS NOT YET: the hold is TIME-BASED - the window's length, set per
 guardian - and not tied to the round's result being FINAL. A cancel for a
 DELIVERED stake is not in it either. Probe runs: 0 ports left bound each time.
+
+THE TEMPLATE COPY, now that the hold probe passes (Daniel's condition): the
+client bundle rebuilt (`tools/bundle.js`), dist/blwp-client.js (432807 bytes)
+copied into unity-proto/Assets/WebGLTemplates/BtcLogistics/; blwp-curve.js and
+blwp-core.js already equalled their dist and were not touched. blwp-client
+233/233, the two template-equals-dist tests included. Nothing deployed.
