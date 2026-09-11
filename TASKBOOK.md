@@ -29907,3 +29907,18 @@ M3, FROST/DKG: FIXED - THE COMMITTEE NAMES A BAD SHARE AND DOES NOT QUEUE AN INV
                     unsent but not named.
   COUNTS STOOD ON   protocol 485/485, node 507/507 (9 sequential chunks, exit 0),
                     client 246/246. Unity not run.
+
+M3, P2 (PUBLICATION IS A CONDITION OF FINALITY, v4.6.2 §13A): MEASURED BEFORE
+  TEST              blwp-node/test/publication-finality.test.js; the contract
+                    names one relay that answers and logs every request. The
+                    objection-window fixtures moved, unchanged, to
+                    test/window-fixture.js (objection-window 6/6 still green).
+  FACTS             7 seats (holder + five signers, window 1000 ms): after the
+                    window the run is FINAL (a share would be released); the
+                    relay was asked 0 times, holds 0 objects.
+                    2 daemons (window 3000 ms): loser SETTLED on both, winner
+                    CANCELLED on both, payout queued on both; relay asked 0.
+  READING           Nothing posts a transcript anywhere, and finality never
+                    asks. W counts from the threshold's signatures. The §35A
+                    self-dealing quorum is open: five seats that keep the
+                    transcript to themselves still reach FINAL and move money.
