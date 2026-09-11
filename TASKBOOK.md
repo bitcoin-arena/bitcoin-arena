@@ -27550,3 +27550,28 @@ THE REHEARSAL WITH THE UNPAID EXPIRY IN (m30b-1..4, AB and BA side by side):
     above; this shows it does not touch the paying path.
 
 M3.3-30 IS DONE, the unpaid invoice with it.
+
+M3.3-30, checked again.
+
+1. "AFTER EXPIRED, A LATER SETTLE ANSWERS ALREADY-MOVED" WAS NOT PINNED. The
+   existing already-moved tests cover a stake that moved to SETTLED. New pin
+   (custody.test.js): a lost stake's hold reaches EXPIRED through the real
+   sweep (expiry 400 recorded, `expire` at tip 401); the next close decides
+   SETTLE on a final run and must answer "already moved", keep the row
+   EXPIRED, and release nothing to lnd - the winner is still cancelled. So the
+   2 s share retry (M3.3-29) stops there. Green; a mutant that counts only
+   SETTLED and CANCELLED as moved fails ("a close tried to act on an expired
+   hold: the preimage was released").
+2. A DAEMON THAT CANNOT READ A CHAIN HOLDS NO STAKE TODAY. `main.js` passes no
+   `funded`, and `serve`'s default refuses every entry with 402 ("this node
+   stores nothing for an entry nobody has funded") - with or without a
+   bitcoind - so a launched daemon issues no hold and has no row it could
+   fail to expire. Paying seats exist only where a caller gives `funded`
+   (the rehearsal's `standUpRound`). A deploy fact, not this letter.
+3. RESTART, THE SWEEP'S LOAD, A PAID-BUT-UNSEEN HOLD: pinned or measured
+   above. Noted, not changed: a VOID run WITH a result is written EXPIRED at
+   the close - the schema's "EXPIRED because nobody acted", its decided end -
+   while lnd still holds its HTLC until the timeout; the money goes back
+   either way.
+
+blwp-node 465/465 (+1), blwp-client 230/230, core 91/91, vectors 8/8.
