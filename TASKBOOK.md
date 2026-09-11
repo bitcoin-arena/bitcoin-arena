@@ -28340,3 +28340,27 @@ AND NOT EVEN THE GUARDIAN MODULE ALONE: `cargo check -p fedimint-lnv2-server
 "Unable to find libclang". So the smallest-delay patch cannot be type-checked
 either, and it is not written: uncompiled Rust would be a guess. Target dir
 now 2.8 GB in scratch.
+
+### libclang from LLVM's own prebuilt release, in scratch - the baseline compiles
+
+Daniel's pick (b), 2026-09-11: LLVM's official prebuilt release into scratch
+only, the build pointed at it; no apt, not Unity's copy.
+
+  fetch       llvmorg-23.1.1, LLVM-23.1.1-Linux-X64.tar.xz from the
+              llvm-project GitHub release: 2014958380 bytes in 36 s, sha256
+              832aeb58d105de1cabc7b982dd2c65de0610f7377df48ae8fc2dd8e97420a15c
+  unpacked    only lib/libclang.so*, lib/clang/* and bin/llvm-config: 130 s,
+              314 MB; `ldd libclang.so.23` finds libm, libz, libstdc++,
+              libgcc_s, libc on the system - nothing missing; 265 headers in
+              lib/clang/23/include; llvm-config 23.1.1
+  pointed     LIBCLANG_PATH=<scratch llvm>/lib and LLVM_CONFIG_PATH=
+              <scratch llvm>/bin/llvm-config for the one cargo command
+  first try   libclang found ("Clang version: clang version 23.1.1"), then
+              aws-lc-sys's bindgen: "fatal error: 'stddef.h' file not found"
+              - clang's own built-in header, which sat in the scratch LLVM
+              (lib/clang/23/include/stddef.h) but was not on bindgen's path
+  fix         BINDGEN_EXTRA_CLANG_ARGS="-I<scratch llvm>/lib/clang/23/include",
+              the variable aws-lc-sys's own build script names for this
+  BASELINE    `cargo check -p fedimint-lnv2-server --locked`, the UNPATCHED
+              v0.12.0 tree: exit 0, "Finished `dev` profile ... in 33.64s";
+              target dir 3.1 GB
