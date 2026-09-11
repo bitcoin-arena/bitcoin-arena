@@ -28334,3 +28334,9 @@ named, not installed.
 NOTHING PATCHED, NOTHING RELEASED EARLIER OR LATER: the secret's release
 timing is unchanged, so the hold probe was not re-run; bob can still spend
 2.3-2.7 s after payment. The missing library is libclang (for bindgen).
+
+AND NOT EVEN THE GUARDIAN MODULE ALONE: `cargo check -p fedimint-lnv2-server
+--locked` exits after 59 s at the same `aws-lc-sys v0.41.0` build script,
+"Unable to find libclang". So the smallest-delay patch cannot be type-checked
+either, and it is not written: uncompiled Rust would be a guess. Target dir
+now 2.8 GB in scratch.
