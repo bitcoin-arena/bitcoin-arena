@@ -81,6 +81,12 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   the raw transaction and submits it itself, one transaction carries about
   300 items, and the browser needs its own wasm build of the stock client
   crates because fedimint-client-wasm has no LNv2.
+  SECURITY PASS (15:00, FEDERATION.md "Security findings", F1-F9): four
+  HIGH holes, each with a fix from tested parts, each a RULING - F1 a loser
+  escapes by dealing shares of the wrong secret (fix: a point image, so
+  Feldman's A0 is checked against it), F2 the page picks the refund key,
+  F3 a seat can substitute claim_pk, F4 lock fields verified before
+  STAKE_COMMITTED. F1 and F4 block the rehearsal's step 1.
 
   THE ROUND FOR SATS IS REHEARSED ON REGTEST, through the real daemons and a
   real lnd (`tools/round-rehearsal-lnd.mjs`; numbers: TASKBOOK). A paying
