@@ -29824,3 +29824,27 @@ M3, FROST/DKG SLICE: AGREEMENT - EVERY SEAT MUST HAVE COMBINED THE SAME CONTRIBU
   reported 229 tests (21 fewer) and 0 failures - some node test files register
   fewer tests under heavy load, so a "green" run can have skipped coverage.
   Likely the earlier off-by-one too. Counts here are from the sequential run.
+
+M3, FROST/DKG LETTER CLOSED (close review, HEAD 3011a6e)
+  OWNERSHIP         2 of 2, rogue first commitment built from the honest A0:
+                    before (734a2ec) accepted / honest share verified / combine
+                    gave the attacker's key / attacker alone signed, and the
+                    daemon took it 201 with the pool output key the attacker's;
+                    after (0672ceb) refused by the round-1 proof of knowledge at
+                    accept, open, combine, and 409 on the daemon.
+  SPLIT             5 of 7, one dealer, two valid contributions to two halves:
+                    before - honest seats finished 6, distinct group keys 2,
+                    distinct pool addresses 2; after (3011a6e) - finished 0,
+                    keys 0, addresses 0, every refusal naming the dealer.
+  UNCHANGED         ZF frost-secp256k1-tr v3.0.0 signing + DKG vectors byte for
+                    byte (0c7df31); honest 2 of 2 and 7 seats -> one key; 5-of-7
+                    signing. Mutants: proof check skipped -> ownership back;
+                    agreement ignored -> split back.
+  RESIDUAL          a seat that never publishes stalls the key (time, not
+                    money, as not dealing always could); a last dealer can nudge
+                    which key comes out, cannot own it (the DKG family's known
+                    property).
+  COUNTS STOOD ON   protocol 485/485, node 504/504 (sequential chunks, exit 0,
+                    0 cancelled), client 246/246. Unity not run. Listed, not
+                    this letter: the second-closer 800 ms load flake, and the
+                    node test-count drop when four suites run at once.
