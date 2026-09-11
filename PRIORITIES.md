@@ -92,6 +92,12 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   still settles and cancels after it. A start runs the close
                   logic again for every closed round with a stake still HELD
                   there. Before: both seats HELD past the window.
+    code, DONE    MF item 14, the node half: `GET /settlement` tells a
+                  player what their hold is now, where the run's result
+                  stands, when the window closes and the refund height.
+                  Before: only `/stake`, which says HELD after the stake was
+                  settled or handed back (4 of 4 asks). The page's half is
+                  next.
     remainder     a SUSPENDED run has no committee re-run (13A) yet; it
                   cannot happen on 2 of 2, so it is not built on this slice.
     ruling        how a settled stake reaches the pool; the owed-sats fee

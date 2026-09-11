@@ -27990,3 +27990,44 @@ WHY STEP 2 STOPS. Three facts, each measured above:
      for today (it only pays).
 Nothing was built; blwp-node 479/479, blwp-client 230/230, protocol 464/464,
 core 91/91 unchanged.
+
+CORRECTION to the recommendation given with this: paying the winner from the
+operator's lnd - (a1) - is one node's act, and "M3 is done when" says "the
+winners are paid by a threshold signature no single node could have
+produced". The built FROST pool is the construction that meets that line; what
+is open is only how settled stakes get into it.
+
+### MF item 14, the node half - where a stake stands, asked by its player
+
+"Waiting for settlement. Held stake, threshold signing, refund on expiry. The
+player is waiting on other people's machines and must be told so, with the
+refund path visible the whole time." Since M3.3-32 that wait is a whole
+objection window.
+
+BEFORE, measured: the page's only question is `GET /stake` ("has this node
+seen it held"), and it answers from the row written when the stake was first
+seen. Two seats, a 3 s window, a winner and a loser: after the window, with
+the loser SETTLED and the winner CANCELLED on both daemons, `/stake` said
+`{"state":"HELD","paidMsat":"98000"}` to all 4 asks. `/settlement` did not
+exist (404 "no such door"). The client stops its stake watch once the run
+ends, so for the whole window the page says nothing at all.
+
+AFTER. `GET /settlement?entry=` (read only; 404 for an entry this node never
+seated) answers: `hold` - the custody row's state now (or FREE, or none) -
+and its `why`; `finality` and `finalityWhy` off `resultFinality`;
+`windowClosesAtMs` on this node's clock; `refundHeight`, the HTLC expiry the
+node learnt when it saw the stake paid.
+
+    objection-window.test.js, the new pin (stakes now seen through the real
+    `GET /stake`, the fake lnd naming an HTLC expiry of 500):
+      inside the window, both seats, winner and loser: HELD,
+        PROVISIONALLY_FINAL, window end within close + 3000 ms and now +
+        3000 ms, refund height 500
+      after it: winner CANCELLED, loser SETTLED, FINAL, on both
+      a stranger's entry: 404
+    Mutants: the door says what /stake says (HELD) - fails; the door names no
+    window end - fails. Restored 6 of 6.
+
+blwp-node 480/480 (+1), blwp-client 230/230, protocol 464/464, core 91/91.
+`/stake` is left as it is: it answers the 23.1 step 5 question it was built
+for. The page does not read `/settlement` yet - that is the client half.
