@@ -19,6 +19,14 @@ Top item first. Finish and deploy before starting the next.
 LIVE LETTER: SPECIAL — make already-coded custody match spec v4.6.2
 (Fable security: F1–F9, P1–P8, 4bcac5c Bitcoin beacon). Interrupt current
 M3 work. Change ONLY what is already implemented and now wrong. Then M3.
+  DONE (18:15 conform): the only already-coded thing v4.6.2 made wrong was
+  constants.js's §23.6 custody comment (still "a Fedimint-class federation
+  with a Lightning gateway") - conformed to the stake-lock wording; behaviour
+  unchanged, protocol 464/464. The beacon already reads bitcoin-block-hash and
+  no drand path is in the code. F1-F9/P1-P8 and federation_id/stake_expiry_blocks
+  concern the federation custody NOT built in the node/client (the hold-invoice
+  path ships); building it is the parked wiring condition, not this interrupt.
+  M3 resumes.
 PREVIOUS LIVE: M3 - A ROUND FOR TESTNET SATS ("M3 is done when"). M3.3-19 is
 closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
 (below, under 6e), so the live work is the finish line itself.

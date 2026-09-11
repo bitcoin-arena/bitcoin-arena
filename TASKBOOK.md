@@ -29280,3 +29280,45 @@ The construction holds on stock 0.12.0. FEDERATION.md's conditions before real
 money remain: FROST/DKG bit-matched to frost-secp256k1-tr (never a trusted
 dealer), real guardians and >=2 independent gateways, federation fees, the
 spec update, and the daemon/browser wiring. None started.
+
+## SPECIAL: CONFORM ALREADY-CODED CUSTODY TO SPEC v4.6.2 (Daniel 2026-09-11 18:15)
+
+Interrupt of M3: change ONLY code that is already implemented and now wrong
+against FEDERATION.md / multiplayer_p2p.md v4.6.2 (F1-F9, P1-P8, 4bcac5c
+Bitcoin beacon). Do not build what is not built.
+
+INVENTORY - what v4.6.2 touches, against what is actually coded here:
+  beacon (4bcac5c)      genesis.js:56 RANDOMNESS_SOURCE = 'bitcoin-block-hash';
+                        §5A.5 now committee_seed over the first Bitcoin block
+                        after committee_time. CODE ALREADY CONFORMS.
+  drand gone            no drand path in packages (genesis is bitcoin); the
+                        spec/TASKBOOK mentions are historical "was drand,
+                        now Bitcoin" notes. NOTHING TO CHANGE.
+  §23.6 wording         constants.js CUSTODY comment quoted the OLD §23.6
+                        ("a Fedimint-class federation with a Lightning
+                        gateway, production-ready ... identical trust
+                        statement"). v4.6.2 §23.6 rewrote this: threshold-LN
+                        measured-and-not-used; FEDERATION = the stake lock
+                        inside the federation, Lightning only at the edges
+                        through >=2 gateways, no gateway holds a round's money;
+                        two-layer residual. FIXED - comment only; CUSTODY list
+                        and custodyByte behaviour unchanged.
+  F1 point image        the stake commitment as a point (P.G) governs the
+                        federation stake lock, which is NOT built in packages
+                        (only rehearsed in tools/). contracts.js still commits
+                        H(P) for the built hold-invoice path. NOT BUILT - left.
+  F2-F9, P1-P8          refund-from-seed, seat-attested claim_pk, pre-commit
+                        field checks, fee secret, slashable missing signature,
+                        publication/grinding, creator-cannot-name-federation:
+                        all describe the federation custody path that is NOT
+                        built in the node/client (the hold-invoice path is what
+                        ships). Building them is the parked "daemon/browser
+                        wiring" condition. NOT TOUCHED.
+  federation_id,        named as future contract fields; not in the encoding.
+  stake_expiry_blocks   Adding them is building. NOT TOUCHED.
+
+CHANGED: packages/protocol/src/constants.js - the §23.6 comment only.
+MEASURED: protocol 464/464 before and after (comment-only, no behaviour).
+No JS behaviour changed; no Unity. The built custody is still the
+hold-invoice path; conforming it to the stake lock is the parked wiring
+letter, not this interrupt.
