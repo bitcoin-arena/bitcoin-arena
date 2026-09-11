@@ -28031,3 +28031,52 @@ node learnt when it saw the stake paid.
 blwp-node 480/480 (+1), blwp-client 230/230, protocol 464/464, core 91/91.
 `/stake` is left as it is: it answers the 23.1 step 5 question it was built
 for. The page does not read `/settlement` yet - that is the client half.
+
+### MF item 14, the client half - the chip says where the stake stands
+
+BEFORE, measured: `watchStake` returns at "committed" and a finished count is
+never restarted, so once the stake was committed the chip read "stake seen by
+2 of 2 nodes (2 needed) · committed" for the rest of the page's life - inside
+the window, after a settle, after a cancel alike. `settlementLine` and
+`settlementBy` did not exist (the new file failed to load).
+
+AFTER:
+  - join.js `settlementBy`: asks each settlement seat's `/settlement`, found
+    at the page's addresses through `/identity` as `stakeSeenBy` does, one
+    answer per seat key; one word per field - the seats' own hold when they
+    agree, HELD while any differs; SUSPENDED if any, FINAL when all, else
+    PROVISIONALLY_FINAL when any has a result; the LATEST window end; the
+    lowest refund height.
+  - client.js `watchSettlement`: started by the stake watch the moment it is
+    committed, every `settlementEveryMs` (5 s by default), stopped when every
+    answering seat has moved the hold (SETTLED, CANCELLED, EXPIRED) or the
+    client closes; the answer rides on `stakeCount`, which the page already
+    hands the chip.
+  - ghost-field.js `settlementLine`, appended by `stakeLine`: nothing until a
+    result exists; then "waiting for the objection window, m:ss left · refunds
+    at block H if nobody acts", "final: the committee is settling it",
+    "suspended by an objection", and after it "stake settled: this run lost
+    it", "stake handed back", "stake refunded: its hold expired". SETTLED does
+    not say "into the pool": where a settled stake goes is the open ruling.
+
+    settlement-seen.test.js (two real daemons, reference window 600000 ms)
+      inside the window: " · stake seen by 2 of 2 nodes (2 needed) · committed
+        · waiting for the objection window, 2:05 left · refunds at block 500
+        if nobody acts"
+      after a settle on both seats: "... · committed · stake settled: this run
+        lost it"
+      the client's own watch: starts at committed, reads PROVISIONALLY_FINAL,
+        stops once both seats CANCELLED, and is not asked again
+      the words, one per state
+    Mutants: the watch never starts - fails; the chip ignores the answer -
+    2 fail; the watch never stops - fails. Restored 3 of 3.
+
+NOT SHIPPED TO THE PAGE, AND WHY. The page loads the WebGL template's copy of
+the bundle, and ghost-field.test.js and page-threshold.test.js require it to
+equal dist byte for byte. Rebuilding dist without that copy turned both red
+(231 of 233); the copy is a file in unity-proto/, which stays untouched. So
+dist and the template are left as they were - 233 of 233 - and the new code
+is in src only. Shipping it is `node tools/bundle.js` and one copy into
+unity-proto/Assets/WebGLTemplates/BtcLogistics/: Daniel's OK.
+
+blwp-node 480/480, blwp-client 233/233 (+3), protocol 464/464, core 91/91.

@@ -96,8 +96,18 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   player what their hold is now, where the run's result
                   stands, when the window closes and the refund height.
                   Before: only `/stake`, which says HELD after the stake was
-                  settled or handed back (4 of 4 asks). The page's half is
-                  next.
+                  settled or handed back (4 of 4 asks).
+    code, DONE    MF item 14, the client half: once the stake is committed
+                  the client asks every settlement seat until the hold has
+                  moved, and the chip adds "waiting for the objection window,
+                  m:ss left · refunds at block H if nobody acts", then
+                  "settled", "handed back" or "refunded". Before: the chip
+                  stopped at "committed".
+    decision      the PAGE runs the WebGL template's copy of the client
+                  bundle (unity-proto/Assets/WebGLTemplates/BtcLogistics),
+                  which must equal dist; both are left as they were because
+                  Unity stays untouched. Shipping it is one rebuild and one
+                  copy into that folder - Daniel's OK.
     remainder     a SUSPENDED run has no committee re-run (13A) yet; it
                   cannot happen on 2 of 2, so it is not built on this slice.
     ruling        how a settled stake reaches the pool; the owed-sats fee
