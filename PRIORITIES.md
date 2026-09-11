@@ -16,9 +16,8 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: SPECIAL — make already-coded custody match spec v4.6.2
-(Fable security: F1–F9, P1–P8, 4bcac5c Bitcoin beacon). Interrupt current
-M3 work. Change ONLY what is already implemented and now wrong. Then M3.
+LIVE LETTER: M3 - A ROUND FOR TESTNET SATS ("M3 is done when"). Special
+conform-to-v4.6.2 is done (a1e8d6e / 875cef1). Continue M3.
   DONE (18:15 conform): the only already-coded thing v4.6.2 made wrong was
   constants.js's §23.6 custody comment (still "a Fedimint-class federation
   with a Lightning gateway") - conformed to the stake-lock wording; behaviour
