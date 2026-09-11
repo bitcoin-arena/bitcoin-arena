@@ -27077,3 +27077,35 @@ pool DKG (`new Dkg`, default SHARES_NEEDED), `payWithCommittee` (default) and
 reaches no chain". No core or Unity engine file was touched, so there is no
 engine comparison to redo. blwp-node 454/454, blwp-client 225/225, core
 91/91, golden vectors 8/8.
+
+### M3.3-26, checked a third time: the slot count in the settle survived every test
+
+Item 23's bug was "every seat a vote": the page dealt `needed:
+settlementSlots`. The same mistake in the SETTLE - `needed =
+settlementSlots` in `fromTheCommittee` - was mutated in a scratch copy and
+passed settle-threshold, handout-threshold, handout-accept, sealed-shares and
+close-order: on two seats the slot count and the threshold are both 2.
+
+`settle-threshold.test.js` now has two shapes on one fixture: 2 seats with 2
+up, and 7 seats with 5 up (two seats are keys with no daemon). Five daemons
+replay the wrecking run, close, re-gather until final, and the first one's
+settle hook opens the 5-of-7 stake off its own share and four others'.
+
+    mutant in the settle      2 of 2, 2 up          7 seats, 5 up
+    default 5 (the bug)       FAIL "2 of 5 shares"  pass (5 is 5)
+    slot count (item 23)      pass (2 is 2)         FAIL "5 of 7 shares"
+    the code                  pass                  pass (2.5 s)
+
+The same slot-count mutant elsewhere, each against its own test (a scratch
+copy without unity-proto fails the two page-file tests unmutated; counted
+beyond that baseline):
+
+    the door (needed !== settlementSlots)   handout-threshold: 1 of 2 fails
+                                            (5-of-7 refused)
+    stakeFor (needed = settlementSlots)     "stakeFor deals at the round's
+                                            threshold..." fails
+    stakeSeenNeeded (= settlementSlots)     "committed counts against the
+                                            same rule" fails
+
+blwp-node 455/455, blwp-client 225/225, core 91/91, golden vectors 8/8 (no
+core or engine file touched this turn).

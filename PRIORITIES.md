@@ -44,9 +44,10 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   the table PAYOUT_QUEUED, 2 of 2 seats signed.
     code, DONE    M3.3-26 (item 23 folded in): a stake opens at the ROUND'S
                   threshold (2 of 2, 5 of 7) - the door refuses any other by
-                  name, the settle opens at it (pinned: a mutant reads "2 of
-                  5"), the page and the client's defaults and "committed"
-                  count read it. Rehearsal, AB and BA: P2 SETTLED on both
+                  name, the settle opens at it (pinned on 2 of 2 and on 7
+                  seats with 2 down: mutants read "2 of 5" and "5 of 7"), the
+                  page and the client's defaults and "committed" count read
+                  it. Rehearsal, AB and BA: P2 SETTLED on both
                   daemons, alice -98000 msat, the operator +98000; P1 and P3
                   cancelled back to alice.
     flake, NEXT   M3.3-27: `Client.at` sometimes refuses "only 1 of 2
@@ -67,7 +68,7 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   too: lnd settled once; the second `settleinvoice` is logged by lnd as
   "invoice already settled" and still returns success, so both write
   SETTLED (reported, left as is). Not yet measurable: the objection window
-  before finality, the pool payout. Node 454/454, client 225/225, core
+  before finality, the pool payout. Node 455/455, client 225/225, core
   91/91, golden vectors 8/8 (0 engine files touched).
 
   M3.3-21 IS DONE - STAKE COMMITTED, AS THE PLAYER SEES IT (§23.1 step 5):
