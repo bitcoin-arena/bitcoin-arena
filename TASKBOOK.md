@@ -27363,3 +27363,16 @@ first closer's gather was answered before the second stored its result.
 
 blwp-node 457/457 (+2: second-closer 800 ms and same moment), blwp-client
 230/230, core 91/91, golden vectors 8/8, 0 core or engine files touched.
+
+THE WATCH'S SECOND ASK, SEEN. The harness prints its stamps once both daemons
+end, and the 2 s watch asks again after that, so after-gap800-1 showed the
+second closer's one refused ask and a row that still ended SETTLED. The
+daemons' own log has the rest: AB - B refused at line 27, HELD at 29, both
+ENDS at 37-38, then B "SETTLE -> SETTLED: the preimage was released" at 90;
+BA - A refused at 27, then A SETTLED at 86. The harness now prints every stamp
+recorded after the first print as LATE STAMPS.
+
+A DIFFERENT ROW, SEEN BY THE SAME PRINT: P3, the VOID stake, times out in lnd
+(CANCELED, back to alice) while both daemons' rows still say HELD - 26 of 26
+played runs of this letter. Nothing moves a row to EXPIRED. Money right, row
+wrong; listed as M3.3-30, not this letter.

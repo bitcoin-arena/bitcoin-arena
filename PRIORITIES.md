@@ -62,6 +62,10 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   the first's finality and nothing asks again (6 of 21
                   rehearsals since M3.3-26, always the second closer, in
                   either order; money right, row wrong).
+    code          M3.3-30: a VOID stake whose hold times out in lnd stays
+                  HELD on both daemons' rows - nothing moves a row to EXPIRED
+                  (26 of 26 rehearsals: lnd CANCELED, rows A HELD, B HELD;
+                  money right, row wrong).
     code          M3.3-28: the POOL's threshold is still a flat 5 - the pool
                   DKG (`new Dkg` in server.js, default SHARES_NEEDED),
                   `payWithCommittee` (default) and `enoughToSign` (payout.js,
