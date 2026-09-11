@@ -27294,14 +27294,19 @@ settled" with success, is only the safety net.
 
     second-closer.test.js   two daemons, a winner (world secret searched once
       with the core replay: DELIVERED by tick 1320, score 12) beside the loser,
-      real 2-of-2 handouts; A re-gathers every 1500 ms, B every 100 ms, B
-      closes right after A. The test first checks the race happened (B's close
-      left the lost stake HELD, "no preimage"), then that B ends SETTLED with
-      the lost stake's own preimage. Before: red - "the second closer is still
-      HELD on a stake the first has settled" after 10 s. After: green, 2.9 s.
+      real 2-of-2 handouts, both on the daemons' own 2 s watch, the second
+      close sent a named gap after the first:
+        800 ms apart   checks the race happened (B's close left the lost stake
+                       HELD, "no preimage"), then that B ends SETTLED with the
+                       lost stake's own preimage. Before: red, "the second
+                       closer is still HELD on a stake lnd settled through the
+                       first" after 12 s. After: green, 4.2 s.
+        same moment    both daemons SETTLED on the lost stake, CANCELLED on the
+                       winner's. Before: red, "B is HELD on the lost stake" -
+                       two in-process closes are handled one after the other,
+                       so here it races too (on the rehearsal gap 0 does not:
+                       0 of 8). After: green, 3.1 s.
 
-(The fix and the pin above are not yet committed: they go in with the node
-suite and the after batches.)
 
 GAP 0, THE CONTROL, before the fix (four pairs, AB and BA side by side, from a
 copy with HEAD's server.js):
@@ -27312,3 +27317,49 @@ copy with HEAD's server.js):
     before, gap 0:     0 of 8 runs with a row HELD after lnd settled - both
                        daemons are final at their first gather, every share ask
                        opens first time, and the watch never has to ask again
+
+THE NORMAL GAP, before the fix (each close awaited, as the rehearsal always
+closed: 348-449 ms apart), four pairs AB and BA side by side:
+
+    run         second  P2 lnd   rows                 the second closer's asks     the first closer's asks
+    normal-1-AB B       SETTLED  A SETTLED, B HELD    1: refused                   1: OPENED with 2
+    normal-1-BA A       SETTLED  both SETTLED         1: OPENED with 2             2: refused, OPENED with 2
+    normal-2-AB B       SETTLED  both SETTLED         1: OPENED with 2             2: refused, OPENED with 2
+    normal-2-BA A       SETTLED  A HELD, B SETTLED    1: refused                   1: OPENED with 2
+    normal-3-AB B       SETTLED  A SETTLED, B HELD    1: refused                   1: OPENED with 2
+    normal-3-BA A       SETTLED  both SETTLED         1: OPENED with 2             2: refused, OPENED with 2
+    normal-4-AB B       SETTLED  both SETTLED         1: OPENED with 2             2: refused, OPENED with 2
+    normal-4-BA A       SETTLED  A HELD, B SETTLED    1: refused                   1: OPENED with 2
+
+    before, normal gap: 4 of 8 runs with a row HELD after lnd settled
+
+Every run has one refused ask; which daemon it falls on decides the row. On
+the FIRST closer it is asked again - its watch is still running because its
+own runs were short - and opens. On the SECOND closer the watch has already
+stopped (nothing was short at its close), the one refused ask is its only
+one, and the row stays HELD while lnd settled the stake. The 2 s watch never
+asked again in any of the four HELD runs.
+
+THE FORCED RACE, 800 ms between the closes, before the fix (four pairs, AB and
+BA side by side, closes landed 801-810 ms apart):
+
+    run          second  P2 lnd   rows                 the second closer's asks  the first closer's asks
+    gap800-1-AB  B       SETTLED  A SETTLED, B HELD    1: refused                1: OPENED with 2
+    gap800-1-BA  A       SETTLED  A HELD, B SETTLED    1: refused                1: OPENED with 2
+    gap800-2-AB  B       SETTLED  A SETTLED, B HELD    1: refused                1: OPENED with 2
+    gap800-2-BA  A       SETTLED  A HELD, B SETTLED    1: refused                1: OPENED with 2
+    gap800-3-AB  B       SETTLED  A SETTLED, B HELD    1: refused                1: OPENED with 2
+    gap800-3-BA  A       SETTLED  A HELD, B SETTLED    1: refused                1: OPENED with 2
+    gap800-4-AB  B       SETTLED  both SETTLED         1: OPENED with 2          2: refused, OPENED with 2
+    gap800-4-BA  A       SETTLED  both SETTLED         1: OPENED with 2          2: refused, OPENED with 2
+
+    before, 800 ms: 6 of 8 second closers HELD after lnd settled
+
+Pair 4 missed the race: the first closer's one gather started at +1267 ms and
+was answered at +1523, and the second's result had landed at +1512 - so the
+first was final at its close, asked, and was the one refused; its watch was
+still running (its table was short) and asked again. In the six HELD runs the
+first closer's gather was answered before the second stored its result.
+
+blwp-node 457/457 (+2: second-closer 800 ms and same moment), blwp-client
+230/230, core 91/91, golden vectors 8/8, 0 core or engine files touched.
