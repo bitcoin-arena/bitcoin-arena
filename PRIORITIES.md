@@ -95,9 +95,9 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   wrote CANCELLED, lnd CANCELED once. Two daemons SETTLING one is measured
   too: lnd settled once; the second `settleinvoice` is logged by lnd as
   "invoice already settled" and still returns success, so both write
-  SETTLED (reported, left as is). Not yet measurable: the objection window
-  before finality. Node 474/474, client 230/230, core 91/91, golden
-  vectors 8/8 (0 engine files touched).
+  SETTLED (reported, left as is). The objection window before finality is
+  M3.3-32 (above). Node 478/478, client 230/230, core 91/91, golden
+  vectors 8/8, protocol 464/464 (0 engine files touched).
 
   M3.3-21 IS DONE - STAKE COMMITTED, AS THE PLAYER SEES IT (§23.1 step 5):
   from the seat of a paying round, the page asks every settlement seat and
