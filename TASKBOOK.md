@@ -28135,3 +28135,45 @@ PAYOUT_QUEUED - "1 of 2 seats committed to this spend" - after the chain
 carried the payment. The payout's twin of M3.3-29's second closer.
 
 blwp-node 481/481 (+1), blwp-client 233/233, protocol 464/464, core 91/91.
+
+### The seat that did not send the payout ends PAID
+
+Measured above, 2 of 2 rehearsal runs: the seat whose one ask came before the
+other seat had queued its table stopped at "1 of 2 seats committed to this
+spend" and kept PAYOUT_QUEUED after the chain carried the other seat's
+payment. Nothing asked again: the finality watch stops when no run, table or
+settle is short. `settleQueued` already reads the chain first (`paidOnChain`).
+
+    payout-second-seat.test.js: two daemons, a dealt 2-of-2 pool, a fake
+      bitcoind that mines what it is sent and answers `getblock` verbosity 3,
+      1000-sat stakes, a winner and a loser, a 3 s window. The rehearsal's
+      order is forced (instrumentation): B signs its table but does not queue
+      it until A has asked once. Unforced, in-process, B asked early and was
+      saved by a run still in its window - the pin passed on the old code, so
+      it was not counted.
+      Before: A "1 of 2 seats committed to this spend", row PAYOUT_QUEUED,
+        B PAID, 1 transaction - red.
+      After: A "1 of 2 seats committed", then "bad-txns-inputs-missingorspent"
+        (its retry started a second signing round while B's spend was going
+        out - the same outputs, refused by the chain), then PAID off the chain;
+        1 transaction, 980 sats to the winner - green.
+
+THE CHANGE: in `watchFinality`, a payout this seat queued and has not seen
+paid is short - only on a seat that can spend and watch the pool, so a daemon
+with no chain does not churn - and the close logic runs again on the same
+cadence, inside the same deadline.
+
+REHEARSAL, real lnd and bitcoind, --pool --stake-msat=1000000:
+    AB   A PAID "the chain carries this round's payment in block 285, and it
+         pays this seat's table"; B PAID "paid by 2 of 2 seats"; the winner's
+         key 980 sats, in a block, fee 220; 0 of 4 acts before the window;
+         VOID rows HELD 0; HELD after lnd settled 0; alice -980000 msat, the
+         operator +980000
+    BA   both rows PAID, each "paid by 2 of 2 seats"; the winner's key 980
+         sats - one payment, not two; the rest the same
+
+blwp-node 482/482 (+1), blwp-client 233/233, protocol 464/464, core 91/91.
+
+THE POOL IS A FEDERATION (Daniel 2026-09-11 09:26). Everything above pays the
+winner from a pool the harness funded; the settled stake still sits in bob's
+channel. That is the next work, not a second choice.

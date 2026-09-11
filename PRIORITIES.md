@@ -112,8 +112,10 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   given no peer list. Rehearsal, 1000-sat stakes, AB and BA:
                   the winner's key holds 980 sats, in a block. At 100-sat
                   stakes the 98-sat row stays owed, under the dust floor.
-    code, OPEN    the seat that did not send the payout keeps its row
-                  PAYOUT_QUEUED after the chain carried it (2 of 2 runs).
+    code, DONE    the seat that did not send the payout no longer keeps its
+                  row PAYOUT_QUEUED after the chain carried it (2 of 2
+                  rehearsal runs did): a queued payout a seat has not seen
+                  paid keeps its watch asking, and the chain answers PAID.
     decision      the PAGE runs the WebGL template's copy of the client
                   bundle (unity-proto/Assets/WebGLTemplates/BtcLogistics),
                   which must equal dist; both are left as they were because
@@ -121,8 +123,12 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   copy into that folder - Daniel's OK.
     remainder     a SUSPENDED run has no committee re-run (13A) yet; it
                   cannot happen on 2 of 2, so it is not built on this slice.
-    ruling        how a settled stake reaches the pool; the owed-sats fee
-                  rate; htlc_cltv_days (all below, unchanged).
+    code, NEXT    the pool is a FEDERATION (DECIDED, below): the settled
+                  stake and the payout go through a Fedimint-class
+                  federation whose quorum is the round's settlement
+                  committee, with a Lightning gateway - not one lnd's
+                  channel and not a harness-funded pool.
+    ruling        the owed-sats fee rate; htlc_cltv_days (below, unchanged).
     inbound       testnet4: 196000 msat needed, 0 offered.
   Two daemons CANCELLING one invoice on the shared endpoint is measured: both
   wrote CANCELLED, lnd CANCELED once. Two daemons SETTLING one is measured
