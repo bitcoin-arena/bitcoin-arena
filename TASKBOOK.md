@@ -29462,3 +29462,28 @@ M3 SLICE 5: THE PUBLICATION CHECK AT SEATING (§5A.5, v4.6.2, P1)
                    f475627647e4b1b2 seated on both daemons, 0 of 2 refused.
                    New roster test: unpublished and in-beacon-block refused,
                    published seated with checkedAgainstChain.
+
+M3 SLICE 6: THE CLAIM KEY'S ATTESTATION (§23.1 step 0, v4.6.2, F3), PROTOCOL
+  claim-key.js     ClaimKeyAttestation { round_id, claim_pk (33, as groupKeyOf
+                   gives it), seat_pubkey } TYPE 0x16, TAG
+                   BLWP/v1/ClaimKeyAttestation; the attested set's id (sorted
+                   by seat, asserted) BLWP/v1/ClaimKeyAttestationSet = the
+                   entry's claim_key_attestation_ref. claimKeyIsAttested:
+                   counts valid signatures of distinct SEATED settlement seats
+                   (a stranger, a repeat, another round's signature: nothing),
+                   threshold = receiptsNeeded(settlementSlots) - never a
+                   caller's number; verify injected (authority.js pattern).
+  test             in blwp-node/test (protocol carries no curve): real BIP-340
+                   keys - 5 of 7 yes, 4 no; F3's own-key seat gets 1; 2 of 2.
+  MEASURED: node claim-key 4/4 (node 491); protocol unchanged 472 then.
+
+M3 SLICE 7: A SEAT CHECKS THE LOCK'S FIELDS (§23.1 step 5, v4.6.2, F4, F5)
+  stake-lock.js    lockMatchesEntry({ lock, entry, kind, claimPk, height }):
+                   stake image Point(stake_point) / fee image Hash(H(F));
+                   amount = netStakeMsat(entry) / feeMsat; claim_pk = the
+                   attested key; refund_pk = 0x02 || player_pubkey (x-only ->
+                   compressed even); expiration >= height + STAKE_EXPIRY_BLOCKS;
+                   F5: H(F) = the entry's H(P) refused. Each refused by name.
+  not here         the contract id: Fedimint's hash of the whole contract, done
+                   by the seat's stock federation client (FEDERATION.md point 8).
+  MEASURED: protocol 476/476 (+4). Not wired: no stake lock in the node yet.

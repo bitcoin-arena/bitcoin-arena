@@ -52,6 +52,16 @@ unblocked work. Park only inbound, which-guardians, and named rulings.
   never the beacon. Measured on a real regtest (client-at-probe): seated.
   Before: 18 node tests seated unpublished rounds. protocol 472/472, node
   487/487, client 236/236.
+  DONE (slice 6, F3 as protocol): claim-key.js - one seat's attestation of
+  (round_id, claim_pk), the attested set's id (the entry's
+  claim_key_attestation_ref), and claimKeyIsAttested: valid signatures of
+  distinct SEATED settlement seats, at the round's own threshold (2 of 2,
+  5 of 7), verify injected. Not wired (the lock itself is not). node 491.
+  DONE (slice 7, F4/F5 as protocol): stake-lock.js lockMatchesEntry - a
+  seat's field check before STAKE_COMMITTED: image = stake point (fee: H(F)),
+  amount = net stake (fee), claim_pk = attested key, refund_pk = 0x02 ||
+  player key, expiration >= height + 144; F = P refused. Contract-id hashing
+  stays with the stock federation client. protocol 476/476.
   DONE (18:15 conform): the only already-coded thing v4.6.2 made wrong was
   constants.js's §23.6 custody comment (still "a Fedimint-class federation
   with a Lightning gateway") - conformed to the stake-lock wording; behaviour
