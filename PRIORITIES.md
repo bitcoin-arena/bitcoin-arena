@@ -22,10 +22,22 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
 
   THE ROUND FOR SATS IS REHEARSED ON REGTEST, through the real daemons and a
   real lnd (`tools/round-rehearsal-lnd.mjs`; numbers: TASKBOOK). A paying
-  round opened, all three stakes were seen 2 of 2 and committed, two runs
-  played - and THE CLOSE SETTLED NOTHING: every hold, the loser's too, went
-  home on its own timelock; the operator gained 0 msat, the winner was paid
-  nothing. The holes, by kind:
+  round opens, every stake is seen 2 of 2 and committed, the runs play, and
+  the close does what 23.2 says in either close order: the loser's stake
+  settles to the operator (+98000 msat), the winner's and the VOID one go
+  back to the player, and no daemon's row says HELD on money no longer in
+  flight. The winner is NOT paid yet - the pool payout stops at "this node
+  reaches no chain". Next first, then the rest, by kind:
+    code, NEXT    M3.3-28: the POOL's threshold is still a flat 5 - the pool
+                  DKG (`new Dkg` in server.js, default SHARES_NEEDED),
+                  `payWithCommittee` (default) and `enoughToSign` (payout.js,
+                  hard 5) - so a 2-of-2 round's pool would ask 5 signers of 2.
+                  Read, not yet run: the rehearsal's payout stops earlier, at
+                  "this node reaches no chain". Same rule as M3.3-26.
+    code          M3.3-31: a LAUNCHED daemon holds no stake - `main.js`
+                  passes no `funded`, and `serve`'s default refuses every
+                  entry with 402. Paying seats exist only where a caller gives
+                  `funded` (the rehearsal). Read, not yet run; blocks testnet.
     code, CLOSED  a regtest daemon with Lightning had no preflight, so no
                   paying round opened (503) - it has one now.
     code, DONE    M3.3-22: the committee carries a checkpoint's receipts at
@@ -62,17 +74,12 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   settle that found no preimage keeps the 2 s watch asking
                   for the share. Second closer HELD after lnd settled: 800 ms
                   gap 6 of 8 -> 0 of 7, normal 4 of 8 -> 0 of 8, gap 0 0 -> 0.
-    code, DONE    M3.3-30: no row stays HELD on money that is not in
-                  flight. A paid hold expires once the daemon's own chain is
-                  past its HTLC's expiry (VOID rows HELD: 35 of 35 -> 0 of 16,
-                  both orders); an invoice nobody paid expires on the daemon's
-                  own clock and number. lnd cancels 13 blocks early.
-    code          M3.3-28: the POOL's threshold is still a flat 5 - the pool
-                  DKG (`new Dkg` in server.js, default SHARES_NEEDED),
-                  `payWithCommittee` (default) and `enoughToSign` (payout.js,
-                  hard 5) - so a 2-of-2 round's pool would ask 5 signers of 2.
-                  Read, not yet run: the rehearsal's payout stops earlier, at
-                  "this node reaches no chain". Same rule as M3.3-26.
+    code, DONE    M3.3-30: no daemon lists money HELD that is no longer in
+                  flight: a paid hold expires once its own chain is past the
+                  HTLC's expiry (VOID rows HELD 35 of 35 -> 0 of 16), an
+                  unpaid invoice on its own clock and number, and a close that
+                  meets an expired hold answers already-moved and releases no
+                  preimage. lnd cancels 13 blocks before the expiry.
     ruling        how a settled stake reaches the pool; the owed-sats fee
                   rate; htlc_cltv_days (all below, unchanged).
     inbound       testnet4: 196000 msat needed, 0 offered.
@@ -81,7 +88,7 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   too: lnd settled once; the second `settleinvoice` is logged by lnd as
   "invoice already settled" and still returns success, so both write
   SETTLED (reported, left as is). Not yet measurable: the objection window
-  before finality, the pool payout. Node 455/455, client 230/230, core
+  before finality, the pool payout. Node 465/465, client 230/230, core
   91/91, golden vectors 8/8 (0 engine files touched).
 
   M3.3-21 IS DONE - STAKE COMMITTED, AS THE PLAYER SEES IT (§23.1 step 5):
