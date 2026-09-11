@@ -87,6 +87,14 @@ unblocked work. Park only inbound, which-guardians, and named rulings.
   bundle, and `node packages/blwp-node/tools/client-hash.mjs <URL|dir>`
   checks a served page against it; index.html waits for a completed WebGL
   build (deploy pin). protocol 485/485, node 496/496, client 246/246.
+  DONE (FEDERATION condition: FROST + DKG bit-matched vs Zcash Foundation
+  frost-secp256k1-tr v3.0.0, vectors pinned by tag + sha256): our BIP-340
+  FROST now signs under the taproot suite's context string and reproduces
+  ZF's nonces, binding factors, signature shares and signature byte for byte
+  (BIP-340 verifies it); our DKG's commitments, round-2 shares and final key
+  shares (with the pool's BIP-341 tweak) are ZF's. GAP, named: our DKG
+  round 1 carries no proof of knowledge (ZF's does). protocol 485/485,
+  node 499/499, client 246/246.
   DONE (18:15 conform): the only already-coded thing v4.6.2 made wrong was
   constants.js's §23.6 custody comment (still "a Fedimint-class federation
   with a Lightning gateway") - conformed to the stake-lock wording; behaviour
