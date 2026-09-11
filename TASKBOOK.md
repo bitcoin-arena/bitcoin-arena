@@ -27439,3 +27439,39 @@ closer's row against lnd's own invoice, per close order):
 
 M3.3-29 IS DONE. What stays wrong on the same rows is the VOID stake: 35 of 35
 runs leave a timed-out hold HELD on both daemons (M3.3-30, listed, not fixed).
+
+### M3.3-30: a VOID stake's timed-out hold is written EXPIRED on the daemon's own chain
+
+BEFORE: 35 of 35 played rehearsals (both close orders) - P3, seated, paid and
+never played, timed out in lnd (CANCELED, back to alice) while both daemons
+still listed it HELD. Nothing moved a row to EXPIRED.
+
+THE RULE, the daemon's own: when a hold is first seen paid (`seenPaid`), lnd
+supplies one fact - the earliest expiry height among the HTLCs it accepted -
+and it is written once (`hold_expiry`, a table of its own). A HELD row whose
+recorded height this node's own chain is PAST is EXPIRED (`Custody.expire`);
+at the height itself it can still be claimed. lnd is not asked after
+seen-time. The height comes from `chainTip`, or from the pool's own bitcoind
+call when a launcher gives one (`main.js` does); a sweep every 5 s.
+
+    void-expiry.test.js   daemon: seen paid at expiry 400; lnd says CANCELED
+      early and the tip is 300 - still HELD; tip 400 - still HELD; tip 401 -
+      EXPIRED, the reason names 400, lnd not asked again. Custody: SETTLED,
+      CANCELLED and a HELD row with no recorded height are left alone.
+      Before: red ("the chain is past the HTLC's expiry and the row still says
+      HELD"; `putHoldExpiry` did not exist). After: green.
+
+LND CANCELS BEFORE THE EXPIRY HEIGHT - measured, both orders: the hold's
+HTLC expires at 366 and lnd failed it back at chain height 353, 13 blocks
+early (its own margin). The harness used to stop mining there, so the chain
+never passed 366; it now mines past the expiry, as a real chain goes on.
+Between 353 and 366 lnd has the money back and the rows still say HELD - the
+chain-only rule's window, 13 blocks here.
+
+    m30-after-2-AB   lnd CANCELED at 353 (expiry 366); rows A HELD, B HELD
+                     until the chain is past 366; at 367 A EXPIRED, B EXPIRED
+                     within 2.5 s. P2 SETTLED; alice -98000, operator +98000.
+    m30-after-2-BA   the same, mirrored.
+    VOID rows HELD after lnd cancelled and the chain passed the expiry: 0 of 4
+    (2 runs x 2 daemons). Second closer HELD after lnd settled: 0 (M3.3-29
+    holds). blwp-node 459/459, blwp-client 230/230, core 91/91, vectors 8/8.
