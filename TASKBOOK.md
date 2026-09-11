@@ -28871,3 +28871,57 @@ WHAT THE DAEMONS WILL HAVE TO KEEP (named, not built):
 Dust and fees stay listed: 100-sat stakes (98 net) cannot be this output
 (330-sat floor); the claim fee (200 here) out of the stake is the parked
 owed-sats ruling; bob's 310-sat lock and 200-sat refund fees at 2 sat/vB.
+
+## THE STAKE LOCK, REHEARSAL STEP 1: THE GUARDIANS ACCEPT A LOCK WHOSE claim_pk IS THE COMMITTEE KEY (2026-09-11)
+
+FEDERATION.md step 1: "deposit into a lock with claim_pk = the FROST key; the
+guardians accept it". Stock released fedimintd 0.12.0, unpatched; four
+guardians, threshold 3 (Fedimint's rule: total - (total-1)/3,
+fedimint-core peer_id.rs:82-102); one gateway on bob's lnd; own regtest.
+
+  FEDIMINT_BIN=<released builds> LOCK_BIN=<blwp-stake-lock> \
+    bash packages/blwp-node/tools/stake-lock-step1.sh [2000000] [980000] [144]
+
+WHY NEW CLIENT CODE: stock `lnv2 send` always names the gateway as claim_pk
+and fedimint-cli has no way to name another; the guardians insert an
+outgoing contract without checking its keys (lnv2-server lib.rs:548). So
+tools/stake-lock (Rust, a member of a v0.12.0 source tree, stock client
+crates only) opens the player's client as fedimint-cli does and funds ONE
+OutgoingContract through the stock transaction builder:
+  payment_image Hash(H(P)), amount 980000 msat, expiration = the guardians'
+  block count + 144 (stake_expiry_blocks, ruled 14:40), claim_pk = the
+  committee key, refund_pk = the player, ephemeral_pk = the refund key.
+The committee key is a 2-of-2 from this repo's own ceremony
+(tools/stake-lock-keys.mjs: each seat deals, opens its own, combines; both
+reach one key). Built in 159 s + 151 s on the existing cache.
+
+MEASURED, run 2 (190 s, nothing left running):
+  federation up        164 s; 4 fedimintd; peers 4, threshold 3; one gateway vetted
+  deposit              2000000 msat LNv2 receive through the gateway; alice
+                       SUCCEEDED; "Claimed"; player's ecash 0 -> 1987072 msat
+                       (gateway receive fee 12928 msat)
+  lock                 tx afbfd0aa2b12d8e2055e6366024c9aad3cd9f7c757d200205f428bde750d346e,
+                       accepted; the lock at output 0
+  STORED               contract id f1cf793fdbb6c07e54fa02ffd5692a851eec878cf5fa397308f1c5e7a3e97cc7
+                       = the id the client computed (the hash of the WHOLE
+                       contract, so every field, claim_pk included)
+                       expiration 449: the guardians answered 144 blocks left
+                       at their block count 305; locked at their count 305
+                       + 144 = 449 computed
+  claim_pk             02c4d3228d562b1cef76736760a8ff9e009778e8891bbae11fefef90434bf08e89
+  refund_pk            032cc0f7bb668edb9416353ce71cc8456163b4268204959f352ddc5170ceea8967
+  player's ecash       1987072 -> 1004544 msat: lock 980000 + 2528 msat fees
+  bitcoin height       314 while the guardians' block count read 305
+Run 1 (180 s): lock accepted, ids match (38a87970ea623cf7...), but the tool
+compared 144 with a computed 454 and printed MISMATCH - the endpoint answers
+in BLOCKS LEFT, `contract.expiration.saturating_sub(consensus_block_count)`
+(lnv2-server lib.rs:851-865), measured at count 310: 454 - 310 = 144. The
+tool now reads the guardians' count again and reports both.
+
+NOT IN THIS STEP: the second gateway (step 5), a guardian down (step 6), the
+forfeit (step 2), the settlement transaction (step 3), refund after expiry
+(step 4). The deposit and the lock are two transactions here; FEDERATION.md's
+one-transaction deposit-into-lock is not measured. The committee key is from
+this repo's ceremony, not bit-matched against frost-secp256k1-tr (a
+condition before real money). Not deployable: regtest, stock tools only, no
+daemon or page path builds a lock yet.
