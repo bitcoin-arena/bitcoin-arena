@@ -27738,3 +27738,29 @@ blwp-node 473/473 (+4), blwp-client 230/230, core 91/91, golden vectors 8/8,
 0 core or Unity files.
 
 M3.3-31 IS DONE.
+
+M3.3-31, checked again.
+
+1. THE FILE SETTING HAD NO TEST. BLWP_FUNDED_ROUNDS_FILE is in `main.js`'s
+   header and in `fundingFromEnv`, and nothing exercised it - a mutant that
+   ignored the file passed every test. New pin: a daemon on the file setting
+   refuses a round the file does not name (402); the round's id is appended
+   after start, in capitals; the same round is then opened (201) without a
+   restart. Green; the mutant fails ("a round named in the file after start
+   was refused: 402").
+2. THE TOOLS THAT RESTART THROUGH main.js, rerun now that it passes `funded`
+   (the rule only ever funds more than before, and a restart re-opens no
+   round - measured anyway):
+     settle-crash-regtest.mjs --point=2   RESTART (a) the real src/main.js,
+       RESTART (b) seat and key from its store; the spend that landed is the
+       one written before the kill, byte for byte; every seat's row PAID. exit 0
+     custody-restart-lnd.mjs   RESTART (a) main.js with no Lightning settings
+       leaves the forfeit SETTLE_REQUESTED as before; RESTART (b) with the lnd
+       settings asks Lightning and writes it SETTLED; bob +98000 msat, one
+       forfeited net stake. exit 0
+3. Checked, fine: the Daily launcher (run-2of2.mjs) goes through
+   standUpRound, whose free rounds keep `() => true`; the only operator-facing
+   list of main.js's settings is its own header, which names both. Noted, not
+   changed: package.json's `start` runs main.js with no port, so 8080.
+
+blwp-node 474/474 (+1), blwp-client 230/230, core 91/91, golden vectors 8/8.
