@@ -30225,3 +30225,23 @@ M3, NIP-04: A KEY THE ENVELOPE WAS NOT SEALED TO - MEASURED BEFORE
                     Not the gap, found beside it: nwcCall does not check that an
                     answer event is signed by the wallet's key or names the
                     request (NIP-01) - it trusts the relay's authors filter.
+
+M3, NIP-04: FIXED - A KEY THE ENVELOPE WAS NOT SEALED TO OPENS NOTHING
+  CHANGE            blwp-client nwc.js nip04Decrypt decodes the plaintext
+                    strictly (TextDecoder fatal): a NIP-04 message is text, so
+                    bytes that are not UTF-8 are refused ("that answer is not
+                    text, so it was not sealed to this key"), not replaced.
+  FACTS (after)     same 4096 deterministic stranger keys: 0 opened (was 15),
+                    0 saw the message; the pair still opens it to "pay_invoice".
+                    wallet-nwc 24/24 with its random-stranger assertion as it
+                    was. The residue is not zero in principle - a stranger's
+                    garbage must pass the padding check AND be valid UTF-8 -
+                    but it is no longer 1 in 256; 0 in 4096 here.
+  MUTANT            the decode made non-fatal again -> 15 opened, the test red.
+  FOUND, NOT THIS   nwcCall takes any EVENT frame the relay sends: it does not
+                    check that the answer is signed by the wallet's key, that
+                    its id is its own hash, or that it names the request
+                    (NIP-01); it trusts the relay's authors filter. The shared
+                    secret still binds the content.
+  COUNTS STOOD ON   protocol 487/487, node 531/531 (sequential chunks, 0
+                    cancelled), client 247/247. No Unity/WebGL (not on the page).

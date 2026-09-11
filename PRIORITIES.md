@@ -109,8 +109,12 @@ unblocked work. Park only inbound, which-guardians, and named rulings.
   nothing final; /invoice and /federation-invoice still quoted. A node without
   Lightning opens it and holds nothing. protocol 487/487, node 522/522, client
   246/246.
-  FOUND: client wallet-nwc's "a third key opened an envelope" flakes about 1 in
-  256 (NIP-04 has no MAC) - the test's premise, TASKBOOK.
+  DONE (wallet-nwc's "a third key opened an envelope"): nip04Decrypt refuses
+  plaintext that is not UTF-8, so a key the envelope was not sealed to opens
+  nothing - 0 of 4096 deterministic stranger keys (was 15, told ok with
+  garbage). Numbers: TASKBOOK.
+  FOUND: nwcCall does not check that a wallet's answer event is signed by the
+  wallet's key and names the request (NIP-01); it trusts the relay's filter.
   DONE (13A re-run, the half that needs no new field): a valid objection's
   SUSPENDED result is re-run by the committee - each seat replays again and
   signs a re-run result tied to the contradicted run - and 5 of 7 on one
