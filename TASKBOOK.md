@@ -27109,3 +27109,104 @@ beyond that baseline):
 
 blwp-node 455/455, blwp-client 225/225, core 91/91, golden vectors 8/8 (no
 core or engine file touched this turn).
+
+### M3.3-27: the Client.at flake is a dead kept-alive socket, reused after a held event loop
+
+THE SHARE. Every rehearsal that stopped before play since the committee-time
+wait was this refusal: rehearsal-3, the first M3.3-25 AB run, 8-AB and 10-BA
+(rehearsal-4, the other pre-play stop, was the committee time, fixed then).
+
+INSTRUMENTED FIRST, NO BEHAVIOUR CHANGED. `discover` already handed back each
+provider's refusal; `Client.at` dropped it and threw only "only 1 of 2
+providers gave a chain". It now carries it (`refused`), and the chain check
+carries the fetch's `cause` - Node's fetch says only "fetch failed" and puts
+the socket's words there. The harness and a new probe
+(`tools/client-at-probe.mjs`: its own bitcoind, the two daemons, no lnd, a
+free round, N asks of `Client.at`) print, per provider, its error, how long
+that origin had been idle, the tip it answered straight after, how long the
+event loop was held, and - `tools/socket-watch.mjs`, undici's diagnostics
+channels joined to the daemons' own server sockets - which socket the failed
+request rode.
+
+    probe, 50 asks, gaps 0-10000 ms slept (loop free)       0 of 50 refused
+    rehearsal batch 12-15, AB and BA side by side          3 of 8 stopped before play,
+      12-BA  provider 0: fetch failed: ECONNRESET, idle 6537 ms before the ask
+      14-BA  provider 0: fetch failed: ECONNRESET, idle 9582 ms
+      15-AB  provider 0: fetch failed: ECONNRESET, idle 6052 ms
+      straight after, both /headers 200, 3 headers, the same tip - the chain
+      was never in question
+    probe, loop HELD synchronously 6000 ms before each ask   20 of 20 refused,
+      every one ECONNRESET (10 provider 0, 1 provider 1, 9 both)
+    probe, loop held 3000 ms                                0 of 20 refused
+    probe held 6000 ms, socket watcher                     5 of 5 refused: every
+      failed request rode a REUSED socket (usesBefore 1) idle ~6000 ms; the
+      daemon's side closed 0 ms before the error or was closing it
+
+(The first stall gauge, `monitorEventLoopDelay`, read 0 ms on the held probe
+too - a hold is recorded only when the loop next runs - so it proved nothing
+and was replaced by a 100 ms tick's open gap, which reads 6000.)
+
+WHY THE REHEARSAL HOLDS IT: between a player's last fetch (`worldSeedFor`)
+and `Client.at`, the harness runs `worldFor`, a synchronous replay search -
+seconds, longer beside a second rehearsal. Node's server lets an idle socket go
+after 5 s; the client's pool cannot notice while its loop is held, and the
+first read after the hold rides the dead socket. A browser asks again by
+itself, so the page never met this; Node's fetch does not.
+
+THE SHAPE, on a bare server (default 5 s keep-alive, loop held 6 s): one
+pooled socket reads fine (3 of 3); three pooled sockets to one origin, the
+next read resets (3 of 3); a shorter keep-alive (2 s held 3 s, 1 s held 2.5 s)
+does not reset. Asked once more after the reset: 5 of 5 answered on the
+second attempt.
+
+THE FIX (`blwp-client/src/reread.js`): a READ whose connection was already
+gone - ECONNRESET, EPIPE, UND_ERR_SOCKET - is asked once more, and only once.
+Never a write (a round, an entry, a handout posted twice is a second act),
+never a refused connection (a server that is down is down), never an HTTP
+answer, never a read its caller aborted. Every idempotent read in the client
+goes through it: the headers and bond providers `Client.at` weighs, the
+round, randomness, settlement seats, stake-seen, advertisement, receipts,
+invoice, entry, transcript and checkpoint reads. The two sources and the
+most-work rule are unchanged: the same source is asked the same question.
+
+    stale-socket.test.js (real sockets, 6 s hold)   red before: both
+      "fetch failed", cause ECONNRESET; green after
+    reread.test.js (stubs)   a lost connection asked once more; a second loss
+      is the answer; a POST never twice; ECONNREFUSED, an HTTP error and an
+      aborted read never again
+
+AFTER (the fix in, everything else the same):
+
+    probe, loop held 6000 ms before each ask     0 of 20 refused (was 20 of 20);
+      the gauge read a 6001 ms stall, so the condition was there; slowest
+      call 23 ms (the first, with its one retry), mean 7.6 ms - nothing hung
+    probe, 50 asks, mixed gaps 0-10000 ms        0 of 50 refused (was 0 of 50);
+      slowest 11 ms
+    rehearsal-16-AB   all three sat (no refusal); stakes seen 2 of 2 and
+      committed; P2 SETTLED; alice -98000 msat, the operator +98000; P1 and P3
+      cancelled back; both tables PAYOUT_QUEUED 2 of 2. The search held the
+      loop 2014 and 799 ms.
+    rehearsal-16-BA   the same, P2 SETTLED on both daemons. The search held
+      the loop 4493 and 449 ms.
+
+Neither after-rehearsal held the loop past 5 s, so neither met the flake's
+condition - the held probe did. Against a before rate of 3 in 8, two clean
+runs are weak, so the before batch is repeated as it was (four pairs side by
+side) before M3.3-27 is closed.
+
+blwp-node 455/455, blwp-client 230/230 (+5: stale-socket 2, reread 3), core
+91/91, golden vectors 8/8 (0 core or engine files touched).
+
+A DIFFERENT HOLE, SEEN IN THE SAME RUNS, NOT THIS LETTER: the second daemon to
+close can end HELD on the loser's stake while lnd settled it through the first.
+16-AB: A closed first and P2 was not final there; B closed 348 ms later with
+P2 final, asked A for its share, and A refused ("no share is handed out
+before the result is final: 1 of 2 agree"); B wrote HELD ("this node has no
+preimage"). A's re-gather then turned P2 final, A asked B, and A SETTLED -
+lnd SETTLED once, the operator +98000. B never asks again: its finality watch
+re-runs the close only for a run that TURNS final on B, and P2 already was.
+Since M3.3-26, 2 of 10 played rehearsals end so (12-AB and 16-AB, both B, the
+second closer); 11-BA and 13-AB end "that hold has already moved". The daemons
+ask each other with their own fetch, not the client's, so the fix above does
+not touch it. No money is lost when the first closer settles; if the first
+closer went down after its close, nobody would.

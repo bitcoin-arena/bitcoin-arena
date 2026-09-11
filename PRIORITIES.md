@@ -50,10 +50,17 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   it. Rehearsal, AB and BA: P2 SETTLED on both
                   daemons, alice -98000 msat, the operator +98000; P1 and P3
                   cancelled back to alice.
-    flake, NEXT   M3.3-27: `Client.at` sometimes refuses "only 1 of 2
-                  providers gave a chain" while both /headers answer 200 at
-                  once (4 of 13 rehearsals, one of them run alone). Not the
-                  close; not investigated.
+    flake, NEXT   M3.3-27: `Client.at` refused "only 1 of 2 providers gave a
+                  chain" (4 of 13 rehearsals; 3 of 8 in a batch). Measured
+                  cause: a read reused a kept-alive socket the daemon had
+                  closed while the event loop was held (ECONNRESET). Fix in:
+                  a lost-connection read is asked once more. Held-loop probe
+                  0 of 20 (was 20 of 20); 16-AB and 16-BA sat and settled.
+                  Closes when the 8-run batch repeats clean.
+    code          M3.3-29: the second daemon to close can stay HELD on a
+                  stake lnd settled through the first - its share ask beat
+                  the first's finality and nothing asks again (2 of 10
+                  rehearsals since M3.3-26; money right, row wrong).
     code          M3.3-28: the POOL's threshold is still a flat 5 - the pool
                   DKG (`new Dkg` in server.js, default SHARES_NEEDED),
                   `payWithCommittee` (default) and `enoughToSign` (payout.js,
@@ -68,7 +75,7 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   too: lnd settled once; the second `settleinvoice` is logged by lnd as
   "invoice already settled" and still returns success, so both write
   SETTLED (reported, left as is). Not yet measurable: the objection window
-  before finality, the pool payout. Node 455/455, client 225/225, core
+  before finality, the pool payout. Node 455/455, client 230/230, core
   91/91, golden vectors 8/8 (0 engine files touched).
 
   M3.3-21 IS DONE - STAKE COMMITTED, AS THE PLAYER SEES IT (§23.1 step 5):
