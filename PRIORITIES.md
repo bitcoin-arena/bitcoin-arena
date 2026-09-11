@@ -111,6 +111,15 @@ unblocked work. Park only inbound, which-guardians, and named rulings.
   246/246.
   FOUND: client wallet-nwc's "a third key opened an envelope" flakes about 1 in
   256 (NIP-04 has no MAC) - the test's premise, TASKBOOK.
+  DONE (13A re-run, the half that needs no new field): a valid objection's
+  SUSPENDED result is re-run by the committee - each seat replays again and
+  signs a re-run result tied to the contradicted run - and 5 of 7 on one
+  outcome make that outcome FINAL (its transcript posted). Before: SUSPENDED
+  two windows later, 0 re-runs. protocol 487/487, node 528/528, client 246/246.
+  PARKED (13A's other half): a re-run short of 5 of 7 stays SUSPENDED - §13C is
+  timed from the result window, the same contract field as (a).
+  FOUND, NOT BUILT: the node files no slash proof against the contradicted
+  signers (protocol slash.js has REPLAY_CONTRADICTS).
   DONE (18:15 conform): the only already-coded thing v4.6.2 made wrong was
   constants.js's §23.6 custody comment (still "a Fedimint-class federation
   with a Lightning gateway") - conformed to the stake-lock wording; behaviour
@@ -318,8 +327,8 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   equals dist again and carries the settlement-wait words -
                   copied once the hold probe passed, as Daniel set. Not
                   deployed; the Daily is untouched.
-    remainder     a SUSPENDED run has no committee re-run (13A) yet; it
-                  cannot happen on 2 of 2, so it is not built on this slice.
+    remainder     a SUSPENDED run's committee re-run (13A): DONE for 5 of 7
+                  (live letter); short of it, parked on the result window.
     code, NEXT    the pool is a FEDERATION (DECIDED, below) whose quorum is
                   the round's settlement committee - and since 13:13 its
                   Lightning is too: invoice, hold, settle and pay by that

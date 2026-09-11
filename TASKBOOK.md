@@ -30112,3 +30112,49 @@ M3, 13A COMMITTEE RE-RUN OF A SUSPENDED RESULT - MEASURED BEFORE
   READING           A suspended result waits for ever: nothing asks the
                     committee to re-run, so the honest outcome never becomes
                     authoritative and every stake in it can only expire back.
+
+M3, 13A COMMITTEE RE-RUN: THE UNBLOCKED HALF BUILT - 5 OF 7 ON THE RE-RUN REPLACE SUSPENDED
+  CHANGE            protocol rerun.js: a signed RerunResult (type 0x19; the
+                    contradicted run id + the whole PlayerResult the seat's
+                    replay produced; 267 bytes signed) and rerunIsAgreed -
+                    distinct SEATED seats, same round, player and contradicted
+                    run, one outcome, verified, at the round's game/verify
+                    threshold (5 of 7, 2 of 2). The node: POST /objection starts
+                    this seat's re-run when the objection makes the run
+                    SUSPENDED; Verifier.rerun replays the stored transcript again
+                    through the same pool as the close and signs the result of
+                    the CURRENT canonical transcript; GET /reruns serves them and
+                    the re-run gathers peers', each checked; the close logic
+                    re-runs and gathers suspended runs and the finality watch
+                    keeps going while any are. resultFinality: a SUSPENDED run
+                    whose re-run is agreed - and whose transcript is posted (P2)
+                    - is FINAL on the re-run's run; short of it, SUSPENDED with
+                    how far the re-run got.
+  FACTS (after)     same fixture (seven seats, five sign a rewritten score, the
+                    holder's replay contradicts it, objection at t): SUSPENDED
+                    at once; the holder signed its own re-run (its replay's run,
+                    naming the contradicted run); four more seats re-run; at
+                    t+1700 ms (two windows) FINAL on the holder's run, 5 re-runs
+                    held, the share released - the outcome is FAILED, which
+                    settles. Before: SUSPENDED, no share, 0 re-runs. With 4
+                    re-runs: SUSPENDED at t+1700 ms, "4 of 5 committee seats
+                    have re-run", no share. Strangers, another contradicted run
+                    and another outcome: counted for nothing ("3 of 5").
+  PARKED            13A's other half - "if the committee cannot reach 5-of-7 on
+                    the re-run, §13C applies" - is timed from the result window,
+                    which the contract does not carry: a re-run short of the
+                    threshold stays SUSPENDED and its hold expires to its player.
+  MUTANTS           the holder does not sign its re-run -> 3 of 3 re-run tests
+                    red; no 5-of-7 (one re-run agrees) -> 2 re-run tests and 2
+                    unit tests red; finality ignores the re-run -> 3 red.
+  NOT THIS HALF     the stake itself settles only when a settler holds 5 seats'
+                    shares: in this fixture the other six seats are keys with no
+                    daemon, so the holder's own hold stays HELD (its share is
+                    released on ask). The finality watch asks again while a run
+                    is suspended, inside its usual budget (a window past the
+                    close); a re-run that lands later is acted on at the next
+                    start (M3.3-33) - how long to wait is the parked result
+                    window. Slashing the contradicted signers: the protocol has
+                    REPLAY_CONTRADICTS (slash.js); the node files no proof.
+  COUNTS STOOD ON   protocol 487/487, node 528/528 (sequential chunks, 0
+                    cancelled), client 246/246. No Unity/WebGL (not in scope).
