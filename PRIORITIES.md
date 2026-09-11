@@ -33,10 +33,11 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   its winner - the pool's key ceremony and signing take the
                   committee's own threshold (2 of 2, 5 of 7), not a flat 5.
                   Regtest: 2 of 2 and 5 of 7 each pay the winner 980 sats.
-    code          M3.3-31: a LAUNCHED daemon holds no stake - `main.js`
-                  passes no `funded`, and `serve`'s default refuses every
-                  entry with 402. Paying seats exist only where a caller gives
-                  `funded` (the rehearsal). Read, not yet run; blocks testnet.
+    code, DONE    M3.3-31: a daemon started from `main.js` opens the paying
+                  rounds its operator names (BLWP_FUNDED_ROUNDS, off by
+                  default) and seats entries into them when it reaches
+                  Lightning; unnamed rounds, entries for rounds it does not
+                  hold, and unpaid transcripts stay refused.
     code, CLOSED  a regtest daemon with Lightning had no preflight, so no
                   paying round opened (503) - it has one now.
     code, DONE    M3.3-22: the committee carries a checkpoint's receipts at
@@ -87,7 +88,7 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   too: lnd settled once; the second `settleinvoice` is logged by lnd as
   "invoice already settled" and still returns success, so both write
   SETTLED (reported, left as is). Not yet measurable: the objection window
-  before finality. Node 469/469, client 230/230, core 91/91, golden
+  before finality. Node 473/473, client 230/230, core 91/91, golden
   vectors 8/8 (0 engine files touched).
 
   M3.3-21 IS DONE - STAKE COMMITTED, AS THE PLAYER SEES IT (§23.1 step 5):

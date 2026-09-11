@@ -27671,3 +27671,70 @@ settle-crash-regtest.mjs, the other kill points (seven seats, unchanged path):
     All four exit 0, as point 2 above: 5 of 7 is unchanged.
 
 M3.3-28 IS DONE.
+
+### M3.3-31: a launched daemon's `funded` - measured first
+
+THE LAUNCHER, AS IT STARTS: `main.js` passes `serve` port, host, the Lightning
+port and preflight (with lnd), the chain options (with bitcoind) - and no
+`funded`, so `serve`'s default `NOTHING_IS_FUNDED` answers every round and every
+entry. The gate is on BOTH doors: `POST /round` (server.js:673) and `POST /entry`
+(:780). Only harnesses pass `funded`, always `() => true`: the rehearsal's
+standUpRound, the regtest tools, testnet4-gate.mjs.
+
+BEFORE, the real main.js in its own process (port 18901 - never 8080 -, a
+scratch store, no bitcoind, no lnd), a paying round and an entry into it:
+
+    POST /round (100000 msat)   402 "this node stores nothing for a round nobody has funded"
+    POST /entry                 402 "this node stores nothing for an entry nobody has funded"
+
+A launched daemon opens no round at all, so it never reaches an entry. The
+transcript quota is already held elsewhere: stake-committed.test.js, "an input
+batch for a stake nobody paid is refused by name, and taken once lnd shows it
+held" - green before this letter.
+
+THE RULE (Daniel's pick): rounds the operator names - an explicit launcher
+setting, off by default - and only paying ones; entries into a paying round
+this node already holds, when it reaches Lightning. Not "the invoice is paid":
+the hold is issued after the entry is stored. Input batches stay gated on the
+stake being seen paid.
+
+M3.3-31 AFTER. `src/funding.js`: `operatorFunding({ named })` and
+`fundingFromEnv(env)` (BLWP_FUNDED_ROUNDS, BLWP_FUNDED_ROUNDS_FILE - read on
+every ask, so a round is named without a restart). `serve` hands `funded` what
+it may know of the node: whether it holds a round, whether it reaches
+Lightning. `main.js` passes `fundingFromEnv(process.env)`. `standUpRound`'s
+PAYING rounds use the same rule and name their round once its id is known
+(its free rounds keep `() => true`; the launcher opens none). testnet4-gate.mjs
+keeps its own `() => true` and was not run - it asks the operator's testnet4
+lnd.
+
+    launcher-funded.test.js
+      nothing named            a paying round 402, an entry 402 (as before)
+      the round named          round 201; entry 201 with x-hold HELD; an entry
+                               for a round this node does not hold 402; a named
+                               FREE round 402; the seated entry's input batch
+                               refused - its stake is not paid
+      no Lightning             an entry into a named paying round is not funded
+      main.js, its own process (port 18902):
+                               unnamed paying round 402; named via
+                               BLWP_FUNDED_ROUNDS - 201, and with no lnd its
+                               entry 402
+    Before (a stand-in that funds nothing, today's launcher): named round 402,
+    no-Lightning branch wrong, main.js named round 402 - red. After: green.
+    Measured on the way: with no lnd, main.js is not "a node that holds
+    stakes", so the round door's Lightning gate does not apply and the named
+    round opens; the rule then refuses every entry into it.
+    Mutant funds-everything-by-default: the nothing-named pin and the main.js
+    pin fail. Mutant never-funds: the named, no-Lightning and main.js pins
+    fail. Mutant main.js wires no funding: the main.js pin fails.
+
+    rehearsal, AB and BA, seats from the launcher's rule (not `() => true`):
+      round opened; P1-P3 seated, x-hold HELD; every stake seen 2 of 2 and
+      committed; P2 SETTLED to the operator, P1 and P3 back to alice; alice
+      -98000 msat, the operator +98000; VOID rows HELD 0, second closer
+      HELD 0 - the same money as before.
+
+blwp-node 473/473 (+4), blwp-client 230/230, core 91/91, golden vectors 8/8,
+0 core or Unity files.
+
+M3.3-31 IS DONE.
