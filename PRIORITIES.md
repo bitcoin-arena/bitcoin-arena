@@ -31,11 +31,12 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   on-chain pool, invoice-first through the patched fedimintd, the guardian
   hold patch. The uncommitted swap work (round.js, store.js, swap.js at
   14:19) is not this path.
-  NEXT: FEDERATION.md's 7-step rehearsal on regtest - unpatched fedimintd,
-  4 guardians 3 of 4, two gateways, a 2-of-2 committee. Then FROST and DKG
-  bit-matched against Zcash Foundation frost-secp256k1-tr; contract fields
-  federation_id and stake_expiry_blocks (constants.js still describes
-  FEDERATION as "with a Lightning gateway").
+  NEXT: rehearsal step 4 - `Refund` after expiry by the player's key;
+  before expiry refused (FEDERATION.md's 7-step rehearsal on regtest -
+  unpatched fedimintd, 4 guardians 3 of 4, two gateways, a 2-of-2
+  committee). Then FROST and DKG bit-matched against Zcash Foundation
+  frost-secp256k1-tr; contract fields federation_id and stake_expiry_blocks
+  (constants.js still describes FEDERATION as "with a Lightning gateway").
   STEP 1 DONE: stock fedimintd 0.12.0 accepts a stake lock whose claim_pk
   is the committee's 2-of-2 key; the guardians store the exact contract the
   player's client built and its expiry (tools/stake-lock-step1.sh; TASKBOOK).
@@ -46,8 +47,13 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   STEP 3a DONE (no fee locks): one 2-of-2 committee signature settles two
   losers' locks into one pre-expired payout to the qualifier; a 1-of-2
   signature, a wrong secret and a second settlement of the same locks are
-  refused (tools/stake-lock-step3.sh; TASKBOOK). OPEN: fee locks - their
-  claim hash, and the §22A node slots.
+  refused, and the accepted settlement resent is answered as already
+  accepted and moves nothing (tools/stake-lock-step3.sh; TASKBOOK). OPEN:
+  fee locks - their claim hash, and the §22A node slots.
+  LATER, DAEMON WORK (not a rehearsal step, not opened): each committee seat
+  rebuilds the settlement transaction from the public payout table and signs
+  only the id it rebuilt; its nonce is a fixed rule (e.g. from round_id),
+  not random.
   RULED (14:40): stake_expiry_blocks = 144 (one day); donations paid by
   the player's wallet directly, every game. OPEN: which guardians.
   AUDITED against the 0.12.0 source (FEDERATION.md, "Source audit"): the
