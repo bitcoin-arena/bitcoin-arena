@@ -30173,3 +30173,38 @@ M3, SLASH PROOF AGAINST A CONTRADICTED SIGNER (REPLAY_CONTRADICTS) - MEASURED BE
                     contradicted result; slash proofs filed by the node: 0 (no
                     store); GET /slash-proofs: 404 (no door). No file in
                     blwp-node/src calls encodeSlashProof or slashHolds.
+
+M3, SLASH PROOF: THE NODE FILES REPLAY_CONTRADICTS AGAINST EVERY SEAT THE RE-RUN CONTRADICTED
+  CHANGE            protocol slash.js: the published form of a proof -
+                    joinSlashEvidence/splitSlashEvidence, the 199-byte proof and
+                    the 232-byte signed result it accuses beside it (431 bytes,
+                    fixed). The node: Verifier.fileSlashProofs - for each held
+                    result whose run is the contradicted one, a REPLAY_CONTRADICTS
+                    proof naming the canonical transcript, the signed result and
+                    the bond the seat's OWN advertisement names (the census's,
+                    or `advertsFor`), filed only if slashHolds slashes; the
+                    replay verdict is this node's own replay being the re-run's
+                    authoritative run. Kept (slash_proofs), served (GET
+                    /slash-proofs), and PUT to every relay the contract names at
+                    /slash/<proof id> - a relay keeps one only under its id and
+                    with the result it names. The re-run now has its own watch,
+                    started when an objection suspends a run (re-run, count,
+                    file once FINAL, every `everyMs`, budget `finality.rerunMs`
+                    else the contract's objection window); the close logic
+                    files for runs already FINAL by re-run (a restart).
+  FACTS (after)     same fixture (b311e15: FINAL, 5 contradicted, 0 proofs, 404):
+                    5 proofs filed - exactly the five who signed the contradicted
+                    result, never the holder; each accepted by slashHolds
+                    (REPLAY_CONTRADICTS) with that seat's advertisement; each
+                    naming its own bond; /slash-proofs serves 5 x 431 bytes; the
+                    relay serves each under its id. A re-run short of five: still
+                    SUSPENDED, 0 proofs. A signer whose advertisement is unknown:
+                    4 filed, that one not accused.
+  NOT THIS SLICE    5A.3B steps 3-5 (k-of-m arbitration keys sign path B, the
+                    OP_RETURN commitment in that transaction, the distribution):
+                    the arbitration set, which does not exist.
+  MUTANTS           no filing -> 2 of 3 slash tests red; filing ignores which
+                    run a result is on -> 2 red (the holder accused, 6 filed);
+                    a wrong seat's bond -> 2 red (slashHolds refuses, 0 filed).
+  COUNTS STOOD ON   protocol 487/487, node 531/531 (sequential chunks, 0
+                    cancelled), client 246/246. No Unity/WebGL (not on the page).

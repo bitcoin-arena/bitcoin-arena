@@ -118,8 +118,16 @@ unblocked work. Park only inbound, which-guardians, and named rulings.
   two windows later, 0 re-runs. protocol 487/487, node 528/528, client 246/246.
   PARKED (13A's other half): a re-run short of 5 of 7 stays SUSPENDED - §13C is
   timed from the result window, the same contract field as (a).
-  FOUND, NOT BUILT: the node files no slash proof against the contradicted
-  signers (protocol slash.js has REPLAY_CONTRADICTS).
+  DONE (slash proof, 5A.3B steps 1-2): once the re-run makes a result FINAL,
+  the node files a REPLAY_CONTRADICTS proof against every seat that signed the
+  contradicted result - checked by slashHolds, naming the seat's own advertised
+  bond, served at /slash-proofs and posted to the round's relays. Before: 0
+  proofs, no door. protocol 487/487, node 531/531, client 246/246.
+  NOT BUILT (needs the arbitration set): 5A.3B steps 3-5 - k-of-m arbitration
+  keys sign path B, the OP_RETURN commitment, the distribution.
+  FOUND: a re-run that completes after its watch's budget (the contract's
+  objection window) is filed only at the next close logic or restart; how long
+  to keep asking is the parked result window.
   DONE (18:15 conform): the only already-coded thing v4.6.2 made wrong was
   constants.js's §23.6 custody comment (still "a Fedimint-class federation
   with a Lightning gateway") - conformed to the stake-lock wording; behaviour
