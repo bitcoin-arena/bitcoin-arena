@@ -43,6 +43,11 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   key, is accepted and the lock is gone; a one-seat forfeit, a committee key
   signing the redeem, and a second redeem are refused
   (tools/stake-lock-step2.sh; TASKBOOK).
+  STEP 3a DONE (no fee locks): one 2-of-2 committee signature settles two
+  losers' locks into one pre-expired payout to the qualifier; a 1-of-2
+  signature, a wrong secret and a second settlement of the same locks are
+  refused (tools/stake-lock-step3.sh; TASKBOOK). OPEN: fee locks - their
+  claim hash, and the §22A node slots.
   RULED (14:40): stake_expiry_blocks = 144 (one day); donations paid by
   the player's wallet directly, every game. OPEN: which guardians.
   AUDITED against the 0.12.0 source (FEDERATION.md, "Source audit"): the

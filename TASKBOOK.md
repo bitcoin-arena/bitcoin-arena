@@ -28983,3 +28983,73 @@ after expiry (the source has no expiry check on Cancel; mining past 144
 blocks is step 4's ground). The forfeit is the repo's FROST, not bit-matched
 against frost-secp256k1-tr. Not deployable: regtest, tools only; no daemon
 signs a forfeit and no page redeems one.
+
+## THE STAKE LOCK, REHEARSAL STEP 3a: ONE COMMITTEE-SIGNED SETTLEMENT OF TWO LOSERS' LOCKS (2026-09-11)
+
+FEDERATION.md step 3: "one settlement transaction: losers' locks and fee
+locks in, payout contracts out; accepted; a 1-of-2 signature refused". 3a is
+that without the fee locks (their claim hash and the §22A node slots are not
+decided). Stock released fedimintd 0.12.0, unpatched; four guardians,
+threshold 3; one gateway; the 2-of-2 committee key.
+
+  FEDIMINT_BIN=<released builds> LOCK_BIN=<blwp-stake-lock> \
+    bash packages/blwp-node/tools/stake-lock-step3.sh
+
+What the source says:
+  - one BIP-340 signature PER INPUT over the txid, each under that input's key;
+    the count must equal the inputs (fedimint-core transaction.rs,
+    validate_signatures). Both locks name the committee: one signature,
+    listed twice.
+  - funding: inputs >= outputs + fees from core consensus 2.1 (this build is
+    2.1; fedimint-server consensus/transaction.rs, verify_funding).
+  - LNv2 fee per input and per output: base + amount * ppm / 1e6
+    (lnv2-common config.rs), read here off the federation's own config.
+  - a submission whose txid is already accepted answers Ok(txid) without
+    processing it again (fedimint-server consensus/api.rs:173-181).
+The committee cannot hand the stock builder a Keypair, so tools/stake-lock
+--mode settle builds the raw Transaction: both locks in as Claim(P), one
+pre-expired payout lock out (expiration 0, claim and refund key both the
+qualifier's), valued at the inputs less those fees; it prints the txid, the
+repo's FROST 2-of-2 signs it (tools/stake-lock-forfeit.mjs), and the tool
+submits through the API. Setup: step 1 with STAY_UP=1 (lock 1, not
+re-measured), then lock 2 from the same client under the same committee and
+player keys with a new secret.
+
+MEASURED (179 s, nothing left running):
+  lock 1       1ed7ce9f8281515afaadf3f6d69e5ccd75345fe0438d0b2082e5e5e37b0388ad:0
+               contract 6335cd9a236ed8556aba8276aabe1b216916c746c7acfc036df64c61f9a2a696
+  lock 2       32352ac0951a9bb31701bd58b3fdb6bb9bd37b953b6fc07dadbf26781024f9f0:0
+               contract 932d5c07dee3dfa8a36a313d6ff20284be9e3d2eadafc745ac3cde3ba3f2cd7a
+               both: 980000 msat, expire at block 454 (144 left at count 310),
+               claim_pk 023f880aeaedf20a9e7985cef0d0f0f91e9f918f09dbfb20568b16b9f247de2765
+  fee rule     base 1000 msat + 0 ppm per input and output (the federation's config)
+  (a) 1-of-2 signature over the right settlement:
+               REFUSED "The transaction's signature is invalid: tx=..., hash=7601be31...,
+               sig=b7b27383..., key=023f880a..." - both locks still stored
+  (b) 2-of-2 signature over a settlement with a wrong secret for lock 2:
+               REFUSED "The transaction had an invalid input: 0-The preimage is
+               invalid" - both locks still stored
+  SETTLEMENT   2-of-2 signature, listed 2x: ACCEPTED,
+               tx a75e40f3894d0090460cdebb8d2028bb7974c77aa3b9c78dfb13055e21363317,
+               at the guardians' block count 310 (< 454)
+  after        both locks: the guardians hold NOTHING (null, null)
+  payout       contract e6219aa1ee2d33149115babdb1965e2b271502d00e1aa50485cfa2550c657c08
+               at a75e40f3...:0, 1957000 msat to the qualifier
+               0227c4e9c2fb1a99b68c717d344df1a124d09e9034c6443e05a2c004a2d2fb0bc8,
+               0 blocks left (pre-expired); stored at once (0 ms wait)
+  fees         1960000 in - 1957000 out = 3000 msat: 2000 on the two inputs,
+               1000 on the output, 0 unspent
+  (c1) the same settlement bytes again: answered ACCEPTED - the guardians'
+               "already accepted" path for a known txid; nothing moved (locks
+               null, payout unchanged). The same transaction, not a second one.
+  (c2) the same claims under a new nonce, a new 2-of-2 signature:
+               REFUSED "The transaction had an invalid input: 0-No contract
+               found for given ContractId"
+
+So a second settlement of the same locks is refused; resending the one that
+was accepted is answered as already accepted and moves nothing.
+
+NOT IN 3a, by the plan: fee locks and node-slot payouts (undecided claim hash,
+§22A); the qualifier redeeming the payout; a Claim after expiry (step 4). The
+signing is the repo's FROST, not bit-matched against frost-secp256k1-tr. Not
+deployable: regtest, tools only; no daemon builds or signs a settlement.
