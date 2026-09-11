@@ -29,6 +29,12 @@ unblocked work. Park only inbound, which-guardians, and named rulings.
   Nothing calls the check yet; builders name no federation (zeros). Page
   bundle rebuilt (dist = WebGL template). protocol 466/466, node 485/485,
   client 236/236.
+  DONE (slice 2): the Entry Contract carries §7's stake_point (33-byte point),
+  fee_preimage, stake_lock_outpoint, fee_lock_outpoint (txid, out_idx) and
+  claim_key_attestation_ref, in the entry id; stakePointIsTheHandouts is F1's
+  check (Feldman A0 == stake_point). stakeCommitment = H(P) stays while the
+  hold invoice ships. Every entry names no lock yet (zeros). protocol
+  468/468, node 485/485, client 236/236.
   DONE (18:15 conform): the only already-coded thing v4.6.2 made wrong was
   constants.js's §23.6 custody comment (still "a Fedimint-class federation
   with a Lightning gateway") - conformed to the stake-lock wording; behaviour

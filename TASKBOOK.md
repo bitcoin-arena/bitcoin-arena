@@ -29385,3 +29385,24 @@ fields first; 18:41 "do everything that does not need him")
   MEASURED: protocol 466/466 (+2), node 485/485 (126+100+117+142), client
   236/236 (4 red before the rebuild: the stale bundle's decoder). Stored rounds
   in an old daemon db will not decode - the Daily is down; new rounds only.
+
+M3 STAKE-LOCK WIRING, SLICE 2: THE v4.6.2 ENTRY FIELDS (§7, §23.1)
+  encoded, in the id    after vss_shares_ref: stake_point (33-byte compressed
+                        point, = handout.js COMMITMENT_BYTES so A0 compares by
+                        bytes), fee_preimage (32), stake_lock_outpoint and
+                        fee_lock_outpoint (Fedimint txid 32 + out_idx u64 -
+                        the rehearsal's OUTPOINT="txid:out_idx"),
+                        claim_key_attestation_ref (32). Absent is refused.
+  kept                  stake_commitment = H(P): §7 dropped it, but the hold
+                        invoice that ships is issued against that hash
+                        (custody.js, payout.js, shares.js). It leaves with the
+                        hold path.
+  no fixed point        the handout carries round_id + player_pubkey, not the
+                        entry id; the locks' contracts name no entry. So the
+                        entry can name both after they exist (§23.1 order).
+  stakePointIsTheHandouts  F1: A0 byte-equal to stake_point; zeros refused
+                        ("no point" never reads as "matched"). Not called yet.
+  builders              79 entry literals in 68 test/tool files + the page's
+                        entryFor name zeros (no lock). Spreads inherit.
+  MEASURED: protocol 468/468 (+2), node 485/485, client 236/236; vectors:
+  contracts.json only (2 lines). Page bundle rebuilt, template = dist.
