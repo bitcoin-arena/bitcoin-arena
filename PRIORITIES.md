@@ -20,6 +20,15 @@ LIVE LETTER: M3 - A ROUND FOR TESTNET SATS ("M3 is done when"). Special
 conform-to-v4.6.2 is done (a1e8d6e / 875cef1). Continue M3. Daniel 18:41:
 do every M3 slice that does not need him. Do not wait. Do not ask Go on
 unblocked work. Park only inbound, which-guardians, and named rulings.
+  DONE (stake-lock wiring, slice 1): the Round Contract carries v4.6.2 §6's
+  federation_id, stake_expiry_blocks (144) and publication_relays[], in the
+  id; custodyFieldsAreValid refuses another expiry, a paying FEDERATION round
+  naming no federation, and a relay that is not an http(s)/ws(s) URL or is
+  named twice. publication_txid is NOT in the contract: it names a tx carrying
+  H(contract), so no fixed point - it rides beside it, like the signature.
+  Nothing calls the check yet; builders name no federation (zeros). Page
+  bundle rebuilt (dist = WebGL template). protocol 466/466, node 485/485,
+  client 236/236.
   DONE (18:15 conform): the only already-coded thing v4.6.2 made wrong was
   constants.js's §23.6 custody comment (still "a Fedimint-class federation
   with a Lightning gateway") - conformed to the stake-lock wording; behaviour

@@ -29353,3 +29353,35 @@ SPECIAL, 2nd pass (stale v4.6.2 quotes in code and tests)
 MEASURED: protocol 464/464 (default discovery; 463 over test/*.test.js),
 blwp-node committee-seed 7/7, blwp-client bundle 5/5. git diff: every
 changed line is a comment. No daemons running; no Unity build.
+
+M3 STAKE-LOCK WIRING, SLICE 1: THE v4.6.2 CONTRACT FIELDS (Daniel: contract
+fields first; 18:41 "do everything that does not need him")
+  encoded, in the id    federation_id (32 bytes, after custody), stake_expiry_
+                        blocks (u32, after it), publication_relays[] (vec of
+                        str, after randomness_rule, author's order). Refused
+                        when absent, never defaulted.
+  NOT encoded           publication_txid: §5A.5 makes it a tx carrying
+                        OP_RETURN "BLW" ROUND H(RoundContract), and round_id =
+                        H(RoundContract) - a contract holding it has no fixed
+                        point (the committee-seed trap). It rides beside the
+                        contract like round_id and creator_signature; §6's
+                        list is read that way. The carrier and its height
+                        check are a later slice.
+  custodyFieldsAreValid stake_expiry_blocks === 144 (STAKE_EXPIRY_BLOCKS);
+                        FEDERATION + stake > 0 names a non-zero federation_id;
+                        each relay an http/https/ws/wss URL, none twice. Not
+                        called by the daemon or the page yet.
+  builders              91 files name federationId zeros (no federation - no
+                        lock is wired, a made-up id would claim one),
+                        stakeExpiryBlocks 144, publicationRelays [].
+  vectors               make-vectors: only contracts.json moved (4 lines).
+  page bundle           rebuilt; also now carries federationStakeFor (in
+                        client src since the invoice-first join, called by
+                        nothing - inert). WebGL template copied = dist.
+  found red, not mine   dkg-dealer.test.js pinned the tools that deal a pool
+                        key; swap-into-pool.mjs (721cd06, 13:53, the swap
+                        probe SUPERSEDED at 14:19) deals a harness 2-of-2 and
+                        turned it red. Named in the pin with its reason.
+  MEASURED: protocol 466/466 (+2), node 485/485 (126+100+117+142), client
+  236/236 (4 red before the rebuild: the stale bundle's decoder). Stored rounds
+  in an old daemon db will not decode - the Daily is down; new rounds only.
