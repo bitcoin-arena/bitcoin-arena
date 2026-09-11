@@ -71,12 +71,15 @@ unblocked work. Park only inbound, which-guardians, and named rulings.
   minimum. The real-regtest census fixture was re-recorded (needs -txindex).
   protocol 480/480, node 491/491, client 236/236.
   DONE (F2, §24): the player key - where a payout and a refund go - is
-  derived per round from a player seed the tab keeps (protocol
-  player-key.js); the page shows its refund fingerprint and a seed backup,
-  and `node packages/blwp-node/tools/refund-key.mjs <seed> <round>` checks it
-  outside the page. entryFor refuses any other key or a stake dealt under
-  one; seats cannot see the seed, their half is F4's refund_pk = player key.
-  Mutants red. protocol 483/483, node 493/493, client 237/237.
+  derived per round from the player's seed (protocol player-key.js). The
+  player can PASTE a seed they already hold (importSeed); the page then
+  derives from it and says the fingerprint is for "the seed you imported",
+  so `node packages/blwp-node/tools/refund-key.mjs <seed> <round>` checks a
+  seed that existed before the page, not one it invented. A tab that
+  imported nothing mints a seed for itself alone (nothing in localStorage;
+  a returning session re-pastes the backup). entryFor refuses any other key
+  or a stake dealt under one. Seats never see the seed: their half is F4,
+  parked with the stake lock. protocol 483/483, node 493/493, client 242/242.
   DONE (18:15 conform): the only already-coded thing v4.6.2 made wrong was
   constants.js's §23.6 custody comment (still "a Fedimint-class federation
   with a Lightning gateway") - conformed to the stake-lock wording; behaviour

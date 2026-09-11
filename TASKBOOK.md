@@ -29565,3 +29565,39 @@ M3 F2: THE REFUND/PAYOUT KEY FROM THE PLAYER'S SEED (§24, v4.6.2)
   MEASURED: protocol 483/483 (+3), node 493/493 (211+282, +2 refund-key),
   client 237/237 (+1). second-closer "800 ms apart" red once under parallel
   chunks, 2/2 alone - load timing, as in slice 8.
+
+M3 F2, THE HOLE: A SEED THE PLAYER HOLDS GOES BACK INTO THE PAGE (§24, v4.6.2)
+  MEASURED BEFORE   tabSeed read the tab's sessionStorage or minted; the page
+                    had no input for a seed. The backup could be written down
+                    and never used, and the fingerprint only ever checked a
+                    seed the page itself had just made - a lying page could
+                    mint one, show it, seat the player under it, and agree
+                    with itself. The c56d26e DONE line overclaimed.
+  CHANGE            join.js importSeed(text, { storage }) - 64 hex, trimmed,
+                    any case; writes the tab's seed and marks it 'imported'.
+                    seedOrigin() says imported | minted. tabSeed: the tab's
+                    seed if any, else mint for this tab. index.html: the
+                    fingerprint line says which kind of seed; a paste box and
+                    "use my seed" (import, then reload to join under it).
+  TRIED AND DROPPED an opt-in "remember in this browser" in localStorage: two
+                    existing page tests forbid any localStorage in the page
+                    (join.test.js:287 player, wallet-nwc.test.js:589 wallet) -
+                    two tabs are two players. Not loosened; persistence left
+                    out, a returning session pastes the backup.
+  THE FIVE          seed-import.test.js, all green:
+                    1 import -> tabSeed returns it, 0 seeds minted over it,
+                      origin 'imported'; import over a minted tab wins; bad
+                      input (4 kinds) refused.
+                    2 imported seed: page key and fingerprint = refund-key.mjs
+                      output (subprocess), byte for byte.
+                    3 close/reopen: a fresh storage + the pasted backup gives
+                      the earlier round's key, 0 minted; a minted seed nobody
+                      backed up does not come back.
+                    4 MUTANT (tabSeed ignores an imported seed and mints):
+                      seed-import 2/5 - tests 1, 2, 3 red. Restored (cmp).
+                    5 two anonymous tabs distinct; an import in one leaves the
+                      other's seed and origin unchanged. The existing identity
+                      tests (join "two tabs are two players", two-tabs.test.js
+                      against real daemons) green, not edited.
+  MEASURED: protocol 483/483, node 493/493 (211+282, clean this run),
+  client 242/242 (+5). Bundle 445.2 KB / 35 modules, template = dist.
