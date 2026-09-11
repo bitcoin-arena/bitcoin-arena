@@ -29423,3 +29423,15 @@ M3 STAKE-LOCK WIRING, SLICE 3: F1 AT THE SEAT, ON THE HOLD PATH THAT SHIPS
   handout-accept 4/5, the new test red. Restored.
   MEASURED: protocol 468/468, node 486/486 (243+243), client 236/236. Page
   bundle rebuilt, template = dist.
+
+M3 SLICE 4: THE ROUND'S PUBLICATION ON CHAIN (§5A.5, v4.6.2, P1), PROTOCOL ONLY
+  publication.js   publicationPayload(rid) = "BLW" 0x52 rid (36 bytes);
+                   publicationOutput(rid) = { value 0, 6a 24 <payload> };
+                   publishesRound(tx, rid) via tx.js commitmentsOf, exact
+                   36-byte length (a 76-byte vote beginning "BLW" is not one);
+                   publicationIsBeforeBeacon({ roundId, tx, txHeight,
+                   beaconHeight }): strictly below, heights required.
+  DECIDED HERE     the ROUND kind byte: the spec writes ROUND and fixes no
+                   value (FORK neither); 0x52 'R', beside the ASCII "BLW".
+  tests            a real segwit tx through serializeSpend -> parseTransaction.
+  MEASURED: protocol 471/471 (+3). Not wired into the node yet.

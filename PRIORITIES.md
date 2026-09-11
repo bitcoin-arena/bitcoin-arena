@@ -40,6 +40,10 @@ unblocked work. Park only inbound, which-guardians, and named rulings.
   entry whose handout's A0 is not that point, or that names none. Before:
   both joined 201; a mutant without the check turns the new test red.
   protocol 468/468, node 486/486, client 236/236.
+  DONE (slice 4, P1 as protocol): publication.js builds and reads a round's
+  publication - OP_RETURN "BLW" 0x52 round_id, 36 bytes (the spec names
+  ROUND and fixes no byte; 'R' chosen) - and refuses one confirmed at or
+  after the beacon height, or with no heights. Not wired yet. protocol 471/471.
   DONE (18:15 conform): the only already-coded thing v4.6.2 made wrong was
   constants.js's §23.6 custody comment (still "a Fedimint-class federation
   with a Lightning gateway") - conformed to the stake-lock wording; behaviour
