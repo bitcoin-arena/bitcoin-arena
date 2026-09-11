@@ -27575,3 +27575,99 @@ M3.3-30, checked again.
    either way.
 
 blwp-node 465/465 (+1), blwp-client 230/230, core 91/91, vectors 8/8.
+
+### M3.3-28: the pool's signing threshold follows the committee - measured first
+
+EVERY FIXED THRESHOLD ON THE POOL PATH (grep of dkg.js, payout.js,
+pool-signing.js, pool-watch.js, pool-wire.js, server.js, frost-bip340.js,
+shares.js, protocol payout.js and dkg.js):
+
+    dkg.js:35         one Dkg per daemon, needed = SHARES_NEEDED (5), used by
+                      deal() for the polynomial's degree and the threshold dealt
+                      - for every committee this daemon is ever on
+    payout.js:486     payWithCommittee(needed = SHARES_NEEDED); its one caller
+                      (payout.js:384) passes none; `asked.length < needed`,
+                      `asked.length = needed`
+    payout.js:622     pay(): enoughToSign({ ..., needed: SHARES_NEEDED })
+    protocol dkg.js   dealContribution's default; its caller passes dkg.needed
+    pool-signing.js, pool-watch.js, frost-bip340.js - no threshold of their
+                      own (enoughToSign takes it as an argument)
+    protocol payout.js SETTLEMENT_THRESHOLD = 5 - NOT a gate: holdSettlement
+                      and preimage.js pass shares and signatures equal to it, so
+                      settlementAction only picks a hold's action. Left alone.
+
+BEFORE, a two-seat committee, the daemons' own ceremony (two in-process
+daemons, dkg.run on their two keys):
+
+    Dkg.needed        A 5, B 5
+    deal()            both REFUSED: "a threshold of 5 cannot be dealt to 2 seats"
+    run()             ok false, the same words; seatFor: "this node has no share
+                      of that committee's key yet" - a two-seat round's pool has
+                      no key at all
+    enoughToSign as pay() calls it, two signers: "2 of 5 signers: a pool nobody
+                      can move stays where it is"
+
+M3.3-28 AFTER: the pool's threshold is the committee's own.
+
+THE CHANGE. `Dkg.deal` takes the threshold from the committee it deals for,
+`receiptsNeeded(seats.length)` - 2 of 2, 5 of 7, the rule M3.3-26 gave the
+stake - and the lifetime `needed` is gone from the constructor: no second
+source. `payWithCommittee` reads `receiptsNeeded(contract.settlementSlots)`
+and takes no `needed`; `pay()` reads the paid round's own contract from the
+store. A committee size the rule does not know is refused by name.
+
+    pool-threshold.test.js (the daemons' OWN ceremony, no trusted dealer, paid
+    through the defaults):
+      2 seats                 deals 2-of-2, one key; both sign and pay, the
+                              signature verifies against the pool output
+      7 seats, 2 down         deals 5-of-7; the five that exist sign and pay
+      pay(), 2 seats          pays with the two seats' own shares
+      pay(), 7 seats          pays with five of them
+    Before: the two-seat pins red ("a threshold of 5 cannot be dealt to 2
+    seats"). After: all four green.
+    Mutant, a flat 5 everywhere: both two-seat pins fail. Mutant, the slot count
+    everywhere: both seven-seat pins fail ("the ceremony did not deal the
+    seven-seat committee its 5-of-7"; "5 of 7 signers").
+
+REGTEST (`payout-committee-regtest.mjs --seats=N`: N daemons, their own key
+ceremony, a real bitcoind; the pool output is funded BY THE HARNESS from its
+own regtest wallet - a STAND-IN, named as one in the tool and its output, NOT
+the parked ruling on how a settled stake reaches the pool):
+
+    seats  key               short committee               threshold   payout
+    2      one key across 2  1 of 2 refused ("1 of 2 seats  2 of 2      block 202; the winner's
+                             committed to this spend")      signed      key holds 980 sats; PAID
+    7      one key across 7  4 of 7 refused ("4 of 5")      5 of 7      block 202; 980 sats; PAID
+    a rogue asker naming its own output: refused by every seat, both sizes.
+
+THE HARNESS'S WINNER CHECK WAS STALE, measured before it was touched: it
+wanted STAKE_MSAT/1000 = 1000 sats and failed "the winner holds 980 sats, not
+1000" at BOTH sizes - the seven-seat path this letter did not change included.
+TASKBOOK last recorded 1000 before ea23cdf (2026-09-10) put the 2% fee in the
+tool's entries; since then the pool holds the loser's net stake (22A) and
+pays the winner that, 980. The check now reads the committee's own queued row
+AND requires it to equal the loser's net stake - two checks for one - and the
+chain must pay the winner that row. Both sizes: "Every number came out as
+claimed."
+
+settle-crash-regtest.mjs (seven seats), kill point 2 - after the spend is on
+disk, before it is sent: one spend in blocks, the one written before the
+kill, byte for byte; the winner 980 sats; every seat's row PAID, the killed
+seat's too.
+
+blwp-node 469/469 (+4), blwp-client 230/230, core 91/91, golden vectors 8/8,
+0 core or Unity files.
+
+settle-crash-regtest.mjs, the other kill points (seven seats, unchanged path):
+
+    point 1  after the table is queued, before it settles: 1 spend in blocks;
+             winner 980 sats; every row PAID, the killed seat's too
+    point 3  after bitcoind took the spend, before PAID is written: 1 spend, the
+             one written before the kill, byte for byte; winner 980; all PAID
+    point 4  a takeover, the asker down and the next seat killed with its spend
+             on disk: 1 spend, byte for byte; winner 980; all PAID
+    --part   a stake paid in part: 1 spend; winner 336 sats; every row
+             PAID_IN_PART, 252 sats owed, the killed seat's too
+    All four exit 0, as point 2 above: 5 of 7 is unchanged.
+
+M3.3-28 IS DONE.

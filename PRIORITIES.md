@@ -26,14 +26,13 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   the close does what 23.2 says in either close order: the loser's stake
   settles to the operator (+98000 msat), the winner's and the VOID one go
   back to the player, and no daemon's row says HELD on money no longer in
-  flight. The winner is NOT paid yet - the pool payout stops at "this node
-  reaches no chain". Next first, then the rest, by kind:
-    code, NEXT    M3.3-28: the POOL's threshold is still a flat 5 - the pool
-                  DKG (`new Dkg` in server.js, default SHARES_NEEDED),
-                  `payWithCommittee` (default) and `enoughToSign` (payout.js,
-                  hard 5) - so a 2-of-2 round's pool would ask 5 signers of 2.
-                  Read, not yet run: the rehearsal's payout stops earlier, at
-                  "this node reaches no chain". Same rule as M3.3-26.
+  flight. The pool pays the winner on regtest (a harness-funded stand-in
+  pool, 2 of 2 and 5 of 7); the lnd rehearsal itself still has no chain to
+  spend on. The rest, by kind:
+    code, DONE    M3.3-28: a two-seat committee's pool has a key and pays
+                  its winner - the pool's key ceremony and signing take the
+                  committee's own threshold (2 of 2, 5 of 7), not a flat 5.
+                  Regtest: 2 of 2 and 5 of 7 each pay the winner 980 sats.
     code          M3.3-31: a LAUNCHED daemon holds no stake - `main.js`
                   passes no `funded`, and `serve`'s default refuses every
                   entry with 402. Paying seats exist only where a caller gives
@@ -88,8 +87,8 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   too: lnd settled once; the second `settleinvoice` is logged by lnd as
   "invoice already settled" and still returns success, so both write
   SETTLED (reported, left as is). Not yet measurable: the objection window
-  before finality, the pool payout. Node 465/465, client 230/230, core
-  91/91, golden vectors 8/8 (0 engine files touched).
+  before finality. Node 469/469, client 230/230, core 91/91, golden
+  vectors 8/8 (0 engine files touched).
 
   M3.3-21 IS DONE - STAKE COMMITTED, AS THE PLAYER SEES IT (§23.1 step 5):
   from the seat of a paying round, the page asks every settlement seat and
