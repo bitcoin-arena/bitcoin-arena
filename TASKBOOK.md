@@ -30335,3 +30335,21 @@ M3, WHAT IS STILL MISSING TO "M3 IS DONE WHEN" - MEASURED INVENTORY (before choo
                     daemon's money path: W4-W6 all key off a seat having seen and
                     checked the lock, and it can be measured against the stock
                     federation with the existing tool, without the page.
+
+M3 W2, A SEAT VERIFIES THE PLAYER'S STAKE LOCK (§23.1 step 5) - MEASURED BEFORE
+  SLICE             W2 of the inventory (d7e0d4a): 1 of the 12 still missing,
+                    1 of the 7 not parked.
+  TEST              blwp-node/test/seat-lock.test.js: one seat (no Lightning) of
+                    a paying FEDERATION round naming a federation and a relay;
+                    a player's stake dealt, handed out and seated, the entry
+                    naming its stake_lock_outpoint; a counting federation port
+                    holding a lock at that outpoint that matches the entry.
+  FACTS             POST /lock: 404 (no door takes the player's contract);
+                    GET /stake: 409 "this node reaches no Lightning, so it
+                    cannot see this stake held"; federation asked 0 times;
+                    stake seen: no. On the decided custody no stake is ever
+                    committed, so play never begins.
+  ALSO              blwp-stake-lock builds a Hash image only (stake_contract:
+                    PaymentImage::Hash) where §23.1 step 4 and F1 say
+                    Point(stake_point), and has no id mode - both needed before
+                    a real federation can be asked.
