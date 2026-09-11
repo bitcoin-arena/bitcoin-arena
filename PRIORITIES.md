@@ -146,7 +146,10 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   funded (fedimint-lnv2-server lib.rs:586) and the endpoint
                   hands it out as soon as it exists (lib.rs:666-679). The
                   hold is a custom lnv2 server module - a fedimintd built
-                  from source - and this machine has no Rust toolchain.
+                  from source. A Rust toolchain now sits in scratch only;
+                  the build STOPS AT libclang (missing: bindgen in
+                  aws-lc-sys, and librocksdb-sys needs it too). The only
+                  libclang here is inside Unity's Emscripten - not used.
     ruling        the owed-sats fee rate; htlc_cltv_days (below, unchanged).
     inbound       testnet4: 196000 msat needed, 0 offered.
   Two daemons CANCELLING one invoice on the shared endpoint is measured: both

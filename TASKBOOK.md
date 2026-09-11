@@ -28304,3 +28304,33 @@ lnv2 server module - the smallest delay being that the share is not made at
 funding but only once the round's result is FINAL and its window has closed -
 in a fedimintd built from source. This machine has no Rust toolchain (`cargo`:
 command not found).
+
+### Building fedimintd from source - stopped at a missing library: libclang
+
+Daniel's Go (2026-09-11): a Rust toolchain inside scratch only - no system
+install, no PATH change, no apt, no system library; a missing library is
+named, not installed.
+
+  toolchain   rustup-init -y --no-modify-path --profile minimal, RUSTUP_HOME
+              and CARGO_HOME in scratch: cargo 1.98.1, rustc 1.98.1; 9 s,
+              618 MB; `command -v cargo` on the system: still none
+  machine     gcc, g++, cmake, pkg-config, make, perl, git present; clang,
+              libclang, protoc absent; 148 GB free
+  lock file   fedimintd -> fedimint-rocksdb -> rocksdb 0.24.0 ->
+              librocksdb-sys 0.17.3 (bindgen 0.72.1); aws-lc-sys in the tree
+  build       `cargo build --release -p fedimintd --locked`, foreground,
+              CARGO_TARGET_DIR in scratch: exit 101 after 129 s -
+              "failed to run custom build command for `aws-lc-sys v0.41.0`
+               ... Unable to find libclang: couldn't find any valid shared
+               libraries matching: ['libclang.so', 'libclang-*.so',
+               'libclang.so.*', 'libclang-*.so.*'], set the `LIBCLANG_PATH`
+               environment variable"
+              disk: 1.7 GB target, 635 MB crates; kept, so a rebuild resumes
+  libclang    the only copies on this machine are inside the Unity editor's
+              Emscripten toolchain (~/Unity/Hub/Editor/6000.0.82f1/.../
+              Emscripten/lib/libclang.so.17). Not used: Unity stays untouched,
+              and it is a WebAssembly-oriented build.
+
+NOTHING PATCHED, NOTHING RELEASED EARLIER OR LATER: the secret's release
+timing is unchanged, so the hold probe was not re-run; bob can still spend
+2.3-2.7 s after payment. The missing library is libclang (for bindgen).
