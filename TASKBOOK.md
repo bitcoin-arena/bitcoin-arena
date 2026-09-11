@@ -27764,3 +27764,111 @@ M3.3-31, checked again.
    changed: package.json's `start` runs main.js with no port, so 8080.
 
 blwp-node 474/474 (+1), blwp-client 230/230, core 91/91, golden vectors 8/8.
+
+### M3.3-32: settlement waits for the objection window - measured first
+
+THE RULE, 13A: a result the threshold signed is PROVISIONALLY_FINAL; "it
+becomes FINAL when the window closes without a valid objection", and "taking a
+player's stake requires a final result, an elapsed objection window, and a
+threshold quorum". `protocol/src/objection.js` had `finality()` and
+`objectionHolds()`; no file in `blwp-node/src` imported either. The daemon
+took the gather's quorum as final: `settleTheStakes` settled and cancelled,
+`mayRelease` handed out shares, the payout queued - all at the close.
+
+BEFORE, objection-window.test.js on the old code (contract window 3000 ms):
+    two seats, winner and loser: settle and cancel reached lnd 586-977 ms
+      after the close, on both daemons (three runs: [[977,811],[914,745]],
+      [[918,752],[826,668]], [[811,586],[816,610]])
+    seven seats: a share of a run the threshold had just signed was released
+      inside its window
+    the late-objection control passed (nothing to fix there)
+
+M3.3-32 AFTER. `src/finality.js`: `resultFinality(round, roundId, entryId)`
+calls `finality()` with the committee's threshold (a new `needed` passthrough,
+so 2 of 2 is agreed at 2, not the flat 5) and answers null,
+PROVISIONALLY_FINAL, FINAL or SUSPENDED.
+  - The window opens when THIS node held the threshold: the `seen_ms` of the
+    agreeing record that completed it, off the store. A restart does not open
+    it again, and no message opens it earlier.
+  - An objection holds per `objectionHolds`: the committee's receipts (this
+    node's stored ones) and a replay that contradicts the signed result. The
+    replay a daemon has is its own, so a filing at `/objection` holds only on
+    a node whose own result is not the run the threshold signed. A filing
+    alone suspends nothing - it would let anybody hold every stake past its
+    window and hand it back.
+  - Gated on FINAL: custody's settle and cancel (`finalFor`), `mayRelease`
+    (the share door), and the pool payout (no table is queued while a run of
+    the round is inside its window or suspended).
+  - The finality watch keeps going while a run waits, reruns the close logic
+    once a window has closed, and its deadline moves to a whole window past
+    the latest close, so a settle short of shares keeps its old budget.
+  - `stakes()` reports `agreed` (the quorum, as before), `final`, `waiting`
+    (with each run's `closesAtMs`) and `suspended`.
+
+    objection-window.test.js (4 pins)
+      two seats, 3 s window    inside it: every hold HELD, lnd told nothing,
+                               no payout row, B refuses the share ("objection
+                               window"); after it: loser SETTLED with its own
+                               preimage, winner CANCELLED, payout queued, on
+                               both - every act >= close + 3000 ms
+      seven seats              an objection in the window against a run this
+                               node replayed differently: SUSPENDED, no share
+                               before or after the window; one against a run
+                               it agrees with: FINAL after the window
+      seven seats              the window counts from the threshold (five
+                               agree 1 s after its own result), not from its
+                               first record
+      seven seats              an objection filed after the window reopens
+                               nothing
+    Mutants, each caught: settles on agreement (pin 1); ignores objections
+    (pin 2); hands out a share on agreement (pins 1-3); pays out inside the
+    window (pin 1); a filing alone suspends (pin 2); the window counted from
+    the first record (pin 3).
+
+FIXTURES CHANGED, AND WHY. Four files built rounds with the 600000 ms
+reference window and asserted a settle, a share or a table at the quorum:
+close-order (2 tests), second-closer (2), settle-threshold (2), reconstruct
+(6) - 12 red. None of them is about the window. Their contracts now say
+`objectionWindowMs: 0n` (final at the quorum), each with a one-line comment
+pointing here, and their assertions are unchanged. The three that rely on
+the finality watch name its budget in `finality.windowMs`, as close-order's
+deadline test already did: the watch's budget is the contract's window, and a
+zero window would leave it none. Green after, 14 of 14.
+
+REHEARSAL, real lnd, `--objection-window=30000` (new flag; standUpRound takes
+`objectionWindowMs`, default the 600000 reference). The tool stamps every
+settle and cancel each daemon sends lnd and counts those before THAT daemon's
+own window on that run closed:
+    AB   windows close +31394..+33540 ms; acts +31940..+34015; 0 of 4 early
+    BA   windows close +31461..+33639 ms; acts +31694..+34544; 0 of 4 early
+    AB, 800 ms gap   0 of 3 early; B's first share ask after its window was
+         refused by A ("the objection window closes at ...") - A's own window
+         was still open - and B settled at +35009 on the M3.3-29 retry
+    BA, 800 ms gap   the same, mirrored; A settled at +35084
+  Every run: P2 SETTLED to the operator, P1 and P3 back to alice; alice
+  -98000 msat, the operator +98000; VOID rows HELD 0; HELD after lnd
+  settled 0. Unchanged holes: the pool ruling, the unpaid winner (no chain in
+  this rehearsal), testnet4 inbound 196000 msat needed, 0 offered.
+  MEASURED ON THE WAY: the first run counted "1 of 8 early" in each order.
+  Every act was stamped twice, under A and B, at the same millisecond:
+  standUpRound hands both daemons one lightning port object
+  (round-2of2.mjs:284), and wrapping it per daemon wrapped it twice. Each
+  daemon now gets its own view of the port (`Object.create`), and the rerun
+  counts 0 of 4 with each act once.
+
+OPEN, NOTED, NOT CHANGED:
+  - SUSPENDED has no way back yet. 13A's committee re-run of the canonical
+    transcript is not built, so a suspended run stays HELD and its hold
+    expires to the player (23.2's default).
+  - A hold must outlive the window and the time to act after it. On regtest
+    30 s is nothing next to the HTLC's blocks; on a real chain this belongs
+    to the parked htlc_cltv_days ruling.
+  - `tools/replay.js` (core) reports fallout and liquidation DIVERGED at
+    tick 600: it does not feed a vector's `liquidations`, which
+    vectors.test.js does. No core file is in this diff; the golden vectors
+    are vectors.test.js, 8 of 8.
+
+blwp-node 478/478 (+4), blwp-client 230/230, core 91/91, golden vectors 8/8,
+protocol 464/464, 0 core or Unity files.
+
+M3.3-32 IS DONE.

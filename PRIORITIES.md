@@ -23,7 +23,8 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   THE ROUND FOR SATS IS REHEARSED ON REGTEST, through the real daemons and a
   real lnd (`tools/round-rehearsal-lnd.mjs`; numbers: TASKBOOK). A paying
   round opens, every stake is seen 2 of 2 and committed, the runs play, and
-  the close does what 23.2 says in either close order: the loser's stake
+  once the round's objection window has closed the close does what 23.2
+  says in either close order: the loser's stake
   settles to the operator (+98000 msat), the winner's and the VOID one go
   back to the player, and no daemon's row says HELD on money no longer in
   flight. The pool pays the winner on regtest (a harness-funded stand-in
@@ -80,6 +81,13 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   unpaid invoice on its own clock and number, and a close that
                   meets an expired hold answers already-moved and releases no
                   preimage. lnd cancels 13 blocks before the expiry.
+    code, DONE    M3.3-32: no stake moves and no share leaves before the
+                  round's objection window has closed. Settle, cancel, the
+                  share handout and the pool payout wait for FINAL; an
+                  objection this node's own replay backs suspends the run.
+                  Before: acts 586-977 ms after the close on a 3 s window.
+                  Rehearsal, 30 s window, AB, BA and 800 ms gaps: 0 acts
+                  before the window, same money.
     ruling        how a settled stake reaches the pool; the owed-sats fee
                   rate; htlc_cltv_days (all below, unchanged).
     inbound       testnet4: 196000 msat needed, 0 offered.
