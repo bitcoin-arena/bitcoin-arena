@@ -30208,3 +30208,20 @@ M3, SLASH PROOF: THE NODE FILES REPLAY_CONTRADICTS AGAINST EVERY SEAT THE RE-RUN
                     a wrong seat's bond -> 2 red (slashHolds refuses, 0 filed).
   COUNTS STOOD ON   protocol 487/487, node 531/531 (sequential chunks, 0
                     cancelled), client 246/246. No Unity/WebGL (not on the page).
+
+M3, NIP-04: A KEY THE ENVELOPE WAS NOT SEALED TO - MEASURED BEFORE
+  LINE              PRIORITIES: "client wallet-nwc's 'a third key opened an
+                    envelope' flakes about 1 in 256 (NIP-04 has no MAC)".
+  TEST              blwp-client/test/nip04-stranger.test.js: one envelope
+                    ("pay_invoice") sealed between two fixed keys, opened with
+                    4096 stranger keys; every key and the iv from sha256 of a
+                    counter, so the count is exact and repeatable.
+  FACTS             15 of 4096 strangers "opened" it (1 in 273): nip04Decrypt
+                    returned ok with garbage full of U+FFFD - AES-CBC passed the
+                    padding check and the decode was non-fatal. 0 saw the
+                    message.
+  READING           NIP-04's content is a UTF-8 string; bytes that are not UTF-8
+                    are not a NIP-04 message, and the decrypt said they were.
+                    Not the gap, found beside it: nwcCall does not check that an
+                    answer event is signed by the wallet's key or names the
+                    request (NIP-01) - it trusts the relay's authors filter.
