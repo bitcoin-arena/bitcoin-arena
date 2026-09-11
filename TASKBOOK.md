@@ -29214,3 +29214,69 @@ AGAINST THE EARLIER STEPS, where they timed the same thing:
 
 Not in step 6: refusals (steps 1-5), step 7. Not deployable: regtest, tools
 only; the committee's signing is not bit-matched to an audited FROST.
+
+## THE STAKE LOCK, REHEARSAL STEP 7: NO SINGLE KEY AND NO MACAROON MOVES A ROUND'S MONEY (2026-09-11)
+
+FEDERATION.md step 7, the last of the 7. Stock released fedimintd 0.12.0,
+unpatched; four guardians, threshold 3; two gateways; the 2-of-2 committee.
+
+  FEDIMINT_BIN=<released builds> LOCK_BIN=<blwp-stake-lock> \
+    bash packages/blwp-node/tools/stake-lock-step7.sh
+
+A. NO MACAROON HAS A PATH (source, not a submission): a stake lock is removed
+   only at process_input (lnv2-server lib.rs:468) - inside a Transaction whose
+   witness needs claim_pk and/or a tx signed by refund_pk. The only lnv2 admin
+   endpoints are add/remove-gateway (lib.rs:705-724); neither spends. gatewayd
+   has no command touching a foreign contract. Live: a guardian admin
+   credential answered `admin audit` (module summaries, no spend), a gateway
+   credential answered `info` (1 federation, no spend). A macaroon is never an
+   input to a lock's witness; one guardian is 1 of 4, below threshold 3.
+
+B. WRONG KEYS AND SPENDS, REFUSED (real submissions, one run, 309 s):
+   B1 Cancel, forfeit by 1 of 2 committee seats:
+      "The transaction had an invalid input: 0-The forfeit signature is invalid";
+      lock still stored (144 left)
+   B2 valid 2-of-2 forfeit, tx signed by a committee seat's key, not the player:
+      "The transaction's signature is invalid: ... key=036aa47f...(refund_pk)";
+      lock still stored. (lnd/guardian private keys cannot be extracted and need
+      not be: the check is against refund_pk, so any non-player key fails the
+      same; a committee insider's own key was used and still failed.)
+   B3 Refund before expiry, the player's key:
+      "The transaction had an invalid input: 0-The contracts locktime has not
+      yet passed"; lock still stored
+   B4 Claim (settle) with a wrong secret for one lock:
+      "The transaction had an invalid input: 0-The preimage is invalid"; both
+      locks still stored
+   B5 a second spend of the redeemed lock 1:
+      "The transaction had an invalid input: 0-No contract found for given
+      ContractId"
+
+LEGITIMATE PATHS on the same federation:
+   FORFEIT lock 1, 2-of-2, player: accepted, lock gone, ecash +977920 msat
+   SETTLE locks 2,3: accepted, payout 0ca73c2eaa25ac383b7295692055233d99ba1a33dde2fd4a8516b0131c086fc6,
+      1957000 msat, 0 blocks left
+   REFUND lock 4 after expiry, player: accepted (count reached 493), lock gone,
+      ecash +977920 msat
+
+B1/B3/B4/B5 confirm steps 2/3a/4 on one lock; A and B2 are step 7's addition -
+no outside credential and no single insider key moves it. Not deployable:
+regtest, tools only; the committee's signing is not bit-matched to an audited
+FROST.
+
+## THE 7-STEP REHEARSAL IS COMPLETE (2026-09-11)
+
+All of FEDERATION.md's rehearsal, on stock unpatched fedimintd 0.12.0, four
+guardians 3 of 4, two gateways, a 2-of-2 committee, each a fresh regtest:
+  1 lock accepted with claim_pk = the committee key (stake-lock-step1.sh)
+  2 the 2-of-2 forfeit, redeemed by the player (stake-lock-step2.sh)
+  3a one committee signature settles two loser locks into one payout
+    (stake-lock-step3.sh; fee locks / node slots parked - 22A, claim hash)
+  4 after expiry the player's own key refunds; before expiry refused
+    (stake-lock-step4.sh)
+  5 gateway A down: deposit and withdrawal through B (stake-lock-step5.sh)
+  6 one guardian down: all of the above still complete (stake-lock-step6.sh)
+  7 no single key and no macaroon moves a lock (stake-lock-step7.sh)
+The construction holds on stock 0.12.0. FEDERATION.md's conditions before real
+money remain: FROST/DKG bit-matched to frost-secp256k1-tr (never a trusted
+dealer), real guardians and >=2 independent gateways, federation fees, the
+spec update, and the daemon/browser wiring. None started.

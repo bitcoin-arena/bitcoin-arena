@@ -31,12 +31,21 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   on-chain pool, invoice-first through the patched fedimintd, the guardian
   hold patch. The uncommitted swap work (round.js, store.js, swap.js at
   14:19) is not this path.
-  NEXT: rehearsal step 7 - no single key and no macaroon moves a round's
-  money (FEDERATION.md's 7-step rehearsal on regtest -
-  unpatched fedimintd, 4 guardians 3 of 4, two gateways, a 2-of-2
-  committee). Then FROST and DKG bit-matched against Zcash Foundation
-  frost-secp256k1-tr; contract fields federation_id and stake_expiry_blocks
-  (constants.js still describes FEDERATION as "with a Lightning gateway").
+  THE 7-STEP REHEARSAL IS COMPLETE (steps 1-7 below): the FEDERATION.md
+  stake-lock custody holds on stock unpatched fedimintd 0.12.0, 4 guardians
+  3 of 4, two gateways, a 2-of-2 committee (tools/stake-lock-step[1-7].sh;
+  TASKBOOK).
+  NEXT (needs a decision to open, larger than a rehearsal step): FEDERATION.md's
+  conditions before real money - FROST and DKG bit-matched against Zcash
+  Foundation frost-secp256k1-tr (never a trusted dealer); contract fields
+  federation_id and stake_expiry_blocks (constants.js still describes
+  FEDERATION as "with a Lightning gateway"); real guardians and >=2 independent
+  gateways; federation fees; the spec update; the daemon/browser wiring.
+  STEP 7 DONE: no single key and no macaroon moves a stake lock - a one-seat
+  forfeit, a committee seat's key signing the redeem, an early refund, a wrong
+  secret and a second spend are refused, while the 2-of-2 forfeit, the
+  committee settlement and the player's post-expiry refund work
+  (tools/stake-lock-step7.sh; TASKBOOK).
   STEP 1 DONE: stock fedimintd 0.12.0 accepts a stake lock whose claim_pk
   is the committee's 2-of-2 key; the guardians store the exact contract the
   player's client built and its expiry (tools/stake-lock-step1.sh; TASKBOOK).
