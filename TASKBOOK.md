@@ -29322,3 +29322,34 @@ MEASURED: protocol 464/464 before and after (comment-only, no behaviour).
 No JS behaviour changed; no Unity. The built custody is still the
 hold-invoice path; conforming it to the stake lock is the parked wiring
 letter, not this interrupt.
+
+SPECIAL, 2nd pass (stale v4.6.2 quotes in code and tests)
+  chain-rpc.js, beacon.js,     quoted old §5A.5 "drand.round(committee_time)"
+  beacon-selection.test.js     and "reads Bitcoin where the spec says drand".
+                               Now: the first Bitcoin block whose MTP is after
+                               committee_time. FIXED - comments only.
+  protocol.test.js             quoted old §23.6 ("production-ready today").
+                               FIXED - test comment only.
+  beacon.js, sortition.js,     quoted §6 "randomness_fallback"; v4.6.2 has no
+  committee-seed.test.js       fallback beacon. FIXED - comments only; the
+                               refusal of a foreign fallback (and of a drand
+                               rule) stays and still passes.
+  blwp-client dist + WebGL     carried the old constants.js §23.6 comment.
+  template copy                Only that comment hunk applied to both (copies
+                               still byte-equal). A full rebuild would also
+                               bundle federationStakeFor from src - code, not
+                               this letter - so it was NOT rebuilt.
+  receipt.js                   quotes §10 "nodes timestamp receipt" for
+                               CHECKPOINT receipts; v4.6.2 §10 still says so.
+                               LEFT.
+  REPORTED, behaviour          §5A.5/§12: round_randomness =
+                               H(hash(beacon_block) || height). The code passes
+                               the block hash itself (verify.js:175/398,
+                               roster.js:87, ghosts.js:#randomnessOf,
+                               server.js /randomness, join.js). Already coded
+                               and not the spec's value; changing it moves
+                               every committee seed and world. NOT CHANGED -
+                               needs Daniel's ruling (tag + height encoding).
+MEASURED: protocol 464/464 (default discovery; 463 over test/*.test.js),
+blwp-node committee-seed 7/7, blwp-client bundle 5/5. git diff: every
+changed line is a comment. No daemons running; no Unity build.

@@ -26,6 +26,13 @@ M3 work. Change ONLY what is already implemented and now wrong. Then M3.
   no drand path is in the code. F1-F9/P1-P8 and federation_id/stake_expiry_blocks
   concern the federation custody NOT built in the node/client (the hold-invoice
   path ships); building it is the parked wiring condition, not this interrupt.
+  DONE (2nd pass): every stale quote of old §23.6 and old §5A.5/§6 in code,
+  tests and both client bundles now cites v4.6.2 (Bitcoin beacon, no fallback
+  beacon, federation stake lock). Comments only; protocol 464/464.
+  REPORTED, NOT CHANGED (behaviour, needs a ruling): v4.6.2 §5A.5/§12 say
+  round_randomness = H(hash(beacon_block) || height); the code seeds the
+  committee and every world with the block hash itself (verify.js, roster.js,
+  ghosts.js, /randomness). Changing it moves every seed and world.
   M3 resumes.
 PREVIOUS LIVE: M3 - A ROUND FOR TESTNET SATS ("M3 is done when"). M3.3-19 is
 closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
