@@ -29406,3 +29406,20 @@ M3 STAKE-LOCK WIRING, SLICE 2: THE v4.6.2 ENTRY FIELDS (§7, §23.1)
                         entryFor name zeros (no lock). Spreads inherit.
   MEASURED: protocol 468/468 (+2), node 485/485, client 236/236; vectors:
   contracts.json only (2 lines). Page bundle rebuilt, template = dist.
+
+M3 STAKE-LOCK WIRING, SLICE 3: F1 AT THE SEAT, ON THE HOLD PATH THAT SHIPS
+  page    dealStake returns stakePoint = dealt.handout.commitments[0] (A0 = P.G);
+          entryFor puts it on the entry, and refuses a stake that publishes
+          shares and names no point.
+  seat    Round.enter, for an entry naming shares: after "accepted" and "this
+          round", stakePointIsTheHandouts(entry, held handout) or refuse by
+          name. The door already proved ONE polynomial; this proves it is the
+          stake's.
+  tests   the four dealt-handout entries (settle-threshold, payout-second-seat,
+          second-closer, objection-window) and reconstruct's dealTo carry A0;
+          handout-accept: honest entry carries A0, new test - a different
+          point and no point are both refused.
+  BEFORE/AFTER: before, both entries joined 201. Mutant (the throw removed):
+  handout-accept 4/5, the new test red. Restored.
+  MEASURED: protocol 468/468, node 486/486 (243+243), client 236/236. Page
+  bundle rebuilt, template = dist.

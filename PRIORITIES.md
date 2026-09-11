@@ -35,6 +35,11 @@ unblocked work. Park only inbound, which-guardians, and named rulings.
   check (Feldman A0 == stake_point). stakeCommitment = H(P) stays while the
   hold invoice ships. Every entry names no lock yet (zeros). protocol
   468/468, node 485/485, client 236/236.
+  DONE (slice 3, F1 on the path that ships): the page's dealt stake names
+  its stake point (the handout's A0) on the entry, and a seat refuses an
+  entry whose handout's A0 is not that point, or that names none. Before:
+  both joined 201; a mutant without the check turns the new test red.
+  protocol 468/468, node 486/486, client 236/236.
   DONE (18:15 conform): the only already-coded thing v4.6.2 made wrong was
   constants.js's §23.6 custody comment (still "a Fedimint-class federation
   with a Lightning gateway") - conformed to the stake-lock wording; behaviour
