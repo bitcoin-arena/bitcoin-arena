@@ -50,17 +50,18 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   it. Rehearsal, AB and BA: P2 SETTLED on both
                   daemons, alice -98000 msat, the operator +98000; P1 and P3
                   cancelled back to alice.
-    flake, NEXT   M3.3-27: `Client.at` refused "only 1 of 2 providers gave a
-                  chain" (4 of 13 rehearsals; 3 of 8 in a batch). Measured
-                  cause: a read reused a kept-alive socket the daemon had
-                  closed while the event loop was held (ECONNRESET). Fix in:
-                  a lost-connection read is asked once more. Held-loop probe
-                  0 of 20 (was 20 of 20); 16-AB and 16-BA sat and settled.
-                  Closes when the 8-run batch repeats clean.
+    code, DONE    M3.3-27: `Client.at` refused "only 1 of 2 providers gave a
+                  chain" (4 of 13 rehearsals) because a read reused a
+                  kept-alive socket the daemon had closed while the event loop
+                  was held (ECONNRESET). A lost-connection read is now asked
+                  once more. Rehearsal with the loop held 6 s before anyone
+                  sits: with it 2 of 2 sit and settle, without it 2 of 2
+                  refuse; unforced batch 8 of 8 (was 5 of 8).
     code          M3.3-29: the second daemon to close can stay HELD on a
                   stake lnd settled through the first - its share ask beat
-                  the first's finality and nothing asks again (2 of 10
-                  rehearsals since M3.3-26; money right, row wrong).
+                  the first's finality and nothing asks again (6 of 21
+                  rehearsals since M3.3-26, always the second closer, in
+                  either order; money right, row wrong).
     code          M3.3-28: the POOL's threshold is still a flat 5 - the pool
                   DKG (`new Dkg` in server.js, default SHARES_NEEDED),
                   `payWithCommittee` (default) and `enoughToSign` (payout.js,

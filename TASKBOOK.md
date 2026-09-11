@@ -27210,3 +27210,40 @@ second closer); 11-BA and 13-AB end "that hold has already moved". The daemons
 ask each other with their own fetch, not the client's, so the fix above does
 not touch it. No money is lost when the first closer settles; if the first
 closer went down after its close, nobody would.
+
+THE BEFORE BATCH REPEATED (rehearsals 17-20, four pairs AB and BA side by side, the fix in):
+
+    17-AB  played, 3 seated, 3 of 3 committed 2 of 2, P2 lnd SETTLED, alice -98000 / operator +98000; searches [3087, 429] = 3516 ms; A SETTLED, B HELD
+    17-BA  played, 3 seated, 3 of 3 committed 2 of 2, P2 lnd SETTLED, alice -98000 / operator +98000; searches [4474, 962] = 5436 ms; A SETTLED, B SETTLED
+    18-AB  played, 3 seated, 3 of 3 committed 2 of 2, P2 lnd SETTLED, alice -98000 / operator +98000; searches [4045, 630] = 4675 ms; A SETTLED, B SETTLED
+    18-BA  played, 3 seated, 3 of 3 committed 2 of 2, P2 lnd SETTLED, alice -98000 / operator +98000; searches [2942, 364] = 3306 ms; A SETTLED, B SETTLED
+    19-AB  played, 3 seated, 3 of 3 committed 2 of 2, P2 lnd SETTLED, alice -98000 / operator +98000; searches [2031, 678] = 2709 ms; A SETTLED, B HELD
+    19-BA  played, 3 seated, 3 of 3 committed 2 of 2, P2 lnd SETTLED, alice -98000 / operator +98000; searches [1916, 682] = 2598 ms; A SETTLED, B SETTLED
+    20-AB  played, 3 seated, 3 of 3 committed 2 of 2, P2 lnd SETTLED, alice -98000 / operator +98000; searches [3687, 714] = 4401 ms; A SETTLED, B SETTLED
+    20-BA  played, 3 seated, 3 of 3 committed 2 of 2, P2 lnd SETTLED, alice -98000 / operator +98000; searches [8369, 557] = 8926 ms; A HELD, B SETTLED
+
+    8 of 8 played (the same batch before the fix: 5 of 8, 3 stopped on the flake).
+    Runs whose world searches held the loop past 5 s in all: 17-BA, 20-BA - they sat.
+    Second closer HELD on P2 (M3.3-29): 17-AB, 19-AB, 20-BA of these 8.
+
+THE CONDITION FORCED, IN THE FULL REHEARSAL. A world search is luck - of the
+eight above only 17-BA (5436 ms) and 20-BA (8926 ms) held the loop past 5 s -
+so the harness takes `--hold-before-sit=6000`: the event loop is held 6 s,
+synchronously, just before the first player sits. The same four runs, the
+real tree against a scratch copy that differs from it in one file (`reread.js`
+a pass-through, the instrumentation kept):
+
+    forced-fix-AB     3 seated, 3 of 3 committed 2 of 2, P2 lnd SETTLED;
+                      alice -98000 msat, the operator +98000
+    forced-fix-BA     the same
+    forced-nofix-AB   P1: Client.at refused after 14 ms, provider 0 ECONNRESET
+                      - a reused socket (6 uses), idle 13096 ms
+    forced-nofix-BA   P1: Client.at refused after 9 ms, provider 0 ECONNRESET
+                      - a reused socket (6 uses), idle 8250 ms, the loop held
+                      8248 ms
+
+M3.3-27 IS CLOSED: the refusal is the retry's absence and nothing else - with
+it, 2 of 2 forced runs sit, play and settle, and 8 of 8 unforced ones; without
+it, 2 of 2 forced runs refuse exactly as the rehearsals did. forced-fix-BA's A,
+the second to close, ended HELD on P2 while lnd settled it: M3.3-29, now 6 of
+21 played rehearsals since M3.3-26.
