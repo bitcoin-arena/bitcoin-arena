@@ -28508,3 +28508,28 @@ share that decides what comes next:
      - and a claim key that is not one party's.
   Until 1 and 2 are settled, the round's stakes cannot pass these guardians
   and close still acts on bob's own hold invoices.
+
+SIZING THE TWO DECISIONS (read from the v0.12.0 source; nothing built):
+  1a  THE INVOICE COMES FIRST: the node's receiving client makes the LNv2
+      invoice and the entry commits to its hash. No cryptography to port;
+      the join order changes, and the player's dealt shares have no job in a
+      federation round.
+  1b  THE PLAYER'S SECRET: the page encrypts it to the guardians' key.
+      crypto/tpe/src/lib.rs encrypt_preimage (49-69) needs, bit for bit,
+      `Scalar::random(ChaChaRng::from_seed(seed))` (83-85) and
+      `G2Projective::random(ChaChaRng::from_seed(sha256("FEDIMINT_TPE_
+      BLS12_381_MESSAGE" || ct || pk || commitment)))` (97-123) - Rust's
+      ChaCha generator through the bls12_381 crate's own sampling, not RFC
+      9380. @noble/curves 2.4.0 (installed) has BLS12-381 arithmetic,
+      pairing and the standard hash-to-curve, not these. So: a bit-exact JS
+      port of three Rust routines, or a WASM build of the tpe crate; one
+      wrong bit and the guardians refuse the contract. Then POST
+      /create_bolt11_invoice {federation_id, contract, amount, description,
+      expiry_secs} (lnv2-common gateway_api.rs 131) to the gateway.
+  2   THE POOL'S LEG: a claim is authorised by one secp256k1 key,
+      `claim_pk` (lnv2-server process_input: `verify_agg_decryption_key`,
+      then claim_pk or refund_pk). A FROST group key - the pool key the
+      daemons already make - signs in that shape, so a committee-held claim
+      key fits; the new work is building and signing the Fedimint claim
+      transaction, and a guardian consensus rule that refuses the claim
+      until the round's hold has passed (on consensus time, deterministic).
