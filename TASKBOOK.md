@@ -27946,3 +27946,47 @@ before the round is posted - none by default, so the Daily's launcher and
 seating.test.js (4 of 4) are unchanged. The rehearsal passes one that waits
 until alice and bob both say synced at bitcoind's tip, and prints whether it
 had to.
+
+### How a settled stake reaches the pool - step 1, measured; step 2 blocked
+
+Daniel's pick (2026-09-11): after the window, the settled loser stake funds
+the pool that pays the winner, so the operator does not keep it and the
+winner is not paid from a side purse.
+
+THE CURRENT PATH, measured on b100863:
+  - blwp-node/src: no file sends anything TO the pool output. pool-watch.js,
+    pool-signing.js and payout.js only find and spend it. Only harness tools
+    fund one (payout-committee-regtest.mjs, labelled STAND-IN).
+  - lnd-port.js: four acts - createHeld, look, settle, cancel. No payment and
+    no on-chain send, so the daemon cannot move a satoshi out of lnd at all.
+  - The real-lnd rehearsal (--mine-before-round=6, AB and BA): 0 of 4 acts
+    before the window, VOID rows HELD 0, HELD after lnd settled 0; the
+    loser's 98000 msat is in bob's CHANNEL balance (bob +98000, alice
+    -98000); both daemons' payout PAYOUT_QUEUED, "this node reaches no
+    chain, so it spends nothing".
+  - What the round owes, from the protocol's own code for this rehearsal
+    (100000 msat stakes, fee 2%): table P1 196000 msat, P2 0, pool 98000;
+    `winnings` - what the pool itself pays after P1's cancel returned its
+    stake - one row, P1 98000 msat.
+  - Dust, on a throwaway regtest bitcoind (bitcoin 31.1): sendtoaddress to a
+    taproot address - 98 sat "Transaction amount too small", 329 sat the same,
+    330 sat accepted.
+
+WHY STEP 2 STOPS. Three facts, each measured above:
+  1. The settled stake is Lightning money in one lnd's channel balance; the
+     pool is an on-chain taproot output. Moving one into the other is an act
+     by the operator of that lnd - an on-chain send from its wallet, a channel
+     close or a swap. That is PRIORITIES' option (a), "an interim bridge, one
+     operator", the choice the standing ruling reserves.
+  2. At this round's stake the hop cannot be a transaction: 98 sat is under
+     the 330-sat dust floor, and so is the winner's 98-sat payout out of the
+     pool. An on-chain pool needs a stake floor far above today's, or stakes
+     batched across rounds - money rules nobody has set.
+  3. The spec pays the winner over Lightning (§23.2: "Lightning payment from
+     the pool wallet"; §23.5/23.6: the pool is a 5-of-7 wallet built as a
+     threshold LN node or a federation, named in the Round Contract). On one
+     shared lnd that is a payment only that lnd's operator can make - single
+     custody again, and a winner's invoice the client cannot ask its wallet
+     for today (it only pays).
+Nothing was built; blwp-node 479/479, blwp-client 230/230, protocol 464/464,
+core 91/91 unchanged.

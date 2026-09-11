@@ -92,6 +92,8 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   still settles and cancels after it. A start runs the close
                   logic again for every closed round with a stake still HELD
                   there. Before: both seats HELD past the window.
+    remainder     a SUSPENDED run has no committee re-run (13A) yet; it
+                  cannot happen on 2 of 2, so it is not built on this slice.
     ruling        how a settled stake reaches the pool; the owed-sats fee
                   rate; htlc_cltv_days (all below, unchanged).
     inbound       testnet4: 196000 msat needed, 0 offered.
@@ -166,6 +168,14 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   custody. The choice: (a) an interim bridge, one operator, said so; (b) a
   federation (spec: "V1 should use the mature one"); (c) threshold LN.
   Until then a real round's winner is paid with money no round put there.
+  MEASURED 2026-09-11 (TASKBOOK): no file in blwp-node/src sends anything
+  to the pool; the lnd port has four acts (hold, look, settle, cancel) and no
+  pay or on-chain send. In the rehearsal the loser's 98000 msat sits in bob's
+  channel balance and the winner's payout stops at PAYOUT_QUEUED. The pool
+  owes that winner 98 sat - and bitcoind refuses a taproot output under 330
+  sat (98 and 329 refused, 330 taken), so at this stake neither the hop into
+  an on-chain pool nor the payout out of it can be a transaction at all.
+  §23.2 pays a qualifier by "Lightning payment from the pool wallet".
   RULING NEEDED (Daniel): htlc_cltv_days. §23.1 sizes a hold's CLTV "in days,
   comfortably beyond round + objection window + result window + claim
   window"; the spec makes it a round-contract field. Today lnd picks its own:
