@@ -27475,3 +27475,18 @@ chain-only rule's window, 13 blocks here.
     VOID rows HELD after lnd cancelled and the chain passed the expiry: 0 of 4
     (2 runs x 2 daemons). Second closer HELD after lnd settled: 0 (M3.3-29
     holds). blwp-node 459/459, blwp-client 230/230, core 91/91, vectors 8/8.
+
+M3.3-30 AFTER, four pairs AB and BA side by side (m30-after-2..5), the harness
+mining past the HTLC's expiry:
+
+    AB  played 4 of 4; VOID rows HELD after lnd cancelled and the chain past the expiry: 0 of 8; rows EXPIRED: 8 of 8; second closer HELD after lnd settled: 0; lnd cancelled [13] block(s) before the expiry
+    BA  played 4 of 4; VOID rows HELD after lnd cancelled and the chain past the expiry: 0 of 8; rows EXPIRED: 8 of 8; second closer HELD after lnd settled: 0; lnd cancelled [13] block(s) before the expiry
+
+    after:  0 of 16 VOID rows HELD once the chain is past the expiry (was 35 of
+            35 runs, both daemons HELD), both close orders; every row EXPIRED
+            2.0-2.5 s after the chain reached 367 (expiry 366). Money in all
+            8: P2 SETTLED, alice -98000 msat, the operator +98000, P3 back with
+            alice. lnd cancelled 13 blocks before the expiry in all 8, so for
+            those 13 blocks the rows still say HELD while the money is back.
+
+M3.3-30 IS DONE.

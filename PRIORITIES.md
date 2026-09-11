@@ -62,10 +62,11 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   settle that found no preimage keeps the 2 s watch asking
                   for the share. Second closer HELD after lnd settled: 800 ms
                   gap 6 of 8 -> 0 of 7, normal 4 of 8 -> 0 of 8, gap 0 0 -> 0.
-    code, NEXT    M3.3-30: a VOID stake whose hold times out in lnd stays
-                  HELD on both daemons' rows - nothing moves a row to EXPIRED
-                  (35 of 35 rehearsals: lnd CANCELED, rows A HELD, B HELD;
-                  money right, row wrong).
+    code, DONE    M3.3-30: a hold whose HTLC has expired is written EXPIRED
+                  once the daemon's own chain is past the expiry height lnd
+                  gave at seen-time. VOID rows HELD after lnd cancelled and
+                  the chain passed the expiry: 35 of 35 -> 0 of 16 rows, both
+                  orders. lnd cancels 13 blocks early; rows follow the chain.
     code          M3.3-28: the POOL's threshold is still a flat 5 - the pool
                   DKG (`new Dkg` in server.js, default SHARES_NEEDED),
                   `payWithCommittee` (default) and `enoughToSign` (payout.js,
