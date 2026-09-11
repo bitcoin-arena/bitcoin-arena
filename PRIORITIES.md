@@ -31,8 +31,8 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   on-chain pool, invoice-first through the patched fedimintd, the guardian
   hold patch. The uncommitted swap work (round.js, store.js, swap.js at
   14:19) is not this path.
-  NEXT: rehearsal step 4 - `Refund` after expiry by the player's key;
-  before expiry refused (FEDERATION.md's 7-step rehearsal on regtest -
+  NEXT: rehearsal step 5 - gateway A down: deposit and withdrawal go
+  through B (FEDERATION.md's 7-step rehearsal on regtest -
   unpatched fedimintd, 4 guardians 3 of 4, two gateways, a 2-of-2
   committee). Then FROST and DKG bit-matched against Zcash Foundation
   frost-secp256k1-tr; contract fields federation_id and stake_expiry_blocks
@@ -50,6 +50,9 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   refused, and the accepted settlement resent is answered as already
   accepted and moves nothing (tools/stake-lock-step3.sh; TASKBOOK). OPEN:
   fee locks - their claim hash, and the §22A node slots.
+  STEP 4 DONE: after expiry the lock comes back on the player's own key and
+  is gone; before expiry, and after it with a committee seat's key, the
+  refund is refused (tools/stake-lock-step4.sh; TASKBOOK).
   LATER, DAEMON WORK (not a rehearsal step, not opened): each committee seat
   rebuilds the settlement transaction from the public payout table and signs
   only the id it rebuilt; its nonce is a fixed rule (e.g. from round_id),

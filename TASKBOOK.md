@@ -29053,3 +29053,51 @@ NOT IN 3a, by the plan: fee locks and node-slot payouts (undecided claim hash,
 §22A); the qualifier redeeming the payout; a Claim after expiry (step 4). The
 signing is the repo's FROST, not bit-matched against frost-secp256k1-tr. Not
 deployable: regtest, tools only; no daemon builds or signs a settlement.
+
+## THE STAKE LOCK, REHEARSAL STEP 4: THE PLAYER'S REFUND AFTER EXPIRY (2026-09-11)
+
+FEDERATION.md step 4: "`Refund` after expiry by the player's key; before
+expiry refused". Stock released fedimintd 0.12.0, unpatched; four
+guardians, threshold 3; one gateway; the 2-of-2 committee key.
+
+  FEDIMINT_BIN=<released builds> LOCK_BIN=<blwp-stake-lock> \
+    bash packages/blwp-node/tools/stake-lock-step4.sh
+
+What the source says: Refund passes only when the lock's expiration is at
+or below the guardians' block count, and the transaction must be signed by
+refund_pk (lnv2-server lib.rs:466-497); the guardians' block count is the
+third-highest of four votes (lib.rs:746-765). So the run mines past the
+expiry and then WAITS until the guardians' own count reaches it.
+Tool: tools/stake-lock --mode redeem --witness refund (the stock Refund
+witness, no signature in it; the transaction signed by the given key), and
+--mode status to poll the guardians' count and the lock.
+
+MEASURED (272 s, nothing left running):
+  lock          9e1bb74986ea20b7b2907392c6bafb49ddbeab2053e642635548b98bfe24fb18:0
+                contract 4110fa42907d596b75c32ff4f44492181b4f1f63dce645e0e018b9ec0e8ddd1d
+                980000 msat, expires at block 452 (144 left at the guardians' count 308)
+                refund_pk 0372a2ab0c05a442c039b1f1bdbaf8bea79cb0447063ef5e14b0879909b7e27946
+  BEFORE        the player's Refund at the guardians' count 308, bitcoin height 313:
+                REFUSED "The transaction had an invalid input: 0-The contracts
+                locktime has not yet passed"; the lock unchanged (144 left)
+                (tx 05ea568cac6c0aa70e5e6f2a8921c77150d95844b392792393066f214a4a0aad)
+  EXPIRY        mined 146 blocks: bitcoin height 313 -> 459. The guardians' count:
+                308 at +292 ms, 460 at +7110 ms (the lock: 0 blocks left) -
+                reached 7150 ms after the mining returned; it read one above
+                the bitcoin height (step 1 had seen it lag: 305 vs 314)
+  WRONG KEY     a Refund after expiry signed by committee seat 1's key, count 460:
+                REFUSED "The transaction's signature is invalid: tx=..., hash=bf89e31e...,
+                sig=094da382..., key=0372a2ab..." (the key it wanted is
+                refund_pk); the lock still stored (0 left)
+  REFUND        the player's Refund after expiry, count 460 (>= 452): ACCEPTED,
+                tx e808817ad6789a0101a5c72f55e360d2675f5279d32f935c4621133ee294a9cf
+  after         the guardians hold NOTHING at the lock's outpoint (null)
+  player's ecash 1004544 -> 1004544 after the wrong key -> 1982464 msat:
+                +977920 for the 980000 msat lock, 2080 msat fees; the notes
+                arrived 54588 ms after the refund returned (step 2's redeem:
+                5930 ms - measured, not explained)
+
+LEFT OUT, by the plan: the exact boundary (a refusal at expiry - 1, then
+acceptance at expiry) under the third-highest-vote lag; a forfeit after
+expiry. Not deployable: regtest, tools only; no page refunds a lock, and
+the committee's signing is not bit-matched to an audited FROST.
