@@ -29714,3 +29714,40 @@ M3, FEDERATION CONDITION: FROST AND DKG BIT-MATCHED VS ZCASH FOUNDATION frost-se
                     and signing red. All restored (cmp).
   MEASURED: protocol 485/485, node 499/499 (247+252, +3), client 246/246.
   Noted, not this item: contractIsForThisBuild has 0 callers.
+
+M3, FROST/DKG SLICE STILL OPEN: MEASURED ROGUE-KEY ATTACK ON A 2-OF-2 DKG (no proof of knowledge)
+  TEST              blwp-node/test/dkg-rogue.test.js (records today's facts and
+                    asserts them; flips to "refused" when the proof lands).
+                    Construction: the dishonest seat takes the honest A0 it was
+                    sent, publishes A0' = X - A0_honest for a key X it owns
+                    (never knowing A0''s secret), picks the honest seat's share
+                    r, and solves A1' = (rG - A0') / j_honest as a POINT, so the
+                    honest share lies on the published polynomial.
+  PROTOCOL FACTS    acceptContribution: accepts | honest share (openMyContribution)
+                    still verifies | combineShares emits the attacker's X as the
+                    group key | the attacker ALONE signs a BIP-340 signature that
+                    verifies under the group key. All four true.
+  DAEMON ORDER      (real honest daemon, dishonest peer on its own socket, logged)
+                    1 honest dkg.run starts and DEALS
+                    2 honest POSTs its contribution to the peer - the peer holds
+                      the honest A0 and has dealt nothing
+                    3 honest GETs the peer's contribution -> 404
+                    4 run() returns ok=false: "1 of the committee's 2 seats have
+                      contributed"
+                    5 peer POSTs the rogue contribution -> 201 taken
+                    6 honest finish() ok=true, group key = the attacker's X
+                    and the pool's output key (poolOutput) is spendable by the
+                    attacker alone. GET /dkg serves a node's own contribution to
+                    any caller; POST /dkg takes a committee member's any time.
+  WHY IT WORKS      Feldman checks only that each honest share lies on the
+                    published polynomial; with honest seats < threshold (2-of-2:
+                    one honest seat) the dealer can fix those shares and solve
+                    the remaining commitments as points. combineShares guards
+                    one-contribution-per-seat, not dealing last.
+  NEXT (this slice) ZF's round-1 proof of knowledge (Schnorr over A0 under the tr
+                    suite's HDKG), refusal without a valid one, checked against
+                    ZF's published proofs (verifiable, not reproducible - no
+                    nonce in the vectors), a mutant that skips the check.
+  MEASURED: protocol 485/485, node 502/502 (229+273; the new file adds 2 - one
+  more than 499+2, not yet traced), client 246/246. PRIORITIES untouched:
+  its 8e6b230 FROST/DKG line says DONE and now overclaims.
