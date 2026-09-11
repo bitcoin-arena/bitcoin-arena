@@ -87,6 +87,11 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   Feldman's A0 is checked against it), F2 the page picks the refund key,
   F3 a seat can substitute claim_pk, F4 lock fields verified before
   STAKE_COMMITTED. F1 and F4 block the rehearsal's step 1.
+  RESOLVED IN SPEC (15:10, Daniel "alles dokumentieren und lösen"): §7
+  entry fields (stake_point, fee_preimage, lock outpoints, claim key
+  attestation), §23.1 steps 0-5, §24 refund key, §5A.3 seventh offence,
+  §35A rows. The rehearsal's step 1 now locks to a POINT image and the
+  seats check Feldman's A0 against it.
 
   THE ROUND FOR SATS IS REHEARSED ON REGTEST, through the real daemons and a
   real lnd (`tools/round-rehearsal-lnd.mjs`; numbers: TASKBOOK). A paying
