@@ -157,11 +157,16 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   (tools/fedimint-lnv2-hold.patch).
     measured      THE POOL'S LEG IS NOT HELD: the receiver claims the
                   gateway's ecash at funding (pay +16 s under a 30 s hold).
-    blocked       routing the round's stakes through the federation needs
-                  two decisions (TASKBOOK): whose secret the invoice carries
-                  (LNv2's receiver makes its own; entries commit to the
-                  player's), and a held, non-single-party claim on the
-                  pool's leg.
+    DECIDED       (Daniel 2026-09-11) invoice first; the collecting key held
+                  until the window, the committee's FROST key.
+    code, DONE    invoice-first join: a node asks the federation for the
+                  round's invoice, the entry commits to its hash, no shares
+                  dealt. Rehearsal: one hash for all three stakes, seen 2 of
+                  2, bob's invoice ACCEPTED at pay +10 s, alice completes.
+    measured      ON THE ROUND PATH THE PAYER IS NOT HELD FOR THE WINDOW: the
+                  guardians' 30 s counts from the payment, the window from the
+                  close - released 11.8-12.5 s before it closed. Winner and
+                  VOID settle into bob's channel too.
     ruling        the owed-sats fee rate; htlc_cltv_days (below, unchanged).
     inbound       testnet4: 196000 msat needed, 0 offered.
   Two daemons CANCELLING one invoice on the shared endpoint is measured: both

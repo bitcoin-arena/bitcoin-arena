@@ -28533,3 +28533,73 @@ SIZING THE TWO DECISIONS (read from the v0.12.0 source; nothing built):
       key fits; the new work is building and signing the Fedimint claim
       transaction, and a guardian consensus rule that refuses the claim
       until the round's hold has passed (on consensus time, deterministic).
+
+### Round stakes through the federation, invoice first - steps 1 and 2 measured
+
+Daniel (2026-09-11): decision 1 is (a) invoice first; decision 2 is yes
+(the collecting key held until the window, the committee's FROST key). Steps:
+the invoice-first join, then measure that path, then the pool-side hold.
+
+STEP 1, THE JOIN:
+  blwp-node  lnd-port `decode({ request })` (`decodepayreq`, read only);
+             serve option `federation` ({ receive({ amountMsat }) -> { request }});
+             door `GET /federation-invoice?round=`: 409 without a federation or
+             for a free round, 404 for an unknown round, 503 if the port cannot
+             decode; asks for exactly the net stake (stake - 2% fee, no
+             donation), reads hash and amount off the invoice itself, 502 for
+             any other amount. `/entry` then takes the gateway's hold invoice
+             up (lnd-port, unchanged) and `invoiceMatchesEntry` checks it.
+  blwp-client `federationStakeFor(round, { nodes })` in client.js - not
+             join.js: session-pay.test.js pins client.js as the one file that
+             quotes a player, and it failed ('join.js' named an invoice) until
+             the ask moved. join.js is back to its committed text.
+  pins       federation-invoice.test.js 3/3 (no federation 409; the net-stake
+             invoice, an entry on its hash with no shares seated and quoted the
+             same invoice; a free round 409, net + 1000 msat 502, unknown 404);
+             federation-stake.test.js 3/3.
+  mutants    no door: 3 of 3 fail; the gross stake asked: 1 fails; no amount
+             check at the door: 1 fails; no amount check in the page (in
+             client.js): 1 fails. Restored green.
+  tools      federation-hold-probe.sh: EXT_* puts the federation on an existing
+             regtest (cookie auth), SETUP_ONLY=1 leaves it up and prints
+             FEDERATION_READY. The rehearsal's --federation: the federation on
+             its own chain (4 guardians, threshold 3, the patched fedimintd,
+             HOLD_SECS 30), invoice-first stakes, every bitcoin-cli call named
+             to one wallet (the gateway loads its own), the VOID wait ends on
+             SETTLED as a hole instead of 300 s.
+
+STEP 2, THE PATH MEASURED - real lnd, AB, 1000-sat stakes (runs 2 and 3; run 1
+was cut off at the tool's 590 s by the VOID wait, and its leftovers - the
+rehearsal's bitcoind, four guardians, the gateway - were stopped by hand):
+    federation up           112-119 s on the rehearsal's bitcoind and bob
+    one hash                P1, P2, P3: the entry's hash = the node's quote =
+                            the invoice's own hash (decodepayreq)
+    seated                  x-hold HELD on both daemons: the gateway's invoice
+                            taken up
+    pay + 10 s              bob's invoice and HTLC ACCEPTED for all three; bob's
+                            channel 1000000000 msat, unchanged
+    seen                    2 of 2, committed, all three
+    alice completes         30698 / 30910 / 30843 ms (run 2), 30795 / 30958 /
+                            31013 ms (run 3); HTLC held 30-31 s
+    AGAINST THE WINDOW      run 3, instrumented: paid 11470 ms before the first
+                            close; released at close +19328 / +19499 / +19562
+                            ms; the round's window closes at +31800 (P1) and
+                            +31309 (P2) - RELEASED 12472 AND 11810 ms BEFORE THE
+                            WINDOW CLOSED
+  THE FINDING: on the round path the payer's HTLC is NOT held for the window.
+  The guardians' hold counts 30 s from the PAYMENT; the round's window counts
+  from the CLOSE. Bob could spend about 12 s before the window closed. Not
+  tuned: raising HOLD_SECS would be moving the number, not the rule.
+  And so: every stake - winner and VOID too - is settled into bob's channel
+  by the gateway (+2940000 msat, 3 x 980), the daemons' P1 cancel meets
+  "invoice already settled" and throws out of the close (money summary
+  "agreed []", table none, rows CANCEL_REQUESTED), and their P2/P3 rows go
+  EXPIRED past the HTLC height while lnd says SETTLED (HELD AFTER LND SETTLED 6).
+  Those are steps 3 and 4's to fix; they are reported, not hidden.
+
+THE SUITES (this tree, run two at a time): blwp-node 485/485 (+3),
+blwp-client 236/236 (+3), protocol 464/464, core 91/91; Unity not touched.
+In an earlier 4-way parallel run two timing tests fell (second-closer 800 ms;
+the restart test cancelled at 135 s) and passed alone (2/2, 6/6);
+blwp-client once failed headers.test.js "0 of 4 providers" and passed alone
+15/15 twice.
