@@ -27916,3 +27916,33 @@ blwp-node 479/479 (+1), blwp-client 230/230, core 91/91, golden vectors 8/8,
 0 core or Unity files.
 
 M3.3-33 IS DONE.
+
+### The rehearsal's "not synced" miss (1 of 69 logs, M3.3-29) - measured first
+
+WHERE IT IS: `standUpRound` mines 6 blocks per try in its beacon loop
+(round-2of2.mjs) and then posts the round; posting runs the daemon's
+Lightning preflight, which refuses unless bob's `getinfo` says
+`synced_to_chain`. The rehearsal's own sync wait comes before the channel,
+long before that last batch. A harness wait, not the daemon: its refusal is
+the right answer.
+
+FORCED, as --hold-before-sit forced M3.3-27's: `--mine-before-round=6` mines
+the batch at its worst moment, just before the round is posted;
+`--no-tip-wait` skips the new wait.
+
+    before (--no-tip-wait), AB and BA   2 of 2 refused: "18701 [18801]
+      refused the round: ... that node is not synced to its chain". Bob read
+      289/289 - AT the tip's height - with synced_to_chain false: the height
+      alone is not the answer.
+    after, AB and BA                    2 of 2 opened: "BEHIND on 1 poll(s)
+      (alice 289/289 synced false, bob 289/289 synced false), waited 190
+      [208] ms"; played, 0 of 4 acts before the window; alice -98000 msat,
+      the operator +98000; VOID rows HELD 0; HELD after lnd settled 0.
+    unforced, AB and BA                 "already" at the tip both times; the
+      same money.
+
+THE CHANGE: `standUpRound` takes an optional `beforeRound`, awaited just
+before the round is posted - none by default, so the Daily's launcher and
+seating.test.js (4 of 4) are unchanged. The rehearsal passes one that waits
+until alice and bob both say synced at bitcoind's tip, and prints whether it
+had to.
