@@ -39,6 +39,10 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   STEP 1 DONE: stock fedimintd 0.12.0 accepts a stake lock whose claim_pk
   is the committee's 2-of-2 key; the guardians store the exact contract the
   player's client built and its expiry (tools/stake-lock-step1.sh; TASKBOOK).
+  STEP 2 DONE: the committee's 2-of-2 forfeit, redeemed by the player's own
+  key, is accepted and the lock is gone; a one-seat forfeit, a committee key
+  signing the redeem, and a second redeem are refused
+  (tools/stake-lock-step2.sh; TASKBOOK).
   RULED (14:40): stake_expiry_blocks = 144 (one day); donations paid by
   the player's wallet directly, every game. OPEN: which guardians.
   AUDITED against the 0.12.0 source (FEDERATION.md, "Source audit"): the

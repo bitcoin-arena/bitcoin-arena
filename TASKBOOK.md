@@ -28925,3 +28925,61 @@ one-transaction deposit-into-lock is not measured. The committee key is from
 this repo's ceremony, not bit-matched against frost-secp256k1-tr (a
 condition before real money). Not deployable: regtest, stock tools only, no
 daemon or page path builds a lock yet.
+
+## THE STAKE LOCK, REHEARSAL STEP 2: THE COMMITTEE'S FORFEIT, REDEEMED BY THE PLAYER (2026-09-11)
+
+FEDERATION.md step 2: "the committee's forfeit, redeemed by the player". Stock
+released fedimintd 0.12.0, unpatched; four guardians, threshold 3; one
+gateway; the 2-of-2 committee key from step 1's key ceremony.
+
+  FEDIMINT_BIN=<released builds> LOCK_BIN=<blwp-stake-lock> \
+    bash packages/blwp-node/tools/stake-lock-step2.sh
+
+What the source says (lnv2-server lib.rs:466-497): a lock spent with
+Cancel(sig) needs a BIP-340 signature by claim_pk over the contract id, no
+preimage, no expiry check - and then the TRANSACTION must be signed by
+refund_pk. The lock is removed when spent. So the committee only signs; the
+player's client redeems.
+
+The run: tools/stake-lock-step1.sh with STAY_UP=1 up to the lock (not
+re-measured); the committee's forfeit from the repo's FROST 2-of-2
+(tools/stake-lock-forfeit.mjs, two rounds, the ceremony's shares); the
+redeem mode of tools/stake-lock (stock client crates: one Outgoing input with
+Cancel(sig), the signer's key, the value back as the signer's ecash). Three
+refusals, each a real submission; (a) and (b) while the lock is still there.
+
+MEASURED, run 2 (195 s, nothing left running):
+  lock                 e8b49a4d10c8cb74f5832b39b4ea1a8019a30709724a08e32d5a4be7eb2ff905:0
+                       contract 33bbb30944e6ccca08d87dfdcb562bd558e2e45caaa182c745723439210be522
+                       expires at block 453 (144 blocks left at count 309)
+  claim_pk             028cce0dddc8000b6d1325390bf996ae6b08ce1afa0b19728091f1ca8eac56d2f7
+  forfeit 2 of 2       50768691b389b2e2e6976d78272ba1fa42fd5dda2f04f6ee1b2a2b824c1608ff
+                       36ac763507e920d1c2d9d90d9bad76dfd8c587c46109b951666702b0b662da43
+                       verifies under claim_pk: true
+  one seat alone       verifies: false
+  (a) 1-of-2 forfeit, signed by the player:
+                       REFUSED "The transaction had an invalid input: 0-The
+                       forfeit signature is invalid"; the lock still stored
+  (b) 2-of-2 forfeit, transaction signed by committee seat 1's key:
+                       REFUSED "The transaction's signature is invalid: tx=...,
+                       hash=d21fe3bf..., sig=..., key=0339747d..."; the lock
+                       still stored
+  REDEEM               2-of-2 forfeit, signed by the player: ACCEPTED,
+                       tx 2008b12d0d017eb4ac199efa9a10b65a7a125faacaf45df7afc39194250ad27d,
+                       at the guardians' block count 309 (< 453)
+  after                the guardians hold NOTHING at the lock's outpoint (null)
+  player's ecash       1004544 -> 1004544 after (a), (b) -> 1982464 msat:
+                       +977920 for the 980000 msat lock, 2080 msat fees; the
+                       notes arrived 5930 ms after the redeem returned
+  (c) the same redeem again:
+                       REFUSED "The transaction had an invalid input: 0-No
+                       contract found for given ContractId"; ecash unchanged
+Run 1 (205 s): the same four answers; its ecash line read +0 because the
+balance was read the instant the redeem returned - the notes come after
+acceptance, and read after (c) it was 1982464. The script now waits for them.
+
+NOT MEASURED, by the plan: a Claim (preimage + claim_pk) - step 3; a forfeit
+after expiry (the source has no expiry check on Cancel; mining past 144
+blocks is step 4's ground). The forfeit is the repo's FROST, not bit-matched
+against frost-secp256k1-tr. Not deployable: regtest, tools only; no daemon
+signs a forfeit and no page redeems one.
