@@ -29664,3 +29664,53 @@ M3 F2 REMAINDER, PIECE 2: THE SERVED CLIENT CHECKED AGAINST A LIST OUTSIDE IT (Â
                     tampered test red. Restored (cmp).
   MEASURED: protocol 485/485, node 496/496 (244+252, +3, clean), client
   246/246.
+
+M3, FEDERATION CONDITION: FROST AND DKG BIT-MATCHED VS ZCASH FOUNDATION frost-secp256k1-tr
+  PINNED            test-vectors/protocol/zf-frost-secp256k1-tr-v3.0.0/, from
+                    github.com/ZcashFoundation/frost tag frost-secp256k1-tr/v3.0.0
+                    (latest tr release), byte for byte, SOURCE.json with URLs:
+                      vectors.json      sha256 0ac120db0ae51143b04e74edfc90cf62e29e58f5980308e5efb0da039bfdc3ff
+                      vectors_dkg.json  sha256 912c8f8a50760351349463550c3ea99c4f8bc1a6c3d7852510194196bfabbf30
+                    vectors-big-identifier.json at that tag is byte-identical to
+                    vectors.json (same sha256) - not copied twice.
+  MEASURED BEFORE   frost.js = RFC 9591 plain secp256k1 (its vectors pass);
+                    frost-bip340.js = BIP-340 conventions over frost.js's
+                    hashes, tested only for self-consistency and BIP-340
+                    acceptance; dkg.js = Pedersen as n Feldman deals, sealed
+                    shares, contribution fields [epochId, from, ephemeralPubkey,
+                    needed, commitments, shares]. Against ZF: 14 match / 24
+                    mismatch. Signing: dealer shares, group key, nonce
+                    commitments matched; nonces, binding factors, sig shares,
+                    signature did not. DKG: commitments matched; the "shares"
+                    mismatches were MY misreading - ZF keys signing_shares by
+                    SENDER as the recipient holds them (P[i].signing_shares[j]
+                    = f_j(i)): all six match. Final shares and key differed.
+  FOUND             ZF tr source (lib.rs at the tag): CONTEXT_STRING
+                    "FROST-secp256k1-SHA256-TR-v1" for H1/H3/H4/H5 (ours used
+                    RFC 9591's "FROST-secp256k1-SHA256-v1"); H2 = BIP-340
+                    challenge (same). post_dkg: t = TapTweak(P.x); make P even
+                    (negate shares); add t to every share, tG to every key.
+                    Scratch re-run, context string only changed: 11/11 signing
+                    values match; DKG shares even + poolTweak: 7/7 match.
+  CHANGE            frost.js: hashesFor(context); nonceGenerate and
+                    bindingFactors take a context (RFC 9591's by default - its
+                    vectors still pass). frost-bip340.js: TR_CONTEXT,
+                    nonceGenerate340, binding factors under TR. Every BIP-340
+                    nonce caller moved to nonceGenerate340: src pool-signing.js,
+                    payout.js; tools payout-regtest, swap-into-pool,
+                    pool-regtest, stake-lock-forfeit. DKG: no change.
+  CONVENTION        ZF keeps the tweaked key's parity (its vector Q 03849089...
+                    is odd) and negates at signing; our poolShare negates at
+                    once for an odd Q. Same key; the test checks both forms.
+  GAP (named)       ZF round-1 package carries a 64-byte proof of knowledge
+                    (Schnorr over A0); ours carries none. The vectors give no
+                    PoK nonce, so it is verifiable, not reproducible. Not
+                    added here - reported.
+  TEST              blwp-node/test/zf-frost-tr.test.js: pinned sha256; signing
+                    byte for byte (+ BIP-340 verifies); DKG byte for byte.
+  MUTANTS           1 TR_CONTEXT back to RFC's -> signing red (and the pin test,
+                    which checks the context string). 2 poolShare ignores the
+                    tweak -> DKG red. 3 one byte of vectors.json flipped -> pin
+                    and signing red. All restored (cmp).
+  MEASURED: protocol 485/485, node 499/499 (247+252, +3), client 246/246.
+  Noted, not this item: contractIsForThisBuild has 0 callers.
