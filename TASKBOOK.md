@@ -29519,3 +29519,49 @@ M3 SLICE 8: THE CREATOR CANNOT NAME HIS OWN FEDERATION (§5A.1, §23.6, v4.6.2, 
                    chunks, 2/2 alone - load timing, not this slice.
   MEASURED: protocol 480/480 (+4), node 491/491 (206+285), client 236/236;
   vectors: advert.json only. Page bundle rebuilt, template = dist.
+
+M3 F2: THE REFUND/PAYOUT KEY FROM THE PLAYER'S SEED (§24, v4.6.2)
+  MEASURED BEFORE   page: tabIdentity kept ONE random secret per tab in
+                    sessionStorage ('blwp.player') and its x-only point was
+                    player_pubkey for EVERY round - no seed, no backup, no
+                    fingerprint, locks linkable across rounds; entryFor took
+                    any 32 bytes as playerPubkey and any dealt stake. Daemon:
+                    no check (it cannot see a seed); F4's lockMatchesEntry
+                    (refund_pk = 0x02||player_pubkey) exists, not called.
+                    The payout already goes to player_pubkey on the path that
+                    ships, so F2 bites now, not only under the stake lock.
+                    Not copied: §294's "browser key blwp.player.v1 + backup
+                    download" - the pre-v4.6.2 rule §24 replaced.
+  THE RULE          protocol/src/player-key.js (not packages/core: key
+                    derivation is not simulation). secret = first
+                    taggedHash('BLWP/v1/PlayerKey', seed||round_id||c), c=0..,
+                    with 0<s<n; player key = x-only(s.G); refund key =
+                    0x02||key; fingerprint = first 8 bytes of
+                    taggedHash('BLWP/v1/RefundFingerprint', refund key) as
+                    xxxx-xxxx-xxxx-xxxx. The spec names the parts, not the
+                    hash - tagged hash chosen, like every derivation here.
+  PAGE              join.js tabSeed (32-byte seed per tab,
+                    'blwp.player.seed') + playerFor(round, {seed, curve});
+                    entryFor derives the key itself and REFUSES a given
+                    playerPubkey that is not it, or a stake whose handout names
+                    another key. index.html: #blwp-refund shows the
+                    fingerprint, the round id and a <details> seed backup.
+  OUTSIDE THE PAGE  node packages/blwp-node/tools/refund-key.mjs <seed> <round>
+                    prints player key, refund key, fingerprint (noble BIP-340,
+                    the page's own pointX); test runs it as a subprocess and
+                    compares with the page's seat.
+  SEATS             cannot check the derivation - they never see the seed. Their
+                    half is F4 (refund_pk = the entry's player key), protocol,
+                    wired with the stake lock (parked).
+  MUTANTS           A: entryFor's key check removed -> join.test 11/12, the F2
+                    test red. B: the stake check removed -> 11/12, red.
+                    Restored (cmp).
+  callers           two-tabs, world-seed(-bridge), checkpoint-quorum,
+                    page-stake, federation-stake, join tests; the rehearsal
+                    tool (round-rehearsal-lnd.mjs: import + calls, NOT run -
+                    it needs lnd). Bundle: player-key.js helper renamed
+                    (is32 clashed with contracts.js in the concatenating
+                    bundler). Bundle 443.7 KB / 35 modules, template = dist.
+  MEASURED: protocol 483/483 (+3), node 493/493 (211+282, +2 refund-key),
+  client 237/237 (+1). second-closer "800 ms apart" red once under parallel
+  chunks, 2/2 alone - load timing, as in slice 8.

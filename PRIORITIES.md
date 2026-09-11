@@ -70,6 +70,13 @@ unblocked work. Park only inbound, which-guardians, and named rulings.
   guardian keys are advertised by distinct census nodes bonded >= the round's
   minimum. The real-regtest census fixture was re-recorded (needs -txindex).
   protocol 480/480, node 491/491, client 236/236.
+  DONE (F2, §24): the player key - where a payout and a refund go - is
+  derived per round from a player seed the tab keeps (protocol
+  player-key.js); the page shows its refund fingerprint and a seed backup,
+  and `node packages/blwp-node/tools/refund-key.mjs <seed> <round>` checks it
+  outside the page. entryFor refuses any other key or a stake dealt under
+  one; seats cannot see the seed, their half is F4's refund_pk = player key.
+  Mutants red. protocol 483/483, node 493/493, client 237/237.
   DONE (18:15 conform): the only already-coded thing v4.6.2 made wrong was
   constants.js's §23.6 custody comment (still "a Fedimint-class federation
   with a Lightning gateway") - conformed to the stake-lock wording; behaviour
