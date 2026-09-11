@@ -30053,3 +30053,18 @@ M3, P2 FINDING (b): FIXED - A NODE THAT HOLDS STAKES TAKES NONE INTO A ROUND NAM
                     refusal. A flake in the test's premise, not in this slice.
   COUNTS STOOD ON   protocol 487/487, node 520/520 (sequential chunks; chunk 40
                     rerun after the objection-window wait fix), client 246/246.
+
+M3, NO-RELAY DOOR, THE OTHER TWO PATHS - MEASURED BEFORE
+  WHY               6db33d9 guards /round and /entry. Two more doors take money
+                    into a round from what is stored: /invoice (Custody.hold,
+                    the only caller of createHeld besides /entry) and
+                    /federation-invoice (federation.receive).
+  TEST              blwp-node/test/seat-relay.test.js, two MEASURED tests: a
+                    paying round naming no relay and an entry kept in the store
+                    as before the rule (round.open / round.enter, no hold yet).
+  FACTS             /invoice: 200, 1 hold asked of Lightning, hold row HELD.
+                    /federation-invoice: 200, the federation asked 1 time for
+                    the round's stake invoice.
+  READING           The seat-time refusal is not the whole door: a stake can
+                    still be quoted, and a federation invoice made, for a round
+                    none of whose results can become final.
