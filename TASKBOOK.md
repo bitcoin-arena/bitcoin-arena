@@ -28385,3 +28385,23 @@ probe, 1000-sat stake, 30 s window:
   The same as the released build (2253 and 2709 ms): bob can spend 2.3-2.7 s
   after payment. The probe left 0 ports bound; 73 empty chroot folders of
   the run removed.
+
+THE HOLD PATCH, FIRST VERSION - MEASURED AND NOT A HOLD. In
+modules/fedimint-lnv2-server (db.rs, lib.rs; diff saved in scratch as
+fedimint-hold-v1.diff): funding no longer makes the decryption share, it
+records a funded-at time (new record IncomingContractFundedAtKey, prefix
+0x12); DECRYPTION_KEY_SHARE_ENDPOINT waits for it, sleeps until funded-at +
+FM_LNV2_INCOMING_HOLD_SECS, then makes the share from the stored contract and
+serves it (default 0 = upstream timing). `cargo check` exit 0 in 3 s (one
+warning: the share key's import is now unused); release build 216 s, 3 crates.
+The probe gained a row read INSIDE the window (alice pays in the background,
+the table is read 10 s later) - a check added, none removed.
+    unpatched, hold 0   INSIDE WINDOW (pay +10 s): bob channel 1001000, bob's
+                        invoice SETTLED; payinvoice 4359 ms; HTLC held 3 s
+    patched v1, hold 30 INSIDE WINDOW (pay +10 s): bob channel 1001000, bob's
+                        invoice SETTLED; payinvoice 9619 ms; HTLC held 9 s
+  It released 21 s early. THE CAUSE, read in the same file: the funded-at
+  time was `consensus_unix_time`, and each guardian votes unix time rounded
+  down to the minute (`60 * (duration_since_epoch().as_secs() / 60)`), so
+  the agreed time lags the clock by up to 60 s. Version 2 counts from this
+  guardian's own clock, in milliseconds.
