@@ -57,7 +57,7 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   once more. Rehearsal with the loop held 6 s before anyone
                   sits: with it 2 of 2 sit and settle, without it 2 of 2
                   refuse; unforced batch 8 of 8 (was 5 of 8).
-    code          M3.3-29: the second daemon to close can stay HELD on a
+    code, NEXT    M3.3-29: the second daemon to close can stay HELD on a
                   stake lnd settled through the first - its share ask beat
                   the first's finality and nothing asks again (6 of 21
                   rehearsals since M3.3-26, always the second closer, in

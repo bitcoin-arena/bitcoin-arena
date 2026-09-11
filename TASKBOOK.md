@@ -27247,3 +27247,68 @@ it, 2 of 2 forced runs sit, play and settle, and 8 of 8 unforced ones; without
 it, 2 of 2 forced runs refuse exactly as the rehearsals did. forced-fix-BA's A,
 the second to close, ended HELD on P2 while lnd settled it: M3.3-29, now 6 of
 21 played rehearsals since M3.3-26.
+
+### M3.3-29: the second daemon to close is left HELD on a stake lnd settled - measured, then fixed
+
+THE 6 OF 21, TIMED from the close stamps already in the logs. In every one the
+second closer turned P2 final - and its settle asked the first for a share -
+about 1.8 s before the first closer turned P2 final on its own re-gather:
+
+    run        order  closes (ms)  second closer's P2 final  first closer's P2 final
+    12-AB      AB     0 / 353      B +1766                   A +3596
+    16-AB      AB     0 / 348      B +1853                   A +3643
+    17-AB      AB     0 / 406      B +2009                   A +3881
+    19-AB      AB     0 / 349      B +1755                   A +3863
+    20-BA      BA     0 / 353      A +1858                   B +3685
+    forced-fix-BA BA  0 / 354      A +1835                   B +3660
+
+The first refused ("no share is handed out before the result is final: 1 of 2
+agree on any one run"), the second wrote HELD ("this node has no preimage for
+that stake"); the first then settled through lnd, the operator +98000 msat -
+and the second never asked again: `watchFinality` stops when no run is short of
+final and the table is signed, and on the second closer P2 was final at its own
+close. `Custody.reconcile` looks only at rows caught mid-act, never at HELD.
+No player money was stuck in any of the six; the second closer's row was wrong,
+and a first closer that died after its close would have left the loser's stake
+to expire back to the loser.
+
+THE RACE NEEDS ASYMMETRY, and gap 0 removes it. The harness takes
+`--close-gap=MS` (the second close sent MS ms after the first, not waiting for
+its answer). At 0 ms both daemons store their own P2 result before either
+gathers (A +1539, B +1838; A gathers +1709, answered +2101), so both are final
+at their first gather and both open the stake with 2 shares - pair 1 at gap 0,
+AB and BA: 0 HELD. The race needs the first closer's one gather to miss the
+second's result (the second stores ~1.4 s after its own close) and the second
+to ask before the first re-gathers (~2 s later): a gap of roughly 0.5-1.6 s.
+The natural ~350 ms sits at its lower edge, which is 6 of 21. So the forced
+race is `--close-gap=800`; gap 0 is kept as the check it cannot regress.
+
+THE FIX (`server.js`, `watchFinality`): a SETTLE on a FINAL run whose hold is
+still HELD - the settle found no preimage - keeps the watch going on its
+existing cadence (2 s) inside the same objection window, and each tick runs the
+round's own close logic again: the settle asks for the shares again, and a
+hold that moved meanwhile answers "already moved". The share is asked again;
+nothing is copied from lnd - with one lnd per daemon the other's settle would
+never be seen - and a repeated `settleinvoice`, which lnd answers "already
+settled" with success, is only the safety net.
+
+    second-closer.test.js   two daemons, a winner (world secret searched once
+      with the core replay: DELIVERED by tick 1320, score 12) beside the loser,
+      real 2-of-2 handouts; A re-gathers every 1500 ms, B every 100 ms, B
+      closes right after A. The test first checks the race happened (B's close
+      left the lost stake HELD, "no preimage"), then that B ends SETTLED with
+      the lost stake's own preimage. Before: red - "the second closer is still
+      HELD on a stake the first has settled" after 10 s. After: green, 2.9 s.
+
+(The fix and the pin above are not yet committed: they go in with the node
+suite and the after batches.)
+
+GAP 0, THE CONTROL, before the fix (four pairs, AB and BA side by side, from a
+copy with HEAD's server.js):
+
+    m29-gap0-1..4-AB   second B; P2 lnd SETTLED; rows A SETTLED, B SETTLED;
+                       B asked once and OPENED with 2; A asked once, OPENED with 2
+    m29-gap0-1..4-BA   second A; the same, mirrored
+    before, gap 0:     0 of 8 runs with a row HELD after lnd settled - both
+                       daemons are final at their first gather, every share ask
+                       opens first time, and the watch never has to ask again
