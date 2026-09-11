@@ -27376,3 +27376,66 @@ A DIFFERENT ROW, SEEN BY THE SAME PRINT: P3, the VOID stake, times out in lnd
 (CANCELED, back to alice) while both daemons' rows still say HELD - 26 of 26
 played runs of this letter. Nothing moves a row to EXPIRED. Money right, row
 wrong; listed as M3.3-30, not this letter.
+
+THE FORCED RACE AFTER THE FIX, 800 ms between the closes (four pairs, AB and
+BA side by side, from the tree):
+
+    run                 second  P2 lnd   rows            the second closer's settle lines
+    after-gap800-1-AB   B       SETTLED  both SETTLED    HELD "no preimage", then SETTLED after both ENDS
+    after-gap800-1-BA   A       SETTLED  both SETTLED    the same
+    after-gap800-2-AB   B       SETTLED  both SETTLED    the same
+    after-gap800-2-BA   A       SETTLED  both SETTLED    the same
+    after-gap800-3-AB   B       SETTLED  both SETTLED    the same; late asks: B OPENED with 2
+    after-gap800-3-BA   A       SETTLED  both SETTLED    the same; late asks: A OPENED with 2
+    after-gap800-4-AB   -       -        -               NOT PLAYED: 18701 refused the round,
+                                                         "that node is not synced to its chain"
+    after-gap800-4-BA   A       SETTLED  both SETTLED    HELD "no preimage", then SETTLED
+
+    after, 800 ms: 0 of 7 second closers HELD after lnd settled (was 6 of 8).
+    The race happened in all 7 - each second closer's first ask was refused -
+    and each settled on its 2 s watch after both daemons had reported.
+
+THE ONE RUN THAT DID NOT OPEN: the daemon's own Lightning preflight refused the
+round because bob's lnd reported it was not synced to its chain. The harness
+waits for sync once (before it confirms the channel) and then mines the six
+confirming blocks without waiting again - 1 of 69 rehearsal logs. A harness
+wait, not this letter; the daemon's refusal is the right answer.
+
+THE VOID STAKE'S ROW, per close order (P3: seated, paid, never played; the
+harness mines past its HTLC's expiry and lnd cancels it back to alice). Each
+daemon's own custody row against lnd's own invoice, every played run of this
+letter:
+
+    phase   order  P3 in lnd  row A  row B  runs
+    before  AB     CANCELED   HELD   HELD   12
+    before  BA     CANCELED   HELD   HELD   12
+    after   AB     CANCELED   HELD   HELD   5
+    after   BA     CANCELED   HELD   HELD   6
+
+    35 of 35: the hold timed out in lnd and both daemons still list it HELD.
+    The second-closer fix does not touch this path, and the number did not
+    move. Nothing in the daemon moves a row to EXPIRED.
+
+M3.3-29 AFTER, EVERY BATCH (the fix in; each pair AB beside BA; the second
+closer's row against lnd's own invoice, per close order):
+
+    gap     order  played  raced*  2nd closer HELD after lnd settled
+    800 ms  AB     3 of 4  3       0 of 3   (before: 3 of 4)
+    800 ms  BA     4 of 4  4       0 of 4   (before: 3 of 4)
+    normal  AB     4 of 4  3       0 of 4   (before: 2 of 4)
+    normal  BA     4 of 4  4       0 of 4   (before: 2 of 4)
+    0 ms    AB     4 of 4  0       0 of 4   (before: 0 of 4)
+    0 ms    BA     4 of 4  2       0 of 4   (before: 0 of 4)
+
+    * a daemon's settle wrote HELD "no preimage" - the race happened.
+
+    after:  0 of 23 played runs leave the second closer HELD (was 10 of 24:
+            6 of 8 at 800 ms, 4 of 8 normal, 0 of 8 at gap 0). In 16 of the
+            23 the race still happened; every one ended SETTLED on both
+            daemons. 10 runs show the second closer's "SETTLE -> SETTLED"
+            after both daemons had reported - the 2 s watch's own ask. The
+            one run that did not play (after-gap800-4-AB) never opened: bob's
+            lnd was not synced to its chain (1 of 69 logs, a harness wait).
+
+M3.3-29 IS DONE. What stays wrong on the same rows is the VOID stake: 35 of 35
+runs leave a timed-out hold HELD on both daemons (M3.3-30, listed, not fixed).

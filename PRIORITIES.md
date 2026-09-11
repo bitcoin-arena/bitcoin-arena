@@ -57,14 +57,14 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   once more. Rehearsal with the loop held 6 s before anyone
                   sits: with it 2 of 2 sit and settle, without it 2 of 2
                   refuse; unforced batch 8 of 8 (was 5 of 8).
-    code, NEXT    M3.3-29: the second daemon to close can stay HELD on a
-                  stake lnd settled through the first - its share ask beat
-                  the first's finality and nothing asks again (6 of 21
-                  rehearsals since M3.3-26, always the second closer, in
-                  either order; money right, row wrong).
+    code, DONE    M3.3-29: the second daemon to close no longer stays HELD
+                  on a stake lnd settled through the first - a final run's
+                  settle that found no preimage keeps the 2 s watch asking
+                  for the share. Second closer HELD after lnd settled: 800 ms
+                  gap 6 of 8 -> 0 of 7, normal 4 of 8 -> 0 of 8, gap 0 0 -> 0.
     code          M3.3-30: a VOID stake whose hold times out in lnd stays
                   HELD on both daemons' rows - nothing moves a row to EXPIRED
-                  (26 of 26 rehearsals: lnd CANCELED, rows A HELD, B HELD;
+                  (35 of 35 rehearsals: lnd CANCELED, rows A HELD, B HELD;
                   money right, row wrong).
     code          M3.3-28: the POOL's threshold is still a flat 5 - the pool
                   DKG (`new Dkg` in server.js, default SHARES_NEEDED),
