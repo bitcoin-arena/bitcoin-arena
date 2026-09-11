@@ -30290,3 +30290,48 @@ M3, NIP-04 ON THE PAGE: FIXED - THE PAGE SHIPS THE STRICT DECRYPT, AND A STALE B
                     next WebGL build from this template.
   COUNTS STOOD ON   protocol 487/487, node 531/531 (sequential chunks, 0
                     cancelled), client 249/249, core 91/91. No Unity/WebGL run.
+
+M3, WHAT IS STILL MISSING TO "M3 IS DONE WHEN" - MEASURED INVENTORY (before choosing a slice)
+  DONE-WHEN         a round for testnet sats; the stake held not spent; winners
+                    paid by a threshold signature; a node killed mid-settlement
+                    recovers. Custody is DECIDED (PRIORITIES 157): the stake is a
+                    Fedimint 0.12.0 LNv2 stake lock, "no lnd of ours in the stake
+                    path" - so "held" means the stake-lock path, wired.
+  ALREADY DONE      FROST/DKG vs ZF; contract fields; spec v4.6.2; the 7-step
+                    rehearsal on stock fedimintd (tools/stake-lock-step1..7.sh,
+                    blwp-stake-lock modes lock/settle/forfeit/refund); protocol
+                    checks F1 stakePointIsTheHandouts (1 node caller), F4/F5
+                    lockMatchesEntry, F3 claimKeyIsAttested, P3
+                    federationIsBonded, custodyFieldsAreValid. Toolchain: libclang
+                    from LLVM's prebuilt release, fedimintd built from source.
+  MISSING, NOT PARKED (7)
+    W1 page         the player's client funds and makes the stake lock (deposit
+                    via a gateway, lock, redeem forfeit/refund, withdraw): 0 lock
+                    code in blwp-client/src; join.js:657-659 writes zero
+                    stake/fee lock outpoints and a zero claim-key ref.
+    W2 seat sees    a seat reads the entry's lock from the federation and runs
+                    lockMatchesEntry before STAKE_COMMITTED: 0 callers in node
+                    and client; the node's only federation code is the
+                    superseded invoice-first /federation-invoice.
+    W3 claim key    seats sign and serve (round_id, claim_pk); the entry names
+                    the set; a client refuses a lock without it: claimKeyIsAttested
+                    0 callers.
+    W4 settle       each seat rebuilds the settlement transaction from the
+                    payout table and signs it with claim_pk (FROST): only
+                    rehearsal tools (stake-lock --mode settle, forfeit.mjs); 0
+                    daemon code.
+    W5 forfeit/refund  the daemon's §23.2 acts on a lock: 0 daemon code.
+    W6 recovery     a node killed mid-settlement asks the federation on start:
+                    0 daemon code for locks.
+    W7 federation named  builders fill federation_id (9 of 26 launchers write
+                    zeros, the client too), custodyFieldsAreValid and
+                    federationIsBonded enforced: 0 callers.
+  MISSING, PARKED (5)  which guardians (Daniel); inbound and >=2 independent
+                    gateways (Daniel); federation fees (a federation config -
+                    waits on the guardians); fee locks' claim hash and 22A node
+                    slots (ruling); the result window (a contract field).
+  Y                 12 still missing: 7 not parked, 5 parked.
+  THE SLICE         W2 - 1 of the 12, 1 of the 7 not parked. First on the
+                    daemon's money path: W4-W6 all key off a seat having seen and
+                    checked the lock, and it can be measured against the stock
+                    federation with the existing tool, without the page.
