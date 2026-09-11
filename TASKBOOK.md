@@ -29873,3 +29873,37 @@ M3, FROST/DKG REOPENED: MEASURED - ONE GARBAGE SIGNATURE SHARE ON A 5-OF-7 PAYOU
                     failure verify each share against that seat's public share
                     (even-normalised, pool-tweaked), name the cheater, discard
                     the spent nonces, retry with fresh ones and a set without it.
+
+M3, FROST/DKG: FIXED - THE COMMITTEE NAMES A BAD SHARE AND DOES NOT QUEUE AN INVALID PAYOUT
+  CHANGE            payWithCommittee checks the aggregate (BIP-340, against the
+                    pool's output key) BEFORE anything is written or sent. On a
+                    failure it checks each share alone (verifyShare340: RFC 9591
+                    verify_signature_share under BIP-340's sign flip) against
+                    that seat's public share - from the DKG commitments
+                    (Dkg.publicSharesFor: sum of A_k*j^k, negated with an odd
+                    key), moved by the pool tweak (poolPublicShare) - names the
+                    seat, and runs a NUMBERED next attempt without it: every
+                    seat takes a FRESH nonce pair (pool_nonces.attempt, migrated
+                    on open), a spent pair is never asked for again, an older
+                    attempt is refused. The same list at the same attempt still
+                    gives back the same shares and bytes (restart, takeover).
+  FACTS (after)     all six peers asked: paid in the same call; culprits
+                    [seat 2 at its URL]; sent 1, valid; raws written 2, both
+                    valid; signers seats 1,3,4,5,6. Only four peers asked
+                    (cheater among them): not paid; sent 0; written 0; row as
+                    queue() left it, no raw; why names "seat 2 (URL)"; a second
+                    call leaving it out pays, sent 1 valid, row PAID.
+  UNCHANGED         honest 5-of-7 (pool-committee), takeover/restart bytes
+                    (pool-settle), ZF vectors; each ZF signature share verifies
+                    alone, a changed share / another seat's public share / zero
+                    does not; every daemon's public shares = its seats' share*G.
+  MUTANTS           share check skipped -> both bad-share tests red (nobody
+                    named, "no share could be shown to be the bad one");
+                    aggregate check skipped -> both red (the chain rejects it).
+  RESIDUAL          a seat that commits and then will not sign still ends the
+                    call (a stall; the next call goes on from the next attempt).
+                    A dealt pool needs its public shares handed in
+                    (poolPublicShares); without them a bad aggregate is refused
+                    unsent but not named.
+  COUNTS STOOD ON   protocol 485/485, node 507/507 (9 sequential chunks, exit 0),
+                    client 246/246. Unity not run.
