@@ -28177,3 +28177,89 @@ blwp-node 482/482 (+1), blwp-client 233/233, protocol 464/464, core 91/91.
 THE POOL IS A FEDERATION (Daniel 2026-09-11 09:26). Everything above pays the
 winner from a pool the harness funded; the settled stake still sits in bob's
 channel. That is the next work, not a second choice.
+
+### FEDERATION, step 1 - does Fedimint's standard Lightning path hold a stake? MEASURED: no
+
+Daniel's accepted sequence (2026-09-11): Fedimint v0.12.0 Linux builds into
+scratch only; a federation on the rehearsal's regtest with its Lightning
+gateway on bob's lnd; one measurement - does a stake paid into the federation
+stay held until the objection window closes, or settle at once into bob's
+channel. No custom module before the number.
+
+THE SETUP, `packages/blwp-node/tools/federation-hold-probe.sh` (reproducible;
+`FEDIMINT_BIN` names the builds, nothing installed or put on PATH):
+  - fedimintd, gatewayd, fedimint-cli, gateway-cli 0.12.0 from the GitHub
+    release, in the scratch directory. They are self-extracting bundles that
+    unpack into $HOME/.cache and run in a nix-user-chroot; HOME is pointed
+    inside the chosen directory. Each call leaves an empty /tmp/nixXXXXXX
+    mount-point directory; the probe's own were removed (owner, time, not
+    mounted - 110 after the first run, the rest after the second).
+  - The rehearsal's regtest shape on its own ports (never 8080): bitcoind,
+    alice's and bob's lnd v0.21.3, an alice->bob channel (2000000, 1000000
+    pushed).
+  - FOUR GUARDIANS, threshold 3 - A DEVIATION FROM THE ACCEPTED 2. Measured:
+    `set-local-params --federation-size 2` answers "Federation size must be
+    1 or at least 4". One guardian is single custody, so 4 is the smallest
+    federation this Fedimint allows. The question measured does not depend
+    on the count.
+  - Their own key ceremony (set-local-params, add-peer all round, start-dkg),
+    the 0.12.0 defaults: LNv2, MintV2, WalletV2.
+  - gatewayd on bob's lnd; `connect-fed`; a peg-in of 0.01 BTC (the
+    gateway's ecash 999577 sat); vetted by all 4 guardians (`lnv2 gateways
+    add` - before that, "No gateways are available" and nothing was
+    measured; that run is not counted).
+  - One receiving client, joined.
+
+THE MEASUREMENT: the client asks `lnv2 receive 1000000` (1000 sat, the pool
+rehearsal's stake); alice pays with `lncli payinvoice`; balances in sats.
+
+  run 1 (by hand)
+    BEFORE PAY    height 297: bob channel 1000000 | alice 996530 | gateway
+                  ecash 999577, lightning 1000000 | receiver 0 | federation
+                  audit: walletv2 +1000000, mintv2 -999577, lnv2 0
+    PAY           alice SUCCEEDED in 2253 ms (lnd's own record); bob's lnd:
+                  the gateway's invoice SETTLED, HTLC accepted at height 297
+                  and settled 2 s later; the gateway's log: incoming contract
+                  995000 msat (expires in 1 h) -> incoming-payment-succeeded
+                  1.1 s later (the guardians decrypted the preimage) ->
+                  HTLC settled 0.44 s after that
+    AFTER PAY     height 297: alice 995530 | gateway ecash 998579, lightning
+                  1001000 | federation audit: lnv2 -995 in flight, mintv2
+                  -998580, walletv2 +1000000 | the receiver's operation
+                  "Claimed" (its `info` read raced the claim: 0)
+    AFTER WINDOW  30 s, height 297: bob channel 1001000 | alice 995530 |
+                  receiver 990 | federation audit: lnv2 0, mintv2 -999570,
+                  walletv2 +1000000
+  run 2 (the tool, from nothing)
+    BEFORE PAY    height 314: the same numbers
+    PAY           alice's payinvoice returned in 2709 ms; bob's invoice
+                  SETTLED, HTLC accepted at height 314, settled 2 s later
+    AFTER PAY     +9.5 s, height 314: bob channel 1001000 | alice 995530 |
+                  gateway ecash 998579, lightning 1001000 | lnv2 -995 in
+                  flight | the receiver's operation "Claimed"
+    AFTER WINDOW  +47 s, height 314: bob channel 1001000 | receiver 990 |
+                  walletv2 +1000000
+
+THE FINDING. The standard path SETTLES AT ONCE. After the invoice is paid and
+long before any window, the 1000 sats are a completed settlement in bob's
+channel - the gateway's lnd, one operator's balance, spendable by bob. What
+the "pool" received is 990 sat of ECASH, swapped from the gateway's own
+pegged-in ecash; the federation's on-chain custody did not move (walletv2
+1000000 sat before, after the payment and after the window). Nothing in the
+path waits for anything but the guardians' automatic threshold decryption of
+the incoming contract's preimage - which is where a hold would have to live.
+  So by Daniel's test - "not spendable by bob, not already a completed
+  settlement in bob's channel" - the stake is not held, and after the window
+  the stake's sats sit in one lnd, not in federation custody.
+
+WHAT IS NOT DONE, ON PURPOSE: no custom Fedimint module, no delay, no test
+changed. The next named piece is a hold: the incoming contract's preimage
+decrypted by the guardians only after the round's result is FINAL and its
+window has closed - the same rule our preimage shares follow today.
+
+A DECISION IT RAISES: 0.12.0 will not run a 2-guardian federation, so the
+rehearsal's two seats cannot be a Fedimint federation; 4 is the smallest
+(threshold 3).
+
+blwp-node 482/482, blwp-client 233/233, protocol 464/464, core 91/91 -
+unchanged; no src file changed.

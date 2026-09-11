@@ -128,6 +128,18 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   federation whose quorum is the round's settlement
                   committee, with a Lightning gateway - not one lnd's
                   channel and not a harness-funded pool.
+    measured      Fedimint 0.12.0's STANDARD Lightning path (LNv2) settles
+                  a stake AT ONCE, it does not hold it: alice's 1000 sats
+                  were a completed settle in bob's (the gateway's) channel
+                  2.3-2.7 s after she paid, at the same block height, long
+                  before a 30 s window. The federation's on-chain custody
+                  did not move (1000000 sat throughout); the receiver got
+                  990 sat of the gateway's ecash. Two runs, the same. Holding
+                  it is the next named piece (`tools/federation-hold-probe.sh`).
+    decision      Fedimint 0.12.0 refuses a 2-guardian federation ("1 or at
+                  least 4"), so the rehearsal's 2 seats cannot be one; the
+                  probe ran 4 guardians, threshold 3 - Daniel's call for the
+                  test nets' seat count.
     ruling        the owed-sats fee rate; htlc_cltv_days (below, unchanged).
     inbound       testnet4: 196000 msat needed, 0 offered.
   Two daemons CANCELLING one invoice on the shared endpoint is measured: both
