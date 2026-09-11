@@ -93,6 +93,17 @@ unblocked work. Park only inbound, which-guardians, and named rulings.
   written or sent, checks each share against its seat's public share, names
   a bad signer and pays on a fresh-nonce attempt without it. Before/after and
   mutants in TASKBOOK. protocol 485/485, node 507/507, client 246/246.
+  DONE (P2, §13A publication is a condition of finality): a result is FINAL
+  only once the round's threshold of settlement seats have posted its
+  transcript to the contract's publication relays - each seat fetches it,
+  checks its hash, posts, reads it back and signs; the window counts from that
+  posting. Every node is a relay. Before: FINAL and money moved with the relay
+  asked 0 times. protocol 486/486, node 517/517, client 246/246.
+  FOUND BY P2, NOT BUILT: (a) §13A's "a seat that cannot retrieve the
+  transcript within the result window treats the entry as VOID" needs a result
+  window, and the contract has none - until then an unposted result stays
+  provisional and its hold expires to its player; (b) a paying round naming no
+  relay still seats stakes it can never settle - refuse it at seat time.
   DONE (18:15 conform): the only already-coded thing v4.6.2 made wrong was
   constants.js's §23.6 custody comment (still "a Fedimint-class federation
   with a Lightning gateway") - conformed to the stake-lock wording; behaviour

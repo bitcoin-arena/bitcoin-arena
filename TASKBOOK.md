@@ -29922,3 +29922,71 @@ M3, P2 (PUBLICATION IS A CONDITION OF FINALITY, v4.6.2 §13A): MEASURED BEFORE
                     asks. W counts from the threshold's signatures. The §35A
                     self-dealing quorum is open: five seats that keep the
                     transcript to themselves still reach FINAL and move money.
+
+M3, P2: FIXED - A RESULT IS FINAL ONLY ONCE ITS TRANSCRIPT IS POSTED WHERE ANYONE CAN REPLAY IT
+  CHANGE            protocol/src/posting.js: a seat's signed TranscriptPosting
+                    (round, player, transcript hash, seat; type 0x18) and
+                    transcriptIsPublished - distinct SEATED settlement seats,
+                    same round/player/hash, verified, against the round's own
+                    threshold (5 of 7, 2 of 2). objection.js finality() takes
+                    publishedAtMs: null -> never FINAL; W opens at the later of
+                    the threshold and the posting. The daemon: every node is a
+                    relay (PUT/GET /transcript/<hash>, kept only under the hash
+                    its bytes have) and serves /postings; Verifier.publish takes
+                    the transcript the agreed result names (its own canonical,
+                    else a peer's, hash-checked), PUTs it to every relay the
+                    contract names, reads it back, and signs only on a matching
+                    read-back; then gathers peers' postings. resultFinality -
+                    what the settle, the share handout, /settlement and the
+                    payout all ask - counts them; a contract naming no relay is
+                    never final. The Daily's launcher names its two daemons.
+  FACTS (after)     7 seats, five signatures, nothing posted: NOT final after
+                    the window ("0 of 5 settlement seats have posted"). Four
+                    postings: not final; the fifth at T: still inside at
+                    T+700 ms, FINAL at T+1300 ms (W = 1000 ms from the posting,
+                    not from the signatures). Strangers' postings and postings
+                    of another transcript count for nothing. No relay named:
+                    never final. 2 daemons + a relay: 4 PUTs (2 seats x 2
+                    runs), relay holds 2 transcripts, each under its own hash;
+                    loser SETTLED, winner CANCELLED, payout queued on both, no
+                    act earlier than a window after the posting. A relay that
+                    gives back other bytes: 0 postings, holds HELD, no payout,
+                    0 Lightning acts after the window.
+  MUTANTS           finality ignores publication -> 6 red; the count skips the
+                    seated check -> 3 red; relay door skips the hash check ->
+                    1 red; W from the signatures -> 2 node + 1 protocol red;
+                    posting without a read-back -> the lying-relay test red.
+  FIXTURES          Every daemon fixture that needs a FINAL result now names its
+                    daemons' relay doors (objection-window, close-order,
+                    payout-second-seat, second-closer, settle-threshold,
+                    reconstruct, the client's settlement-seen); fixtures that
+                    write results straight into a store write the seats'
+                    postings beside them (reconstruct posts through the real
+                    Verifier.publish, then copies postings as it copies results).
+                    Without that: node 503/517, 14 red, every one "the round
+                    contract names no publication relay".
+  TEST FIXES        publication-finality's own window check compared both acts
+                    to the loser's posting - the winner's cancel is timed from
+                    the winner's (per run now). second-closer's end-state wait
+                    covered the loser only; it now waits for the state it
+                    asserts (loser SETTLED and winner CANCELLED on both).
+  SECOND-CLOSER     M3.3-29's race (B final at its close, refused A's share)
+                    cannot happen as built under P2: no seat is final at its own
+                    close. Measured at the 800 ms gap: no seat refused at all;
+                    with cadences skewed it came and went. Traced: the seat that
+                    posts LAST is final first and asks a seat that has not
+                    pulled its posting yet. The test now makes that state - B's
+                    posting reaches A 3 s after the close - and asserts A refused
+                    B ("1 of 2 settlement seats have posted") and later handed
+                    the share over; every end-state assertion is unchanged. The
+                    M3.3-29 mutant (the watch never re-asks a HELD final settle)
+                    turns it red.
+  NOT BUILT         §13A's "a seat that cannot retrieve the transcript within
+                    the result window treats the entry as VOID": the result
+                    window is not in the contract. Until it is, an unposted
+                    result stays PROVISIONALLY_FINAL - nothing moves, the hold
+                    expires to its player. A paying round naming no relay seats
+                    stakes it can never settle (refused at finality, not at
+                    seat time). The real-lnd rehearsal was not run.
+  COUNTS STOOD ON   protocol 486/486, node 517/517 (9 sequential chunks, exit 0, 0 cancelled),
+                    client 246/246. Unity not in scope (nothing it renders changed).
