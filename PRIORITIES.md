@@ -103,10 +103,12 @@ unblocked work. Park only inbound, which-guardians, and named rulings.
   transcript within the result window treats the entry as VOID" needs a result
   window, and the contract has none - until then an unposted result stays
   provisional and its hold expires to its player. PARKED: a contract field.
-  DONE (b): a node that holds stakes refuses a paying round naming no relay at
-  /round and refuses to seat a stake in one at /entry, before any hold. Before:
-  both stakes held, nothing final after the window. protocol 487/487, node
-  520/520, client 246/246.
+  DONE (b): a node that holds stakes takes no stake into a paying round naming
+  no relay - refused at /round, at /entry, at /invoice (Custody.hold, the one
+  funnel to a hold) and at /federation-invoice. Before: both stakes held and
+  nothing final; /invoice and /federation-invoice still quoted. A node without
+  Lightning opens it and holds nothing. protocol 487/487, node 522/522, client
+  246/246.
   FOUND: client wallet-nwc's "a third key opened an envelope" flakes about 1 in
   256 (NIP-04 has no MAC) - the test's premise, TASKBOOK.
   DONE (18:15 conform): the only already-coded thing v4.6.2 made wrong was

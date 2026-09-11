@@ -30068,3 +30068,29 @@ M3, NO-RELAY DOOR, THE OTHER TWO PATHS - MEASURED BEFORE
   READING           The seat-time refusal is not the whole door: a stake can
                     still be quoted, and a federation invoice made, for a round
                     none of whose results can become final.
+
+M3, NO-RELAY DOOR: CLOSED ON EVERY PATH THAT TAKES MONEY INTO A ROUND
+  CHANGE            Custody.hold - the one funnel to createHeld, so /entry,
+                    /invoice and any later caller - reads the round's stored
+                    contract and issues no hold (and re-quotes none) in a
+                    paying round naming no relay. /federation-invoice refuses
+                    such a round (409) before asking the federation.
+  FACTS (after)     /invoice for an entry kept before the rule: 503 "no hold is
+                    issued in that round", 0 holds asked, no hold row (was 200,
+                    1 asked, HELD). /federation-invoice: 409, federation asked 0
+                    (was 200, asked 1). /round and /entry as in 6db33d9.
+  MUTANTS           Custody.hold's check removed -> the /invoice test red;
+                    /federation-invoice's check removed -> its test red.
+  PATHS CHECKED     createHeld is called only from Custody.hold; Custody.hold
+                    only from /entry and /invoice; federation.receive only from
+                    /federation-invoice. /stake and the start-up look ask
+                    Lightning about holds that exist; they issue none.
+  RESIDUAL          a hold issued and paid BEFORE this rule stays in flight:
+                    its round is never final (P2), so it is never settled, and
+                    it expires back to its player.
+  FIXTURE           custody.test.js drives Custody directly on a paying round
+                    naming no relay: 19 red once Custody.hold refused. It names
+                    the never-posted relay (http://127.0.0.1:9, commented);
+                    no assertion changed.
+  COUNTS STOOD ON   protocol 487/487, node 522/522 (sequential chunks; chunk 10
+                    rerun after the custody fixture), client 246/246.
