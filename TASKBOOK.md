@@ -29990,3 +29990,16 @@ M3, P2: FIXED - A RESULT IS FINAL ONLY ONCE ITS TRANSCRIPT IS POSTED WHERE ANYON
                     seat time). The real-lnd rehearsal was not run.
   COUNTS STOOD ON   protocol 486/486, node 517/517 (9 sequential chunks, exit 0, 0 cancelled),
                     client 246/246. Unity not in scope (nothing it renders changed).
+
+M3, P2 FINDING (b): A PAYING ROUND NAMING NO PUBLICATION RELAY - MEASURED BEFORE
+  TEST              blwp-node/test/seat-relay.test.js: two daemons, a paying
+                    round (100000 msat stakes, 3000 ms window) whose contract
+                    names publication_relays [].
+  FACTS             /round 201 on both; both players seated, quoted, paid and
+                    seen held on both seats; closed; 4.5 s after the close every
+                    stake still HELD on both, /settlement PROVISIONALLY_FINAL
+                    ("the round contract names no publication relay, so no
+                    result of it can become final"), 0 Lightning acts.
+  READING           The node takes stakes into a round none of whose results can
+                    ever be final: every player's money waits in a hold that
+                    can only expire back to them.
