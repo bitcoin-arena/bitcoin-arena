@@ -29435,3 +29435,30 @@ M3 SLICE 4: THE ROUND'S PUBLICATION ON CHAIN (§5A.5, v4.6.2, P1), PROTOCOL ONLY
                    value (FORK neither); 0x52 'R', beside the ASCII "BLW".
   tests            a real segwit tx through serializeSpend -> parseTransaction.
   MEASURED: protocol 471/471 (+3). Not wired into the node yet.
+
+M3 SLICE 5: THE PUBLICATION CHECK AT SEATING (§5A.5, v4.6.2, P1)
+  roster.seedFor   after "the beacon is the block my chain names":
+                   findPublication(view, round_id) in the node's own view (the
+                   census view: census height - lookback .. beacon at depth),
+                   then publicationIsBeforeBeacon(..., beaconHeight =
+                   named.height). Refused by name otherwise. A node with no
+                   view is unchanged (censusFor refuses it first).
+  fixtures         chainview.js publicationOf(contract) (tools only); the four
+                   chainWith(bonds, contract) fixtures publish in block FROM+1;
+                   chainFor/randomnessFor pass the contract the roster hands
+                   them. Census roots unchanged (bonds, not hashes).
+  launcher         round-2of2 standUpRound: local chain - publication in block
+                   10 (census 9, beacon ~34), re-mined, times unchanged;
+                   regtest - contract built first, bitcoind createrawtransaction
+                   data output + fund + sign, include, then mine past
+                   committee_time waiting real seconds. committee_time was the
+                   tip MEDIAN: the next block's median passes it on a fast
+                   regtest, which would make the publication block the beacon;
+                   now tip TIMESTAMP + 2 s (10 of the next block's 11 are <= it).
+  MEASURED         before: 18 node tests (5 files) refused "there is no
+                   publication transaction to read". After: protocol 472/472,
+                   node 487/487 (243+243, +1 roster), client 236/236.
+                   client-at-probe --calls=2 on its own regtest: round
+                   f475627647e4b1b2 seated on both daemons, 0 of 2 refused.
+                   New roster test: unpublished and in-beacon-block refused,
+                   published seated with checkedAgainstChain.

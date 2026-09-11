@@ -44,6 +44,14 @@ unblocked work. Park only inbound, which-guardians, and named rulings.
   publication - OP_RETURN "BLW" 0x52 round_id, 36 bytes (the spec names
   ROUND and fixes no byte; 'R' chosen) - and refuses one confirmed at or
   after the beacon height, or with no heights. Not wired yet. protocol 471/471.
+  DONE (slice 5, P1 wired): a node seats a round only if its OWN chain view
+  shows the publication strictly below the beacon block the chain names (no
+  txid taken on trust). The Daily's launcher (round-2of2) now publishes before
+  its beacon: local chain in block 10; regtest via bitcoind's OP_RETURN data
+  output, committee_time = tip timestamp + 2 s so the publication block is
+  never the beacon. Measured on a real regtest (client-at-probe): seated.
+  Before: 18 node tests seated unpublished rounds. protocol 472/472, node
+  487/487, client 236/236.
   DONE (18:15 conform): the only already-coded thing v4.6.2 made wrong was
   constants.js's §23.6 custody comment (still "a Fedimint-class federation
   with a Lightning gateway") - conformed to the stake-lock wording; behaviour
