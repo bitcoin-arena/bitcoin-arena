@@ -20,6 +20,25 @@ LIVE LETTER: M3 - A ROUND FOR TESTNET SATS ("M3 is done when"). M3.3-19 is
 closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
 (below, under 6e), so the live work is the finish line itself.
 
+  CUSTODY IS DECIDED (Daniel 2026-09-11 14:19) - FEDERATION.md, spec v4.6.2
+  §23. A stake waits as a STAKE LOCK inside the federation: stock Fedimint
+  0.12.0 LNv2 OutgoingContract, claim_pk = the round's settlement FROST key,
+  refund_pk = the player, expiry in federation blocks. Lightning only at the
+  edges (deposit, withdrawal) through any of >=2 gateways. No pool wallet:
+  one settlement transaction per round, losers' locks into qualifiers'
+  payout contracts. No patched fedimintd, no lnd of ours in the stake path.
+  SUPERSEDED by it: the committee-signed lnd, the submarine swap into the
+  on-chain pool, invoice-first through the patched fedimintd, the guardian
+  hold patch. The uncommitted swap work (round.js, store.js, swap.js at
+  14:19) is not this path.
+  NEXT: FEDERATION.md's 7-step rehearsal on regtest - unpatched fedimintd,
+  4 guardians 3 of 4, two gateways, a 2-of-2 committee. Then FROST and DKG
+  bit-matched against Zcash Foundation frost-secp256k1-tr; contract fields
+  federation_id and stake_expiry_blocks (constants.js still describes
+  FEDERATION as "with a Lightning gateway").
+  RULINGS: stake_expiry_blocks; donations to LNURL recipients; which
+  guardians.
+
   THE ROUND FOR SATS IS REHEARSED ON REGTEST, through the real daemons and a
   real lnd (`tools/round-rehearsal-lnd.mjs`; numbers: TASKBOOK). A paying
   round opens, every stake is seen 2 of 2 and committed, the runs play, and
@@ -132,8 +151,8 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   in bob's channel; there is no Lightning pay. Fedimint 0.12.0
                   has no Lightning path without one gateway. The guardian hold
                   keyed to the round's deadline is stopped: it keys bob's hold.
-    DECIDED       a committee-signed Lightning node: lnd's remote signer
-                  answered by the settlement committee.
+    SUPERSEDED    (14:19, stake lock - top) a committee-signed Lightning
+                  node: lnd's remote signer answered by the settlement committee.
     measured      NO on this lnd as the tree stands: invoice create asks the
                   signer for ECDSA by the node key, settle for MuSig2; the
                   committee signs only FROST Schnorr over spends it rebuilt.
@@ -145,14 +164,14 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   pool key and only that publishes the secret the operator
                   settles with. 1 of 2, a wrong secret and an early refund are
                   refused. Harness committee (TASKBOOK).
-    DECIDED       (Daniel 2026-09-11) the submarine swap is how a loser's
-                  stake reaches the pool; invoice, hold, cancel stay on the
-                  operator's replaceable lnd.
+    SUPERSEDED    (14:19, stake lock - top) the submarine swap is how a
+                  loser's stake reaches the pool; invoice, hold, cancel stay
+                  on the operator's replaceable lnd.
     measured      THE TIMING WINDOW EXISTS: a claim before lnd cancels alice's
                   HTLC leaves the operator whole; a late claim drains him only
                   when his refund height lies past that cancel. Refund height
                   below it, claim before the refund height (TASKBOOK).
-    code, NEXT    the committee daemons' own 2-of-2 claim of a swap output the
+    STOPPED       (14:19, stake lock - top) the committee daemons' own 2-of-2 claim of a swap output the
                   operator locked (the probe may still supply the secret).
     measured      Fedimint 0.12.0's STANDARD Lightning path (LNv2) settles
                   a stake AT ONCE, it does not hold it: alice's 1000 sats
@@ -184,8 +203,8 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   (tools/fedimint-lnv2-hold.patch).
     measured      THE POOL'S LEG IS NOT HELD: the receiver claims the
                   gateway's ecash at funding (pay +16 s under a 30 s hold).
-    DECIDED       (Daniel 2026-09-11) invoice first; the collecting key held
-                  until the window, the committee's FROST key.
+    SUPERSEDED    (14:19, stake lock - top) invoice first; the collecting key
+                  held until the window, the committee's FROST key.
     code, DONE    invoice-first join: a node asks the federation for the
                   round's invoice, the entry commits to its hash, no shares
                   dealt. Rehearsal: one hash for all three stakes, seen 2 of
@@ -434,6 +453,11 @@ is M3.2 item 5.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
 threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
+
+HARD (Daniel 2026-09-11 14:19): V1 custody is the STAKE LOCK in FEDERATION.md
+and spec v4.6.2 §23. No single node is needed and no single node can take
+money: no gateway, lnd or patched fedimintd holds a round's stake. Only
+recognised, tested parts; no Lightning multisig node of our own.
 
 HARD (Daniel 2026-09-11 13:13): no central payment endpoint. A single lnd
 gateway is forbidden. Invoice, hold, settle and pay need the same quorum
