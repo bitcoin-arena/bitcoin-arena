@@ -16,7 +16,10 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: M3 - A ROUND FOR TESTNET SATS ("M3 is done when"). M3.3-19 is
+LIVE LETTER: SPECIAL — make already-coded custody match spec v4.6.2
+(Fable security: F1–F9, P1–P8, 4bcac5c Bitcoin beacon). Interrupt current
+M3 work. Change ONLY what is already implemented and now wrong. Then M3.
+PREVIOUS LIVE: M3 - A ROUND FOR TESTNET SATS ("M3 is done when"). M3.3-19 is
 closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
 (below, under 6e), so the live work is the finish line itself.
 
@@ -527,6 +530,11 @@ HARD (Daniel 2026-09-11 14:19): V1 custody is the STAKE LOCK in FEDERATION.md
 and spec v4.6.2 §23. No single node is needed and no single node can take
 money: no gateway, lnd or patched fedimintd holds a round's stake. Only
 recognised, tested parts; no Lightning multisig node of our own.
+
+HARD (Daniel 2026-09-11 18:15): Fable's security fixes are spec. Interrupt.
+Bring already-coded parts into line with FEDERATION.md + multiplayer_p2p.md
+v4.6.2 (F1–F9, grinding/publication, Bitcoin beacon). Do not rewrite what
+is not built. Then continue M3.
 
 HARD (Daniel 2026-09-11 13:13): no central payment endpoint. A single lnd
 gateway is forbidden. Invoice, hold, settle and pay need the same quorum
