@@ -150,6 +150,13 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   the build STOPS AT libclang (missing: bindgen in
                   aws-lc-sys, and librocksdb-sys needs it too). The only
                   libclang here is inside Unity's Emscripten - not used.
+    code, DONE    the federation HOLDS the stake for the window: with LLVM's
+                  libclang in scratch, a patched fedimintd makes and serves
+                  a guardian's decryption share only 30 s after it saw the
+                  contract funded. Bob's HTLC held 31 s (was 3 s); inside
+                  the window bob's channel is unchanged and his invoice
+                  ACCEPTED. Time-based, not yet tied to FINAL
+                  (tools/fedimint-lnv2-hold.patch).
     ruling        the owed-sats fee rate; htlc_cltv_days (below, unchanged).
     inbound       testnet4: 196000 msat needed, 0 offered.
   Two daemons CANCELLING one invoice on the shared endpoint is measured: both

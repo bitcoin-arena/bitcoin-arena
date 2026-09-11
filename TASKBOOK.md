@@ -28405,3 +28405,28 @@ the table is read 10 s later) - a check added, none removed.
   down to the minute (`60 * (duration_since_epoch().as_secs() / 60)`), so
   the agreed time lags the clock by up to 60 s. Version 2 counts from this
   guardian's own clock, in milliseconds.
+
+THE HOLD PATCH, VERSION 2 - THE SECRET IS NOT RELEASED UNTIL THE WINDOW HAS
+CLOSED. Funded-at is this guardian's own clock in ms when it processes the
+funding (a guardian that processes it late only holds longer); the endpoint
+releases at funded-at + FM_LNV2_INCOMING_HOLD_SECS x 1000 by the same clock.
+Release build 214 s. The patch: packages/blwp-node/tools/fedimint-lnv2-hold.patch
+(against the v0.12.0 tag; applies cleanly to a pristine tree).
+    unpatched, hold 0     INSIDE WINDOW (pay +10 s): bob channel 1001000 -
+                          settled; invoice SETTLED | payinvoice 4359 ms |
+                          HTLC held 3 s
+    patched v2, hold 30   INSIDE WINDOW (pay +10 s): bob channel 1000000 -
+                          NOT in bob's balance; invoice ACCEPTED (held); alice
+                          995100; the gateway's ecash already locked in the
+                          contract (998579, lnv2 -995 in flight); receiver 0
+                          | payinvoice 31803 ms | HTLC held 31 s
+                          AFTER PAY: bob channel 1001000 | receiver "Claimed"
+                          AFTER WINDOW: receiver 990 ecash; walletv2 +1000000
+                          throughout
+  Bob can spend only after the 30 s hold, not in 2.3-2.7 s. After it the
+  receiver - the pool's side - holds 990 sat of federation ecash; the lnd
+  sats are the gateway's, paid for with its own pegged-in ecash.
+
+WHAT IT IS NOT YET: the hold is TIME-BASED - the window's length, set per
+guardian - and not tied to the round's result being FINAL. A cancel for a
+DELIVERED stake is not in it either. Probe runs: 0 ports left bound each time.
