@@ -27490,3 +27490,13 @@ mining past the HTLC's expiry:
             those 13 blocks the rows still say HELD while the money is back.
 
 M3.3-30 IS DONE.
+
+M3.3-30, checked again: the launcher's path had no test. `main.js` gives a
+daemon its bitcoind as `poolCall` and no `chainTip`, and the height then
+comes from `poolCall('getblockcount')`. With that fallback removed (a scratch
+mutant), every VOID-expiry test and rehearsal still passed - a production
+daemon would never have expired a row. New pin: a daemon given only a
+`poolCall` stub (answers getblockcount, refuses anything else) expires the
+hold once that height is past the expiry. Tree green; mutant red, "the
+launcher's own bitcoind is past the expiry and the row still says HELD".
+blwp-node 460/460, blwp-client 230/230, core 91/91, vectors 8/8.
