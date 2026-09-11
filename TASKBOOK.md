@@ -29487,3 +29487,35 @@ M3 SLICE 7: A SEAT CHECKS THE LOCK'S FIELDS (§23.1 step 5, v4.6.2, F4, F5)
   not here         the contract id: Fedimint's hash of the whole contract, done
                    by the seat's stock federation client (FEDERATION.md point 8).
   MEASURED: protocol 476/476 (+4). Not wired: no stake lock in the node yet.
+
+M3 SLICE 8: THE CREATOR CANNOT NAME HIS OWN FEDERATION (§5A.1, §23.6, v4.6.2, P3)
+  advert.js        guardian_of[] after payout_pubkey, before timestamp (5A.1's
+                   order): vec of (federation_id 32, guardian_key 33), asserted
+                   sorted by federation then key. Key size read from fedimint
+                   v0.12.0 fedimint-core/src/config.rs: broadcast_public_keys
+                   is BTreeMap<PeerId, secp256k1::PublicKey>; FederationId is
+                   a sha256::Hash. (What the id hashes is the stock client's
+                   business; not used here.)
+  why now          the bond commits to the advert body, so the format can only
+                   change before real bonds exist: TASKBOOK/PRIORITIES record no
+                   bond posted outside regtest and fixtures.
+  federation.js    federationIsBonded({ federationId, guardianKeys, threshold,
+                   census, bondMinSats }): each config guardian key counted
+                   once, for one census node, bonded >= the round's minimum;
+                   one operator advertising two keys is one. threshold and
+                   keys are the federation's own config, not the creator's.
+  builders         25 adverts in 22 files: guardianOf: []. Bundle: advert.js's
+                   byte comparator renamed (guardianBytesOrder) - the bundler
+                   concatenates, and payout.js already has compareBytes.
+  fixture          test/fixtures/regtest-census.json RE-RECORDED on an isolated
+                   bitcoin-31.1 regtest (scratch datadir, 29444/29443): its
+                   bonds committed to the old advert bytes, so the honest bond
+                   no longer resolved. The documented command (line ~19032)
+                   now NEEDS -txindex=1 - without it the tool's own lookups
+                   fail ("No such mempool transaction"), it excludes the honest
+                   bond and dumps a zero root. With it: eligible 1 ws://honest,
+                   doomed spent, shallow 2 deep, root 0baa1970...
+  flake            second-closer "800 ms apart" failed once under the parallel
+                   chunks, 2/2 alone - load timing, not this slice.
+  MEASURED: protocol 480/480 (+4), node 491/491 (206+285), client 236/236;
+  vectors: advert.json only. Page bundle rebuilt, template = dist.

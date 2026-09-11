@@ -62,6 +62,14 @@ unblocked work. Park only inbound, which-guardians, and named rulings.
   amount = net stake (fee), claim_pk = attested key, refund_pk = 0x02 ||
   player key, expiration >= height + 144; F = P refused. Contract-id hashing
   stays with the stock federation client. protocol 476/476.
+  DONE (slice 8, P3 as protocol): the node advertisement carries 5A.1's
+  guardian_of[] - (federation_id, 33-byte guardian broadcast key, Fedimint's
+  secp256k1::PublicKey), sorted, in the body the bond commits to (changed
+  before any bond outside regtest exists). federation.js federationIsBonded:
+  a federation is a paying round's custodian only if its own threshold of
+  guardian keys are advertised by distinct census nodes bonded >= the round's
+  minimum. The real-regtest census fixture was re-recorded (needs -txindex).
+  protocol 480/480, node 491/491, client 236/236.
   DONE (18:15 conform): the only already-coded thing v4.6.2 made wrong was
   constants.js's §23.6 custody comment (still "a Fedimint-class federation
   with a Lightning gateway") - conformed to the stake-lock wording; behaviour
