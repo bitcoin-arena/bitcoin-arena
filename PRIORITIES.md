@@ -91,8 +91,10 @@ unblocked work. Park only inbound, which-guardians, and named rulings.
   frost-secp256k1-tr v3.0.0): signing and DKG outputs bit-match ZF's
   vectors (0c7df31), but the DKG is not yet safe without a dealer - round 1
   has no proof of knowledge, and a dishonest 2-of-2 seat makes the group key
-  its own (measured 734a2ec; facts in TASKBOOK). Next on this item: ZF's
-  round-1 proof, and refusal of a contribution without a valid one.
+  its own (measured 734a2ec; facts in TASKBOOK). Round 1 now carries ZF's
+  proof of knowledge and a contribution without a valid one is refused: the
+  same rogue deal is refused at every step and on the daemon (409). Still
+  OPEN until this item's close review.
   DONE (18:15 conform): the only already-coded thing v4.6.2 made wrong was
   constants.js's §23.6 custody comment (still "a Fedimint-class federation
   with a Lightning gateway") - conformed to the stake-lock wording; behaviour

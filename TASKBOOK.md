@@ -29751,3 +29751,42 @@ M3, FROST/DKG SLICE STILL OPEN: MEASURED ROGUE-KEY ATTACK ON A 2-OF-2 DKG (no pr
   MEASURED: protocol 485/485, node 502/502 (229+273; the new file adds 2 - one
   more than 499+2, not yet traced), client 246/246. PRIORITIES untouched:
   its 8e6b230 FROST/DKG line says DONE and now overclaims.
+
+M3, FROST/DKG SLICE: ROUND-1 PROOF OF KNOWLEDGE - THE ROGUE DKG DEAL IS REFUSED
+  RULE (ZF source)  frost-core keys/dkg.rs at frost-secp256k1-tr/v3.0.0:
+                    c = HDKG(id || A0 || R), id = 32-byte BE scalar, A0 and R
+                    compressed; mu = k + a0*c. The tr crate writes a Signature
+                    as R's x (32) || z (32) and reads R back as even (02||x).
+                    HDKG = hash_to_scalar(CONTEXT_STRING + "dkg"), the tr
+                    context. Checked before coding: ZF's three published proofs
+                    verify under this rule; flipped byte / other id / other A0
+                    each fail.
+  CODE              frost.js hashesFor(...).HDKG. dkg.js: PROOF_BYTES = 64,
+                    proveKnowledge (R made even by negating k), knowledgeIsProven,
+                    proofHolds (dealer's own seat number = its x); the wire
+                    format carries the proof after the commitments;
+                    dealContribution proves with a nonce = taggedHash(
+                    BLWP/v1/DkgProofNonce, secret || epoch || A0); the proof is
+                    checked in acceptContribution (now takes { curve }),
+                    openMyContribution and combineShares. Daemon Dkg.accept
+                    passes its curve.
+  TESTS             zf-frost-tr: ZF's proofs verify, changed ones do not.
+                    dkg-rogue flipped to refusal (the attacker also attaches its
+                    best proof, made with a guessed secret): protocol facts
+                    BEFORE yes/yes/yes/yes -> AFTER no/no/no/no, each refusal
+                    naming the proof. Daemon BEFORE: rogue POST 201, key the
+                    attacker's, pool output spendable alone. AFTER: honest still
+                    sends A0 first (window unchanged, now useless), rogue POST
+                    409 "seat 2's proof of knowledge does not verify", finish()
+                    1 of 2, no key, no output. protocol/test/dkg.test.js: shape
+                    fixture carries a proof; its positive line is now "the proof
+                    check needs a curve" (protocol has none) - the accepted case
+                    is in blwp-node/test/dkg.test.js with a curve. Honest 7-seat
+                    daemon DKG and 5-of-7 signing green.
+  MUTANT            proofHolds returns ok -> both dkg-rogue tests red and every
+                    fact back to the attack. Restored (cmp).
+  MEASURED: protocol 485/485, node 502/502 (228+274; the node total has been
+  off by one against the files' test counts for two runs - not traced),
+  client 246/246. Out of scope, left: GET /dkg still serves a node's own
+  contribution to anyone and POST /dkg still takes a late deal - with the
+  proof required, that window no longer lets a seat choose the key.
