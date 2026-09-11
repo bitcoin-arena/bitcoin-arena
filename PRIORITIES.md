@@ -228,9 +228,10 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   RULING NEEDED (Daniel): the owed sats leave as miner fee (900 in, 336 out,
   564 fee), against item 16's own rule. Keeping them means a change output to
   the pool, and that needs a fee rate nobody has set.
-  DECIDED (Daniel 2026-09-11 09:26): V1 pool is FEDERATION (Fedimint-class +
-  Lightning gateway). No operator bridge. No threshold-LN until it hardens.
-  Round Contract names FEDERATION (§23.6). Never single custody.
+  DECIDED (Daniel 2026-09-11 09:26 / 13:13): V1 pool is FEDERATION
+  (Fedimint-class). Never single custody. AND no central payment endpoint:
+  a single lnd gateway is forbidden. Invoice/hold/settle/pay need the same
+  quorum (5 of 7, or 2 of 2). Round Contract names FEDERATION (§23.6).
   The 7 who can move that round's money ARE the settlement committee: census
   of bonded nodes, sortition after committee_time (§5A.6–5A.9), 7 slots,
   threshold 5, drawn separately from game/verify. The mint/gateway itself is
@@ -407,9 +408,13 @@ is M3.2 item 5.
 threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
 
-HARD (Daniel 2026-09-11 09:26): V1 pool is FEDERATION (Fedimint-class +
-Lightning gateway). No operator bridge. No threshold-LN until it hardens.
-Never single custody. The 7 movers each round are the settlement committee
+HARD (Daniel 2026-09-11 13:13): no central payment endpoint. A single lnd
+gateway is forbidden. Invoice, hold, settle and pay need the same quorum
+as the mint (5 of 7 / 2 of 2) — not one operator's node.
+
+HARD (Daniel 2026-09-11 09:26): V1 pool is FEDERATION (Fedimint-class).
+No operator bridge. Never single custody. Lightning in front of it is not
+one person's gateway. The 7 movers each round are the settlement committee
 (§5A.6–5A.9).
 
 HARD (Daniel 2026-09-08 11:56): everything needed for playable M2 on
