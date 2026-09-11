@@ -87,6 +87,18 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   Feldman's A0 is checked against it), F2 the page picks the refund key,
   F3 a seat can substitute claim_pk, F4 lock fields verified before
   STAKE_COMMITTED. F1 and F4 block the rehearsal's step 1.
+  P2P PASS (15:40, the whole spec, P1-P8 in §35A and the revision note):
+  two free exploits closed - round grinding by mass publication (now
+  publication_txid on chain before the beacon block, replaces timestamp
+  receipts) and a self-dealing quorum that never publishes its transcript
+  (now FINAL needs >=5 settlement seats to retrieve and post it to the
+  contract's publication_relays[]); two false claims corrected - a forged
+  chain view costs the stake, and replay does not catch a player-run
+  quorum's fork selection. Creator cannot name his own federation
+  (guardians must be bonded census nodes, guardian_of[] in the advert).
+  CODE CONSEQUENCES: the daemon's timestamp receipts go, a publication tx
+  and its height check come; settlement seats fetch+post transcripts
+  before W; the client checks federation guardians against the census.
   RESOLVED IN SPEC (15:10, Daniel "alles dokumentieren und lösen"): §7
   entry fields (stake_point, fee_preimage, lock outpoints, claim key
   attestation), §23.1 steps 0-5, §24 refund key, §5A.3 seventh offence,
