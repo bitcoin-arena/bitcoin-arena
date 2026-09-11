@@ -28653,3 +28653,93 @@ DECISION NEEDED (Daniel), which quorum-run Lightning:
       (on-chain or ecash), no invoice at all. Meets "no single node", drops
       Lightning hold invoices (M3's stated path).
   (c) something else Daniel names.
+
+## A COMMITTEE-SIGNED LIGHTNING NODE: CAN lnd's REMOTE SIGNER BE ANSWERED 2 OF 2? (2026-09-11)
+
+Daniel's pick: lnd's remote-signer interface answered 2 of 2 (not Fedimint
+hold patches, not waiting). Invoice / hold / cancel may sit on one replaceable
+node; the settle and the spend of settled money must not. (FEDERATION.md,
+a024628, predates this pick.) Measured before any FROST, threshold node or
+Fedimint work.
+
+  bash packages/blwp-node/tools/remote-signer-probe.sh     (149 s, run 2; run 1 145 s)
+
+Own regtest, ports 30301-30312. Bob's lnd v0.21.3 is WATCH-ONLY
+(--remotesigner.enable, InitWallet watch_only over REST - `lncli
+createwatchonly` needs a terminal); a signer lnd (nochainbackend, no peers,
+RPC log at debug) holds every key; a private TAPROOT channel alice -> bob
+(--protocol.simple-taproot-chans, commitment type TAPROOT). The invoice and
+the settle go through the daemons' own port (src/lnd-port.js, via
+tools/remote-signer-acts.mjs). Bob's health check on the signer is off - his
+switch, so he keeps every power his credentials allow.
+
+WHAT THE SIGNER HOLDS: one seed. It exports 259 xpubs and nothing private:
+m/49', m/84', m/86' (one on-chain account each) and m/1017'/1'/0'..255' -
+lnd's key families (0 funding, 1-5 revocation/htlc/payment/delay bases and
+revocation root, 6 the NODE KEY). Bob's node key 03717641...54d75a is not in
+bob's lnd.
+
+WHAT EACH ACT ASKS THE SIGNER FOR (requests the signer served, run 2):
+    open (taproot)  DeriveSharedKey 1, MuSig2CreateSession 3, MuSig2Sign 2, MuSig2CombineSig 1
+    idle 10 s       SignMessage 4 (noise floor)
+    INVOICE         SignMessage 1
+    hold            DeriveSharedKey 2, MuSig2CreateSession 2, MuSig2Sign 1, WalletKit/SignPsbt 1
+    SETTLE          MuSig2CreateSession 2, MuSig2Sign 1        (alice SUCCEEDED)
+    cancel          MuSig2CreateSession 2, MuSig2Sign 1        (alice FAILED = refunded)
+    spend 500 sat   MuSig2CreateSession 4, MuSig2Sign 2, WalletKit/SignPsbt 1
+  Runs 1 and 2 asked the same requests for every act.
+
+THE INVOICE'S SIGNATURE, read off the BOLT11 request: 65 bytes, recovery id 1,
+  r 05b60be6702cd1f194c02286b8f35ead96096e8eb7b9d5f77ec0202895126dd1
+  s 6062f9fd2a5a3f4ee1243a42b68b9299413afe727329e598b0ef3081751bb5e3
+  recovers to bob's node key, and verifies as ECDSA (secp256k1, not prehashed
+  again). BOLT11 requires this recoverable ECDSA signature.
+
+THE ANSWER: NO. The two-seat committee cannot answer this signer 2 of 2 for
+either act, as the tree stands:
+  - invoice create needs an ECDSA signature by the node key. The committee's
+    only signature is FROST over BIP340 Schnorr (protocol/src/frost-bip340.js);
+    there is no ECDSA anywhere in blwp-node/src or protocol/src.
+  - settle needs a MuSig2 partial signature, in a session with alice, over the
+    channel's funding key (family 0). The committee has no MuSig2, and a
+    FROST group acting as one MuSig2 signer is not a procedure this tree or
+    lnd has.
+  - and the committee's door refuses by construction: pool-signing.js takes
+    a round and an output and signs only a spend it rebuilt itself -
+    "nothing here accepts a sighash, a transaction, or a table". lnd asks for
+    exactly that: a message, a session, a partial signature.
+
+CAN ONE MACAROON STILL SETTLE? YES, with the signer up: bob's one
+admin.macaroon plus the preimage settled (invoice SETTLED, alice SUCCEEDED),
+and the signer signed the MuSig2 share without any second party - the signer
+is itself one lnd behind one macaroon (bob's lnd holds the signer's
+admin.macaroon). A remote signer moves the keys to a second process; it adds
+no quorum.
+
+WITH THE SIGNER GONE, bob's own node and credentials: the invoice is refused
+("error signing message in remote signer instance ... connection refused"),
+and bob's lnd SHUTS ITSELF DOWN on that first signing failure:
+  13:38:51.291 [CRT] RPWL: [RPC signing server not available: ... dial tcp 127.0.0.1:30311: connect: connection refused]
+  13:38:51.291 [INF] RPWL: Sending request for shutdown
+  13:38:51.419 [INF] LTND: Shutdown complete
+Then hold (alice's payment FAILED), settle, cancel and spend: connection
+refused - nothing. Invoices 4 and 5 stay ACCEPTED in flight (alice
+IN_FLIGHT); 23.2's default, the CLTV, is what returns them.
+
+THE LEFTOVER, in the same table:
+    act       signer up                      signer gone, bob's credentials only
+    invoice   signer: ECDSA by the node key  refused, and bob's lnd shuts down
+    hold      signer: ECDH + MuSig2 + PSBT   no (lnd down)
+    settle    signer: MuSig2                 no (lnd down)
+    cancel    signer: MuSig2 - the same      no (lnd down)
+              requests as a settle
+    spend     signer: MuSig2 + PSBT          no (lnd down)
+  So a remote signer takes every act away from bob's node alone - the gap
+  it would close is all five acts - but ONLY IF the signer is the quorum,
+  and on this lnd the quorum cannot be the signer: it is asked for ECDSA and
+  MuSig2, and the committee has neither. Also measured: a settle and a cancel
+  reach the signer as the same requests (MuSig2CreateSession 2, MuSig2Sign 1),
+  so a signer that lets a replaceable node cancel alone but not settle would
+  have to read the commitment it signs - it cannot tell them apart by name.
+
+Not touched: FROST, a threshold node, Fedimint, Unity, §22, the parked items.

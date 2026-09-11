@@ -132,7 +132,13 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   in bob's channel; there is no Lightning pay. Fedimint 0.12.0
                   has no Lightning path without one gateway. The guardian hold
                   keyed to the round's deadline is stopped: it keys bob's hold.
-    DECISION      which quorum-run Lightning construction (TASKBOOK).
+    DECIDED       a committee-signed Lightning node: lnd's remote signer
+                  answered by the settlement committee.
+    measured      NO on this lnd as the tree stands: invoice create asks the
+                  signer for ECDSA by the node key, settle for MuSig2; the
+                  committee signs only FROST Schnorr over spends it rebuilt.
+                  One macaroon still settles; bob's lnd shuts down without its
+                  signer (TASKBOOK).
     measured      Fedimint 0.12.0's STANDARD Lightning path (LNv2) settles
                   a stake AT ONCE, it does not hold it: alice's 1000 sats
                   were a completed settle in bob's (the gateway's) channel
