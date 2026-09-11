@@ -27872,3 +27872,47 @@ blwp-node 478/478 (+4), blwp-client 230/230, core 91/91, golden vectors 8/8,
 protocol 464/464, 0 core or Unity files.
 
 M3.3-32 IS DONE.
+
+### M3.3-33: a daemon restarted inside the objection window - measured first
+
+FOUND BY RE-READING M3.3-32's own work: `watchFinality` has one caller, the
+close (server.js, the `close ` text door), and it lives in memory. On start the
+daemon reconciles only rows it died in the middle of an act on (custody's
+SETTLE_REQUESTED / CANCEL_REQUESTED, the payouts). Since M3.3-32 a close moves
+nothing for a whole window - ten minutes at the reference - so a daemon that
+restarts inside it has nothing left to settle that round.
+
+BEFORE, a new pin in objection-window.test.js: two daemons on file stores, a
+3 s window, a winner and a loser, both closed and agreed, both restarted
+inside the window on their own stores and the same lnd. 10 s past the window
+A's lost stake still read HELD ("in flight, in nobody's balance, until every
+condition is met") - it would have expired back to the loser, and the
+winner's back on its own timelock rather than by a cancel.
+
+M3.3-33 AFTER. The close's work is one function, `afterClose(roundId)`: replay
+and gather (`verifier.settleRound`), the money (`settleTheStakes`), the watch.
+The close door calls it, and so does a start: once custody's `reconcile` has
+answered, every CLOSED round with a stake still HELD on this node runs
+`afterClose` again, one round at a time (`resuming`, on the returned node).
+A replay after a restart re-signs nothing - the store keeps the first result
+per seat - and a hold that moved is left alone. A daemon shut down while it
+replays acts on nothing afterwards.
+
+    restart pin   both seats restarted inside the window: after it the loser
+                  SETTLED with its own preimage and the winner CANCELLED on
+                  both, every act >= close + 3000 ms. Red before, green after.
+    Mutant a start resumes nothing: the restart pin fails; restored 5 of 5.
+    custody-restart-lnd.mjs (real lnd, main.js restarted): exit 0, RESTART
+      (a) with no Lightning settings leaves the forfeit SETTLE_REQUESTED,
+      RESTART (b) with them writes it SETTLED; bob +98000 msat, one
+      forfeited net stake - as at M3.3-31.
+
+COST, NOTED: every start replays each closed round that still has a HELD
+stake - a VOID run's hold stays HELD until the chain sweep moves it (M3.3-30),
+so its round is replayed on each start until then. One replay per entry, the
+same work as a close.
+
+blwp-node 479/479 (+1), blwp-client 230/230, core 91/91, golden vectors 8/8,
+0 core or Unity files.
+
+M3.3-33 IS DONE.

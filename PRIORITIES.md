@@ -88,6 +88,10 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   Before: acts 586-977 ms after the close on a 3 s window.
                   Rehearsal, 30 s window, AB, BA and 800 ms gaps: 0 acts
                   before the window, same money.
+    code, DONE    M3.3-33: a daemon restarted inside the objection window
+                  still settles and cancels after it. A start runs the close
+                  logic again for every closed round with a stake still HELD
+                  there. Before: both seats HELD past the window.
     ruling        how a settled stake reaches the pool; the owed-sats fee
                   rate; htlc_cltv_days (all below, unchanged).
     inbound       testnet4: 196000 msat needed, 0 offered.
