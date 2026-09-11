@@ -17,7 +17,9 @@ Nothing stays local. Claude commits as claude after each measured change.
 Top item first. Finish and deploy before starting the next.
 
 LIVE LETTER: M3 - A ROUND FOR TESTNET SATS ("M3 is done when"). Special
-conform-to-v4.6.2 is done (a1e8d6e / 875cef1). Continue M3.
+conform-to-v4.6.2 is done (a1e8d6e / 875cef1). Continue M3. Daniel 18:41:
+do every M3 slice that does not need him. Do not wait. Do not ask Go on
+unblocked work. Park only inbound, which-guardians, and named rulings.
   DONE (18:15 conform): the only already-coded thing v4.6.2 made wrong was
   constants.js's §23.6 custody comment (still "a Fedimint-class federation
   with a Lightning gateway") - conformed to the stake-lock wording; behaviour
