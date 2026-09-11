@@ -28364,3 +28364,24 @@ only, the build pointed at it; no apt, not Unity's copy.
   BASELINE    `cargo check -p fedimint-lnv2-server --locked`, the UNPATCHED
               v0.12.0 tree: exit 0, "Finished `dev` profile ... in 33.64s";
               target dir 3.1 GB
+  BUILD       `cargo build --release -p fedimintd --locked`, unpatched,
+              foreground: 590 s to the tool's cap (277 crates), resumed, done
+              229 s later - about 13.6 minutes; fedimintd 0.12.0, 582 MB
+              (optimized + debuginfo); target dir 11 GB
+
+THE BEFORE NUMBER, the self-built UNPATCHED fedimintd as all 4 guardians
+(gatewayd, fedimint-cli, gateway-cli the released 0.12.0 builds), the same
+probe, 1000-sat stake, 30 s window:
+    BEFORE PAY    height 313: bob channel 1000000 | alice 996530 | gateway
+                  ecash 999577, lightning 1000000 | receiver 0 | walletv2
+                  +1000000, mintv2 -999577, lnv2 0
+    PAY           alice's payinvoice SUCCEEDED in 2391 ms
+    AFTER PAY     +8.9 s, height 313: bob channel 1001000 | alice 995530 |
+                  gateway ecash 998579, lightning 1001000 | lnv2 -995 in
+                  flight | the receiver's operation "Claimed" | bob's hold
+                  invoice SETTLED, HTLC accepted at height 313, held 2 s
+    AFTER WINDOW  +46.8 s: bob channel 1001000 | receiver 990 | walletv2
+                  +1000000
+  The same as the released build (2253 and 2709 ms): bob can spend 2.3-2.7 s
+  after payment. The probe left 0 ports bound; 73 empty chroot folders of
+  the run removed.
