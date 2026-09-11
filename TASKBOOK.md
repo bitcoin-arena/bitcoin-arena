@@ -27500,3 +27500,40 @@ daemon would never have expired a row. New pin: a daemon given only a
 hold once that height is past the expiry. Tree green; mutant red, "the
 launcher's own bitcoind is past the expiry and the row still says HELD".
 blwp-node 460/460, blwp-client 230/230, core 91/91, vectors 8/8.
+
+### M3.3-30, the unpaid invoice: it runs out on the daemon's own clock and number
+
+`Custody.hold` writes HELD - "in flight, in nobody's balance" - the moment an
+invoice is issued, and for an invoice nobody paid that stayed true forever
+while lnd cancelled it at the expiry the daemon asked for (`--expiry 3600`).
+Now the daemon records, when it issues the invoice, its issue time plus that
+expiry (lnd-port's own `expirySeconds`, never read back from lnd) in
+`invoice_expiry`, and a HELD row it never saw paid, past that time, is
+EXPIRED: "its invoice ran out unpaid ...: nothing was ever sent". Paid holds
+keep the chain-height rule.
+
+THE GUARD, logically required: "never seen paid" is not "never paid" - a
+player can pay and be seen by nobody, and that HTLC stays held in lnd past any
+invoice expiry. So before the clock expires a row, the sweep asks the one
+seen-time question (`seenPaid`: is it paid?). Paid - it is seen, its HTLC
+expiry recorded, and the chain decides. "Not paid and held" - EXPIRED. An
+answer the node cannot get - left alone.
+
+    unpaid-expiry.test.js (the port reports a 1 s expiry; no test waits an hour)
+      issued, never paid       HELD before, EXPIRED after; no settle, no cancel
+      restart                  a store on disk, the daemon stopped, the expiry
+                               passed while none ran; a new daemon on that
+                               store expires the row
+      paid, never seen         past the invoice clock it stays HELD, is seen,
+                               records HTLC expiry 400, and turns EXPIRED only
+                               when the chain passes 400
+      expiry far out (control) stays HELD
+    Before: the first three red ("the invoice expired unpaid and the row still
+    says HELD"; "the restarted daemon kept ... HELD"; "the sweep did not see
+    the paid hold before judging it"). After: green.
+    Mutant, unpaid invoices never expire: issued-never-paid, restart and
+    paid-never-seen fail. Mutant, the clock alone with no paid check: only
+    paid-never-seen fails - the guard is pinned.
+
+blwp-node 464/464 (+4), blwp-client 230/230, core 91/91, golden vectors 8/8,
+0 core or Unity files. The rehearsals follow.
