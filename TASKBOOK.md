@@ -29101,3 +29101,56 @@ LEFT OUT, by the plan: the exact boundary (a refusal at expiry - 1, then
 acceptance at expiry) under the third-highest-vote lag; a forfeit after
 expiry. Not deployable: regtest, tools only; no page refunds a lock, and
 the committee's signing is not bit-matched to an audited FROST.
+
+## THE STAKE LOCK, REHEARSAL STEP 5: GATEWAY A DOWN, DEPOSIT AND WITHDRAWAL THROUGH B (2026-09-11)
+
+FEDERATION.md step 5: "gateway A down: deposit and withdrawal go through B".
+Stock released fedimintd 0.12.0, unpatched; four guardians, threshold 3; two
+gateways, each on its own lnd - A on bob's, B on carol's
+(tools/federation-hold-probe.sh SECOND_GATEWAY=1: carol's lnd, a channel
+alice->carol funded both ways, gatewayd B at 30180, pegged in, vetted by all
+four guardians; off by default, so steps 1-4 are unchanged); the 2-of-2
+committee key from this repo's ceremony.
+
+  FEDIMINT_BIN=<released builds> LOCK_BIN=<blwp-stake-lock> \
+    bash packages/blwp-node/tools/stake-lock-step5.sh
+
+Which gateway carried each payment is read off lnd, not assumed: the
+deposit invoice's payee node (bob = A, carol = B), and the lnd holding the
+withdrawal's outgoing payment.
+
+MEASURED (235 s, nothing left running):
+  setup         209 s; 4 guardians, threshold 3; the guardians' gateway list
+                ["http://127.0.0.1:30180/","http://127.0.0.1:30170/"]
+  A DOWN        gatewayd process group stopped; port 30170 closed; 0 of its
+                processes left
+                a direct request to A: "Unspecified server error: error sending
+                request for url (http://127.0.0.1:30170/info)"
+                a deposit naming A: "Failed to connect to gateway"
+                the guardians still list both A and B
+  DEPOSIT       no gateway named: the invoice's payee is carol's lnd (B);
+                alice SUCCEEDED; "Claimed"; player's ecash 0 -> 1987072 msat
+                (receive fee through B 12928 msat on 2000000)
+  LOCK          from that deposit: b20e45d602bde165b9001b153daf9a43889ebe4de746a444bd54064190551405:0
+                stored contract 6eaac332fa15f0db09d7f5a948473743ef8ffd6523eb222457981e0fc975964a
+                = the computed one; 980000 msat; expires at block 498 (144 left
+                at the guardians' count 354); claim_pk the committee key
+                player's ecash 1987072 -> 1004544 msat (2528 msat federation fees)
+  WITHDRAW      no gateway named: a 500 sat invoice of alice's lnd; send
+                {"Success":"2eee3279..."}; alice's invoice SETTLED; the payment
+                is carol's lnd's (B); player's ecash 1004544 -> 495104 msat:
+                -509440 for 500000 msat, 9440 msat fees
+
+WHAT IS AND IS NOT SHOWN: the stock client's gateway list is shuffled on
+every call and then sorted by how many guardians list each gateway
+(lnv2-client api.rs, `gateways`); select_gateway then takes the first that
+answers a routing-info request (lib.rs). Both gateways are listed by all
+four guardians, so the order is random per call. This run shows the client,
+told no gateway, went through B while A was down, both ways; it does NOT
+show that it tried A first and moved on - each selection's own order was
+not recorded (the one printed list happened to put B first).
+
+NOT IN STEP 5: the fallback walk pinned (A first in the list, then B);
+step 6 (a guardian down). Not deployable: regtest, tools only; the page has
+no LNv2 client, and the committee's signing is not bit-matched to an
+audited FROST.
