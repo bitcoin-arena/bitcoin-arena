@@ -144,7 +144,16 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   the committee's 2-of-2 claim with the secret moves it to the
                   pool key and only that publishes the secret the operator
                   settles with. 1 of 2, a wrong secret and an early refund are
-                  refused. Harness committee; not wired; not a pick (TASKBOOK).
+                  refused. Harness committee (TASKBOOK).
+    DECIDED       (Daniel 2026-09-11) the submarine swap is how a loser's
+                  stake reaches the pool; invoice, hold, cancel stay on the
+                  operator's replaceable lnd.
+    measured      THE TIMING WINDOW EXISTS: a claim before lnd cancels alice's
+                  HTLC leaves the operator whole; a late claim drains him only
+                  when his refund height lies past that cancel. Refund height
+                  below it, claim before the refund height (TASKBOOK).
+    code, NEXT    the committee daemons' own 2-of-2 claim of a swap output the
+                  operator locked (the probe may still supply the secret).
     measured      Fedimint 0.12.0's STANDARD Lightning path (LNv2) settles
                   a stake AT ONCE, it does not hold it: alice's 1000 sats
                   were a completed settle in bob's (the gateway's) channel

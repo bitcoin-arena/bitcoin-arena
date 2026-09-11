@@ -28801,3 +28801,73 @@ WHAT IT DOES NOT SHOW (the next pieces, if chosen):
   - Fees: 310 sat on bob's lock at 2 sat/vB and a 200-sat stand-in claim fee
     taken from the stake (the owed-sats fee-rate ruling, parked). At 100-sat
     stakes (98 net) there is no swap output at all: under the 330-sat floor.
+
+## THE SWAP'S CLOCKS: A TIMING WINDOW EXISTS (2026-09-11)
+
+Daniel: the submarine swap IS how a loser's stake reaches the pool. Before
+any src change, the hole the first run named - the operator's refund height
+must fall before alice's HTLC times out, with the committee's claim in
+between - measured in the same tool, one scenario per run:
+
+  bash packages/blwp-node/tools/swap-into-pool-probe.sh <normal|late-before-timeout|far-refund|bob-refunds>
+
+Alice's hold invoice has the daemons' own shape (addholdinvoice --expiry 3600,
+no --cltv_expiry, as src/lnd-port.js). Four runs side by side (PORT_OFF 0/20/
+40/60), 55-106 s each; no process left. Regtest mines on demand, so seconds
+are at the 600 s block target, not measured.
+
+THE CLOCKS (identical in all four runs):
+  CLOCK 1  alice's HTLC   paid at 262; invoice final CLTV 80; expiry_height 345
+                          = +83 blocks = 49800 s. lnd CANCELS the held HTLC at
+                          327, 18 blocks before its expiry (alice's payment
+                          FAILED, her channel back to 1996530000 msat).
+                          The rehearsal's own: expiry 366/367 with the chain at
+                          283/284 at the close (+83), cancelled at 353/354.
+  CLOCK 2  bob's refund   nLockTime = alice's expiry - 20 = 325 (+63 from the
+                          payment); lock confirmed at 263. Spent before 325:
+                          "non-final", every run.
+  CLOCK 3  the claim      2 of 2 + the secret, into the pool key:
+    normal                confirmed at 264 - 61 blocks before bob's refund,
+                          81 before alice's expiry. Bob settles from the
+                          chain: alice SUCCEEDED, bob's channel +980000 msat,
+                          pool +780 sat.
+    late-before-timeout   bob does NOT refund; the claim after his refund
+                          height confirmed at 327 (2 past it, 18 before
+                          alice's expiry). Bob still settles: alice
+                          SUCCEEDED, bob's channel +980000 msat, pool +780.
+    bob-refunds           bob's refund confirmed at 326 (alice still
+                          ACCEPTED); lnd cancels alice at 327; the late claim
+                          at 327: "bad-txns-inputs-missingorspent". Pool 0,
+                          alice refunded, bob on-chain 1000000 -> 999490
+                          (310 lock fee + 200 refund fee).
+    far-refund            bob's refund at payment + 144 = 406, 61 blocks
+                          PAST alice's expiry (the first run's choice). lnd
+                          cancels alice at 327; the claim confirmed at 328;
+                          bob's settle: "invoice already canceled".
+                          ALICE REFUNDED, BOB -1290 sat on-chain and 0 in his
+                          channel, POOL +780: A LATE CLAIM DRAINS BOB.
+
+THE WINDOW, on these clocks:
+  - A claim confirmed at any height up to lnd's cancel (327 = expiry - 18)
+    leaves bob whole: he reads the secret from the chain and settles.
+  - The drain needs BOTH bob's refund height past lnd's cancel AND a claim
+    after it. With the refund height before the cancel (expiry - 20 = 325),
+    bob's refund confirmed at 326 and a claim after alice's timeout found
+    the output spent.
+  - So: lock height < claim <= lnd's cancel height, and bob's refund
+    nLockTime < lnd's cancel height. Here: the committee has 263 -> 325, 62
+    blocks (37200 s at the target); bob has 325 -> 326, the blocks between
+    his refund height and lnd's cancel, to get his refund in. The refund
+    margin trades one against the other (20 here); it is not chosen -
+    htlc_cltv_days is the parked ruling.
+  - On the rehearsal's own timeouts: 83 blocks from payment to expiry and
+    lnd's cancel 13-18 before it, with the round's 30 s objection window
+    (10 min reference) well inside one block - the window exists.
+
+WHAT THE DAEMONS WILL HAVE TO KEEP (named, not built):
+  - the operator's refund nLockTime from alice's HTLC expiry, below lnd's
+    cancel height; the committee's claim before that nLockTime;
+  - the operator refunding at its height rather than waiting.
+Dust and fees stay listed: 100-sat stakes (98 net) cannot be this output
+(330-sat floor); the claim fee (200 here) out of the stake is the parked
+owed-sats ruling; bob's 310-sat lock and 200-sat refund fees at 2 sat/vB.
