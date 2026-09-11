@@ -87,14 +87,14 @@ unblocked work. Park only inbound, which-guardians, and named rulings.
   bundle, and `node packages/blwp-node/tools/client-hash.mjs <URL|dir>`
   checks a served page against it; index.html waits for a completed WebGL
   build (deploy pin). protocol 485/485, node 496/496, client 246/246.
-  CLOSED (FEDERATION condition: FROST + DKG vs Zcash Foundation
-  frost-secp256k1-tr v3.0.0): signing and DKG bit-match ZF's vectors; the
-  committee makes its key with no dealer - round 1 carries ZF's proof of
-  knowledge (no seat can own the key) and a seat keeps its share only when
-  every seat signed the same contribution set (no dealer can split it).
-  Residual: a seat that never publishes stalls the key (time, not money),
-  and a last dealer can nudge which key comes out without owning it.
-  Numbers in TASKBOOK. protocol 485/485, node 504/504, client 246/246.
+  OPEN (FEDERATION condition: FROST + DKG vs Zcash Foundation
+  frost-secp256k1-tr v3.0.0): key-making is done - no dealer, no seat can own
+  the key (round-1 proof of knowledge), no dealer can split it (signed
+  contribution-set agreement); numbers in TASKBOOK. Payout signing is NOT:
+  the committee's payout path verifies neither the signature shares nor the
+  aggregate, so one dishonest seat among the five signers can stall every
+  payout and leave an invalid transaction queued - a stall, not a theft, the
+  same class of hole as the split.
   DONE (18:15 conform): the only already-coded thing v4.6.2 made wrong was
   constants.js's §23.6 custody comment (still "a Fedimint-class federation
   with a Lightning gateway") - conformed to the stake-lock wording; behaviour
