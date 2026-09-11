@@ -96,6 +96,9 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   chain view costs the stake, and replay does not catch a player-run
   quorum's fork selection. Creator cannot name his own federation
   (guardians must be bonded census nodes, guardian_of[] in the advert).
+  RULED (15:55): Bitcoin is the mainnet beacon; drand and the fallback
+  beacon are out of the spec (§5A.5, §12, §27A.6, §35). The code already
+  does this (M2 32).
   CODE CONSEQUENCES: the daemon's timestamp receipts go, a publication tx
   and its height check come; settlement seats fetch+post transcripts
   before W; the client checks federation guardians against the census.
