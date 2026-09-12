@@ -22,7 +22,12 @@ username, free play. Then ENTRY_VOID.
   DONE so far (TASKBOOK): free lobby link, join, play, ghost; generated key
   and custom username locally. DONE: the other player sees the chosen name
   (seated view and lobby row, after a repaint and a reload), from a record the
-  player signed with its round key; no key stub.
+  player signed with its round key; no key stub. DONE: a player who typed no
+  name shows one generated name (display-name.js, from the identity key) in the
+  seated view, the lobby row and on board rows, in every round.
+  DEPLOYED 2026-09-12: btc-logistics-core.pages.dev (1ad5a069); the page loads.
+  NOT YET usable there: the Daily's seats are down, and run-2of2.mjs binds 8080
+  (signal-cli) and opens no rounds, so the deployed lobby lists nothing.
   DONE (2-of-2, TASKBOOK): each seat signs its listing of a round; the page
   offers Join only when both of the round's seats say open and seated. With
   one seat down the row says 1 of 2 and has no Join. Measured in the built

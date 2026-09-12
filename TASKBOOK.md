@@ -31499,3 +31499,37 @@ M3.3-34 LOBBY: ONE GENERATED DEFAULT NAME, FROM THE IDENTITY KEY
                     --test-timeout=120000: protocol 500/500, node 565/565, client
                     285/285 (+2). No red. Unity not re-run (no C#, jslib or core
                     change; the built page's scripts refreshed from the template).
+
+M3.3-34 DEPLOYED TO THE DAILY PAGE (2026-09-12) - AND WHY A PLAYER CANNOT USE IT YET
+  WHAT              the build measured above (Unity 0.0.1121, index.html and page
+                    scripts from HEAD 5836750 via the template, _headers from the
+                    last core deploy), `wrangler pages deploy ... --project-name
+                    btc-logistics-core --branch main`. btc-logistics-war untouched;
+                    not an M-freeze.
+  BEFORE            btc-logistics-core.pages.dev: index 200, 32,991 bytes, no name
+                    exchange; blwp-client.js 411,800 bytes md5 01b13442 (the
+                    2026-09-10 build, unity-proto/build/webgl).
+  AFTER             deployment 1ad5a069.btc-logistics-core.pages.dev, and the alias
+                    the same at once: index 200, 57,579 bytes, exchangeNames present;
+                    blwp-client.js 526,555 bytes md5 16e111fd = HEAD's dist (pinned
+                    83485bfa... sha256); Build/*.wasm.unityweb served application/wasm.
+                    Headless Chrome on the deployment: Unity loaded in 3.2 s, 0 page
+                    exceptions, 0 failed requests; the page's generatedName of key
+                    0x07x32 is "wild-wolf-8351", display-name.js's own in node.
+  THE DAILY HOST    bitcoind: YES - testnet4 at /mnt/bitcoin/tn4, block 152078 =
+                    headers, not in IBD (the Daily's chain, run-2of2.mjs says
+                    bitcoin-testnet4). But NO blwp seat is running on this host,
+                    and the Daily launcher tools/run-2of2.mjs binds A to :8080 -
+                    signal-cli's port here, which must not be bound - and wires no
+                    round opener (keepOpen lives in round-2of2.mjs, the local
+                    tool). So the deployed lobby has no seats to list and no round
+                    to join: a player who opens it today sees an empty list. Not
+                    started here: moving the launcher's port and wiring the opener
+                    into it is the next piece of this letter.
+  UNITY DIRT        link.xml and link.xml.meta restored to HEAD (deleted by this
+                    session's local WebGL build, not a change); build.txt and
+                    ProjectSettings (0.0.936 -> 0.0.1121) and the two template
+                    lock-client .meta files left unstaged - local build noise.
+  COUNTS            this turn, foreground, one file per node --test under timeout
+                    180, --test-timeout=120000: protocol 500/500, node 565/565,
+                    client 285/285. Unity not re-run (no C#, jslib or core change).
