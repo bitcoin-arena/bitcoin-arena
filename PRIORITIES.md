@@ -89,9 +89,14 @@ done, continue M3 immediately (ENTRY_VOID and the rest). Same letter.
   seat refused (1 of 2 receipts) is held until the result window passes, then
   VOID at both seats - lock held, no refund act, forfeit 409, out of the payout
   table; the player's own two first marks are FORFEIT instead. No live Daily
-  refusal (no fault injection): a named gap. Still
-  open here: §15 text,
-  fresh-federation walk-away, Lightning hold and objected re-run.
+  refusal (no fault injection): a named gap.
+  DONE (TASKBOOK): a first mark refused by the only seat it reached is VOID,
+  not FORFEIT 0; a player's two first marks (on time at one seat, late at the
+  other) are FORFEIT, never ENTRY_VOID. On a fresh federation a paid walk-away
+  is FORFEIT 0, final 2 of 2, no refund before expiry (the lock back at expiry:
+  W4's hole). On a hold, beside a winner, its hold is settled into the pool.
+  An objected stopped run re-runs to the same FAILED. Still open here: §15
+  text (the spec is not on this branch).
   DONE (W5b, TASKBOOK): on a fresh regtest federation, with the seats' own
   claim key, both seats forfeited a qualifying Delivered lock once its result
   was final with the window closed. The forfeit verified under the claim key,

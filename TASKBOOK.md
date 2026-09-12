@@ -32414,3 +32414,57 @@ M3 ENTRY_VOID: TWO FIRST MARKS ARE THE PLAYER'S EQUIVOCATION, NOT AN OUTAGE (202
   COUNTS            foreground, timeout 180, --test-timeout=120000: node 576/576 over
                     99 files (1-48 279/279 with 5b; 49-99 297/297), client 286/286;
                     protocol unchanged (501/501). No C#.
+
+M3.3-34 WALK-AWAY STEP 7: A LIGHTNING-HOLD WALK-AWAY AND AN OBJECTED STOPPED RUN (2026-09-12)
+  (b) OBJECTED      rerun.test.js, the seven-seat fixture with a run that STOPS
+      STOPPED RUN   (the winner's checkpoints cease at tick 600, still LIVE):
+                    the close signs FAILED/1 at its last receipted checkpoint;
+                    five seats sign it with the score rewritten; the objection
+                    suspends it (SUSPENDED); the holder's own re-run is FAILED/1,
+                    the same run; five of seven re-runs -> FINAL, "re-run by 5 of
+                    7 committee seats: the replay outcome is authoritative (13A)".
+                    Green at once - measured, not changed: the re-run applies the
+                    close's stopped rule. rerun.test.js 4/4 (+1).
+  (a) LIGHTNING     walk-away-hold.test.js, two live seats on hold invoices, the
+      HOLD          player's preimage dealt 2 of 2:
+                    FIRST, W alone: FORFEIT/0 at both seats, 2 signers, FINAL - and
+                    no stake moved: "the operator would keep 98000 msat: a pool of
+                    98000 against 0 handed out. every hold stays in flight and
+                    expires to its player". A round with no qualifier moves nothing
+                    (the operator must not profit) - by design, not a walk-away gap.
+                    THEN W beside a winner P: W FORFEIT/0 FINAL 2 of 2, both seats
+                    release their shares ("ok FORFEIT"), W's hold SETTLED at A and
+                    at B (1, 1), never cancelled; P DELIVERED FINAL, P's hold
+                    CANCELLED back to P at both (1, 1), never settled; payout table
+                    W 0, P 196000 msat (P's own stake back + W's 98000 net from the
+                    pool), PAYOUT_QUEUED, agreed 2 of 2. Measured, not changed.
+                    The window-fixture's sevenSeats takes a `play` option (who plays
+                    each run; LOSER by default).
+
+M3.3-34 WALK-AWAY STEP 6: A PAID WALK-AWAY ON A FRESH FEDERATION, WITH A REAL REDEEM (2026-09-12)
+  HOW               tools/walk-away.mjs, run by
+                    OUTAGE_SCRIPT=walk-away.mjs FEDIMINT_BIN=<released v0.12.0>
+                    LOCK_BIN=<blwp-stake-lock> bash tools/outage-regtest.sh
+                    Stock fedimintd 0.12.0, 4 guardians, one gateway, regtest; the
+                    Daily's 2-of-2 round naming it, the seats making the claim key
+                    (attested 2 of 2), objection window 5000 ms. W locks 980000 msat
+                    as the page does; both seats commit it (201/201) - and W sends
+                    nothing. Two runs (federation up in 170 s and 134 s).
+  MEASURED          both seats closed -> W FORFEIT/0 at A and B, one transcript
+                    (1489e8c9; 34cc7998 in the second run), 2 signers, FINAL in 8.1
+                    s / 8.5 s; no ENTRY_VOID, no late start, no no-quorum record.
+                    The forfeit door at both seats: 409 "that run is FORFEIT with
+                    score 0 and this round's minimum is 1: not a qualifier, so its
+                    stake lock is not forfeited". W before the expiry (block 311-315
+                    of 461-465): through the seats refused (no forfeit), by refund
+                    refused by the guardians - "The contracts locktime has not yet
+                    passed" - the lock held, 150 blocks left.
+                    Past the expiry (152 blocks mined to the regtest lnd's address -
+                    the first run's bitcoind had no wallet to mine to: that part not
+                    measured there): the federation at 463 > 461, W's refund
+                    ACCEPTED, 975360 msat credited, the lock gone.
+  SO                a paid walk-away is FORFEIT 0, final 2 of 2, never a refund at
+                    the seats and never before the expiry - and at the expiry the
+                    lock returns to the player: the W4 money hole every loser has
+                    (a FORFEIT lock is not claimed until W4, parked behind the
+                    fee-lock ruling), measured live.
