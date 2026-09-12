@@ -16,11 +16,12 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: M3 lobby + play with no money (Daniel 07:45 / 07:48). A lobby
-belongs in M3, not last. The NODE must serve it: list joinable rounds, seats
-waiting, free/no-Lightning flag, join without a wallet. Page shows that.
-Stake 0 must work end-to-end. Then ENTRY_VOID and the rest of M3.
-  NEXT (top, unblocked): node lobby doors + page lobby + free play. Then
+LIVE LETTER: M3 lobby + play with no money (Daniel 07:45 / 07:48 / 08:41).
+A lobby belongs in M3. Node lists rounds; page shows them. Same letter:
+generated public/private key, a username, and overwrite that username with
+a custom one. Stake 0 / no Lightning end-to-end. Then ENTRY_VOID.
+  NEXT (top, unblocked): node lobby doors + page lobby + identity (key +
+  username, custom overwrite) + free play. Then
   ENTRY_VOID (§16) - nothing in the node makes a Void today. The start deadline is a
   round parameter in ticks from the join tick (a named default if omitted);
   the evidence is the player's first mark, forwarded between the seats.
@@ -729,6 +730,10 @@ HARD (Daniel 2026-09-11 14:19): V1 custody is the STAKE LOCK in FEDERATION.md
 and spec v4.6.2 §23. No single node is needed and no single node can take
 money: no gateway, lnd or patched fedimintd holds a round's stake. Only
 recognised, tested parts; no Lightning multisig node of our own.
+
+HARD (Daniel 2026-09-12 08:41): lobby includes identity. Generated
+public/private key, a username, and overwriting that username with a custom
+one. Same letter as the round list (M3.3-34).
 
 HARD (Daniel 2026-09-12 07:48): everything the lobby needs in the NODE is
 in this letter too: rounds to join, who is waiting, free/no-Lightning, seat
@@ -1559,10 +1564,12 @@ IN THIS ORDER (unparked):
                                         33.500 m the ground was worth. The fix
                                         is 36's, again: the core owns the map's
                                         boxes and Unity draws them.
-   M3.3-34  lobby + free play          M3   OPEN — Daniel 07:45/07:48. Lobby in
-                                        M3. Node: list rounds, waiting seats,
-                                        free flag, join with no Lightning.
-                                        Page shows it. Play and ghosts, no wallet.
+   M3.3-34  lobby + free play          M3   OPEN — Daniel 07:45/07:48/08:41.
+                                        Node: list rounds, waiting seats, free
+                                        flag, join with no Lightning. Page:
+                                        that list, generated pubkey/privkey, a
+                                        username, custom username overwrite.
+                                        Play and ghosts, no wallet.
    M3.3-19  optional stake / ghost     M3   OPEN — Daniel 11:15. Satoshis are
        without money                      optional. A free round (stake 0) seats
                                         without Lightning. Ghosts must be
