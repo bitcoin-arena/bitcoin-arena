@@ -20,6 +20,11 @@ LIVE LETTER: M3.3-34 lobby still open. Daniel 22:16: lobby and every control
 fully visible in Unity on iOS and Android. 22:12: lobby replaces splash;
 PLAY starts the round; spectate always. Daniel 22:34: when the lobby is
 done, continue M3 immediately (ENTRY_VOID and the rest). Same letter.
+  DONE (Unity lobby, TASKBOOK, live on btc-logistics-core): the lobby is
+  Unity's title screen, no HTML overlay - who you are with NAME and KEY, the
+  rounds with their seats' word, PLAY joins the picked 2-of-2 round and starts
+  it, SPECTATE always. Measured on iPhone and Android, portrait and landscape:
+  every element on screen and readable; PLAY seated the player at both seats.
   DONE so far (TASKBOOK): free lobby link, join, play, ghost; generated key
   and custom username locally. DONE: the other player sees the chosen name
   (seated view and lobby row, after a repaint and a reload), from a record the

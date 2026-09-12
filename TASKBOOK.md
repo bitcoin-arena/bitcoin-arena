@@ -32332,7 +32332,26 @@ M3.3-34 THE LOBBY IS UNITY'S TITLE SCREEN (2026-09-12)
                     out in CSS pixels and drawn at the canvas's pixels-per-CSS-pixel
                     (BlwpUiScale, GUI.matrix). LobbyScreenTests now also at 2.625x
                     and 3x.
-  LIVE              (pending: the rebuild)
+  LIVE, REBUILT     build 0.0.1159, deployed to btc-logistics-core (43cb734b; the
+                    core alias the same page and daily.json). The same five views:
+                    Unity now reports its title screen in CSS pixels (390x844,
+                    844x390, 412x915, 915x412, 1280x800 - drawn at 3x / 2.625x /
+                    1x); each: the lobby drawn, "you" brave-tern-6263, round
+                    5dd50a1e "2 of 2 seats" joinable and picked, PLAY enabled, 7 of 7
+                    elements inside the screen, the HTML overlay 0 px. The
+                    screenshots, read: "You are brave-tern-6263 · made from your
+                    key / key 7155-7a31-7bd0-accd" whole on every view; on an iPhone
+                    in portrait the text about three times its first size, NAME and
+                    KEY under the name, the round row without its id to fit.
+  PRESSED           the real buttons, by touch at the rects Unity reported:
+                    SPECTATE (Android landscape) - the title screen gone within 1 s,
+                    no round. PLAY (iPhone portrait) - the page went to the round's
+                    own link with play=1, Unity loaded into the round and left its
+                    title screen within 6 s with no second PLAY (the ramp, "CHOOSE
+                    YOUR MEMPOOL CARGO", on screen); held 45 s, player b6e68ece
+                    seated at seat A and at seat B in round 5ae77bed (entry
+                    dcdc4dda). A first PLAY run closed its tab at 6 s and seated
+                    nobody: the page takes its seat after Unity has loaded.
 
 M3.3-34 ONE SEAT REFUSED, THE DIRECT PATH: A FIRST MARK THAT REACHED ONLY THE SEAT THAT REFUSED IT (2026-09-12)
   HOLE              16a4d96 kept a refused on-time first mark only when another
