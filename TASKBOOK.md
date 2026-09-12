@@ -31043,3 +31043,36 @@ M3.3-34, 2-OF-2 CONSENSUS IN THE LOBBY (Daniel 09:04)
                                     round (fb33fe0e.., opened at 152 s), Join shown
   COUNTS            protocol 490/490 (+2 listing), node 550/550, client 279/279.
                     Unity: no C# or jslib changed; the page template only.
+
+M3 ENTRY_VOID (§16), BEAT 1: THE START DEADLINE AND THE PREDICATE
+  MEASURED BEFORE   tools/entry-void-before.mjs (cc3102b), two in-process seats of
+                    a lock round, join tick 0, first mark at tick 60, run to 1320:
+                    contract            no start-deadline field; no named default
+                    both seats in time  DELIVERED at both, FINAL, forfeit 200
+                    B down, never sent  A: no canonical transcript ("the first has
+                                        1"); no result anywhere; finality null;
+                                        forfeit 409; lock refunds at expiry
+                    B down, caught up   B took the first mark after A's chain was
+                    late                at 1320: DELIVERED at both, FINAL, forfeit
+                                        200
+                    Void anywhere       none; no seat forwards a mark
+  NAMED PICK        Void is the first-mark tick against join tick + start deadline,
+                    not "a seat was down". In time is not Void even if a seat has
+                    not seen it (forwarding is the next beat). No mark is not
+                    ENTRY_VOID (§15, listed hole). Default 120 (§16 names none).
+  BUILT             constants START_DEADLINE_TICKS = 120; contracts.js
+                    startDeadlineTicks, an optional LAST field written only when
+                    it is not 120 (1 .. blockTicks-1), so no existing id or vector
+                    moves; entry-void.js entryVoidOutcome({ joinTick,
+                    deadlineTicks, firstMark }).
+  MEASURED          join 0, deadline 120: mark 60 -> not Void; 120 -> not Void;
+                    121, 1197, 1320 -> ENTRY_VOID; no mark -> not Void; join 500:
+                    560 not Void, 621 Void (line 620). Field: omitted decodes 120;
+                    explicit 120 is the same round; 300 round-trips, another id;
+                    written default, 0, and 9000 refused.
+  RISK FOR WIRING   120 ticks is 2 s. The page marks once a second and a mark can
+                    wait up to 10 s for its inputs, and the fixtures' single first
+                    marks are at 1320 (forfeit.test) and 1197 (W5b): wired into a
+                    seat as is, those runs would be Void. Weighed at the wiring beat.
+  COUNTS            protocol 493/493 (+3), node 550/550, client 279/279 (bundle
+                    eb6da97a). Not wired: no seat, forfeit or forwarding changed.
