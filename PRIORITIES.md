@@ -1661,9 +1661,11 @@ IN THIS ORDER (unparked):
                                         on-time mark after a Void) and path 2
                                         (the late mark's forward lost, pulled
                                         at the close) closed: FORFEIT at both,
-                                        no refund, lock held. Still open: the
-                                        no-quorum FORFEIT on a hold (path 3);
-                                        the lock past expiry (path 5).
+                                        no refund, lock held. Path 3 closed: on
+                                        a hold, two first marks settle into the
+                                        pool (real lnd: SETTLED, not back to the
+                                        player). Still open: the lock past
+                                        expiry (path 5).
    M3.3-19  optional stake / ghost     M3   done (TASKBOOK "M3.3-19", 2026-09-10) —
        without money                      a free seat on a daemon with no
                                         Lightning is 201 FREE; the watcher's

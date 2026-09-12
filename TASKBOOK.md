@@ -32637,3 +32637,61 @@ M3.3-34 PATH 2: THE LATE FIRST MARK IS PULLABLE PROOF - A LOST FORWARD STILL CLO
   COUNTS            foreground, timeout 180, --test-timeout=120000: node 581/581 over
                     100 files (1-48 282/282 in 91 s with 5e; 49-100 299/299 in 65 s);
                     core 91/91; protocol 501/501; client 286/286. No C#.
+
+M3.3-34 PATH 3: TWO FIRST MARKS ON A LIGHTNING HOLD - THE HOLD SETTLES INTO THE POOL, NEVER BACK TO THE PLAYER (2026-09-13, ruled)
+  RULE              two first marks is the player's FORFEIT, not an escape: the
+                    player does not get the hold back. Beside a winner the hold
+                    settles into the pool like the paid walk-away's - with no signed
+                    FORFEIT 0 result and no agreed run made up (item 4 not needed).
+  READS             the close hands the hold settlement only runs this seat SIGNED
+                    (replayed stored && outcome); mayRelease hands a share only for
+                    a signed result that is FINAL. A no-quorum FORFEIT has neither.
+  BEFORE            in process (hold-two-first.test.js: two seats on holds, B down,
+  (in process)      on-time first mark 60 to A, B back, a different one at 30 to B,
+                    a winner beside): FORFEIT (no-quorum) at both, 0 signed results;
+                    the hold settled 0/0, cancelled 0/0 - HELD, expiring to the
+                    player; mayRelease "this node has replayed nothing" at both;
+                    payout table pool 0, the winner 98000 msat (its own stake only).
+  BEFORE (real lnd) round-rehearsal-lnd.mjs --two-first on a162f9c (its own regtest,
+                    alice pays, bob holds, 30 s window): P2 no-quorum FORFEIT at
+                    both, 0 results, share refused at both; lnd CANCELED - back to
+                    alice (custody rows A EXPIRED, B EXPIRED); table pool 98000
+                    (only P3), winner row 196000.
+  CHANGE            server settleTheStakes: each entry this seat's store holds as a
+                    no-quorum FORFEIT joins 23.2's table - FORFEIT, score 0, its
+                    stake from its own Entry Contract - and counts as final; read
+                    LIVE from the store (the finality watch hands the close's first
+                    snapshot again: measured, its "pending" never cleared); while an
+                    entry's no-quorum decision is still to come, no stake moves (a
+                    table without the FORFEIT would pay the winner a pool without
+                    it), and the watch keeps asking (pendingShort) - measured before
+                    that: the watch stopped, no seat settled. verify #noQuorum marks
+                    its pending answer. preimage mayRelease: this seat's own
+                    no-quorum FORFEIT with no signed result releases (23.2: a
+                    FORFEIT settles). A no-quorum VOID stays out of the table.
+  AFTER (in         FORFEIT at both, 0 signed results; the hold SETTLED at A and B
+  process)          (1/1), cancelled 0/0; the winner's hold cancelled 1/1; both
+                    seats' tables pool 98000, the winner 196000, PAYOUT_QUEUED; 3 of
+                    3 runs the same.
+  AFTER (real lnd)  the same rehearsal on this code: P2 no-quorum FORFEIT at both,
+                    0 results, share "ok FORFEIT" at both; lnd SETTLED - to bob, not
+                    alice (custody rows A SETTLED, B SETTLED); table pool 196000
+                    (P2 + P3), winner row 294000 (98000 own + 196000); P1 CANCELED
+                    back to alice. Every act at +34286 ms or later, the 30000 ms
+                    window running from each seat's close (+0, +350 ms).
+  SAME IN BOTH      P3 ("VOID" in the harness: seated, paid, never plays) is the
+  RUNS, NOT THIS    ruled walk-away, FORFEIT 0 agreed 2 of 2, SETTLED to bob; the
+  PATH              harness's "VOID" label and its "settled through the federation"
+                    hole text are stale (no federation ran). "N acts before the
+                    window" counts every act on a run the harness has no window for
+                    (P2, P3). The settled stake lands in bob's lnd, not the pool
+                    wallet, and the payout is only QUEUED (no --pool, "reaches no
+                    chain") - the standing ruling, unchanged.
+  NOT COVERED       an entry whose no-quorum rule waits on a seat that stays down
+                    keeps the round's acts waiting with it (the rule decides only
+                    with every seat reachable).
+  COUNTS            foreground, timeout 180, --test-timeout=120000: node 582/582 over
+                    101 files (1-48 280/280; 49-101 302/302, hold-two-first 1/1;
+                    first-mark 14/14, no-quorum 5/5, one-seat-refused 5/5, outage
+                    9/9, walk-away-hold 1/1); core 91/91; protocol 501/501; client
+                    286/286. No C#.
