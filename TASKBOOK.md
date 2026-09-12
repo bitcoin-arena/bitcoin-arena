@@ -31076,3 +31076,30 @@ M3 ENTRY_VOID (§16), BEAT 1: THE START DEADLINE AND THE PREDICATE
                     seat as is, those runs would be Void. Weighed at the wiring beat.
   COUNTS            protocol 493/493 (+3), node 550/550, client 279/279 (bundle
                     eb6da97a). Not wired: no seat, forfeit or forwarding changed.
+
+M3 ENTRY_VOID (§16), BEAT 2: THE OMITTED DEADLINE IS THE PAGE'S WINDOW
+  RULED             do not wire seats while the omitted deadline is 120 (2 s): an
+                    honest first mark can land after it.
+  MEASURED          ticks a second     65536/1092 = 60.015 (core TICK_DT)
+                    page mark cadence  MarkEvery = 60 (1 Hz); first attempt at
+                                       net.seen 60, once the client is ready
+                    honest first mark  built page (lobby-regtest.sh), both players:
+                                       join 0, first mark tick 60; marks at A and
+                                       B: [60,120,180,240] and [60,180,300] (two
+                                       skipped under load)
+                    input wait         a mark waits up to 10 s (MARK_INPUT_WAIT_MS)
+                                       and keeps its tick; timed out it is sent to
+                                       nobody and marks due meanwhile are skipped:
+                                       the next honest first mark is tick 720
+                    fixture plants     forfeit.test 1320 (WINNER), W5b 1197 (its
+                                       searched run)
+  CHANGED           START_DEADLINE_TICKS 120 -> 900: 720 plus three missed marks
+                    (15 s), not the 22 s plants. 120 stays legal explicitly.
+  MEASURED AFTER    default: 60, 720, 900 not Void; 901, 1197, 1320 ENTRY_VOID; no
+                    mark not Void. Omitted = written 900, one round; named 120 or
+                    1400, another id. Tight-line predicates at 120 unchanged.
+  NEXT              the forfeit and W5b rounds name a deadline past their plant or
+                    mark earlier; then seats forward the first mark and record
+                    ENTRY_VOID from it.
+  COUNTS            protocol 494/494 (+1), node 550/550, client 279/279 (bundle
+                    cf843cd2).
