@@ -30668,3 +30668,51 @@ M3 W1b FOLLOW-UP: THE PLAYER SEES THE LOCK, KEEPS IT, AND PLAYS
                     federation (parked: inbound, which-guardians). The first
                     rehearsal harness wedged when its Chrome went away (no
                     timeout on DevTools asks); asks are now bounded at 30 s.
+
+M3 W5 STEP 1: THE SEATS MAKE THE ROUND'S CLAIM KEY
+  WHY FIRST         W5b's forfeit is a threshold signature by the round's claim
+                    key, and every lock rehearsal (W1a, W1b) had handed the seats
+                    that key (claimKeyFor, keys.json). Measured before anything:
+                    does a round the daemons seat themselves have one?
+  BEFORE            fresh Daily 2-of-2 (standUpRound), nothing injected: neither
+                    seat held a group key ("this node has no share of that
+                    committee's key yet"), /claim-key 409 and 409; dkg.run by
+                    hand, twice on both: "1 of the committee's 2 seats have
+                    contributed". So on a daemon-seated round the page counted 0
+                    of 2 and would lock nothing: W1b's shipping path rested on
+                    the injected key.
+  CAUSE             nothing in server.js or main.js ran the key generation; its
+                    peers were a daemon-wide list, [] on a launched daemon (the
+                    tests set dkg.peers by hand); and once the peers were given,
+                    Dkg.finish still asked the daemon-wide list for the other
+                    seats' agreements ("1 of the committee's 2 seats have said
+                    which contributions they combined").
+  FIX               a seat that seats a round from its census runs its half of
+                    the key generation with the round's own committee endpoints
+                    (endpointsOf, the rule the verify and payout paths use), and
+                    again every second until the key exists (at least 30 runs,
+                    while entries are open); Dkg.run and Dkg.finish take those
+                    peers. No key is injected and no peer wired by hand; a
+                    harness that hands claimKeyFor makes none (and is labelled
+                    HARNESS KEY where a test still does).
+  TIMED             paying lock round: seat B held the key 266 ms after the round
+                    was up, seat A at 1582 ms (a second run); free round: 300 and
+                    305 ms. The same group key on both.
+  THE PAGE          opened on the link at once, it counted "1 of 2" and refused
+                    the seat (measured). It now asks again every second for up
+                    to 30 s (awaitAttestedClaimKey), saying the count; nothing
+                    short of the threshold is ever accepted (claim-key-wait.test).
+  AFTER             claim-key-own.test.js (shipping path, nothing injected): key
+                    made in 322-331 ms, both seats one 33-byte group key,
+                    /claim-key 200 200 serving it, the page 2 of 2 on it.
+                    Mutant (no seat-time run): red, 409 409, 0 attested.
+                    Page rehearsal, fresh federation, no key injected: the page
+                    locked at c81dad3e025428403b3a0f53d7942a78455baaf177b4fe7483a2bf982348aeff:0,
+                    the federation holds it (146 blocks left), /entry 201 201,
+                    /lock 201 201, both seats committed 980000 msat; after PLAY
+                    32/29 batches, 4/4 receipts, none refused; the no-lock mutant
+                    was refused and not seated.
+  NOT DONE          the seat that restarts mid key generation restarts it only
+                    when the round is posted again; rounds larger than 2-of-2
+                    make the key over contract.nodes, which claimKeyOf already
+                    reads (measured here only on 2 of 2).

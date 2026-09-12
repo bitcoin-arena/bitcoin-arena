@@ -20,9 +20,15 @@ LIVE LETTER: M3 - A ROUND FOR TESTNET SATS ("M3 is done when"). Special
 conform-to-v4.6.2 is done (a1e8d6e / 875cef1). Continue M3. Daniel 18:41:
 do every M3 slice that does not need him. Do not wait. Do not ask Go on
 unblocked work. Park only inbound, which-guardians, and named rulings.
-  NEXT (top): not chosen in the W1b letter. The rest of "M3 is done" is the W
-  inventory (TASKBOOK); W5 - redeem/forfeit/refund/withdraw - is the lock's
-  other half.
+  NEXT (top): W5a - the player's refund after the lock's own expiry, from a
+  later session holding only the seed, and withdraw over a listed gateway;
+  then W5b, the seats' forfeit and the page's redeem - all on the seats' own
+  claim key.
+  DONE (W5 step 1, TASKBOOK): the seats make the round's claim key themselves
+  when they seat it - both hold one group key, /claim-key serves it, the page
+  counts 2 of 2 - and a page lock under it (c81dad3e..:0) was verified and
+  committed by both seats. Before: no key on either seat (409, 409); every
+  lock rehearsal had injected one.
   PARKED: inbound, which-guardians, the expiry margin, the fee lock.
   DONE (W1b, TASKBOOK): a joining player's page makes the stake lock - on
   regtest the built page joined a lock round from its link, took one deposit,
