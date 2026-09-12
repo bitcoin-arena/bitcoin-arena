@@ -31663,3 +31663,71 @@ M3.3-34 THE DAILY'S BARE ROOT SHOWS THE LIVE 2-OF-2 LOBBY (2026-09-12)
   COUNTS            foreground, one file per node --test under timeout 180,
                     --test-timeout=120000: protocol 500/500, node 565/565, client
                     286/286 (+1: daily.json). Unity not re-run.
+
+M3.3-34 ENTRY_VOID PIECE: THE WALK-AWAY (§15), READ AND MEASURED - NO CODE CHANGED (2026-09-12)
+  THE SPEC (multiplayer_p2p.md, header "BLWP v4.6")
+    §15 Disconnect rule: "After stake commitment: A transcript that stops becomes
+        a deterministic result. Missing inputs follow the neutral-input policy; if
+        checkpoints stop beyond tolerance, the valid run ends at the last receipted
+        checkpoint; replay determines the final state; the player normally becomes
+        FAILED or FORFEIT. Closing the browser does not escape a losing stake."
+    §16: "Before stake commitment: no financial entry exists; no loss." ENTRY_VOID
+        only "after commitment, before the first financial tick" when fewer than the
+        threshold of game/verify seats are available - a seat outage, not a player.
+    §13C: VOID only when no result reaches quorum and the fault is the operator's.
+    §14: VOID / ENTRY_VOID reachable only from PROVISIONAL.
+    In a player's words: once your stake is committed, walking away is not a
+    refund - the round replays what you sent and you normally lose (FAILED or
+    FORFEIT); only the seats failing you before your first tick refunds you
+    (ENTRY_VOID), or the committee failing to agree (VOID). PLAYER_LOST is not an
+    outcome in the spec or the code (DELIVERED, FAILED, FORFEIT, VOID, ENTRY_VOID).
+    NOT DEFINED ANYWHERE: "neutral-input policy" and "tolerance" appear only in
+    §15's sentence (lines 1754-1755). No old C# path exists (no disconnect, idle
+    or neutral-input code in unity-proto/Assets/Scripts): intent is §15 alone.
+  MEASURED TODAY    tools/no-mark-probe.mjs, two in-process seats (the
+                    closed-claim harness), deadline 900, both seats close:
+    (A) paid, seated (entry, handout, lock 201 at both), sends nothing:
+        both seats' replay "that transcript carries no ticks" - no result;
+        no ENTRY_VOID, no FORFEIT; /forfeit 409 "0 of 2 agree on any one run";
+        lock held, expiry 1200 > height 1000 -> the player's key refunds it.
+    (B) paid, first mark at tick 60 (receipted at both), then nothing:
+        both "that run is still LIVE at its last stored tick, so it came to
+        nothing yet" (verdict.js resultFrom) - no result; the same refund at expiry.
+    (C) free, seated, sends nothing: "that transcript carries no ticks" - no result.
+    What the other seat and the operator see: a seated entry with no result,
+    no record, no board row; the money path does nothing and the lock expires
+    back to the player. "Closing the browser does not escape a losing stake" is
+    not true today - before the first mark or after it.
+  THE GAP           the no-first-mark walk-away accounts for 1 of the 2 ways a
+                    stopped transcript ends with no result today (nothing sent;
+                    LIVE at the last receipted mark). Both miss the same rule:
+                    §15's "ends at the last receipted checkpoint ... becomes a
+                    deterministic result" is not built - the receipted prefix
+                    exists (canonicalTranscript), the ending of it does not. And
+                    2 of §15's terms have no definition to build to.
+  SMALLEST CHANGE   (needs two rulings first, not invented here)
+                    1. tolerance: which silence counts as "stopped" - proposed:
+                       the round's start deadline for the first mark (900 ticks,
+                       the rule seats already enforce), the round's close for a
+                       later mark.
+                    2. the outcome of a run ended that way: FAILED (it did not
+                       deliver) or FORFEIT (as the late start already is) for no
+                       first mark; FAILED for a run LIVE at its last receipted mark.
+                    Then, in protocol (a rule beside first-mark.js) and the node's
+                    close (verify/verdict): past tolerance, a run with no receipted
+                    mark, or LIVE at its last one, is signed with the ruled outcome
+                    and its score at that tick (0 with no mark), over the canonical
+                    transcript it has (empty with no mark). Core unchanged: it
+                    replays ticks; the protocol decides where a stopped run ends.
+                    VOID (§13C) and ENTRY_VOID (§16) unchanged.
+  WILL MEASURE      no-mark-probe again: (A) both seats store the ruled outcome/0,
+                    one resultId, 2 of 2, FINAL; /forfeit refused as a non-
+                    qualifier; the lock not forfeited to the player. (B) FAILED with
+                    tick 60's score, FINAL. (C) the free entry gets a result row.
+                    Controls: DELIVERED run unchanged; outage ENTRY_VOID, late-start
+                    FORFEIT, invented-closed-receipt 409 and no-quorum VOID tests
+                    unchanged. Then a fresh 2-of-2 federation: a paid walk-away's
+                    lock is not refunded at once (claimed at W4, parked; until then
+                    it expires - the loser money hole already listed).
+  NOT RUN THIS TURN suites (last at 3e3b22b, no code changed since: protocol
+                    500/500, node 565/565, client 286/286). Unity not run.
