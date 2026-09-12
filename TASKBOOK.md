@@ -32266,3 +32266,96 @@ M3.3-34 ONE SEAT REFUSED: §13C'S VOID AFTER THE RESULT WINDOW (2026-09-12)
                     296/296 - one-seat-refused 4/4, outage 9/9, receipt-carry 3/3,
                     no-quorum 5/5); client 286/286. EditMode and PlayMode not run
                     (no C#, jslib or core change).
+
+M3.3-34 THE LOBBY IS UNITY'S TITLE SCREEN (2026-09-12)
+  RULED             (Daniel 22:11) the lobby UI goes into Unity, not the HTML
+                    overlay; (22:12) it replaces the splash screen - PLAY starts
+                    the round, SPECTATE is always possible; (22:16) the lobby and
+                    every element of it fully visible in Unity on iOS and Android.
+                    2-of-2, keys, username and free play stay.
+  BEFORE            the bare root drew the lobby as an HTML overlay and did not load
+                    Unity at all ("a lobby is a list"); the player came back to
+                    Unity through the round link. The splash screen showed the
+                    rules, PLAY (offline) and SPECTATE.
+  DESIGN            the page keeps every trusted job - fetchLobby's per-seat
+                    signed listings and the 2-of-2 Join, the tab's identity key,
+                    the name rules - and draws nothing: it publishes the lobby as
+                    data (BLWP_LOBBY_VIEW) and actions (BLWP_LOBBY_ACT: join =
+                    the round's own link + play=1; the name and the key backup
+                    in the browser's own prompt, which a phone keyboard types
+                    into) and loads Unity at the bare root too. blwp.jslib carries
+                    both across (BlwpLobbyState / Join / EditName / KeyBackup /
+                    Shown). Unity (DailyLobby.cs, SplashScreen) draws the lobby in
+                    the title screen's copy area: who you are and the key's
+                    fingerprint with NAME and KEY, then the rounds (FREE, time
+                    left, seats agreeing, seated), the one PLAY joins picked out
+                    in gold; PLAY joins it (disabled until a round has 2 of 2),
+                    SPECTATE as before; arriving with play=1 the round starts
+                    without a second PLAY. Unity tells the page what it drew
+                    (BLWP_UNITY_LOBBY) so it can be measured and pressed.
+  PHONES            DailyLobby.MeasureLobby: arithmetic, buttons at least 34 px,
+                    NAME/KEY under the name on a narrow screen, a page button
+                    when more rounds are listed than fit. LobbyScreenTests checks
+                    it at iOS 375x667, 390x844, 430x932 and Android 360x800,
+                    412x915 - portrait and landscape, 1x and 2x - plus tablets and
+                    desktops: everything inside the panel, nothing overlapping, at
+                    least two round rows. First run: at 800x360 only one row fit
+                    (55 px): the title screen's vertical pad was the WIDTH's 7%
+                    (48 px on a phone held sideways). Now also at most 7% of the
+                    height (SplashScreen.Measure's padV); passes everywhere.
+  EDITMODE          195: 191 pass, 1 red, 3 skipped - the red is the listed
+                    CombatFxTests.RifleFireProducesAFlashAndATracer (first run:
+                    190, the layout red above).
+  LIVE, FIRST BUILD build 0.0.1157, deployed to btc-logistics-core (212fbd3b; the
+                    core alias served the same page and daily.json). lobby-phone-probe
+                    (CDP device emulation), Unity's own report of what it drew:
+                      iPhone portrait    390x844 @3     Unity screen 1170x2532
+                      iPhone landscape   844x390 @3     2532x1170
+                      Android portrait   412x915 @2.625 1082x2402
+                      Android landscape  915x412 @2.625 2402x1082
+                      desktop            1280x800 @1    1280x800
+                    each: the lobby drawn by Unity, "you" lush-orca-5592, round
+                    2a1ef6b0 "2 of 2 seats" joinable and picked, PLAY enabled, 7 of
+                    7 elements inside the screen, the HTML overlay 0 px.
+                    THE SCREENSHOTS showed what the rectangles did not: (1) on all
+                    four phone views the "You are ... (made from your key)" block
+                    wrapped to a third line in a two-line box - "You are" and the
+                    identity key clipped; (2) Unity draws at the phone's full 3x,
+                    and the title screen's fonts are device pixels - its text about
+                    8 points high on an iPhone. Fixed: the block is shorter and set
+                    smaller until it fits its box; the whole title screen is laid
+                    out in CSS pixels and drawn at the canvas's pixels-per-CSS-pixel
+                    (BlwpUiScale, GUI.matrix). LobbyScreenTests now also at 2.625x
+                    and 3x.
+  LIVE              (pending: the rebuild)
+
+M3.3-34 ONE SEAT REFUSED, THE DIRECT PATH: A FIRST MARK THAT REACHED ONLY THE SEAT THAT REFUSED IT (2026-09-12)
+  HOLE              16a4d96 kept a refused on-time first mark only when another
+                    seat FORWARDED it. The player's own send to a seat that
+                    refused it (/play, "stake not seen") kept nothing, and a refused
+                    mark is never forwarded - so no seat knew the player had
+                    started.
+  BEFORE            one-seat-refused.test.js (8), B without the stake lock, the
+                    player's first mark to B only: B "error stake not seen" twice,
+                    refused record none; both seats signed the walk-away's
+                    FORFEIT/0 at the close, FINAL 2 of 2, public /results 2 - the
+                    seat's own refusal (§13C: the operator side's fault) turned
+                    into the player's forfeit.
+  CHANGE            blwp-node only. round.onTimeFirstMark: one check of the
+                    player's own signed, on-time first mark of an entry seated here
+                    (putRefusedFirstMark now uses it). server /play: a first mark
+                    refused for the stake not seen is kept; GET /refused-first-mark
+                    serves it. verify carryReceipts: each peer's refused mark is
+                    read and checked again (refusedMarks); #neverStarted is false
+                    while one is shown; #noQuorum takes it as the evidence at a
+                    seat that holds no mark.
+  AFTER             (8): B keeps it; in the window A HOLDING "no quorum yet: 1
+                    seat(s) that were up refused the player's on-time first mark",
+                    B HOLDING on its own record, nothing signed; after it VOID at
+                    both - finality VOID, /closing VOID, /results 0 + x-no-quorum
+                    VOID, forfeit 409 (A: "that entry is VOID (§13C) ..."), lock
+                    held. Cases (1), (2), (4), (5/6) unchanged: 5/5.
+  COUNTS            foreground, timeout 180, --test-timeout=120000: node 575/575 over
+                    99 files (1-48 278/278; 49-99 297/297 - one-seat-refused 5/5,
+                    outage 9/9, receipt-carry 3/3, no-quorum 5/5, verdict 5/5),
+                    client 286/286; protocol unchanged (501/501). No C#.
