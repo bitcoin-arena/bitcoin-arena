@@ -16,9 +16,9 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: M3.3-34 lobby still open. Daniel 09:04: the lobby must support
-2-of-2 consensus (two seats, threshold 2), not 5-of-7. Same letter as keys,
-username, free play. Then ENTRY_VOID.
+LIVE LETTER: M3.3-34 lobby still open. Daniel 22:11: the lobby UI is not in
+Unity. It must be Unity UI, not the HTML overlay. Same letter: 2-of-2,
+keys, username, free play. Then ENTRY_VOID.
   DONE so far (TASKBOOK): free lobby link, join, play, ghost; generated key
   and custom username locally. DONE: the other player sees the chosen name
   (seated view and lobby row, after a repaint and a reload), from a record the
@@ -787,6 +787,9 @@ HARD (Daniel 2026-09-11 14:19): V1 custody is the STAKE LOCK in FEDERATION.md
 and spec v4.6.2 §23. No single node is needed and no single node can take
 money: no gateway, lnd or patched fedimintd holds a round's stake. Only
 recognised, tested parts; no Lightning multisig node of our own.
+
+HARD (Daniel 2026-09-12 22:11): the lobby UI is in Unity, not HTML. Same
+letter M3.3-34. Do this now.
 
 HARD (Daniel 2026-09-12 09:04): lobby supports 2-of-2 consensus. Two seats,
 threshold 2. Same letter M3.3-34.
@@ -1624,11 +1627,9 @@ IN THIS ORDER (unparked):
                                         33.500 m the ground was worth. The fix
                                         is 36's, again: the core owns the map's
                                         boxes and Unity draws them.
-   M3.3-34  lobby + free play          M3   OPEN — Daniel 09:04: 2-of-2
-                                        consensus in the lobby (2 seats,
-                                        threshold 2). Also 07:45/07:48/08:41:
-                                        list rounds, free/no Lightning, keypair,
-                                        username, custom overwrite, play, ghosts.
+   M3.3-34  lobby + free play          M3   OPEN — Daniel 22:11: lobby UI in
+                                        Unity, not HTML. Also 09:04 2-of-2;
+                                        keys, username, free play, ghosts.
    M3.3-19  optional stake / ghost     M3   OPEN — Daniel 11:15. Satoshis are
        without money                      optional. A free round (stake 0) seats
                                         without Lightning. Ghosts must be
