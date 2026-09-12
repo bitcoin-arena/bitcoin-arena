@@ -1657,10 +1657,12 @@ IN THIS ORDER (unparked):
                                         PLAY seats and starts, SPECTATE always;
                                         2-of-2, keys, username kept. Open under
                                         the letter: §15 text; ENTRY_VOID order.
-   M3.3-19  optional stake / ghost     M3   OPEN — Daniel 11:15. Satoshis are
-       without money                      optional. A free round (stake 0) seats
-                                        without Lightning. Ghosts must be
-                                        testable with no wallet. Screen:
+   M3.3-19  optional stake / ghost     M3   done (TASKBOOK "M3.3-19", 2026-09-10) —
+       without money                      a free seat on a daemon with no
+                                        Lightning is 201 FREE; the watcher's
+                                        ghost follows (ghost-socket.test.js);
+                                        the Daily's rounds are free and PLAY
+                                        seats a player with no wallet. Screen:
                                         daniel-screens/2026-09-10-1115-free-seat-refused.png
    36  M2 live ghost pose             M2   OPEN — the ground half is done and
                                         measured. Daniel 21:23: heat goes in
