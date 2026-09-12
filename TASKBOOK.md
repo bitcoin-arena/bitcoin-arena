@@ -30419,3 +30419,42 @@ M3 W3, THE CLAIM KEY A LOCK MAY NAME (§23.1 step 0, F3) - MEASURED BEFORE
                     claim key); the page's bundle has no way to check one; the
                     page's entryFor writes claim_key_attestation_ref = 32 zero
                     bytes; claimKeyIsAttested callers: node src 0, client src 0.
+
+M3 W3: FIXED - A LOCK CAN ONLY NAME A CLAIM KEY THE ROUND'S SEATS ATTESTED
+  CHANGE            blwp-node GET /claim-key?round=: a SEATED node signs
+                    (round_id, claim_pk, its key) - protocol claim-key.js's
+                    attestation, then a BIP-340 signature over its id - with
+                    claim_pk from one lookup shared with /lock (claimKeyFor, else
+                    the seat's DKG committee key); an unseated node 409, a seat
+                    with no key 409. blwp-client join.js attestedClaimKey asks every
+                    node the page holds, groups the answers by key and counts them
+                    with claimKeyIsAttested over the round's settlement seats at
+                    its threshold; roundLocks = a paying round naming a federation;
+                    entryFor names the attested set as claim_key_attestation_ref
+                    and refuses a locking round without one. The page (WebGL
+                    template index.html) asks after it learns the seats and before
+                    it deals, and refuses the seat by name. Hold-invoice rounds
+                    (federation_id zero) keep a zero attestation. claim-key.js's
+                    private helpers renamed (is32 collided in the one-scope
+                    bundle). Bundle rebuilt, copied to the template, pinned
+                    (e1692760...); bundle-fresh holds.
+  FACTS (after)     before (aed31be): /claim-key 404, no page check, entry ref
+                    zero, claimKeyIsAttested callers node 0 / client 0. After: 2
+                    seats both attest - accepted 2 of 2, the entry names the set
+                    (not zero); 7 seats: 5 attest one key - accepted 5 of 5
+                    needed, 4 - refused "4 of 7 seats attest this claim key, and
+                    this round needs 5"; a seat serving its own key - alone
+                    refused (1 of 7) and entryFor refuses, among the others not
+                    taken (the attested key, 6 of 7); a stranger's signature
+                    counts for nothing (1 of 2); an unseated node 409; a locking
+                    round with no attested key gets no entry. Callers: client src
+                    1 (join.js, the page's path), node src 0 (a seat attests; it
+                    does not count others).
+  MUTANTS           the page takes a key without counting -> 3 of 5 W3 tests
+                    red; entryFor drops its refusal -> 2 red; a node attests
+                    without being seated -> 1 red.
+  NOT THIS SLICE    the lock itself (W1a/W1b); a seat checking the entry's
+                    attestation reference (it would need the player's signature
+                    set handed over).
+  COUNTS STOOD ON   protocol 487/487, node 537/537 (sequential chunks, 0
+                    cancelled), client 254/254. Core not touched. No Unity/WebGL.

@@ -126,6 +126,11 @@ unblocked work. Park only inbound, which-guardians, and named rulings.
   FOUND (spec, needs a ruling): §23.1 step 4 locks at height + 144, step 5
   verifies >= current + 144 - a lock made as step 4 says is refused one block
   later (measured 450 vs 316 + 144). Margin, or verify against lock height.
+  DONE (W3 of 12, TASKBOOK): seats sign and serve (round_id, claim_pk) at
+  /claim-key; the page counts them with claimKeyIsAttested (its first caller)
+  before it deals, refuses a key short of the round's threshold (4 of 7
+  refused, 5 accepted; one seat's own key refused), and names the attested set
+  on the entry. Before: no door, no check, a zero reference. Next: W1a, W1b.
   DONE (13A re-run, the half that needs no new field): a valid objection's
   SUSPENDED result is re-run by the committee - each seat replays again and
   signs a re-run result tied to the contradicted run - and 5 of 7 on one
