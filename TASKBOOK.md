@@ -32601,3 +32601,39 @@ M3.3-34 PATH 1: A SECOND ON-TIME FIRST MARK AFTER A VOID IS FORFEIT, NO REFUND (
                     14/14, forfeit 2/2; 49-100 299/299 in 64 s - outage 9/9,
                     no-quorum 5/5, one-seat-refused 5/5); core 91/91; protocol
                     501/501; client 286/286. No C#.
+
+M3.3-34 PATH 2: THE LATE FIRST MARK IS PULLABLE PROOF - A LOST FORWARD STILL CLOSES FORFEIT AT BOTH (2026-09-13, ruled)
+  RULE              the seat holding the late mark serves it; a Void seat that
+                    missed the forward still gets the pair after the window.
+  BEFORE            first-mark 5e in process: A down, B ENTRY_VOID; A back; B down
+                    while the late mark goes to A (its forward to B lost); B back.
+                    After the window, before any door: A and B no decision
+                    (no-quorum none, finality none, proof 0 at both) - a split
+                    (ENTRY_VOID / a late start). Doors 409 x3 only because B's door
+                    showed A the Void and A made the pair then. Fresh federation
+                    (void-then-late.mjs MODE=lostforward, A down while B takes the
+                    late mark): 92 s, nothing decided at either; A's door tried to
+                    gather the refund ("1 of the 2 seats the forfeit needs
+                    committed"), B refused; redeem and refund refused, lock held
+                    (145 blocks left) - no refund on 2 of 2 only because B refused.
+  CHANGE            server: GET /late-first-mark serves the late first mark a seat
+                    keeps (204: none). verify #equivocationProven pulls each peer's
+                    /late-first-mark and /entry-void first mark and pairs them with
+                    this seat's own first mark (voided, late or held); a proven pair
+                    is kept here (path 1's putFirstMarkPair). tools/round-2of2.mjs:
+                    restartA (seat A served again from the same options).
+  AFTER             5e: pulled at the close - A and B FORFEIT (no-quorum), proof 1 at
+                    both, before any door; doors B 409, A 409, B again 409; A no Void;
+                    no forfeit kept; lock held. Fresh federation: locks 201/201;
+                    FORFEIT at both 10.4 s after the close, proof 1 at both; doors
+                    409 x3; redeem refused; refund before expiry refused ("locktime
+                    has not yet passed"); lock HELD, 145 blocks left.
+  UNEXPLAINED       one MODE=lostforward run before this one: the lock handoff came
+                    back 409/409 (committed 0) before any path-2 code ran, so both
+                    seats saw no stake and closed VOID - not a measurement of this
+                    path. The refusal text was not printed; the harness now prints
+                    it (lockWhy) and stops when the seats do not commit the lock.
+                    The rerun: 201/201. 1 of 8 federation runs this letter.
+  COUNTS            foreground, timeout 180, --test-timeout=120000: node 581/581 over
+                    100 files (1-48 282/282 in 91 s with 5e; 49-100 299/299 in 65 s);
+                    core 91/91; protocol 501/501; client 286/286. No C#.

@@ -1658,10 +1658,10 @@ IN THIS ORDER (unparked):
                                         iPhone and Android, PLAY seats and
                                         starts, SPECTATE always. 5c ruled and
                                         closed (dde56b9). Path 1 (a second
-                                        on-time mark after a Void) closed:
-                                        FORFEIT at both, no refund, lock held.
-                                        Still open: a Void seat that missed the
-                                        late mark's forward (path 2); the
+                                        on-time mark after a Void) and path 2
+                                        (the late mark's forward lost, pulled
+                                        at the close) closed: FORFEIT at both,
+                                        no refund, lock held. Still open: the
                                         no-quorum FORFEIT on a hold (path 3);
                                         the lock past expiry (path 5).
    M3.3-19  optional stake / ghost     M3   done (TASKBOOK "M3.3-19", 2026-09-10) —
