@@ -37,8 +37,10 @@ username, free play. Then ENTRY_VOID.
   Join). A tunnel restart means deploying the launcher's new daily.json.
   DONE (2-of-2, TASKBOOK): each seat signs its listing of a round; the page
   offers Join only when both of the round's seats say open and seated. With
-  one seat down the row says 1 of 2 and has no Join. Measured in the built
-  page locally; not deployed.
+  one seat down the row says 1 of 2 and has no Join. LIVE on the Daily page
+  (2026-09-12, measured there): both up, 2 of 2 and Join; seat B down, 1 of 2
+  and no Join; back, Join again. Reached through the quick tunnels in
+  daily.json; the durable funnel route still needs a root action.
   DONE (late start, TASKBOOK): a round names a start deadline in ticks after
   the join tick, or gets the page's measured window (900). Seats refuse a first
   mark signed after that line and record FORFEIT (the player's own late start,

@@ -32054,3 +32054,40 @@ M3.3-34 THE DAILY'S CLOSE: RETRIES SURVIVE A RESTART AND OUTLAST THE WINDOW (202
                     Stake 0 on the Daily: no lock was held, so no lock claim or
                     refund was measured here - that is step 6/7's fresh-federation
                     walk-away. Unity not run (no C# changed).
+
+M3.3-34 THE 2-OF-2 SIGNED LOBBY LISTING, MEASURED ON THE LIVE DAILY PAGE (2026-09-12)
+  WHAT              abfbdc4's listing: each seat signs its listing of a round; the
+                    page offers Join only when both of the round's seats say open
+                    and seated. PRIORITIES said "measured in the built page locally;
+                    not deployed" - the live look waited on the seats' public route
+                    (the root funnel paths, still 502).
+  ALREADY LIVE      no new deploy: btc-logistics-core.pages.dev serves the build of
+                    5836750 (abfbdc4 is its ancestor). /blwp-client.js 527752 B,
+                    sha cee239e1 = HEAD's dist and template bundle; / (58582 B) =
+                    the local webgl-lobby build and carries abfbdc4's page lines
+                    (fetchLobby with the signature verify, rows from seatsAgree /
+                    needed / joinable); daily.json = the launcher's (62007255).
+                    Last deploy of that folder e6abc6a5 (18:19Z, daily.json only).
+  LIVE LOOK         lobby-probe (CDP, read-only, joins nothing) on the bare root,
+                    lobby from daily.json, launcher pid 3570186:
+                    18:44:33 both up   rounds 90d73bdc and bce581ef: "2 of 2 seats
+                                       agree", Join on both rows; both seats'
+                                       /rounds 200, both rounds open, seatedHere,
+                                       a 64-byte signature on each
+                    18:44:42 B down    (SIGUSR1) both rows "1 of 2 seats agree -
+                                       waiting for 1 more", no Join; seat A's
+                                       /rounds still signed, seat B's tunnel answers
+                                       an HTML error page
+                    18:44:51 B back    (SIGUSR2) both rows 2 of 2 with Join again
+  ROUTE             the page reaches the seats through the two Cloudflare quick
+                    tunnels named in daily.json (facing-attachment-klein-initially /
+                    sit-benjamin-thing-century .trycloudflare.com, cloudflared up
+                    since 15:15Z); daily.json is deployed beside the page and is
+                    redeployed whenever the launcher restarts. A quick tunnel's name
+                    changes only when cloudflared restarts - then daily.json must be
+                    redeployed. The durable route stays the root funnel map (/blwp-a
+                    -> 100.74.66.98:18080, /blwp-b -> :18081; THE ACTION above), not
+                    doable without root here.
+  COUNTS            no code, test or page file changed in this step, so no suite
+                    re-run for it; the tree's last counts (219d086): protocol
+                    501/501, node 564/564, client 286/286. Unity not run.
