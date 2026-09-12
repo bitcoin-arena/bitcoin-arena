@@ -74,9 +74,11 @@ username, free play. Then ENTRY_VOID.
   2). It keeps retrying past the objection window (live: B down 640 s, then
   FORFEIT 0 and DELIVERED 61, one transcript each, FINAL 2 of 2), and the hold
   and the round's beacon are kept in the seat's store across a restart.
-  DONE (late start at close, measured live): a first mark after join + 900 is
-  FORFEIT 0 at the close, signed by both seats like a walk-away, FINAL 2 of 2,
-  no refund; a seat holding only a late mark waits while a seat is down. Still
+  DONE (late start at close, a390ca0, TASKBOOK): a first mark after join + 900
+  is FORFEIT 0 at the close, signed by both seats like a walk-away, FINAL 2 of
+  2, no refund; a seat holding only a late mark waits while a seat is down.
+  Live Daily b345eff6: late start FORFEIT 0, walk-away FORFEIT 0, played run
+  FAILED, each FINAL 2 of 2. blwp-node 570/570. Still
   open here: one-seat-refused VOID, §15 text,
   fresh-federation walk-away, Lightning hold and objected re-run.
   DONE (W5b, TASKBOOK): on a fresh regtest federation, with the seats' own

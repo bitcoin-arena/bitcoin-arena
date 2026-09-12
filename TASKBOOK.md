@@ -32165,3 +32165,21 @@ M3.3-34 LATE START AT THE CLOSE: FORFEIT 0, SIGNED BY BOTH SEATS, FINAL 2 OF 2 (
                     +6 late-start cases - and 49-98 292), client 286/286. The node
                     chunk 49-98 ran with the live harness's Chrome at load 13; green.
                     EditMode and PlayMode not run (no C#, jslib or core change).
+
+M3.3-34 LATE START AT THE CLOSE - RECORDED DONE (2026-09-12)
+  COMMIT            a390ca0 "a late start is FORFEIT 0 at the close, signed by both
+                    seats, final 2 of 2, no refund" (pushed; origin matches).
+  LIVE              Daily round b345eff6, both seats up, the same at seat A and B:
+                      run              entry     result     transcript  marks  signers  finality
+                      late start (L)   839303a6  FORFEIT/0  3b192006        0        2  FINAL
+                      walk-away (W)    3a6893ab  FORFEIT/0  03ebeb78        0        2  FINAL
+                      played (P)       6fb0b20d  FAILED/0   dcea4169      103        2  FINAL
+                    L's first mark at 1320 against 900, refused at A and recorded at
+                    both; one transcript per run, entryVoid false, nothing HOLDING;
+                    public /results 2 signatures per run at each seat. Stake 0: no
+                    lock, nothing refunded.
+  TESTS             blwp-node 570/570 across 98 files (1-48 278/278, 49-98
+                    292/292), per-file, foreground; no reds. Earlier in the step
+                    protocol 501/501, client 286/286; EditMode, PlayMode not run.
+  PARKED            the guard case's leftover - seat B holding an on-time first
+                    mark and a late-start record from A's forward - is ENTRY_VOID's.
