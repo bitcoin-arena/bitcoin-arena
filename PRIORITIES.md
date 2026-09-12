@@ -32,6 +32,9 @@ username, free play. Then ENTRY_VOID.
   through two user-space Cloudflare quick tunnels - both up: rows with Join;
   seat B down: 1 of 2, no Join. The tunnel names change on a restart; the
   durable route is still the root funnel map /blwp-a, /blwp-b (TASKBOOK).
+  DONE: the bare root btc-logistics-core.pages.dev shows that live lobby too,
+  from daily.json deployed beside the page (both up: Join; B down: 1 of 2, no
+  Join). A tunnel restart means deploying the launcher's new daily.json.
   DONE (2-of-2, TASKBOOK): each seat signs its listing of a round; the page
   offers Join only when both of the round's seats say open and seated. With
   one seat down the row says 1 of 2 and has no Join. Measured in the built

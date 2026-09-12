@@ -31627,3 +31627,39 @@ M3.3-34 THE DEPLOYED DAILY LOBBY LISTS A JOINABLE 2-OF-2 ROUND (no root; 2026-09
                     root is still the offline daily.
   COUNTS            this turn, foreground, timeout 180 + --test-timeout=120000:
                     protocol 500/500, node 565/565, client 285/285. Unity not re-run.
+
+M3.3-34 THE DAILY'S BARE ROOT SHOWS THE LIVE 2-OF-2 LOBBY (2026-09-12)
+  BEFORE            https://btc-logistics-core.pages.dev/ with no query was the
+                    offline daily: a visitor saw the live round only with the lobby
+                    link (node=, bond=, advert= in the address).
+  CHANGE            daily.json, deployed beside the page, names what the lobby link
+                    names - the two seats, the bond door, the signed advertisement
+                    - and nothing else. lobby.js `dailyLobbySearch` turns it into
+                    that link's query and holds it to `lobbyQuery`'s rules; a file
+                    naming a round, one seat, a non-URL, a bad advert or no bond is
+                    no lobby (lobby.test.js), and the root stays the offline daily.
+                    index.html reads it only when the address carries no query, and
+                    builds Join links from that query. run-2of2.mjs writes
+                    daily.json beside lobby-url.txt. The page trusts nothing a link
+                    would not: the seats are checked by bond, advert and contract
+                    exactly as from a link (directory.js: "a page may still carry
+                    the bytes").
+  DEPLOYED          52e4c8b8.btc-logistics-core.pages.dev; the alias serves the same
+                    daily.json (advert = the running launcher's, restarted 13:26:18Z
+                    so its own code wrote the file) and the new index. Bundle
+                    sha256 cee239e1... pinned. btc-logistics-war untouched.
+  MEASURED          headless Chrome on https://btc-logistics-core.pages.dev/ - the
+                    bare root; the address stayed bare; BLWP_LOBBY_FROM "daily.json";
+                    Unity not loaded (a lobby is a list):
+                    both up   round 92dc0073 "2 of 2 seats agree", Join; 0 errors
+                    B down    (SIGUSR1, :18081 closed) "1 of 2 seats agree -
+                              waiting for 1 more", no Join; the 2 errors are the
+                              page's fetches to B
+                    B back    (SIGUSR2) 2 of 2, Join; 0 errors
+  LIMIT             the tunnel names change when cloudflared restarts; then the
+                    launcher is restarted with the new BLWP_WSS_* and its new
+                    daily.json deployed with the page. The durable route is still
+                    the root funnel map (above).
+  COUNTS            foreground, one file per node --test under timeout 180,
+                    --test-timeout=120000: protocol 500/500, node 565/565, client
+                    286/286 (+1: daily.json). Unity not re-run.
