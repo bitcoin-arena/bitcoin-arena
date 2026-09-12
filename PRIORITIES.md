@@ -25,6 +25,9 @@ unblocked work. Park only inbound, which-guardians, and named rulings.
   over the lock's contract id at a door; a loser's is 409 and stays held; the
   page verifies it and redeems (a later session from the seed too), then
   withdraws. preimage.js's "qualifies = DELIVERED" is fixed inside it.
+  DONE (W5b piece 1, TASKBOOK): the seats forfeit a qualifier's lock after the
+  window - verifies under the claim key, both keep it; a loser's and a
+  below-score Delivered run's are 409. Next piece: the page redeems it.
   THEN (unblocked): seats decide ENTRY_VOID (§16) - nothing in the node makes a
   Void today. Result-window Void stays parked.
   MONEY HOLE: nothing claims a loser's lock until W4, and W4 is parked behind

@@ -30810,3 +30810,42 @@ M3 W5b, THE SEATS' FORFEIT AND THE PAGE'S REDEEM - MEASURED BEFORE
                     secret searched with the core's own replay (harness work,
                     labelled); a short objection window through the round's own
                     objectionWindowMs.
+
+M3 W5b PIECE 1: THE SEATS FORFEIT A QUALIFIER'S LOCK, AND ONLY A QUALIFIER'S
+  BUILT             blwp-node/src/forfeit.js: a seat rebuilds the forfeit's
+                    message - the lock's contract id - from the lock IT verified
+                    (the federation port hashes it), and signs only when its own
+                    finality says FINAL (window closed) and its own result
+                    qualifies (protocol isQualifier: DELIVERED and score >=
+                    min_score, now one rule for the payout table, preimage.js and
+                    the forfeit). One nonce pair per message, in memory; one share
+                    per commitment list. Doors: POST /forfeit-commit,
+                    /forfeit-share, /forfeit-signature (between seats); GET
+                    /forfeit (public). Each seat keeps the combined signature
+                    (forfeits table) - its record that it released the stake.
+  FOUND             a seat that reaches no Lightning (a lock round's) stopped its
+                    finality watch after one pass: settleTheStakes returned
+                    before computing what was waiting, so the seat that posted
+                    first never gathered the other's posting - "1 of 2
+                    settlement seats have posted", never FINAL (measured: both
+                    forfeit tests timed out at 20 s). It now hands back what is
+                    waiting and keeps posting and gathering until FINAL, as a
+                    Lightning seat always did.
+  MEASURED          forfeit.test.js (two in-process seats, the claim key's
+                    generation started by hand - labelled; the shipping path is
+                    claim-key-own.test.js):
+                      before the close          409 "no forfeit before the result is final"
+                      winner after the window   200; over the lock's own contract id,
+                                                under the round's claim key; verifies
+                                                (BIP-340); seat B keeps and serves the same
+                      loser (FAILED, score 128) 409 "not a qualifier"; kept by 0 seats;
+                                                its lock still held
+                      Delivered, score 12,      409 "not a qualifier" (min_score 100)
+                      below min_score
+                      one seat's share alone    does not verify under the claim key
+                    MUTANTS: the qualifier refusal removed -> the loser's forfeit
+                    200 and kept by 2 seats, 2 of 2 tests red; the watch's early
+                    return restored -> 1 of 2 tests red (the other reached FINAL
+                    by the order of the two closes - timing, said so).
+  COUNTS            protocol 487/487, node 549/549, client 271/271 (bundle
+                    rebuilt, d5ae8135.. - payout.js is in it).
