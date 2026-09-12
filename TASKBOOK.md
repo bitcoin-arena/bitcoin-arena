@@ -30774,3 +30774,39 @@ M3 W5a: THE PLAYER'S REFUND AND WITHDRAW
                     the bundle; W5b's redeem puts them on the page); fee locks
                     (parked); a testnet4 withdraw needs a gateway with liquidity
                     (parked with inbound). Not deployed.
+
+M3 W5b, THE SEATS' FORFEIT AND THE PAGE'S REDEEM - MEASURED BEFORE
+  SLICE             W5b (PRIORITIES): §23.2's first row - "DELIVERED (qualifying):
+                    forfeit the stake lock -> it returns to the player's key;
+                    threshold settlement signature over the lock, published; the
+                    player's own client redeems it, and only the player can".
+  TODAY (read)      a seat forfeits a verified lock: NO - the node's only cancel
+                    is the Lightning hold invoice's (lnd-port, custody). A FROST
+                    signature over a lock's contract id at any door: NO - the only
+                    daemon FROST is PoolSigning, which signs taproot sighashes of
+                    pool spends it rebuilt, under the TWEAKED pool key; a forfeit
+                    is an untweaked BIP-340 signature by claim_pk over the
+                    contract id. The page verifies and redeems: NO - the wasm lock
+                    client has refund, not the Cancel(sig) witness (only the
+                    native rehearsal tool's redeem has it).
+  HOLES, AS RULED   (a) VOID: protocol names VOID/ENTRY_VOID and no node code
+                    produces either (replay.js: "cannot be"); §16's ENTRY_VOID is
+                    unbuilt, the result window's VOID parked. Out of W5b; ENTRY_VOID
+                    (§16) is the next unblocked item. No Void is recorded by hand.
+                    (b) "qualifying" is DELIVERED and score >= min_score (§18);
+                    preimage.js has qualifies = outcome === 'DELIVERED' - fixed in
+                    W5b. A Delivered run below min_score gets no forfeit; its lock
+                    takes the default refund at expiry. (c) nothing claims a
+                    loser's lock until W4 (parked behind the fee-lock ruling): a
+                    loser refunds at expiry and loses only fees until then. A
+                    loser's forfeit request is 409 and the lock stays held.
+  THE RULE          PoolSigning's: a seat signs only a forfeit it rebuilt from its
+                    own verified lock record, only when its own finality says the
+                    run qualifies and is final with the window closed; nonces in
+                    memory, one message per nonce pair; the seats exchange
+                    commitments and shares; the combined signature at a public
+                    door.
+  HARNESS           a delivering run under the round's real randomness: a world
+                    secret searched with the core's own replay (harness work,
+                    labelled); a short objection window through the round's own
+                    objectionWindowMs.

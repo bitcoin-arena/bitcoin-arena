@@ -20,9 +20,18 @@ LIVE LETTER: M3 - A ROUND FOR TESTNET SATS ("M3 is done when"). Special
 conform-to-v4.6.2 is done (a1e8d6e / 875cef1). Continue M3. Daniel 18:41:
 do every M3 slice that does not need him. Do not wait. Do not ask Go on
 unblocked work. Park only inbound, which-guardians, and named rulings.
-  NEXT (top): W5b - the seats forfeit a Delivered lock after finality and the
-  objection window (a Void one at once, never a loser's), FROST over the lock's
-  contract id at a door, and the page verifies it and redeems.
+  NEXT (top): W5b - the seats forfeit a QUALIFYING Delivered lock (DELIVERED
+  and score >= min_score, §18) after finality and the objection window, FROST
+  over the lock's contract id at a door; a loser's is 409 and stays held; the
+  page verifies it and redeems (a later session from the seed too), then
+  withdraws. preimage.js's "qualifies = DELIVERED" is fixed inside it.
+  THEN (unblocked): seats decide ENTRY_VOID (§16) - nothing in the node makes a
+  Void today. Result-window Void stays parked.
+  MONEY HOLE: nothing claims a loser's lock until W4, and W4 is parked behind
+  the fee-lock ruling - so until then a loser refunds the lock at expiry and
+  loses only fees.
+  RULED: a Delivered run below min_score is not a qualifier - no forfeit; its
+  lock takes the default refund at expiry.
   DONE (W5a, TASKBOOK): a player refunds a stake lock from a later session
   holding only the seed - refused before the lock's expiry, accepted after
   (975360 of 980000 msat credited, the lock gone, a second refund refused),
