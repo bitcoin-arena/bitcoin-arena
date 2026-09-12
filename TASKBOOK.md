@@ -31329,3 +31329,70 @@ M3 ENTRY_VOID (§16), THE CLOSED-CLAIM TRUST BOUNDARY: ONE SEAT'S WORD IS NOT A 
                     (VisibilityTests.ArmiesAreActuallyDrawn, .RoadsAreActuallyDrawn).
                     Nothing red beyond them. Measured in-process only (closed-claim
                     probe, outage.test.js (f)); no fresh-federation run for this beat.
+                    - The fresh-federation run follows below.
+
+M3 ENTRY_VOID (§16), THE CLOSED-CLAIM TRUST BOUNDARY ON A FRESH FEDERATION
+  HOW               tools/closed-claim.mjs, run by
+                    OUTAGE_SCRIPT=closed-claim.mjs FEDIMINT_BIN=<released v0.12.0>
+                    LOCK_BIN=<blwp-stake-lock> bash tools/outage-regtest.sh
+                    Stock fedimintd 0.12.0, 4 guardians, one gateway, regtest; the
+                    Daily's 2-of-2 round naming it, the seats making the claim key
+                    themselves (attested 2 of 2), start deadline omitted (900). Two
+                    players lock 980,000 msat each as the page does, both seats
+                    commit both locks (201/201). Both seats up and open throughout.
+                    Seat A lies - written into its own store, as a lying seat can;
+                    B is reached only over HTTP. X's lock expires at 460, Y's at 464.
+  (1) FORGED        X sends nothing. A invents X's first mark (a key not X's session
+                    key), signs its own receipt over it, plants its own ENTRY_VOID,
+                    and hands B the mark with "closed".
+  (2) REAL          Y's own on-time first mark (tick 60) reaches A only; A keeps it
+                    from B, plants its own ENTRY_VOID ("closed") and hands B the
+                    same claim with Y's real mark and A's receipt.
+  MEASURED BEFORE   ca10964 (the parent: no player-signature check in voidHere), the
+                    same harness on its own fresh federation (up in 135 s, exit 0),
+                    block 314 throughout; X's lock expires at 459, Y's at 464:
+    (1)             B: 409 {entryVoid: true} "... the on-time first mark had 1 of
+                    2"; B records ENTRY_VOID though X sent nothing; round open.
+                    Forfeit 257 ms, kept by both seats. X REDEEMED through the seats
+                    at block 314, before 459 - the paid lock gone for a run never
+                    played. X's lock at the end: none.
+    (2)             as after: B ENTRY_VOID (closed), forfeit 654 ms, verifies; a
+                    stranger's key and seat A's key refused ("The transaction's
+                    signature is invalid"); Y redeems at 314 < 464, credited
+                    975,360, withdraw 961,392 SETTLED; again: "No contract found".
+  MEASURED AFTER    HEAD 025a441, federation block 314 throughout:
+    (1)             B: 409 "the signature does not verify under the entry's session
+                    key"; B's /entry-void 404; B holds no mark; B's round open.
+                    Forfeit asked 20.8 s: none - A "1 of the 2 seats the forfeit
+                    needs", B 409 "no forfeit before the result is final ... 0 of 2
+                    agree on any one run"; kept by neither seat.
+                    X before the expiry: redeem through the seats refused (no
+                    forfeit); a forfeit A signed alone over the lock's contract id:
+                    forfeit_verifies false, the guardians "The forfeit signature is
+                    invalid"; refund: the guardians "The contracts locktime has not
+                    yet passed". X's lock HELD at the end, 146 blocks left.
+    (2)             B: 409 {entryVoid: true} "offered the on-time first mark only
+                    after the start deadline had passed; ... 1 of 2"; B records
+                    ENTRY_VOID (closed); round open. Forfeit 431 ms, verifies under
+                    the round's claim key, kept by both seats; lock held, 150 left.
+                    The real forfeit with a stranger's key and with seat A's node
+                    key, at the guardians: both refused, "The transaction's
+                    signature is invalid" (signer is not the refund key); lock held.
+                    Y redeems from the seed: accepted, block 314 < 464, credited
+                    975,360 msat (fee 4,640); withdraw Success, lnd SETTLED 961,392
+                    msat. The same forfeit again: "No contract found"; lock gone.
+                    exit 0; federation up in 133 s.
+  WHAT IT MEANS     A seat's own word and receipt void nothing: the paid lock stays
+                    held and no key opens it before expiry. A seat that really holds
+                    the player's signed first mark can still close it early and push
+                    "closed" - a 2-of-2 veto, which either seat always has by
+                    withholding receipts - and the forfeit then pays only the
+                    player's refund key: not a stranger, not a seat.
+  COUNTS            Foreground, one file per node --test under timeout 180,
+                    --test-timeout=120000: protocol 497/497 (496 in *.test.js + 1 in
+                    engine-check.js), node 564/564 (558 in *.test.js + 6 fixture
+                    files at 1 each: lock-fixture, pool-fixture, curve,
+                    window-fixture, seating, planted-marks), client 279/279. No red.
+                    Unity untouched since the runs above (no C#, jslib or core
+                    change): EditMode 193 = 189/1 listed/3, PlayMode 239 = 215/11
+                    listed/13, as listed above.
