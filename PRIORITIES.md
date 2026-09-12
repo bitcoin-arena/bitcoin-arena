@@ -16,12 +16,17 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: M3 - A ROUND FOR TESTNET SATS ("M3 is done when"). Special
-conform-to-v4.6.2 is done (a1e8d6e / 875cef1). Continue M3. Daniel 18:41:
-do every M3 slice that does not need him. Do not wait. Do not ask Go on
-unblocked work. Park only inbound, which-guardians, and named rulings.
-  NEXT (top, unblocked): seats decide ENTRY_VOID (§16) - nothing in the node
-  makes a Void today. Result-window Void stays parked.
+LIVE LETTER: M3 lobby + play with no money (Daniel 07:45). A lobby belongs
+in M3, not last. Stake 0 / no Lightning must work end-to-end: node, page,
+join, play, ghosts. No wallet. Then ENTRY_VOID and the rest of M3.
+  NEXT (top, unblocked): M3 lobby UI + free play (stake 0 / no Lightning)
+  in node and page. Then ENTRY_VOID (§16) - nothing in the node
+  round parameter in ticks from the join tick (a named default if omitted);
+  the evidence is the player's first mark, forwarded between the seats.
+  HOLE (walk-aways, separate, not this slice): a committed player who never
+  sends a first mark refunds at expiry today, because §15 (neutral input to a
+  deterministic result) is unbuilt - and ENTRY_VOID must not fire without a
+  mark. Not ENTRY_VOID; not built here.
   DONE (W5b, TASKBOOK): on a fresh regtest federation, with the seats' own
   claim key, both seats forfeited a qualifying Delivered lock once its result
   was final with the window closed. The forfeit verified under the claim key,
@@ -723,6 +728,10 @@ HARD (Daniel 2026-09-11 14:19): V1 custody is the STAKE LOCK in FEDERATION.md
 and spec v4.6.2 §23. No single node is needed and no single node can take
 money: no gateway, lnd or patched fedimintd holds a round's stake. Only
 recognised, tested parts; no Lightning multisig node of our own.
+
+HARD (Daniel 2026-09-12 07:45): lobby is M3, not last. Stake 0 / no Lightning
+must work in backend and frontend so the game plays with no money and no
+wallet. Do this now.
 
 HARD (Daniel 2026-09-11 18:15): Fable's security fixes are spec. Interrupt.
 Bring already-coded parts into line with FEDERATION.md + multiplayer_p2p.md
@@ -1545,6 +1554,9 @@ IN THIS ORDER (unparked):
                                         33.500 m the ground was worth. The fix
                                         is 36's, again: the core owns the map's
                                         boxes and Unity draws them.
+   M3.3-34  lobby + free play          M3   OPEN — Daniel 07:45. Lobby in M3.
+                                        Stake 0 / no Lightning in node and page.
+                                        Play and ghosts with no wallet.
    M3.3-19  optional stake / ghost     M3   OPEN — Daniel 11:15. Satoshis are
        without money                      optional. A free round (stake 0) seats
                                         without Lightning. Ghosts must be
