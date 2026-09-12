@@ -30458,3 +30458,29 @@ M3 W3: FIXED - A LOCK CAN ONLY NAME A CLAIM KEY THE ROUND'S SEATS ATTESTED
                     set handed over).
   COUNTS STOOD ON   protocol 487/487, node 537/537 (sequential chunks, 0
                     cancelled), client 254/254. Core not touched. No Unity/WebGL.
+
+M3 W1a, THE LOCK CLIENT - MEASURED BEFORE
+  SLICE             W1a (PRIORITIES): a wasm crate on the stock fedimint 0.12.0
+                    client crates that joins, takes a gateway deposit, locks
+                    Point(stake_point) to the attested claim_pk and reads the
+                    outpoint back, driven from Node on regtest, ending in a W2
+                    seat committing the stake. Not the page (W1b).
+  (1) OUTPOINTS     non-zero stake_lock_outpoint writers on the shipping path:
+                    0 - the one client line, join.js:719, writes zeros.
+  (2) WHO LOCKS     code of ours that asks a federation to lock: only
+                    blwp-node/tools/stake-lock (native, the rehearsal's); wasm
+                    crates of ours: 0.
+  (3) ZERO OUTPOINT blwp-node/test/lock-client.test.js: a seat of a paying
+                    federation round, an entry naming zeros, a lock handed over -
+                    POST /lock 409 "that entry names no stake lock outpoint",
+                    stake not committed, /stake 409, federation asked 0.
+  (4) TOOLCHAIN     rustc 1.98.1; installed targets: x86_64-unknown-linux-gnu
+                    only; wasm-bindgen: none; fedimint 0.12.0's Cargo.lock pins
+                    wasm-bindgen 0.2.106; fedimint-client-wasm carries
+                    cfg(target_family = "wasm") dependencies. Whether
+                    fedimint-lnv2-client builds for wasm32: not yet asked.
+  (5) NODE-RUN LOCK client code that makes a lock a seat accepts: 0
+                    functions (the only matching client line is the zeros one).
+  FIXTURE           lockPort and seatedWithLock moved unchanged from
+                    seat-lock.test.js to test/lock-fixture.js (seat-lock 3/3);
+                    seatedWithLock takes the entry's outpoint.

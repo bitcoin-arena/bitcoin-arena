@@ -131,6 +131,11 @@ unblocked work. Park only inbound, which-guardians, and named rulings.
   before it deals, refuses a key short of the round's threshold (4 of 7
   refused, 5 accepted; one seat's own key refused), and names the attested set
   on the entry. Before: no door, no check, a zero reference. Next: W1a, W1b.
+  W1a (the lock client, not the page): a wasm crate on the stock fedimint 0.12.0
+  client crates joins, takes a gateway deposit, locks Point(stake_point) to the
+  attested claim_pk, reads the outpoint back - driven from Node on regtest, a W2
+  seat commits the stake. W1b: the page drives it (entryFor's outpoint, pins,
+  WebGL). Redeem/forfeit/refund/withdraw are W5.
   DONE (13A re-run, the half that needs no new field): a valid objection's
   SUSPENDED result is re-run by the committee - each seat replays again and
   signs a re-run result tied to the contradicted run - and 5 of 7 on one
