@@ -32091,3 +32091,77 @@ M3.3-34 THE 2-OF-2 SIGNED LOBBY LISTING, MEASURED ON THE LIVE DAILY PAGE (2026-0
   COUNTS            no code, test or page file changed in this step, so no suite
                     re-run for it; the tree's last counts (219d086): protocol
                     501/501, node 564/564, client 286/286. Unity not run.
+
+M3.3-34 LATE START AT THE CLOSE: FORFEIT 0, SIGNED BY BOTH SEATS, FINAL 2 OF 2 (2026-09-12)
+  RULED             (Daniel) a seated player whose first mark comes after join tick
+                    + 900 has forfeited, whenever the close comes: at the close both
+                    seats sign FORFEIT, score 0, over the empty receipted transcript,
+                    FINAL 2 of 2. Not VOID, not ENTRY_VOID, not FAILED; nothing
+                    refunded; a staked round's lock held (the Daily stakes 0). The
+                    same FORFEIT 0 as no mark, whichever seat recorded the late mark.
+                    Guard required: a seat holding only a late mark waits while any
+                    other seat is unreachable (it may hold an on-time first mark).
+  BEFORE            first-mark.test.js / outage.test.js as they were: late at both
+                    seats, and B down caught up late - FORFEIT recorded at the door
+                    at both seats, results [], finality null (13/13 green on that).
+  CHANGE            blwp-node verify.js: #neverStarted no longer excludes a late
+                    start (its only mark was refused, never receipted - it never
+                    started); the hold rule no longer exempts it, so it waits while a
+                    seat is unreachable like no mark. server.js: the retry filter and
+                    the start-up resume no longer skip late starts. Protocol and page
+                    unchanged.
+  PROTECTED, RULED  first-mark "a first mark after join + deadline..." and "a down
+                    seat caught up late...", outage (c): results [] / finality null
+                    -> FORFEIT / FINAL. Nothing else in them changed. outage (c, d)
+                    also waits for the no-mark entry to be FINAL at both seats before
+                    reading it (in the full suite the late start, now final at once,
+                    ended the old wait with A still PROVISIONALLY_FINAL); the values
+                    asserted are unchanged.
+  IN PROCESS        first-mark.test.js, two seats of a lock round, deadline 900:
+    (1) late at both (forward)   FORFEIT/0 at A and B, 2 signers, one transcript
+                                 across both, FINAL, no ENTRY_VOID, /forfeit 409,
+                                 lock held
+    (2) B down, caught up late   the same
+    (3) late at A only, forward  B never recorded it (no late start there); both
+        lost                     sign the same FORFEIT/0, one transcript, FINAL
+    (4) peer down at the close   A HOLDING, 12 attempts, "waiting on 1 seat(s)",
+                                 nothing signed; B back and closed: FORFEIT/0 FINAL
+                                 at both, one transcript, lock held
+    (5) guard: on-time mark at   A HOLDING, 12 attempts, "waiting on 1 seat(s)",
+        B, late mark at A, B     nothing signed. Named, not resolved (ENTRY_VOID,
+        down at A's close        parked): B held the on-time first mark AND a late
+                                 start recorded by A's forward.
+    (7) late mark after both     "the round is closed" twice; FORFEIT/0 FINAL at
+        seats signed FORFEIT 0   both, the same transcript before and after
+  THE PAGE          late-page-probe on the live page: joined ae07d3f0, sat 25 s idle
+                    after Unity loaded - before PLAY both seats already held the
+                    entry's first mark at tick 60 (1 mark, no late start). The page
+                    sends its first mark at 60 by itself: it cannot start late. The
+                    live case is a driven client (late-client.mjs): a free entry of
+                    its own at both seats, a first batch 0..1319 and a first mark at
+                    1320 to seat A, signed with the entry's session key.
+  LIVE              launcher 19:01:14Z on this code, page 466dc1b4 (daily.json only);
+                    round b345eff6 (end 19:13:26.957Z), no seat taken down:
+                    L  late-client.mjs: its own free entry 839303a6 (player
+                       1eefd818) - POST /entry 201 at both seats; to seat A a batch
+                       0..1319 ("1320") and a first mark at 1320: "error FORFEIT:
+                       the first mark at tick 1320 is after the start deadline
+                       (join 0 + 900 = 900)"; late start recorded at A and, by
+                       forward, at B (mark 1320 > 900)
+                    W  the live page, seated at both seats (3a6893ab), tab closed
+                       before any mark
+                    P  the live page, played (6fb0b20d)
+                    both seats' stores, the same at A and B:
+                       L  FORFEIT/0, transcript 3b192006, 0 marks, 2 signers
+                       W  FORFEIT/0, transcript 03ebeb78, 0 marks, 2 signers
+                       P  FAILED/0,  transcript dcea4169, 103 marks, 2 signers
+                    one transcript per run, entryVoid false, nothing HOLDING;
+                    PROVISIONALLY_FINAL until the objection windows closed (A
+                    19:23:35.8-36.9, B 19:23:39.1-39.6), FINAL 2 of 2 at both seats
+                    by 19:23:41Z (harness) - read again 19:23:52Z. Public /results
+                    through both tunnels: 2 signatures for each of the three runs
+                    at each seat. Stake 0: no lock, no refund, no ENTRY_VOID.
+                    own test/*.test.js: protocol 501/501, node 570/570 (1-48 278 -
+                    +6 late-start cases - and 49-98 292), client 286/286. The node
+                    chunk 49-98 ran with the live harness's Chrome at load 13; green.
+                    EditMode and PlayMode not run (no C#, jslib or core change).
