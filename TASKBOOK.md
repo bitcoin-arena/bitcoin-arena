@@ -31533,3 +31533,41 @@ M3.3-34 DEPLOYED TO THE DAILY PAGE (2026-09-12) - AND WHY A PLAYER CANNOT USE IT
   COUNTS            this turn, foreground, one file per node --test under timeout
                     180, --test-timeout=120000: protocol 500/500, node 565/565,
                     client 285/285. Unity not re-run (no C#, jslib or core change).
+
+M3.3-34 THE DAILY'S 2-OF-2 RUNS AGAIN, ON 18080/18081, WITH THE ROUND OPENER (2026-09-12)
+  PORTS             measured with ss: 18080-18089 free on every address; 8080 is
+                    signal-cli (127.0.0.1). Named pair 18080 (A) / 18081 (B) kept:
+                    the only other user of 1808x is blwp-client two-tabs.test.js,
+                    on 127.0.0.1; the seats bind the tailnet address 100.74.66.98,
+                    and the client suite run WITH the seats up passed two-tabs 5/5.
+  LAUNCHER          tools/run-2of2.mjs is now the Daily's: standUpRound (bonded
+                    seats, census, each round published under its beacon block)
+                    on the regtest bitcoind named by RT/RPCPORT, keepOpen for the
+                    next free round, stores in /mnt/bitcoin/blwp-2of2 (the seats'
+                    keys kept), 8080 refused by name, the lobby link written to
+                    lobby-url.txt. BLWP_WSS_18080/18081 name the funnel paths
+                    wss://beelink.tail1723e2.ts.net/blwp-a and /blwp-b, so the link
+                    names https://.../blwp-a and /blwp-b. Before: it bound :8080,
+                    stood up no round and opened none.
+  CHAIN             its own regtest bitcoind, /mnt/bitcoin/blwp-2of2/btc, rpc
+                    30401, p2p 30402, -listen=0: the opener mines it. testnet4
+                    (synced, 152078) cannot be mined on demand and a round waits
+                    on its beacon block - a free test round's chain, not Bitcoin.
+  RUNNING           launcher started 12:59:29Z, detached (setsid), log
+                    /mnt/bitcoin/blwp-2of2/daily.log: "up", seats on
+                    100.74.66.98:18080 and :18081, first round e7c1286f... under
+                    beacon block 117. /identity 200 on both; /rounds on both lists
+                    it open, free, seatedHere, needed 2 of 2 seats. The opener then
+                    opened bec7fc11, be08c13b, 25b95399, 727edd63, 69efe163 - one
+                    every ~2 min 5 s - and both seats list the same two open rounds
+                    at any time.
+  NOT YET           the page reaches the seats only through the funnel, and
+                    https://beelink.tail1723e2.ts.net/blwp-a|b/identity is 502:
+                    tailscale serve needs root here ("To not require root, use
+                    'sudo tailscale set --operator=$USER' once"). Until Daniel maps
+                    /blwp-a -> 100.74.66.98:18080 and /blwp-b -> :18081, the deployed
+                    lobby cannot reach them. The deployed-page look (both up: a row
+                    with Join; one down: 1 of 2, no Join) waits on that.
+  COUNTS            foreground, one file per node --test under timeout 180,
+                    --test-timeout=120000, with the Daily seats up: protocol
+                    500/500, node 565/565, client 285/285. Unity not re-run.

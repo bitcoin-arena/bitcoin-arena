@@ -26,8 +26,10 @@ username, free play. Then ENTRY_VOID.
   name shows one generated name (display-name.js, from the identity key) in the
   seated view, the lobby row and on board rows, in every round.
   DEPLOYED 2026-09-12: btc-logistics-core.pages.dev (1ad5a069); the page loads.
-  NOT YET usable there: the Daily's seats are down, and run-2of2.mjs binds 8080
-  (signal-cli) and opens no rounds, so the deployed lobby lists nothing.
+  DONE (Daily seats, 2026-09-12): run-2of2.mjs runs the pair on 18080/18081
+  (never 8080) with the round opener; a new free round opens every ~2 min and
+  both seats list it. NOT YET reachable from the page: the funnel paths
+  /blwp-a and /blwp-b must be mapped to 18080/18081 as root (502 today).
   DONE (2-of-2, TASKBOOK): each seat signs its listing of a round; the page
   offers Join only when both of the round's seats say open and seated. With
   one seat down the row says 1 of 2 and has no Join. Measured in the built
