@@ -31144,3 +31144,50 @@ M3 ENTRY_VOID (§16), BEAT 3: SEATS RECORD IT FROM A FORWARDED FIRST MARK
                     regtest federation is measured in-process only.
   COUNTS            node 555/555 (+4 entry-void, +1 fixture file), protocol 494/494,
                     client 279/279.
+
+M3 LATE START (§15, §13C), BEAT 4: A LATE FIRST MARK IS FORFEIT, NOT ENTRY_VOID
+  RULED             pick (a). A first mark signed after join tick + the start
+                    deadline is the player's own act: FORFEIT (§15), not ENTRY_VOID.
+                    As ENTRY_VOID it was a refund the player could pick after seeing
+                    the run (§13C). ENTRY_VOID stays §16's outage refund. Not (b):
+                    a forfeit returns the lock to the player's refund key, so doing
+                    it at once on a Void lock pays that refund sooner. Not (c): W4.
+  CHANGED           protocol first-mark.js (was entry-void.js): firstMarkOutcome ->
+                    FORFEIT. Seats: the late mark refused as "FORFEIT: ...", kept in
+                    start_forfeits, GET /start-forfeit; the forward answers
+                    "forfeit". The deadline, refusal and forward are unchanged.
+  MEASURED          before: late first mark 1320 -> "ENTRY_VOID at 1320 > 900" at
+                    both seats. after (first-mark.test.js, two seats, default 900):
+                    late 1320, player at A      FORFEIT at 1320 > 900 at A, and at B by
+                                                forward; mark not stored; no result;
+                                                forfeit door 409
+                    B down, caught up late      FORFEIT at B too; nothing DELIVERED
+                    first mark at 60            nothing recorded; B holds it by forward
+                                                (2 receipts); DELIVERED, FINAL, 200
+                    no mark                     nothing recorded at either seat; lock
+                                                held; door 409
+                    predicates: 120-line 60 -> none, 1197/1320 -> FORFEIT; default
+                    60/720/900 none, 901/1197/1320 FORFEIT; no mark none.
+  THE LOCK          not spent. Until W4 a FORFEIT lock refunds at expiry - the money
+                    hole every loser has (listed, not closed).
+  HOLES (ENTRY_VOID on this letter)
+                    1. ENTRY_VOID (§16, the outage refund) is decided nowhere: an
+                       entry whose first mark reached fewer than the threshold of
+                       seats because seats were down still just refunds at expiry.
+                    2. A FORFEIT lock is not claimed (W4, parked).
+                    3. No first mark (§15's walk-away) refunds at expiry - neither
+                       Void nor FORFEIT, not built here.
+                    4. The late-start FORFEIT is proven with in-process seats; the
+                       fresh-regtest W5b run proves the on-time path with seats wired.
+  COUNTS            protocol 495/495 (+1), node 555/555, client 279/279 (bundle
+                    ff16f1d8). No C# or jslib changed; Unity measured anyway:
+                    EditMode 193: 189 pass, 1 red, 3 skipped - the red is the listed
+                    CombatFxTests.RifleFireProducesAFlashAndATracer.
+                    PlayMode 239: 215 pass, 11 red, 13 skipped (run ended 10:47:21) -
+                    the documented eleven: nine on the retired C# army and truck
+                    physics (FeatureTests.DamageIsFeltInTheDriving, ImportedModelTests
+                    x2, TruckHealthTests.CrashingIntoArmourWritesItOff, VehicleTests
+                    x5) and two that need a graphics device under -nographics
+                    (VisibilityTests.ArmiesAreActuallyDrawn, RoadsAreActuallyDrawn).
+                    No red beyond the listed ones; the IdlingEarnsNothing load flake
+                    passed this run.
