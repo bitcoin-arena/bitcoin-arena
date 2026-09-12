@@ -136,6 +136,10 @@ unblocked work. Park only inbound, which-guardians, and named rulings.
   attested claim_pk, reads the outpoint back - driven from Node on regtest, a W2
   seat commits the stake. W1b: the page drives it (entryFor's outpoint, pins,
   WebGL). Redeem/forfeit/refund/withdraw are W5.
+  DONE (W1a, TASKBOOK): the lock client builds for wasm and locks - driven
+  from Node on regtest it joined, deposited through a gateway, locked
+  Point(stake_point) to the attested claim_pk at a non-zero outpoint, and both
+  seats committed 980000 msat. Before: only the native rehearsal tool could.
   DONE (13A re-run, the half that needs no new field): a valid objection's
   SUSPENDED result is re-run by the committee - each seat replays again and
   signs a re-run result tied to the contradicted run - and 5 of 7 on one

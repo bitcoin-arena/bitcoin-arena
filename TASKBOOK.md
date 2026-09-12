@@ -30484,3 +30484,59 @@ M3 W1a, THE LOCK CLIENT - MEASURED BEFORE
   FIXTURE           lockPort and seatedWithLock moved unchanged from
                     seat-lock.test.js to test/lock-fixture.js (seat-lock 3/3);
                     seatedWithLock takes the entry's outpoint.
+
+M3 W1a: THE LOCK CLIENT BUILDS FOR WASM AND LOCKS - AFTER
+  CRATE             packages/blwp-client/lock-client (blwp-lock-client): the
+                    stock fedimint 0.12.0 client crates (client, mintv2, lnv2),
+                    wasm-bindgen; LockClient join(invite) on an in-memory
+                    database, receive(msat, gateway) + awaitReceive (Claimed),
+                    lock(point, msat, claim_pk, refund_pk, delta) - one
+                    OutgoingContract, payment_image Point(stake_point), funded by
+                    the stock builder, then what the guardians stored at its
+                    outpoint. Built in the v0.12.0 workspace (symlink + member).
+                    blwp-client/src/lock-result.js reads its answer into the
+                    entry's outpoint and the seat's contract (not bundled: W1b).
+  (4) TOOLCHAIN     into scratch: wasm32-unknown-unknown (2 s), wasm-bindgen-cli
+                    0.2.106, the lockfile's (63 s); clang + llvm-ar unpacked from
+                    the LLVM 23.1.1 tarball already there (134 s).
+                    cargo check wasm32 of fedimint-client, -mintv2-client,
+                    -lnv2-client: exit 0 in 64 s - LNv2 builds for the browser's
+                    target. Three things it took, one at a time: secp256k1-sys's
+                    C needs clang for wasm32 (CC/AR_wasm32_unknown_unknown);
+                    getrandom 0.3 needs --cfg getrandom_backend="wasm_js" (the
+                    feature is on in fedimint-core; the flag is not in the tree);
+                    receive takes lnv2-common's own Bolt11InvoiceDescription, not
+                    lightning-invoice's. getrandom 0.2 needed nothing.
+  BUILD             cargo build --release --target wasm32 -p blwp-lock-client:
+                    exit 0 in 15 s; blwp_lock_client.wasm 110072286 bytes (release
+                    keeps debuginfo); wasm-bindgen --target nodejs exit 0 in 2 s:
+                    blwp_lock_client_bg.wasm 18347458 bytes, glue 50243 bytes.
+                    Cargo.lock: 19 lines added (the blwp-lock-client block), 0
+                    removed - no pinned dependency moved.
+  REGTEST           tools/lock-client-regtest.sh: stock fedimintd 0.12.0 (4
+                    guardians, 3 of 4, one gateway, regtest), up in 151 s. The
+                    page's own attestedClaimKey: the committee key attested 2 of
+                    2. The wasm lock client, driven from Node: join 471 ms;
+                    deposit 3000000 msat through the gateway, Claimed in 5253 ms,
+                    ecash 2983936 msat; LOCK A in 978 ms at outpoint
+                    f2bcb9b2772d88384449ff417c4b62f479ea858f82fdf47cbfe3908d9e16b848:0
+                    (contract 7e95de15376a...), ecash 2001408 msat after. Handed
+                    to both seats: 201 and 201, stake committed 980000 msat on
+                    both. An outpoint holding no lock (the lock skipped): 409 on
+                    both, "the federation holds no lock at the entry's
+                    stake_lock_outpoint", not committed. A lock the client made
+                    to an unattested key: 409 on both, "claim_pk is not this
+                    round's attested claim key", not committed.
+                    THE DRIVER DID NOT EXIT: every step done, the process up
+                    another 9 minutes - the wasm client's guardian websockets keep
+                    Node's event loop alive, and its lines sat in the grep pipe.
+                    Read by what it held (no children, 9 connections to the four
+                    guardians, none to the gateway, no seat listening), ended by
+                    TERM, which flushed the lines above. It exits itself now.
+  MUTANTS           the seat takes a zero outpoint (its refusal removed) ->
+                    lock-client.test.js red; the seat skips the federation (the
+                    handed contract taken as stored) -> seat-lock "no lock at the
+                    outpoint: accepted", red. On the real federation: the lock
+                    skipped and an unattested key, both refused (above).
+  COUNTS STOOD ON   protocol 487/487, node 538/538 (sequential chunks, 0
+                    cancelled), client 256/256. Core not touched. No Unity/WebGL.
