@@ -31821,3 +31821,71 @@ M3.3-34 THE DAILY'S SEATS CLOSE EACH ROUND AT ITS END - A LIVE WALK-AWAY IS FORF
                     --test-timeout=120000: protocol 502/502 (+1 round end), node
                     567/567 (+1 close-at-end: files 1-48 274, 49+ with the 6 fixtures
                     293), client 286/286. Unity not run.
+
+M3.3-34 A SEAT WHOSE PEER IS DOWN AT THE CLOSE HOLDS, TRIES AGAIN, AND SIGNS ONE TRANSCRIPT (2026-09-12)
+  THE STATES        resultFinality: null (no threshold), PROVISIONALLY_FINAL (2 of 2
+                    agree on one run), FINAL (and the 600 s objection window closed,
+                    the transcript posted), SUSPENDED. 1 of 2 = null: no forfeit door
+                    opens, nothing moves, and nothing marks it a refund - a paid lock
+                    would just reach its expiry.
+  MEASURED BEFORE   (1) in-process, tools-free: close-retry.test.js run on 092410b's
+                    code (its /closing reads made tolerant; the old code has no such
+                    door), seat B down when seat A closed:
+                      W (no mark)   A: 0 signers; after B back and closed: B alone
+                                    FORFEIT/0, 1 signer, finality null - STUCK
+                      P (mark 60)   A: FAILED/0 1 signer; after: FINAL 2 of 2 (A held
+                                    B's receipt of the first mark via the forward)
+                    the close ran once; the watch re-gathered only runs already signed.
+                    (2) live, first retry build, round a09ce9a5 (Daily, bare root):
+                    seat B down 14998 ms before the end; seat A closed 520 ms after
+                    it; W HOLDING at A's /closing (4 attempts at +20 s, 10 at +75 s),
+                    A's public /results P 1 W 0; this round not in the lobby, the one
+                    open round 1/2 no Join. B back 15:25:40: A signed W FORFEIT/0
+                    after 11 attempts -> W FINAL 2 of 2. But P: A had signed FAILED/0
+                    while B was down over a 1-mark receipted transcript (the only mark
+                    it held B's receipt of), B later over all 94 marks - transcripts
+                    d03d3fd9 vs 7fe5a197, runs b7505ca2 vs 85967a63: 2 signers,
+                    finality null, STUCK.
+  CHANGE            verify.js retryClose: the close again for one run - the cheap
+                    receipt pull first, replay and sign only when no seat that
+                    matters is still unreachable. #keep holds (signs nothing) while
+                    an unreachable seat could lengthen the receipted transcript
+                    (#mightGrow: the first mark short of the round's receipts, plus
+                    the unreachable seats, would reach them) - and, for an entry with
+                    no mark here, while any seat is down (it may hold the first mark).
+                    A peer that could not change the transcript stops nothing
+                    (receipt-carry.test.js unchanged). server.js finality watch: every
+                    run not signed at the close is tried again on its cadence (2 s),
+                    HOLDING/SIGNED with attempts at GET /closing, logged at attempt 1,
+                    every 30th and on signing; at the watch's window end still HOLDING
+                    - never a refund, never a VOID. round.js markIds.
+  IN-PROCESS AFTER  close-retry.test.js (P now sends marks at 60 and 120): B down at
+                    A's close - W and P both HOLDING at A, 12 attempts each (100 ms
+                    cadence), nothing signed, no Void; B back and closed - both signed
+                    at A on attempt 13; W FORFEIT/0 and P FAILED/0 FINAL 2 of 2 at both
+                    seats, ONE transcript each.
+  COUNTS            foreground, one file per node --test under timeout 180,
+                    --test-timeout=120000: protocol 502/502, node 568/568 (+1
+                    close-retry; files 1-48 270, 49+ with 6 fixtures 298), client
+                    286/286. Unity not run.
+  LIVE AFTER        refined gate, launcher 15:54:30Z, page cf8dd61b; daily-close-look
+                    with DOWN_B_PID, bare root, round c427789e: P (5b6cf193) drove,
+                    W (954d8742) held by both seats, tab closed before any mark;
+                    seat B down 14999 ms before the end.
+                    seat A closed 1852 ms after the end, on its own clock
+                    +20 s   A's /closing: W and P both HOLDING, 6 attempts each,
+                            "waiting on 1 seat(s)"; A signed 0 for both; A's public
+                            /results P 0 W 0; this round not in the lobby, the one
+                            open round 1/2 no Join; no ENTRY_VOID
+                    +75 s   HOLDING, 16 and 15 attempts; A signed 0 for both
+                    B back 16:01:55.810Z, closed the round at its start; A signed
+                    both on attempt 17: "signed FORFEIT/0", "signed DELIVERED/41"
+                    both seats' stores: W FORFEIT/0 by both, transcript b7a90670,
+                    run 99cfea13, 0 marks; P DELIVERED/41 by both, transcript
+                    c2c365df, run bd97c343, 44 marks at each seat - ONE transcript
+                    per run; FINAL 2 of 2 at both seats 622 s after the end; public
+                    /results through both tunnels: 2 signatures each.
+                    Against the live before (a09ce9a5): P there is still two
+                    transcripts (d03d3fd9 vs 7fe5a197), finality null.
+                    And the first live DELIVERED on the Daily: P's AUTO run
+                    delivered (score 41), signed and final like the others.

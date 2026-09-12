@@ -66,9 +66,11 @@ username, free play. Then ENTRY_VOID.
   seated player with no first mark is FORFEIT 0 and a stopped run is FAILED at
   its last receipted checkpoint - both seats sign, final 2 of 2, lock held.
   The Daily's seats now close each round at its end (live: FORFEIT 0 and
-  FAILED 1, final 2 of 2). Still open here: close retry, late start at close,
-  one-seat-refused VOID, §15 text, fresh-federation walk-away, Lightning hold
-  and objected re-run; a live DELIVERED run not yet measured.
+  FAILED 1, final 2 of 2). A seat whose peer is down at the close holds and
+  retries, and signs only the full receipted transcript (live, seat B down
+  across the end: FORFEIT 0 and DELIVERED 41, one transcript each, final 2 of
+  2). Still open here: late start at close, one-seat-refused VOID, §15 text,
+  fresh-federation walk-away, Lightning hold and objected re-run.
   DONE (W5b, TASKBOOK): on a fresh regtest federation, with the seats' own
   claim key, both seats forfeited a qualifying Delivered lock once its result
   was final with the window closed. The forfeit verified under the claim key,
