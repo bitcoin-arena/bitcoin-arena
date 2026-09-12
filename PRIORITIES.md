@@ -118,6 +118,14 @@ unblocked work. Park only inbound, which-guardians, and named rulings.
   template is not the build of the source.
   FOUND: nwcCall does not check that a wallet's answer event is signed by the
   wallet's key and names the request (NIP-01); it trusts the relay's filter.
+  DONE (W2 of 12 still missing to "M3 is done", TASKBOOK): a seat verifies the
+  player's stake lock - POST /lock, the federation asked what it holds at the
+  entry's outpoint, the contract hashed by the stock client, lockMatchesEntry -
+  and only then counts the stake. Real fedimintd 0.12.0: own lock verified in
+  233 ms, a changed amount and an empty outpoint refused. Before: never asked.
+  FOUND (spec, needs a ruling): §23.1 step 4 locks at height + 144, step 5
+  verifies >= current + 144 - a lock made as step 4 says is refused one block
+  later (measured 450 vs 316 + 144). Margin, or verify against lock height.
   DONE (13A re-run, the half that needs no new field): a valid objection's
   SUSPENDED result is re-run by the committee - each seat replays again and
   signs a re-run result tied to the contradicted run - and 5 of 7 on one

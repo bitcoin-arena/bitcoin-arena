@@ -30353,3 +30353,56 @@ M3 W2, A SEAT VERIFIES THE PLAYER'S STAKE LOCK (§23.1 step 5) - MEASURED BEFORE
                     PaymentImage::Hash) where §23.1 step 4 and F1 say
                     Point(stake_point), and has no id mode - both needed before
                     a real federation can be asked.
+
+M3 W2: FIXED - A SEAT VERIFIES THE PLAYER'S STAKE LOCK AND ONLY THEN COUNTS THE STAKE
+  CHANGE            blwp-node stake-lock-seat.js verifyStakeLock and POST
+                    /lock?entry=: the player hands the seat the contract it
+                    locked (JSON); the seat asks the federation port what it holds
+                    at the entry's stake_lock_outpoint (contract id, blocks left,
+                    block count), hashes the handed contract with the stock client
+                    (port.contractId), requires the ids equal and expiration =
+                    count + blocks left, runs lockMatchesEntry (first caller) with
+                    the round's claim key (the seat's DKG committee key, or
+                    claimKeyFor), then records the lock (stake_locks) and
+                    putStakeSeen - the record the play gate already reads. A round
+                    naming no federation takes no lock. stake-lock-port.js: the
+                    real port, running blwp-stake-lock (status, id); main.js takes
+                    BLWP_STAKE_LOCK_BIN + BLWP_FEDERATION_CLIENT_DIR, both or
+                    neither. blwp-stake-lock: --point for Point(stake_point)
+                    (§23.1 step 4, F1; it built Hash only) and an id mode (no
+                    client); rebuilt in the v0.12.0 workspace, 2m35s.
+  FACTS, FIXTURE    before (acffd59): /lock 404, /stake 409, federation asked 0,
+                    stake never seen. After: the player's own lock - /lock 201,
+                    federation asked 2 (status, id), stake seen at 98000 msat
+                    (the net), /stake 409 -> 200, the lock kept. Refused by name,
+                    stake unseen, /stake 409: no lock at the outpoint; a contract
+                    other than the stored one; a stored lock for the wrong amount;
+                    a hash image; another claim key; another refund key; too short
+                    an expiry. A round naming no federation: refused, federation
+                    asked 0.
+  FACTS, REAL       tools/seat-lock-regtest.sh on stock fedimintd 0.12.0 (4
+  FEDERATION        guardians, 3 of 4, up in 142 s), a 3000000 msat deposit
+                    through the gateway, claim_pk a 2-of-2 DKG key, net stake
+                    980000 msat, two POINT-image locks by blwp-stake-lock (ids
+                    match, A expiration 450, B 456, at count 306). One seat, the
+                    real port: B's own lock 201 in 233 ms, stake seen 980000,
+                    /stake 200; B with the amount -1 msat 409 "its id is another";
+                    an outpoint holding no lock 409; then, the federation's count
+                    306 -> 316, A's own lock (locked at exactly +144) 409 "expires
+                    at 450, before 316 + 144". 0 fedimintd/gatewayd left running.
+  MUTANTS           the field check removed -> the wrong-amount lock accepted
+                    (red); the contract-id comparison removed -> "a contract other
+                    than the one stored" refused for another reason (red).
+  FOUND (SPEC)      §23.1 step 4 has the player lock at "federation block height
+                    + stake_expiry_blocks"; step 5 has seats require ">= current
+                    height + stake_expiry_blocks". A lock made exactly as step 4
+                    says is refused as soon as the federation counts one block -
+                    measured above. Either the client adds a margin (how much is a
+                    number to rule) or seats compare against the height at lock
+                    time. Not decided here.
+  NOT THIS SLICE    the fee lock (its claim hash, the §22A node slots: a ruling);
+                    >=5 seats' verification making STAKE_COMMITTED for the client
+                    (each seat verifies itself; the client's count of seats is the
+                    existing stake-seen path); the page making the lock (W1).
+  COUNTS STOOD ON   protocol 487/487, node 537/537 (sequential chunks, 0
+                    cancelled), client 249/249. Core not touched. No Unity/WebGL.
