@@ -31191,3 +31191,58 @@ M3 LATE START (§15, §13C), BEAT 4: A LATE FIRST MARK IS FORFEIT, NOT ENTRY_VOI
                     (VisibilityTests.ArmiesAreActuallyDrawn, RoadsAreActuallyDrawn).
                     No red beyond the listed ones; the IdlingEarnsNothing load flake
                     passed this run.
+
+M3 ENTRY_VOID (§16), THE OUTAGE REFUND - AT BOTH SEATS, AND THE LOCK BACK AT ONCE
+  MEASURED BEFORE   tools/outage-before.mjs (3300558), two seats, deadline 900:
+                    (a) on time, both up     DELIVERED, FINAL, forfeit 200
+                    (b) on time, B down      A: first mark, 1 receipt, its one forward
+                                             failed; B: nothing after restart; nothing
+                                             recorded, no result, forfeit 409, lock held
+                                             - a silent refund at expiry
+                    (b') B caught up after   B receipts it: DELIVERED at both, FINAL,
+                                             forfeit 200 - a run kept after seeing it
+                    (c) late first mark      FORFEIT at both
+                    (d) no mark              nothing
+  BUILT             protocol entry-void.js outageOutcome: ENTRY_VOID when the start
+                    deadline has passed at a seat, the on-time first mark is short of
+                    the threshold's receipts, and every missing seat was offered it and
+                    silent (a refusing seat was up; a never-offered one proves nothing);
+                    never on a late start or no mark; PROVISIONAL only.
+                    seats: the forward keeps each answer (first_mark_offers) and carries
+                    the Void evidence; re-offered on each later mark inside the line;
+                    decided when the chain passes it (evidence: the player's own mark)
+                    or at close ("closed"); a seat without the first mark refuses it
+                    after the line - forwarded, or from the player after asking the
+                    other seat (GET /entry-void) - and records the same Void
+                    (entry_voids). Forfeit gate: a seat's own ENTRY_VOID record stands
+                    in for finality; the evidence is pushed first (§23.2 at once).
+  MEASURED AFTER    outage.test.js: (a) unchanged; (b) A ENTRY_VOID (mark), offer
+                    "unanswered", 1 of 2 receipts; B none before, ENTRY_VOID after the
+                    forfeit was asked; forfeit 200 at once, verifies, the lock's id,
+                    both keep; (b') B "error ENTRY_VOID", nothing DELIVERED; (c)
+                    FORFEIT, 409; (d) nothing, lock held; (e) withheld from B while up
+                    -> the forward reaches B, 2 receipts, no Void. MUTANT forwarding
+                    off: 4 of 5 red.
+  REGTEST           tools/outage-regtest.sh, fresh federation, seats' own claim key:
+                    locked 980000 msat, exp 458; B down; first mark 60, mark 960 at A;
+                    A ENTRY_VOID (offer unanswered); B back: 404 -> ENTRY_VOID; forfeit
+                    in 380 ms, verifies, both keep, no result anywhere; redeem from the
+                    seed accepted at block 308 < 458 (975360 credited, 4640 fee);
+                    withdraw 961392 msat SETTLED.
+  HOLES             FORFEIT lock unclaimed until W4; no first mark refunds at expiry
+                    (§15); names not shown to others. ENTRY_VOID's "closed" evidence
+                    is exercised only when a seat's chain never passes the line.
+  COUNTS            protocol 497/497 (+2), node 560/560 (+5), client 279/279.
+                    No C# or jslib changed. EditMode 193: 189 pass, 1 red (the listed
+                    CombatFxTests.RifleFireProducesAFlashAndATracer), 3 skipped
+                    (run ended 11:14:49). PlayMode 239: 215 pass, 11 red, 13 skipped
+                    (run ended 11:24:39) - the documented eleven: retired C# army and
+                    truck physics x9 (FeatureTests.DamageIsFeltInTheDriving,
+                    ImportedModelTests.SoldiersStandOnTheGroundAndAreAnimated,
+                    ImportedModelTests.TanksStandOnTheGroundRatherThanInIt,
+                    TruckHealthTests.CrashingIntoArmourWritesItOff, VehicleTests.
+                    ArmiesFightNearTheSeamRatherThanWanderingOff, .ArmourBlocksTheTruck,
+                    .BothArmiesAreOnTheFieldAndOnTheGround, .TheTruckCanDriveOnAfter-
+                    HittingTheArmy, .UnitsDoNotShoveEachOtherWithPhysics) and a graphics
+                    device under -nographics x2 (VisibilityTests.ArmiesAreActuallyDrawn,
+                    .RoadsAreActuallyDrawn). Nothing red beyond them.

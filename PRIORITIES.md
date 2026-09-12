@@ -34,7 +34,13 @@ username, free play. Then ENTRY_VOID.
   EditMode 189/193, PlayMode 215/239 (listed reds only). Not deployed.
   NOT YET: a FORFEIT lock is not claimed - it refunds at expiry until W4 (parked
   behind the fee-lock ruling), the money hole every loser has.
-  HOLE: ENTRY_VOID, §16's outage refund, is decided nowhere yet.
+  DONE (ENTRY_VOID §16, TASKBOOK): an on-time first mark that missed a down
+  seat is ENTRY_VOID at both seats (the returning seat refuses it late, by
+  forward or from the player) and the lock is forfeited to the player at once;
+  on a fresh regtest federation the player redeemed it before expiry and
+  withdrew it. Late first mark stays FORFEIT; no mark stays neither. Suites:
+  protocol 497, node 560, client 279; EditMode 189/193, PlayMode 215/239
+  (listed reds only). Not deployed.
   HOLE (walk-aways, separate, not this slice): a committed player who never
   sends a first mark refunds at expiry today, because §15 (neutral input to a
   deterministic result) is unbuilt - and ENTRY_VOID must not fire without a
