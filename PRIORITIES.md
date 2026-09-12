@@ -69,7 +69,10 @@ username, free play. Then ENTRY_VOID.
   FAILED 1, final 2 of 2). A seat whose peer is down at the close holds and
   retries, and signs only the full receipted transcript (live, seat B down
   across the end: FORFEIT 0 and DELIVERED 41, one transcript each, final 2 of
-  2). Still open here: late start at close, one-seat-refused VOID, §15 text,
+  2). It keeps retrying past the objection window (live: B down 640 s, then
+  FORFEIT 0 and DELIVERED 61, one transcript each, FINAL 2 of 2), and the hold
+  and the round's beacon are kept in the seat's store across a restart. Still
+  open here: late start at close, one-seat-refused VOID, §15 text,
   fresh-federation walk-away, Lightning hold and objected re-run.
   DONE (W5b, TASKBOOK): on a fresh regtest federation, with the seats' own
   claim key, both seats forfeited a qualifying Delivered lock once its result

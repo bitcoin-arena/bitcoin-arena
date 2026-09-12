@@ -31889,3 +31889,168 @@ M3.3-34 A SEAT WHOSE PEER IS DOWN AT THE CLOSE HOLDS, TRIES AGAIN, AND SIGNS ONE
                     transcripts (d03d3fd9 vs 7fe5a197), finality null.
                     And the first live DELIVERED on the Daily: P's AUTO run
                     delivered (score 41), signed and final like the others.
+
+M3.3-34 THE DAILY'S CLOSE: RETRIES SURVIVE A RESTART AND OUTLAST THE WINDOW (2026-09-12)
+  RULED             Daniel: fix both retry limits before step 3 - (1) pending
+                    HOLDING closes survive a seat restart; (2) a seat still short
+                    of 2 of 2 keeps retrying after the objection window: the window
+                    is for objections, not for abandoning the second signature.
+                    Never a shorter transcript; one transcript per run; walk-away
+                    FORFEIT 0.
+  BEFORE            bb19a69 with the new close-retry cases copied in:
+                    past the window (800 ms, B down): A's attempts 5 in the window,
+                    8, then stopped ("the watch's window passed"); B back: A 0
+                    signers, B 1 - finality null, STUCK.
+                    restart while holding: A's /closing null after the restart (the
+                    hold lived in memory); B back: A 0, B 1 - STUCK.
+                    AND, found live once the hold was persisted: the Daily's chain
+                    reader (beacon-source chainBeacon) keeps each round's beacon in
+                    memory and reads again only rounds it opens. Launcher restarted
+                    16:45:33Z: rounds 853ab9b7 and a09ce9a5 (seated before) resumed
+                    HOLDING on "that randomness names no time", 208 attempts by
+                    16:51 - never signable. In process, both seats restarted with a
+                    reader that has read nothing: both HOLDING on that why, 0 of 2
+                    signed for both runs after B was back.
+  CHANGE            store.js close_holds and round_beacons. server.js: /closing's
+                    states written through to the store and read back at start; at
+                    start a closed round with a run short of final here runs its
+                    close logic again; the finality watch keeps going past its
+                    window while a run is unsigned, short, or not FINAL here,
+                    doubling its interval to maxEveryMs (60 s); randomnessFor kept:
+                    a complete answer (hash, height, time) is written to
+                    round_beacons, the reader's answer wins, the kept one serves when
+                    the reader has none; POST /round asks once, so a posted round's
+                    beacon is kept before any run is replayed. verify.js #unreached
+                    (seated seats that did not answer): a resume at start, before any
+                    peer answers, holds instead of signing short. round.js
+                    putCloseHold/closeHolds, putBeacon/beaconOf, closedRounds.
+                    AND ONE SEAT, ONE RESULT ACROSS A RESTART: measured on the same
+                    restart, the resumed close put runs this seat had already signed
+                    back on HOLDING and retried them (a09ce9a5 W FORFEIT/0, 853ab9b7
+                    f46db443 FAILED/0 - both FINAL 2 of 2 - at 364 and 588 attempts
+                    by 17:21; only the missing beacon kept a replay from running).
+                    Now the watch leaves a run this seat has signed out of its
+                    retries, retryClose refuses one as `retry` always did, and a kept
+                    HOLDING row for a signed run loads as SIGNED.
+                    close-order.test.js's never-final test now asserts back-off
+                    instead of a stop at the window - the ruling changed what it
+                    guards. run-2of2 BLWP_START_B_DOWN / round-2of2 bDownAtStart for
+                    the live restart look.
+  IN-PROCESS AFTER  close-retry.test.js 3/3, receipt-carry.test.js 3/3 unchanged:
+                    past the window (800 ms, cap 400 ms): HOLDING, attempts 5 in the
+                    window then 14, nothing signed, no Void; B back: W FORFEIT/0, P
+                    FAILED/0, FINAL 2 of 2 at both seats, one transcript each; A's
+                    verdict "the window closed ... no valid objection".
+                    restart while holding, both seats back with a reader that has
+                    read nothing: sinceMs read back unchanged, attempts 4 -> 9 after
+                    the restart, nothing signed while B is down; B back: W FORFEIT/0,
+                    P FAILED/0, FINAL 2 of 2 at both, one transcript each.
+                    close-order never-final: 11 asks in the window, 4 in the 1.5 s
+                    after, gaps 409/414/411 ms at the 400 ms cap, not final.
+  COUNTS            foreground, timeout 180, --test-timeout=120000, each package's
+                    own test/*.test.js: protocol 501/501 (engine-check.js 1/1 apart:
+                    the 502 above counted it), node 564/564 (98 files: 1-48 272,
+                    49-98 292; the 568 at bb19a69 counted objection-window.test.js's
+                    6 twice - 562 then, +2 close-retry), client 286/286. Unity not run.
+  LIVE (a)          peer down across the window. Launcher 16:45:39Z (this code but
+                    the beacon keep; B's down is in-process, so the reader's memory
+                    stays), page 13d02bd0; daily-close-look DOWN_B_PID HOLD_S=660,
+                    round dbed3faa: P (b7b1831e) drove, W (b2aa964a) seated at both
+                    seats and walked away before any mark. Seat B down 12482 ms
+                    before the end; seat A closed 665 ms after it.
+                    +20 s   W and P HOLDING at A, 6 attempts, "waiting on 1 seat(s)";
+                            A signed 0; A's public /results 0 0; round not in the
+                            lobby, the open round 1/2 no Join; no ENTRY_VOID
+                    +75 s   13 attempts;  +330 s  30
+                    +640 s  past A's 600 s window: 48 attempts, same since, nothing
+                            signed, no Void, public 0 0; A's log "past the window
+                            with 2 run(s) unsigned here ...: still asking, backing
+                            off to 60 s"
+                    B back 17:08:42.86Z; A signed on attempt 50: W FORFEIT/0
+                    17:08:58.36Z, P DELIVERED/61 17:08:59.05Z. Both stores: W
+                    transcript 0bec15e4 (0 marks), P transcript 1aedaea6 (30 marks at
+                    each seat), 2 signers each - one transcript per run.
+                    FINAL 2 of 2 at both seats for both runs by 17:19:36Z (the
+                    harness's first look after the window from the signing); public
+                    /results through both tunnels: W FORFEIT/0 x2, P DELIVERED/61 x2.
+                    Against the before: at bb19a69 the watch stopped at the window
+                    and this ended STUCK.
+  LIVE (b), FIRST   restart while holding, round f3dad5d7 (P 20ce9171, W ccdd1e86):
+                    B down 14997 ms before the end; A closed +1630 ms; HOLDING 5 /
+                    15 / 17 attempts at +20 / +75 / +100 s, nothing signed, public 0
+                    0, lobby 1/2 no Join. Launcher restarted 17:27:50Z with B held
+                    down: A's hold read back (since 1789233957764 unchanged),
+                    attempts 17 -> 57 -> 243 - but under a new why at both seats:
+                    "this view begins at height 2232 and its earliest median time is
+                    ... already after this round's committee time". B back
+                    17:29:05Z; at 17:35:35Z A 243 attempts, B 188, 0 signers, finality
+                    null - STUCK (no short transcript, no Void; stake 0, no lock).
+                    CAUSE (measured): the kept beacon is at 2139 (census 2132); every
+                    start posts the bonds again and the seats' chain view began 20
+                    below them, at 2232 - after the round's beacon, so nothing could
+                    check it.
+  VIEW FIX          round-2of2 chainFor: a round whose census height is below the
+                    seats' view reads its own view, from 20 below that height to the
+                    tip, once. Tried first and measured wrong: moving the SEATS' view
+                    back to 2112 - its census then counted earlier starts' bonds and
+                    the launcher died opening its round ("18080 refused the round:
+                    ... the census seats 1"). Launcher 17:44:58Z: "[view] a round with
+                    census 2132 reads its own view from 2112; the seats' begins at
+                    2367"; f3dad5d7 signed at both seats 17:44:53-54Z (A attempt 311,
+                    B 289; A's since still 1789233957764): P DELIVERED/78 (transcript
+                    0a5d586a, 33 marks), W FORFEIT/0 (ff008c07, 0 marks), 2 signers,
+                    one transcript each, no Void. FINAL 2 of 2 at both seats by
+                    17:55:5x; public /results through both tunnels 2 and 2.
+  RERUN NOISE       three reruns (7fb2105a 17:46, e16b13a8 17:48, cdb500d9 17:53)
+                    seated nobody - W 0 of 2, then P 0 of 2, the seats' own stores
+                    empty for those players; page, daily.json and tunnels checked
+                    and the same. Cause, measured: the Chrome of the harness killed
+                    at 17:36 was left running Unity in software (gpu-process 778%
+                    CPU, load 19-20), and a page did not post its entry in 60 s.
+                    Killed; a CDP join probe then seated its player at both seats
+                    (fbf93917, d5e70f49 at A and B). The harness now closes its
+                    browsers when it is killed.
+  LIVE (b), RERUN   from a clean pair (launcher 17:44:58Z, view fix), daily-close-look
+                    DOWN_B_PID HOLD_S=120 RESTART_CMD, round f6148281 (kept beacon
+                    2491 at both seats): P (521a1b8a) drove, W (14a2351b) seated at
+                    both seats and walked away before any mark. Seat B down 15000 ms
+                    before the end; A closed +610 ms.
+                    +20 s   W and P HOLDING at A, 5 attempts, "waiting on 1 seat(s)";
+                            A signed 0; public 0 0; no ENTRY_VOID
+                    +75 s   13;  +100 s  16
+                    launcher restarted 18:06:58Z with B held down (B served only on
+                    a port nobody names, then closed): "[view] a round with census
+                    2393 reads its own view from 2373; the seats' begins at 2571" -
+                    2373 <= 2491, the seat's view holds the beacon.
+                    +60 s after the restart: A's hold read back, since
+                    1789236307550 unchanged, 16 -> 49 attempts, why still "waiting on
+                    1 seat(s)" (not the view error); signed 0, public 0 0.
+                    B back 18:08:12.8Z; A signed on attempt 50, 18:08:15.0Z P
+                    FAILED/0, 18:08:15.2Z W FORFEIT/0. Both stores: P transcript
+                    3755ae79 (87 marks at each seat), W 671543f5 (0 marks), 2 signers
+                    each, one transcript per run, entryVoid false; FINAL 2 of 2 at
+                    both seats by 18:18:26Z; public /results through both tunnels P
+                    FAILED/0 x2, W FORFEIT/0 x2. Stake 0: no lock, no refund path
+                    taken (no ENTRY_VOID, no VOID).
+                    Measured, not assumed: P's outcome is what its run earned - the
+                    harness drove it; FAILED/0 is its one outcome, the same at both.
+  EXTRA RESTART     launcher restarted 18:19:17Z, up 18:19:30Z, both seats; read
+                    75 s later. /closing at both seats: every kept close state of
+                    the old rounds SIGNED - 853ab9b7 (A 516 attempts), a09ce9a5 (A
+                    516, B 710), dbed3faa (A 50), f3dad5d7 (A 311, B 289), f6148281
+                    (A 50, B 0) - the same attempt counts as before the restart:
+                    none retried, no HOLDING line in the new launcher's log. Before
+                    it (18:18Z) A served 853ab9b7 and a09ce9a5 HOLDING at 516, B
+                    a09ce9a5 at 710 and f6148281 at 0 - all runs those seats had
+                    signed.
+                    Not fixed: those store rows still read HOLDING; each start
+                    reads them as SIGNED (the run is signed here). And each start
+                    still runs the close logic again for rounds never FINAL here
+                    (853ab9b7, a09ce9a5, e16b13a8 - the last seated P at A only,
+                    during the loaded reruns).
+  HOLES             a09ce9a5 (before the hold) keeps two transcripts for its played
+                    run (d03d3fd9 vs 7fe5a197): finality null for ever. e16b13a8's
+                    one entry is at seat A only (1 of 2): nothing can become final.
+                    Stake 0 on the Daily: no lock was held, so no lock claim or
+                    refund was measured here - that is step 6/7's fresh-federation
+                    walk-away. Unity not run (no C# changed).
