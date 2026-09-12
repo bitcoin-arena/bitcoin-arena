@@ -62,11 +62,13 @@ username, free play. Then ENTRY_VOID.
   lock held until expiry (before: redeemed at once). Late first mark stays
   FORFEIT; no mark stays neither. Suites: protocol 497, node 564, client 279;
   Unity in TASKBOOK. Not deployed.
-  DONE (walk-aways, §15, ruled 2026-09-12, TASKBOOK): at the round's close a
-  seated player who never sent a first mark is FORFEIT (score 0), and one whose
-  checkpoints stopped is FAILED at the last receipted one - signed by both
-  seats, final 2 of 2, never VOID or ENTRY_VOID; the lock is not handed back
-  early (held to expiry until W4). Neutral input is not a sim rule yet.
+  WALK-AWAYS (§15, ruled 2026-09-12, TASKBOOK), OPEN: at the round's close a
+  seated player with no first mark is FORFEIT 0 and a stopped run is FAILED at
+  its last receipted checkpoint - both seats sign, final 2 of 2, lock held.
+  The Daily's seats now close each round at its end (live: FORFEIT 0 and
+  FAILED 1, final 2 of 2). Still open here: close retry, late start at close,
+  one-seat-refused VOID, §15 text, fresh-federation walk-away, Lightning hold
+  and objected re-run; a live DELIVERED run not yet measured.
   DONE (W5b, TASKBOOK): on a fresh regtest federation, with the seats' own
   claim key, both seats forfeited a qualifying Delivered lock once its result
   was final with the window closed. The forfeit verified under the claim key,

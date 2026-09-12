@@ -31779,3 +31779,45 @@ M3.3-34 THE WALK-AWAY CLOSE (§15): NO FIRST MARK IS FORFEIT, A STOPPED RUN IS F
   NOT YET           the Daily's running seats still run the code they loaded
                     (restart needed to carry this); a FORFEIT/FAILED lock is claimed
                     only at W4 (parked) - until then it expires like every loser's.
+
+M3.3-34 THE DAILY'S SEATS CLOSE EACH ROUND AT ITS END - A LIVE WALK-AWAY IS FORFEIT, NOT A REFUND (2026-09-12)
+  MEASURED BEFORE   only a `close <round>` message closes a round (server.js); the
+                    tools send it, but the Daily's launcher, its opener and the page
+                    never did, and a restart re-ran the close only for Lightning-held
+                    stakes. So no Daily run was ever replayed, signed or made final:
+                    a walk-away refunded at its lock's expiry, a delivery was never
+                    paid.
+  CHANGE            protocol first-mark.js `roundEndMs(contract)`: entry close +
+                    ticks->ms(start deadline + BLOCK_TICKS + start deadline), rounded
+                    up (default: entry close + 179957 ms) - the latest join, its
+                    first-tick window, a whole run, and the same window again for the
+                    last mark; no new constant. server.js `closeAtEnd` (opt-in): the
+                    seat closes every round it holds once that has passed on its own
+                    clock, by the path `close <round>` takes, and at start for any
+                    already over. run-2of2.mjs turns it on for both seats.
+  LIVE              launcher restarted 14:30:57Z (closed the 84 rounds already over
+                    in its store at start); page 22333c33 with its new daily.json.
+                    tools/daily-close-look.mjs (blwp-client), headless Chrome on the
+                    bare root: P joined round 63d2c841 and drove (PLAY, AUTO, depart,
+                    throttle, 160 s); W joined, was held by BOTH seats, and its tab
+                    closed before any mark. Nobody sent `close`.
+                    both seats logged "[close] 63d2c841 is over at 1789224063957"
+                    (= roundEndMs, 14:41:03.957Z)
+                    P  FAILED/1 at both seats, 2 signers, FINAL
+                    W  FORFEIT/0 at both seats, 2 signers, FINAL, no ENTRY_VOID
+                    public /results through both tunnels: P FAILED/1 x2, W FORFEIT/0
+                    x2 - what anyone can read. FINAL after the 600 s objection window.
+                    P's seated view read "2 players in this round: royal-goat-4861"
+                    (W by its generated name after leaving).
+  MEASURED ON THE WAY   a first harness closed W's tab as soon as seat A held its
+                    entry: seat B never got it (1 of 2) - no 2-of-2 member and
+                    nothing final. The harness now waits for both seats.
+  NOT YET           a live DELIVERED run (P's AUTO run did not deliver); the paid
+                    lock on a live walk-away (the Daily is free); close retry when a
+                    peer is unreachable, late start at close, one-seat-refused VOID,
+                    §15 text, fresh-federation walk-away, Lightning hold, objected
+                    re-run.
+  COUNTS            foreground, one file per node --test under timeout 180,
+                    --test-timeout=120000: protocol 502/502 (+1 round end), node
+                    567/567 (+1 close-at-end: files 1-48 274, 49+ with the 6 fixtures
+                    293), client 286/286. Unity not run.
