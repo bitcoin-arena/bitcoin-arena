@@ -18,7 +18,8 @@ Top item first. Finish and deploy before starting the next.
 
 LIVE LETTER: M3.3-34 lobby still open. Daniel 22:16: lobby and every control
 fully visible in Unity on iOS and Android. 22:12: lobby replaces splash;
-PLAY starts the round; spectate always. Same letter.
+PLAY starts the round; spectate always. Daniel 22:34: when the lobby is
+done, continue M3 immediately (ENTRY_VOID and the rest). Same letter.
   DONE so far (TASKBOOK): free lobby link, join, play, ghost; generated key
   and custom username locally. DONE: the other player sees the chosen name
   (seated view and lobby row, after a repaint and a reload), from a record the
@@ -787,6 +788,9 @@ HARD (Daniel 2026-09-11 14:19): V1 custody is the STAKE LOCK in FEDERATION.md
 and spec v4.6.2 §23. No single node is needed and no single node can take
 money: no gateway, lnd or patched fedimintd holds a round's stake. Only
 recognised, tested parts; no Lightning multisig node of our own.
+
+HARD (Daniel 2026-09-12 22:34): when M3.3-34 lobby is done, continue M3
+immediately. Do not wait.
 
 HARD (Daniel 2026-09-12 22:16): lobby and all its elements fully visible in
 Unity on iOS and Android. Same letter M3.3-34.
