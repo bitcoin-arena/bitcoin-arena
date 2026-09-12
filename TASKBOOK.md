@@ -32468,3 +32468,30 @@ M3.3-34 WALK-AWAY STEP 6: A PAID WALK-AWAY ON A FRESH FEDERATION, WITH A REAL RE
                     lock returns to the player: the W4 money hole every loser has
                     (a FORFEIT lock is not claimed until W4, parked behind the
                     fee-lock ruling), measured live.
+
+M3 ENTRY_VOID: THE OTHER ORDER - B'S VOID BEFORE THE LATE MARK (2026-09-12, measured)
+  CASE              first-mark.test.js (5c): A down; the player sends B its on-time
+                    first mark (tick 60) and the next mark past the line (1320 >
+                    900), so B decides the outage and records ENTRY_VOID (its
+                    forward to A goes while A is down); A back; only then the
+                    player sends A a late first mark (1320, same session key).
+  MEASURED          before the close: B ENTRY_VOID, B holds the proof of the two
+                    first marks (A's forward of the late mark), A holds the late
+                    start only - never the on-time mark (B's forward is not sent
+                    again once A is back), A no proof, no Void. After the window:
+                    A FORFEIT (no-quorum rule, the proof read at B's
+                    /equivocation), forfeit 409; B ENTRY_VOID, finality none,
+                    forfeit 200. Lock HELD: the forfeit is 2 of 2, so no refund
+                    leaves on B's Void alone. The seats disagree on the record.
+  ASSERTED          only what holds under either ruling: the case's order (B's
+                    Void first, A's late start), never 200 at both, lock held.
+  A RULING          which wins when a real outage came first: B's ENTRY_VOID (§14
+                    lets nothing undo it; A would take the Void from the on-time
+                    mark) or the proven equivocation (§13C; B would withhold its
+                    forfeit share while it holds the proof). Not coded.
+  COUNTS            first-mark 12/12 in 61 s (+5c), foreground, timeout 180. No src
+                    changed; node otherwise as at 897cca0 (578/578).
+  DAILY             launcher restarted on db5ef14 + 47bb972 (pid 4140676, up
+                    21:25:10Z), its daily.json deployed with the lobby
+                    (c35a85c8.btc-logistics-core.pages.dev); first round on the new
+                    code 7d45532f, opened 21:27:16Z.

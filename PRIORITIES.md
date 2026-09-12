@@ -97,6 +97,10 @@ done, continue M3 immediately (ENTRY_VOID and the rest). Same letter.
   W4's hole). On a hold, beside a winner, its hold is settled into the pool.
   An objected stopped run re-runs to the same FAILED. Still open here: §15
   text (the spec is not on this branch).
+  MEASURED (5c, TASKBOOK), A RULING: B records ENTRY_VOID on a real outage
+  (A down), then the player sends A a late first mark. B: ENTRY_VOID, forfeit
+  200. A: never got the on-time mark, FORFEIT by B's proof, 409. Lock held to
+  expiry; the seats disagree. Which wins - the outage first, or equivocation?
   DONE (W5b, TASKBOOK): on a fresh regtest federation, with the seats' own
   claim key, both seats forfeited a qualifying Delivered lock once its result
   was final with the window closed. The forfeit verified under the claim key,
@@ -1647,10 +1651,12 @@ IN THIS ORDER (unparked):
                                         33.500 m the ground was worth. The fix
                                         is 36's, again: the core owns the map's
                                         boxes and Unity draws them.
-   M3.3-34  lobby + free play          M3   OPEN — Daniel 22:16: fully visible
-                                        in Unity on iOS and Android. 22:12:
-                                        replaces splash, PLAY starts, spectate
-                                        always. Also 2-of-2, keys, username.
+   M3.3-34  lobby + free play          M3   done (1398323, live c35a85c8) — the
+                                        lobby is Unity's title screen, every
+                                        element on screen on iPhone and Android,
+                                        PLAY seats and starts, SPECTATE always;
+                                        2-of-2, keys, username kept. Open under
+                                        the letter: §15 text; ENTRY_VOID order.
    M3.3-19  optional stake / ghost     M3   OPEN — Daniel 11:15. Satoshis are
        without money                      optional. A free round (stake 0) seats
                                         without Lightning. Ghosts must be
