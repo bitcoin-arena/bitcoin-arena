@@ -31452,3 +31452,50 @@ M3.3-34 LOBBY: NAMES SHOWN TO OTHERS - THE OTHER SEAT SEES THE CHOSEN NAME
                     entry, no mark and no board row, but it now also goes to the
                     round's seats as a record the player signed. That sentence is
                     Daniel's to reword. Not deployed.
+
+M3.3-34 LOBBY: ONE GENERATED DEFAULT NAME, FROM THE IDENTITY KEY
+  RULING            (2026-09-12) one wordlist - display-name.js - over one key - the
+                    tab's identity key, never a round key; a verified custom name
+                    still wins; the name stays off finals, entries, marks, board rows
+                    and the money path. §0.12 updated to say so.
+  MEASURED BEFORE   13811d5, one fixed tab seed (identity key 3d0f3cd5...):
+                    lobby        "PluckyNomad-5573"  (identity.js's second list)
+                    board rnd 1  "keen-goat-2257"    (display-name.js, round key)
+                    board rnd 2  "dry-stag-7171"     (another round key, another name)
+  DONE              identity.js generatedName is displayNameFromKey(identity key);
+                    the second list is gone from the bundle. boardNames draws a
+                    leaderboard row's name from the player's verified display
+                    record (custom, or the default from the identity key it
+                    carries); a row with no record gets none. leaderboard.js's
+                    pseudonym note says so; the board still has no name column.
+                    namesOf now errors when NO seat answered instead of returning
+                    an empty round, and the page asks with 8 s: measured with 3 s
+                    asks, a busy page's asks all timed out and it wiped the names
+                    it had drawn (tab 1 lost the other's name; tab 2 never got it).
+  MEASURED AFTER    same seed: lobby, seated view, board rnd 1, board rnd 2 all
+                    "vast-rook-5034".
+                    Built page (lobby-regtest.sh, bundle 83485bfa..., exit 0), tab 2
+                    typed no name (generated "wild-bee-3856" = displayNameFromKey of
+                    its identity key), tab 1 typed "Night Hauler 7":
+                    round 1  tab 1 seated "2 players in this round: wild-bee-3856"
+                             (and later the same); lobby row "players: wild-bee-3856,
+                             Night Hauler 7" fresh, after repaint, after reload;
+                             tab 2 seated shows "Night Hauler 7"; tab 1's generated
+                             name never shown; no key stub.
+                    round 2  same identity keys, new round keys: tab 1 seated
+                             "wild-bee-3856" 20 s after PLAY; row "players:
+                             wild-bee-3856, Night Hauler 7"; tab 2 sees "Night
+                             Hauler 7". Page exchange errors none.
+                    board    no board is drawn on any screen yet (leaderboard.js:
+                             blocked on 22); on real leaderboard() rows the drawn
+                             names are ["urban-asp-0032", "Night Hauler 7", null] -
+                             the identity-key default, the custom name, a player
+                             with no record - and neither name is in the 168 result
+                             bytes (client lobby-names.test.js).
+                    seats    "Night Hauler 7" found only in lobby_names: 35 tables,
+                             ~3,450 rows per seat scanned outside it (4 entries,
+                             ~206 batches, 44 marks; 0 results yet).
+  COUNTS            foreground, one file per node --test under timeout 180,
+                    --test-timeout=120000: protocol 500/500, node 565/565, client
+                    285/285 (+2). No red. Unity not re-run (no C#, jslib or core
+                    change; the built page's scripts refreshed from the template).
