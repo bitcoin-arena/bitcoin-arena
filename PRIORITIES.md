@@ -62,11 +62,11 @@ username, free play. Then ENTRY_VOID.
   lock held until expiry (before: redeemed at once). Late first mark stays
   FORFEIT; no mark stays neither. Suites: protocol 497, node 564, client 279;
   Unity in TASKBOOK. Not deployed.
-  HOLE (walk-aways, §15, next on this letter): a committed player who never
-  sends a first mark, or stops after one, gets no result at either seat and
-  refunds at expiry (measured, TASKBOOK) - §15's stopped-transcript result is
-  unbuilt, and its "neutral-input policy" and "tolerance" are undefined. Needs
-  two rulings (tolerance; FAILED or FORFEIT) before code. Not ENTRY_VOID.
+  DONE (walk-aways, §15, ruled 2026-09-12, TASKBOOK): at the round's close a
+  seated player who never sent a first mark is FORFEIT (score 0), and one whose
+  checkpoints stopped is FAILED at the last receipted one - signed by both
+  seats, final 2 of 2, never VOID or ENTRY_VOID; the lock is not handed back
+  early (held to expiry until W4). Neutral input is not a sim rule yet.
   DONE (W5b, TASKBOOK): on a fresh regtest federation, with the seats' own
   claim key, both seats forfeited a qualifying Delivered lock once its result
   was final with the window closed. The forfeit verified under the claim key,

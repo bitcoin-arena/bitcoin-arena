@@ -31731,3 +31731,51 @@ M3.3-34 ENTRY_VOID PIECE: THE WALK-AWAY (§15), READ AND MEASURED - NO CODE CHAN
                     it expires - the loser money hole already listed).
   NOT RUN THIS TURN suites (last at 3e3b22b, no code changed since: protocol
                     500/500, node 565/565, client 286/286). Unity not run.
+
+M3.3-34 THE WALK-AWAY CLOSE (§15): NO FIRST MARK IS FORFEIT, A STOPPED RUN IS FAILED (2026-09-12)
+  RULED             (Daniel) walking away after a seat is taken is not ENTRY_VOID and
+                    not VOID. Tolerance: a missing first mark is stopped when the
+                    round's start deadline (900 ticks) passes with no receipted mark;
+                    a run with marks is stopped when checkpoints cease before the
+                    round's close, and ends at its last receipted checkpoint.
+                    Outcomes: no first mark = FORFEIT, score 0, empty receipted
+                    transcript (the late start's family); a mid-run stop = FAILED
+                    at the last receipted checkpoint. No PLAYER_LOST; core
+                    unchanged; neutral input is not a sim rule this turn; no W4.
+  CHANGE            protocol first-mark.js `stoppedOutcome` (the rule); the door's
+                    no-mark answer still decides nothing (its test unchanged).
+                    node verdict.js `resultFrom({ stopped })`: only the close's call
+                    turns LIVE into FAILED - every other caller still refuses it
+                    (verdict.test.js's test kept as it was). verify.js at the close:
+                    an entry that never started - no mark here, no ENTRY_VOID, no
+                    late-start FORFEIT, and every other seat answered the receipt
+                    pull with nothing - is signed FORFEIT 0 over the empty receipted
+                    transcript, and posted as it (#transcriptNamed); a run LIVE at
+                    its last receipted mark is signed FAILED, re-replayed to that
+                    mark when later ticks were stored; a re-run applies the same.
+                    The forfeit door is untouched: FINAL + not a qualifier = 409.
+  MEASURED BEFORE   (no-mark-probe.mjs, above) all three: no result at either seat,
+                    finality none, the lock back to the player at its expiry.
+  MEASURED AFTER    no-mark-probe.mjs, two in-process seats, both close:
+    (A) paid, sends nothing      both sign FORFEIT/0 (each holds both), FINAL
+                                 2 of 2, no ENTRY_VOID, no late-start record;
+                                 /forfeit 409 "that run is FORFEIT with score 0
+                                 ... not a qualifier, so its stake lock is not
+                                 forfeited"; lock held (expiry 1200 > 1000)
+    (B) paid, mark 60 then stop  both sign FAILED/0 - the replay's score at tick
+                                 60 - FINAL 2 of 2; /forfeit 409 not a qualifier;
+                                 lock held
+    (C) free, sends nothing      both sign FORFEIT/0, FINAL 2 of 2
+  CONTROLS          late start unchanged: outage (c) and first-mark "caught up late"
+                    still FORFEIT at the door, results [], finality null; ENTRY_VOID
+                    (a)-(b), (i)-(iii), invented closed receipt (f), DELIVERED and
+                    VOID paths unchanged (outage 9/9, first-mark 4/4, verdict 5/5).
+                    Changed as ruled: outage (d) and first-mark "no first mark at
+                    all" - from results [] / finality null to FORFEIT / FINAL.
+  COUNTS            foreground, one file per node --test under timeout 180,
+                    --test-timeout=120000: protocol 501/501 (+1 stopped.test.js),
+                    node 566/566 (+1 verdict), client 286/286. Unity not run (no C#,
+                    jslib or core change).
+  NOT YET           the Daily's running seats still run the code they loaded
+                    (restart needed to carry this); a FORFEIT/FAILED lock is claimed
+                    only at W4 (parked) - until then it expires like every loser's.
