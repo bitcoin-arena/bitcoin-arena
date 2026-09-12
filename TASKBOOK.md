@@ -32306,6 +32306,11 @@ M3.3-34 THE LOBBY IS UNITY'S TITLE SCREEN (2026-09-12)
   EDITMODE          195: 191 pass, 1 red, 3 skipped - the red is the listed
                     CombatFxTests.RifleFireProducesAFlashAndATracer (first run:
                     190, the layout red above).
+  PLAYMODE          239: 215 pass, 11 red, 13 skipped - the documented eleven (nine
+                    on the retired C# army and truck physics, two that need a
+                    graphics device under -nographics); TheTitleScreenNeverDraws-
+                    OverItself and TheTitleScreenHoldsEverythingUntilPlay pass with
+                    the height-capped pad.
   LIVE, FIRST BUILD build 0.0.1157, deployed to btc-logistics-core (212fbd3b; the
                     core alias served the same page and daily.json). lobby-phone-probe
                     (CDP device emulation), Unity's own report of what it drew:
@@ -32359,3 +32364,34 @@ M3.3-34 ONE SEAT REFUSED, THE DIRECT PATH: A FIRST MARK THAT REACHED ONLY THE SE
                     99 files (1-48 278/278; 49-99 297/297 - one-seat-refused 5/5,
                     outage 9/9, receipt-carry 3/3, no-quorum 5/5, verdict 5/5),
                     client 286/286; protocol unchanged (501/501). No C#.
+
+M3 ENTRY_VOID: TWO FIRST MARKS ARE THE PLAYER'S EQUIVOCATION, NOT AN OUTAGE (2026-09-12)
+  HOLE              the late-start guard case's leftover (a390ca0, PARKED as
+                    ENTRY_VOID's): an on-time first mark to B while A was down and
+                    a late first mark to A. Two first marks under the entry's own
+                    key, both chaining to nothing - §13B's second limb, "two chains
+                    that diverge", which forfeits. §13C: "a player cannot
+                    manufacture a refund".
+  BEFORE            first-mark.test.js (5b), both seats up at the close: B held the
+                    on-time mark (its forward to A "unanswered"), A and B the late
+                    start; after the window ENTRY_VOID at A and B and the forfeit
+                    door 200 at both - the lock handed back to the player at once,
+                    a refund for the player's own split start.
+  CHANGE            blwp-node only. round.equivocation also pairs the first mark a
+                    seat holds with a DIFFERENT late first mark it refused (one
+                    parent, two chains: the proof provesEquivocation checks, and
+                    /equivocation serves it). server decideOutage: no ENTRY_VOID
+                    while that proof is held here. verify #noQuorum: a late start
+                    no longer ends the rule - with two first marks proven (here or
+                    at a peer's /equivocation) the entry is decided after the result
+                    window by noQuorumOutcome, equivocation proven: FORFEIT.
+  AFTER             (5b): no ENTRY_VOID at either seat; FORFEIT at A and B
+                    (finality FORFEIT, the no-quorum record), forfeit door 409, lock
+                    held. first-mark 11/11, equivocation 14/14, outage 9/9 (every
+                    ENTRY_VOID path unchanged), one-seat-refused 5/5.
+  NOT COVERED       the order where B decides its outage BEFORE A's late mark
+                    reaches it (a later mark past the line at B first): ENTRY_VOID
+                    is recorded, and §14 lets nothing undo it. Named, not measured.
+  COUNTS            foreground, timeout 180, --test-timeout=120000: node 576/576 over
+                    99 files (1-48 279/279 with 5b; 49-99 297/297), client 286/286;
+                    protocol unchanged (501/501). No C#.
