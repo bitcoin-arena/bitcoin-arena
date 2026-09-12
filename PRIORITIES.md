@@ -95,12 +95,14 @@ done, continue M3 immediately (ENTRY_VOID and the rest). Same letter.
   other) are FORFEIT, never ENTRY_VOID. On a fresh federation a paid walk-away
   is FORFEIT 0, final 2 of 2, no refund before expiry (the lock back at expiry:
   W4's hole). On a hold, beside a winner, its hold is settled into the pool.
-  An objected stopped run re-runs to the same FAILED. Still open here: §15
-  text (the spec is not on this branch).
-  MEASURED (5c, TASKBOOK), A RULING: B records ENTRY_VOID on a real outage
-  (A down), then the player sends A a late first mark. B: ENTRY_VOID, forfeit
-  200. A: never got the on-time mark, FORFEIT by B's proof, 409. Lock held to
-  expiry; the seats disagree. Which wins - the outage first, or equivocation?
+  An objected stopped run re-runs to the same FAILED.
+  DONE (5c, ruled 2026-09-12: FORFEIT wins the money; TASKBOOK): a seat Voids on a
+  real outage, then the player sends the other a late first mark - FORFEIT at
+  both after the window, every forfeit door 409, no refund signed, the Void
+  kept as history. Fresh federation: before, both signed the refund and the
+  player redeemed 975360 msat before expiry; now redeem and refund refused,
+  lock held. §15 amended in this branch's multiplayer_p2p.md (walk-away, late
+  start, stopped run, two first marks).
   DONE (W5b, TASKBOOK): on a fresh regtest federation, with the seats' own
   claim key, both seats forfeited a qualifying Delivered lock once its result
   was final with the window closed. The forfeit verified under the claim key,
@@ -1655,8 +1657,8 @@ IN THIS ORDER (unparked):
                                         lobby is Unity's title screen, every
                                         element on screen on iPhone and Android,
                                         PLAY seats and starts, SPECTATE always;
-                                        2-of-2, keys, username kept. Open under
-                                        the letter: §15 text; ENTRY_VOID order.
+                                        2-of-2, keys, username kept. §15 text and
+                                        the ENTRY_VOID order: done (5c).
    M3.3-19  optional stake / ghost     M3   done (TASKBOOK "M3.3-19", 2026-09-10) —
        without money                      a free seat on a daemon with no
                                         Lightning is 201 FREE; the watcher's

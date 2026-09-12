@@ -32495,3 +32495,54 @@ M3 ENTRY_VOID: THE OTHER ORDER - B'S VOID BEFORE THE LATE MARK (2026-09-12, meas
                     21:25:10Z), its daily.json deployed with the lobby
                     (c35a85c8.btc-logistics-core.pages.dev); first round on the new
                     code 7d45532f, opened 21:27:16Z.
+
+M3 ENTRY_VOID: TWO FIRST MARKS AFTER AN OUTAGE-VOID ARE FORFEIT, NO REFUND (2026-09-12, ruled)
+  RULING            Daniel: FORFEIT wins the money. Two first marks are FORFEIT at
+                    both seats, never a refund, even when a real outage made a seat
+                    record ENTRY_VOID first. The Void row stays as history (§14); a
+                    seat holding the proof refuses the refund signature; both close
+                    FORFEIT; the lock follows the paid-walk-away path.
+  CORRECTION        the section above ("THE OTHER ORDER") said "no refund leaves on
+                    B's Void alone". WRONG: its B door 200 was a combined 2 of 2
+                    refund - B's forfeit showed A the Void, A recorded it (voidHere
+                    had no two-first-marks guard) and committed its share. The
+                    fixture never redeemed, so its lock only looked held.
+  BEFORE            tools/void-then-late.mjs on a fresh federation (outage-regtest,
+  (real fed.)       stock fedimintd 0.12.0, the seats' own 2-of-2 claim key,
+                    objection window 5 s): B down; on-time first mark 60 and a mark
+                    at 960 to A -> A ENTRY_VOID; B back; late first mark 960 to B
+                    -> "error FORFEIT ... after the start deadline". A: Void, late
+                    start by forward, proof 1, no decision (92 s waited); B: FORFEIT
+                    after the window. Doors A 200, B 200, A 200 - one signature;
+                    forfeitOf SIGNED, kept at both; B recorded ENTRY_VOID from A's
+                    evidence. The player REDEEMED 975360 msat before expiry (block
+                    314 of 464); the lock gone.
+  CHANGE            blwp-node. round.twoFirstMarks: a proof here, or a late first
+                    mark kept for FORFEIT that is not the on-time mark voided or
+                    held. forfeit.js: an ENTRY_VOID entry with two first marks (or a
+                    no-quorum FORFEIT) is refused. verify #noQuorum: a Void with
+                    the equivocation proven is decided after the window (FORFEIT);
+                    #equivocationProven also pairs the voided mark with the late
+                    one. server: voidHere, the forward door and /play refuse a
+                    second first mark (409 / "error FORFEIT"), never void or take
+                    it; the close's holding and retry filters keep such an entry.
+  AFTER (real fed.) same run: A and B FORFEIT (no-quorum) 9.2 s after the close,
+                    no results signed; doors A 409 "two first marks ... signs no
+                    forfeit of the lock", B 409, A again 409; forfeitOf refused; B
+                    never recorded the Void; redeem via the seats refused; refund
+                    before expiry refused ("locktime has not yet passed"); lock
+                    HELD, 150 blocks left - a forfeit's path (expiry / W4).
+  AFTER (5c, in     first-mark.test.js 5c asserts it: FORFEIT at both (no-quorum,
+  process)          finality), doors 409 / 409 / 409 again, A records no Void from
+                    B's evidence, B's Void kept, no forfeit kept, lock held. Before:
+                    B's door 200.
+  SPEC              multiplayer_p2p.md (v4.6.2, already on this branch - "not on
+                    this branch" was wrong) §15: walk-away FORFEIT 0, late start
+                    FORFEIT 0, stopped run FAILED at its last receipted checkpoint
+                    and the same on re-run, two first marks FORFEIT never a refund
+                    (the four steps above). master untouched.
+  COUNTS            foreground, timeout 180, --test-timeout=120000: node 579/579 over
+                    100 files (1-48 280/280 in 72 s; 49-100 299/299 in 81 s -
+                    first-mark 12/12, outage 9/9, one-seat-refused 5/5, no-quorum
+                    5/5, equivocation 14/14, forfeit 2/2); core 91/91; protocol and
+                    client unchanged (no source there). No C#, no Unity.
