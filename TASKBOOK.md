@@ -30548,3 +30548,61 @@ M3 W1a: THE LOCK CLIENT BUILDS FOR WASM AND LOCKS - AFTER
                       the seat skips the federation          seat-lock      red
                     W1a closed: page, bundle, pins and Unity not touched - not
                     player-visible; W1b is next.
+
+M3 W1b: THE PAGE MAKES THE PLAYER'S STAKE LOCK
+  SLICE             W1b (PRIORITIES): the joining page drives the W1a lock
+                    client, so the entry it writes names a real stake-lock
+                    outpoint the seats verify and commit.
+  HOW MEASURED      packages/blwp-client/tools/page-lock-regtest.sh: stock
+                    fedimintd 0.12.0 (4 guardians, 3 of 4, one gateway, regtest,
+                    up in 136-142 s); per run the Daily's own 2-of-2 round
+                    (standUpRound: bonded seats, census, published round) naming
+                    the federation, both seats holding the attested claim key and
+                    the real stake-lock port; the built page (build/webgl of
+                    2026-09-10 + this template, filled - no compiled Unity change)
+                    opened on the round's link in headless Chrome; the harness
+                    pays the deposit invoice the page shows through regtest lnd.
+  BEFORE (today's   entry outpoint 0000..0000:0, lock client never loaded,
+  page, aed4357)    handouts 201 201, /entry 201 201, /lock none, committed
+                    none.
+  AFTER             deposit shown at 33.9 s: 994270 msat (net 980000 + the stock
+                    allowance 4940, grossed up by gateway and claim fees), one
+                    deposit; locked at 39.0 s. Outpoint
+                    d88b5a6ad8a21cad115ee68b67435f02c3f588491ef2952ab9281945bdc6cc54:0
+                    - the entry names it, the federation holds it (150 blocks
+                    left at 315); /entry 201 201, /lock 201 201, both seats
+                    committed 980000 msat. Lock client files served 200 200.
+  NO-LOCK MUTANT    the same page served with its lock step switched off: the
+                    page refuses the link ("no lock was made: an entry naming no
+                    stake lock outpoint is one no seat can commit"), Unity never
+                    starts, /entry none, /lock none, committed none.
+  W1A FOR SCALE     the Node-driven lock: f2bcb9b2..b848:0, 980000 msat on both
+                    seats.
+  FOUND ON THE WAY  (1) the first page run threw on its own invite: the check
+                    wanted `fed1` + data, a real invite is `fed1` + `1` + data.
+                    (2) the second refused its seat "Insufficient funds" before
+                    any deposit: the federation's fee quote is a dry run over the
+                    notes held, so an empty client cannot be quoted. The first
+                    deposit is now the net stake + PaymentFee::
+                    TRANSACTION_FEE_DEFAULT (2 sat + 3000 ppm); after it the
+                    quote decides, and a short one is topped up (tested).
+                    (3) a lock round's entry was 402 on a launched daemon: the
+                    funding rule wanted Lightning; it now wants the federation
+                    for a round naming one (launcher-funded.test.js).
+  ALSO              entryFor refuses a lock round's entry with no or a zero
+                    outpoint; the link carries federation=<invite> and the lock
+                    client refuses an invite to another federation; the lock
+                    client's root is taggedHash(LockClientSecret, seed||round)
+                    (recoverable from the seed; recovery itself not wired); the
+                    lock encoding moved to protocol (one for page and seat); the
+                    lock client (wasm 18317561 bytes, glue 60768) is in dist and
+                    the template, pinned c82da319.. / 863189ad.., copied by
+                    SyncCore; bundle ea1fc5a4...
+  COUNTS            protocol 487/487; client 264/264; node 543/544 - the red is
+                    second-closer "closed 800 ms apart", which passes alone (2/2)
+                    and fails in HEAD aed4357's full node suite too (541/543 there,
+                    with "two seats restarted inside a 3 s window"): a timing red
+                    that predates W1b.
+  NOT DONE          not deployed; the page still throws "expected 32 bytes, got
+                    nothing" after the world seed - on today's page too, not
+                    traced here. A testnet4 round needs gateway inbound (parked).

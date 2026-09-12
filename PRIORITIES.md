@@ -20,9 +20,18 @@ LIVE LETTER: M3 - A ROUND FOR TESTNET SATS ("M3 is done when"). Special
 conform-to-v4.6.2 is done (a1e8d6e / 875cef1). Continue M3. Daniel 18:41:
 do every M3 slice that does not need him. Do not wait. Do not ask Go on
 unblocked work. Park only inbound, which-guardians, and named rulings.
-  NEXT (top): W1b — the page drives this wasm lock client so a joining player
-  writes a real stake-lock outpoint on the shipping path.
+  NEXT (top): not chosen in the W1b letter. The rest of "M3 is done" is the W
+  inventory (TASKBOOK); W5 - redeem/forfeit/refund/withdraw - is the lock's
+  other half.
   PARKED: inbound, which-guardians, the expiry margin, the fee lock.
+  DONE (W1b, TASKBOOK): a joining player's page makes the stake lock - on
+  regtest the built page joined a lock round from its link, took one deposit,
+  locked, and wrote outpoint d88b5a6a..cc54:0 on its entry; both seats
+  verified it in the federation and committed 980000 msat. Before: the page
+  wrote a zero outpoint and posted no lock. Not deployed.
+  FOUND (not W1b): the page throws "expected 32 bytes, got nothing" after the
+  world seed, on today's page too; second-closer.test.js fails in the full
+  node suite on HEAD aed4357 as well (passes alone) - a timing red.
   DONE (stake-lock wiring, slice 1): the Round Contract carries v4.6.2 §6's
   federation_id, stake_expiry_blocks (144) and publication_relays[], in the
   id; custodyFieldsAreValid refuses another expiry, a paying FEDERATION round
