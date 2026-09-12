@@ -16,13 +16,12 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE LETTER: M3 lobby + play with no money (Daniel 07:45 / 07:48 / 08:41).
-A lobby belongs in M3. Node lists rounds; page shows them. Same letter:
-generated public/private key, a username, and overwrite that username with
-a custom one. Stake 0 / no Lightning end-to-end. Then ENTRY_VOID.
-  NEXT (top, unblocked): node lobby doors + page lobby + identity (key +
-  username, custom overwrite) + free play. Then
-  ENTRY_VOID (§16) - nothing in the node makes a Void today. The start deadline is a
+LIVE LETTER: M3.3-34 lobby still open. Daniel 09:04: the lobby must support
+2-of-2 consensus (two seats, threshold 2), not 5-of-7. Same letter as keys,
+username, free play. Then ENTRY_VOID.
+  DONE so far (TASKBOOK): free lobby link, join, play, ghost; generated key
+  and custom username locally. Names not yet shown to others.
+  NEXT (top, unblocked): 2-of-2 in the lobby (node + page). Then ENTRY_VOID (§16) - nothing in the node makes a Void today. The start deadline is a
   round parameter in ticks from the join tick (a named default if omitted);
   the evidence is the player's first mark, forwarded between the seats.
   HOLE (walk-aways, separate, not this slice): a committed player who never
@@ -730,6 +729,9 @@ HARD (Daniel 2026-09-11 14:19): V1 custody is the STAKE LOCK in FEDERATION.md
 and spec v4.6.2 §23. No single node is needed and no single node can take
 money: no gateway, lnd or patched fedimintd holds a round's stake. Only
 recognised, tested parts; no Lightning multisig node of our own.
+
+HARD (Daniel 2026-09-12 09:04): lobby supports 2-of-2 consensus. Two seats,
+threshold 2. Same letter M3.3-34.
 
 HARD (Daniel 2026-09-12 08:41): lobby includes identity. Generated
 public/private key, a username, and overwriting that username with a custom
@@ -1564,12 +1566,11 @@ IN THIS ORDER (unparked):
                                         33.500 m the ground was worth. The fix
                                         is 36's, again: the core owns the map's
                                         boxes and Unity draws them.
-   M3.3-34  lobby + free play          M3   OPEN — Daniel 07:45/07:48/08:41.
-                                        Node: list rounds, waiting seats, free
-                                        flag, join with no Lightning. Page:
-                                        that list, generated pubkey/privkey, a
-                                        username, custom username overwrite.
-                                        Play and ghosts, no wallet.
+   M3.3-34  lobby + free play          M3   OPEN — Daniel 09:04: 2-of-2
+                                        consensus in the lobby (2 seats,
+                                        threshold 2). Also 07:45/07:48/08:41:
+                                        list rounds, free/no Lightning, keypair,
+                                        username, custom overwrite, play, ghosts.
    M3.3-19  optional stake / ghost     M3   OPEN — Daniel 11:15. Satoshis are
        without money                      optional. A free round (stake 0) seats
                                         without Lightning. Ghosts must be
