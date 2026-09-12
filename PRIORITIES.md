@@ -25,9 +25,12 @@ username, free play. Then ENTRY_VOID.
   offers Join only when both of the round's seats say open and seated. With
   one seat down the row says 1 of 2 and has no Join. Measured in the built
   page locally; not deployed.
-  NEXT (top, unblocked): ENTRY_VOID (§16) - nothing in the node makes a Void today. The start deadline is a
-  round parameter in ticks from the join tick (a named default if omitted);
-  the evidence is the player's first mark, forwarded between the seats.
+  DONE (ENTRY_VOID §16, TASKBOOK): a round names a start deadline in ticks
+  after the join tick, or gets the page's measured window (900). Seats refuse
+  a first mark signed after that line and record ENTRY_VOID, and forward the
+  first mark to the other seat; a down seat caught up late with a late mark is
+  Void too, not DELIVERED. No mark is not Void. NOT YET: a Void lock is not
+  forfeited at once - it refunds at expiry.
   HOLE (walk-aways, separate, not this slice): a committed player who never
   sends a first mark refunds at expiry today, because §15 (neutral input to a
   deterministic result) is unbuilt - and ENTRY_VOID must not fire without a

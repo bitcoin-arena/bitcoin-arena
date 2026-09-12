@@ -31103,3 +31103,44 @@ M3 ENTRY_VOID (§16), BEAT 2: THE OMITTED DEADLINE IS THE PAGE'S WINDOW
                     ENTRY_VOID from it.
   COUNTS            protocol 494/494 (+1), node 550/550, client 279/279 (bundle
                     cf843cd2).
+
+M3 ENTRY_VOID (§16), BEAT 3: SEATS RECORD IT FROM A FORWARDED FIRST MARK
+  BUILT             round.checkpoint: a first mark (chains to nothing) after
+                    join_tick + startDeadlineOf(round) is refused - no receipt -
+                    and kept whole in entry_voids (GET /entry-void). In time it is
+                    any mark. server: a seat that takes or voids a first mark hands
+                    it on at once (POST /first-mark: mark, the batches it commits
+                    to, the forwarder's receipt); the other seat applies the same
+                    rule and returns its receipt. No mark: no record (§15 hole).
+  MEASURED          entry-void.test.js, two in-process seats, round omits the
+                    deadline (900):
+                    in time, player at A only   B holds mark 60 by forward, 2 receipts;
+                                                DELIVERED, FINAL, forfeit 200 at both
+                    first mark at 1320          A: "ENTRY_VOID at 1320 > 900", mark not
+                                                stored; B the same by forward; no
+                                                result, finality null, forfeit 409
+                    B down, caught up late      B refuses the same mark: ENTRY_VOID at
+                                                both, nothing DELIVERED (was DELIVERED)
+                    no mark                     no record at either seat; forfeit 409;
+                                                lock held
+                    MUTANT (forwarding off): 2 of 4 red - B holds nothing (the in-time
+                    run no longer settles) and B keeps no Void.
+  FIXTURES          rounds that plant ONE first mark at a run's end (1000, 1320) and
+                    must settle name startDeadlineTicks 1400 (test/planted-marks.js):
+                    window-fixture contractFor and receipt-carry, close-order,
+                    settle-threshold, custody-daemon, reconstruct, payout-second-
+                    seat, second-closer, verdict, verify. Found by the suite: 8 red
+                    and one chunk hung (close-order waited on a result a Void never
+                    gets) before; 0 after. No assertion changed.
+  W5b REHEARSAL     fresh regtest federation, the harness now marks at tick 60 then
+                    the end (winner 1178, loser 471): winner DELIVERED, forfeited by
+                    both seats 26.7 s after close, verifies; loser 409 "FAILED with
+                    score 14"; one seat's signature refused by the guardians; redeem
+                    from the seed accepted (975360 msat); withdraw 961392 msat
+                    SETTLED. Seat B answered "0" to the first batch: A had forwarded
+                    it.
+  NOT DONE          the Void lock is not forfeited at once (§23.2): it refunds at
+                    expiry, which is lawful when nobody acts. A late first mark on a
+                    regtest federation is measured in-process only.
+  COUNTS            node 555/555 (+4 entry-void, +1 fixture file), protocol 494/494,
+                    client 279/279.
