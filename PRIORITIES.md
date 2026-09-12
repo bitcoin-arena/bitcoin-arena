@@ -20,10 +20,15 @@ LIVE LETTER: M3 - A ROUND FOR TESTNET SATS ("M3 is done when"). Special
 conform-to-v4.6.2 is done (a1e8d6e / 875cef1). Continue M3. Daniel 18:41:
 do every M3 slice that does not need him. Do not wait. Do not ask Go on
 unblocked work. Park only inbound, which-guardians, and named rulings.
-  NEXT (top): W5a - the player's refund after the lock's own expiry, from a
-  later session holding only the seed, and withdraw over a listed gateway;
-  then W5b, the seats' forfeit and the page's redeem - all on the seats' own
-  claim key.
+  NEXT (top): W5b - the seats forfeit a Delivered lock after finality and the
+  objection window (a Void one at once, never a loser's), FROST over the lock's
+  contract id at a door, and the page verifies it and redeems.
+  DONE (W5a, TASKBOOK): a player refunds a stake lock from a later session
+  holding only the seed - refused before the lock's expiry, accepted after
+  (975360 of 980000 msat credited, the lock gone, a second refund refused),
+  for even-y and odd-y keys - and withdraws it over the federation's gateway:
+  961392 msat settled at the player's lnd. One stock LNv2 line patched
+  (fedimint-lnv2-send-expiry.patch): its send panicked on wasm. Not deployed.
   DONE (W5 step 1, TASKBOOK): the seats make the round's claim key themselves
   when they seat it - both hold one group key, /claim-key serves it, the page
   counts 2 of 2 - and a page lock under it (c81dad3e..:0) was verified and

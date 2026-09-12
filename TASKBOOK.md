@@ -30716,3 +30716,61 @@ M3 W5 STEP 1: THE SEATS MAKE THE ROUND'S CLAIM KEY
                     when the round is posted again; rounds larger than 2-of-2
                     make the key over contract.nodes, which claimKeyOf already
                     reads (measured here only on 2 of 2).
+
+M3 W5a: THE PLAYER'S REFUND AND WITHDRAW
+  SLICE             W5a (PRIORITIES): §23.2's default path - nobody acts, the
+                    lock expires, the player's key takes it back - from a later
+                    session holding only the seed, then the ecash out over a
+                    gateway the federation lists. Player side only; no forfeit.
+  HOW MEASURED      packages/blwp-node/tools/w5a-regtest.sh (foreground): stock
+                    fedimintd 0.12.0, 4 guardians, one gateway, regtest; the
+                    Daily's 2-of-2 round naming it, the seats making their own
+                    claim key (nothing injected); two players, one even-y key
+                    and one odd-y, locking as the page locks (the wasm lock
+                    client, deposit paid by regtest lnd); every refund from an
+                    EMPTY tab store and the seed alone.
+  BUILT             lock client: refund (the lock rebuilt from its fields,
+                    OutgoingWitness::Refund, signed by the player's key -
+                    negated when its point is odd-y, as refund_pk is the even-y
+                    point), withdrawableMsat (stock spendable_amount), withdraw
+                    (stock send, its gateway picked by the stock select_gateway
+                    and reported). Seat: GET /stake-lock?round=&refund= - the
+                    verified locks with that refund key, public as every lock
+                    is. Client: findLock, refundStake (the seed -> player key and
+                    lock-client secret -> the seats -> a fresh wallet -> refund).
+  RESULTS           (run 3; runs 1 and 2 agreed on every refund number)
+                    step                      even-y                      odd-y
+                    locked, 2 seats committed f44e5570..c6ee:0, 980000     23b1ad73..749d:0, 980000
+                                              msat, expiry block 457      msat, expiry 464
+                    refund before expiry      REFUSED "The contracts locktime has not yet passed"
+                    (federation at block 314) lock held                   lock held
+                    mined past the expiry     151 blocks; the federation at 465 after 2.5 s
+                    refund after expiry       ACCEPTED 99920acb..,        ACCEPTED 561418c4..,
+                                              975360 msat credited,       975360 credited,
+                                              fee 4640, lock gone         fee 4640, lock gone
+                    second refund             REFUSED "No contract found for given ContractId"
+                    withdraw                  gateway http://127.0.0.1:30170/, 961392 msat out,
+                                              0 left, send fees 13968; lnd SETTLED 961392 msat
+                                              (both players the same)
+                    So of a 1000000 msat stake: 20000 node fee, 4640 the
+                    refund's federation fee, 13968 the withdraw's gateway and
+                    federation fees; 961392 back in the player's wallet.
+  FOUND ON THE WAY  the withdraw panicked the wasm (run 1: the harness died
+                    there; run 2: recorded "unreachable"): LNv2 send checks
+                    invoice.is_expired() first (lnv2-client lib.rs:549), which
+                    reads std::time - "time not implemented on this platform"
+                    on wasm32-unknown-unknown. Stock 0.12's browser client has
+                    no LNv2; the native client withdrew fine (rehearsal step 5).
+  THE PATCH         packages/blwp-client/lock-client/fedimint-lnv2-send-expiry.patch:
+                    that one check, as invoice.would_expire(duration_since_epoch())
+                    - fedimint's own clock (JS Date on wasm). The rest of send is
+                    stock. Checked as tools/fedimint-lnv2-hold.patch is: patch -p1
+                    --dry-run applies to a pristine v0.12.0 file, and reverses
+                    cleanly on the patched tree. Lock client pinned 5add7e24.. /
+                    e898c937...
+  COUNTS            protocol 487/487, node 547/547, client 271/271 (full, quiet
+                    machine). No Unity change.
+  NOT DONE          the page's own refund and withdraw buttons (the calls are in
+                    the bundle; W5b's redeem puts them on the page); fee locks
+                    (parked); a testnet4 withdraw needs a gateway with liquidity
+                    (parked with inbound). Not deployed.
