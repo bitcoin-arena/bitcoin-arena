@@ -32695,3 +32695,30 @@ M3.3-34 PATH 3: TWO FIRST MARKS ON A LIGHTNING HOLD - THE HOLD SETTLES INTO THE 
                     first-mark 14/14, no-quorum 5/5, one-seat-refused 5/5, outage
                     9/9, walk-away-hold 1/1); core 91/91; protocol 501/501; client
                     286/286. No C#.
+
+M3.3-34 PATH 5: PAST THE LOCK'S EXPIRY - HELD UNTIL THEN, BACK ONLY THROUGH THE EXPIRY REFUND (2026-09-13, measured)
+  RUN               void-then-late.mjs EXPIRY=1 (the late order: B down, A ENTRY_VOID
+                    on-time 60 + a mark at 960; B back, a late first mark at 960 to
+                    B), fresh federation via outage-regtest.sh (up in 133 s), the
+                    seats' own 2-of-2 claim key, window 5 s; 251 s in all.
+  BEFORE THE        FORFEIT (no-quorum) at A and B 10.3 s after the close, proof 1
+  EXPIRY            at both, 0 signed results; doors A 409 "two first marks ...
+                    signs no forfeit of the lock", B 409, A again 409; forfeitOf "no
+                    seat gave a forfeit"; redeem through the seats refused; refund
+                    refused ("The contracts locktime has not yet passed", block 314
+                    of 460); lock HELD, 146 blocks left.
+  PAST THE EXPIRY   148 blocks mined (lnd's address; bitcoind has no wallet):
+                    federation block 462 (expiry 460), lock held with 0 left. Both
+                    seats unchanged - A ENTRY_VOID as history + no-quorum FORFEIT,
+                    B late start + no-quorum FORFEIT, 0 results, no forfeit kept;
+                    doors still A 409, B 409; the redeem through the seats still
+                    refused ("no seat gave a forfeit"); the refund at expiry
+                    ACCEPTED, 975360 msat credited, lock GONE.
+  READS AS          no committee refund at any point; the lock returns only by the
+                    player's own refund key once the chain passes its expiry - the
+                    accepted W4 gap (nothing claims a forfeited lock yet), as for a
+                    paid walk-away (step 6: the same 975360 msat). Measurement only:
+                    no door added.
+  COUNTS            harness only, no source: node 582/582, core 91/91, protocol
+                    501/501, client 286/286 re-run for this commit (foreground,
+                    timeout 180, --test-timeout=120000).
