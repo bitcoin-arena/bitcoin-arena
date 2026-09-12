@@ -20,7 +20,9 @@ LIVE LETTER: M3.3-34 lobby still open. Daniel 09:04: the lobby must support
 2-of-2 consensus (two seats, threshold 2), not 5-of-7. Same letter as keys,
 username, free play. Then ENTRY_VOID.
   DONE so far (TASKBOOK): free lobby link, join, play, ghost; generated key
-  and custom username locally. Names not yet shown to others.
+  and custom username locally. DONE: the other player sees the chosen name
+  (seated view and lobby row, after a repaint and a reload), from a record the
+  player signed with its round key; no key stub.
   DONE (2-of-2, TASKBOOK): each seat signs its listing of a round; the page
   offers Join only when both of the round's seats say open and seated. With
   one seat down the row says 1 of 2 and has no Join. Measured in the built
@@ -43,7 +45,9 @@ username, free play. Then ENTRY_VOID.
   so both seats record ENTRY_VOID and the refund is at once (fresh federation:
   redeemed before expiry). A seat records ENTRY_VOID only with the player's own
   signed first mark in hand, never on another seat's word alone (a mark one
-  seat invented is refused; no Void, no forfeit). Late first mark stays
+  seat invented is refused; no Void, no forfeit). DONE on a fresh 2-of-2
+  federation: an invented closed receipt is 409, nothing recorded, the paid
+  lock held until expiry (before: redeemed at once). Late first mark stays
   FORFEIT; no mark stays neither. Suites: protocol 497, node 564, client 279;
   Unity in TASKBOOK. Not deployed.
   HOLE (walk-aways, separate, not this slice): a committed player who never

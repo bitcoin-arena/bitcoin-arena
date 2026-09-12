@@ -31396,3 +31396,59 @@ M3 ENTRY_VOID (§16), THE CLOSED-CLAIM TRUST BOUNDARY ON A FRESH FEDERATION
                     Unity untouched since the runs above (no C#, jslib or core
                     change): EditMode 193 = 189/1 listed/3, PlayMode 239 = 215/11
                     listed/13, as listed above.
+
+M3.3-34 LOBBY: NAMES SHOWN TO OTHERS - THE OTHER SEAT SEES THE CHOSEN NAME
+  HOW               tools/lobby-page.mjs through tools/lobby-regtest.sh on the built
+                    page (webgl-lobby, Unity 0.0.1121; index.html and the page's
+                    scripts refreshed from the template, Unity's macros filled -
+                    no C#, jslib or core change, no Unity rebuild), headless
+                    Chrome, the Daily's 2-of-2 on a fresh regtest bitcoind, free
+                    rounds. Tab 2 saves "Road Owl 42" in the lobby and joins the
+                    round tab 1 joined; both play. Read: tab 1's seated chip, then
+                    a lobby tab's row for the round - fresh, after the list's own
+                    5 s repaint, after a reload - and whether any 8-hex stub of
+                    tab 2's identity key, fingerprint or player key shows.
+  MEASURED BEFORE   HEAD 7600e38 on the page (bundle = dist, template diff = the 20
+                    macro lines), exit 0:
+                    tab 1 seated  "2 players in this round · other at -76,-78 m ·
+                                  free seat" (and later the same) - hasName false
+                    lobby row     "... 2 seated, 2 playing (says :18581); 2 seated,
+                                  2 playing (says :18582)" - hasName false, also
+                                  after the repaint and after the reload
+                    key stub      none anywhere. The other player saw a count and
+                                  never the name.
+  DONE              protocol lobby-name.js: one record - round, the round key the
+                    player is seated under, the tab's identity key, the chosen name
+                    (empty for none: the generated one is made from the identity
+                    key), time - signed by that round key (TAG BLWP/v1/LobbyName);
+                    the name rule moved there so seat and page share it. A seat
+                    keeps it (POST /name) only under that signature and only from a
+                    player it seated in that round, newest wins; serves it in
+                    /rounds rows and at GET /names. The page hands its record to
+                    every seat once seated (again until kept) and checks every
+                    record it is shown - decodes, this round, verifies under the
+                    player key it names - before drawing a name: a seat can leave a
+                    name out, never write one. No record, no name: a count, never a
+                    key. The board and the signed final are untouched.
+  MEASURED AFTER    the same run, new bundle 3dd7deb9... pinned, exit 0:
+                    tab 1 seated  "2 players in this round: Road Owl 42 · other at
+                                  -76,-24 m · free seat", and later the same
+                    lobby row     "... · players: Road Owl 42, Night Hauler 7" -
+                                  fresh, after the repaint, after the reload
+                    tab 2 seated  "2 players in this round: Night Hauler 7 ..."
+                    key stub      none anywhere; page exceptions 0; 2 of 2 and the
+                                  opener unchanged (B down: 1/2 no join).
+                    In-process: a seat's forgery 400, an unseated key 409, another
+                    round 404, a bad name 400, an older record 200 not kept, a newer
+                    201 kept (lobby-names.test.js); the page drops a forgery, a
+                    record moved from another round and junk, newest wins
+                    (client lobby-names.test.js, lobby.test.js).
+  COUNTS            foreground, one file per node --test under timeout 180,
+                    --test-timeout=120000: protocol 500/500 (+3), node 565/565 (+1;
+                    558+1 in *.test.js, 6 fixture files), client 283/283 (+4). No
+                    red. Unity not re-run (no C#, jslib or core change).
+  SPEC              §0.12 says a custom name "lives next to the secret in the
+                    browser, not on the signed final". It is still on no final, no
+                    entry, no mark and no board row, but it now also goes to the
+                    round's seats as a record the player signed. That sentence is
+                    Daniel's to reword. Not deployed.
