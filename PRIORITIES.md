@@ -1664,8 +1664,13 @@ IN THIS ORDER (unparked):
                                         no refund, lock held. Path 3 closed: on
                                         a hold, two first marks settle into the
                                         pool (real lnd: SETTLED, not back to the
-                                        player). Still open: the lock past
-                                        expiry (path 5).
+                                        player). Path 5 measured: the lock held
+                                        to expiry, back only by the expiry
+                                        refund (W4 gap). Still open: a no-quorum
+                                        rule that waits on a seat that stays
+                                        down holds every act of the round (a
+                                        hold can then expire to its player);
+                                        these paths unmeasured on 5 of 7.
    M3.3-19  optional stake / ghost     M3   done (TASKBOOK "M3.3-19", 2026-09-10) —
        without money                      a free seat on a daemon with no
                                         Lightning is 201 FREE; the watcher's
