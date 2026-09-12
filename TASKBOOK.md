@@ -31246,3 +31246,48 @@ M3 ENTRY_VOID (§16), THE OUTAGE REFUND - AT BOTH SEATS, AND THE LOCK BACK AT ON
                     HittingTheArmy, .UnitsDoNotShoveEachOtherWithPhysics) and a graphics
                     device under -nographics x2 (VisibilityTests.ArmiesAreActuallyDrawn,
                     .RoadsAreActuallyDrawn). Nothing red beyond them.
+
+M3 ENTRY_VOID (§16), THE CHAIN THAT NEVER PASSES THE LINE: A CLOSED PEER'S VOID
+  THE HOLE          "closed" evidence existed only in code: no test and no run had a
+                    seat whose chain never passes the start line.
+  MEASURED BEFORE   tools/closed-line-probe.mjs, two seats, deadline 900, chain stops
+                    at the first mark (60), A closes while B is down:
+                    (i)   B back and closed, forfeit asked   ENTRY_VOID (closed) both;
+                                                             forfeit 200 at once
+                    (ii)  forfeit asked while B is open      409 until B closed
+                    (iii) player sends B the first mark      B took it (receipt), no
+                          while B is open                    record, 2 receipts after
+                                                             its close; forfeit 409 -
+                                                             the lock only at expiry
+                    fresh regtest (closed-line.mjs): A ENTRY_VOID (closed); B took
+                    the mark, 404; forfeit 409 after 20.6 s; refund refused ("the
+                    contracts locktime has not yet passed", block 308 < 458); lock held.
+  RULED             pick (1): a seat that does not hold the first mark takes a round
+                    seat's closed ENTRY_VOID and refuses the mark. Not a parked
+                    refund-at-expiry hole: the player started on time, one seat was down.
+  BUILT             lateEvidenceHere: a "closed" claim counts at a seat without the
+                    first mark only with the claimant's own signed receipt of THIS
+                    first mark (a seated member's, verified) - from the forward or from
+                    GET /entry-void. A seat holding the first mark never takes it.
+  MEASURED AFTER    outage.test.js (i) ENTRY_VOID (closed) both, 200; (ii) B open:
+                    ENTRY_VOID (closed) at B at once, 200, both keep; (iii) B answers
+                    "error ENTRY_VOID", does not hold the mark, both Void, 200. The
+                    probe agrees; (a)-(e) unchanged.
+                    fresh regtest: A ENTRY_VOID (closed); B "error ENTRY_VOID",
+                    ENTRY_VOID (closed), round open, mark not held; forfeit in 384 ms,
+                    verifies, both keep, no result; redeem from the seed accepted at
+                    block 308 < 458 (975360 msat); withdraw 961392 msat SETTLED.
+  COUNTS            protocol 497/497, node 563/563 (+3), client 279/279. No C# or
+                    jslib changed. EditMode 193: 189 pass, 1 red (the listed
+                    CombatFxTests.RifleFireProducesAFlashAndATracer), 3 skipped (run
+                    ended 11:51:39). PlayMode 239: 215 pass, 11 red, 13 skipped (run
+                    ended 12:01:29) - the documented eleven: retired C# army and truck
+                    physics x9 (FeatureTests.DamageIsFeltInTheDriving, ImportedModel-
+                    Tests.SoldiersStandOnTheGroundAndAreAnimated, ImportedModelTests.
+                    TanksStandOnTheGroundRatherThanInIt, TruckHealthTests.Crashing-
+                    IntoArmourWritesItOff, VehicleTests.ArmiesFightNearTheSeamRather-
+                    ThanWanderingOff, .ArmourBlocksTheTruck, .BothArmiesAreOnTheField-
+                    AndOnTheGround, .TheTruckCanDriveOnAfterHittingTheArmy, .UnitsDo-
+                    NotShoveEachOtherWithPhysics) and a graphics device under
+                    -nographics x2 (VisibilityTests.ArmiesAreActuallyDrawn,
+                    .RoadsAreActuallyDrawn). Nothing red beyond them.
