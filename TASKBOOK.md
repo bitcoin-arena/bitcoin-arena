@@ -30406,3 +30406,16 @@ M3 W2: FIXED - A SEAT VERIFIES THE PLAYER'S STAKE LOCK AND ONLY THEN COUNTS THE 
                     existing stake-seen path); the page making the lock (W1).
   COUNTS STOOD ON   protocol 487/487, node 537/537 (sequential chunks, 0
                     cancelled), client 249/249. Core not touched. No Unity/WebGL.
+
+M3 W3, THE CLAIM KEY A LOCK MAY NAME (§23.1 step 0, F3) - MEASURED BEFORE
+  SLICE             W3 of the inventory (d7e0d4a): 1 of the 12 still missing,
+                    1 of the 7 not parked; before W1 because a lock must name an
+                    attested claim_pk ("a client MUST refuse to lock to a key
+                    without them").
+  TEST              blwp-client/test/claim-key-attest.test.js: a paying round
+                    naming a federation, two seat daemons, each knowing the
+                    committee's claim key.
+  FACTS             GET /claim-key on a seat: 404 (no seat serves a signed
+                    claim key); the page's bundle has no way to check one; the
+                    page's entryFor writes claim_key_attestation_ref = 32 zero
+                    bytes; claimKeyIsAttested callers: node src 0, client src 0.
