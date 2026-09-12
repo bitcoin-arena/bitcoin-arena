@@ -32546,3 +32546,58 @@ M3 ENTRY_VOID: TWO FIRST MARKS AFTER AN OUTAGE-VOID ARE FORFEIT, NO REFUND (2026
                     first-mark 12/12, outage 9/9, one-seat-refused 5/5, no-quorum
                     5/5, equivocation 14/14, forfeit 2/2); core 91/91; protocol and
                     client unchanged (no source there). No C#, no Unity.
+
+M3.3-34 PATH 1: A SECOND ON-TIME FIRST MARK AFTER A VOID IS FORFEIT, NO REFUND (2026-09-13, ruled)
+  RULE              same-mark Void evidence only: a seat records a Void from another
+                    seat's evidence only for that same first mark; a different
+                    on-time first mark is refused and kept as the proof pair.
+  READS             round.js keeps pairs in `equivocations` (one tick) and
+                    `offered_marks` (refused, paired with the stored chain) -
+                    nothing for two first marks a seat holds neither of; a late
+                    first mark is recorded by round.checkpoint (putStartForfeit,
+                    then "FORFEIT: ..."); playerSigned checks the session-key
+                    signature only; standUpRound's seat A is a plain field (no
+                    restart) - needed for path 2.
+  CAUSE (measured)  B down, A ENTRY_VOID (on-time 60, a mark at 960), B back, the
+                    player sends B a DIFFERENT on-time first mark (30). A's
+                    /entry-void served "mark" evidence and A's receipt (B had 1
+                    peer), but outageOutcome read 0 of 2 receipts for the new mark
+                    ("an outage cannot be told from a mark never offered"), so B
+                    TOOK it as a normal mark; later A's forfeit pushed its own mark
+                    with the Void and B recorded ENTRY_VOID for it too.
+  BEFORE            in process (5d): after the window both ENTRY_VOID, no FORFEIT;
+                    doors B 200, A 200, B again 200; a forfeit kept at both. Fresh
+                    federation (void-then-late.mjs MODE=ontime): both ENTRY_VOID
+                    (92 s waited, nothing decided); doors 200/200/200, one
+                    signature; the player REDEEMED 975360 msat before expiry
+                    (block 315 of 460); the lock gone.
+  CHANGE            store: first_mark_pairs. round.putFirstMarkPair (both signed by
+                    the session key, both from nothing, different) and
+                    equivocation() serves the pairs. server: lateByPeers refuses an
+                    ON-TIME first mark whose peer's Void names a different one
+                    ("error FORFEIT: ... two first marks") and keeps the pair;
+                    secondFirstMark keeps the pair with a voided or late first mark,
+                    and in voidHere also with a held one; voidStands keeps a Void in
+                    the close until the result window passed (a peer may hold the
+                    pair). verify: #noQuorum decides on a proof held here;
+                    #equivocationProven keeps a pulled first-mark pair locally.
+  TWO REDS ON THE   the held-first-mark check also at the door changed
+  WAY, FIXED        checkpoint.test.js's pinned refusals ("error equivocation at
+                    tick 60", "a parent that is not the head") to "two first
+                    marks": client 284/286. The held check is now voidHere's only
+                    (the chain's own refusal keeps that proof): 286/286. And the
+                    peer-Void check first caught 5c's LATE mark (A kept a pair, no
+                    late start - 5c's precondition red): now on-time marks only.
+  AFTER             5d: B refuses the mark, proof at B 1, A pulls it (1); after the
+                    window FORFEIT at both (no-quorum), doors B 409, A 409, B again
+                    409, B no Void, A's Void kept, no forfeit kept, lock held. Fresh
+                    federation (final code): the same; FORFEIT at both 9.1 s after
+                    the close; forfeitOf "no seat gave a forfeit"; redeem refused;
+                    refund before expiry refused ("locktime has not yet passed");
+                    lock HELD, 150 blocks left. MODE=late re-run on the new code:
+                    FORFEIT at both 9.1 s, doors 409, redeem and refund refused.
+  COUNTS            foreground, timeout 180, --test-timeout=120000: node 580/580 over
+                    100 files (1-48 281/281 in 84 s - first-mark 13/13, equivocation
+                    14/14, forfeit 2/2; 49-100 299/299 in 64 s - outage 9/9,
+                    no-quorum 5/5, one-seat-refused 5/5); core 91/91; protocol
+                    501/501; client 286/286. No C#.
