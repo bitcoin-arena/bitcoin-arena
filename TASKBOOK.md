@@ -32183,3 +32183,86 @@ M3.3-34 LATE START AT THE CLOSE - RECORDED DONE (2026-09-12)
                     protocol 501/501, client 286/286; EditMode, PlayMode not run.
   PARKED            the guard case's leftover - seat B holding an on-time first
                     mark and a late-start record from A's forward - is ENTRY_VOID's.
+
+M3.3-34 ONE SEAT REFUSED: §13C'S VOID AFTER THE RESULT WINDOW (2026-09-12)
+  RULED             (Daniel) a seated entry whose on-time first mark is receipted
+                    below the threshold, every seat it is short of having been up
+                    and REFUSED it: both seats HOLD until the result window has
+                    passed (not at the close), then record explicit VOID - final,
+                    not HOLDING; the lock held (no act: it returns at its expiry),
+                    forfeit door 409, out of the pool and the payout table; Daily
+                    stake 0: recorded VOID only. The refusing seat holding a
+                    different first mark: FORFEIT. Unanswered / down: ENTRY_VOID,
+                    unchanged. A seat unreachable at the close: hold, no VOID. A
+                    refusal made good in time: 2 of 2, the run's own outcome. A
+                    FINAL result is never voided. No live fault injection: a live
+                    Daily refusal is a named gap.
+  LAW               §13C: no result at the threshold after the result window -
+                    proven equivocation -> FORFEIT, otherwise the operator side's
+                    fault -> VOID, "refunded by letting the HTLC expire ...
+                    excluded from the pool and from the payout table". §23.2:
+                    VOID = do nothing. §14: VOID only from PROVISIONAL. Protocol
+                    payout.js noQuorumOutcome / settlementAction already said so;
+                    nothing in blwp-node called it.
+  BEFORE            refused-probe (scratchpad, first-mark's lock-round fixture), B
+                    up and refusing every mark of the run: A 1 receipt, the offer
+                    to B "refused"; at the close both HOLDING - 3 attempts at 2 s,
+                    12 and 11 at 10 s - "no checkpoint of that entry is carried by
+                    2 committee members" / "no checkpoints for that entry"; no
+                    result, finality null, no Void, forfeit 409 at both, lock
+                    held: a hold for ever, nothing ever decided.
+  CHANGE            blwp-node only. store: refused_first_marks, no_quorum. round:
+                    putRefusedFirstMark (kept only for the player's own signed,
+                    on-time first mark of an entry seated here, this seat holding
+                    none), refusedFirstMark, putNoQuorum, noQuorum. server: the
+                    forward door keeps what it refused (stake not seen, or the
+                    mark not taken - never FORFEIT or "the round is closed");
+                    /closing shows the decided outcome; the retry filter and the
+                    start-up resume leave a decided entry alone; /results says
+                    x-no-quorum. verify #keep -> #noQuorum: the evidence above, no
+                    seat unreachable, not ENTRY_VOID, not a late start; held until
+                    this seat's close + the round's objection window; then
+                    protocol noQuorumOutcome, equivocation proven from this
+                    seat's own store or a peer's /equivocation, each pair checked
+                    with provesEquivocation. finality: the no-quorum outcome where
+                    no quorum is. forfeit: a VOID entry is refused by name (409).
+  IN PROCESS        one-seat-refused.test.js, two seats of a lock round, window
+                    3000 ms, B refusing because it never saw the stake lock:
+    (1) B up, refuses    A 1 receipt, offer "refused"; B refused "stake not
+                         seen". In the window: HOLDING at both ("no quorum yet"),
+                         nothing decided. After it: VOID at A and B - finality
+                         VOID, /closing VOID, /results 0 signed + x-no-quorum
+                         VOID, forfeit 409 ("that entry is VOID (§13C) ..." at
+                         A; B, which never saw a lock, "verified no stake lock"),
+                         no payout table, no ENTRY_VOID; the lock held.
+    (2) two first marks  A holds the chain at 60, B the one at 90; each refused
+                         the other's (offers "refused" both ways), 1 equivocation
+                         proof at each seat -> FORFEIT at both ("the player signed
+                         two chains: 13B"), not VOID; lock held.
+    (3) B down           ENTRY_VOID, unchanged: outage (b), (b'), (i)-(iii) as they
+                         were (rerun, untouched).
+    (4) B unreachable    A past the window: HOLDING, 33 attempts, "waiting on 1
+        at the close     seat(s)", no VOID, finality null. B back and closed: VOID
+                         at both, as (1); lock held.
+    (5) made good        B refused, then saw the stake and took the mark: 2
+                         receipts, DELIVERED/12 at both, FINAL, public /results 2.
+    (6) FINAL stays      (5) read long past the window, B's refusal record kept:
+                         no no-quorum outcome, FINAL.
+    (7) must-not-move    late start and no-mark FORFEIT 0, stopped FAILED,
+                         ENTRY_VOID, close-retry, receipt-carry, close-order:
+                         rerun, untouched (COUNTS).
+  LIVE GAP          no live Daily refusal: an honest seat does not refuse a free
+                    round's forward, and the Daily does not grow a fault
+                    injection (ruled). Measured in process only.
+  ONE RED, FIXED    in the first full node run (chunk 49+), case (1) failed once
+                    (295/296); the per-file reporter kept no error, and the TAP
+                    rerun passed 296/296. Its in-window read slept a fixed 1.2 s
+                    after the close (that rerun: A's hold at 0 attempts at the
+                    read). It now waits until both seats' /closing hold the entry;
+                    the assertions are unchanged. Rerun: 296/296. The cause of the
+                    one failure was not captured.
+  COUNTS            foreground, timeout 180, --test-timeout=120000: protocol
+                    501/501; node 574/574 over 99 files (1-48 278/278, 49-99
+                    296/296 - one-seat-refused 4/4, outage 9/9, receipt-carry 3/3,
+                    no-quorum 5/5); client 286/286. EditMode and PlayMode not run
+                    (no C#, jslib or core change).

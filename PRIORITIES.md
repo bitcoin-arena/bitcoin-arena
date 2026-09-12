@@ -78,8 +78,13 @@ username, free play. Then ENTRY_VOID.
   is FORFEIT 0 at the close, signed by both seats like a walk-away, FINAL 2 of
   2, no refund; a seat holding only a late mark waits while a seat is down.
   Live Daily b345eff6: late start FORFEIT 0, walk-away FORFEIT 0, played run
-  FAILED, each FINAL 2 of 2. blwp-node 570/570. Still
-  open here: one-seat-refused VOID, §15 text,
+  FAILED, each FINAL 2 of 2. blwp-node 570/570.
+  DONE (one-seat refusal, in process, TASKBOOK): an on-time first mark an up
+  seat refused (1 of 2 receipts) is held until the result window passes, then
+  VOID at both seats - lock held, no refund act, forfeit 409, out of the payout
+  table; the player's own two first marks are FORFEIT instead. No live Daily
+  refusal (no fault injection): a named gap. Still
+  open here: §15 text,
   fresh-federation walk-away, Lightning hold and objected re-run.
   DONE (W5b, TASKBOOK): on a fresh regtest federation, with the seats' own
   claim key, both seats forfeited a qualifying Delivered lock once its result
