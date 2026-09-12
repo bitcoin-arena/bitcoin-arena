@@ -29,9 +29,15 @@ unblocked work. Park only inbound, which-guardians, and named rulings.
   locked, and wrote outpoint d88b5a6a..cc54:0 on its entry; both seats
   verified it in the federation and committed 980000 msat. Before: the page
   wrote a zero outpoint and posted no lock. Not deployed.
-  FOUND (not W1b): the page throws "expected 32 bytes, got nothing" after the
-  world seed, on today's page too; second-closer.test.js fails in the full
-  node suite on HEAD aed4357 as well (passes alone) - a timing red.
+  DONE (W1b follow-up, TASKBOOK): the player sees, keeps and plays the lock -
+  the deposit invoice sits on the loading screen (was under it), a lock round's
+  panel shows the lock (was a hold-invoice panel), 0 "expected 32 bytes"
+  throws (were 14-60), a reload after the deposit or after the lock pays once
+  (was 994270 msat twice), and after PLAY both seats took the run (4 receipts
+  each). A seat refuses one lock for two entries. Full node suite green:
+  second-closer and the restart test no longer ride a 3 s clock. Not deployed.
+  FOUND: Fedimint 0.12's mintv2 recovery panics on wasm (tokio's clock); the
+  lock client keeps its wallet in the tab instead of recovering it.
   DONE (stake-lock wiring, slice 1): the Round Contract carries v4.6.2 §6's
   federation_id, stake_expiry_blocks (144) and publication_relays[], in the
   id; custodyFieldsAreValid refuses another expiry, a paying FEDERATION round

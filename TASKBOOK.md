@@ -30606,3 +30606,65 @@ M3 W1b: THE PAGE MAKES THE PLAYER'S STAKE LOCK
   NOT DONE          not deployed; the page still throws "expected 32 bytes, got
                     nothing" after the world seed - on today's page too, not
                     traced here. A testnet4 round needs gateway inbound (parked).
+
+M3 W1b FOLLOW-UP: THE PLAYER SEES THE LOCK, KEEPS IT, AND PLAYS
+  HOLES             (1) the deposit invoice was not on screen; (2) a lock round
+                    showed the hold-invoice panel, and the page threw "expected
+                    32 bytes, got nothing"; (3) a reload between deposit and lock
+                    paid twice; (4) play after the lock was never measured.
+  HOW MEASURED      tools/page-lock.mjs, second harness on the same regtest
+                    federation (PORT_BASE 18421): the Daily's 2-of-2 round per
+                    run, the built page (build/webgl 2026-09-10 + this template),
+                    headless Chrome, the harness paying the invoice the page
+                    shows; PLAY, AUTO, depart and 6 s of throttle after the lock
+                    (screen.mjs's clicks); each seat's stored batches and
+                    checkpoints and its receipts for the entry.
+  RUNS              run          invoice drawn/top/carries  throws  deposits (msat)          outpoint       seats            batches    receipts
+                    w1b (c6fca4c) yes / no / no             14      994270                   f8e2330e..:0   201 201, 980000  26 / 23    3 / 3
+                    fixed         yes / yes / yes           0       994270                   a29211a5..:0   201 201, 980000  36 / 33    4 / 4
+                    reload-w1b    yes / no / no             56      994270, then 994270      1c021a40..:0   201 201          (earlier run, no PLAY)
+                    reload-fixed  yes / yes / yes           0       994270 once              7feeb7c5..:0   201 201, 980000  35 / 32    4 / 4
+                    relock        yes / yes / yes           0       994270 once              7db6dac6..:0   201 201, 980000  36 / 33    4 / 4
+                    nolock        -                         0       none                     none           not seated: "no lock was made"
+                    Batches refused: none on any run. Before PLAY: 0 batches, 0
+                    receipts on every seat. Chip after the lock: "stake seen by 2
+                    of 2 nodes (2 needed) · committed". reload-fixed's reloaded
+                    page reopened its wallet holding 985088 msat; relock's never
+                    loaded the lock client again (the kept lock).
+  PANEL             during the deposit (screenshot fixed-deposit.png): "this
+                    round's stake goes into a federation lock: pay the deposit
+                    shown below", no "Pay the stake"; after the lock: the lock
+                    line. Before (c6fca4c): "this seat owes -", a wallet box and
+                    "Pay the stake" beside the loader. Driven in wallet-nwc.test.js.
+  THE THROW         instrumented: BLWP_ENTRY lacks roundId and sessionPubkey;
+                    Client.invoice -> entryId -> encodeEntryContract -> Writer.
+                    bytes32 threw on every quote and every pay, on today's page
+                    too. The page now quotes and pays with client.seatEntry.
+  THE RELOAD        Fedimint's recover() hung the page: instrumented with a panic
+                    hook, mintv2's fetch_recovery_slice uses tokio::time, whose
+                    Instant::now panics on wasm32-unknown-unknown ("std/src/sys/
+                    time/unsupported.rs"); the stock persistent db (cursed-redb)
+                    needs a worker's OPFS handle. So the lock client keeps its
+                    database in the tab (lock-client/src/store.rs: MemDatabase's
+                    semantics, every committed key written through, reopened with
+                    ClientBuilder::open), and a made lock is kept with its stake
+                    until a seat commits it (saveLock/savedLock). A seat refuses
+                    an outpoint it already committed for another entry (409 "one
+                    lock is one seat"; seat-lock.test.js; mutant: without it 201).
+  RED TESTS         second-closer "closed 800 ms apart": the race needed B's ask
+                    to beat a 3 s clock; in the full suite B asked at 5587 ms and
+                    A had become final ("A never refused B's ask") - on HEAD
+                    aed4357 too. Now A keeps B's posting until A has refused B
+                    once: the order is held by the event. objection-window
+                    "restarted inside the window": on the shared 3 s window its
+                    guard fired under load ("the restart came after the window");
+                    it has its own 10 s window, every check unchanged, and says
+                    by how many ms a late restart missed.
+  COUNTS            protocol 487/487, node 545/545, client 267/267 (full, quiet
+                    machine). Pins: bundle 150e8e5f.., lock client glue
+                    999a57a0.., wasm 82291cdf.. (18.3 MB). No compiled Unity
+                    change.
+  NOT DONE          not deployed; a testnet4 round needs gateway inbound and a
+                    federation (parked: inbound, which-guardians). The first
+                    rehearsal harness wedged when its Chrome went away (no
+                    timeout on DevTools asks); asks are now bounded at 30 s.
