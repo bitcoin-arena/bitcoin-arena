@@ -1653,12 +1653,16 @@ IN THIS ORDER (unparked):
                                         33.500 m the ground was worth. The fix
                                         is 36's, again: the core owns the map's
                                         boxes and Unity draws them.
-   M3.3-34  lobby + free play          M3   done (1398323, live c35a85c8) — the
-                                        lobby is Unity's title screen, every
-                                        element on screen on iPhone and Android,
-                                        PLAY seats and starts, SPECTATE always;
-                                        2-of-2, keys, username kept. §15 text and
-                                        the ENTRY_VOID order: done (5c).
+   M3.3-34  lobby + free play          M3   OPEN — lobby done (1398323, live): Unity
+                                        title screen, every element on screen on
+                                        iPhone and Android, PLAY seats and
+                                        starts, SPECTATE always. 5c ruled and
+                                        closed (dde56b9). Still open under the
+                                        letter: two first marks after a Void -
+                                        a second ON-TIME mark voided on a peer's
+                                        evidence; a Void seat that missed the
+                                        late mark's forward; the no-quorum
+                                        FORFEIT on a hold; not a signed close.
    M3.3-19  optional stake / ghost     M3   done (TASKBOOK "M3.3-19", 2026-09-10) —
        without money                      a free seat on a daemon with no
                                         Lightning is 201 FREE; the watcher's
