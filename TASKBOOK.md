@@ -30849,3 +30849,65 @@ M3 W5b PIECE 1: THE SEATS FORFEIT A QUALIFIER'S LOCK, AND ONLY A QUALIFIER'S
                     by the order of the two closes - timing, said so).
   COUNTS            protocol 487/487, node 549/549, client 271/271 (bundle
                     rebuilt, d5ae8135.. - payout.js is in it).
+
+M3 W5b PIECE 2: THE PAGE REDEEMS THE FORFEIT FROM THE SEED, AND W5b ON REGTEST
+  BUILT             lock client (wasm, stock fedimint 0.12.0 + the one LNv2 send
+                    patch): redeem(outpoint, fields, forfeit, player_secret) -
+                    spends the lock with OutgoingWitness::Cancel(sig), signed by
+                    the player's key (odd-y negated, as refund); it reports the
+                    contract's own verify_forfeit_signature and submits anyway, so
+                    the guardians' answer is what is measured. page-lock.js:
+                    forfeitOf (GET /forfeit, first 200 with a 128-hex signature,
+                    else every seat's reason) and redeemStake (seed -> player key
+                    and lock secret -> the seats' findLock -> forfeitOf -> a fresh
+                    tab wallet -> redeem). Pins: bundle 91014e2c.., glue
+                    e59e1950.., wasm f61d4074...
+  HOW MEASURED      packages/blwp-node/tools/w5b-regtest.sh (foreground): stock
+                    fedimintd 0.12.0, 4 guardians, one gateway, a FRESH regtest
+                    federation; the Daily's 2-of-2 round naming it, the seats
+                    making the claim key themselves (nothing injected), a 20 s
+                    objection window through the round's own objectionWindowMs.
+                    Two players lock as the page locks (tab store) and are
+                    committed by both seats. HARNESS, SAID SO: each entry's world
+                    secret is searched with the core's own replay against the
+                    round's actual randomness until the fixture's drive delivers
+                    with score >= min_score (winner: 29 tries) or fails (loser:
+                    2 tries). Offline the same search took 1-6 tries, < 1 s.
+  MEASURED          federation up                 135 s
+                    claim key                     attested 2 of 2, 0211be6a..
+                    winner locked                 980000 msat, 3fef1a0c..:0, exp 459;
+                                                  entries 201/201, locks 201/201,
+                                                  committed 2; played 1197 ticks
+                    loser locked                  980000 msat, b4494aa2..:0, exp 464;
+                                                  committed 2; played 640 ticks
+                    first ask after the close     409 both "no forfeit before the
+                                                  result is final with its objection
+                                                  window closed"
+                    winner forfeit                200 at 24.2 s after the close; over
+                                                  the lock's contract id ec5b8b85..,
+                                                  under the round's claim key,
+                                                  verifies (BIP-340); kept by both
+                    loser forfeit                 409 A "FAILED with score 210 ... not
+                                                  a qualifier"; B "window closes at
+                                                  ..7732 and it is ..7571" (its own
+                                                  window, 161 ms short); kept by 0;
+                                                  lock still held
+                    redeem, ONE seat's signature  forfeit_verifies false; REFUSED by
+                                                  the guardians "The forfeit signature
+                                                  is invalid"; lock still held
+                    redeem, later session, seed   forfeit_verifies true; ACCEPTED
+                                                  8e45cf95..; lock gone; 975360 msat
+                                                  credited (4640 federation fee) at
+                                                  block 314, before expiry 459
+                    withdraw                      over http://127.0.0.1:30170/:
+                                                  Success; 961392 msat SETTLED at the
+                                                  player's lnd; 13968 send fees;
+                                                  0 left in the wallet
+                    the loser's lock at the end   still held (refunds at expiry until
+                                                  W4 - the money hole, PRIORITIES)
+  COUNTS            protocol 487/487 (486 + engine-check.js), node 549/549
+                    (544 + 5 in the fixture files), client 272/272 - chunked,
+                    foreground, quiet machine.
+  DEPLOYABLE        yes - every suite green. Not deployed: no page control calls
+                    refundStake or redeemStake yet, so a deploy gives a player
+                    nothing to press; it ships with the next Unity build.

@@ -20,16 +20,15 @@ LIVE LETTER: M3 - A ROUND FOR TESTNET SATS ("M3 is done when"). Special
 conform-to-v4.6.2 is done (a1e8d6e / 875cef1). Continue M3. Daniel 18:41:
 do every M3 slice that does not need him. Do not wait. Do not ask Go on
 unblocked work. Park only inbound, which-guardians, and named rulings.
-  NEXT (top): W5b - the seats forfeit a QUALIFYING Delivered lock (DELIVERED
-  and score >= min_score, §18) after finality and the objection window, FROST
-  over the lock's contract id at a door; a loser's is 409 and stays held; the
-  page verifies it and redeems (a later session from the seed too), then
-  withdraws. preimage.js's "qualifies = DELIVERED" is fixed inside it.
-  DONE (W5b piece 1, TASKBOOK): the seats forfeit a qualifier's lock after the
-  window - verifies under the claim key, both keep it; a loser's and a
-  below-score Delivered run's are 409. Next piece: the page redeems it.
-  THEN (unblocked): seats decide ENTRY_VOID (§16) - nothing in the node makes a
-  Void today. Result-window Void stays parked.
+  NEXT (top, unblocked): seats decide ENTRY_VOID (§16) - nothing in the node
+  makes a Void today. Result-window Void stays parked.
+  DONE (W5b, TASKBOOK): on a fresh regtest federation, with the seats' own
+  claim key, both seats forfeited a qualifying Delivered lock once its result
+  was final with the window closed. The forfeit verified under the claim key,
+  and the player redeemed it from a later session holding only the seed, then
+  withdrew it to their lnd. A loser's forfeit is 409 and its lock stays held.
+  One seat's signature is refused by the guardians. Suites green; deployable,
+  not deployed - no page control calls the refund or the redeem yet.
   MONEY HOLE: nothing claims a loser's lock until W4, and W4 is parked behind
   the fee-lock ruling - so until then a loser refunds the lock at expiry and
   loses only fees.
