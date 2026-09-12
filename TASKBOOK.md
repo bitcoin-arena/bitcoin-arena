@@ -30911,3 +30911,135 @@ M3 W5b PIECE 2: THE PAGE REDEEMS THE FORFEIT FROM THE SEED, AND W5b ON REGTEST
   DEPLOYABLE        yes - every suite green. Not deployed: no page control calls
                     refundStake or redeemStake yet, so a deploy gives a player
                     nothing to press; it ships with the next Unity build.
+
+M3.3-34, THE LOBBY, FREE PLAY WITH NO MONEY, AND WHO A TAB IS (Daniel 07:45 / 07:48 / 08:41)
+  MEASURED BEFORE   GET /rounds: 404 - no door listed rounds. A page link with
+                    no round= was the offline game; nothing listed or joined a
+                    round from it. One round per launch: standUpRound opened
+                    exactly one, its entry closing 180 s after committee time.
+                    The free seat itself already stood (M3.3-19): 201 FREE, a
+                    tick taken, no Lightning.
+  BUILT             node: GET /rounds (7de3f3c) - the open rounds this node holds
+                    whose entry has not closed, open before pending, soonest close
+                    first; free and wallet (none / lightning / federation-lock)
+                    off the stored contract; seated, playing, watching are the
+                    node's own counts.
+                    client: lobby.js (6d6110c) - a link naming nodes and no round;
+                    every listed id fetched and hashed (fetchRound) before it is a
+                    row; free / open come from the contract and the page clock;
+                    counts shown as each node's word; Join is the join link.
+                    opener: round-2of2 openNext / keepOpen - the same committee's
+                    contract with new times, its census root derived again, its
+                    hash published and mined under its own beacon block, posted to
+                    both daemons; a new round whenever none has > 60 s of entry
+                    left. Bitcoind only: the fixture chain's clock is fixed
+                    (2026-09-06), refused by name there.
+                    page: the lobby panel over everything until Join; Unity is not
+                    loaded in the lobby. A free round asks no invoice.
+                    identity: a key generated per tab from its seed under its own
+                    tag (TAG.lobbyIdentity - never a round's player key; the seed
+                    backup covers it), a name made from the public key, and the
+                    player's own name over it (1-24 letters/digits with space . -
+                    _ between), kept in the tab. The name decides nothing and is
+                    not sent to any node.
+  FOUND, FIXED      the opener dated a new round from the chain tip's time, and
+                    the tip was the last mined block, 2 minutes old: the round
+                    opened with 59 s of its 180 s entry and the keeper opened a
+                    second 6 s later (dry run: pairs at 148/154 s and 276/284 s).
+                    Now max(tip, now) + 2 s: one round per opening (153, 275, 398,
+                    523 s in the next run).
+                    a free seat's page asked GET /invoice 37 times in 55 s (two
+                    tabs, once a second each), every one refused by the node. The
+                    owed poll now returns at once for a round that does not pay.
+  FIRST BROWSER RUN (built page, before the invoice guard and identity; regtest
+                    bitcoind, no Lightning, no wallet, two headless Chromes):
+                    lobby tab 1     1 row: "free - no wallet, no Lightning · entry
+                                    open, closes in 2:50", Join shown; no wallet;
+                                    Unity not loaded
+                    join            both tabs by the row's own button, same round,
+                                    Unity loaded, no wallet, no deposit
+                    seats           2 seated, 2 playing at each; hold FREE, FREE
+                    play            52 s of throttle; 4 receipts per player at each
+                                    seat; 18-25 batches
+                    ghost           tab 1: others 1, drawn 19, first at 19 s; tab 2:
+                                    drawn 16; chip "2 players in this round · other
+                                    at -90,-57 m · free seat"
+                    aged out        the first round's entry closed: both nodes list 1
+                                    free open round (the next), and a fresh lobby
+                                    shows it with Join
+  FINAL RUN         built page with the guard and identity (e84e1757 bundle),
+                    packages/blwp-client/tools/lobby-regtest.sh, fresh regtest,
+                    no Lightning in the environment, two headless Chromes:
+                    stood up        29 s; first round 85181b49.., stake 0, beacon 117
+                    lobby tab 1     1 row, free, open, "closes in 2:55", Join; no
+                                    wallet; Unity not loaded
+                    identity tab 1  generated SturdyDriver-1808, key 92c4-a350-5442-
+                                    c5ac; saved "Night Hauler 7" -> shown; "<b>x</b>"
+                                    refused ("letters and digits, with space, dot,
+                                    dash or underscore between them"), name kept;
+                                    reload -> same key, same name, custom
+                    identity tab 2  RustyScout-2462, key a4cd-099e-.. (another player)
+                    join            both by the row's button, same round, 39 s after
+                                    start; no wallet, no deposit
+                    seats           2 seated, 2 playing at each; hold FREE, FREE;
+                                    receipts 5 and 3 per player at each; batches
+                                    22/18 and 21/17
+                    ghost           tab 1 at 14.6 s: others 1, drawn 12; tab 2 drawn
+                                    21; chip "2 players in this round · other at
+                                    -79,-37 m · free seat"
+                    wallet asks     0 (invoice, federation-invoice, lock, NWC) - was 37
+                    aged out        at 212 s: the first round not listed; 1 free open
+                                    round at each node (b991012a.., opened at 156 s);
+                                    a fresh lobby shows it with Join
+  COUNTS            protocol 488/488 (+1 identity key), node 550/550 (+1 lobby
+                    door), client 279/279 (+3 lobby, +4 identity).
+                    EditMode 193: 189 pass, 1 red, 3 skipped - the red is the
+                    documented CombatFxTests.RifleFireProducesAFlashAndATracer;
+                    same counts as on record. PlayMode 239: 214 pass, 12 red, 13
+                    skipped - the documented eleven (retired C# army x9, graphics
+                    device x2) and ScoreTests.IdlingEarnsNothingEvenOnTheSeam, the
+                    load flake on record (red under load, green alone). No C# and
+                    no jslib changed in this letter.
+  NOT DONE          names are not shown to other players: that needs a name
+                    signed by the entry's key and a node door. Not deployed.
+
+M3.3-34, 2-OF-2 CONSENSUS IN THE LOBBY (Daniel 09:04)
+  MEASURED BEFORE   the page's lobby took each node's word alone: a round one
+                    node listed while the other was down got a row with Join
+                    (lobby.test.js at 6d6110c: "a node that is down is named, and
+                    the other node's rounds are still listed"). On a 2-of-2 that
+                    is a Join into a round nobody can play - every mark needs
+                    both seats' receipts.
+  BUILT             protocol lobby-listing.js (TAG.lobbyListing): one seat's word
+                    about one round - round id, node key, time, phase, seated
+                    here, seated, playing - one encoding, every field signed.
+                    node /rounds: each row carries that BIP-340 signature under
+                    the node key, the round's threshold (receiptsNeeded of its
+                    game/verify slots: 2) and its seat count; the reply names the
+                    node key. page lobby.js: a row is joinable only when that many
+                    DISTINCT keys the verified contract names signed "open, seated
+                    here" within 60 s of the page clock; the line says "2 of 2
+                    seats agree" or "1 of 2 - waiting for 1 more"; Join only then.
+  TESTS             node lobby 1: 3 of 3 rows verify under the node key; a count,
+                    seated-here or another key changed after signing do not;
+                    needed 2, seats 2. client lobby 3: both seats -> 2/2 Join; one
+                    seat -> 1/2 no Join; pending 0/2; node down, a stranger's key,
+                    one key twice, a tampered flag, a stale listing, a seat that
+                    has not seated it, a third node that is no seat -> 1/2 no Join.
+  BROWSER           built page (edb40a59 bundle), tools/lobby-regtest.sh, fresh
+                    regtest, no Lightning, headless Chromes:
+                    both seats up   "free - no wallet, no Lightning · entry open,
+                                    closes in 2:55 · 2 of 2 seats agree", Join
+                    identity        RustyFreighter-3847 -> "Night Hauler 7", "<b>x</b>"
+                                    refused, kept across a reload; tab 2
+                                    FierceOutrider-8743, another key
+                    play            both in one round, FREE/FREE at both seats,
+                                    receipts 4 and 3 per player, ghost at 14.5 s
+                                    (tab 1 drew 15, tab 2 21), 0 wallet requests
+                    B down          a fresh lobby: the same round "1 of 2 seats agree
+                                    - waiting for 1 more", no Join (screen
+                                    lobby-one-seat.png); B restarted
+                    aged out        the first round gone; both nodes list 1 free open
+                                    round (fb33fe0e.., opened at 152 s), Join shown
+  COUNTS            protocol 490/490 (+2 listing), node 550/550, client 279/279.
+                    Unity: no C# or jslib changed; the page template only.

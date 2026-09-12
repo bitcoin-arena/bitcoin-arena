@@ -21,7 +21,11 @@ LIVE LETTER: M3.3-34 lobby still open. Daniel 09:04: the lobby must support
 username, free play. Then ENTRY_VOID.
   DONE so far (TASKBOOK): free lobby link, join, play, ghost; generated key
   and custom username locally. Names not yet shown to others.
-  NEXT (top, unblocked): 2-of-2 in the lobby (node + page). Then ENTRY_VOID (§16) - nothing in the node makes a Void today. The start deadline is a
+  DONE (2-of-2, TASKBOOK): each seat signs its listing of a round; the page
+  offers Join only when both of the round's seats say open and seated. With
+  one seat down the row says 1 of 2 and has no Join. Measured in the built
+  page locally; not deployed.
+  NEXT (top, unblocked): ENTRY_VOID (§16) - nothing in the node makes a Void today. The start deadline is a
   round parameter in ticks from the join tick (a named default if omitted);
   the evidence is the player's first mark, forwarded between the seats.
   HOLE (walk-aways, separate, not this slice): a committed player who never
