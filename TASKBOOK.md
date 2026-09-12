@@ -31571,3 +31571,59 @@ M3.3-34 THE DAILY'S 2-OF-2 RUNS AGAIN, ON 18080/18081, WITH THE ROUND OPENER (20
   COUNTS            foreground, one file per node --test under timeout 180,
                     --test-timeout=120000, with the Daily seats up: protocol
                     500/500, node 565/565, client 285/285. Unity not re-run.
+
+M3.3-34 REMAINING HOST ACTION (root, operator): THE FUNNEL PATHS TO THE DAILY SEATS
+  MEASURED          2026-09-12 13:1xZ: https://beelink.tail1723e2.ts.net/blwp-a/identity
+                    502, /blwp-b/identity 502 - the funnel serves only / (finedining,
+                    localhost:3001); nothing maps the two paths. Non-root `tailscale
+                    serve` answers "Use 'sudo tailscale serve ...' / To not require
+                    root, use 'sudo tailscale set --operator=$USER' once".
+  THE ACTION        as root on beelink (adds two paths; / stays finedining):
+                        sudo tailscale serve --bg --set-path /blwp-a http://100.74.66.98:18080
+                        sudo tailscale serve --bg --set-path /blwp-b http://100.74.66.98:18081
+                    Gate: both identity URLs 200. Then restart run-2of2.mjs with
+                    BLWP_WSS_18080=wss://beelink.tail1723e2.ts.net/blwp-a and
+                    BLWP_WSS_18081=wss://beelink.tail1723e2.ts.net/blwp-b if it runs
+                    with any other public address, so its bonds and lobby link name
+                    the funnel. Not a coding step; nothing in the game remaps it.
+
+M3.3-34 THE DEPLOYED DAILY LOBBY LISTS A JOINABLE 2-OF-2 ROUND (no root; 2026-09-12)
+  NO ROOT, NO FUNNEL   the funnel map is the operator's (above). Looked for a
+                    user-space path instead.
+  RAW TAILNET IP    measured on the deployed page with node=http://100.74.66.98:
+                    18080,18081: "Mixed Content" and "blocked by CORS policy:
+                    Permission was denied for this request to access the `local`
+                    address space"; the lobby read "Failed to fetch" for both seats
+                    and listed no row. Not a path.
+  CLOUDFLARE        a Pages Function cannot reach a tailnet address. A quick tunnel
+                    can: cloudflared 2026.9.1 (official release, user space, sha256
+                    03f1f25d...), /mnt/bitcoin/blwp-2of2/bin, no account:
+                        cloudflared tunnel --no-autoupdate --url http://100.74.66.98:18080
+                        cloudflared tunnel --no-autoupdate --url http://100.74.66.98:18081
+                    A https://facing-attachment-klein-initially.trycloudflare.com
+                    B https://sit-benjamin-thing-century.trycloudflare.com
+                    /identity 200 and /rounds on both, through the tunnels.
+  LAUNCHER          run-2of2.mjs restarted 13:18:06Z with BLWP_WSS_18080/18081 =
+                    wss://<those hosts>: bonds and lobby link name the tunnels
+                    (lobby-url.txt). First round 972af91c under beacon block 252;
+                    the opener opened 191219a2 at 13:20:12Z. SIGUSR1 / SIGUSR2 take
+                    seat B down / bring it back (new, for this look).
+  ON THE DEPLOYED PAGE   btc-logistics-core.pages.dev (1ad5a069), the lobby link,
+                    headless Chrome, a fresh tab each time:
+                    both up     rows 3598639e and 972af91c: "2 of 2 seats agree",
+                                Join on both, counts from both tunnels; 0 errors
+                    B down      (SIGUSR1; :18081 not listening) both rows "1 of 2
+                                seats agree - waiting for 1 more", no Join; only
+                                A's counts; the page logged B unreachable
+                    B back      (SIGUSR2; :18081 listening) both rows 2 of 2, Join;
+                                0 errors
+  LIMITS            the tunnel hosts are Cloudflare's quick-tunnel names: they change
+                    when cloudflared restarts, and then the launcher must restart
+                    with the new BLWP_WSS_* so bonds and link match. Quick tunnels
+                    carry no uptime promise. Tunnels, launcher and the Daily's
+                    regtest bitcoind run detached (setsid), not as system services:
+                    a reboot stops them. The durable route stays the funnel map.
+                    A player needs the lobby link (lobby-url.txt); the page's bare
+                    root is still the offline daily.
+  COUNTS            this turn, foreground, timeout 180 + --test-timeout=120000:
+                    protocol 500/500, node 565/565, client 285/285. Unity not re-run.

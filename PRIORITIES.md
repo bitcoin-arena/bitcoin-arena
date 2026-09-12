@@ -28,8 +28,10 @@ username, free play. Then ENTRY_VOID.
   DEPLOYED 2026-09-12: btc-logistics-core.pages.dev (1ad5a069); the page loads.
   DONE (Daily seats, 2026-09-12): run-2of2.mjs runs the pair on 18080/18081
   (never 8080) with the round opener; a new free round opens every ~2 min and
-  both seats list it. NOT YET reachable from the page: the funnel paths
-  /blwp-a and /blwp-b must be mapped to 18080/18081 as root (502 today).
+  both seats list it. DONE (2026-09-12): the deployed Daily lobby reaches them
+  through two user-space Cloudflare quick tunnels - both up: rows with Join;
+  seat B down: 1 of 2, no Join. The tunnel names change on a restart; the
+  durable route is still the root funnel map /blwp-a, /blwp-b (TASKBOOK).
   DONE (2-of-2, TASKBOOK): each seat signs its listing of a round; the page
   offers Join only when both of the round's seats say open and seated. With
   one seat down the row says 1 of 2 and has no Join. Measured in the built
