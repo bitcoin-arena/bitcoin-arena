@@ -30540,3 +30540,11 @@ M3 W1a: THE LOCK CLIENT BUILDS FOR WASM AND LOCKS - AFTER
                     skipped and an unattested key, both refused (above).
   COUNTS STOOD ON   protocol 487/487, node 538/538 (sequential chunks, 0
                     cancelled), client 256/256. Core not touched. No Unity/WebGL.
+  RECORDED          fe499ca. Mutant table:
+                      mutant                                 where          result
+                      the lock skipped (no lock at outpoint) real, 2 seats  409 409, not committed
+                      a lock to an unattested claim key      real, 2 seats  409 409, not committed
+                      the seat takes a zero outpoint         lock-client    red
+                      the seat skips the federation          seat-lock      red
+                    W1a closed: page, bundle, pins and Unity not touched - not
+                    player-visible; W1b is next.

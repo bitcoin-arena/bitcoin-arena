@@ -20,6 +20,9 @@ LIVE LETTER: M3 - A ROUND FOR TESTNET SATS ("M3 is done when"). Special
 conform-to-v4.6.2 is done (a1e8d6e / 875cef1). Continue M3. Daniel 18:41:
 do every M3 slice that does not need him. Do not wait. Do not ask Go on
 unblocked work. Park only inbound, which-guardians, and named rulings.
+  NEXT (top): W1b — the page drives this wasm lock client so a joining player
+  writes a real stake-lock outpoint on the shipping path.
+  PARKED: inbound, which-guardians, the expiry margin, the fee lock.
   DONE (stake-lock wiring, slice 1): the Round Contract carries v4.6.2 §6's
   federation_id, stake_expiry_blocks (144) and publication_relays[], in the
   id; custodyFieldsAreValid refuses another expiry, a paying FEDERATION round
@@ -136,10 +139,10 @@ unblocked work. Park only inbound, which-guardians, and named rulings.
   attested claim_pk, reads the outpoint back - driven from Node on regtest, a W2
   seat commits the stake. W1b: the page drives it (entryFor's outpoint, pins,
   WebGL). Redeem/forfeit/refund/withdraw are W5.
-  DONE (W1a, TASKBOOK): the lock client builds for wasm and locks - driven
-  from Node on regtest it joined, deposited through a gateway, locked
-  Point(stake_point) to the attested claim_pk at a non-zero outpoint, and both
-  seats committed 980000 msat. Before: only the native rehearsal tool could.
+  DONE (W1a, fe499ca): the player's lock client builds for wasm on the stock
+  Fedimint 0.12.0 crates; driven from Node on a regtest federation it wrote a
+  real non-zero stake-lock outpoint, and two seats verified it and committed
+  the stake. Not player-visible yet: page, bundle, pins and Unity untouched.
   DONE (13A re-run, the half that needs no new field): a valid objection's
   SUSPENDED result is re-run by the committee - each seat replays again and
   signs a re-run result tied to the contradicted run - and 5 of 7 on one
