@@ -41,8 +41,11 @@ username, free play. Then ENTRY_VOID.
   withdrew it. Also when the player's chain never passes the line: a seat
   without the first mark takes a round seat's closed Void and refuses the mark,
   so both seats record ENTRY_VOID and the refund is at once (fresh federation:
-  redeemed before expiry). Late first mark stays FORFEIT; no mark stays neither.
-  Suites: protocol 497, node 563, client 279; Unity in TASKBOOK. Not deployed.
+  redeemed before expiry). A seat records ENTRY_VOID only with the player's own
+  signed first mark in hand, never on another seat's word alone (a mark one
+  seat invented is refused; no Void, no forfeit). Late first mark stays
+  FORFEIT; no mark stays neither. Suites: protocol 497, node 564, client 279;
+  Unity in TASKBOOK. Not deployed.
   HOLE (walk-aways, separate, not this slice): a committed player who never
   sends a first mark refunds at expiry today, because §15 (neutral input to a
   deterministic result) is unbuilt - and ENTRY_VOID must not fire without a

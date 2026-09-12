@@ -31291,3 +31291,41 @@ M3 ENTRY_VOID (§16), THE CHAIN THAT NEVER PASSES THE LINE: A CLOSED PEER'S VOID
                     NotShoveEachOtherWithPhysics) and a graphics device under
                     -nographics x2 (VisibilityTests.ArmiesAreActuallyDrawn,
                     .RoadsAreActuallyDrawn). Nothing red beyond them.
+
+M3 ENTRY_VOID (§16), THE CLOSED-CLAIM TRUST BOUNDARY: ONE SEAT'S WORD IS NOT A VOID
+  THE HOLE          a seat without the first mark took a round seat's "closed" claim
+                    whenever it carried that seat's signed receipt - so an operator
+                    seat could void a run the other seat never saw.
+  MEASURED BEFORE   tools/closed-claim-probe.mjs, two seats, B up and open:
+                    (1a) A's claim + A's receipt, no mark   400 at the door; nothing
+                    (1b) an invented first mark (a key not  B: 409 {entryVoid: true},
+                         the player's), A's receipt over       ENTRY_VOID (closed), round
+                         it, "closed"; the player sent        open, no mark held; with
+                         nothing                              A's side planted: forfeit
+                                                              200 at once, verifies, the
+                                                              lock's id, expiry 1200 still
+                                                              ahead of 1000
+                    (2)  honest closed-line                 ENTRY_VOID both, 200
+                    (2') live run, forward reaches B        DELIVERED both, qualifier 200
+  FIXED             voidHere records ENTRY_VOID only for a first mark in the player's
+                    own hand: it must verify under the entry's session key, be the mark
+                    in hand, and chain to nothing - from the player or in a forward,
+                    never on another seat's word alone. Anything else goes on to the
+                    door's own checks.
+  MEASURED AFTER    (1a) 400, nothing. (1b) B 409 "the signature does not verify under
+                    the entry's session key", no Void; A's planted side alone: forfeit
+                    409; lock held. (2) unchanged: ENTRY_VOID both, 200. (2') unchanged:
+                    DELIVERED both, 200. outage.test.js (f) holds (1a)/(1b); (a)-(e) and
+                    (i)-(iii) unchanged: both up DELIVERED, down seat ENTRY_VOID and 200
+                    at once, catch-up refused, late mark FORFEIT, no mark neither.
+  COUNTS            protocol 497/497, node 564/564 (+1: test (f)), client 279/279.
+                    No C# or jslib changed. EditMode 193: 189 pass, 1 red (the listed
+                    CombatFxTests.RifleFireProducesAFlashAndATracer), 3 skipped (run
+                    ended 12:15:35). PlayMode 239: 215 pass, 11 red, 13 skipped (run
+                    ended 12:25:19) - the documented eleven: retired C# army and truck
+                    physics x9 (FeatureTests.DamageIsFeltInTheDriving, ImportedModel-
+                    Tests x2, TruckHealthTests.CrashingIntoArmourWritesItOff,
+                    VehicleTests x5) and a graphics device under -nographics x2
+                    (VisibilityTests.ArmiesAreActuallyDrawn, .RoadsAreActuallyDrawn).
+                    Nothing red beyond them. Measured in-process only (closed-claim
+                    probe, outage.test.js (f)); no fresh-federation run for this beat.
