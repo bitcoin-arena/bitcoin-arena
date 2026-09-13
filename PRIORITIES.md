@@ -29,6 +29,10 @@ DONE, payment commit: the page fetches the signed set from every seat, checks
 it, lists the recipients, and the player's Client pays each share over LNURL -
 a 2% donor pays 1334 + 666 msat to the two recipients (in process; a real
 wallet on a paid round is the on-screen check). Destination (6d) waits with W4.
+DONE: a paid local round's launcher binds the two recipients at 127.0.0.1:18777
+and they invoice from its Lightning - live on regtest lnd: 5% donor 3334 + 1666
+msat SETTLED; 2% donor 1334 SETTLED, 666 NO_ROUTE (under lnd's 1000 msat
+min_htlc - needs a ruling). Left on 6e: 56 fixtures with the placeholder set id.
 
 DONE: M3.3-34 lobby how-to strip (Daniel 08:58) - the 1-2-3-4 art is in the
 player build's Unity lobby, whole and on screen on iPhone and Android, upright

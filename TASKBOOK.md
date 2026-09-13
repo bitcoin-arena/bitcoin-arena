@@ -33825,3 +33825,53 @@ M3.2 ITEM 6e, THE PAYMENT COMMIT: THE PAGE FETCHES THE SIGNED SET, CHECKS IT, AN
   SUITES            core 91/91, protocol 512/512 (+6), client 300/300 (+7), node 609/609
                     (+1; five-of-seven 21/21). Page bundle rebuilt (fresh), known-good
                     list +f332e13e... (intermediate uncommitted builds kept off it).
+
+M3.2 ITEM 6e: A PAID LOCAL ROUND'S LAUNCHER BINDS THE TWO TEST RECIPIENTS, AND THEY INVOICE (2026-09-13; Daniel's pick)
+  BEFORE            nothing listened on 127.0.0.1:18777, the address the signed set
+                    names, so a paid round's page asked both recipients and each share
+                    came back "the recipient's endpoint did not answer" (measured in
+                    the payment commit). The Lightning port could make only holds.
+  CODE              lnurl-recipients.js: the two LUD-06 recipients - pay request (tag,
+                    callback, metadata, 1..1e11 msat, commentAllowed 64, CORS open) and
+                    a callback that invoices exactly the amount asked under SHA-256 of
+                    the recipient's metadata, through the invoice source it is handed;
+                    handed none, a bad amount or one out of range, it refuses by name.
+                    lnd-port.js invoice(): lncli addinvoice --amt_msat --description_hash
+                    --expiry. round-2of2.mjs standUpRound: a paid round (stakeMsat > 0)
+                    binds the recipients at 127.0.0.1:18777 by default, invoicing from
+                    the launcher's own BLWP_LND endpoint, and closes them with the round;
+                    a free round binds nothing.
+  A LEAK, FOUND LIVE AND FIXED  the first version bound before the round was up: a
+                    paid round refused by its node's preflight left 18777 bound, and the
+                    next launcher failed EADDRINUSE. It binds last now.
+  LIVE (6e3b-live.mjs) throwaway regtest lnd 0.21.3 as the launcher's BLWP_LND (scratch
+                    chain, own ports) and a second as the payer, with a 1,000,000 sat
+                    channel into it (996,530 sat inbound); the wallet the page talks to
+                    is a NIP-47 bridge that pays through the payer.
+                      the paid launcher first REFUSED on a node with no channel ("2 holds
+                      of 98000 msat need 196000 msat of inbound") - the preflight doing
+                      its job; with the channel it stood the round up, stake 100000 msat;
+                      bound: http://127.0.0.1:18777 - blwp-test-a 200 payRequest, blwp-test-b
+                      200 payRequest, CORS *, commentAllowed 64;
+                      the set from the launcher's own two seats: accepted, shares
+                      6667/3333, signed by the regtest authority;
+                      2% donor (2000 msat): both recipients issued real lnbcrt invoices
+                      (1334 and 666 msat, description hash = their metadata, comment = the
+                      player key), the wallet asked exactly those two; 1334 SETTLED in the
+                      recipient lnd (amt_paid 1334); 666 OPEN, unpaid -
+                      FAILURE_REASON_NO_ROUTE; reported, not redirected; spend log 1334;
+                      5% donor (5000 msat): 3334 SETTLED and 1666 SETTLED, paid 5000;
+                      0% donor: 0 invoices, 0 asked.
+  THE 666 MSAT SHARE, CAUSE CONFIRMED  both directions' channel policies have min_htlc
+                    1000 msat (lnd's default; describegraph --include_unannounced); the
+                    channel constraints are 1 msat. A share under one satoshi does not
+                    route on default nodes: a 2% donation on a 100 sat stake leaves the
+                    3333-bps recipient 666 msat, which the protocol splits correctly and
+                    Lightning will not carry. Listed, not fixed: whether shares under
+                    1000 msat are paid, folded, or the minimum donation is raised is a
+                    ruling (spec rounding is msat floor).
+  LEFTOVER, SAME LETTER  56 test fixture files still name the placeholder donationSetId
+                    b32(0xd0) - node tests 39, client tests 17 (fixtures testing other
+                    rules); launchers 0. Not started this turn.
+  SUITES            core 91/91, protocol 512/512, client 300/300 (bundle unchanged,
+                    fresh), node 613/613 (+4: lnurl-recipients; five-of-seven 21/21).
