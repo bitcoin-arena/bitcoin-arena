@@ -33946,3 +33946,63 @@ M3.2 ITEM 6e: THE LEFTOVER PLACEHOLDER SET IDS NAME THE REAL SIGNED SET (2026-09
   SUITES            core 91/91, protocol 512/512, client 300/300 (bundle fresh), node
                     613/613 (six chunks 101+93+128+103+106+61; five-of-seven 21/21, run as
                     nine name-pattern groups - one title matches two, so 22 runs of 21).
+
+M3.2 ITEM 6e: THE GOLDEN CONTRACT VECTOR KEEPS THE PLACEHOLDER - PICK A (Daniel 2026-09-13)
+  RULED             vectors.test.js, engine-check.js and test-vectors/protocol/contracts.json
+                    stay on donationSetId fill(0xd0); make-vectors.js untouched. In a vector
+                    the 32 bytes are encoding input, not a set anyone is owed, and moving
+                    them without a PROTOCOL_VERSION move is what the vectors rule forbids.
+                    donation-set-door.test.js and donation.test.js's two roundWith(b32(0xd0))
+                    stay: there the placeholder has to be the wrong id.
+  FINAL COUNT       donationSetId placeholders in node/client/protocol test/*.js, door
+                    excluded: 83 -> 2 (the 56 b32(0xd0): node 39, client 17; then node 9,
+                    client 6, protocol 12 -> protocol 2, both the golden contract by pick A).
+  SUITES            docs only - the last measured counts stand (0f673c9): core 91/91,
+                    protocol 512/512, client 300/300, node 613/613 (five-of-seven 21/21).
+
+M3.2 ITEM 6e: IS AMOUNTS FINISHED? NOT ON THE PLAYER'S SCREEN (2026-09-13; read and probed, no code)
+  WHAT STANDS       2% donor, 100000 msat stake: entry writes donation 2000, net 96000,
+                    hold 96000; the set is signed and served by every seat; the Client pays
+                    1334 + 666 (donation-pay.test.js, in process); live regtest through the
+                    launcher's recipients (6e3b-live.mjs, a script driving the page's
+                    Client, not the page on a screen): 1334 SETTLED, 666 NO_ROUTE (ruled
+                    kept); 5% donor 3334 + 1666 SETTLED.
+  HOLES, EACH MEASURED
+    1 NOT DEPLOYED  btc-logistics-core serves blwp-client.js sha256 cee239e1..., 0
+                    occurrences of payDonation; HEAD's bundle is f332e13e.... The last core
+                    deploy (943407de) predates the donation prompt (8a0a981). On the live
+                    page a 2% donor is never asked.
+    2 A RELOAD PAYS IT AGAIN (read from the code, not run)  index.html:673 `let
+                    donationPaying = false` is page memory and spendLog() (nwc.js:166) is
+                    in-memory; the lock (saveLock), the chosen donation (chooseDonation's
+                    storage) and the wallet (tabWallet) are all in sessionStorage. A reload
+                    over a kept lock rebuilds the same entry, the seats take it, and
+                    index.html:881's condition holds again: 1334 + 666 paid a second time
+                    (2668 of 2000 on default lnd, where the 666 never routes). Nothing on
+                    the recipient side dedupes - each callback is a fresh invoice.
+    3 THE RESULT IS NOT ON SCREEN  window.BLWP_DONATION_PAID {state paid|part|error,
+                    paidMsat, unpaid[]} is written by the page and read by nothing: 0
+                    references in unity-proto/Assets *.cs / *.jslib. §22A: clients SHOULD
+                    report a failed share; the 666 ruling rests on "the client reports that
+                    share unpaid" - today only window state and the console do.
+    4 THE TEST RECIPIENTS ARE LOOPBACK  the signed regtest and testnet4 sets name
+                    http://127.0.0.1:18777. Only a browser on the launcher's own machine
+                    reaches them; a phone on the core page asks its own loopback and both
+                    shares come back "the recipient's endpoint did not answer" (1334 and
+                    666 unpaid). Not measured: whether desktop Chrome's local-network
+                    permission lets the https core page reach http://127.0.0.1 (the
+                    recipients send no Access-Control-Allow-Private-Network header).
+  NOT 6e's TO START, NAMED FOR A RULING
+    - THE FEE IS SHOWN, NOT COLLECTED: owedLine says "2 sat fee and 2 sat donation out
+      of it, 96 sat staked"; the wallet is asked 96 (hold) + 2 (donation) = 98 of the
+      100 approved. The fee collector is parked with the fee-lock ruling / W4 (6e's
+      handoff line "THE FEE AND DONATION COLLECTOR": the donation half is built).
+    - THE DONATION IS PAID WHEN THE SEATS TAKE THE ENTRY (index.html:881), not when the
+      stake is HELD - so an entry that ends ENTRY_VOID has still donated. Ruled "at
+      entry"; §22A excludes ENTRY_VOID/VOID from the fee base and is silent on the
+      donation. Listed, not changed.
+  DEPLOYABLE?       the code can ship to btc-logistics-core, but holes 2 and 3 should close
+                    first - a reload double-charges and the player never sees what was
+                    paid. Even then an on-screen paid round is a desktop browser on the
+                    launcher's host (hole 4), a launcher with BLWP_LND and inbound, and a
+                    real NWC wallet with a route: not done yet. Green suites are not that.

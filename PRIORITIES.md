@@ -34,9 +34,12 @@ and they invoice from its Lightning - live on regtest lnd: 5% donor 3334 + 1666
 msat SETTLED; 2% donor 1334 SETTLED, 666 NO_ROUTE (lnd's 1000 msat min_htlc;
 ruled: the floor split stands, the share is reported unpaid, the player keeps it).
 DONE: the 56 node/client fixtures name the real signed set (b32(0xd0) 56 -> 0).
-DONE: the leftover placeholder set ids name it too (node 9 -> 0, client 6 -> 0,
-protocol 12 -> 2). Held for a pick: the golden contract vector (vectors.test.js,
-engine-check.js, test-vectors/protocol/contracts.json) - A keep it, B regenerate.
+DONE: leftover node/client/protocol fixtures name the real signed set; the
+golden contract vector stays on the placeholder by pick A (TASKBOOK).
+STILL OPEN ON 6e (TASKBOOK, measured): a reload over a kept lock pays the
+donation again; the page never shows what was paid or left unpaid; core is not
+deployed (live bundle has no payDonation); the test recipients are loopback, so
+the on-screen paid round is a desktop on the launcher's host.
 
 DONE: M3.3-34 lobby how-to strip (Daniel 08:58) - the 1-2-3-4 art is in the
 player build's Unity lobby, whole and on screen on iPhone and Android, upright
