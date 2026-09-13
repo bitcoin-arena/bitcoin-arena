@@ -34006,3 +34006,42 @@ M3.2 ITEM 6e: IS AMOUNTS FINISHED? NOT ON THE PLAYER'S SCREEN (2026-09-13; read 
                     paid. Even then an on-screen paid round is a desktop browser on the
                     launcher's host (hole 4), a launcher with BLWP_LND and inbound, and a
                     real NWC wallet with a route: not done yet. Green suites are not that.
+
+M3.2 ITEM 6e: RULINGS ON THE FEE AND ON A VOIDED ENTRY'S DONATION (Daniel 2026-09-13)
+  FEE COLLECTOR     parked with W4. The page keeps showing the fee line ("2 sat fee ...
+                    out of it"); nothing collects it in this item; no fee-lock work here.
+  STANDING RULE     THE DONATION IS PAID AT ENTRY, AND A VOIDED ENTRY HAS STILL DONATED.
+                    The page pays once the seats take the entry, not when the stake is
+                    HELD; an entry that ends ENTRY_VOID (or a round that goes VOID) does
+                    not get its donation back, and nothing here refunds it.
+
+M3.2 ITEM 6e, HOLE 2 CLOSED: A RELOAD DOES NOT PAY THE DONATION TWICE (2026-09-13)
+  BEFORE (measured, donation-pay.test.js's reload tests run against HEAD's client.js)
+                    fully paid, then reload:  second load asked the wallet 2 more times,
+                                              for 2000 msat (1334 + 666 again)
+                    part-paid (666 NO_ROUTE), then reload: 2 more asks for 2000 msat,
+                                              1334 sent again
+                    tab died mid-ask on 1334: the reload asked for 1334 again
+  THE KEY           per round and player key, not per entry id and not per tab forever:
+                    a reload keeps the player's key and draws a NEW entry (client.js
+                    join, "draws a NEW entry"; the test asserts the worldSecret moved),
+                    so an entry-id key would miss the very reload it is for. It is the
+                    pair savedLock already keys the kept lock by.
+  CODE              donation-pay.js: donationPaidKey / donationPaidRecord /
+                    noteDonationShare. Client.payDonation takes `storage`: each share is
+                    noted `asked` BEFORE the wallet is asked, then `paid` or `unpaid`; a
+                    noted share is never asked again and is reported from the note
+                    (paid, unpaid with its why, or unknown if the tab died mid-ask). A
+                    tab that cannot write the note does not ask the wallet. Without
+                    `storage` the behaviour is unchanged. The page passes
+                    window.sessionStorage - one argument, same pattern as chooseDonation.
+  AFTER             fully paid reload: 0 wallet asks, 0 invoices, 0 msat sent; reports
+                    paid 2000, kept 2. Part-paid reload: 0 asks, 0 msat; reports paid
+                    1334, unpaid 666 (NO_ROUTE). Mid-ask: only the 666 share is asked;
+                    1334 reported unknown, not unpaid. No-storage tab: 0 asks.
+  SUITES            core 91/91, protocol 512/512, client 304/304 (+4, bundle fresh,
+                    39f59133 added to known-good), node 613/613 (six chunks 101+93+128+
+                    103+106+61; five-of-seven 21/21 last measured, not rerun: it imports
+                    nothing from blwp-client).
+  STILL OPEN        hole 3 (the result on screen), then deploy, then loopback - parked
+                    behind this commit, not started.

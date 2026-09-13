@@ -36,10 +36,12 @@ ruled: the floor split stands, the share is reported unpaid, the player keeps it
 DONE: the 56 node/client fixtures name the real signed set (b32(0xd0) 56 -> 0).
 DONE: leftover node/client/protocol fixtures name the real signed set; the
 golden contract vector stays on the placeholder by pick A (TASKBOOK).
-STILL OPEN ON 6e (TASKBOOK, measured): a reload over a kept lock pays the
-donation again; the page never shows what was paid or left unpaid; core is not
-deployed (live bundle has no payDonation); the test recipients are loopback, so
-the on-screen paid round is a desktop on the launcher's host.
+DONE: a reload does not pay the donation twice - the second load sends 0 msat
+and asks the wallet 0 times (was 2 asks, 2000 msat).
+STILL OPEN ON 6e (TASKBOOK, measured), in this order: the page never shows what
+was paid or left unpaid; core is not deployed (live bundle has no payDonation);
+the test recipients are loopback, so the on-screen paid round is a desktop on
+the launcher's host. Fee collector stays parked with W4.
 
 DONE: M3.3-34 lobby how-to strip (Daniel 08:58) - the 1-2-3-4 art is in the
 player build's Unity lobby, whole and on screen on iPhone and Android, upright
