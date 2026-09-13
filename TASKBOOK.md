@@ -34384,3 +34384,26 @@ M3.2 ITEM 6e: ROUND 3 DOES NOT GATE 6e; TWO AMOUNTS ON THE PLAYER'S SCREEN STILL
                     only; the loopback recipients parked with W4 / 6d; fee collector W4.
   SUITES            no code change: core 91/91, protocol 512/512, client 308/308, node
                     614/614 (five-of-seven 21/21), as at e705efe. Unity not run.
+
+M3.2 ITEM 6e, HOLE 1 CLOSED: A STAKE THAT CAME BACK IS NOT COUNTED AS SPENT (2026-09-13)
+  BEFORE            (bundle 915f64c9, the one the daily page ran) a 98000 msat stake:
+                    winner CANCELLED, refund EXPIRED and loser SETTLED all read "98 sat
+                    over 1 stake in 1 round".
+  CODE              nwc.js: spendLog.markReturned({ paymentHash, state }) marks a stake
+                    returned (CANCELLED or EXPIRED), kept across a reload with the log;
+                    totalMsat counts only what stayed gone, returnedMsat what came back;
+                    spentLine leaves returned stakes out and names them ("· 98 sat came
+                    back (1 stake cancelled)"); wording with nothing returned unchanged.
+                    noteSettlement(log, settlementBy's answer, the stake's hash) is the
+                    rule; the page's settlement poll calls it with the entry's stake
+                    commitment (the hold's payment hash).
+  AFTER (the page's own askTheSettlement and paintWallet, run off the shipped bundle)
+                    winner  CANCELLED "nothing spent this session · 98 sat came back (1
+                            stake cancelled)"   spent 0, returned 98000
+                    refund  EXPIRED   "nothing spent this session · 98 sat came back (1
+                            stake expired)"     spent 0, returned 98000
+                    loser   SETTLED   "98 sat over 1 stake in 1 round"  spent 98000
+                    each the same after a reload; a donation share is never marked.
+  SUITES            core 91/91, protocol 512/512, client 309/309 (+1; bundle 675d62d1
+                    added to known-good), node 593/593 in six chunks (no node change;
+                    five-of-seven 21/21 last run). Not deployed.
