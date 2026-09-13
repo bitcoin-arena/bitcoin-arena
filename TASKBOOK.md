@@ -34355,3 +34355,32 @@ M3.2 ITEM 6e: PICK B LIVE ON THE DAILY PAGE - THE POOL MOVES 0 -> 98000; RULING 
     5 the loopback recipients stay parked, with W4 / 6d.
   SUITES            unchanged since e705efe: core 91/91, protocol 512/512, client 308/308,
                     node 614/614 (five-of-seven 21/21). No Unity change.
+
+M3.2 ITEM 6e: ROUND 3 DOES NOT GATE 6e; TWO AMOUNTS ON THE PLAYER'S SCREEN STILL WRONG OR MISSING (2026-09-13 17:31)
+  RULED (Daniel)    pick A closed the required live check (rounds 1 and 2, seats and lnd);
+                    round 3 still HELD is not a reason to keep 6e open; not waited on.
+  ROUND 3 AT 17:31:29   351697a5, entry close in 10.8 min: page idle 0% loser HELD 98000
+                    (lnd 893e3b28 ACCEPTED 98000), D2 HELD 96000 (0e692351), Z0 HELD 98000
+                    (921e1747); no results, no pool yet; page "Settlement: this seat's
+                    98000 msat stake is held, no result yet"; Chrome alive (1902332).
+  MEASURED HOLES (the shipped bundle 915f64c9 - what the daily page runs - fed a stake
+                    recorded as payStake records it and each settlement end state):
+    1 A STAKE THAT CAME BACK IS STILL COUNTED AS SPENT. spendLog records the stake when
+      it is paid and nothing takes it out when the hold ends CANCELLED or EXPIRED:
+        winner   running total "98 sat over 1 stake in 1 round" beside "Returned: this
+                 seat's 98000 msat stake was cancelled back to the wallet · the round's
+                 pool 98000 msat"
+        refund   "98 sat over 1 stake in 1 round" beside "Expired: this seat's 98000 msat
+                 stake came back to the wallet when its hold ran out"
+        loser    "98 sat over 1 stake in 1 round" beside "Settled: ... went into the pool"
+                 - correct: it did leave the wallet
+    2 A WINNER IS NOT SHOWN WHAT THE ROUND OWES IT. /settlement serves holdMsat and
+      poolMsat only - not the seat's own row of the payout table (194000 msat for the
+      winner in rounds 1 and 2), so a winner's page reads "Returned ... · the round's
+      pool 98000 msat" and no winnings figure. The payout's destination is 6d; the
+      amount owed is this letter's.
+  STILL NOTES / PARKED   the reload "no entry id" line and the chip's "stake dealt,
+                    unpaid" beside HELD (notes); the HH:05:01 Chrome deaths hit the check
+                    only; the loopback recipients parked with W4 / 6d; fee collector W4.
+  SUITES            no code change: core 91/91, protocol 512/512, client 308/308, node
+                    614/614 (five-of-seven 21/21), as at e705efe. Unity not run.
