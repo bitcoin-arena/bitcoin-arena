@@ -30,10 +30,14 @@ refund is asked - the proof now spreads when it forms, all seven hold it, none
 sign: player 0, no committee refund (before: 98000 msat back). A genuine
 outage-VOID still refunds 98000 msat. Ruled limit (path 2, seat 4 down) unchanged.
 
-LIVE LETTER: M3.3-34 lobby still open. Daniel 22:16: lobby and every control
-fully visible in Unity on iOS and Android. 22:12: lobby replaces splash;
-PLAY starts the round; spectate always. Daniel 22:34: when the lobby is
-done, continue M3 immediately (ENTRY_VOID and the rest). Same letter.
+LIVE: ENTRY_VOID (M3.3-34; the lobby is done). An entry that must VOID does
+VOID - not a loss for the player, not a silent refund, not pool profit.
+MEASURED, A HOLE (3 of 3), 5 of 7: a genuine outage (seats 4-6 down, seats 0-3
+ENTRY_VOID), the down seats then caught up late - they take the first mark,
+all seven sign FAILED: the hold settles into the pool (the player loses 98000
+msat); a lock: no fast refund (4 of 5), FAILED recorded. A fork (TASKBOOK):
+ENTRY_VOID at the returning seats (pick) or a no-quorum VOID; needs a go.
+(Earlier, Daniel 22:16/22:12/22:34: the lobby letter, then ENTRY_VOID.)
   DONE (Unity lobby, TASKBOOK, live on btc-logistics-core): the lobby is
   Unity's title screen, no HTML overlay - who you are with NAME and KEY, the
   rounds with their seats' word, PLAY joins the picked 2-of-2 round and starts

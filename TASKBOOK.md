@@ -33313,3 +33313,49 @@ M3.3-34 ON 5 OF 7: PLAN A - THE PROOF IS SPREAD WHEN IT FORMS, ON A LOCK AS ON A
                     lost + seat 5 unreachable 2, genuine outage-VOID 1, all up +
                     lock 2); node 49-102 303/303; core 91/91; protocol 501/501;
                     client 286/286. No Unity, Daily, W4 or C#.
+
+ENTRY_VOID ON 5 OF 7: A GENUINE OUTAGE, THE DOWN SEATS CAUGHT UP LATE - THE ENTRY BECOMES A LOSS (2026-09-13, measured, no code change, A FORK)
+  SPEC              §16: after commitment, before the first financial tick, fewer
+                    than 5 game/verify seats available -> ENTRY_VOID, refunded by
+                    forfeit (at once, §23.2) or the lock's expiry; §14 reachable only
+                    from PROVISIONAL; §18 neither in nor out of the pool; §13C a run
+                    cannot be kept by catching a down seat up after seeing it.
+  ORDER             five-of-seven.test.js "genuine outage-VOID: seats 4-6 down, then
+                    caught up late": seats 4-6 down; the player's first mark (60) and
+                    a mark past the line (1500) to seats 0-3 - all four ENTRY_VOID;
+                    4-6 back; the player's client catches them up (first mark and the
+                    mark past the line). No second first mark: no proof anywhere.
+  HOLD, 3 SETUPS,   the returning seats answered the catch-up with receipts (took
+  THE SAME FIGURES  the first mark late); the first mark then carries 7 receipts at
+                    every seat (the mark at 1500: 1); ALL SEVEN SIGNED FAILED -
+                    seats 0-3 too, over their own ENTRY_VOID record; the hold SETTLED
+                    into the pool at 6-7 seats, cancelled 0: the player loses 98000
+                    msat to an outage, the pool takes it.
+  LOCK, 3 SETUPS    the same record (4 ENTRY_VOID, then 7 FAILED); the Void refund
+                    would be signed by 4 (/forfeit-commit 200 at 0-3, 409 at 4-6) -
+                    one short of five, doors 409 x7, none kept; the lock held - back
+                    only at expiry until W4, which would then claim it as a FAILED
+                    loss.
+  CAUSE             a returning seat's voidHere gets the Void seat's evidence with
+                    ONE receipt (the forwarder's own): outageOutcome reads 1 of 5 with
+                    one silent seat - "an outage cannot be told from a mark never
+                    offered" - so it records no Void and round.checkpoint takes the
+                    first mark late. On 2 of 2 the same evidence reads 1 of 2 with one
+                    silent seat and voids.
+  THE FORK          A (pick): ENTRY_VOID at the returning seats (§16). The Void
+                    evidence carries every receipt the Void seat holds for the
+                    on-time first mark (here 4), each checked by the returning seat;
+                    4 of 5 with itself the silent one is §16's outage, so it refuses
+                    the late mark and records the same ENTRY_VOID. outageOutcome
+                    unchanged. With it: a seat holding ENTRY_VOID signs no run for
+                    that entry (two first marks stay FORFEIT, as ruled). Then all
+                    seven hold ENTRY_VOID and five can sign the fast refund.
+                    B: the returning seats refuse the late mark without a Void; no
+                    transcript reaches five receipts; §13C's no-quorum VOID after the
+                    window; refund only at expiry; the records split ENTRY_VOID (0-3)
+                    / VOID (4-6).
+                    Not coded: needs a go.
+  THE REDS          the two new five-of-seven cases fail their money assertions ("a
+                    seat signed a run for an entry that must VOID") - listed, not
+                    softened. No source changed since 72b9306 (node 602/602, core
+                    91/91, protocol 501/501, client 286/286 there).
