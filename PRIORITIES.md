@@ -22,12 +22,11 @@ no longer refunds the round: the loser's 98000 msat enters the pool (was 0).
 DONE, commit 2: the page asks for the donation (browser prompt, default 0, a
 second confirmation above 5%) and the entry carries it - a 2% donor writes 2000
 msat, net 96000, lock 96000 (was: 0 on every entry).
-COMMIT 3 MEASURED, NOT CODED (TASKBOOK): a 2% donor's 2000 msat is taken by
-nobody; no seat serves a DonationSet; every round names a placeholder set id
-(b32(0xd0), 67 files), so no round names a payable set; no LNURL or BOLT11 code.
-Picks given; the set commit waits on one more: the donation authority's keys
-on disk are Ed25519 (match genesis), the one real-signature test is BIP-340.
-Destination (6d) waits with W4.
+DONE, commit 3a: rounds name a donation set signed by the network's Ed25519
+authority, and every seat of the round serves it (404 otherwise) - a 2% donor's
+2000 msat is owed 1334/666 to two local test recipients (was: no set, 404).
+NEXT, not started: the payment commit (the page fetches and checks the set,
+LNURL + BOLT11, payDonation). Destination (6d) waits with W4.
 
 DONE: M3.3-34 lobby how-to strip (Daniel 08:58) - the 1-2-3-4 art is in the
 player build's Unity lobby, whole and on screen on iPhone and Android, upright

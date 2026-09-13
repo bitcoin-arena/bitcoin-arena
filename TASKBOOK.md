@@ -33713,3 +33713,50 @@ M3.2 ITEM 6e, COMMIT 3a (THE SET AND THE SEATS), STOPPED BEFORE CODE ON THE SIGN
                     sign. Choosing BIP-340 means new genesis donation keys, which moves
                     NETWORK_ID_REGTEST and NETWORK_ID_TESTNET4 and every fixture bound
                     to them. Needs Daniel's pick before the set commit.
+
+M3.2 ITEM 6e, COMMIT 3a: A ROUND NAMES A SIGNED DONATION SET AND ITS SEATS SERVE IT (rulings 2026-09-13: Ed25519)
+  BEFORE            (6e3-before.mjs) a seat answered /donation-set 404 for every round;
+                    67 files named donationSetId b32(0xd0) - 11 launchers (the 2-of-2
+                    among them) and 56 test fixtures - no set's id, so no round named a
+                    set anybody could pay; no bech32 or LNURL decoding existed.
+  SIGNED ONCE       protocol/tools/sign-donation-set.mjs reads the Ed25519 donation
+                    authority keys make-genesis wrote (/mnt/bitcoin/blwp-genesis),
+                    refuses one whose public key is not genesis's, signs one set per
+                    test network (serial 1, valid from 0), checks its own signature and
+                    writes src/test-donation-sets.js - public bytes only. regtest signed
+                    by 6a0bbf5d..., testnet4 by ea65169e.... Two local test recipients,
+                    http://127.0.0.1:18777/lnurlp/blwp-test-a (6667 bps) and
+                    .../blwp-test-b (3333 bps); set id 7b128a1b.... No test needs a
+                    secret; no production recipient; 6d untouched.
+  THE SEATS         serve({ donationSets, donationRotations }) and GET
+                    /donation-set?round=: the handed set whose recipients hash to the
+                    id the round names, for its network, in force at its census height,
+                    signed by that network's donation authority at that height
+                    (authorityAt, rotations included) - Ed25519, @noble/curves. Body:
+                    the signed set's bytes then the 64-byte signature. Anything else
+                    404, bad id 400. genesis.js donationKeysForNetworkId maps a round's
+                    network id to its keys. donation-rotation.test.js now signs with
+                    Ed25519 keys; its checks are unchanged and green.
+  THE LAUNCHERS     all 11 name idOfDonationSet(TEST_DONATION_SET_REGTEST.recipients)
+                    (7b128a1b...) instead of b32(0xd0); the 2-of-2 launcher also hands
+                    both seats the signed set. (testnet4-gate's contract is on the
+                    regtest network id, so it names the regtest set too.) The local
+                    endpoints on :18777 are bound in the payment commit.
+  AFTER             two seats of one round: 200 and 200, the same 282 bytes, the
+                    signature verifies under the regtest authority, and
+                    donationSetMatchesRound holds. A round naming the placeholder: 404
+                    at all three seats. A seat holding no set 404; a seat handed the
+                    same set signed by another Ed25519 key 404. The testnet4 set does
+                    not verify under the regtest key. A 2% donor's 2000 msat splits
+                    1334 to blwp-test-a and 666 to blwp-test-b (floor, the remainder to
+                    the first as published); a 0% donor owes 0 and 0. BIP-173's valid
+                    and invalid strings and LUD-01's example LNURL decode as published.
+                    The same grep as before: 56 files name the placeholder - launchers
+                    0, node tests 39, client tests 17 (fixtures testing other rules;
+                    listed, not rewritten); make-vectors.js keeps it for the committed
+                    vectors.
+  NOT YET           nothing pays: the 2000 msat is owed to the served set, not taken
+                    from the donor - the payment commit (page fetch + checks, LNURL,
+                    BOLT11, payDonation) is next.
+  SUITES            core 91/91, protocol 506/506 (+5), client 293/293 (bundle fresh,
+                    unchanged), node 608/608 (+3; five-of-seven 21/21).
