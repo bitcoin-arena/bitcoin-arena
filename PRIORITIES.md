@@ -30,8 +30,11 @@ refund is asked - the proof now spreads when it forms, all seven hold it, none
 sign: player 0, no committee refund (before: 98000 msat back). A genuine
 outage-VOID still refunds 98000 msat. Ruled limit (path 2, seat 4 down) unchanged.
 
-LIVE: M3.3-34 PLAY must not show the loading screen again (Daniel 07:11).
-PLAY starts the round. Then ENTRY_VOID. An entry that must VOID does
+DONE: PLAY in the lobby no longer shows the loading screen again (Daniel 07:11):
+the seat is taken in the running page, no reload; the round starts 1 s after
+PLAY (measured on a local 2-of-2, TASKBOOK). Deployed to btc-logistics-core.
+
+LIVE: ENTRY_VOID (M3.3-34). An entry that must VOID does
 VOID - not a loss for the player, not a silent refund, not pool profit.
 MEASURED, A HOLE (3 of 3), 5 of 7: a genuine outage (seats 4-6 down, seats 0-3
 ENTRY_VOID), the down seats then caught up late - they take the first mark,

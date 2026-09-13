@@ -33359,3 +33359,46 @@ ENTRY_VOID ON 5 OF 7: A GENUINE OUTAGE, THE DOWN SEATS CAUGHT UP LATE - THE ENTR
                     seat signed a run for an entry that must VOID") - listed, not
                     softened. No source changed since 72b9306 (node 602/602, core
                     91/91, protocol 501/501, client 286/286 there).
+
+PLAY IN THE LOBBY NO LONGER SHOWS THE LOADING SCREEN AGAIN (M3.3-34, Daniel 2026-09-13 07:11)
+  THE ASK           "after PLAY the loading screen comes again. That must not
+                    happen. PLAY starts the round."
+  CAUSE (read)      BLWP_LOBBY_ACT.join set `location.search` to the round's link
+                    + play=1: the page navigated, Unity loaded a second time, and
+                    the player sat through the whole loading screen again before
+                    AutoPlay started the round.
+  NOW               PLAY takes the seat IN THE RUNNING PAGE. index.html: the address
+                    becomes the round's link by history.replaceState (with play=1,
+                    so a reload still starts the round), joinTheRoundIfOneWasNamed
+                    runs in place, BLWP_JOIN says joining / joined / refused (why,
+                    and the lock step) through BLWP_LOBBY_VIEW. BLWP_CHAIN and
+                    BLWP_ADVERT are set last, beside BLWP_ENTRY: they are what tells
+                    Unity a session exists, and a session opened before the entry
+                    fails for good. A refused join puts the lobby's address back.
+                    The deposit box moves out of the loading screen before it is
+                    removed, so a lock round's invoice still shows.
+                    Unity (intent only): SplashScreen starts the round when the page
+                    says joined and the session runs, or 5 s after joined without
+                    one (DailyLobby.AfterJoin); a refusal shows "not seated: <why>".
+                    NetSession asks the page again for a session while it has none
+                    (twice a second) - it read it once at Start.
+  MEASURED          local 2-of-2 (round-2of2.mjs on 18280/18281, a private regtest
+                    bitcoind in the scratchpad, page on 8902 from the new build),
+                    headless Chrome, Unity's own PLAY pressed at its reported rect
+                    (play-inplace-probe.mjs):
+                      navigations after PLAY 0, same document (window mark kept),
+                      loading screen visible after PLAY: never,
+                      title screen gone 1 s after PLAY, BLWP_JOIN joined,
+                      session opening 1 s -> ready 6 s, first mark receipted 10 s;
+                      screenshot: the cargo ramp, "1 player · waiting · free seat".
+  TESTS             EditMode 196: 192 pass, 3 skipped, 1 red - the listed
+                    CombatFxTests.RifleFireProducesAFlashAndATracer. New:
+                    LobbyScreenTests.PlayStartsTheRoundWhenThePageSaysJoinedWithoutAReload.
+                    BuildWebGL result=Succeeded errors=0 (6:47).
+  DEPLOYED          btc-logistics-core 943407de (daily.json unchanged).
+  NOT MEASURED LIVE the Daily's own seats (run-2of2.mjs pid 14074, :18080/:18081)
+                    accept connections and answer nothing in 20 s (accept queue 4 on
+                    18080, the process running at 29% CPU): the live lobby lists no
+                    round right now, so PLAY cannot be pressed against it. Not
+                    restarted here - a restart loads this worktree, which holds the
+                    uncommitted ENTRY_VOID edits.
