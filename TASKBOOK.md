@@ -32777,3 +32777,20 @@ M3.3-34: A SEAT THAT STAYS DOWN PAST THE HOLD'S EXPIRY NO LONGER HANDS BACK A TW
                     101 files (1-48 281/281; 49-101 302/302 on the second run, the
                     first 301/302 above; hold-two-first 2/2); related 12 files
                     95/95; core 91/91; protocol 501/501; client 286/286. No C#.
+
+M3.3-34: THE TWO RESIDUALS OF THE DOWN SEAT RETURN NO STAKE (2026-09-13, measured)
+  MEASURED          hold-two-first.test.js (the stays-down test, extended): after A
+                    settled the two-first-marks hold with B down, B comes back;
+                    18 s later: B's custody row still HELD, B no-quorum none, 0
+                    results (B never ran its close - only A was told to close); the
+                    hold settled at A 1, B 0, cancelled 0/0; A's payout still "1 of
+                    2 seats signed this table, so nothing is spent".
+  FACT              neither residual hands the stake back to the two-first-marks
+                    player: 0 msat back. (1) B's HELD row: B cancelled nothing, and
+                    the invoice is already settled. (2) The settled stake waits in
+                    the operator's lnd until B signs the payout - it goes to the
+                    winner or stays with the operator, never to that player. Left
+                    after 5 of 7, as ruled.
+  COUNTS            this path (8e68e1f): node 583/583, core 91/91, protocol 501/501,
+                    client 286/286; payout-second-seat 0/1 once in the first 49-101
+                    run (reason not printed), not reproduced (5/5 alone, 302/302).
