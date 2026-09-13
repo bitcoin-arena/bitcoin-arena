@@ -34045,3 +34045,40 @@ M3.2 ITEM 6e, HOLE 2 CLOSED: A RELOAD DOES NOT PAY THE DONATION TWICE (2026-09-1
                     nothing from blwp-client).
   STILL OPEN        hole 3 (the result on screen), then deploy, then loopback - parked
                     behind this commit, not started.
+
+M3.2 ITEM 6e, HOLE 3 CLOSED: THE PAGE SHOWS EACH DONATION SHARE PAID, UNPAID OR OUTCOME UNKNOWN (2026-09-13)
+  BEFORE (measured: the shipped paintWallet, pulled out of index.html and run on a stubbed
+                    DOM with dist/blwp-client.js as BLWPCLIENT, after real payDonation loads)
+                    the page kept { state, paidMsat, unpaid } on window and painted none of
+                    it: 0 of 2 shares shown, donation text "" - in every case.
+  CODE              donation-pay.js: donationPaidState(set, said) - one row per owed share
+                    in the set's order, paid / unpaid (with why) / unknown, off
+                    payDonation's answer (on a reload, the tab's notes); donationPaidLine -
+                    the one line, and what is unpaid "stays in your wallet, sent nowhere
+                    else". The page: a #blwp-donation line in the wallet panel, painted by
+                    paintWallet BEFORE the lock-round early return; payDonation's answer
+                    stored as BLWPCLIENT.donationPaidState(...) and the panel repainted.
+  AFTER (same harness, 2% donor, 100000 msat stake)
+                    fully paid, load 1 and reload: 2 of 2 shown - "1334 msat paid to
+                      .../blwp-test-a · 666 msat paid to .../blwp-test-b"; the reload
+                      asked the wallet 0 times
+                    part-paid (666 NO_ROUTE), load 1 and reload, hold round and lock round:
+                      2 of 2 - "1334 msat paid ... · 666 msat UNPAID to .../blwp-test-b
+                      (... FAILURE_REASON_NO_ROUTE) · 666 msat unpaid stays in your wallet,
+                      sent nowhere else"; the reload asked 0
+                    tab closed mid-ask on 1334: 2 of 2 - "1334 msat outcome unknown to
+                      .../blwp-test-a (...) · 666 msat paid to .../blwp-test-b"; only 666
+                      asked; not called unpaid
+                    every row equals the tab's sessionStorage note for that share (asked ->
+                    unknown). Before any donation: ""; while paying: "paying …".
+  SUITES            core 91/91, protocol 512/512, client 305/305 (+1; bundle 747a0f28 added
+                    to known-good, template = dist), node 613/613 (six chunks 592;
+                    five-of-seven 21/21 last measured - imports nothing from blwp-client).
+  NOT MEASURED      a real browser: whether the wallet panel and a line this long are
+                    readable on a phone over the game. And the line appears once
+                    payDonation has answered - on a reload that is after the new seat is
+                    taken with the kept wallet; a reload whose seat is never taken shows
+                    no donation line though the notes exist. Both are the deploy step's
+                    on-screen check.
+  NEXT ON 6e        deploy HEAD's page to btc-logistics-core and check it on screen; then
+                    the loopback recipients. Fee collector parked with W4; no refund on void.

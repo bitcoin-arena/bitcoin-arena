@@ -38,10 +38,12 @@ DONE: leftover node/client/protocol fixtures name the real signed set; the
 golden contract vector stays on the placeholder by pick A (TASKBOOK).
 DONE: a reload does not pay the donation twice - the second load sends 0 msat
 and asks the wallet 0 times (was 2 asks, 2000 msat).
-STILL OPEN ON 6e (TASKBOOK, measured), in this order: the page never shows what
-was paid or left unpaid; core is not deployed (live bundle has no payDonation);
-the test recipients are loopback, so the on-screen paid round is a desktop on
-the launcher's host. Fee collector stays parked with W4.
+DONE: the page shows each donation share as paid, unpaid or outcome unknown,
+matching the tab's notes - 2 of 2 shares in every measured case (was 0 of 2).
+NEXT ON 6e: deploy HEAD's page to btc-logistics-core (live bundle has no
+payDonation) and check it on screen. Then: the test recipients are loopback, so
+the on-screen paid round is a desktop on the launcher's host. Fee collector
+stays parked with W4; no refund on void.
 
 DONE: M3.3-34 lobby how-to strip (Daniel 08:58) - the 1-2-3-4 art is in the
 player build's Unity lobby, whole and on screen on iPhone and Android, upright
