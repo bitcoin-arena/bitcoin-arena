@@ -19,8 +19,10 @@ Top item first. Finish and deploy before starting the next.
 DONE: two first marks after an outage-VOID on 5 of 7 - with seats 3-5 or 4-6
 down through the hold's expiry the hold settles into the pool, player 0, pool
 98000 msat (before: seats 3-5 down gave the player 98000); a lock: no refund.
-Still in TASKBOOK, not started: path 2 with seat 4 down; a lock with receipts
-lost between seats that are up.
+RULED LIMIT: path 2 with seat 4 down from its refusal through the hold's expiry -
+the second mark never left the down seat, no seat up can prove it: the
+outage-VOID refund stands, player 98000 msat, pool 0, no lock refund.
+NEXT: a lock with receipts lost between seats that are up.
 
 LIVE LETTER: M3.3-34 lobby still open. Daniel 22:16: lobby and every control
 fully visible in Unity on iOS and Android. 22:12: lobby replaces splash;
@@ -1672,7 +1674,10 @@ IN THIS ORDER (unparked):
                                         seat that saw the second mark down.
                                         OPEN: the NEXT item above; the seats'
                                         records split (money unaffected);
-                                        payout-second-seat's unexplained red;
+                                        payout-second-seat's red (text caught:
+                                        A stays PAYOUT_QUEUED after B paid,
+                                        "bad-txns-inputs-missingorspent" -
+                                        payout work, not fixed here);
                                         the down seat's two residuals (no
                                         stake back, payout work).
    M3.3-19  optional stake / ghost     M3   done (TASKBOOK "M3.3-19", 2026-09-10) —

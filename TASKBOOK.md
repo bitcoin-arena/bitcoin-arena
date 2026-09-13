@@ -33073,3 +33073,83 @@ M3.3-34 ON 5 OF 7: SEATS HOLDING THE PROOF GATHER THE SHARES WHILE EVERY SEAT IS
                     payout-second-seat 1/1 - still listed unexplained; five-of-seven
                     12/12 in four runs by test name); core 91/91; protocol 501/501;
                     client 286/286. No Daily, W4, Unity or C#.
+
+M3.3-34 ON 5 OF 7: PATH 2 WITH SEAT 4 DOWN FROM ITS REFUSAL THROUGH THE EXPIRY - THE HOLD COMES BACK, 98000 MSAT (2026-09-13, measured, no code change, NEEDS A RULING)
+  ORDER             as TASKBOOK defines path 2: seats 4-6 down, the first mark (60)
+                    and a mark past the line (1500) to each of seats 0-3 - all four
+                    ENTRY_VOID; seat 4 alone up, a LATE first mark (1500) to it -
+                    "error FORFEIT ... after the start deadline", kept as its late
+                    start, the forward lost (every other seat down); then seat 4
+                    DOWN from that refusal through the expiry, every other seat
+                    back; the winner plays at the six up; they close.
+  HOLD, 3 SETUPS,   seat 4 before it went down: 1 share, no proof (it never held an
+  THE SAME FIGURES  on-time mark, and nobody was up to pull one from). Seats 0-3
+                    before and after the close: ENTRY_VOID, no proof, no decision, 1
+                    share each; seats 5-6: no proof, no decision, 1 share each. Seat
+                    0's open: "1 of 5 shares". The hold settled 0, cancelled 0 at
+                    every seat - it expires back: 98000 msat to the player, pool 0.
+  LOCK              would sign 4 (seats 0-3, the Void; 5-6 409) - one short of five;
+                    refund doors 409 x6 at once and after the close, none kept; the
+                    lock held, 98000 msat, 0 by the committee - back only by the
+                    player's own expiry refund. Seats 5-6 signed FAILED/0.
+  CAUSE             not shares (the seats 3-5 hole): NO SEAT THAT IS UP HOLDS THE
+  (instrumented)    PROOF. The second first mark never left seat 4 - its forward was
+                    lost and it went down before any seat could pull it - so the
+                    Void stands at 0-3 and no seat has grounds to FORFEIT. Gathering
+                    shares earlier would not change it: nobody has a reason to
+                    settle. Two seat-side failures are needed (the lost forward AND
+                    that seat down through the expiry); the player causes neither.
+  RULING NEEDED     accept this as the limit (a second mark only one unreachable
+                    seat ever received cannot be proven, so the outage refund
+                    stands), or name a protocol change. No patch guessed.
+  THE RED           five-of-seven "a hold, path 2, seat 4 down from its refusal"
+                    fails its ruled assertion ("no seat settled the hold: 98000 at
+                    the hold's expiry back to the player") - listed, not softened;
+                    the lock case passes. Test helper playWinner now takes the seats
+                    that are up (seat 4 is down here); other callers unchanged.
+  NOT STARTED       a lock with receipts lost between seats that are up.
+  THE OTHER REDS    in this pass's full run (no source changed since 0b2f6b7):
+  (text captured)   - payout-second-seat.test.js 0/1, its text caught at last: "A
+                      still reads PAYOUT_QUEUED after the chain carried the payout:
+                      ['1 of 2 seats committed to this spend',
+                      'bad-txns-inputs-missingorspent']" - A's own spend was refused
+                      because B had already spent the pool, and A did not take the
+                      chain's payment as its PAID within the test's window. The
+                      payout's ordering (pool spend / pool watch), not holds, shares
+                      or two first marks: listed, not fixed on this pass.
+                    - first-mark.test.js, two cases, intermittent: "no first mark at
+                      all is FORFEIT at both seats" (full run) and "late start at
+                      close (2)" (1 of 2 runs alone; the other 14/14). Both: A FINAL,
+                      B PROVISIONALLY_FINAL, the same FORFEIT signed 2 of 2 - the
+                      test waits on seat A's forfeit door (closeAndSettle) and then
+                      asserts FINAL at both, so B's window closing a tick later is
+                      caught early. A timing race in the test's wait, not an outcome
+                      and not these seats' code (lock rounds; the /share gathering
+                      runs on holds). Listed, not changed here.
+                    Load at the time: 3.2-4.8 on 12 cores (unrelated monitors, the
+                    Daily launcher, a mainnet bitcoind).
+  COUNTS            foreground, timeout 180, --test-timeout=120000: node 594/597 over
+                    102 files (1-48 without five-of-seven 279/280 - first-mark 13/14;
+                    49-102 302/303 - payout-second-seat 0/1; five-of-seven 13/14 in
+                    five runs by test name - the path 2 hold red); core 91/91;
+                    protocol 501/501; client 286/286. Not committed: behaviour did
+                    not change (as ruled for this order).
+
+M3.3-34 ON 5 OF 7: PATH 2 WITH SEAT 4 DOWN - RULED THE PROTOCOL'S LIMIT (2026-09-13)
+  RULING            Daniel: accept the measured outcome, do not patch. A second
+                    first mark only seat 4 ever saw cannot be proven: no seat up
+                    holds the proof, so no independent seat can replay a FORFEIT.
+                    The lost forward and seat 4 down through the expiry are
+                    seat-side; the player caused neither, and the operator must not
+                    profit from a technical failure. The outage-VOID refund stands:
+                    player 98000 msat, pool 0, no committee lock refund.
+  THE TEST          five-of-seven "a hold, path 2, seat 4 down from its refusal"
+                    now asserts the ruled limit: settled at no seat, cancelled at
+                    no seat, 98000 msat back at the hold's expiry, 0 to the pool,
+                    and no seat up holding the proof (so a run where one does
+                    cannot pass as this case). The lock case already asserted no
+                    refund. payout-second-seat and the first-mark timing cases stay
+                    listed with their reasons, unchanged.
+  LATER (not this   a colluding seat that swallows the second mark and goes down is a
+  letter)           bond/slash question - not a reason to settle a hold into the pool
+                    without proof. Listed, not opened.
