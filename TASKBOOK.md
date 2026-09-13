@@ -33153,3 +33153,38 @@ M3.3-34 ON 5 OF 7: PATH 2 WITH SEAT 4 DOWN - RULED THE PROTOCOL'S LIMIT (2026-09
   LATER (not this   a colluding seat that swallows the second mark and goes down is a
   letter)           bond/slash question - not a reason to settle a hold into the pool
                     without proof. Listed, not opened.
+
+M3.3-34 ON 5 OF 7: A LOCK WITH RECEIPTS LOST BETWEEN SEATS THAT ARE UP - A COMMITTEE REFUND FORMS, 98000 MSAT (2026-09-13, measured, no code change)
+  ORDER             the order TASKBOOK listed: every seat up, their links to each
+                    other cut (sevenSeats cut(): each seat's peers point where
+                    nothing listens) while the player's first mark (60) and a mark
+                    past the line (1500) reach seats 0-4; then heal(); then a
+                    DIFFERENT on-time first mark (30) to seat 5 ("error FORFEIT ...
+                    two first marks"). On a lock and on a hold.
+  WHO HAS THE       seats 0-4 each hold ONE receipt per mark - their own (first
+  RECEIPTS          mark 1, the mark at 1500 1) - while cut and after the heal
+                    (nothing exchanged them again); seats 5-6 hold none. Each of
+                    seats 0-4 found its six offers unanswered: all five recorded
+                    ENTRY_VOID. The proof: seat 5 only (lock); seats 0-5 (hold).
+  LOCK, 3 SETUPS,   would sign 5 (/forfeit-commit 200 at seats 0-4; 409 at 5-6);
+  THE SAME FIGURES  refund doors 200 at 0-4 - FIVE SIGNATURES FORMED - a committee
+                    refund kept at 5 seats, still 200 after the close. The player
+                    can redeem the lock now, before its expiry: 98000 msat back by
+                    the committee. After the close seats 0-4 signed FAILED/128, seat
+                    5 FORFEIT, seat 6 FAILED/0. THE HOLE IS OPEN on a lock.
+  HOLD, 3 SETUPS    the share gathering spread the proof: seats 0-5 FORFEIT, each
+                    SETTLED the hold, cancelled at no seat - player 0, pool 98000
+                    msat; the winner's own hold cancelled back.
+  CAUSE             on a lock the five Void seats sign the refund "at once" on their
+                    own record, and none of them holds the proof - seat 5's pair is
+                    pulled only at their close (#noQuorum), after the refund exists;
+                    the hold path pulls earlier (a seat asked for its share on proof).
+                    No code changed on this pass; the fix needs a go.
+  THE RED           five-of-seven "a stake lock, receipts lost between seats that are
+                    up" fails its ruled assertion ("a refund door answered 2xx - five
+                    signatures formed") - listed, not softened.
+  COUNTS            foreground, timeout 180, --test-timeout=120000: node 598/599 over
+                    102 files (1-48 without five-of-seven 280/280; 49-102 303/303;
+                    five-of-seven 15/16 in six runs by test name - the red above);
+                    core 91/91; protocol 501/501; client 286/286. No Unity, Daily,
+                    W4 or C#.
