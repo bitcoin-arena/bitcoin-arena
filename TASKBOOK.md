@@ -33760,3 +33760,68 @@ M3.2 ITEM 6e, COMMIT 3a: A ROUND NAMES A SIGNED DONATION SET AND ITS SEATS SERVE
                     BOLT11, payDonation) is next.
   SUITES            core 91/91, protocol 506/506 (+5), client 293/293 (bundle fresh,
                     unchanged), node 608/608 (+3; five-of-seven 21/21).
+
+M3.2 ITEM 6e, THE PAYMENT COMMIT: THE PAGE FETCHES THE SIGNED SET, CHECKS IT, AND PAYS THE SHARES OVER LNURL (rulings 2026-09-13; pick A)
+  BEFORE            a 2% donor's 2000 msat was owed to the served set (commit 3a) and
+                    paid to nobody: no bech32, LNURL or BOLT11 code; splitDonation had
+                    no caller; pay_invoice had one call site, the stake.
+  PROTOCOL          bolt11.js reads an invoice's network, amount (m/u/n/p; a pico amount
+                    must end in 0), payment hash, description and description hash -
+                    checked against BOLT11's own four published examples. lnurl-pay.js:
+                    a pay request stands only as tag payRequest, a callback URL,
+                    metadata, and a min..max range holding the share; the callback
+                    asks exactly the share, with the player key as the comment only
+                    where commentAllowed >= 64 (LUD-12); the invoice must ask exactly
+                    the share, under SHA-256 of the endpoint's own metadata (LUD-06),
+                    on the round's network. donation-keys.js maps a network id to its
+                    donation keys without the core's rules (genesis.js re-exports it).
+                    authority.js's private is32/same32 renamed: the page bundle is one
+                    scope and contracts.js has its own is32.
+  SEATS             GET /donation-rotations?round= serves the rotations a seat holds
+                    for the round's network (JSON), so a page applies them.
+  THE PAGE          fetchDonationSet (donation-pay.js): every seat of the round must
+                    serve the same bytes; the set must be the round's, in force at its
+                    census height, signed by the network's Ed25519 authority at that
+                    height - rotations from every seat, each checked against the
+                    recovery key with the browser's async Ed25519 and settled before
+                    authorityAt sees them. The page fetches it before the donation
+                    prompt, which lists every recipient; with no set that checks the
+                    donation stays 0 and the page says why. Once the seats have taken
+                    the entry and a wallet is connected, the page calls the player's own
+                    Client: payDonation(entry, set) - an entry and a set, never an
+                    invoice - beside payStake in client.js, through the same payInvoice.
+  THE GUARD (pick A) session-pay.test.js counted one satoshi-moving Client method,
+                    written when payStake was the only one. It now names exactly two,
+                    ['payStake', 'payDonation']; the file allowlist (client.js, nwc.js,
+                    page-lock.js) and "only client.js asks a node for a quote" are
+                    unchanged, and donation-pay.js names no invoice in code (0 lines).
+                    Before the move the guard was red: a second file named invoices.
+                    wallet-nwc.test.js held the same count ("one method that moves a
+                    satoshi") over a list without payDonation, so it passed without
+                    seeing it: it now names both, and holds payDonation to payStake's
+                    shape too (an entry and a set first, no invoice parameter) -
+                    stricter, not looser.
+  AFTER (in process, the page's own code, two local LNURL endpoints on the set's fixed
+                    address through an injected fetch, a NIP-47 wallet on a local relay)
+                      2% donor: 1334 msat to http://127.0.0.1:18777/lnurlp/blwp-test-a
+                      and 666 msat to .../blwp-test-b - the wallet was asked exactly
+                      the two invoices those endpoints issued (1334, 666), the comment
+                      was the player key as hex, the spend log holds 2 payments, 2000
+                      msat.
+                      0% donor: 0 requests to any endpoint, 0 invoices to the wallet.
+                      unconfirmed above 5% and over-cap (99%): the choice writes 0, and
+                      0 pays nothing.
+                      a wrong amount (1335 for 1334), a wrong description hash, or an
+                      endpoint that is down: that share unpaid and reported, the wallet
+                      asked only the other recipient's own 666 - never redirected.
+                      an endpoint allowing 63 characters: no comment.
+                      the set: two real seats 200/200 -> accepted; one seat missing,
+                      one seat serving another set, both serving a forged set, or a set
+                      the rotated-away authority signed -> refused.
+  NOT MEASURED      a real wallet and real Lightning: the on-screen check is a paid
+                    regtest/testnet4 entry with a real NWC wallet and reachable LNURL
+                    endpoints - the Daily's rounds are free and never ask. The fixed
+                    local endpoints on :18777 are not bound by any launcher yet.
+  SUITES            core 91/91, protocol 512/512 (+6), client 300/300 (+7), node 609/609
+                    (+1; five-of-seven 21/21). Page bundle rebuilt (fresh), known-good
+                    list +f332e13e... (intermediate uncommitted builds kept off it).

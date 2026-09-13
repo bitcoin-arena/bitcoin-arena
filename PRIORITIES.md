@@ -25,8 +25,10 @@ msat, net 96000, lock 96000 (was: 0 on every entry).
 DONE, commit 3a: rounds name a donation set signed by the network's Ed25519
 authority, and every seat of the round serves it (404 otherwise) - a 2% donor's
 2000 msat is owed 1334/666 to two local test recipients (was: no set, 404).
-NEXT, not started: the payment commit (the page fetches and checks the set,
-LNURL + BOLT11, payDonation). Destination (6d) waits with W4.
+DONE, payment commit: the page fetches the signed set from every seat, checks
+it, lists the recipients, and the player's Client pays each share over LNURL -
+a 2% donor pays 1334 + 666 msat to the two recipients (in process; a real
+wallet on a paid round is the on-screen check). Destination (6d) waits with W4.
 
 DONE: M3.3-34 lobby how-to strip (Daniel 08:58) - the 1-2-3-4 art is in the
 player build's Unity lobby, whole and on screen on iPhone and Android, upright
