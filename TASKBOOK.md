@@ -32794,3 +32794,59 @@ M3.3-34: THE TWO RESIDUALS OF THE DOWN SEAT RETURN NO STAKE (2026-09-13, measure
   COUNTS            this path (8e68e1f): node 583/583, core 91/91, protocol 501/501,
                     client 286/286; payout-second-seat 0/1 once in the first 49-101
                     run (reason not printed), not reproduced (5/5 alone, 302/302).
+
+M3.3-34 ON 5 OF 7: TWO FIRST MARKS FORFEIT AT EVERY SEAT, NO REFUND (2026-09-13, ruled, measured)
+  RULE              same as 2 of 2: two different first marks signed by the entry's
+                    session key are §13B's portable proof - FORFEIT, no refund, no
+                    signed result or agreed run made up; a hold does not come back
+                    to that player; a lock only by the player's own expiry refund; a
+                    seat down at the close or past the hold's expiry hands nothing
+                    back.
+  FIXTURE           five-of-seven.test.js: SEVEN LIVE DAEMONS, own stores and ports,
+                    each can go down and come back (window-fixture's sevenSeats is
+                    one daemon and six keys). Order: seats 4-6 down while the
+                    on-time first mark (60) reaches seat 0, forwarded to 1-3 (4
+                    receipts); 4-6 back; a different on-time first mark (30) to
+                    seat 4, forwarded to 5, 6 (3 receipts); neither reaches 5. The
+                    winner is seated at all seven first, then played (the fixture's
+                    seatAndPlay met a forward that got there first: its batch
+                    answered '0' - round.batch counts only fresh ticks - not 1320).
+  BEFORE            the same test on 2c87ef8: hold, all up - seats 0-4 FORFEIT/0,
+                    seats 5 and 6 decided NOTHING (none/0), the hold settled at 5,
+                    cancelled 0; hold, 4-6 down - already FORFEIT/0 at 0-3, settled
+                    at 0-3, seat 0 opens with 5 shares (kept envelopes); lock - seats
+                    5, 6 none/0, doors 409 x7, no forfeit kept, lock held. So the
+                    money already stayed with the pool on 5 of 7; the seats that
+                    took the second mark only by forward never saw the first, asked
+                    nobody, and split the record.
+  CHANGE            verify #noQuorum: a first mark this seat holds that no quorum
+                    carried is reason to pull the other seats' proof (portable,
+                    checked here). server: a refused forward pulls the proof only on
+                    a conflict (409) or FORFEIT, not on a 404 from a seat that has
+                    not seated the entry (measured: payout-second-seat pulled 2 per
+                    run, 26-31 ms, for nothing; after: 0).
+  AFTER             hold, all up: FORFEIT/0 at all 7 (0 signed results); the hold
+                    settled at 7, cancelled 0 - 0 msat back to that player; the
+                    winner FINAL at 7, its own hold cancelled back; table pool
+                    98000, winner 196000 (payout read at 2-4 of 5 seats signed, the
+                    signing still under way). Hold, seats 4-6 down from before the
+                    close through the expiry: FORFEIT/0 at 0-3, the hold settled at
+                    0-3, cancelled 0, custody rows SETTLED x4, seat 0 opens with 5
+                    (own + kept). Lock: FORFEIT/0 at all 7, doors 409 x7, no
+                    forfeit kept, lock held - no committee refund; back only by the
+                    player's own expiry refund (path 5's split, measured on 2 of 2).
+  NOT IN THIS       Daily, W4, the Unity lobby. The two residuals of the down seat
+  CHANGE            (B's HELD row; the settled stake waiting on B's payout
+                    signature) return no stake (measured, 2c87ef8) - left after
+                    5 of 7.
+  THE ONE RED       payout-second-seat: 2 failures in 10 runs of 49-102 since
+                    8e68e1f (reason never printed), 0 of 8 alone. It runs through
+                    the changed paths (holds, shares, settle); the only work the
+                    change added in it was the 2 pulls on 404s, now gone. After: 2 of
+                    2 runs of 49-102 clean. Not shown to be fixed: named, watched.
+                    bundle-fresh failed once only when node --test ran from the repo
+                    root by mistake; from blwp-client 2/2.
+  COUNTS            foreground, timeout 180, --test-timeout=120000: node 586/586 over
+                    102 files (1-48 283/283; 49-102 303/303 twice; five-of-seven 3/3,
+                    hold-two-first 2/2, first-mark 14/14); core 91/91; protocol
+                    501/501; client 286/286. No C#, no Unity.

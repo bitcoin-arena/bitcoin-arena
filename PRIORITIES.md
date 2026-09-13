@@ -1671,8 +1671,12 @@ IN THIS ORDER (unparked):
                                         (shares gathered on the proof, FORFEIT
                                         and SETTLED by the seat that is up; the
                                         payout waits for the down seat; its two
-                                        residuals return no stake). Still open:
-                                        these paths on 5 of 7.
+                                        residuals return no stake). 5 of 7 done
+                                        (TASKBOOK): FORFEIT at all seven, hold
+                                        settled, lock doors 409 x7, three seats
+                                        down still settle. Still open: the down
+                                        seat's residuals; payout-second-seat's
+                                        unexplained intermittent red.
    M3.3-19  optional stake / ghost     M3   done (TASKBOOK "M3.3-19", 2026-09-10) —
        without money                      a free seat on a daemon with no
                                         Lightning is 201 FREE; the watcher's
