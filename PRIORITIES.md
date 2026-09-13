@@ -16,6 +16,12 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
+NEXT (M3.3-34, not started): two first marks after an outage-VOID on 5 of 7
+with seats 4-6 down from before the close through the hold's expiry. By
+reading, the four seats up hold the proof but only 4 of 5 shares (they learned
+it by pulling and never gathered), so the hold would expire back to the
+player - 98000 msat. Measure first (TASKBOOK names two more such orders).
+
 LIVE LETTER: M3.3-34 lobby still open. Daniel 22:16: lobby and every control
 fully visible in Unity on iOS and Android. 22:12: lobby replaces splash;
 PLAY starts the round; spectate always. Daniel 22:34: when the lobby is
@@ -1656,36 +1662,19 @@ IN THIS ORDER (unparked):
    M3.3-34  lobby + free play          M3   OPEN — lobby done (1398323, live): Unity
                                         title screen, every element on screen on
                                         iPhone and Android, PLAY seats and
-                                        starts, SPECTATE always. 5c ruled and
-                                        closed (dde56b9). Path 1 (a second
-                                        on-time mark after a Void) and path 2
-                                        (the late mark's forward lost, pulled
-                                        at the close) closed: FORFEIT at both,
-                                        no refund, lock held. Path 3 closed: on
-                                        a hold, two first marks settle into the
-                                        pool (real lnd: SETTLED, not back to the
-                                        player). Path 5 measured: the lock held
-                                        to expiry, back only by the expiry
-                                        refund (W4 gap). A seat that stays down
-                                        past the hold's expiry: closed on 2 of 2
-                                        (shares gathered on the proof, FORFEIT
-                                        and SETTLED by the seat that is up; the
-                                        payout waits for the down seat; its two
-                                        residuals return no stake). 5 of 7 done
-                                        (TASKBOOK): FORFEIT at all seven, hold
-                                        settled, lock doors 409 x7, three seats
-                                        down still settle. Outage-VOID orders on
-                                        5 of 7 done (TASKBOOK): at most 4 seats
-                                        would sign a refund, none formed, lock
-                                        held; the hold settles even with the
-                                        refusing seat down (before: 98000 msat
-                                        back). Still open: the seats' records
-                                        split (money unaffected);
-                                        payout-second-seat's intermittent red (2
-                                        of 12 full runs, text never captured,
-                                        TASKBOOK says what it depends on). The
-                                        down seat's residuals return no stake:
-                                        listed, payout work.
+                                        starts, SPECTATE always.
+                                        DONE, two first marks (player gets 0):
+                                        on 2 of 2 and 5 of 7 no committee
+                                        refund forms, the hold settles into
+                                        the pool, a lock comes back only by
+                                        the player's own expiry refund - also
+                                        after an outage-VOID, and with the
+                                        seat that saw the second mark down.
+                                        OPEN: the NEXT item above; the seats'
+                                        records split (money unaffected);
+                                        payout-second-seat's unexplained red;
+                                        the down seat's two residuals (no
+                                        stake back, payout work).
    M3.3-19  optional stake / ghost     M3   done (TASKBOOK "M3.3-19", 2026-09-10) —
        without money                      a free seat on a daemon with no
                                         Lightning is 201 FREE; the watcher's

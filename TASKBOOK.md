@@ -32937,3 +32937,30 @@ M3.3-34 ON 5 OF 7: THE OUTAGE-VOID ORDERS - NO REFUND FORMS, AND A DOWN SEAT NO 
                     it, 20 s under the timeout: split the chunks smaller next;
                     49-102 303/303, payout-second-seat 1/1); core 91/91; protocol
                     501/501; client 286/286. No Daily, W4, Unity or C#.
+
+M3.3-34: ON 5 OF 7, WHAT STILL COULD PAY THE PLAYER AFTER AN OUTAGE-VOID AND A SECOND FIRST MARK (2026-09-13, by reading, not measured)
+  CLOSED (190f5ed)  measured: lock and hold, paths 1 and 2, and path 1 with seat 4
+                    down through the hold's expiry - 0 msat back; no refund forms
+                    (at most 4 seats would sign); every hold settled.
+  1. LIKELY PAYS    path 1 with seats 4-6 ALL down from before the close through
+     98000 msat     the expiry. The proof formed at seat 4; seats 0-3 got it only
+                    by pulling during seat 4's share gathering, and never gathered
+                    shares themselves. With 4-6 down, seats 0-3 FORFEIT but hold 4
+                    of the 5 shares a settle needs - the hold would expire back to
+                    the player. (The earlier three-down case settled because there
+                    seats 0-3 formed the proof by their own refusal and gathered
+                    while every seat was up.) NEXT in PRIORITIES; measure first.
+  2. PAYS ONLY IF   path 2 with seat 4 - the one seat keeping the late first mark,
+     TWO SEAT-SIDE  its forward lost - down from its refusal through the expiry:
+     FAILURES       no other seat can learn the second mark, so the Void stands and
+                    the hold expires back. Needs the lost forward AND that seat
+                    down; no seat can prove what it never received.
+  3. PAYS ONLY IF   on a lock: five seats each holding the on-time first mark and
+     SEATS LOSE     each short of five receipts (receipts lost between seats that
+     RECEIPTS       are up) would all record the Void and could sign a refund at
+     BETWEEN THEM   once, before their close pulls the proof. Measured orders reach
+                    4; a fifth needs messages lost between up seats.
+  NOT THIS PATH     the record split (seats that took the first mark after the line
+                    sign FAILED - the ENTRY_VOID gap), payout-second-seat's
+                    unexplained red, and the down seat's two residuals: none moved
+                    a msat in any measured order.
