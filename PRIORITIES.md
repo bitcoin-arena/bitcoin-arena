@@ -55,11 +55,16 @@ decided beside the hold, and the page shows it - a 2% donor who loses reads
 DONE (live, rounds 1 and 2): an idle 0% loser's 98000 msat settles into a pool
 of 98000 at both seats and in lnd - 0 before pick A on the same entries; the
 live 2% donor-loser round is not required (ruled).
-6e STAYS OPEN, two amounts on the player's screen (TASKBOOK, measured): the
-running total still counts a stake that came back (CANCELLED / EXPIRED) as
-spent; a winner is not shown what the round owes it (the seat serves the pool,
-not its own payout row). Loopback recipients parked with W4/6d; fee collector
-W4; no refund on void.
+DONE (live, round 3): the daily page shows the idle loser "Settled: this seat's
+98000 msat stake went into the pool · the round's pool 98000 msat", matching
+both seats and lnd.
+DONE (page path, committed): a stake that came back reads "nothing spent ·
+98 sat came back"; a winner reads "the round's payout table: 194000 msat for
+this seat".
+6e STAYS OPEN: those two fixes are not on the daily page yet (live 10fa2870
+still shows the old total and no owed row) - deploy and check them there.
+Notes: the stake line's stale "HELD" and the chip's "inputs past the end"
+after settlement. Loopback recipients parked with W4/6d; fee collector W4.
 
 DONE: M3.3-34 lobby how-to strip (Daniel 08:58) - the 1-2-3-4 art is in the
 player build's Unity lobby, whole and on screen on iPhone and Android, upright

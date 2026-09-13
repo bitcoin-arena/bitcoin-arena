@@ -34407,3 +34407,45 @@ M3.2 ITEM 6e, HOLE 1 CLOSED: A STAKE THAT CAME BACK IS NOT COUNTED AS SPENT (202
   SUITES            core 91/91, protocol 512/512, client 309/309 (+1; bundle 675d62d1
                     added to known-good), node 593/593 in six chunks (no node change;
                     five-of-seven 21/21 last run). Not deployed.
+
+M3.2 ITEM 6e, HOLE 2 CLOSED: A WINNER IS SHOWN WHAT THE ROUND OWES IT (2026-09-13)
+  BEFORE            /settlement served hold and pool only; a winner's line read
+                    "Returned: this seat's 96000 msat stake was cancelled back to the
+                    wallet · the round's pool 98000 msat" - no winnings figure.
+  CODE              server.js keeps each round's payout-table rows (computePayoutTable's
+                    { pubkey, amountMsat }, as custody ran it) and /settlement serves the
+                    entry's own row as owedMsat beside holdMsat and poolMsat (null until
+                    custody has run). settlementBy passes it on only when every seat
+                    agrees; settledLine adds " · the round's payout table: N msat for this
+                    seat" when N > 0 - a loser's 0 adds nothing. No arithmetic in the page.
+  MEASURED          two seats, 3 s window (objection-window.test.js): a 0% winner owed
+                    194000 msat (its own 98000 + the 96000 pool), the 2% donor-loser 0 -
+                    on both seats. The page's own paintWallet off the shipped bundle, round
+                    1's D2 (hold 96000, row 194000, pool 98000): "Returned: this seat's
+                    96000 msat stake was cancelled back to the wallet · the round's payout
+                    table: 194000 msat for this seat · the round's pool 98000 msat";
+                    seats that disagree on the row show none.
+  NOT LIVE          round 3's seats ran the server from before this change; the live page
+                    is never the winner (no driving Unity cargo headless).
+
+M3.2 ITEM 6e: ROUND 3 SETTLED - THE PAGE SHOWS THE IDLE LOSER'S 98000 msat IN A POOL OF 98000 (2026-09-13 17:55)
+  PAGE (live 10fa2870, bundle 915f64c9, the idle 0% loser, tab alive to the end)
+                    "Settled: this seat's 98000 msat stake went into the pool · the
+                    round's pool 98000 msat" (screenshot pool-live-settled.png); payload
+                    SETTLED holdMsat 98000 poolMsat 98000 FINAL, 2 of 2 seats agreeing.
+  SEATS             both FINAL: page FAILED/0 SETTLED 98000 pool 98000; Z0 DELIVERED/13
+                    CANCELLED 98000; D2 (2%) DELIVERED/3 CANCELLED 96000; pool 98000 each.
+  LND               page hold 893e3b28 SETTLED 98000 (17:55:37); 921e1747 CANCELED 98000;
+                    0e692351 CANCELED 96000.
+  BEFORE / NOW      same live entries: f7002e1^ REFUSED ("the qualifiers staked different
+                    nets (98000, 96000 msat)") -> pool 0; HEAD pool 98000, rows Z0 196000
+                    (rank 1), page 0, D2 96000.
+  DONATION          D2 1334 msat paid, 666 msat unpaid (NO_ROUTE).
+  SEEN ON THE SAME SCREEN, NOTES   the stake line still ends "· HELD" (its quote is not
+                    asked again after settlement) beside "Settled: ..."; the round chip
+                    reads "ended · not publishing · error that run ends at tick 8999 - 9000
+                    ticks from its join at 0 - and this batch reaches 9113: inputs past the
+                    end" after the idle run.
+  SUITES            at this commit: core 91/91, protocol 512/512, client 310/310 (+1;
+                    bundle e9f22a89 added to known-good), node 614/614 (six chunks 593 +
+                    five-of-seven 21/21 rerun - server changed). Not deployed.
