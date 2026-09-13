@@ -40,10 +40,16 @@ DONE: a reload does not pay the donation twice - the second load sends 0 msat
 and asks the wallet 0 times (was 2 asks, 2000 msat).
 DONE: the page shows each donation share as paid, unpaid or outcome unknown,
 matching the tab's notes - 2 of 2 shares in every measured case (was 0 of 2).
-NEXT ON 6e: deploy HEAD's page to btc-logistics-core (live bundle has no
-payDonation) and check it on screen. Then: the test recipients are loopback, so
-the on-screen paid round is a desktop on the launcher's host. Fee collector
-stays parked with W4; no refund on void.
+DONE: the daily page pays the donation (live 8effcead). On screen, a 2% donor
+sees "1334 msat paid · 666 msat UNPAID (NO_ROUTE) · 666 msat unpaid stays in
+your wallet"; a reload asks the wallet 0 times (TASKBOOK). Measured with
+Chrome's loopback permission allowed - without it the https page cannot reach
+the local round at all.
+HELD FOR A RULING: on an iPhone sideways the wallet panel runs 52 px off the
+bottom ("Pay the stake" cut) - the donation line's height did it.
+OPEN ON 6e: a reload whose seat is never taken shows no donation line (the
+notes are in the tab); the running total forgets a reload. Then the loopback
+recipients. Fee collector stays parked with W4; no refund on void.
 
 DONE: M3.3-34 lobby how-to strip (Daniel 08:58) - the 1-2-3-4 art is in the
 player build's Unity lobby, whole and on screen on iPhone and Android, upright

@@ -34082,3 +34082,89 @@ M3.2 ITEM 6e, HOLE 3 CLOSED: THE PAGE SHOWS EACH DONATION SHARE PAID, UNPAID OR 
                     on-screen check.
   NEXT ON 6e        deploy HEAD's page to btc-logistics-core and check it on screen; then
                     the loopback recipients. Fee collector parked with W4; no refund on void.
+
+M3.2 ITEM 6e: THE DONATION PAYMENT IS LIVE ON THE DAILY PAGE, AND WHAT A PLAYER SEES THERE (2026-09-13)
+  GATE              at 0528b57, before deploying: core 91/91, protocol 512/512, client
+                    305/305, node 592/592 (six chunks; five-of-seven untouched, 21/21).
+  DEPLOYED          btc-logistics-core 8effcead (alias serves it; btc-logistics-war not
+                    touched; no mN snapshot). Built from the live Unity player (scratch
+                    webgl-howto, BuildWebGL at 5eb64e3 - no Unity change since, so no
+                    rebuild and build.txt untouched) + today's template page and bundles,
+                    loader filled by fill-template.mjs, --check clean. wrangler uploaded 2
+                    of 28 files (index.html, blwp-client.js). Both URLs: blwp-client.js
+                    sha256 747a0f28... (on known-good), #blwp-donation in the page.
+                    Bare page starts Unity: 8effcead 4 s, previous 001d3b67 3 s (headless).
+  THE ROUND         donation-live-launch.mjs: a paid local round (stake 100000 msat, a
+                    hold on the scratch regtest lnd, 996522 sat inbound), seats
+                    127.0.0.1:18380/18381, the set's recipients bound at 127.0.0.1:18777,
+                    its link naming https://btc-logistics-core.pages.dev; a NIP-47 wallet on
+                    a local relay paying through the payer lnd. Browser: headless Chrome
+                    151.0.7922.34 over CDP (donation-live-probe.mjs), one tab throughout.
+  FIRST, BLOCKED    the live https page cannot reach 127.0.0.1 in Chrome 151: "Access to
+                    fetch at 'http://127.0.0.1:18380/identity' from origin
+                    'https://btc-logistics-core.pages.dev' has been blocked by CORS policy:
+                    Permission was denied for this request to access the `loopback` address
+                    space" - the seats AND the signed set's recipients (18777); the page
+                    shows "That round link cannot be used: no node holds the round this URL
+                    names: http://127.0.0.1:18380: Failed to fetch; ...18381: Failed to
+                    fetch". Seats and recipients answered 200 from the shell.
+                    127.0.0.1 is Chrome's separate `loopbackNetwork` permission
+                    (localNetworkAccess alone: still refused; loopbackNetwork: 200), and a
+                    CDP grant lasts only while its DevTools session stays attached (200
+                    open, refused 1.5 s after close). MEASURED WITH both granted to the
+                    live origin - what a desktop player's "Allow" does. Whether a headed
+                    Chrome prompts or refuses outright: not measured. A phone can never
+                    reach the launcher's loopback (the loopback-recipients item).
+  1 A 2% DONOR, 100000 msat STAKE, ON THE DAILY PAGE (phase A)
+                    seated 12 s after load; the prompt: "Recipients: 66.67% to
+                    http://127.0.0.1:18777/lnurlp/blwp-test-a, 33.33% to
+                    .../blwp-test-b ... Donation to the developers, in percent of your 100
+                    sat stake. It comes out of the stake, not on top." - answered 2 ->
+                    donation 2000 msat, 200 bps. Panel: "100 sat round: 2 sat fee and 2 sat
+                    donation out of it, 96 sat staked · the wallet is asked 96 sat · HELD".
+                    "Pay the stake" pressed; wallet asked (pay_invoice): 96000 (the hold,
+                    in flight), 1334 SETTLED, 666 FAILED FAILURE_REASON_NO_ROUTE; the
+                    recipients issued exactly 1334 (blwp-test-a) and 666 (blwp-test-b).
+                    On screen 10 s later: "Donation: 1334 msat paid to
+                    http://127.0.0.1:18777/lnurlp/blwp-test-a · 666 msat UNPAID to
+                    http://127.0.0.1:18777/lnurlp/blwp-test-b (the wallet did not pay it:
+                    the wallet refused: PAYMENT_FAILED FAILURE_REASON_NO_ROUTE) · 666 msat
+                    unpaid stays in your wallet, sent nowhere else". Tab notes: paid 1334,
+                    unpaid 666 - the screen and the notes agree.
+  2 RELOAD OVER THE KEPT LOCK (phase B)
+                    re-seated 14 s, the line back 1 s later, identical to A; 0 donation
+                    prompts; wallet pay_invoice asks 0 (its only new request was a budget
+                    query), recipients' new invoices 0. No second payment.
+  3 READABILITY ON A PHONE OVER THE GAME (phase C, CDP device emulation, CSS px)
+                    iPhone portrait 390x844: wallet panel absolute at 56,14, 320x428, z 21,
+                    over 41.6% of the game canvas; donation line 293x146, 13 px, 8 lines,
+                    fully on screen, nothing on top of it (the element at its centre is
+                    the line itself), no horizontal overflow. But the panel is see-through:
+                    the round chip ("play · http://127.0.0.1:18380 up · 1 player ·
+                    waiting · stake dealt, unpaid") and the cargo HUD ("CHOOSE YOUR MEMPOOL
+                    CARGO", FILLS tiles) show through behind the panel's first lines.
+                    iPhone landscape 844x390: the same 320x428 panel at 510,14 - bottom
+                    442 on a 390 screen, 52 px BELOW THE EDGE: "Pay the stake" cut at the
+                    bottom and the why line off screen; over 36.6% of the canvas; the round
+                    chip is cut by the panel. The donation line (y 113-259) itself is on
+                    screen. THE DONATION LINE IS WHAT MADE IT OVERFLOW: it is 146 of the
+                    panel's 428 px; without it ~282 px, which fits (by subtraction, not
+                    rendered). A real layout bug - held for a ruling, not fixed.
+  4 THE MISSED RELOAD: NOTES IN THE TAB, THE SEAT NEVER TAKEN (phase D)
+                    launcher stopped (seats, recipients, wallet down), page reloaded: for
+                    60 s the loading screen - "Could not start · That round link cannot be
+                    used: no node holds the round this URL names: http://127.0.0.1:18380:
+                    Failed to fetch; http://127.0.0.1:18381: Failed to fetch"; no wallet
+                    panel (display none), donation line "", Unity never started. The tab
+                    still holds the notes (paid 1334, unpaid 666). The player sees nothing
+                    of a donation that did leave their wallet.
+  ALSO SEEN, LISTED NOT CHANGED
+                    - the running total forgets a reload: after B the panel says "nothing
+                      paid this session" beside "1334 msat paid" (spendLog is page memory);
+                      before the reload it said "97 sat over 2 stakes in 1 round" - the
+                      donation counted as a "stake" (spentLine's word).
+                    - after the reload the why line reads "no entry id to ask about:
+                      setRound was never called and none was given" (portrait screenshot).
+                    - the round chip says "stake dealt, unpaid" while the panel says HELD.
+  SCREENSHOTS       scratch donation-live-{A-desktop,B-desktop-reload,C-iPhone-portrait,
+                    C-iPhone-landscape,D-no-seat-reload}.png; verdict donation-live-verdict.json.
