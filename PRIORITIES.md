@@ -61,15 +61,22 @@ both seats and lnd.
 DONE (page path, committed): a stake that came back reads "nothing spent ·
 98 sat came back"; a winner reads "the round's payout table: 194000 msat for
 this seat".
-6e STAYS OPEN: those two fixes are not on the daily page yet (live 10fa2870
-still shows the old total and no owed row) - deploy and check them there.
-Notes: the stake line's stale "HELD" and the chip's "inputs past the end"
-after settlement. Loopback recipients parked with W4/6d; fee collector W4.
+DONE (live, round 4 on the HEAD deploy afe5eb06): the idle loser reads the
+98000 msat pool; the seats serve the winner's row, 194000 msat.
+DONE (page path): after the round the stake line reads SETTLED / CANCELLED /
+EXPIRED from the seats, no longer the payment-time "HELD".
+6e STAYS OPEN until that fix is on the daily page and read there after a
+settlement. Loopback recipients parked with W4/6d; fee collector W4.
 
 DONE: M3.3-34 lobby how-to strip (Daniel 08:58) - the 1-2-3-4 art is in the
 player build's Unity lobby, whole and on screen on iPhone and Android, upright
 and sideways, and desktop (live 001d3b67; TASKBOOK). Art now under
 Assets/Art/Resources/ so the lobby can load it.
+
+LATER (not 6e): after an idle run the round chip reads "not publishing · error
+that run ends at tick 8999 ... this batch reaches 9113: inputs past the end" -
+the page keeps recording ticks after its run has ended and the seats refuse the
+batch past the end; it does not touch the settlement amounts.
 
 LISTED, NOT STARTED: the forfeit-ask label a colluding Void seat could omit
 (colluding-seat bond/slash); payout-second-seat's intermittent red and the

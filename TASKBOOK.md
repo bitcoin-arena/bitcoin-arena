@@ -34449,3 +34449,41 @@ M3.2 ITEM 6e: ROUND 3 SETTLED - THE PAGE SHOWS THE IDLE LOSER'S 98000 msat IN A 
   SUITES            at this commit: core 91/91, protocol 512/512, client 310/310 (+1;
                     bundle e9f22a89 added to known-good), node 614/614 (six chunks 593 +
                     five-of-seven 21/21 rerun - server changed). Not deployed.
+
+M3.2 ITEM 6e: ROUND 4 ON THE HEAD DEPLOY, AND THE STAKE LINE STOPS READING HELD AFTER THE ROUND ENDS (2026-09-13 18:58)
+  DEPLOYED FIRST    81b1882 to btc-logistics-core: afe5eb06, bundle e9f22a89 (the alias
+                    served it at 18:13:22; the first wrangler call printed nothing and
+                    deployed nothing - rerun, deployment complete).
+  ROUND 4 (41e16a08)  the same pick-B pairing, seats closing on their own clocks
+                    (1789318001957), window 600 s. The seats ran the current server, so
+                    the payout-table rows were live for the first time:
+                    both seats FINAL: page FAILED/0 SETTLED hold 98000 pool 98000 owed 0;
+                    D2 (2%) DELIVERED/9 CANCELLED 96000 owed 194000; Z0 DELIVERED/1
+                    CANCELLED 98000 owed 98000.
+                    lnd: page 03a3822a SETTLED 98000 (18:56:57); D2 914429cb and Z0
+                    43979b46 CANCELED. Same live entries by f7002e1^: refused -> pool 0;
+                    HEAD pool 98000, rows 0 / 194000 / 98000. D2 donation 1334 paid, 666
+                    unpaid (NO_ROUTE).
+                    THE PAGE (e9f22a89), after custody:
+                      settled line  "Settled: this seat's 98000 msat stake went into the
+                                    pool · the round's pool 98000 msat"
+                      running total "98 sat over 1 stake in 1 round" (a settled stake
+                                    stays spent - correct)
+                      stake line    "100 sat round: 2 sat fee and 0 sat donation out of
+                                    it, 98 sat staked · the wallet is asked 98 sat · HELD"
+                                    <- stuck: its quote was asked once, at payment
+  THE HELD FIX      nwc.js owedLine(entry, quote, settlement): when the seats say the
+                    hold ended - SETTLED, CANCELLED, EXPIRED - the line reads that state
+                    instead of the payment-time quote's; while HELD, or with no answer
+                    yet, it reads as before. The page passes BLWP_SETTLEMENT.
+    BEFORE          (e9f22a89, and the live screen above) "... · HELD" for every seat state
+    AFTER           (the page's own paintWallet off the rebuilt bundle 8f914122)
+                      seats SETTLED   "... · the wallet is asked 98 sat · SETTLED"
+                      seats CANCELLED "... · CANCELLED"   seats EXPIRED "... · EXPIRED"
+                      seats HELD      "... · HELD" (inside the window) - unchanged
+                      no answer yet   "... · HELD" - unchanged
+  SUITES            with the fix: core 91/91, protocol 512/512, client 311/311 (+1),
+                    node 614/614 (six chunks 593 + five-of-seven 21/21 at 81b1882; no
+                    node change). One red under parallel load - close-retry.test.js "a
+                    seat whose peer is down at the close ..." (9.9 s) - 3/3 alone (6.9 s);
+                    file untouched since 219d086: a load flake, listed.
