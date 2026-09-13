@@ -34302,3 +34302,56 @@ M3.2 ITEM 6e: THE POOL, MEASURED BEFORE THE LIVE SETTLEMENT RUN - AND A FORK ON 
   NOTES             the reload why-line ("no entry id to ask about: setRound was never
                     called") and the chip's "stake dealt, unpaid" beside HELD: listed,
                     neither is on the settlement number's path.
+
+M3.2 ITEM 6e: PICK B LIVE ON THE DAILY PAGE - THE POOL MOVES 0 -> 98000; RULING ON WHAT CLOSES 6e (Daniel 2026-09-13)
+  THE RUNS          daily page 10fa2870 (bundle 915f64c9, #blwp-settled); a paid local
+                    round each (pool-live-launch.mjs): stake 100000 msat, closeAtEnd on
+                    both seats as the Daily runs, the contract's default objection window
+                    600000 ms; a scripted 2% donor D2 (net 96000) and a scripted 0% player
+                    Z0 (net 98000) deliver; the page is the idle 0% loser (net 98000),
+                    headless Chrome 151 with loopback allowed (pool-live-probe.mjs).
+  ROUND 1 (b2b7a3ab)  both seats closed it on their own clocks; custody after the window:
+                    lnd  page hold 53af9a47 SETTLED 98000 (16:25:29), D2 964405f9
+                         CANCELED 96000, Z0 42b8d2a5 CANCELED 98000
+                    both seats, FINAL: page FAILED/0 SETTLED hold 98000 pool 98000;
+                         D2 DELIVERED/84 CANCELLED 96000 pool 98000; Z0 DELIVERED/47
+                         CANCELLED 98000 pool 98000
+                    same live entries by f7002e1^'s holdSettlement: REFUSED "the
+                    qualifiers staked different nets (96000, 98000 msat)" -> pool 0;
+                    by HEAD's: pool 98000, rows 194000 / 98000 / 0
+  ROUND 2 (e9022332)  the same: lnd page 9ecc165f SETTLED 98000 (17:10:33), D2 cdf6bf06
+                    CANCELED 96000, Z0 2a1fd858 CANCELED 98000; both seats FINAL, page
+                    FAILED/0 SETTLED 98000, D2 DELIVERED/10, Z0 DELIVERED/7, pool 98000
+                    at every seat; before pick A pool 0 (refused), now 98000.
+                    Inside the window the page read "Settlement: this seat's 98000 msat
+                    stake is held, the result PROVISIONALLY_FINAL" and had received
+                    poolMsat 98000 from both seats (the line paints the pool once the
+                    hold leaves HELD).
+  DONATION          D2's shares in every round, by Client.payDonation through the test
+                    wallet: 1334 msat paid, 666 msat unpaid (NO_ROUTE, lnd's 1000 msat
+                    floor), none unknown.
+  A DISCONNECT IS NOT AN ESCAPE  round 1's page browser was gone ~23 min in, after its
+                    run ended: the seats still recorded FAILED/0 and its 98000 SETTLED
+                    into the pool - not refunded.
+  RULING (Daniel)   the live 2% donor-loser round is NOT required to close 6e. Pick A is
+                    proven by the idle 0% loser: 0 msat into the pool before, 98000 after,
+                    on rounds 1 and 2 at both seats and in lnd. A 2% donor who loses put
+                    96000 in before pick A and after, so that live case would not move the
+                    number; no round is run for it.
+  THE CLOSE CONDITION  the page's own settled-pool line on round 3 (351697a5, idle 0%
+                    loser, net 98000): "Settled: this seat's 98000 msat stake went into the
+                    pool · the round's pool 98000 msat", matching its seats and lnd. Round
+                    3 was open at 17:15 (custody ~17:55); not forced, not invented.
+  HOLES ON 6e
+    1 the page's pool line - pending round 3's custody.
+    2 the live 2% donor-loser - not required (ruling above).
+    3 the headless Chrome running the check died at exactly 16:05:01 and 17:05:01
+      (systemd "app-org.chromium.Chromium-<pid>.scope" ended; Chrome: "Failed to send
+      GetTerminationStatus message to zygote", exit 0) - rounds 1 and 2 lost the page
+      tab before settlement. No cron or timer at :05 found; it hits the check only, not
+      the page or the seats.
+    4 notes: the reload why-line "no entry id to ask about: setRound was never called
+      and none was given", and the chip's "stake dealt, unpaid" beside the panel's HELD.
+    5 the loopback recipients stay parked, with W4 / 6d.
+  SUITES            unchanged since e705efe: core 91/91, protocol 512/512, client 308/308,
+                    node 614/614 (five-of-seven 21/21). No Unity change.
