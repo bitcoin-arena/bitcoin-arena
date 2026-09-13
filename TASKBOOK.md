@@ -34526,3 +34526,50 @@ M3.2 ITEM 6e: ROUND 5 ON THE FIX'S DEPLOY - AFTER CUSTODY THE STAKE LINE READS S
                     rig only.
   SUITES            at 99dc7cc: core 91/91, protocol 512/512, client 311/311, node 614/614.
                     No reds (close-retry's load flake, listed at round 4). Unity not run.
+
+M3.2 ITEM 6e: THE AUDIT AFTER CLOSING - ONE DOOR STILL SUBTRACTED BY HAND, NOW FIXED (2026-09-13)
+  THE QUESTION      does anything this goal needs remain? 6e closes when "both readings
+                    cannot coexist in the code: one door, one arithmetic, and the page
+                    showing what the wallet is actually asked for".
+  CORE VS OLD       not applicable, checked: the C# has no money. RunScore.cs:19 "The
+                    score itself is deliberately NOT sats"; no stake, fee or donation
+                    arithmetic anywhere in unity-proto/Assets/Scripts. 6e does not
+                    touch the simulation, the physics or the recording.
+  EVERY DOOR        grep of packages/*/src for a hand subtraction from the stake:
+                    netStakeMsat (payout.js:68) is read by custody (the hold asked and
+                    checked), preflight, stake-lock (the lock's amount), page-lock, the
+                    fee rule, the payout table, payout-spend, invoiceMatchesEntry and
+                    the page's quote line (nwc.js owedLine). TWO places subtracted by
+                    hand, stake less fee with NO donation: server.js /federation-invoice
+                    and client.js federationStakeFor - the invoice-first federation stake.
+  BEFORE            (federation-invoice.test.js, stake 1000000 msat, 2% donor 20000):
+                    the federation asked 980000; the donor's entry SEATED (201); its
+                    quote 503 "that invoice asks 980000 msat and this entry holds
+                    960000: a stake of 1000000 less a fee of 20000 and a donation of
+                    20000" - a donor seated who could never pay.
+  THE FIX (4a07f31) both read netStakeMsat; the page names its donation with
+                    &donation= (msat; none is 0, and the client sends none for 0). An
+                    unreadable donation (-1, 1.5, abc, 0x10) or one the stake cannot hold
+                    (980001) is 400 and the federation is asked nothing.
+  AFTER             asked 960000; seated 201; quoted 200 at 960000. 0 donation: asked
+                    980000 as before. Client: a donor asks ...&donation=20000, takes the
+                    960000 invoice, refuses the fee-only 980000 ("net stake is"); a
+                    donation of the whole stake refuses ("cannot come to more than it").
+  NOT A SCREEN CHANGE  the page never calls federationStakeFor (its federation path is the
+                    stake lock, page-lock.js:99, already netStakeMsat).
+  ALSO CHECKED      the spend log: a donation share is never marked returned (only a
+                    stake is), so a winner who donated keeps the share as spent and a
+                    voided entry's donation stays spent (no refund on void, ruled).
+                    Preflight sizes the largest hold with donation 0 - an upper bound,
+                    correct. EXPIRED is measured on the page path, not live.
+  RULED, NOT 6e     the fee collector (W4): nothing collects the 2 sat fee on either
+                    reading; the wallet is asked 98 of 100 and the page says so.
+  SUITES            at 4a07f31: core 91/91, protocol 512/512, client 312/312 (+1; bundle
+                    a2386e2e added to known-good), node 616/616 (+2; six chunks
+                    114+120+78+132+99+52 = 595, five-of-seven 21/21 in four name groups
+                    6+4+7+5, one test in two groups, all 21 covered - the whole file
+                    runs past the 180 s cap even alone).
+  DEPLOYED          4a07f31 to btc-logistics-core at 20:25: 581edaba; the unique URL and
+                    the alias both serve bundle a2386e2e (first try, 20:25:39); the page
+                    still hands the seats' settlement to the stake line. The screen is
+                    unchanged (the page calls no federationStakeFor).

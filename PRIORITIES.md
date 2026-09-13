@@ -74,8 +74,13 @@ DONE (live, round 5 on deploy 1981cf52 = 99dc7cc): after custody the idle
 loser's stake line reads "... the wallet is asked 98 sat · SETTLED" beside "the
 round's pool 98000 msat" (round 4: stuck on HELD); both seats and lnd agree. A
 cancelled stake reads "nothing spent · 98 sat came back"; the winner's row is
-196000 msat (TASKBOOK). 6e IS CLOSED. Loopback recipients parked with W4/6d;
-fee collector W4.
+196000 msat (TASKBOOK).
+DONE (audit, 4a07f31, live 581edaba): the last door that subtracted by hand - a federation
+round's invoice-first stake - reads netStakeMsat: a 2% donor was seated on a
+980000 msat invoice its quote refused (it holds 960000); now asked, seated and
+quoted at 960000. Every door reads the one subtraction; the C# has no money, so
+no engine comparison applies. 6e IS CLOSED. Loopback recipients parked with
+W4/6d; fee collector W4 (ruled).
 
 DONE: M3.3-34 lobby how-to strip (Daniel 08:58) - the 1-2-3-4 art is in the
 player build's Unity lobby, whole and on screen on iPhone and Android, upright
