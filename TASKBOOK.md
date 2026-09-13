@@ -33221,3 +33221,48 @@ M3.3-34 ON 5 OF 7: A VOID SEAT PULLS THE OTHER SEATS' PROOF BEFORE IT SIGNS A LO
                     path 1/2 4, seat 4 down + seats 4-6 down 4, seats 3-5 down 2,
                     from its refusal 2, receipts lost 2, all up + lock 2); core
                     91/91; protocol 501/501; client 286/286. No Unity, Daily, W4, C#.
+
+M3.3-34 ON 5 OF 7: RECEIPTS LOST, AND THE SEAT HOLDING THE PROOF UNREACHABLE WHEN THE LOCK REFUND IS ASKED - THE REFUND FORMS AGAIN, 98000 MSAT (2026-09-13, measured, no code change)
+  ORDER             the receipts-lost order (seats 0-4 ENTRY_VOID with one receipt
+                    each per mark; the links heal; a different on-time first mark to
+                    seat 5, which refuses it and holds the proof), then seats 0-4 and
+                    seat 5 cut off from each other (sevenSeats partition(); seat 6
+                    reaches all) while the lock refund is asked; healed after.
+  LOCK, 3 SETUPS,   the proof: seat 5 only, before the partition and at the refund.
+  THE SAME FIGURES  The Void seats' pull reached nobody holding it: would sign 5
+                    (/forfeit-commit 200 at 0-4, 409 at 5-6), refund doors 200 at 0-4
+                    - five signatures, a committee refund kept at 5 seats, still 200
+                    after the close: 98000 msat back to the player by the committee.
+                    After the close seats 0-4 signed FAILED/128, seat 5 FORFEIT.
+                    (cb63823's case, seat 5 reachable: 0 sign, no refund.)
+  HOLD, 3 SETUPS    the proof was already at seats 0-5 BEFORE the partition - on a
+                    hold, seat 5 gathers shares the moment it forms the proof and
+                    every seat it asks pulls and keeps it (0b2f6b7). Seats 0-5
+                    FORFEIT, the hold settled at 6 seats, cancelled at none: player
+                    0, pool 98000 msat.
+  RULED LIMIT       path 2 with seat 4 down through the expiry, 3 setups: unchanged -
+                    the hold back at expiry 98000 msat, pool 0; lock: 4 would sign,
+                    doors 409 x6, no refund.
+  WHY               a hold spreads the proof the moment it forms; a lock does not - a
+                    lock seat pulls only when it is asked to sign, and here the seat
+                    holding the proof is cut off by then.
+  PLAN (keeps the   A. Spread the proof when it forms on a lock too, as the hold does:
+  new assertion,       the seat that refuses a second first mark tells every other
+  not coded)           seat to pull and check the pair at once (they verify it, never
+                       take its word). In this order the proof formed while every seat
+                       was up, so seats 0-4 would hold it before the refund is asked.
+                    B. (a ruling) a Void seat signs a lock refund at once only when
+                       every other seat answered its pull and none holds a proof; with
+                       any seat unreachable, no refund at once - the lock returns only
+                       by the player's own expiry refund. Covers a proof that forms
+                       during the partition, but also withholds the fast refund of a
+                       real outage-Void while a seat is unreachable.
+                    Recommended: A now; B only on your ruling.
+  THE RED           five-of-seven "a stake lock, receipts lost, and seat 5 (the
+                    proof) unreachable" fails its ruled assertion ("a refund door
+                    answered 2xx - five signatures formed") - listed, not softened.
+  COUNTS            foreground, timeout 180, --test-timeout=120000, one node --test
+                    per shell: node 600/601 over 102 files (1-48 without five-of-seven
+                    280/280; 49-102 303/303; five-of-seven 17/18 in seven name groups
+                    - 4, 4, 2, 2, 2, 1/2 (this red), 2); core 91/91; protocol
+                    501/501; client 286/286. No Unity, Daily, W4 or C#.
