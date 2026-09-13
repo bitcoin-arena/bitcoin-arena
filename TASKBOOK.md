@@ -33040,3 +33040,36 @@ M3.3-34 ON 5 OF 7: OUTAGE-VOID, A SECOND FIRST MARK, SEATS 3-5 DOWN THROUGH THE 
                     payout-second-seat 1/1; five-of-seven 11/12 in four runs by test
                     name - the one red above); core 91/91; protocol 501/501; client
                     286/286. No Daily, W4, Unity or C#.
+
+M3.3-34 ON 5 OF 7: SEATS HOLDING THE PROOF GATHER THE SHARES WHILE EVERY SEAT IS UP - SEATS 3-5 DOWN NOW SETTLE, PLAYER 0 (2026-09-13, ruled)
+  CHANGE            server /share door: a seat asked for its share on an entry whose
+                    two first marks it holds the proof of starts its own gathering
+                    (gatherOnProof, in the background) - so the seats that learn the
+                    proof when asked keep the other seats' envelopes while every
+                    seat is still up. The whole patch; no lock refund, lock expiry,
+                    hold invoice or assertion touched.
+  BEFORE (6256807)  seats 3-5 down from before the close through the expiry: shares
+                    before the downs 0-2 1 each (only 3 and 4 had gathered, 5 each);
+                    after the close 0-2 FORFEIT with 4 each, "4 of 5 shares"; the
+                    hold settled 0, cancelled 0 - player 98000 msat back at expiry,
+                    pool 0.
+  AFTER, 3 SETUPS,  shares before the downs: seats 0-4 5 each (5, 6: 1); after the
+  THE SAME FIGURES  close seats 0-2 FORFEIT, 0 signed results, 5 shares each, each
+                    SETTLED the hold (custody SETTLED; lnd settled at 0, 1, 2),
+                    cancelled at no seat; seat 0's open "OPENED with 5". Player 0
+                    msat, pool 98000 msat (payout "4 of 5 seats signed" - it waits
+                    for a fifth seat, payout work). Lock, the same order: would sign
+                    3, doors 409 x4 at once and after the close, none kept, lock held
+                    - 0 by the committee.
+  UNCHANGED         seats 4-6 down: player 0, pool 98000. Every other five-of-seven
+                    order (all up, three down, lock, the four outage-VOID paths,
+                    seat 4 down): green. 2 of 2 (hold-two-first 2/2, first-mark
+                    14/14): green. The seats 3-5 hold test went green as written -
+                    no assertion changed.
+  STILL IN          path 2 with seat 4 down from its refusal through the expiry; a
+  TASKBOOK          lock with receipts lost between seats that are up. Not started.
+  COUNTS            foreground, timeout 180, --test-timeout=120000: node 595/595 over
+                    102 files (1-48 without five-of-seven 280/280; 49-102 303/303,
+                    payout-second-seat 1/1 - still listed unexplained; five-of-seven
+                    12/12 in four runs by test name); core 91/91; protocol 501/501;
+                    client 286/286. No Daily, W4, Unity or C#.
