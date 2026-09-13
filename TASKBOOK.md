@@ -33450,3 +33450,38 @@ ENTRY_VOID ON 5 OF 7, PICK A: THE RETURNING SEATS RECORD THE VOID FROM THE FULL 
                     setup checks above ('seat 4 kept no late first mark'). Not
                     committed while those are red; the Daily seats (hung) not
                     restarted.
+
+ENTRY_VOID ON 5 OF 7, PICK A FINISHED: THE RULED LIMIT KEEPS "NO LOCK REFUND" (M3.3-34, rulings 2026-09-13: keep, 1a then (y), 2a)
+  CODE              forfeit.js: a seat whose ENTRY_VOID came only from a forfeit
+                    ask (entry_voids.learned = 'forfeit-ask'; the others are own,
+                    player, forward) signs a lock refund only if its proof pull
+                    reached every other seat (verify pullFirstMarkProofReach: a seat
+                    reached is one that answered /equivocation at all); otherwise
+                    409, no refund kept, the lock returns at its expiry. server.js
+                    secondFirstMark: a Void seat that receives the player's late,
+                    different first mark also keeps it as a late start (through
+                    round.checkpoint: signature checked, kept, refused FORFEIT),
+                    next to the pair. store.js: the learned column, migrated.
+  TRIED, MEASURED   window gate (sign after the result window): no refund at the
+                    ask, but after close + window doors 200 x6, kept 6 - a refund
+                    at the window's end. Never signing (1a): the ruled limit held,
+                    but 2 of 2's outage refunds broke - outage.test.js (b), (i),
+                    (ii) answered 409, bKeepsIt false: there the ask is how the
+                    seat that was down learns the Void at all.
+  MEASURED WITH (y) ruled limit, path 2, seat 4 down from its refusal:
+                      lock: at the ask commits 200 at 0-3, 409 at 5 and 6; doors
+                            409 x6, kept 0; after close and the window doors 409
+                            x6, kept 0, lock held - committee refund 0, the
+                            player's 98000 msat at the lock's expiry, pool 0;
+                      hold: settled 0 cancelled 0, no seat up holds the proof,
+                            player 98000 msat at the hold's expiry, pool 0;
+                      seat 4 keeps the late first mark as a late start (lateAt4).
+                    genuine outage caught up late: ENTRY_VOID 7 of 7, no run
+                    signed; hold 98000 at expiry, pool 0; lock commits 200 x7,
+                    doors 200 x7, kept 7 - refund at once, 98000.
+                    2 of 2 (b), (i), (ii): forfeit 200, verifies, the lock's id;
+                    (b) and (ii) the other seat keeps it.
+  SUITES            core 91/91, protocol 501/501, client 286/286, node 604/604 -
+                    five-of-seven 21/21 (both ruled-limit cases green, the two
+                    setup checks and every money assert unchanged), outage.test.js
+                    9/9, the other 99 files 574/574.

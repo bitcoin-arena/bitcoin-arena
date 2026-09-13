@@ -36,18 +36,14 @@ PLAY (measured on a local 2-of-2, TASKBOOK). Deployed to btc-logistics-core.
 
 LIVE: ENTRY_VOID (M3.3-34). An entry that must VOID does
 VOID - not a loss for the player, not a silent refund, not pool profit.
-PICK A (Daniel 2026-09-13), CODED, NOT COMMITTED: a returning seat gets every
-receipt the Void seats hold, counts them itself and records the same ENTRY_VOID;
-a seat holding ENTRY_VOID signs no run. Measured (3 of 3): the genuine outage
+DONE (pick A, Daniel 2026-09-13): a genuine outage on 5 of 7 with the down seats
 caught up late is ENTRY_VOID at all seven, no run signed - hold: player 98000
-msat at expiry, pool 0; lock: refund at once, 98000. Every other 5-of-7 case
-unchanged (TASKBOOK).
-STOPPED ON THE RULED LIMIT (path 2, seat 4 down from its refusal): hold unchanged
-(player 98000 at expiry, pool 0); the LOCK MOVED - a committee refund now forms
-at once (98000, pool 0; was: no lock refund, 98000 at expiry). Needs Daniel:
-keep "no lock refund" (a seat voided only by a forfeit ask waits out the window)
-or accept the refund at once. Suites on this code: core, protocol, client green;
-node 602/604, the two reds are the ruled-limit cases. Commit after the ruling.
+msat at expiry, pool 0; lock: refund at once, 98000 (before: all seven signed
+FAILED and the hold settled into the pool). The ruled limit (path 2, seat 4 down
+from its refusal) still pays no lock refund - at the ask, after close, after the
+window; player 98000 at expiry, pool 0; seat 4 keeps the late start. A seat that
+learned the Void only from a forfeit ask signs a lock refund only when its proof
+pull reached every other seat; 2 of 2's outage refunds stay at once.
 (Earlier, Daniel 22:16/22:12/22:34: the lobby letter, then ENTRY_VOID.)
   DONE (Unity lobby, TASKBOOK, live on btc-logistics-core): the lobby is
   Unity's title screen, no HTML overlay - who you are with NAME and KEY, the
