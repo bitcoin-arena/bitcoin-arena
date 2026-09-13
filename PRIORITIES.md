@@ -3875,11 +3875,17 @@ round, which is why testnet comes first and why the order is stricter.
      and slashing punishes an absent operator without returning a sat.
      6a already fixes the approval fatigue that motivated it.
 
-  6d. **Where a payout goes** (24A.2). The player supplies a destination
-     and the protocol keeps none: LNURL-withdraw, or a BOLT11 invoice
-     they provide at claim time. Nothing is stored between rounds and no
-     address is remembered, because a remembered payout address is a
-     resting relationship with a player and the beginning of an account.
+  6d. **Where a payout goes** (24A.2, RESTATED 2026-09-13 to spec v4.6.2):
+     a win is a payout contract to the player's key in the federation, and
+     the client withdraws it over Lightning through any listed gateway.
+     Nothing is stored between rounds and no address is remembered, because
+     a remembered payout address is a resting relationship with a player and
+     the beginning of an account. NOT BUILT HERE: it waits with W4 and the
+     fee-lock ruling. MEASURED BASELINE (TASKBOOK): today a win is one
+     on-chain P2TR output to the player's key from the pool UTXO (payToKey),
+     and at a 100 sat stake it is not even made - 98 sat under the 330 sat
+     floor stays owed in the pool. (Was: LNURL-withdraw or a BOLT11 invoice
+     at claim time - not v4.6.2.)
 
      A payout unclaimed inside `claim_window` follows the existing
      expiry path. It does not become a balance.

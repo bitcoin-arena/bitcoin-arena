@@ -33485,3 +33485,42 @@ ENTRY_VOID ON 5 OF 7, PICK A FINISHED: THE RULED LIMIT KEEPS "NO LOCK REFUND" (M
                     five-of-seven 21/21 (both ruled-limit cases green, the two
                     setup checks and every money assert unchanged), outage.test.js
                     9/9, the other 99 files 574/574.
+
+M3.2 ITEM 6e, MEASURED BEFORE ANY CHANGE (2026-09-13; scratch 6e-measure.mjs, no repo change)
+  RULINGS (Daniel)  22A weighting pick A: a qualifier's share = floor(pool * net_i /
+                    sum of nets), leftover msat one at a time in descending net order,
+                    ties by seat index - the pool spent exactly; today's refusal of
+                    mixed nets is not the product rule. 6d restated to v4.6.2 §24A.2
+                    (payout contract to the player's key in the federation, withdrawn
+                    over a listed gateway) - not shipped here, waits with W4 / the
+                    fee-lock ruling. Donations: the player's own wallet pays each
+                    recipient's LNURL at entry, never through the federation; default
+                    0, a second confirmation above 5%.
+  ENTRY PATHS       donationMsat is 0 on every entry this repo writes: blwp-client
+                    join.js:784 (0n), page-lock.js:94 (0n), blwp-node preflight.js:83
+                    and :96 (0n). splitDonation, donationAfterFailures, donatedMsat:
+                    no caller outside donation.js; no LNURL is paid anywhere.
+  MIXED ROUND       100000 msat stakes, fee 2000: A (900) donates 2000, B (800) and C
+                    (700) 0, D FAILED 0 - nets A 96000, B/C/D 98000.
+                      computePayoutTable REFUSED: "the qualifiers staked different
+                      nets (96000, 98000 msat): 22A weights a share by net stake and,
+                      as written, that does not spend the pool - no table until it is
+                      ruled, so every hold expires to its player".
+                      The node (custody.js:259 settleHeldInvoices) returns moved 0:
+                      every hold stays HELD and expires to its player - A 96000, B
+                      98000, C 98000, D 98000; pool 0. One 2% donor accounts for all
+                      98000 of the 98000 msat the pool should have taken from D, and
+                      all 98000 of A's winnings.
+  CONTROL (all 0)   pool 98000; holds A/B/C CANCEL 98000 each to the player, D SETTLE
+                    98000 to the pool; table A 196000, B 98000, C 98000, D 0;
+                    winnings A 98000 msat.
+  DESTINATION       the winner's payout is one on-chain output, script
+                    5120a1a1...a1 (34 bytes) = payToKey(A): P2TR to the player's own
+                    key from the pool UTXO. Not 6d's LNURL-withdraw/BOLT11, not
+                    §24A.2's federation payout contract. At this stake it is not even
+                    made: 98 sat < DUST_SATS 330, so payoutOutputs answers "every one of
+                    the 1 player(s) this round owes is under 330 sats ... the sats stay
+                    in the pool and the debt stands" (owed 98 sat).
+  NEXT (not started) amounts first: pick A's split in computePayoutTable, then the
+                    entry's donation choice and the wallet's LNURL payments; the
+                    destination only after 6d is restated in PRIORITIES.
