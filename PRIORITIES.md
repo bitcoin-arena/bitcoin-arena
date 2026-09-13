@@ -19,9 +19,11 @@ Top item first. Finish and deploy before starting the next.
 LIVE: M3.2 item 6e - amounts. DONE, commit 1: 22A pick A in computePayoutTable
 (rank weight x net stake within the paying ranks, §18A.6 leftover) - a 2% donor
 no longer refunds the round: the loser's 98000 msat enters the pool (was 0).
-NEXT, not started: commit 2 the entry's donation (page prompt, default 0,
-second confirmation above 5%), commit 3 the wallet's LNURL payments (the seats
-serve the DonationSet). Destination (6d) waits with W4.
+DONE, commit 2: the page asks for the donation (browser prompt, default 0, a
+second confirmation above 5%) and the entry carries it - a 2% donor writes 2000
+msat, net 96000, lock 96000 (was: 0 on every entry).
+NEXT, not started: commit 3 the wallet's LNURL payments (the seats serve the
+DonationSet). Destination (6d) waits with W4.
 
 DONE: M3.3-34 lobby how-to strip (Daniel 08:58) - the 1-2-3-4 art is in the
 player build's Unity lobby, whole and on screen on iPhone and Android, upright

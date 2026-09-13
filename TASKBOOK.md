@@ -33610,3 +33610,53 @@ M3.2 ITEM 6e, COMMIT 1: 22A PICK A IN computePayoutTable (rulings 2026-09-13)
   SUITES            core 91/91, protocol 501/501 (the refusal pin replaced by pick A's
                     pins), client 286/286, node 604/604 (five-of-seven 21/21, the other
                     101 files 583/583). No Unity in this commit.
+
+M3.2 ITEM 6e, COMMIT 2: THE PLAYER'S DONATION IS CHOSEN ON THE PAGE AND WRITTEN INTO THE ENTRY (rulings 2026-09-13)
+  BEFORE (measured, 6e2-before.mjs)
+                    entryFor options {seed, curve, playerPubkey, random, joinTick,
+                    stake, claimKey, stakeLock} - no donation option; it wrote
+                    donationMsat: 0n on every entry. The page had 2 prompts (name, key
+                    backup), no donation prompt, 0 window.confirm - a donation above 5%
+                    could not be written in one step because none could be written at
+                    all. The page's lock amount assumed 0: 98000 msat for a 2% donor,
+                    where the seat's stake-lock check wants netStakeMsat = 96000.
+                    The seat's door already took a donor: donation 0 -> 201, 2000 ->
+                    201 (stored "2000"), 99000 -> 400 "a fee of 2000 and a donation of
+                    99000 come out of a stake of 100000, and cannot come to more than it".
+  NOW               donation-choice.js (bundled, BLWPCLIENT.chooseDonation): the page
+                    asks in the browser's own prompt, only for a round that asks a
+                    stake; nothing typed, a cancel or 0 is 0; a percent of the stake
+                    becomes msat, floored; above 5% (500 bps) window.confirm must say
+                    yes or nothing is written, and up to three answers are judged; the
+                    fee must still fit (the seat's feeMatchesEntry). The choice is kept
+                    per round in the tab (sessionStorage), so a reload over a kept lock
+                    writes the same donation. entryFor takes donationMsat (default 0n,
+                    checked by the same fee rule) and writes it into the entry field
+                    computePayoutTable reads; lockAmountMsat / lockStake take it, so a
+                    donor's lock holds the net. The page names no amount of its own:
+                    chooseDonation reads the round's stake (the page scan refuses a page
+                    that writes stakeMsat - my first version did, and it went red).
+  AFTER (pinned)    written donation field, 100000 msat stake: nothing/cancel/"0" -> 0
+                    (net 98000, tables byte-identical, commit 1); "2" -> 2000 (net
+                    96000, lock 96000); "2.5%" -> 2500; "5" -> 5000 with no second
+                    question; "6" -> refused unless confirmed, then 6000; every percent
+                    from 5.01 to 98 in steps of 0.07 (1329 of them, each answered with
+                    no confirm and with a confirm that says no - 2658 answers): 0 stood; "99" -> refused by the fee rule; "98" confirmed -> 98000; a
+                    free round cannot carry a donation. At the seat's door: a 2% donor
+                    201 and kept at 2000, net 96000; one msat past the stake's net 400;
+                    all of the net 201.
+  NOT YET           nothing pays the recipients - that is commit 3 (the wallet pays each
+                    recipient's LNURL at entry, the seats serve the DonationSet). Until
+                    it lands, a donor's donation is not taken from them at all: the
+                    hold or lock is the net, and no pool or seat receives the 2%. The
+                    prompt is not exercised in a browser here: the Daily's rounds are
+                    free, and a free round never asks.
+  FLAKE, NAMED      client headers.test.js "a provider that errors or never answers is
+                    counted, not waited for" failed once while a node chunk ran beside
+                    it ("only 0 of 4 providers gave a chain", 68 ms); alone 15/15, and
+                    the whole client suite alone 293/293. Not touched by this commit.
+  SUITES            core 91/91, protocol 501/501, client 293/293 (+7), node 605/605 (+1:
+                    the door takes a player's own 2% donation). Page bundle rebuilt
+                    (dist and the WebGL template's copy, fresh); known-good list gained
+                    24d75398... (earlier hashes stay; an intermediate build's hash that
+                    was never committed was taken back out). No C#, no Unity build.
