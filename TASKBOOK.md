@@ -33912,3 +33912,37 @@ M3.2 ITEM 6e: THE 56 PLACEHOLDER FIXTURES NAME THE REAL SIGNED DONATION SET (202
                     (the placeholder's 404 is what it tests).
   SUITES            core 91/91, protocol 512/512, client 300/300 (bundle fresh), node
                     613/613 (six chunks 101+93+128+103+106+61, five-of-seven 21/21).
+
+M3.2 ITEM 6e: THE LEFTOVER PLACEHOLDER SET IDS NAME THE REAL SIGNED SET (2026-09-13)
+  BEFORE (scratch convert-leftovers.mjs, counting `donationSetId: <placeholder>` in
+                    node, client and protocol test/*.js, donation-set-door.test.js excluded)
+                      node      fill(0xd0) 8, b32(0xd0) 0, b32g(0xd0) 1   in 8 files
+                      client    fill(0xd0) 6, b32(0xd0) 0                 in 6 files
+                      protocol  fill(0xd0) 7, b32(0xd0) 5                 in 12 files
+                    The b32g(0xd0) one (preflight.test.js, a local alias of b32) was
+                    not in the earlier 13 + 12; no-quorum.test.js carries two.
+  CODE              the same swap as the 56: idOfDonationSet(TEST_DONATION_SET_REGTEST
+                    .recipients), imported from protocol/src (../src/ inside protocol).
+                    24 files. No assertion touched; no test went red. The one pinned
+                    hash in reach (beacon.test.js, the committee seed) is computed from
+                    roundId b32(6), not a contract's id, so it could not move.
+  AFTER             node 0, client 0, protocol 2 - the two below, held.
+  HELD FOR A RULING - A FORK  protocol/test/vectors.test.js and protocol/test/engine-check.js
+                    build the ONE golden contract that test-vectors/protocol/contracts.json
+                    pins (encoding hex and round_id; the entry vector hashes that
+                    round_id), written by tools/make-vectors.js; engine-check.js prints
+                    that round_id under V8 and SpiderMonkey in CI. vectors.test.js: "A
+                    failure here is never 'regenerate the vectors'. It is a deliberate
+                    protocol change - PROTOCOL_VERSION moves - or a bug." Swapping the
+                    id is neither, so it is not done without a pick:
+                      A (recommended) keep the golden contract on the placeholder: in a
+                        vector the 32 bytes are an encoding input, not a set anyone is
+                        owed, and the published vectors and cross-engine round_id stay put;
+                      B regenerate on purpose with the real set id - make-vectors.js,
+                        contracts.json (round and entry vectors), engine-check.js - with no
+                        PROTOCOL_VERSION move, said so in the commit.
+  STAYS, ON PURPOSE  donation.test.js roundWith(b32(0xd0)) twice: "a round naming another
+                    id is not this set" - the placeholder is the other id, like the door.
+  SUITES            core 91/91, protocol 512/512, client 300/300 (bundle fresh), node
+                    613/613 (six chunks 101+93+128+103+106+61; five-of-seven 21/21, run as
+                    nine name-pattern groups - one title matches two, so 22 runs of 21).
