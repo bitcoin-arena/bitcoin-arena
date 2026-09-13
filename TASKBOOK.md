@@ -32722,3 +32722,58 @@ M3.3-34 PATH 5: PAST THE LOCK'S EXPIRY - HELD UNTIL THEN, BACK ONLY THROUGH THE 
   COUNTS            harness only, no source: node 582/582, core 91/91, protocol
                     501/501, client 286/286 re-run for this commit (foreground,
                     timeout 180, --test-timeout=120000).
+
+M3.3-34: A SEAT THAT STAYS DOWN PAST THE HOLD'S EXPIRY NO LONGER HANDS BACK A TWO-FIRST-MARKS STAKE (2026-09-13, ruled)
+  RULE              same as the closed paths: two first marks is FORFEIT, no refund;
+                    a down seat must not return the stake when the hold expires.
+  MEASURED BEFORE   hold-two-first.test.js, 2-of-2 on holds, in process: the player's
+  (no code change)  on-time first mark (60) to A while B is down, B back, a different
+                    one (30) to B; a winner beside; then B DOWN from before the close
+                    through the hold's expiry. A after three result windows:
+                    no-quorum none (the rule waits while a seat is unreachable),
+                    finality none, 0 results, proof 1 (B 0); A's preimage open "1
+                    of 2 shares ... (B: fetch failed)"; the hold settled 0/0,
+                    cancelled 0/0, custody rows HELD/HELD - lnd hands it back at
+                    expiry: 98000 of the player's 98000 msat net stake comes back;
+                    A's table pool 0, the winner 98000, "1 of 2 seats signed".
+                    Decisive in process: no seat could settle, so no lnd rehearsal.
+  THE SHARE         this is 1 of the 2 items left on the letter (the other: 5 of 7,
+                    listed, not this measurement), namely whether the two-first-marks
+                    stake comes back because no-quorum never lands: before, 98000 of
+                    98000 msat back; after, 0.
+  CHANGE            blwp-node. round.provenTwoFirstMarks: two different first marks
+                    of the entry, both signed by its session key, checked from this
+                    seat's own store. preimage mayRelease releases on that proof
+                    (§13B: no quorum, no replay, no window); open() keeps each
+                    envelope another seat sealed to this one (held_shares) and opens
+                    kept ones first - envelopes only, never an opened share. server
+                    gatherOnProof: the moment a proof forms here (the forward door's
+                    refusal, /play's, a refused forward - which pulls the peer's
+                    proof first), ask for the shares while the seats are up; the
+                    /share door pulls and checks a proof before refusing, never on
+                    the asker's word. verify: the close's down-wait, retryClose's
+                    and #noQuorum's stop at a down seat do not apply to an entry
+                    this seat holds the proof for. No signed result, no agreed run.
+  ON THE WAY        with only #keep and #noQuorum changed, A still decided nothing:
+                    retryClose's own cheap down-wait ran first - fixed the same way.
+  AFTER             3 of 3 runs: proof at A and B before the close (1/1); A with B
+                    down: no-quorum FORFEIT, 0 results, preimage OPENED from B's
+                    kept envelope; the hold SETTLED at A (1), cancelled nowhere;
+                    custody rows A SETTLED, B HELD (B down, its row not updated);
+                    A's table pool 98000, the winner 196000, "1 of 2 seats signed
+                    this table, so nothing is spent" - the payout waits for B. The
+                    winner's own hold stays HELD (not final without B) and expires
+                    back to the winner - its own stake.
+  NOT COVERED       B's stale HELD row when it returns (reconciling against lnd
+                    unmeasured); the settled stake sits with the operator until B
+                    signs the payout; a round with a stake lock rather than a hold is
+                    not re-measured with a seat down (a refund there needs every
+                    seat's signature, path 5's numbers stand); 5 of 7.
+  ONE RED, NOT      payout-second-seat.test.js failed once in the first 49-101 run
+  REPRODUCED        (0/1, the reason not printed by the per-file reporter); 5 of 5
+                    alone and 302/302 in a second 49-101 run. A timing-sensitive
+                    test of two seats' payout asks; the one failure is not explained.
+  COUNTS            foreground, timeout 180, --test-timeout=120000: node 583/583 over
+                    101 files (1-48 281/281; 49-101 302/302 on the second run, the
+                    first 301/302 above; hold-two-first 2/2); related 12 files
+                    95/95; core 91/91; protocol 501/501; client 286/286. No C#.

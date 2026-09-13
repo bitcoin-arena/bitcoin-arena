@@ -1666,11 +1666,12 @@ IN THIS ORDER (unparked):
                                         pool (real lnd: SETTLED, not back to the
                                         player). Path 5 measured: the lock held
                                         to expiry, back only by the expiry
-                                        refund (W4 gap). Still open: a no-quorum
-                                        rule that waits on a seat that stays
-                                        down holds every act of the round (a
-                                        hold can then expire to its player);
-                                        these paths unmeasured on 5 of 7.
+                                        refund (W4 gap). A seat that stays down
+                                        past the hold's expiry: closed on 2 of 2
+                                        (shares gathered on the proof, FORFEIT
+                                        and SETTLED by the seat that is up; the
+                                        payout waits for the down seat). Still
+                                        open: these paths on 5 of 7.
    M3.3-19  optional stake / ghost     M3   done (TASKBOOK "M3.3-19", 2026-09-10) —
        without money                      a free seat on a daemon with no
                                         Lightning is 201 FREE; the watcher's
