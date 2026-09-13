@@ -16,6 +16,14 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
+LIVE: M3.2 item 6e - 6b's amounts (the DonationSet's amounts), then 6d where a
+payout goes: this file's NEXT for M3 (HARD 22:34: continue M3). Not started.
+
+LISTED, NOT STARTED: the forfeit-ask label a colluding Void seat could omit
+(colluding-seat bond/slash); payout-second-seat's intermittent red and the
+first-mark timing race (not fixed); the live Daily's hung seats and daily.json's
+dead tunnels; Unity build.txt, ProjectSettings and two .meta files stay unstaged.
+
 DONE: two first marks after an outage-VOID on 5 of 7 - with seats 3-5 or 4-6
 down through the hold's expiry the hold settles into the pool, player 0, pool
 98000 msat (before: seats 3-5 down gave the player 98000); a lock: no refund.
@@ -34,16 +42,11 @@ DONE: PLAY in the lobby no longer shows the loading screen again (Daniel 07:11):
 the seat is taken in the running page, no reload; the round starts 1 s after
 PLAY (measured on a local 2-of-2, TASKBOOK). Deployed to btc-logistics-core.
 
-LIVE: ENTRY_VOID (M3.3-34). An entry that must VOID does
-VOID - not a loss for the player, not a silent refund, not pool profit.
-DONE (pick A, Daniel 2026-09-13): a genuine outage on 5 of 7 with the down seats
-caught up late is ENTRY_VOID at all seven, no run signed - hold: player 98000
-msat at expiry, pool 0; lock: refund at once, 98000 (before: all seven signed
-FAILED and the hold settled into the pool). The ruled limit (path 2, seat 4 down
-from its refusal) still pays no lock refund - at the ask, after close, after the
-window; player 98000 at expiry, pool 0; seat 4 keeps the late start. A seat that
-learned the Void only from a forfeit ask signs a lock refund only when its proof
-pull reached every other seat; 2 of 2's outage refunds stay at once.
+DONE: M3.3-34 ENTRY_VOID (2026-09-13) - an entry that must VOID does VOID on 5 of
+7: a genuine outage caught up late is ENTRY_VOID at all seven (hold: player 98000
+msat, pool 0; lock: refund at once); the ruled-limit lock pays no refund (player
+98000 at expiry, pool 0). core 91/91, protocol 501/501, client 286/286, node
+604/604 (TASKBOOK).
 (Earlier, Daniel 22:16/22:12/22:34: the lobby letter, then ENTRY_VOID.)
   DONE (Unity lobby, TASKBOOK, live on btc-logistics-core): the lobby is
   Unity's title screen, no HTML overlay - who you are with NAME and KEY, the
@@ -1681,10 +1684,11 @@ IN THIS ORDER (unparked):
                                         33.500 m the ground was worth. The fix
                                         is 36's, again: the core owns the map's
                                         boxes and Unity draws them.
-   M3.3-34  lobby + free play          M3   OPEN — Daniel 07:11: after PLAY the
-                                        loading screen must not return. PLAY
-                                        starts the round. Also Unity lobby,
-                                        iOS/Android, SPECTATE always.
+   M3.3-34  lobby + free play          M3   done (2026-09-13) — the Unity lobby,
+                                        iOS/Android, SPECTATE always; PLAY
+                                        starts the round with no second
+                                        loading screen; ENTRY_VOID voids on
+                                        5 of 7, the ruled-limit lock included.
                                         DONE, two first marks (player gets 0):
                                         on 2 of 2 and 5 of 7 no committee
                                         refund forms, the hold settles into
@@ -1692,7 +1696,7 @@ IN THIS ORDER (unparked):
                                         the player's own expiry refund - also
                                         after an outage-VOID, and with the
                                         seat that saw the second mark down.
-                                        OPEN: the NEXT item above; the seats'
+                                        LISTED, not started: the seats'
                                         records split (money unaffected);
                                         payout-second-seat's red (text caught:
                                         A stays PAYOUT_QUEUED after B paid,
