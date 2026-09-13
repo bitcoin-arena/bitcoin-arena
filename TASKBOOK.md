@@ -34487,3 +34487,42 @@ M3.2 ITEM 6e: ROUND 4 ON THE HEAD DEPLOY, AND THE STAKE LINE STOPS READING HELD 
                     node change). One red under parallel load - close-retry.test.js "a
                     seat whose peer is down at the close ..." (9.9 s) - 3/3 alone (6.9 s);
                     file untouched since 219d086: a load flake, listed.
+
+M3.2 ITEM 6e: ROUND 5 ON THE FIX'S DEPLOY - AFTER CUSTODY THE STAKE LINE READS SETTLED. 6e CLOSED (2026-09-13 19:51)
+  DEPLOYED          99dc7cc to btc-logistics-core: 1981cf52, bundle 8f914122 (alias checked
+                    serving it before the probe started).
+  ROUND 5 (5f001f54)  the pick-B pairing again: the page is the idle 0% loser, scripted D2
+                    at 2% and Z0 at 0% deliver; seats 18380/18381 closing on their own
+                    clocks, window 600 s. Probe from 19:06:28.
+  CHECK 1 - THE IDLE LOSER AFTER CUSTODY (the page, f050e4f1):
+                      stake line    "100 sat round: 2 sat fee and 0 sat donation out of
+                                    it, 98 sat staked · the wallet is asked 98 sat ·
+                                    SETTLED"            <- round 4 on e9f22a89: "· HELD"
+                      settled line  "Settled: this seat's 98000 msat stake went into the
+                                    pool · the round's pool 98000 msat"
+                    both seats FINAL and agreeing: page FAILED/0 SETTLED hold 98000, pool
+                    98000, owed 0; D2 282854c2 DELIVERED/1 CANCELLED 96000, owed 96000;
+                    Z0 3d0b275e DELIVERED/3 CANCELLED 98000, owed 196000.
+                    lnd: page 7e395ff6 SETTLED 98000 (19:50:38); D2 9fdff7cc (96000) and
+                    Z0 7bbfc334 (98000) CANCELED.
+                    Same live entries by f7002e1^: refused, pool 0. HEAD: pool 98000, rows
+                    96000 / 196000 / 0.
+  CHECK 2 - A SETTLED LOSER READS 98 SAT SPENT: running total "98 sat over 1 stake in 1
+                    round" on the live page.
+  CHECK 3 - A RETURNED STAKE READS NOTHING SPENT: the deployed bundle's own lines against
+                    the live seat answers (the live page cannot play a winner): Z0 "nothing
+                    spent this session · 98 sat came back (1 stake cancelled)", stake line
+                    "· CANCELLED"; D2 "... 96 sat came back", "· CANCELLED". Expired: the
+                    page-path test, "nothing spent".
+  CHECK 4 - THE WINNER'S ROW: Z0 "Returned: this seat's 98000 msat stake was cancelled
+                    back to the wallet · the round's payout table: 196000 msat for this
+                    seat · the round's pool 98000 msat" - round 5's row, not round 4's
+                    194000 (that was D2's row in round 4).
+  DONATION          D2 1334 msat paid, 666 unpaid (NO_ROUTE, lnd's 1000 msat min_htlc) - as
+                    in every round.
+  NOTES, NOT 6e     the page's own run ends "VOID ... inputs past the end" in its console
+                    (the chip line in LATER); the seats score it FAILED/0 and settle it.
+                    The reload "no entry id" line. Headless Chrome dies at HH:05:01 - the
+                    rig only.
+  SUITES            at 99dc7cc: core 91/91, protocol 512/512, client 311/311, node 614/614.
+                    No reds (close-retry's load flake, listed at round 4). Unity not run.

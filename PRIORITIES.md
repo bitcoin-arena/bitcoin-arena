@@ -16,7 +16,12 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE: M3.2 item 6e - amounts. DONE, commit 1: 22A pick A in computePayoutTable
+NEXT (not started): W4 - a loser's stake lock claimed into the pool, and with
+it 6d (where a payout goes), the fee collector and the loopback donation
+recipients. Parked behind the fee-lock ruling: until it is ruled a loser's lock
+refunds at expiry. The ruling is Daniel's, not the code's.
+
+DONE: M3.2 item 6e - amounts (closed 2026-09-13, round 5 live). commit 1: 22A pick A in computePayoutTable
 (rank weight x net stake within the paying ranks, §18A.6 leftover) - a 2% donor
 no longer refunds the round: the loser's 98000 msat enters the pool (was 0).
 DONE, commit 2: the page asks for the donation (browser prompt, default 0, a
@@ -65,8 +70,12 @@ DONE (live, round 4 on the HEAD deploy afe5eb06): the idle loser reads the
 98000 msat pool; the seats serve the winner's row, 194000 msat.
 DONE (page path): after the round the stake line reads SETTLED / CANCELLED /
 EXPIRED from the seats, no longer the payment-time "HELD".
-6e STAYS OPEN until that fix is on the daily page and read there after a
-settlement. Loopback recipients parked with W4/6d; fee collector W4.
+DONE (live, round 5 on deploy 1981cf52 = 99dc7cc): after custody the idle
+loser's stake line reads "... the wallet is asked 98 sat · SETTLED" beside "the
+round's pool 98000 msat" (round 4: stuck on HELD); both seats and lnd agree. A
+cancelled stake reads "nothing spent · 98 sat came back"; the winner's row is
+196000 msat (TASKBOOK). 6e IS CLOSED. Loopback recipients parked with W4/6d;
+fee collector W4.
 
 DONE: M3.3-34 lobby how-to strip (Daniel 08:58) - the 1-2-3-4 art is in the
 player build's Unity lobby, whole and on screen on iPhone and Android, upright
@@ -877,7 +886,12 @@ distinguishable from a stranger's - and the cold recovery key ends a stolen
 authority, exercised on real BIP-340 keys and not described. No money moves:
 the amounts are 6e's letter.
 
-NEXT UNDER THIS HEADING: 6b's amounts behind 6e, 6d where a payout goes.
+M3.2 ITEM 6e IS CLOSED, AND WITH IT 6b's AMOUNTS. 100 sat leaves the wallet, the
+fee and the player's donation come out of it, the donation is paid over LNURL,
+and the page reads the round's end from its seats: live, a settled 0% loser
+reads SETTLED beside a 98000 msat pool, seats and lnd agreeing (TASKBOOK).
+
+NEXT UNDER THIS HEADING: 6d where a payout goes - waits with W4.
 
 Every M3.3 line - 8b, 9, 10, 13, 14, 15, 16, 17, 18, 19, 20 - is closed, and so
 is M3.2 item 5.
