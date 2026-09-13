@@ -32964,3 +32964,44 @@ M3.3-34: ON 5 OF 7, WHAT STILL COULD PAY THE PLAYER AFTER AN OUTAGE-VOID AND A S
                     sign FAILED - the ENTRY_VOID gap), payout-second-seat's
                     unexplained red, and the down seat's two residuals: none moved
                     a msat in any measured order.
+
+M3.3-34 ON 5 OF 7: OUTAGE-VOID, A SECOND FIRST MARK, SEATS 4-6 DOWN THROUGH THE EXPIRY - THE POOL TOOK IT, 0 MSAT BACK (2026-09-13, measured, no code change)
+  ORDER             five-of-seven.test.js: seats 4-6 down, the first mark (60) and a
+                    mark past the line (1500) to each of seats 0-3 - all four record
+                    ENTRY_VOID; 4-6 back; a different on-time first mark (30) to
+                    seat 4 ("error FORFEIT ... two first marks"); the winner plays;
+                    then seats 4-6 DOWN from before the close through the expiry;
+                    seats 0-3 close.
+  THE READING WAS   "seats 0-3 hold the proof but only 4 of 5 shares, so the hold
+  WRONG             expires back at 98000 msat". Measured, 3 setups, the same
+                    figure each time:
+  HOLD              before the down: seat 3 5 shares, seat 4 5 (own + 4 kept
+                    envelopes each), seats 0-2 1 each, 5-6 1 (no proof); seats 0-4
+                    hold the proof. After the close: seats 0-3 no-quorum FORFEIT, 0
+                    signed results; seats 0-2 4 shares each (seat 0's open: "4 of 5
+                    shares"), seat 3 5 - seat 3 SETTLED the hold (custody SETTLED;
+                    0-2 HELD). lnd: settled 1 (seat 3), cancelled 0 at every seat.
+                    Player 0 msat back; pool 98000 (table pool 98000 at seat 0,
+                    payout "4 of 5 seats signed this table, so nothing is spent" -
+                    it waits for a fifth seat); the winner's own hold neither
+                    settled nor cancelled (not final without a fifth signature).
+  LOCK (the same    the four seats up would sign (/forfeit-commit 200 x4) - one
+  order)            short of five; refund doors 409 x4 at once and after the close,
+                    none kept; seats 0-3 decided nothing (no proof on a lock, the
+                    early share gathering runs on holds); lock HELD, 98000 msat -
+                    back only by the player's own refund at its expiry (the accepted
+                    W4 gap), 0 by the committee.
+  WHY SEAT 3        not identified: seat 3 held 5 shares before the down in all
+                    three setups (seat 4's own gathering explains seat 4; nothing
+                    measured yet explains seat 3). So a different three-seat
+                    down-set - one that takes seat 3 and seat 4 down - is not
+                    measured and could still hand the hold back.
+  STILL IN          path 2 with seat 4 down from its refusal through the expiry; the
+  TASKBOOK ONLY     lock with receipts lost between up seats (five Voids); the
+                    down-set taking seats 3 and 4 (above).
+  COUNTS            foreground, timeout 180, --test-timeout=120000: node 593/593 over
+                    102 files (1-48 without five-of-seven 280/280; 49-102 303/303,
+                    payout-second-seat 1/1; five-of-seven 10/10 in three runs by
+                    test name - 84, 69, 33 s - the file alone now exceeds one 180 s
+                    run); core 91/91; protocol 501/501; client 286/286. No seat,
+                    hold or lock code changed; no Daily, W4, Unity or C#.
