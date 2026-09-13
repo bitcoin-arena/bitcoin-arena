@@ -45,10 +45,12 @@ sees "1334 msat paid · 666 msat UNPAID (NO_ROUTE) · 666 msat unpaid stays in
 your wallet"; a reload asks the wallet 0 times (TASKBOOK). Measured with
 Chrome's loopback permission allowed - without it the https page cannot reach
 the local round at all.
-HELD FOR A RULING: on an iPhone sideways the wallet panel runs 52 px off the
-bottom ("Pay the stake" cut) - the donation line's height did it.
-OPEN ON 6e: a reload whose seat is never taken shows no donation line (the
-notes are in the tab); the running total forgets a reload. Then the loopback
+DONE (live ce2be35c): with the round unreachable the loading screen still shows
+1334 paid / 666 unpaid from the tab's notes, 0 wallet asks; the running total
+reads 97334 msat over 1 stake and 1 donation share, before and after a reload;
+an iPhone on its side keeps the throttle clear and "Pay the stake" on screen.
+6e STAYS OPEN. NEXT: a paid round with a 2% donor played to settlement on the
+daily page (the pool takes the loser's net stake). Then the loopback
 recipients. Fee collector stays parked with W4; no refund on void.
 
 DONE: M3.3-34 lobby how-to strip (Daniel 08:58) - the 1-2-3-4 art is in the

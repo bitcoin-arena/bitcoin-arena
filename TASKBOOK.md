@@ -34168,3 +34168,79 @@ M3.2 ITEM 6e: THE DONATION PAYMENT IS LIVE ON THE DAILY PAGE, AND WHAT A PLAYER 
                     - the round chip says "stake dealt, unpaid" while the panel says HELD.
   SCREENSHOTS       scratch donation-live-{A-desktop,B-desktop-reload,C-iPhone-portrait,
                     C-iPhone-landscape,D-no-seat-reload}.png; verdict donation-live-verdict.json.
+
+M3.2 ITEM 6e: THREE PLAYER-FACING HOLES FROM THE DAILY-PAGE CHECK, CLOSED AND MEASURED ON IT (2026-09-13)
+  RULED             no rollback; 6e stays open; no pool-math playthrough until these three
+                    are on screen; the why-line / round-chip mismatch is a note.
+  1 THE DONATION WITHOUT A SEAT
+    BEFORE          (ce11a7a's probe, phase D) round link unreachable on reload: the loading
+                    screen's refusal only - no panel, donation line "" for 60 s - with the
+                    tab's notes holding paid 1334, unpaid 666.
+    CODE            donation-pay.js donationNotedState (the line's state from the notes
+                    alone) and notedDonationForLink (round id off the link; this tab's key
+                    from its own seed, read and never minted - join.js TAB_SEED_KEY); the
+                    page's showNotedDonation paints #blwp-donation-noted on the loading
+                    screen after fail(); the join also preloads BLWP_DONATION_PAID from the
+                    notes, so the panel shows them before payDonation answers.
+    AFTER (live)    seats and recipients closed, wallet kept up (SIGUSR2), reload: under
+                    "That round link cannot be used: no node holds the round this URL
+                    names: ...18380: Failed to fetch; ...18381: Failed to fetch" the screen
+                    shows "Donation: 1334 msat paid to .../blwp-test-a · 666 msat UNPAID to
+                    .../blwp-test-b (the wallet did not pay it: the wallet refused:
+                    PAYMENT_FAILED FAILURE_REASON_NO_ROUTE) · 666 msat unpaid stays in your
+                    wallet, sent nowhere else" at 15/30/45/60 s; notes still paid 1334,
+                    unpaid 666; wallet pay_invoice asks 0 (one get_info), invoices 0.
+    TEST            donation-pay.test.js drives the shipped showNotedDonation with the
+                    shipped bundle: the line after a part-paid load, 0 wallet asks, 0
+                    invoices; another round or a tab with no seed shows nothing and mints
+                    no seed.
+  2 THE RUNNING TOTAL ACROSS A RELOAD
+    BEFORE          "97 sat over 2 stakes in 1 round" (a donation share counted as a
+                    stake, 334 msat dropped); after a reload "nothing paid this session"
+                    beside "1334 msat paid" - spendLog was page memory.
+    CODE            nwc.js spendLog({ storage }) keeps the log in the tab (sessionStorage,
+                    blwp.spend.log), one entry per payment hash, each with its kind; payStake
+                    records 'stake', payDonation 'donation'. spentLine: stakes-only logs read
+                    exactly as before ("250 sat over 3 stakes in 2 rounds" untouched); with a
+                    donation share the total is exact and the share is named.
+    AFTER (live)    "97334 msat over 1 stake and 1 donation share in 1 round" before and
+                    after the reload = 96000 (the hold, in flight) + 1334 (settled share);
+                    the reload: pay_invoice asks 0, invoices 0.
+    TEST            the same text across two page loads on one tab's storage; the reload
+                    asks 0 and the log stays 2 entries, 97334 msat; a share alone reads
+                    "1334 msat over 1 donation share in 1 round".
+  3 A PHONE ON ITS SIDE
+    BEFORE          844x390: panel 320x428 at 510,14, bottom 442 - 52 px below the screen,
+                    "Pay the stake" cut, over the throttle.
+    CODE            one media rule (landscape, max-height 500px): the panel runs from 14 px
+                    to 23.5vh + 12px in from the right - Unity's TouchPad.RectFor puts the
+                    throttle s + m = 23.5% of the short side in - and its height is capped
+                    above the bottom row; input and button share a row.
+    AFTER (live)    844x390: panel 726x227 at 14,14, bottom 241; the donation line 699x55,
+                    3 lines; "Pay the stake" 590,178 105x27, fully on screen, on top at its
+                    centre, no scroll. Unity's pads (TouchPad.RectFor, hit-tested at centre
+                    and four corners): throttle 752,214 78x78, brake 752,298, handbrake
+                    668,298, steering 14,298 and 98,298 - every point the canvas, none
+                    covered. The panel lies over 50% of the canvas (cargo board, round
+                    chip); AUTO and the HUD below it clear (screenshot).
+                    Portrait 390x844 unchanged by the rule: panel 320x446, all five pads
+                    clear, "Pay the stake" 71,381 on screen.
+  THE REST OF THE CHECK, SAME RUN (ce2be35c)
+                    2% donor: prompt lists both recipients; pay_invoice 96000 (hold,
+                    pending), 1334 SETTLED, 666 FAILED NO_ROUTE; invoices 1334 + 666; the
+                    line as before, shown 12 s after paying. Reload: re-seated 14 s, line 1
+                    s later, identical; 0 prompts, 0 pay asks, 0 invoices.
+  DEPLOYED          btc-logistics-core ce2be35c (alias serves it): webgl-howto's Unity
+                    output + this page + blwp-client.js 84ad83e6 (added to known-good);
+                    2 of 28 files uploaded; daily.json unchanged; btc-logistics-war untouched.
+                    Condition as before: Chrome 151 headless with localNetworkAccess and
+                    loopbackNetwork granted to the live origin.
+  SUITES            core 91/91, protocol 512/512, client 307/307 (+2), node 592/592 (six
+                    chunks; five-of-seven 21/21 last measured - imports nothing from
+                    blwp-client). No assertion changed.
+  NOTES, NOT THIS PASS
+                    the why line after a reload still reads "no entry id to ask about:
+                    setRound was never called and none was given"; the round chip says
+                    "stake dealt, unpaid" while the panel says HELD.
+  NEXT ON 6e        a paid round with a 2% donor played to settlement on the daily page:
+                    the pool takes the loser's net stake. Then the loopback recipients.
