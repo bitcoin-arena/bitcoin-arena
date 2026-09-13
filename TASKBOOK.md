@@ -33402,3 +33402,47 @@ PLAY IN THE LOBBY NO LONGER SHOWS THE LOADING SCREEN AGAIN (M3.3-34, Daniel 2026
                     round right now, so PLAY cannot be pressed against it. Not
                     restarted here - a restart loads this worktree, which holds the
                     uncommitted ENTRY_VOID edits.
+
+ENTRY_VOID ON 5 OF 7, PICK A: THE RETURNING SEATS RECORD THE VOID FROM THE FULL RECEIPT SET (M3.3-34, ruled 2026-09-13)
+  CODE (uncommitted) server.js: the Void evidence - the forward body and the
+                    /entry-void door - carries every receipt the Void seat holds
+                    of the on-time first mark (round.receiptsOfMark), not its own
+                    one; the returning seat counts them itself, once per signer
+                    (round.receiptSigners). verify.js #keep: a seat holding
+                    ENTRY_VOID with no proof of two first marks signs no run (the
+                    no-quorum rule runs first, so two first marks stay FORFEIT).
+  MEASURED          genuine outage (seats 4-6 down, 0-3 ENTRY_VOID), 4-6 caught up
+                    late, 3 setups each, all the same:
+                      hold: ENTRY_VOID 7 of 7, no run signed, settled 0 cancelled 0,
+                            player 98000 msat at the hold's expiry, pool 0;
+                      lock: ENTRY_VOID 7 of 7, commits 200 x7, doors 200 x7, kept 7,
+                            player 98000 msat at once, pool 0.
+                    Returning seats 4-6 answer the first mark "error ENTRY_VOID".
+                    Genuine outage-VOID with no catch-up ('and no second first
+                    mark'): refund doors 200 at the five Void seats, 98000.
+  OTHER GROUPS      path [12]: 4/4 (the path 2 lock setup check rewritten, as ruled:
+                    seat 4 records the Void from the full receipts and refuses the
+                    late mark as a second first mark - voidAt4, the §13B refusal,
+                    proofAt4; money asserts unchanged: FORFEIT, 409 x7, lock held);
+                    and seat 4 down|seats 4-6 down 6/6; seats 3-5 down 2/2;
+                    receipts lost seats 0-4 2/2; receipts lost and seat 5 2/2;
+                    every seat up / FORFEIT at all seven 2/2. No seat signed FAILED
+                    or DELIVERED in any case; every two-first-marks case FORFEIT,
+                    player 0 (hold settled into the pool, 98000; lock held, 409).
+  THE RULED LIMIT MOVED ('from its refusal', 0/2 - the setup check fails before
+                    the money asserts run; numbers from the FACTS printed first):
+                    seat 4 now records ENTRY_VOID and refuses the late mark (tick
+                    1500) as a second first mark, holding the proof, then goes down.
+                      hold: no seat up holds the proof, settled 0 cancelled 0,
+                            player 98000 msat at the hold's expiry, pool 0 - the
+                            money as ruled;
+                      lock: before the ask ENTRY_VOID at 0-3 (commits 200 x4, 409 at
+                            5 and 6); the forfeit ask hands 5 and 6 the full
+                            receipts, they record it too: doors 200 x6, kept 6 -
+                            a committee refund at once, player 98000, pool 0.
+                            Ruled: no lock refund (98000 at the lock's expiry).
+                    Needs a ruling: keep "no lock refund" (a seat voided only by a
+                    forfeit ask signs no refund before the result window passes) or
+                    accept the refund at once and restate the limit.
+  NOT RUN           node, core, protocol, client suites. Nothing committed but these
+                    notes; the Daily seats (hung) not restarted.

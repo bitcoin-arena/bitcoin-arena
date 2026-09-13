@@ -36,11 +36,17 @@ PLAY (measured on a local 2-of-2, TASKBOOK). Deployed to btc-logistics-core.
 
 LIVE: ENTRY_VOID (M3.3-34). An entry that must VOID does
 VOID - not a loss for the player, not a silent refund, not pool profit.
-MEASURED, A HOLE (3 of 3), 5 of 7: a genuine outage (seats 4-6 down, seats 0-3
-ENTRY_VOID), the down seats then caught up late - they take the first mark,
-all seven sign FAILED: the hold settles into the pool (the player loses 98000
-msat); a lock: no fast refund (4 of 5), FAILED recorded. A fork (TASKBOOK):
-ENTRY_VOID at the returning seats (pick) or a no-quorum VOID; needs a go.
+PICK A (Daniel 2026-09-13), CODED, NOT COMMITTED: a returning seat gets every
+receipt the Void seats hold, counts them itself and records the same ENTRY_VOID;
+a seat holding ENTRY_VOID signs no run. Measured (3 of 3): the genuine outage
+caught up late is ENTRY_VOID at all seven, no run signed - hold: player 98000
+msat at expiry, pool 0; lock: refund at once, 98000. Every other 5-of-7 case
+unchanged (TASKBOOK).
+STOPPED ON THE RULED LIMIT (path 2, seat 4 down from its refusal): hold unchanged
+(player 98000 at expiry, pool 0); the LOCK MOVED - a committee refund now forms
+at once (98000, pool 0; was: no lock refund, 98000 at expiry). Needs Daniel:
+keep "no lock refund" (a seat voided only by a forfeit ask waits out the window)
+or accept the refund at once. Then node, core, protocol, client; then commit.
 (Earlier, Daniel 22:16/22:12/22:34: the lobby letter, then ENTRY_VOID.)
   DONE (Unity lobby, TASKBOOK, live on btc-logistics-core): the lobby is
   Unity's title screen, no HTML overlay - who you are with NAME and KEY, the
