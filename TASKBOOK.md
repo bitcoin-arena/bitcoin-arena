@@ -34573,3 +34573,40 @@ M3.2 ITEM 6e: THE AUDIT AFTER CLOSING - ONE DOOR STILL SUBTRACTED BY HAND, NOW F
                     the alias both serve bundle a2386e2e (first try, 20:25:39); the page
                     still hands the seats' settlement to the stake line. The screen is
                     unchanged (the page calls no federationStakeFor).
+
+M3.2 ITEM 6e: THE SECOND PASS - THE SPEC'S OWN §18A TABLES AND THE TEST THAT PINNED THEM STILL READ ON TOP (2026-09-13)
+  SCOPE             past the code doors: the spec text, the fee table, winnings, every
+                    money number Unity or the page prints, the golden payout vector.
+  CLEAN             Unity: every "sat" string is the game world's mempool fee (cargo,
+                    fees to miners, sat/vB), none is round money; the lobby prints no
+                    amount. The page: no "on top" (the one hit is CSS). fee.js's gross is
+                    the wallet commitments (22A's inclusive base); winnings and the table
+                    read netStakeMsat. FEDERATION.md, IMPLEMENTATION.md, README: no
+                    on-top arithmetic. test-vectors/protocol/payout.json: already inclusive
+                    (fee 2000, pool 2450000, paid 9800000).
+  STILL ON TOP      multiplayer_p2p.md §18 and Collection (22A) say inclusive, but §18A
+                    computed on top - the player paying 102:
+                      18A.1  pool 2,500; edge +8%; corridor 0.5 x (100 + 80) - 102 = -12%
+                      18A.4  "moves the edge route from +8% to -2%"
+                      18A.5  disqualifying raises the pool to 7,500: +98% / -100%
+                      18A.6  loser_pool 2,500; edge 100 - 102; corridor 0.5 x 200 - 102;
+                             70% survival 0.7 x 200 - 102 = +38%
+                    and protocol.test.js "the worked example from 18A.6 comes out at the
+                    spec's numbers" wrote feeMsat 0n and asserted pool 2500000 / paid
+                    10000000 - the on-top reading through a zero fee, against the vector.
+  RE-DERIVED        (computed, 100 paid, 98 staked each):
+                      18A.1  pool 2,450; 9.8 / 78.4 sat shares; edge 98 + 9.8 - 100 = +7.8%;
+                             corridor 0.5 x (98 + 78.4) - 100 = -11.8%
+                      18A.4  +7.8% to -2%
+                      18A.5  7,350 (75 x 98): +96% / -100% (now exact)
+                      18A.6  pool 2,450; edge 98 - 100 = -2%; corridor 0.5 x (98 + 98) - 100
+                             = -2%; 70% survival 0.7 x 196 - 100 = +37.2%; zero-sum still
+                             -200 sat = the fees collected
+                    Every conclusion stands. The test now writes the 2000 msat fee the door
+                    demands and asserts pool 2450000 / paid 9800000 - the vector's numbers.
+  STAYS             the other computePayoutTable unit tests write fee 0 on purpose: table
+                    arithmetic (remainders, VOID, no qualifiers), none claims the spec's
+                    numbers. The historical note at §22A ("Earlier versions collected ...
+                    on top") is correct as written.
+  SUITES            protocol 512/512 with the test on the inclusive numbers; nothing else
+                    changed (core 91, client 312, node 616 stand from 4a07f31).

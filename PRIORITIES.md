@@ -79,7 +79,11 @@ DONE (audit, 4a07f31, live 581edaba): the last door that subtracted by hand - a 
 round's invoice-first stake - reads netStakeMsat: a 2% donor was seated on a
 980000 msat invoice its quote refused (it holds 960000); now asked, seated and
 quoted at 960000. Every door reads the one subtraction; the C# has no money, so
-no engine comparison applies. 6e IS CLOSED. Loopback recipients parked with
+no engine comparison applies.
+DONE (second pass): the spec's §18A tables still paid 102 on top, and the 18A.6
+test pinned pool 2,500 with a 0 fee; both re-derived inclusive - pool 2,450, edge
++7.8% -> -2%, 70% survival +37.2% - matching the payout vector (TASKBOOK).
+6e IS CLOSED. Loopback recipients parked with
 W4/6d; fee collector W4 (ruled).
 
 DONE: M3.3-34 lobby how-to strip (Daniel 08:58) - the 1-2-3-4 art is in the
