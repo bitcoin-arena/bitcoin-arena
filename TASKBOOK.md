@@ -33444,5 +33444,9 @@ ENTRY_VOID ON 5 OF 7, PICK A: THE RETURNING SEATS RECORD THE VOID FROM THE FULL 
                     Needs a ruling: keep "no lock refund" (a seat voided only by a
                     forfeit ask signs no refund before the result window passes) or
                     accept the refund at once and restate the limit.
-  NOT RUN           node, core, protocol, client suites. Nothing committed but these
-                    notes; the Daily seats (hung) not restarted.
+  SUITES            on the uncommitted pick-A code: core 91/91, protocol 501/501,
+                    client 286/286; node 602/604 - six chunks of the other 101 files
+                    583/583, five-of-seven 19/21, the two reds the ruled-limit
+                    setup checks above ('seat 4 kept no late first mark'). Not
+                    committed while those are red; the Daily seats (hung) not
+                    restarted.

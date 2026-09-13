@@ -46,7 +46,8 @@ STOPPED ON THE RULED LIMIT (path 2, seat 4 down from its refusal): hold unchange
 (player 98000 at expiry, pool 0); the LOCK MOVED - a committee refund now forms
 at once (98000, pool 0; was: no lock refund, 98000 at expiry). Needs Daniel:
 keep "no lock refund" (a seat voided only by a forfeit ask waits out the window)
-or accept the refund at once. Then node, core, protocol, client; then commit.
+or accept the refund at once. Suites on this code: core, protocol, client green;
+node 602/604, the two reds are the ruled-limit cases. Commit after the ruling.
 (Earlier, Daniel 22:16/22:12/22:34: the lobby letter, then ENTRY_VOID.)
   DONE (Unity lobby, TASKBOOK, live on btc-logistics-core): the lobby is
   Unity's title screen, no HTML overlay - who you are with NAME and KEY, the
