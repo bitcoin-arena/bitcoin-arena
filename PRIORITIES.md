@@ -1674,9 +1674,15 @@ IN THIS ORDER (unparked):
                                         residuals return no stake). 5 of 7 done
                                         (TASKBOOK): FORFEIT at all seven, hold
                                         settled, lock doors 409 x7, three seats
-                                        down still settle. Still open: the down
-                                        seat's residuals; payout-second-seat's
-                                        unexplained intermittent red.
+                                        down still settle. Still open: the
+                                        outage-VOID orders (5c, paths 1, 2) on 5
+                                        of 7 - unmeasured, and there one refusing
+                                        seat no longer blocks a refund;
+                                        payout-second-seat's intermittent red (2
+                                        of 12 full runs, text never captured,
+                                        TASKBOOK says what it depends on). The
+                                        down seat's residuals return no stake:
+                                        listed, payout work.
    M3.3-19  optional stake / ghost     M3   done (TASKBOOK "M3.3-19", 2026-09-10) —
        without money                      a free seat on a daemon with no
                                         Lightning is 201 FREE; the watcher's

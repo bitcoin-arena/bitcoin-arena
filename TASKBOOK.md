@@ -32850,3 +32850,38 @@ M3.3-34 ON 5 OF 7: TWO FIRST MARKS FORFEIT AT EVERY SEAT, NO REFUND (2026-09-13,
                     102 files (1-48 283/283; 49-102 303/303 twice; five-of-seven 3/3,
                     hold-two-first 2/2, first-mark 14/14); core 91/91; protocol
                     501/501; client 286/286. No C#, no Unity.
+
+M3.3-34: PAYOUT-SECOND-SEAT'S INTERMITTENT RED, AND WHAT 5 OF 7 HAS NOT MEASURED (2026-09-13, written, no code)
+  WHAT IT IS        payout-second-seat.test.js: two seats on holds with the 2-of-2
+                    pool; the test forces the rehearsal's order (B signs its table
+                    but does not queue it until A has asked once), then requires,
+                    within WINDOW_MS + 15 s: the loser's hold SETTLED at A, the
+                    winner's CANCELLED, exactly one transaction, 980 sats to the
+                    winner, and both payout rows PAID - never PAYOUT_QUEUED.
+  RUN HISTORY       since 8e68e1f, full runs of files 49-102: 12, failed 2 (02:03 at
+  (logs)            8e68e1f; 02:31 on 5 of 7 before the 409 change), both under the
+                    old per-file reporter, which printed no failure text; 10 passed
+                    (5 default reporter, 3 with the reporter that prints failure
+                    detail, 2 after the 409 change). Alone: 6 of 6; instrumented
+                    copies: 5 of 5. Before 8e68e1f: no failure in any full run.
+  WHAT IS KNOWN     it runs through paths this letter changed (holds, shares,
+                    settle); the one piece of work the letter added inside it was
+                    two proof pulls per run on 404 refusals (26-31 ms), removed in
+                    5538a13 (0 pulls). Which assertion failed is NOT known.
+  WHY NOT FIXED NOW no failure text was ever captured, and it has not reproduced in
+                    the 10 runs since; changing code for it would be a guess.
+  DEPENDS ON        one failing run's assertion and stack: the per-file reporter
+                    now prints them (FAIL DETAIL), so the next full-suite failure is
+                    captured where it happens. Owned by this letter until then - not
+                    carried into ENTRY_VOID as unexplained; if it fails again, its
+                    text decides whether it is this letter's (holds, shares, settle)
+                    or the payout's own ordering.
+  NOT MEASURED ON   the outage-VOID orders - 5c (Void, then a late first mark),
+  5 OF 7            path 1 (Void, then a different on-time one), path 2 (the late
+                    mark's forward lost) - were measured on 2 of 2 only. There the
+                    seat holding the second mark never Voids, so one seat always
+                    refuses the refund. On 5 of 7 a refund needs 5 of 7: seats that
+                    recorded the Void and missed the late mark's forward would sign
+                    it "at once" (no window) until they pull the proof at their
+                    close - if five such seats exist, a refund could be signed. By
+                    reading, not measured. Named as the next item on this letter.
