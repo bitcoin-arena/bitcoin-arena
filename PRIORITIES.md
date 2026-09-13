@@ -16,12 +16,13 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-DONE (measured, 3 of 3): two first marks after an outage-VOID on 5 of 7, seats
-4-6 down through the hold's expiry - the player got 0, the pool took 98000
-msat (a seat up held 5 shares); on a lock no refund formed, the lock held.
-NEXT (M3.3-34, not started): the same order with seats 3 and 4 among the
-three down - why seat 3 held 5 shares is not known, so that down-set may still
-hand the hold back. Then the two orders TASKBOOK lists. Measure first.
+MEASURED (3 of 3): two first marks after an outage-VOID on 5 of 7. Seats 4-6
+down through the hold's expiry: player 0, pool 98000 msat. Seats 3-5 down (both
+five-share seats): THE HOLD COMES BACK - 98000 msat to the player, pool 0 (the
+four seats up reach 4 of 5 shares). A lock: no refund formed either way.
+OPEN, needs a go (a code change): gather the shares while every seat is up, so
+four seats up still settle. Still in TASKBOOK: path 2 with seat 4 down; a lock
+with receipts lost between seats that are up.
 
 LIVE LETTER: M3.3-34 lobby still open. Daniel 22:16: lobby and every control
 fully visible in Unity on iOS and Android. 22:12: lobby replaces splash;

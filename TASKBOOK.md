@@ -33005,3 +33005,38 @@ M3.3-34 ON 5 OF 7: OUTAGE-VOID, A SECOND FIRST MARK, SEATS 4-6 DOWN THROUGH THE 
                     test name - 84, 69, 33 s - the file alone now exceeds one 180 s
                     run); core 91/91; protocol 501/501; client 286/286. No seat,
                     hold or lock code changed; no Daily, W4, Unity or C#.
+
+M3.3-34 ON 5 OF 7: OUTAGE-VOID, A SECOND FIRST MARK, SEATS 3-5 DOWN THROUGH THE EXPIRY - THE HOLD COMES BACK, 98000 MSAT (2026-09-13, measured, no code change)
+  ORDER             the seats 4-6 order (seats 0-3 ENTRY_VOID on a real outage, a
+                    different on-time first mark to seat 4, the winner plays), but
+                    seats 3, 4 and 5 down from before the close through the expiry -
+                    both seats that held five shares; seats 0, 1, 2, 6 close.
+  HOLD, 3 SETUPS,   shares before the downs: seats 3 and 4 5 each; 0, 1, 2, 5, 6 1
+  THE SAME FIGURES  each (proof at 0-4). After the close: seats 0-2 no-quorum
+                    FORFEIT, 0 signed results, 4 shares each; seat 6 signed FAILED/0,
+                    proof, 1 share; seat 0's open: "4 of 5 shares: a stake nobody can
+                    open stays in flight". The hold settled 0, cancelled 0 at every
+                    seat - it expires back: 98000 msat to the player, 0 to the pool
+                    (seat 0's table names pool 98000, payout "4 of 5 seats signed",
+                    nothing settled into it). The winner's own hold: neither.
+  LOCK, 3 SETUPS    would sign 3 (0-2; seat 6 409) - short of five; refund doors 409
+                    x4 at once and after the close, none kept; lock HELD, 98000 msat,
+                    0 by the committee - back only by the player's own expiry refund
+                    (the accepted W4 gap).
+  READS AS          with both five-share seats down, the four seats up can reach
+                    four shares: nobody can open the preimage, so nobody can settle,
+                    and the hold goes back to the player. THE HOLE IS OPEN on this
+                    down-set. (Seats 4-6 down: player 0, pool 98000 - seat 3 had
+                    gathered five.) No code changed on this pass, as ruled.
+  THE RED           five-of-seven "a hold, path 1, seats 3-5 down" fails its own
+                    ruled assertion ("no seat settled the hold: 98000 at the hold's
+                    expiry back to the player") - listed with this reason, not
+                    softened.
+  STILL UNMEASURED  path 2 with seat 4 down from its refusal through the expiry; a
+                    lock with receipts lost between seats that are up. Why seat 3
+                    gathered five shares is still not identified.
+  COUNTS            foreground, timeout 180, --test-timeout=120000: node 594/595 over
+                    102 files (1-48 without five-of-seven 280/280; 49-102 303/303,
+                    payout-second-seat 1/1; five-of-seven 11/12 in four runs by test
+                    name - the one red above); core 91/91; protocol 501/501; client
+                    286/286. No Daily, W4, Unity or C#.
