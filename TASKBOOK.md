@@ -33524,3 +33524,51 @@ M3.2 ITEM 6e, MEASURED BEFORE ANY CHANGE (2026-09-13; scratch 6e-measure.mjs, no
   NEXT (not started) amounts first: pick A's split in computePayoutTable, then the
                     entry's donation choice and the wallet's LNURL payments; the
                     destination only after 6d is restated in PRIORITIES.
+
+M3.3-34, THE LOBBY'S 1-2-3-4 HOW-TO STRIP (Daniel 2026-09-13 08:58)
+  THE ASK           "put the ONE how-to infographic in the Unity lobby ... Steps 1
+                    load mempool TXs, 2 cross the front (closer = more points), 3
+                    deliver to miners, 4 stake sats and win. Small, fully visible on
+                    iOS/Android."
+  CODE              DailyLobby.MeasureLobby places it: a strip across the top of the
+                    copy area (at most 24% of its height) when the area is not wide,
+                    a column beside the rounds (at most 38% of the list's width) when
+                    it is 2.2x wider than tall - a strip there took the rounds' height.
+                    Only the four cards are drawn (UV crop x 40-1240, y 118-570 of the
+                    1280x720 file), aspect 2.655 kept. SplashScreen draws it with a
+                    gold border and reports its rect and whether it was drawn
+                    (BLWP_UNITY_LOBBY.howTo / howToDrawn). The art moved to
+                    Assets/Art/Resources/ (Resources.Load; the scene is not rebuilt by
+                    BuildWebGL); LobbyArtImport imports it as GUI art, 1280x720, no
+                    mipmaps, no power-of-two rescale; ShrinkTextures skips it.
+  TESTS             EditMode 197: 193 pass, 3 skipped, 1 red - the listed
+                    CombatFxTests.RifleFireProducesAFlashAndATracer. New:
+                    TheHowToArtLoadsWhole (1280x720 from Resources); the phone-shape
+                    layout test now holds the art inside the copy area, clear of
+                    every element and of PLAY/SPECTATE/hint, >= 40 px of layout high,
+                    aspect within 0.01 - at every shape and density. (First run: my
+                    size check multiplied 40 by the density, 106 < 120 at 375x667 3x;
+                    the file checks sizes in layout units, as the game lays out in CSS
+                    px - corrected to 40.)
+                    BuildWebGL result=Succeeded size=38MB errors=0 (6:18).
+                    PlayMode 239: 213 pass, 13 red, 13 skipped (ended 07:42:51Z,
+                    566 s) - the documented eleven (retired C# army and truck
+                    physics x9, graphics device under -nographics x2) plus the two on
+                    record: PostOfficeTests.TheGogglesAnimate, the wall-clock flake
+                    (0.0 movement in 2 s), and RampReadyTests.TheRealTransactions-
+                    ReplaceTheStandInsWhileNothingIsLoaded, expected 2 got 10 with
+                    the Binance/Bybit feeds unreachable in its own output ("Unable
+                    to connect to the remote server", 7 lines). Neither touches the
+                    lobby: in the editor there is no page, so no lobby and no art.
+  LIVE              btc-logistics-core 001d3b67 (alias serves it: webgl-howto loader),
+                    howto-phone-probe.mjs, CDP device emulation, CSS px:
+                      iPhone 390x844 @3      art 51,186 288x109  drawn  off-screen none
+                      iPhone 844x390 @3      art 497,172 237x89  drawn  off-screen none
+                      Android 412x915 @2.625 art 54,213 305x115  drawn  off-screen none
+                      Android 915x412 @2.625 art 539,176 257x97  drawn  off-screen none
+                      desktop 1280x800 @1    art 510,188 260x98  drawn  off-screen none
+                    7 of 7 elements on screen each; screenshots read: the four cards
+                    whole, numbers, pictures and labels legible on the phones; on the
+                    desktop at 1x the labels are ~4 px (numbers and pictures read).
+                    The live lobby listed 0 rounds (the Daily's seats hung), so the
+                    art beside real rows is measured by the layout test only.

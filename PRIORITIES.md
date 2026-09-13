@@ -16,10 +16,14 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE: M3.3-34 lobby how-to infographic (Daniel 08:58). One Unity strip,
-steps 1-4: load mempool TXs, cross the front (closer = more points), deliver
-to miners, stake sats and win. Asset: Assets/Art/lobby-how-to-1-2-3-4.jpg
-Then back to M3 (6e).
+LIVE: M3.2 item 6e - amounts first (22A pick A split in computePayoutTable,
+then the entry's donation and the wallet's LNURL payments), destination after
+6d's restatement waits with W4. Measured baseline in TASKBOOK. Not started.
+
+DONE: M3.3-34 lobby how-to strip (Daniel 08:58) - the 1-2-3-4 art is in the
+player build's Unity lobby, whole and on screen on iPhone and Android, upright
+and sideways, and desktop (live 001d3b67; TASKBOOK). Art now under
+Assets/Art/Resources/ so the lobby can load it.
 
 LISTED, NOT STARTED: the forfeit-ask label a colluding Void seat could omit
 (colluding-seat bond/slash); payout-second-seat's intermittent red and the
