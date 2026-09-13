@@ -32885,3 +32885,55 @@ M3.3-34: PAYOUT-SECOND-SEAT'S INTERMITTENT RED, AND WHAT 5 OF 7 HAS NOT MEASURED
                     it "at once" (no window) until they pull the proof at their
                     close - if five such seats exist, a refund could be signed. By
                     reading, not measured. Named as the next item on this letter.
+
+M3.3-34 ON 5 OF 7: THE OUTAGE-VOID ORDERS - NO REFUND FORMS, AND A DOWN SEAT NO LONGER HANDS THE HOLD BACK (2026-09-13, measured)
+  ORDERS            five-of-seven.test.js, seven live daemons. Seats 4-6 down; the
+                    player's first mark (60) and a mark past the start line (1500 >
+                    1400) to each of seats 0-3 - a real outage: all four record
+                    ENTRY_VOID. Path 1: 4-6 back, a DIFFERENT on-time first mark
+                    (30) to seat 4. Path 2: seat 4 alone up, a LATE first mark
+                    (1500) to it - its forward lost - then all back. On a lock
+                    (refund = five signatures of the claim key) and on a hold.
+  REFUND COUNTS     lock, path 1: VOID 4 (seats 0-3), both marks 1 (seat 4), would
+  (lock)            sign 4 (/forfeit-commit 200 at 0-3; 409 at 4, 5, 6), refund
+                    doors 409 x7 at once and after the close, kept 0 - five
+                    signatures never form; lock held; 0 msat. Path 2: VOID 4, both
+                    0, would sign 4, doors 409 x7, kept 0, lock held, 0 msat. The
+                    seats that were down never record the Void from the evidence
+                    pushed to them (it carries one receipt: "an outage cannot be
+                    told from a mark never offered"), so at most the four seats
+                    that held the mark in the outage - one short of five - sign.
+  THE HOLE          hold, path 1, seat 4 (the one seat that refused the second mark
+  (measured)        and decided FORFEIT) down from before the close through the
+                    hold's expiry: seats 0-3 signed FAILED/128, seats 5-6 FAILED/0
+                    (they took the first mark late and carried a transcript; four
+                    of the six held the proof and signed anyway); the results never
+                    agreed, no seat decided FORFEIT, the hold settled 0, cancelled
+                    0 - 98000 msat back to the player at the hold's expiry.
+  CHANGE            verify #keep: a seat holding the proof of two first marks signs
+                    no run for the entry - the no-quorum rule decides it FORFEIT
+                    after the window, carried transcript or not. preimage
+                    mayRelease: a held proof releases first, even over a result the
+                    seat signed before it held the proof. open() asks with proof=1
+                    when this seat holds the proof; the /share door then pulls and
+                    checks it itself before refusing, even over a signed result.
+                    No signed result, no agreed run.
+  AFTER             the same order, seat 4 down: seats 0-3 FORFEIT (0 signed
+                    results), 5-6 FAILED/0; the hold SETTLED at 0-3, cancelled 0 -
+                    0 msat back. Hold, path 1 (all up): FORFEIT at 0-4, FAILED/0 at
+                    5-6, settled at 0-4, 0 msat. Hold, path 2: FORFEIT at six seats,
+                    one no-quorum VOID (seat 5 decided before the proof reached it),
+                    settled, 0 msat. Lock paths unchanged: would sign 4, doors 409
+                    x7, lock held (seats 0-3 still sign FAILED/128 on a lock - the
+                    early share gathering that spreads the proof runs on holds).
+                    The all-up, three-down and lock cases of 5538a13: unchanged.
+  STILL SPLIT       the seats' records, not the money: seats that took the first
+  (money right)     mark after the line (the ENTRY_VOID gap, not started) sign
+                    FAILED; a seat that decides before the proof reaches it records
+                    a no-quorum VOID, decided once. No split moved a msat: no refund
+                    formed, every hold settled, every lock held.
+  COUNTS            foreground, timeout 180, --test-timeout=120000: node 591/591 over
+                    102 files (1-48 288/288 in 160 s - five-of-seven 8/8 now sits in
+                    it, 20 s under the timeout: split the chunks smaller next;
+                    49-102 303/303, payout-second-seat 1/1); core 91/91; protocol
+                    501/501; client 286/286. No Daily, W4, Unity or C#.

@@ -1674,10 +1674,13 @@ IN THIS ORDER (unparked):
                                         residuals return no stake). 5 of 7 done
                                         (TASKBOOK): FORFEIT at all seven, hold
                                         settled, lock doors 409 x7, three seats
-                                        down still settle. Still open: the
-                                        outage-VOID orders (5c, paths 1, 2) on 5
-                                        of 7 - unmeasured, and there one refusing
-                                        seat no longer blocks a refund;
+                                        down still settle. Outage-VOID orders on
+                                        5 of 7 done (TASKBOOK): at most 4 seats
+                                        would sign a refund, none formed, lock
+                                        held; the hold settles even with the
+                                        refusing seat down (before: 98000 msat
+                                        back). Still open: the seats' records
+                                        split (money unaffected);
                                         payout-second-seat's intermittent red (2
                                         of 12 full runs, text never captured,
                                         TASKBOOK says what it depends on). The
