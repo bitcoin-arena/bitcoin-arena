@@ -34244,3 +34244,61 @@ M3.2 ITEM 6e: THREE PLAYER-FACING HOLES FROM THE DAILY-PAGE CHECK, CLOSED AND ME
                     "stake dealt, unpaid" while the panel says HELD.
   NEXT ON 6e        a paid round with a 2% donor played to settlement on the daily page:
                     the pool takes the loser's net stake. Then the loopback recipients.
+
+M3.2 ITEM 6e: THE POOL, MEASURED BEFORE THE LIVE SETTLEMENT RUN - AND A FORK ON WHICH SEAT THE DONOR PLAYS (2026-09-13)
+  BEFORE / NOW, SAME ENTRIES (scratch payout-before/run.mjs: holdSettlement from f7002e1^'s
+                    payout.js and from HEAD's; stakes 100000, fee 2000, minScore 1)
+                      2% donor LOSES, one 0% winner:
+                        before  pool 96000 msat; CANCEL, SETTLE; rows 194000, 0
+                        now     pool 96000 msat; CANCEL, SETTLE; rows 194000, 0
+                        -> THE NUMBER DOES NOT MOVE for a donor who loses: the old
+                           refusal fired only on qualifiers with different nets.
+                      2% donor WINS beside two 0% winners, one 0% loser (the round
+                      6e measured before any change):
+                        before  REFUSED "the qualifiers staked different nets (96000,
+                                98000 msat)" -> no stake moves, pool 0
+                        now     pool 98000 msat (the loser's net); CANCEL x3, SETTLE;
+                                rows 194000, 98000, 98000, 0
+                    So "pool 0 before, the loser's net after" holds when the donor is
+                    among the qualifiers; for a donor who is the loser it was 96000
+                    both before and after pick A. Which round the live run plays is a
+                    ruling (below) - not started.
+  WHAT THE PAGE COULD NOT SHOW   /settlement answered the hold state and finality
+                    only; the page never asked it (its quote is asked once, so a
+                    settled loser's panel still read HELD); no number anywhere on the
+                    page said what the pool took.
+  CODE              custody.settleHeldInvoices returns holdSettlement's own poolMsat;
+                    the seat keeps it per round and /settlement serves holdMsat (the
+                    hold's amount as Lightning was asked) and poolMsat (null until
+                    custody has run). settlementBy passes both on only when every
+                    seat that answered says the same number; settledLine renders
+                    them; the page asks every 5 s while the hold is HELD and paints
+                    #blwp-settled in the wallet panel. No second formula: the figure
+                    is computePayoutTable's through holdSettlement, as custody ran it.
+  MEASURED (tests)  objection-window.test.js, two seats, 3 s window, a 2% donor who
+                    loses against a 0% winner: after the window both seats serve the
+                    loser SETTLED hold 96000 pool 96000 and the winner CANCELLED hold
+                    98000 pool 96000. donation-pay.test.js, the shipped paintWallet
+                    with the shipped bundle: "Settled: this seat's 96000 msat stake
+                    went into the pool · the round's pool 96000 msat"; seats that
+                    disagree on the pool show none.
+  LIVE              not run: the page line is not deployed (the daily still serves
+                    ce2be35c), waiting on the ruling below.
+  THE RULING NEEDED which round the live settlement run plays -
+                    A the page is the 2% donor and loses (idle to RUN_MISSED), one
+                      scripted 0% winner: pool 96000 = the donor's net; before 96000
+                      too - shows the donation out of the pool, not pick A;
+                    B the page is a 0% loser (idle), a scripted 2% donor and a scripted
+                      0% player both deliver: before pool 0 (refused), now 98000 = the
+                      loser's net - pick A's move, the donor's own shares paid by the
+                      same Client.payDonation from the harness, not the page.
+                    (A donor who WINS on the page would need the page to deliver cargo
+                    in Unity - not measured as doable headless.) The round closes by
+                    the seats' own clock (closeAtEnd, roundEndMs = entry close + ~180 s,
+                    so ~33 min after the start with standUpRound's 30 min entry window).
+  SUITES            core 91/91, protocol 512/512, client 308/308 (+1, bundle 915f64c9
+                    added to known-good), node 614/614 (six chunks 593 +1; five-of-seven
+                    21/21 rerun - server and custody changed).
+  NOTES             the reload why-line ("no entry id to ask about: setRound was never
+                    called") and the chip's "stake dealt, unpaid" beside HELD: listed,
+                    neither is on the settlement number's path.

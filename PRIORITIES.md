@@ -49,9 +49,13 @@ DONE (live ce2be35c): with the round unreachable the loading screen still shows
 1334 paid / 666 unpaid from the tab's notes, 0 wallet asks; the running total
 reads 97334 msat over 1 stake and 1 donation share, before and after a reload;
 an iPhone on its side keeps the throttle clear and "Pay the stake" on screen.
-6e STAYS OPEN. NEXT: a paid round with a 2% donor played to settlement on the
-daily page (the pool takes the loser's net stake). Then the loopback
-recipients. Fee collector stays parked with W4; no refund on void.
+DONE (tests, not live): a settlement seat serves the pool its payout table
+decided beside the hold, and the page shows it - a 2% donor who loses reads
+"96000 msat stake went into the pool · the round's pool 96000 msat".
+6e STAYS OPEN. HELD FOR A RULING: which round the live settlement run plays -
+the donor as the loser (pool 96000, did not move with pick A) or a 0% loser
+beside the donor among the winners (pool 0 before, 98000 now) (TASKBOOK).
+Then the loopback recipients. Fee collector parked with W4; no refund on void.
 
 DONE: M3.3-34 lobby how-to strip (Daniel 08:58) - the 1-2-3-4 art is in the
 player build's Unity lobby, whole and on screen on iPhone and Android, upright
