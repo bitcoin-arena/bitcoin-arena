@@ -83,6 +83,11 @@ no engine comparison applies.
 DONE (second pass): the spec's §18A tables still paid 102 on top, and the 18A.6
 test pinned pool 2,500 with a 0 fee; both re-derived inclusive - pool 2,450, edge
 +7.8% -> -2%, 70% survival +37.2% - matching the payout vector (TASKBOOK).
+DONE (third pass, 37da8cf, live 02bce934): the donation went as soon as a wallet
+was connected, before the stake - a player who never paid the stake had donated.
+Now nothing leaves before the seats commit the stake: live, 2% donor, 0 pays
+before the press; hold 96000 at +4.4 s, committed +12.5 s, 1334 paid +24.0 s,
+666 NO_ROUTE +35.3 s (TASKBOOK).
 6e IS CLOSED. Loopback recipients parked with
 W4/6d; fee collector W4 (ruled).
 

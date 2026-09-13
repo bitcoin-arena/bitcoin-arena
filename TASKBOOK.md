@@ -34610,3 +34610,41 @@ M3.2 ITEM 6e: THE SECOND PASS - THE SPEC'S OWN §18A TABLES AND THE TEST THAT PI
                     on top") is correct as written.
   SUITES            protocol 512/512 with the test on the inclusive numbers; nothing else
                     changed (core 91, client 312, node 616 stand from 4a07f31).
+
+M3.2 ITEM 6e: THE THIRD PASS - THE DONATION LEFT THE WALLET BEFORE THE STAKE (2026-09-13 21:44)
+  THE HOLE          index.html's donation trigger read: a seat, the set, a donation above
+                    0, a wallet - nothing about the stake. "Pay the stake" is a button
+                    (payTheStake); the donation went as soon as a wallet was connected. A
+                    player seated who never paid the stake, or whose wallet refused it,
+                    had donated anyway - against §22A, where the donation is part of one
+                    wallet commitment counted over financially activated entries only.
+                    No test ran the page's trigger (pageLoad calls payDonation directly).
+  BEFORE            (donation-pay.test.js, a seated Client, stake not committed) wallet
+                    asked 2 times for 2000 msat, both recipients invoiced, 2000 msat spent.
+                    The page's trigger had no stake condition.
+  THE FIX (37da8cf) Client.payDonation refuses until stakeCommitted - the settlement seats'
+                    own count (watchStake), not the page's memory of having paid - and
+                    the page's trigger waits for c.stakeCommitted === true as well, so its
+                    once-only flag is not spent on a refusal. The two fixtures that pay
+                    (pay, pageLoad) now say the stake is committed; no assertion changed.
+  AFTER (tests)     uncommitted: asked 0, invoiced 0, spent 0 - "the stake is not in yet";
+                    committed: 1334 + 666, 2000 msat.
+  AFTER (LIVE, deploy 02bce934, bundle ba3b4c1a; round e561fc62 on 18380/18381, the page
+                    a 2% donor - prompt answered 2, "It comes out of the stake, not on top")
+                      before the press   5 samples: committed false, no donation, 0 pays
+                      +4.4 s             wallet asked 96000 msat (the hold)
+                      +12.5 s            the seats' count committed (2 of 2)
+                      +16.4 s            the page starts the donation
+                      +24.0 s            1334 msat SUCCEEDED
+                      +35.3 s            666 msat FAILED NO_ROUTE (ruled: stays unpaid)
+                    the panel: "Donation: 1334 msat paid ... 666 msat UNPAID ... stays in
+                    your wallet"; "97334 msat over 1 stake and 1 donation share in 1
+                    round"; "100 sat round: 2 sat fee and 2 sat donation out of it, 96 sat
+                    staked · the wallet is asked 96 sat · HELD"; chip "stake seen by 2 of 2
+                    nodes (2 needed) · committed". The launcher's scripted D2, whose Client
+                    watches no stake, was refused: 0 msat.
+                    Before this the live donation ("the daily page pays the donation", live
+                    8effcead) went at once, stake or not; it had never been timed against
+                    the stake.
+  SUITES            client 314/314 (+2), node 616/616 (six chunks 595 + five-of-seven 21/21
+                    in four name groups); core 91 and protocol 512 unchanged since 5067260.
