@@ -25,10 +25,10 @@ outage-VOID refund stands, player 98000 msat, pool 0, no lock refund.
 DONE: a lock with receipts lost between seats that are up - the five Void seats
 pull the other seats' proof before signing: no committee refund forms (before:
 98000 msat back to the player); the hold on the same order settles, player 0.
-MEASURED, A HOLE (3 of 3): the same, but the seat holding the proof unreachable
-from the Void seats when the refund is asked - five sign, a committee refund
-forms: 98000 msat back to the player; the hold still settles, player 0. Plan in
-TASKBOOK (spread the proof when it forms, as holds do); needs a go.
+DONE: the seat holding the proof unreachable from the Void seats when the lock
+refund is asked - the proof now spreads when it forms, all seven hold it, none
+sign: player 0, no committee refund (before: 98000 msat back). A genuine
+outage-VOID still refunds 98000 msat. Ruled limit (path 2, seat 4 down) unchanged.
 
 LIVE LETTER: M3.3-34 lobby still open. Daniel 22:16: lobby and every control
 fully visible in Unity on iOS and Android. 22:12: lobby replaces splash;

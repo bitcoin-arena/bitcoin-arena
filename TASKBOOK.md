@@ -33266,3 +33266,50 @@ M3.3-34 ON 5 OF 7: RECEIPTS LOST, AND THE SEAT HOLDING THE PROOF UNREACHABLE WHE
                     280/280; 49-102 303/303; five-of-seven 17/18 in seven name groups
                     - 4, 4, 2, 2, 2, 1/2 (this red), 2); core 91/91; protocol
                     501/501; client 286/286. No Unity, Daily, W4 or C#.
+
+M3.3-34 ON 5 OF 7: PLAN A - THE PROOF IS SPREAD WHEN IT FORMS, ON A LOCK AS ON A HOLD - THE UNREACHABLE-PROOF-SEAT HOLE CLOSED (2026-09-13, ruled)
+  CHANGE            server.js: spreadProof - the seat that forms the proof of two
+                    first marks (it refuses a second first mark, or learns the pair
+                    from a refused forward) asks every other seat to POST
+                    /proof-pull; each pulls the pair itself and keeps it only if it
+                    verifies (never on the asker's word). gatherOnProof now runs on
+                    every custody: it spreads the proof first, then on a hold also
+                    gathers the preimage shares as before. Plan B (withhold the fast
+                    refund whenever a seat is unreachable) not implemented, as ruled.
+  FIVE CHECKS,      1. The hole - receipts lost between up seats, seat 5 (the proof)
+  3 SETUPS EACH,       unreachable from the Void seats at the refund ask. Lock before
+  THE SAME MONEY       (b8b409c): 5 signed, doors 200 at 0-4, a refund kept, 98000
+  EVERY TIME           msat back to the player. After: all 7 seats hold the proof by
+                       the ask, 0 would sign, doors 409 x7 at once and after the
+                       close, none kept, lock held - 0. Hold: player 0.
+                    2. Seat 5 reachable (cb63823's case): 0 would sign, doors 409 x7,
+                       none kept, lock held; hold player 0.
+                    3. A genuine outage-VOID (receipts lost, NO second first mark,
+                       new test): no proof anywhere, 5 would sign, doors 200 at 0-4,
+                       a refund kept at 5 seats - the fast refund still forms: 98000
+                       msat back, rightly.
+                    4. Ruled limit, path 2 with seat 4 down: unchanged - the hold
+                       back 98000 at expiry, pool 0; lock 4 would sign, doors 409 x6,
+                       no refund.
+                    5. Seats 3-5 / 4-6 down through the expiry: the hold settled at
+                       0-2 / 0-3, player 0, pool 98000; the lock 0 would sign
+                       (before: 3 / 4), doors 409 x4, no refund.
+                    On holds the number of seats that settle the one invoice varies
+                    between setups (it settles once, is never cancelled).
+  CASE 5, RULED     first-mark "late start at close (5)": seat A now holds the proof
+                    before its close (B's FORFEIT answer to A's forward makes A pull
+                    it), and a seat holding the proof does not wait on a down seat -
+                    so its hold reason reads "no quorum yet: the player signed two
+                    first marks for this entry - one of them late (§13B)", no longer
+                    "waiting on 1 seat". No money difference: still HOLDING, 0
+                    results, 0 signers, forfeit 409, no ENTRY_VOID. The pin updated
+                    to the new reason (Daniel); case 4's pin untouched.
+  STILL LISTED      payout-second-seat (A stays PAYOUT_QUEUED after B paid) and the
+                    first-mark timing race (the test waits on A only) - not touched.
+  COUNTS            foreground, timeout 180, --test-timeout=120000, one node --test
+                    per shell: first-mark 14/14; five-of-seven 19/19 in eight name
+                    groups (path 1/2 4, seat 4 down + seats 4-6 down 4, seats 3-5
+                    down 2, path 2 from its refusal 2, receipts lost 2, receipts
+                    lost + seat 5 unreachable 2, genuine outage-VOID 1, all up +
+                    lock 2); node 49-102 303/303; core 91/91; protocol 501/501;
+                    client 286/286. No Unity, Daily, W4 or C#.
