@@ -16,8 +16,10 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE: M3.2 item 6e - 6b's amounts (the DonationSet's amounts), then 6d where a
-payout goes: this file's NEXT for M3 (HARD 22:34: continue M3). Not started.
+LIVE: M3.3-34 lobby how-to infographic (Daniel 08:58). One Unity strip,
+steps 1-4: load mempool TXs, cross the front (closer = more points), deliver
+to miners, stake sats and win. Asset: Assets/Art/lobby-how-to-1-2-3-4.jpg
+Then back to M3 (6e).
 
 LISTED, NOT STARTED: the forfeit-ask label a colluding Void seat could omit
 (colluding-seat bond/slash); payout-second-seat's intermittent red and the
@@ -832,6 +834,9 @@ HARD (Daniel 2026-09-11 14:19): V1 custody is the STAKE LOCK in FEDERATION.md
 and spec v4.6.2 §23. No single node is needed and no single node can take
 money: no gateway, lnd or patched fedimintd holds a round's stake. Only
 recognised, tested parts; no Lightning multisig node of our own.
+
+HARD (Daniel 2026-09-13 08:58): put the one 1-2-3-4 how-to infographic in
+the Unity lobby. Asset Assets/Art/lobby-how-to-1-2-3-4.jpg. Then M3.
 
 HARD (Daniel 2026-09-13 07:11): after PLAY the loading screen must not
 come back. PLAY starts the round. Same letter M3.3-34.
@@ -1684,7 +1689,10 @@ IN THIS ORDER (unparked):
                                         33.500 m the ground was worth. The fix
                                         is 36's, again: the core owns the map's
                                         boxes and Unity draws them.
-   M3.3-34  lobby + free play          M3   done (2026-09-13) — the Unity lobby,
+   M3.3-34  lobby + free play          M3   OPEN — Daniel 08:58: 1-2-3-4
+                                        infographic in the Unity lobby
+                                        (Assets/Art/lobby-how-to-1-2-3-4.jpg).
+                                        Was done except this how-to.
                                         iOS/Android, SPECTATE always; PLAY
                                         starts the round with no second
                                         loading screen; ENTRY_VOID voids on
