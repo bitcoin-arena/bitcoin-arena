@@ -33660,3 +33660,34 @@ M3.2 ITEM 6e, COMMIT 2: THE PLAYER'S DONATION IS CHOSEN ON THE PAGE AND WRITTEN 
                     (dist and the WebGL template's copy, fresh); known-good list gained
                     24d75398... (earlier hashes stay; an intermediate build's hash that
                     was never committed was taken back out). No C#, no Unity build.
+
+M3.2 ITEM 6e, COMMIT 3, MEASURED BEFORE ANY PAYMENT CODE (2026-09-13; scratch 6e3-before.mjs)
+  THE 2% DONOR      100000 msat stake: hold/lock net 96000 (the page's lock 96000),
+                    fee 2000, donation 2000 msat - taken by no hold, no lock, no pool,
+                    no seat. It stays in the donor's wallet.
+  THE SEATS         an in-process seat answers GET /donation-set, /donation-set?round=,
+                    /donations with 404: no seat holds or serves a DonationSet.
+  THE ROUND         67 files name the placeholder donationSetId b32(0xd0) - every
+                    launcher and test tool, the 2-of-2 launcher (the Daily) among them.
+                    That is no set's id: a real one-recipient set (id d8725903...)
+                    does not match such a round (donationSetMatchesRound false). So no
+                    round today names a set anybody could pay.
+  THE CLIENT        LNURL-pay code: payRequest 0, callback fetch 0, bech32 decode 0; no
+                    BOLT11 decoder (an invoice's amount and description hash cannot be
+                    checked); splitDonation and donationAfterFailures have 0 callers;
+                    pay_invoice has 1 call site, the stake path (payStake takes an
+                    entry, never an invoice).
+  RECIPIENTS        balances that can move: 0 msat - nothing names a recipient and
+                    nothing pays one.
+  WHAT EXISTS       authority.js (the signed DonationSet: serial, valid_from,
+                    signature; donationSetInForce at a height; rotations);
+                    donation.js (the set's bytes and id, splitDonation - floor, the
+                    remainder to the first recipient as published -
+                    donationAfterFailures - never redirected); the test networks'
+                    authority secrets are derivable (genesis-ids.js), so a regtest or
+                    testnet4 set can be signed; a fake NWC wallet on a local relay
+                    (wallet-nwc.test.js) records every pay_invoice.
+  NEEDS A RULING    which set a round names (and its recipients on regtest/testnet4);
+                    where a seat gets the signed set; the page's LNURL + BOLT11 checks
+                    keeping one money path; when the donation is paid; how "the
+                    recipients receive it" is measured without a real wallet here.
