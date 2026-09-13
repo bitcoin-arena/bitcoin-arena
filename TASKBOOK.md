@@ -33188,3 +33188,36 @@ M3.3-34 ON 5 OF 7: A LOCK WITH RECEIPTS LOST BETWEEN SEATS THAT ARE UP - A COMMI
                     five-of-seven 15/16 in six runs by test name - the red above);
                     core 91/91; protocol 501/501; client 286/286. No Unity, Daily,
                     W4 or C#.
+
+M3.3-34 ON 5 OF 7: A VOID SEAT PULLS THE OTHER SEATS' PROOF BEFORE IT SIGNS A LOCK REFUND - NO REFUND FORMS WHEN RECEIPTS WERE LOST (2026-09-13, ruled)
+  CHANGE            forfeit.js message(): a seat that recorded ENTRY_VOID pulls the
+                    other seats' proof of two first marks (verifier.pullFirstMarkProof,
+                    the /share door's pull) before it decides whether it will sign
+                    the lock refund, unless it already holds one; the refusal on a
+                    held proof then applies. server.js wires pullProof into Forfeit.
+                    Nothing else: no hold, lock-expiry, assertion or other path.
+  BEFORE (17d8cc6)  lock, receipts lost between seats that are up: seats 0-4 would
+                    sign (5), doors 200 at 0-4, a refund kept at 5 seats - 98000 msat
+                    back to the player by the committee.
+  AFTER, 3 SETUPS   the same order: seats 0-4 ENTRY_VOID with one receipt each per
+  EACH              mark, seat 5 holding the proof - would sign 0 (/forfeit-commit
+                    409 x7), refund doors 409 x7 at once and after the close, none
+                    kept, the lock held; 0 by the committee, the lock not redeemable
+                    from that Void. After the close seats 0-5 FORFEIT, seat 6 no
+                    decision. The new lock test went green as written.
+                    Hold, same order: player 0, pool 98000 (settled at seats 0-5).
+                    Path 2, seat 4 down through the expiry: still the ruled limit -
+                    hold back 98000 at expiry, pool 0; lock would sign 4, doors 409,
+                    no refund. Seats 3-5 down: settled at 0-2, player 0, pool 98000.
+                    Seats 4-6 down: settled at 0-3, player 0, pool 98000.
+  STILL OPEN        by reading, not measured: receipts lost AND the proof-holding
+  (not measured)    seat unreachable from the Void seats at the moment the refund is
+                    asked - the pull finds nothing and five Void seats would sign
+                    again. Seat 6 decides nothing on the lock (money unaffected).
+  COUNTS            foreground, timeout 180, --test-timeout=120000, one node --test
+                    per shell (a chained shell was killed at 520 s - memory updated):
+                    node 599/599 over 102 files (1-48 without five-of-seven 280/280;
+                    49-102 303/303; five-of-seven 16/16 in six runs by test name -
+                    path 1/2 4, seat 4 down + seats 4-6 down 4, seats 3-5 down 2,
+                    from its refusal 2, receipts lost 2, all up + lock 2); core
+                    91/91; protocol 501/501; client 286/286. No Unity, Daily, W4, C#.

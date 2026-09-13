@@ -22,10 +22,9 @@ down through the hold's expiry the hold settles into the pool, player 0, pool
 RULED LIMIT: path 2 with seat 4 down from its refusal through the hold's expiry -
 the second mark never left the down seat, no seat up can prove it: the
 outage-VOID refund stands, player 98000 msat, pool 0, no lock refund.
-MEASURED, A HOLE (3 of 3): a lock with receipts lost between seats that are up -
-five seats record the outage-VOID with one receipt each and sign a committee
-refund at once: 98000 msat back to a player who signed two first marks. On a
-hold the same order settles into the pool, player 0. The fix needs a go.
+DONE: a lock with receipts lost between seats that are up - the five Void seats
+pull the other seats' proof before signing: no committee refund forms (before:
+98000 msat back to the player); the hold on the same order settles, player 0.
 
 LIVE LETTER: M3.3-34 lobby still open. Daniel 22:16: lobby and every control
 fully visible in Unity on iOS and Android. 22:12: lobby replaces splash;
