@@ -33572,3 +33572,41 @@ M3.3-34, THE LOBBY'S 1-2-3-4 HOW-TO STRIP (Daniel 2026-09-13 08:58)
                     desktop at 1x the labels are ~4 px (numbers and pictures read).
                     The live lobby listed 0 rounds (the Daily's seats hung), so the
                     art beside real rows is measured by the layout test only.
+
+M3.2 ITEM 6e, COMMIT 1: 22A PICK A IN computePayoutTable (rulings 2026-09-13)
+  RULE              within the paying ranks a player's weight is its §18A rank weight
+                    (3^(i-1) * 4^(K-i)) times its own net stake; the pool is split in
+                    proportion, each share floored; the leftover goes out by §18A.6,
+                    ascending H(round_id || pubkey) (remainderOrder), unchanged. The
+                    refusal of mixed nets is gone. holdSettlement, the slash check's
+                    recompute (slash.js) and the leaderboard all call this one
+                    function, so they follow it.
+  THE LIMIT         accepted: with one paying rank - every round of four qualifiers or
+                    fewer - the winner takes the whole pool whatever it donated.
+                    22A's "no double reward for donating" bites only when two or more
+                    ranks pay; no second-rank effect is added.
+  BEFORE / AFTER    the mixed round (stakes 100000, fee 2000; A donates 2000 - net
+                    96000; B, C 98000 deliver; D 98000 fails):
+                      before: computePayoutTable refused, the node moved nothing,
+                        every hold expired to its player - A 96000, B 98000, C 98000,
+                        D 98000 back; pool 0 of D's 98000.
+                      after:  pool 98000 (D SETTLE into the pool); A CANCEL 96000,
+                        B CANCEL 98000, C CANCEL 98000 back to the players; table A
+                        194000 (own 96000 + the pool), B 98000, C 98000, D 0; A wins
+                        98000. Donations 0 msat collected (production writes 0).
+                    two paying ranks (pinned in inclusive.test.js): donor first at net
+                    93000, second at 98000, pool 98000 - weights 4 x 93000 and
+                    3 x 98000: shares 54738 and 43261 floored plus 1 leftover msat by
+                    §18A.6, 98000 spent exactly (unweighted it was 56000 / 42000).
+  NO LIVE ROUND MOVES  2000 random rounds with every net equal (1 to 20 entries, all
+                    outcomes, 1660 with a pool, up to 3 paying ranks): the encoded
+                    table byte-identical before and after, 2000 of 2000. Production
+                    writes donationMsat 0, so every live table is one of these.
+  THE PAGE BUNDLE   carries payout.js, so it was rebuilt: dist/blwp-client.js and the
+                    WebGL template's copy (bundle-fresh: "all three fresh in dist and
+                    the template"), known-good-clients.json gained the new client hash
+                    ae35b979... - earlier hashes stay listed, so the live page's
+                    bundle is still known-good. No C#, no Unity build, no deploy.
+  SUITES            core 91/91, protocol 501/501 (the refusal pin replaced by pick A's
+                    pins), client 286/286, node 604/604 (five-of-seven 21/21, the other
+                    101 files 583/583). No Unity in this commit.

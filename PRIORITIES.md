@@ -16,9 +16,12 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE: M3.2 item 6e - amounts first (22A pick A split in computePayoutTable,
-then the entry's donation and the wallet's LNURL payments), destination after
-6d's restatement waits with W4. Measured baseline in TASKBOOK. Not started.
+LIVE: M3.2 item 6e - amounts. DONE, commit 1: 22A pick A in computePayoutTable
+(rank weight x net stake within the paying ranks, §18A.6 leftover) - a 2% donor
+no longer refunds the round: the loser's 98000 msat enters the pool (was 0).
+NEXT, not started: commit 2 the entry's donation (page prompt, default 0,
+second confirmation above 5%), commit 3 the wallet's LNURL payments (the seats
+serve the DonationSet). Destination (6d) waits with W4.
 
 DONE: M3.3-34 lobby how-to strip (Daniel 08:58) - the 1-2-3-4 art is in the
 player build's Unity lobby, whole and on screen on iPhone and Android, upright
@@ -3956,8 +3959,10 @@ round, which is why testnet comes first and why the order is stricter.
          spend the pool: literal, one winner at 98 over three at 93 takes 104%
          of it; normalised over the paying ranks, a sole paying rank (every
          round of four qualifiers or fewer) keeps the donor's double reward.
-         Until ruled, qualifiers with different nets and a pool are REFUSED -
-         no stake moves, every hold expires. Nothing live reaches it.
+         RULED 2026-09-13 (pick A) AND BUILT: rank weight x net stake within
+         the paying ranks, floored, §18A.6 leftover; equal nets byte-identical.
+         Accepted limit: one paying rank takes the whole pool whatever it
+         donated.
        - THE FEE AND DONATION COLLECTOR. Nothing collects either, on either
          reading; the wallet is asked 98 of 100 and the page shows the split.
 
