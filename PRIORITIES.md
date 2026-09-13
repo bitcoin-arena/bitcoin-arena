@@ -30,7 +30,8 @@ refund is asked - the proof now spreads when it forms, all seven hold it, none
 sign: player 0, no committee refund (before: 98000 msat back). A genuine
 outage-VOID still refunds 98000 msat. Ruled limit (path 2, seat 4 down) unchanged.
 
-LIVE: ENTRY_VOID (M3.3-34; the lobby is done). An entry that must VOID does
+LIVE: M3.3-34 PLAY must not show the loading screen again (Daniel 07:11).
+PLAY starts the round. Then ENTRY_VOID. An entry that must VOID does
 VOID - not a loss for the player, not a silent refund, not pool profit.
 MEASURED, A HOLE (3 of 3), 5 of 7: a genuine outage (seats 4-6 down, seats 0-3
 ENTRY_VOID), the down seats then caught up late - they take the first mark,
@@ -822,6 +823,9 @@ HARD (Daniel 2026-09-11 14:19): V1 custody is the STAKE LOCK in FEDERATION.md
 and spec v4.6.2 §23. No single node is needed and no single node can take
 money: no gateway, lnd or patched fedimintd holds a round's stake. Only
 recognised, tested parts; no Lightning multisig node of our own.
+
+HARD (Daniel 2026-09-13 07:11): after PLAY the loading screen must not
+come back. PLAY starts the round. Same letter M3.3-34.
 
 HARD (Daniel 2026-09-12 22:34): when M3.3-34 lobby is done, continue M3
 immediately. Do not wait.
@@ -1671,10 +1675,10 @@ IN THIS ORDER (unparked):
                                         33.500 m the ground was worth. The fix
                                         is 36's, again: the core owns the map's
                                         boxes and Unity draws them.
-   M3.3-34  lobby + free play          M3   OPEN — lobby done (1398323, live): Unity
-                                        title screen, every element on screen on
-                                        iPhone and Android, PLAY seats and
-                                        starts, SPECTATE always.
+   M3.3-34  lobby + free play          M3   OPEN — Daniel 07:11: after PLAY the
+                                        loading screen must not return. PLAY
+                                        starts the round. Also Unity lobby,
+                                        iOS/Android, SPECTATE always.
                                         DONE, two first marks (player gets 0):
                                         on 2 of 2 and 5 of 7 no committee
                                         refund forms, the hold settles into
