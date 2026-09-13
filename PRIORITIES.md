@@ -31,8 +31,10 @@ a 2% donor pays 1334 + 666 msat to the two recipients (in process; a real
 wallet on a paid round is the on-screen check). Destination (6d) waits with W4.
 DONE: a paid local round's launcher binds the two recipients at 127.0.0.1:18777
 and they invoice from its Lightning - live on regtest lnd: 5% donor 3334 + 1666
-msat SETTLED; 2% donor 1334 SETTLED, 666 NO_ROUTE (under lnd's 1000 msat
-min_htlc - needs a ruling). Left on 6e: 56 fixtures with the placeholder set id.
+msat SETTLED; 2% donor 1334 SETTLED, 666 NO_ROUTE (lnd's 1000 msat min_htlc;
+ruled: the floor split stands, the share is reported unpaid, the player keeps it).
+DONE: the 56 node/client fixtures name the real signed set (b32(0xd0) 56 -> 0).
+Left on 6e: 13 node/client + 12 protocol fixtures with other placeholder spellings.
 
 DONE: M3.3-34 lobby how-to strip (Daniel 08:58) - the 1-2-3-4 art is in the
 player build's Unity lobby, whole and on screen on iPhone and Android, upright

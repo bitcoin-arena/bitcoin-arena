@@ -33875,3 +33875,40 @@ M3.2 ITEM 6e: A PAID LOCAL ROUND'S LAUNCHER BINDS THE TWO TEST RECIPIENTS, AND T
                     rules); launchers 0. Not started this turn.
   SUITES            core 91/91, protocol 512/512, client 300/300 (bundle unchanged,
                     fresh), node 613/613 (+4: lnurl-recipients; five-of-seven 21/21).
+
+M3.2 ITEM 6e: SHARES UNDER 1000 MSAT, RULED (Daniel 2026-09-13)
+  The signed set is the allocation: floor-msat split, kept. No folding dust into the
+  other recipient, no raised donation minimum, no share rewritten in the protocol. A
+  2% donor on a 100000 msat stake is owed 1334/666; the 666 NO_ROUTE is lnd's default
+  min_htlc, not a bind bug. The client reports that share unpaid and sends its msat
+  nowhere - not the operator, not the other recipient; the player keeps what Lightning
+  will not carry. The 5% pair (3334 + 1666 SETTLED) is the proof both recipients work
+  on a paid local round. Closed.
+
+M3.2 ITEM 6e: THE 56 PLACEHOLDER FIXTURES NAME THE REAL SIGNED DONATION SET (2026-09-13)
+  BEFORE            56 test files built their round contract with donationSetId b32(0xd0)
+                    - the id of no set - so a 2% donor's 2000 msat was owed to nothing in
+                    them: node 39 (incl. the pool-fixture.js and window-fixture.js
+                    helpers), client 17, launchers 0.
+  CODE              each names idOfDonationSet(TEST_DONATION_SET_REGTEST.recipients), the
+                    signed regtest set (7b128a1b..., 6667/3333 bps) production launchers
+                    name, imported from protocol/src/test-donation-sets.js. No assertion
+                    touched except the one below.
+  AFTER             grep 'donationSetId: b32(0xd0)': node 39 -> 0, client 17 -> 0, 56 -> 0.
+  ONE FIXTURE RED, CAUSE MEASURED, NOT LOOSENED  committee-seed.test.js "two beacons
+                    that differ only after committee_time seat different committees":
+                    the real set id moved the round id, and the fixture's two chosen
+                    beacons 0xbe and 0x9c both seated pair 0x41+0x42 (scratch
+                    seed-collide.mjs: under b32(0xd0) they seated 41+45 and 40+44). A
+                    1-in-28 coincidence - over 256 beacons all 28 pairs of the 8-node,
+                    2-slot census stayed reachable under either id. The assertion was
+                    NOT re-pointed at a luckier beacon: it is now the sweep - one beacon
+                    seats one pair twice, and beacons 0x00..0xff seat all 28 pairs -
+                    which implies the old claim and no longer depends on the round id.
+  LEFTOVER, SAME LETTER  the other spelling, donationSetId new Uint8Array(32).fill(0xd0),
+                    is in 13 node/client files (node 7, client 6) and 7 protocol files;
+                    protocol also has 5 with donationSetId b32(0xd0). None was in the 56;
+                    not converted. donation-set-door.test.js keeps b32(0xd0) on purpose
+                    (the placeholder's 404 is what it tests).
+  SUITES            core 91/91, protocol 512/512, client 300/300 (bundle fresh), node
+                    613/613 (six chunks 101+93+128+103+106+61, five-of-seven 21/21).
