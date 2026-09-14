@@ -23,10 +23,19 @@ DONE (ef88b4d, measured in simulation, NOT live, NOT on the Daily): the page onl
 that collects and pays out, through one wallet; no invoice source, nothing collected.
 Simulated closed tab after a win: the federation still holds 978000 + 980000 msat, the
 tab 0; the old path stranded 1958000 msat in the closed tab. blwp-client 328/328.
-NEXT: settle-live-regtest.mjs still reads BLWP_PAYOUT / BLWP_STAKE_BACK / BLWP_REFUND,
-which the page no longer sets - it must read BLWP_OWED and close the winner's tab before
-the withdraw; then a live run; then the Daily. The Daily (0.0.1247, 70d46f75) still has
-the hole.
+LIVE (run A3, 22:20-22:32, real federation, the page on screen): the driver reads BLWP_OWED
+only; the winner's first tab looked (owed 1958000 msat, tab 0) and was CLOSED with no
+withdraw - the federation still held the payout 978000 + the stake 980000, the tab 0; a
+fresh tab with the same seed read the same; a pasted invoice for 1958000 was refused,
+nothing collected, alice paid 0.
+RED: the Withdraw did not pay alice. It collected both out of the federation, then ran past
+the driver's 180 s (run 22: ~330 s) and the harness closed the tab mid-Withdraw - >= 973312
+msat stranded in that tab. HOLE: a tab closed while its Withdraw runs loses what it
+collected (the notes live in the tab's sessionStorage); no progress and no "do not close"
+on screen meanwhile.
+NEXT: the driver waits out the Withdraw, a live run where it pays alice; run B (the refused
+player on screen); the hole above; then the Daily. The Daily (0.0.1247, 70d46f75) still
+has the hole.
 Built so far, on the Daily as 0.0.1239 (e00d2ac3): the collect, the three named holes
 closed, the fee-lock door (TASKBOOK). Free rounds mint no fee lock.
 NOTE: the Daily's daily.json names quick tunnels that no longer resolve - no seats reachable.

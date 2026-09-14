@@ -35420,3 +35420,42 @@ M3 W4 6d: THE PASTED INVOICE, AND THE LIVE DRIVER ON WHAT THE PAGE LOOKS AT (202
                     BLWP_OWED; its Node-side winner looks instead of collecting.
   REMAINDER (named) only the newest round the tab keeps is looked at and withdrawn; an older round's
                     money stays in the federation under the player's key, unseen by the page.
+
+M3 W4 6d: THE LIVE DRIVER CLOSES THE WINNER'S TAB, AND THE FEDERATION STILL HOLDS THE MONEY (run A3, 2026-09-14)
+  THE RUN           settle-live run A3, 22:20-22:32, stock fedimintd 0.12.0 (4 guardians, 3 of 4, one
+                    gateway, regtest); page = build 0.0.1247's Unity files + HEAD's WebGL template
+                    (ef88b4d + 2a063be: the page only looks; a pasted invoice never collects), headless
+                    Chrome. SKIP_REFUSED=1 ON_SCREEN=DELIVERED: the 1000 sat winner on screen, the loser
+                    by Node, the refused third player left for run B. Runs A (22:09) and A2 (22:17) were
+                    killed with the session ("Terminated"): the session's shells live in the driver's
+                    systemd unit, whose restart kills setsid/nohup children too; A3 ran in its own unit
+                    (systemd-run --user).
+  THE DRIVER        reads BLWP_OWED only (settle-live-regtest.mjs:202; tools/page-lock.mjs:248); no read
+                    of BLWP_PAYOUT / BLWP_STAKE_BACK / BLWP_REFUND is left.
+  SETTLEMENT        100 sat (Node): ACCEPTED; the winner's withdraw Success 180346 msat, alice SETTLED
+                    180346. 1000 sat: 8524ec2b... ACCEPTED at both seats, 980000 + 2 x 20000 in,
+                    978000 / 18000 / 18000; the winner's payout and stake lock held by the federation.
+  FIRST TAB         BLWP_OWED in 25.7 s: owed 1958000 msat (payout 978000 owed; stake 980000 owed, by
+                    forfeit), in the tab 0, tab balance 0, not final; 16 s later the same. On screen: "978000
+                    msat payout and your 980000 msat stake - yours in the round's federation until you
+                    withdraw it; nothing is taken out before you press Withdraw". CLOSED, no withdraw.
+  AFTER THE CLOSE   the federation holds the payout (978000) and the stake lock (980000); the tab 0 msat.
+  FRESH TAB         same seed (the player's backup): owed 1958000 in 29.5 s; both still held.
+  PASTED            an invoice from alice for the owed 1958000 msat: refused in 52.4 s, "nothing was
+                    collected, it stays in the federation"; both still held; alice's invoice OPEN, paid 0.
+  WITHDRAW - RED    BLWP_WITHDRAW with alice's lnd handed in gave no answer within the driver's 180 s
+                    (run 22's collect alone took 239.7 s, its withdraw 90.6 s). By then the payout and the
+                    lock had left the federation (neither held) and alice had been asked for no invoice.
+                    61 s later the page read: payout gone, stake still "owed", 959456 msat withdrawable in
+                    the tab, balance 973312 msat. The harness then closed the tab mid-Withdraw.
+  THIRD TAB         same seed: owed 0, final, tab 0 - "Payout 978000 msat: no longer in the federation -
+                    your key collected it before · Stake 980000 msat: no longer in the federation - back to
+                    your key before". Federation at the end: neither held. Alice was paid nothing.
+  HOLE (named)      A TAB CLOSED WHILE ITS WITHDRAW RUNS STRANDS WHAT WAS COLLECTED: live, >= 973312 msat.
+                    The tab wallet's secret is the seed's (lockSecretFor(seed, round)) but its notes are kept
+                    in the tab's sessionStorage (lockStoreFor), which a new tab does not have. During the
+                    ~5 min Withdraw the screen showed no progress, no "do not close this tab", and the
+                    withdraw line still read the paste refusal; the Withdraw button stayed offered.
+  TESTS             blwp-client 328/328 (page-lock 23/23; page-lock + wallet-nwc 48/48).
+  NOT DONE          the Withdraw paying alice live (the driver's wait must cover ~330 s); the hole above;
+                    run B (the refused player on screen); the Daily (0.0.1247) still has run 15's hole.
