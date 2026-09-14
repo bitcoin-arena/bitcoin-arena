@@ -34782,3 +34782,48 @@ M3 W4 PICK A: THE FEE LOCKS INTO THE ONE SETTLEMENT, FOR THE SITTING SEATS (Dani
                     reach a seat (1000 sat stakes: 20000 msat fee locks can); the whole path
                     on a live federation; the page's redeem of its payout (6d).
   SUITES            protocol 524/524 (+5), node 620/620 (six chunks 599 + five-of-seven 21/21).
+
+M3 W4 PICK (b): FEE LOCKS ARE ONLY CREATED WHEN THEY CAN PAY A SEAT (Daniel 2026-09-14)
+  RULED             "Do not mint a fee lock when claiming it cannot pay a sitting seat after
+                    this federation's 1000 msat input fee and 1000 msat output fee ... The
+                    operator must not take money that only pays the federation." The seats'
+                    skip when a claim would only pay the federation stays, untouched.
+  THE GATE          protocol lock-settlement.js feeLockPays: the seats' own fee arithmetic
+                    (feeSettlement) on the round's worst case - the fewest players a round
+                    opens for (MIN_PLAYERS_PER_ROUND = 2, now one protocol constant the
+                    preflight imports) and the round's game/verify + settlement slots as
+                    that many different seats - mints only if every entitled seat is paid
+                    strictly more than nothing after the federation's fee on every input and
+                    output. The fee rule is the federation's own, asked by the page's lock
+                    client (new wasm feeRule(), from the federation config); none known,
+                    no lock.
+  MEASURED (rule 1000 msat per input and output, 2 players, 2+2 slots):
+                      100 sat   lock 2000 msat - NO LOCK (4 seats unpaid: 4000 in, 2000 input
+                                fees, each share under its own 1000 msat output)
+                      151 sat   the measured floor: lock 3020, input fees 2000, output fees
+                                4000, per-seat net 10,10,10,10 - mints; 150 sat does not
+                      1000 sat  lock 20000, input fees 2000, output fees 4000, per-seat net
+                                8500 x 4 (the gate's worst case) - MINTS
+                    brackets: 10 sat no lock, 100 sat no lock, 1000 sat the smallest that mints.
+  THE PAGE          lockStake: the gate before any lock; one deposit for both locks where the
+                    first quote covers it; the fee lock by the new wasm lockHash (a hash-image
+                    OutgoingContract, H(F), F from the seed and round - feeSecretFor); kept
+                    across a reload (saveLock/savedLock); entryFor names F and the outpoint only
+                    then (and refuses a fee lock not to H(F) or not the entry's fee); the
+                    Client hands it to every seat's /fee-lock after the stake lock.
+                      100 sat, 2 players: fee locks minted 0; deposits 116358 + 18358 msat -
+                        exactly the deposits of the same page with no fee rule at all (the
+                        second is the stake lock's own fee top-up); the entry names no F
+                      1000 sat: one 20000 msat fee lock to H(F); F and its outpoint in the
+                        entry; handed to both seats' /fee-lock; kept by saveLock
+  THE SEATS' CLAIM  two seats, the real rule, 1000 sat: the loser's 980000 msat claimed, the
+                    winner paid 978000; both 20000 msat fee locks claimed; input fees 2000,
+                    output fees 2000; per-seat net 18000, 18000 msat.
+                    W4 at 100 sat unchanged: the loser's 98000 into the pool, the winner paid
+                    96000; no fee lock claimed.
+  FOUND ON THE WAY  the page bundle refused the gate: "hex is declared at the top level of
+                    both protocol/src/fee.js and protocol/src/payout-spend.js" - one scope for
+                    every module; payout-spend's private helper is now hexOf.
+  SUITES            protocol 528/528 (+4), client 318/318 (+2; bundle 368d1781 and the new lock
+                    client 0f7dbbd5 / 91b4e496 added to known-good), node 621/621 (six chunks
+                    600 + five-of-seven 21/21; +1). Wasm: cargo release wasm32 Finished (1m58s).

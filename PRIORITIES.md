@@ -935,9 +935,14 @@ now cut from his whole at its true edges. Smallest panel: ~136x73 CSS on an SE.
 DONE (Pick A, f9758c2): the seats verify each fee lock and claim it for the
 round's sitting seats by §22A's weights in the one settlement; under the real
 guardians' 1000 msat per input and output a 100 sat round's 2000 msat fee lock
-cannot reach a seat, so it is not claimed (hole: 2000 msat per entry). OPEN in
-W4: the page makes no fee lock yet; the path on a live federation; the page's
-redeem of its payout (6d).
+cannot reach a seat, so it is not claimed (hole: 2000 msat per entry).
+DONE (Pick b): fee locks are only created when they can pay a seat. The page asks
+the federation's own fee rule and mints a fee lock only if every sitting seat
+nets more than 0 after 1000 msat per input and output: 100 sat - none (the
+player's deposits equal a page with no fee rule); measured floor 151 sat; 1000
+sat - a 20000 msat lock, each seat nets 18000 after the claim (TASKBOOK). W4 at
+100 sat unchanged: loser 98000 into the pool, winner paid 96000. OPEN in W4: the
+path on a live federation, the page's redeem of its payout (6d).
 
 HARD (Daniel 2026-09-14 07:22): a loser loses the stake. The lock is claimed
 into the pool. Winners are paid from that. W4 is unparked.
