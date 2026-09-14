@@ -16,10 +16,11 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE: W4 - a loser's stake lock claimed into the pool, and with it 6d (where
-a payout goes), the fee collector and the loopback donation recipients.
-DECIDED (Daniel 07:22): a loser loses the stake. Winners are paid from that
-pool. A refund-at-expiry loser would leave nothing to pay with. Do this now.
+LIVE: W4 (loser lock into the pool) AND M3.3-34 howto art (Daniel 07:53-07:55).
+Daniel's infographic: Assets/Art/Resources/lobby-howto.png plus tiles 1-4,
+white knocked out for a dark lobby. Loading screen AND lobby. Desktop can
+split horizontal; mobile 1-2 top, 3-4 bottom; shrink if still readable.
+DECIDED (Daniel 07:22): a loser loses the stake. Do both now.
 
 DONE: M3.2 item 6e - amounts (closed 2026-09-13, round 5 live). commit 1: 22A pick A in computePayoutTable
 (rank weight x net stake within the paying ranks, §18A.6 leftover) - a 2% donor
@@ -914,6 +915,11 @@ is M3.2 item 5.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
 threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
+
+HARD (Daniel 2026-09-14 07:55): howto art is transparent on dark. Signal
+whites the bg; the PNGs in Assets/Art/Resources/lobby-howto*.png have white
+knocked out. Lobby + loading. Desktop may split; mobile 1-2 top, 3-4 bottom.
+Must stay readable.
 
 HARD (Daniel 2026-09-14 07:22): a loser loses the stake. The lock is claimed
 into the pool. Winners are paid from that. W4 is unparked.
