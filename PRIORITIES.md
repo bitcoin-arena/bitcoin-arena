@@ -927,9 +927,17 @@ msat claimed, the winner paid 96000 (the real guardians' 1000 msat per input and
 output); before, the lock went back to the loser at expiry (TASKBOOK). OPEN in W4:
 the daemon path on a real federation, the page's redeem of the payout (6d); fee
 locks stay with F5.
-IN PROGRESS (how-to): four panels in the Unity lobby (1-2 over 3-4 on a portrait
-phone, one row on a wide desktop, a column on a phone on its side; LobbyScreenTests
-4/4) and on the loading screen; the WebGL build is running, not deployed yet.
+DONE (how-to, live 16174f67, build 0.0.1228): Daniel's four panels on the loading
+screen and in the lobby - a phone 1-2 over 3-4, a desktop one row, each panel
+whole at its own shape, on 7 devices x 2 screens (TASKBOOK). The tiles he sent
+were cut at half height (sliver above 3 and 4 in a row, measured); each panel is
+now cut from his whole at its true edges. Smallest panel: ~136x73 CSS on an SE.
+DONE (Pick A, f9758c2): the seats verify each fee lock and claim it for the
+round's sitting seats by §22A's weights in the one settlement; under the real
+guardians' 1000 msat per input and output a 100 sat round's 2000 msat fee lock
+cannot reach a seat, so it is not claimed (hole: 2000 msat per entry). OPEN in
+W4: the page makes no fee lock yet; the path on a live federation; the page's
+redeem of its payout (6d).
 
 HARD (Daniel 2026-09-14 07:22): a loser loses the stake. The lock is claimed
 into the pool. Winners are paid from that. W4 is unparked.

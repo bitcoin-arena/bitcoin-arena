@@ -34709,3 +34709,76 @@ M3 W4: A LOSER'S STAKE LOCK IS CLAIMED INTO THE ROUND'S ONE SETTLEMENT (Daniel 2
                     its payout contract (6d).
   SUITES            protocol 519/519 (+7), node 618/618 (six chunks 597 + five-of-seven 21/21;
                     +2), client 316/316.
+
+M3.3-34: DANIEL'S HOW-TO ON THE LOADING SCREEN AND IN THE LOBBY, LIVE (2026-09-14, ca916db + ee9ad6c; live 16174f67, build 0.0.1228)
+  ASKED             (Daniel 07:53-07:55) his infographic, white knocked out, on the loading
+                    screen AND the lobby; desktop may be one row, a phone 1-2 over 3-4;
+                    shrink only while readable.
+  FIRST BUILD       0.0.1226 (ca916db, live 354b13f4): "Build Finished, Result: Success.",
+                    result=Succeeded errors=0 (8:35). Measured live on 7 devices x 2 screens:
+                    every arrangement as asked - but in the 1280x800 lobby row slivers of
+                    panels 1 and 2 stood above 3 and 4, and panel 1's players were cut.
+  CAUSE, MEASURED   the four tiles were cut at the whole's half height, y 543; the picture's
+                    rows part at y 625-649 (fully transparent). Tiles 1 and 2 had 9601 and
+                    14192 opaque px in their last 20 rows, tiles 3 and 4 had 9471 and 14199
+                    in their first 20 (a clean cut has none). The column cut at x 724 is
+                    inside the real gaps (694-725 top, 711-726 bottom). In 1-2 over 3-4 the
+                    strips line up - why the phones looked right.
+  FIX (ee9ad6c)     each panel is its opaque box in Daniel's whole (unchanged): 667x545,
+                    714x543, 688x369, 677x367 - aspects 1.22, 1.31, 1.86, 1.84. Unity draws
+                    each from lobby-howto.png by UVs; a row at one height, 1-2 over 3-4 as
+                    two equal columns at natural heights; the smallest panel keeps a 40
+                    layout-px floor; the phone-on-its-side column starts at the rounds
+                    header (beside the list only, panel 3 was 37 px at 667x375 1x). The
+                    loading screen uses the same boxes, cut by unity-proto/tools/cut-howto.py.
+  LIVE (0.0.1228)   howto-live-probe.mjs, CDP emulation, each: 4 panels loaded, each its own
+                    shape, all on screen, no overlap with PLAY/SPECTATE/NAME/KEY, the bar on
+                    screen. Panel 1, CSS (device px):
+                      iPhone 390x844 @3     loading 1-2/3-4 180x147   lobby 1-2/3-4 143x117 (429x351)
+                      iPhone SE 375x667 @2  loading 1-2/3-4 173x142   lobby 1-2/3-4 136x111 (272x222)
+                      Android 412x915       loading 1-2/3-4 191x156   lobby 1-2/3-4 151x123 (396x323)
+                      iPhone 844x390 @3     loading row 124x101       lobby column 120x98 (360x294)
+                      Android 915x412       loading row 131x107       lobby column 145x118 (381x310)
+                      desktop 1280x800      loading row 212x173       lobby row 149x122
+                      desktop 1920x1080     loading row 212x173       lobby row 149x122
+                    the smallest panel anywhere: 3 in the SE lobby, ~136x73 CSS (272x146).
+                    Seen in the screenshots: every headline reads; the second lines are
+                    small but legible on the SE and the desktop lobby row. The lobby lists
+                    0 rounds on every device - the Daily's hung seats / dead tunnels (listed).
+  TESTS             EditMode LobbyScreenTests 4/4 (each cell its panel's aspect); the whole
+                    EditMode 197: 193 pass, 1 red, 3 skipped - CombatFxTests.RifleFireProduces-
+                    AFlashAndATracer, documented in every run, deterministic alone (6: 5/1).
+                    PlayMode 239: 214 pass, 12 red, 13 skipped - the documented eleven and
+                    the recorded wall-clock flake PostOfficeTests.TheGogglesAnimate.
+                    Rebuild: "Build Finished, Result: Success.", errors=0 (9:10).
+
+M3 W4 PICK A: THE FEE LOCKS INTO THE ONE SETTLEMENT, FOR THE SITTING SEATS (Daniel 2026-09-14, f9758c2)
+  RULED             node-slot fee payouts to the round's sitting committee seat keys, in the
+                    one settlement and one signature after the window; §22A's weights if
+                    published (they are: 1% game/verify pool, 1% settlement pool, per
+                    eligible seat, leftovers in the round's order - fee.js nodeFeeTable);
+                    never to the donation recipients.
+  FOUND FIRST       no fee lock exists: join writes F = zeros and a zero fee-lock outpoint
+                    ("the fee lock is not made yet"), no seat checks one, and the wasm lock
+                    client locks to a point only. Today the 2000 msat fee per entry is not
+                    collected at all (the wallet is asked the 98000 net).
+  BUILT             protocol: every counted entry's fee lock in as Claim(F) - winners' too,
+                    F5; VOID/ENTRY_VOID's not; one payout per seat key (both pools summed),
+                    its share less its part of the guardians' fees; the table's fee must equal
+                    the locks to the msat; a no-qualifier round still claims its fees.
+                    node: POST /fee-lock (lockMatchesEntry kind 'fee'), fee_locks kept; the
+                    settlement passes the fee locks and the sitting seats (census draw by
+                    role; the contract's nodes where there is none).
+  MEASURED          no guardian fee: 3 inputs (the loser's 98000 stake, two 2000 fee locks),
+                    the winner 98000, each sitting seat 2000 to its own key.
+                    1000 ppm: a fee pool of 8000 pays two seats 3993+3 each, nothing lost.
+                    THE REAL GUARDIANS' RULE (1000 msat per input and output): two 2000 msat
+                    fee locks bring 4000, inputs cost 2000, each seat's 1000 share cannot pay
+                    its own output - so none is claimed (claimed, the fees would only pay
+                    the guardians), each expires back, the hole is named: 4000 msat pool,
+                    2000 input fees, 2000 owed per seat. The winner is still paid 96000.
+  REMAINING HOLES   the page makes no fee lock (wasm hash-image lock, page-lock, join); at a
+                    100 sat stake and a 1000 msat-per-item federation fee a fee lock cannot
+                    reach a seat (1000 sat stakes: 20000 msat fee locks can); the whole path
+                    on a live federation; the page's redeem of its payout (6d).
+  SUITES            protocol 524/524 (+5), node 620/620 (six chunks 599 + five-of-seven 21/21).
