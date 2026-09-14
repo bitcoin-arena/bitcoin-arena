@@ -16,11 +16,13 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-DONE: W4 / 6d CLOSED (2026-09-14 18:23) - build 0.0.1247 is on the Daily (btc-logistics-
-core, deploy 70d46f75; the live page says "build 0.0.1247"). The winner's money path is
-measured live end to end: loser's stake into the pool, winner and seats paid, the page
-collects and withdraws to the player's own wallet, a refused or unsettled lock comes
-back by the player's key after expiry; the fee-lock door (TASKBOOK).
+LIVE: W4 / 6d REOPENED - the page spends the player's money into the TAB before the
+player withdraws. It collects the payout and redeems the stake every 5 s into a wallet
+kept in sessionStorage (bearer e-cash); withdrawing waits for the player. A tab closed in
+between loses it, and the federation no longer holds it (run 15: a fresh tab found
+"Payout already collected · Stake already back", nothing to withdraw). NEXT: the page only
+LOOKS (what is owed, nothing spent) and collects + withdraws in one action on withdraw.
+On the Daily: 0.0.1247 (70d46f75) - collect, withdraw, refund after expiry, the door.
 Built so far, on the Daily as 0.0.1239 (e00d2ac3): the collect, the three named holes
 closed, the fee-lock door (TASKBOOK). Free rounds mint no fee lock.
 NOTE: the Daily's daily.json names quick tunnels that no longer resolve - no seats reachable.
