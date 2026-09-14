@@ -16,11 +16,13 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE: W4 (loser lock into the pool) AND M3.3-34 howto art (Daniel 07:53-07:55).
-Daniel's infographic: Assets/Art/Resources/lobby-howto.png plus tiles 1-4,
-white knocked out for a dark lobby. Loading screen AND lobby. Desktop can
-split horizontal; mobile 1-2 top, 3-4 bottom; shrink if still readable.
-DECIDED (Daniel 07:22): a loser loses the stake. Do both now.
+LIVE: W4 / 6d, the holes left on the winner's money path (TASKBOOK "NAMED HOLES ON W4"):
+(1) NEXT: a reload onto the round link after the entry is committed starts a new join
+and asks for a second deposit (measured: "funding 980000 + 20000 msat of lock"); a
+committed entry needs a resume on reload. (2) One entry without a fee lock blocks
+the round's whole settlement - needs a ruling: refuse it at the door, or settle
+without that fee. (3) The stake step does not read an already-redeemed lock as final.
+DECIDED (Daniel 07:22): a loser loses the stake. How-to art: done (16174f67).
 
 DONE: M3.2 item 6e - amounts (closed 2026-09-13, round 5 live). commit 1: 22A pick A in computePayoutTable
 (rank weight x net stake within the paying ranks, §18A.6 leftover) - a 2% donor
@@ -954,6 +956,11 @@ the loser's lock client asked nothing; on screen in Chrome, winner "Payout colle
 seats' forfeit into the same wallet: 98000 (wallet 92672 -> 188928) and, on screen,
 980000 (973312 -> 1951232); the federation no longer holds it. A loser: "No stake
 back", its lock client asked nothing.
+DONE (reload collect, build 0.0.1236): a tab reloaded before its collect collects
+on its own - 978000 payout and 980000 stake back, neither left in the federation
+(before: both left). A real browser join, loser beside a winner: one deposit funds
+both locks, the seats settle, the real tab shows "No payout · No stake back" and
+never touches its wallet (TASKBOOK). OPEN: the three holes at the top.
 
 HARD (Daniel 2026-09-14 07:22): a loser loses the stake. The lock is claimed
 into the pool. Winners are paid from that. W4 is unparked.

@@ -34966,3 +34966,139 @@ M3 W4 6d: THE PAGE COLLECTS THE WINNER'S PAYOUT; A LOSER'S FINDS NONE (Daniel 20
                                 drawn 293x91, topmost
   SUITES            protocol 530/530, client 320/320 (+1 stake-back test; wallet-nwc drives the
                     joined line), node 621/621 (six chunks 600 + five-of-seven 21/21).
+  LEFTOVER 1: A RELOAD BEFORE THE COLLECT - A MONEY GAP, MEASURED (run 10, 11:24, 1000 sat, build
+                    0.0.1234). The kept notes (payout, stake back) are written only after a
+                    successful collect, so a reload AFTER it is coverage. But the only setter of
+                    the collect's state is the join's lock branch (index.html BLWP_LOCK_JOIN),
+                    and a reload after the seats committed the entry does not reuse the kept
+                    lock (reuse = kept && !kept.committedTo). Live: the winner's tab was
+                    handed its join state before the close; its collect asked ("Payout:
+                    waiting for the seats' settlement - ... NONE; NONE"); reloaded; the round
+                    settled (e65e92a1..., 980000 + 2 x 20000 in, winner 978000, seats 18000):
+                      at once after the reload   BLWP_LOCK_JOIN gone, settled line empty
+                      60 s after the settlement  still nothing - no payout, no stake asked
+                      federation                 the payout contract (978000) STILL HELD, the
+                                                 winner's stake lock (980000) STILL HELD
+                    A fresh tab handed the same state then collected both (0 -> 973312 ->
+                    1951232 msat): nothing is lost - only the winner's key can spend either,
+                    the payout never expires, the stake lock refunds after block 464 - but
+                    the reloaded page never collects it. (The harness tab reloads onto the
+                    bare root; a real tab reloads onto the round link - the real join below.)
+  THE RELOAD FIX (page-lock saveCollect / savedCollects / markCollectDone; index.html). The
+                    join now keeps, per round in the tab, what the collect needs - the round,
+                    the invite, the seats, the tab's seed, the lock - once its lock is made or
+                    kept. collectThePayout works from those records on every load, not from
+                    the join's globals: each round not yet done is asked (payout, then the
+                    stake back into the same wallet); when both answers are final the round
+                    is marked done with its lines and not asked again. With no round joined
+                    (a reload onto the lobby) the wallet panel paints the newest kept round:
+                    its lock line and its lines. The settle-live harness now writes that
+                    record the way the join does, so its reload measures the page's own
+                    restore, not a fresh tab. Tests: page-lock (the record round-trips whole;
+                    done survives a later save; an unreadable record is skipped; no storage,
+                    nothing), wallet-nwc (no round joined: the panel shows the kept round's
+                    lock and lines). Client 321/321.
+  LEFTOVER 2: A REAL JOIN TO THE COLLECT - no earlier run did it (every "Payout collected"
+                    here is this letter's harness). A browser run has never delivered
+                    (daily-close-look: P FAILED/1), so the real tab is the loser; page-lock.mjs
+                    label collect: a real bonded round (3 s window), the real tab joins,
+                    deposits, locks and plays, a seed-derived winner is played from Node beside
+                    it, the seats close, the real tab's own collect is read, then the tab is
+                    reloaded onto its round link. Two attempts (11:32, 11:36) never reached the
+                    money: the tab answered no browser ask at all - the first poll timed out
+                    at 30 s (made tolerant), then 6 min of unanswered asks and an empty page
+                    console. Instrumented, not guessed: Chrome's stderr tail, the page's
+                    lifecycle, every request and its status, the pending ones, printed for
+                    every run.
+  WHAT THE INSTRUMENTS SAID (build 0.0.1236):
+                    (a) THE REAL TAB'S HANG: a modal prompt 1-2 s after load - "Donation to the
+                        developers, in percent of your 1000 sat stake ... 0 = none", default "0"
+                        (index.html hands the donation choice window.prompt / window.confirm). An
+                        unanswered prompt holds the page's main thread: nothing answered, an empty
+                        console. The harness records every dialog and answers it with its default,
+                        as a player pressing OK does.
+                    (b) THE RELOAD FIX FIRST KEPT NOTHING: saveCollect returned false, the tab's
+                        storage had no key - the round encoded, the harness's lock (amount and
+                        expiry only) did not, and one field threw the whole record away. The page
+                        now keeps the record without a lock that does not encode (the collect finds
+                        the lock through the seats); the harness hands over the lock whole.
+                    (c) THE REAL PAGE'S FEE LOCK LEFT A STAKE LOCKED WITH NO SEAT (Pick b's path,
+                        never run in a real browser before): "funding a 1000000 msat lock: holding 0",
+                        deposit 1014399, holding 1005056, one lock quoted 1004544 -> the 980000 stake
+                        lock made (983552 with its fees) -> 21504 left for a 20000 fee lock that costs
+                        more -> a 556 msat top-up refused, "Amount is too small to cover fees" -> seat
+                        refused, 980000 msat locked with no entry. Two locks are two transactions.
+                        Now funded for both, each quoted apart, and no top-up below the allowance:
+                        deposit 1016353, holding 1007104, both locks quoted 1005568 -> stake lock
+                        980000 made -> 23552 left, the fee lock quoted 22016 -> fee lock 20000 made;
+                        both seats 201 for the entry and the lock, committed 980000 at both, played
+                        (receipts 4/4, batches 22/20). The unit fake now refuses a receive under 1000
+                        msat as the gateway does.
+                    (d) A PAYOUT ALREADY SPENT (a reload mid-collect, a second tab) was "waiting ...
+                        undefined" for ever and the stake never asked: now final, "Payout already
+                        collected: 978000 msat - ... spent - by this seed's key", and the stake step
+                        asks whenever the seats hold a settlement.
+  LEFTOVER 1 AFTER THE FIX (run 14, 13:14, build 0.0.1236 - the same round shape: 980000 + 2 x 20000 in,
+                    winner 978000, seats 18000, settlement 50a58227...):
+                      before the reload   the kept record 1, saved; "Payout: waiting ... NONE"
+                      at once after it    the record still there (the join's globals gone)
+                      89 s after the settlement, the RELOADED tab on its own:
+                        "Payout collected: 978000 msat ... (balance 0 -> 973312 msat) · Stake
+                        returned: 980000 msat ... (balance 973312 -> 1951232 msat)", the record done
+                      federation          the payout contract NOT held, the winner's stake lock NOT
+                                          held  (before the fix: 978000 and 980000 still held)
+                      loser tab           "No payout · No stake back", done, the wallet not touched
+                    A second winner tab opened after it: "Payout already collected: 978000 msat" -
+                    and "Stake: not back yet - ... No contract found for given ContractId", asked
+                    again every 5 s. Nothing is left in the federation (the reloaded tab took both);
+                    the stake step does not yet read an already-redeemed lock as final the way the
+                    payout step does (the redeem's stored_before is null there). Named, on W4.
+  LEFTOVER 2, THE REAL JOIN AFTER THE FIXES (build 0.0.1236):
+                    run 6 (13:06): the real tab's whole join - deposit 1016353, both locks made, entry
+                      201/201, lock 201/201, 980000 committed at both, played (receipts 4/4); the
+                      harness's winner then asked for a delivery inside the first-mark deadline
+                      (real round: 900 ticks - a bonded contract carries no startDeadlineTicks, read
+                      now by protocol startDeadlineOf) and none delivers by then.
+                    run 8 (13:35): the winner in two legs as close-retry.test.js chains them - first
+                      mark 600, second batch and mark 1200, receipted at both seats; the real tab
+                      again committed 980000 at both and played (receipts 3/3). The seats closed and
+                      the settlement stayed NONE for 302 s: "nothing claimed: ... an entry's fee lock
+                      was never verified, so the fee cannot be claimed: 14b39b85..." - lock-settlement
+                      feeSettlement: once a round holds any verified fee lock, EVERY counted entry
+                      must have one, and the id printed is a player key. The real tab's fee lock was
+                      verified; the harness's winner had made none (settle-live's players do). The
+                      harness winner now mints its own when the gate does.
+                    run 9 (14:06, the same build) - THE REAL JOIN TO THE COLLECT, whole:
+                      real tab (loser)  deposit 1016353 msat; entry 201/201, stake lock 201/201,
+                                        fee lock 201/201 (the page's own /fee-lock), committed
+                                        980000 at both; played, receipts 4/4
+                      winner (Node)     key 0344a844..., fee lock 20000 201/201, two legs receipted
+                      settlement        ACCEPTED 15.1 s after the close (4e24f622...): claimed the
+                                        real tab's 980000 + 2 x 20000 fee locks, paid the winner
+                                        978000, each seat 18000
+                      the real tab's OWN collect: "No payout: the round's settlement pays this seed's
+                                        key nothing · No stake back: ... its stake went into the
+                                        round's pool", its lock gone from the federation, its wallet
+                                        not asked on the collect
+                      the winner's collect (the page's code): payout 978000, 0 -> 973312 msat; stake
+                                        980000 back, 973312 -> 1951232; its lock gone
+                      the real tab reloaded onto its round link: the lines kept from the record
+                                        ("No payout · No stake back") - and the join started again,
+                                        "funding 980000 + 20000 msat of lock: holding 1536 msat" -
+                                        named hole (1) below.
+  NAMED HOLES ON W4 (cause; what it depends on):
+                    (1) A RELOAD ONTO THE ROUND LINK STARTS A NEW JOIN - measured, run 8: after the
+                        reload the page, holding 1536 msat, set out to fund a second 980000 + 20000
+                        msat of lock, i.e. to show a second deposit invoice for a round the player
+                        already stakes. Cause: index.html reuses a kept lock only when no seat has
+                        committed it (reuse = kept && !kept.committedTo), and a committed entry has no
+                        resume path (its session key is the Client's). The collect itself is not
+                        affected (it works from the kept record). Depends on: a resume of a
+                        committed entry on reload (W1b's reload, extended past the commit).
+                    (2) ONE ENTRY WITHOUT A FEE LOCK BLOCKS THE WHOLE ROUND'S SETTLEMENT once any fee
+                        lock in it is verified - measured, run 8 (every stake waits for its lock's
+                        expiry). A client that does not mint (or whose /fee-lock never lands) makes
+                        this happen. Depends on a ruling: refuse such an entry at the door when the
+                        round's gate mints, or settle the stakes and leave that fee out.
+                    (3) THE STAKE STEP DOES NOT READ AN ALREADY-REDEEMED LOCK AS FINAL (run 14, a
+                        second tab): no money left in the federation; the tab asks again every 5 s.
