@@ -35169,6 +35169,26 @@ M3 W4 6d: THE PAGE COLLECTS THE WINNER'S PAYOUT; A LOSER'S FINDS NONE (Daniel 20
                     session catch now also writes it to BLWP_SEAT_REFUSED, which the chip shows as "not
                     seated · <why>" (build 0.0.1239). The player's stake lock stays theirs: back to
                     their key from its expiry block.
+    LIVE, 1000 SAT, A THIRD PLAYER WITH A STAKE LOCK AND NO FEE LOCK (settle-live run 19, 16:06,
+                    stock fedimintd 0.12.0, real federation; the gate MINTS: "every one of 4 seats is
+                    paid more than nothing after the federation's fees"):
+                      the third player  stake lock 09c4b2ce...:0, 980000 msat, no fee lock; /entry
+                                        409 at BOTH seats - "this round mints fee locks (...): an
+                                        entry that brings no fee lock is not seated - its stake would
+                                        not be counted, and it would block the round's settlement";
+                                        stored at neither seat, its stake counted at neither
+                      seated set        2 / 2 (the winner and the loser, both with fee locks, 201)
+                      settlement        ACCEPTED, txid 3a878ff6..., 5733 ms after the close, one
+                                        signature verifying under the claim key: in 980000 (the
+                                        loser) + 2 x 20000 fee locks; out winner 978000, seats
+                                        18000 + 18000
+                      the winner's page (on screen) 978000 collected (0 -> 973312) and 980000 back
+                                        (973312 -> 1951232); the loser "No payout · No stake back"
+                    The round id is not printed by the driver (only the settlement txid, which names
+                    the round's one settlement); the driver prints it from now on.
+                    The same run, 100 sat (the gate does not mint): no fee locks, lock 201 at both
+                    seats, settlement a051c1d9...: 98000 in, winner 96000, collected 96000 and 98000
+                    back; the loser neither.
   NAMED HOLES ON W4 (cause; what it depends on):
                     (1) A RELOAD ONTO THE ROUND LINK STARTS A NEW JOIN - measured, run 8: after the
                         reload the page, holding 1536 msat, set out to fund a second 980000 + 20000
