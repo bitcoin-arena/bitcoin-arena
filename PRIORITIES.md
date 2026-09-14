@@ -28,14 +28,19 @@ only; the winner's first tab looked (owed 1958000 msat, tab 0) and was CLOSED wi
 withdraw - the federation still held the payout 978000 + the stake 980000, the tab 0; a
 fresh tab with the same seed read the same; a pasted invoice for 1958000 was refused,
 nothing collected, alice paid 0.
-RED: the Withdraw did not pay alice. It collected both out of the federation, then ran past
-the driver's 180 s (run 22: ~330 s) and the harness closed the tab mid-Withdraw - >= 973312
-msat stranded in that tab. HOLE: a tab closed while its Withdraw runs loses what it
-collected (the notes live in the tab's sessionStorage); no progress and no "do not close"
-on screen meanwhile.
-NEXT: the driver waits out the Withdraw, a live run where it pays alice; run B (the refused
-player on screen); the hole above; then the Daily. The Daily (0.0.1247, 70d46f75) still
-has the hole.
+A3 RED: the Withdraw ran past the driver's 180 s and the harness closed the tab mid-Withdraw
+- >= 973312 msat stranded in that tab (its notes live in the tab's sessionStorage).
+DONE LIVE (run A4, 22:35-22:50, the driver waits 600 s): the same closed tab, federation
+still holding 978000 + 980000, tab 0, paste refused - then the page's own Withdraw paid
+alice 1930649 msat, SETTLED, tab 1951232 -> 0, in 414 s; a third tab: nothing left.
+DONE (2f5a170, simulation): while a Withdraw runs the page says "do not close this tab" with
+its step, offers no second Withdraw, and the browser asks before closing it.
+RULED (Daniel ~22:48): a Withdraw this long must survive the tab. (1) The round's session is
+persisted, so the next start has the same key and wallet. (2) A withdrawal can be claimed
+later. (3) Unity checks after start and tells the player a withdrawal is available. The
+spec (multiplayer_p2p.md §24) says so.
+NEXT: run B live (the refused player on screen); (1)-(3) built and measured; then the Daily.
+The Daily (0.0.1247, 70d46f75) still has the hole.
 Built so far, on the Daily as 0.0.1239 (e00d2ac3): the collect, the three named holes
 closed, the fee-lock door (TASKBOOK). Free rounds mint no fee lock.
 NOTE: the Daily's daily.json names quick tunnels that no longer resolve - no seats reachable.

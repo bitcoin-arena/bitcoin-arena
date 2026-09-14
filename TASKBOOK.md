@@ -35459,3 +35459,31 @@ M3 W4 6d: THE LIVE DRIVER CLOSES THE WINNER'S TAB, AND THE FEDERATION STILL HOLD
   TESTS             blwp-client 328/328 (page-lock 23/23; page-lock + wallet-nwc 48/48).
   NOT DONE          the Withdraw paying alice live (the driver's wait must cover ~330 s); the hole above;
                     run B (the refused player on screen); the Daily (0.0.1247) still has run 15's hole.
+
+M3 W4 6d: LIVE, THE PAGE'S OWN WITHDRAW PAYS THE PLAYER'S WALLET AFTER A CLOSED TAB (run A4, 2026-09-14)
+  THE RUN           settle-live run A4, 22:35-22:50, same setup as A3 (stock fedimintd 0.12.0, page =
+                    0.0.1247 Unity files + the template of ef88b4d/2a063be, headless Chrome), in its own
+                    systemd unit; the driver waits up to 600 s for the page's Withdraw (A3: 180 s). exit 0.
+  SETTLEMENT        100 sat (Node): ACCEPTED, alice SETTLED 180346. 1000 sat: ACCEPTED at both seats,
+                    978000 / 18000 / 18000.
+  DRIVER READS      BLWP_OWED only.
+  FIRST TAB         owed 1958000 msat (payout 978000 owed, stake 980000 owed by forfeit), in the tab 0,
+                    balance 0, looked in 31.3 s; 16 s later the same. CLOSED with no withdraw.
+  AFTER THE CLOSE   the federation holds the payout and the stake lock; the tab 0 msat.
+  FRESH TAB         same seed: owed 1958000 in 28.4 s; both held.
+  PASTED            alice's invoice for 1958000 msat: refused in 52.4 s, "nothing was collected, it stays
+                    in the federation"; both held; that invoice OPEN, paid 0.
+  WITHDRAW - GREEN  BLWP_WITHDRAW with alice's lnd handed in: Success, 1930649 msat, through the listed
+                    gateway 127.0.0.1:30170; the tab's wallet 1951232 -> 0 msat; alice's invoice
+                    "blwp withdraw on screen" SETTLED, amt_paid_msat 1930649 (22:48:10). 414.2 s from the
+                    press: collect the payout, find the lock, the seats' forfeit, redeem, ask alice for
+                    1930649 msat, pay. The federation then holds neither. The page after: final, "Payout
+                    978000 msat collected · Stake 980000 msat back", "Withdrawn: 1930649 msat to your own
+                    wallet over Lightning (this tab's wallet 1951232 → 0 msat)".
+  THIRD TAB         same seed: owed 0, final, tab 0 - both "no longer in the federation".
+  FEES              1958000 owed -> 1951232 in the tab (the federation's redeem fees) -> 1930649 paid
+                    (20583 msat to the gateway's and the federation's withdraw fees).
+  STILL OPEN        414 s is long: a tab closed inside it loses what it collected (A3). Ruled (Daniel
+                    ~22:48): persist the round's session so the next start has the same key, a way to
+                    claim the withdrawal later, and Unity checks after start and tells the player a
+                    withdrawal is available. Run B (the refused player on screen) is next live.
