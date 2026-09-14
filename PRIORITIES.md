@@ -16,11 +16,11 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE: W4 / 6d - everything the goal names is measured live (TASKBOOK): the destination
-(the page withdraws to the player's own wallet, on screen 1930649 msat SETTLED) and a
-lock no seat will settle coming back by the player's key after expiry (a refused tab on
-screen: 980000 back, 961392 withdrawn, SETTLED); makeInvoice tested. Build 0.0.1247.
-NEXT: 0.0.1247 on the Daily (the Daily is 0.0.1239) on Daniel's go; then W4 / 6d closes.
+DONE: W4 / 6d CLOSED (2026-09-14 18:23) - build 0.0.1247 is on the Daily (btc-logistics-
+core, deploy 70d46f75; the live page says "build 0.0.1247"). The winner's money path is
+measured live end to end: loser's stake into the pool, winner and seats paid, the page
+collects and withdraws to the player's own wallet, a refused or unsettled lock comes
+back by the player's key after expiry; the fee-lock door (TASKBOOK).
 Built so far, on the Daily as 0.0.1239 (e00d2ac3): the collect, the three named holes
 closed, the fee-lock door (TASKBOOK). Free rounds mint no fee lock.
 NOTE: the Daily's daily.json names quick tunnels that no longer resolve - no seats reachable.

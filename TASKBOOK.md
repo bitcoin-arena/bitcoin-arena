@@ -35328,6 +35328,22 @@ M3 W4 6d: THE PAGE COLLECTS THE WINNER'S PAYOUT; A LOSER'S FINDS NONE (Daniel 20
                     at the fee-lock door (or in a round that never settles) gets its lock back by its own key
                     after expiry and withdraws it; no second deposit on a reload; a stake already back is
                     final. Not on the Daily yet: the Daily is 0.0.1239.
+  DEPLOYED TO THE DAILY - W4 / 6d CLOSED (Daniel's go 18:21; btc-logistics-core only, btc-logistics-war not
+                    touched; the existing 0.0.1247 snapshot, no rebuild):
+                      snapshot      build/webgl from 17:39:40, "[build] stamped 0.0.1247 (ea51d34)";
+                                    bundle, lock client and wasm = dist's (8218c0cc / ed316f8c / ed6195d1);
+                                    the withdraw and refund steps in its page
+                      wrangler      "Deployment complete!" https://70d46f75.btc-logistics-core.pages.dev
+                                    (5 files uploaded, 27 already there), 18:23
+                      served        unique URL and alias index 91f130fb27964367 = the snapshot's; the live
+                                    page reads "build 0.0.1247" (the loading screen's #sub) and
+                                    productVersion '0.0.1247'; the withdraw and refund steps there.
+                                    daily.json names the lobby's seats only - no build field.
+                      observation   the served Build/webgl.data.unityweb (12864689 bytes, = the snapshot's)
+                                    holds no plain "0.0.1247": its one version-like string is "0.0.1128"
+                                    (the 0.0.1239 data held "0.0.1239" and "0.0.1128"). The build writes
+                                    Resources/build.txt for the splash and refreshes; why this data does
+                                    not carry it plainly is not traced. Noted, not chased.
   NAMED HOLES ON W4 (cause; what it depends on):
                     (1) A RELOAD ONTO THE ROUND LINK STARTS A NEW JOIN - measured, run 8: after the
                         reload the page, holding 1536 msat, set out to fund a second 980000 + 20000
