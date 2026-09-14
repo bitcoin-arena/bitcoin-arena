@@ -16,8 +16,35 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE: W4 / 6d REOPENED - the page spent the player's money into the TAB before the player
-withdrew (run 15: a closed tab lost it, the federation no longer held it).
+LIVE: M3 W7 - THE FEDERATION IS NAMED EVERYWHERE A ROUND IS BUILT, AND CHECKED. Measured
+2026-09-15: custodyFieldsAreValid and federationIsBonded have 0 callers in node, client and
+protocol; 9 launchers still write a zero federation_id (custody-crash, no-mark-probe,
+payout-committee-regtest, custody-restart-lnd, settle-regtest, custody-lnd, payout-regtest,
+testnet4-gate, settle-crash-regtest). W7 of the M3 inventory (TASKBOOK), 1 of the 7 not parked.
+
+DONE: M3 W6 - A SEAT KILLED INSIDE A LOCK SETTLEMENT RECOVERS TO THE RIGHT STATE ON RESTART
+(2026-09-15). Measured before: a seat restarted inside one never asked again - its row stayed
+SUBMITTING whether the money had moved or not (a start re-ran a close only for a round with a
+run short of FINAL). Now settle() asks the federation first for a SUBMITTING row, from what the
+seat kept with its intent: a payout contract of that txid stored and no claimed lock held ->
+ACCEPTED, no rebuild; every claimed lock held and no payout -> rebuilt, the kept signature only
+for the same txid, else signed afresh; anything else stays SUBMITTING with its reason. At start,
+and every 60 s, every SUBMITTING row goes through it.
+blwp-node lock-settlement 15/15: (a) money moved - ACCEPTED, with the plan the same, different
+or not rebuildable; (b) never sent - ACCEPTED, the same txid; (b)+(c) plan differs - signed
+afresh, a new txid, ACCEPTED; mixed - SUBMITTING with the reason, no retry. No signature ever
+went out over other bytes.
+LIVE (a), stock fedimintd 0.12.0: SIGKILL after the real guardians accepted - both rows
+SUBMITTING, 3 of 3 claimed locks gone, 3 of 3 payouts stored - restarted: both ACCEPTED in
+2.18 s. The real guardians answer as the test port copies them. Numbers: TASKBOOK.
+Named: a seat killed before any row of the settlement reached it keeps none (it answers NONE,
+not REFUSED); once every payout is collected and the claimed locks are gone the federation shows
+no proof - SUBMITTING with the reason. The known-good list was re-pinned (the Daily's
+blwp-client.js was missing from it since 09-14).
+
+DONE: W4 / 6d - CLOSED ON THE DAILY 0.0.1265 (2026-09-14 23:57). It was reopened because the
+page spent the player's money into the TAB before the player withdrew (run 15: a closed tab
+lost it, the federation no longer held it).
 DONE (ef88b4d, measured in simulation, NOT live, NOT on the Daily): the page only LOOKS
 (lookOwed - seats + the federation's read-only lockStatus); Withdraw is the one action
 that collects and pays out, through one wallet; no invoice source, nothing collected.
@@ -67,8 +94,6 @@ btc-logistics-core (14086895); the unique URL and the alias serve its blwp-clien
 Still named: the Daily's seats are unreachable (daily.json's dead tunnels), so no round
 is played there yet; a lock refused at the door comes back only on the device that made
 it; a done round's wallet database stays in the browser.
-NEXT (Daniel 23:36: continue M3 at once): W6 - a seat killed inside a lock settlement
-recovers to the right state on restart.
 RULED (Daniel 23:34): (1) deploy to Daily only when that is finished - not 0.0.1247 while
 the hole remains. (2) Withdraw time (414 s live) is OK; shorten it in M5, not now.
 RULED (Daniel 23:36): when this run is through, continue M3 immediately. No pause, no ask.

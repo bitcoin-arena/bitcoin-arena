@@ -35584,3 +35584,60 @@ M3 W4 6d: ON THE DAILY - build 0.0.1265 (2026-09-14 23:57)
                     refund, persist / claim later / another device / Unity's lobby.
   NOT MEASURED ON THE DAILY  a round played there: the Daily's seats are unreachable (daily.json's dead
                     tunnels) - named in PRIORITIES, not this letter.
+
+M3 W6: A SEAT KILLED INSIDE A LOCK SETTLEMENT RECOVERS TO THE RIGHT STATE ON RESTART (2026-09-15)
+  PREMISE CORRECTED identical settlement bytes sent again are ACCEPTED (stake-lock-step3.sh c1), so a
+                    resubmit of the same txid is not the failure. The failure is a restart that cannot
+                    rebuild the signed bytes.
+  TEST              blwp-node/test/lock-settlement.test.js, "W6 ...": two seats on store files, each
+                    reaching the federation through a port that dies with the seat - after the guardians
+                    answered (a) or before the settlement went (b); both seats started again on their
+                    files and ports; (c) the plan rebuilt differs (the federation's fee rule 1000 -> 1500
+                    msat per input/output) or cannot be rebuilt (seat B stays down, no loser's P opens).
+  MEASURED BEFORE   in all six cases both rows stayed SUBMITTING after the restart with the note "about to
+                    submit; if this seat dies here, ask the federation for the claimed locks", and no
+                    submission followed: (a) the payout at the signed txid stored and the loser's lock
+                    gone - the money had moved; (b) the lock still held, no payout, 0 submissions - never
+                    sent, the losers' locks would go back to them at expiry. Not REFUSED: nothing asked
+                    again. CAUSE: at start a closed round's close runs again only for a round with a run
+                    short of FINAL (server.js, M3.3-34), and a lock settlement happens only once every run
+                    is FINAL - a settlement the seat died inside was never picked up.
+  BUILT             the claimed outpoints and the payout count of the signed transaction are kept with its
+                    intent (lock_settlement_moves); settle() on a SUBMITTING row asks the federation first
+                    - IN: a payout contract of that txid stored and no claimed lock held -> ACCEPTED, no
+                    rebuild; OUT: every claimed lock held and no payout -> rebuilt, the kept signature only
+                    for the same txid, else signed afresh; anything else stays SUBMITTING with the reason,
+                    no retry; at start, after the resumed closes, every SUBMITTING row goes through
+                    settle(), and again every 60 s (the timer unref'd).
+  MEASURED AFTER    (a) same plan: both ACCEPTED, "found in the federation ...: 1 of 1 payout contract(s)
+                    ... stored, 1 of 1 claimed lock(s) gone", 2 -> 2 submissions (none new).
+                    (a)+(c) fee rule changed: both ACCEPTED from the federation, 0 signatures over other
+                    bytes. (a)+(c) seat B down: seat A ACCEPTED without a rebuild.
+                    (b): both ACCEPTED, the same txid submitted, the lock claimed, the payout at the
+                    signed txid. (b)+(c) fee rule changed: signed afresh - txid 7ce9... -> 9ca1..., the
+                    winner paid 95000 msat under the new rule (was 96000), ACCEPTED, 0 signatures over
+                    other bytes. mixed (the loser's lock gone by itself, no payout): SUBMITTING, "neither
+                    in nor out - not settled here, not submitted again: 0 of 1 payout contract(s) ...",
+                    0 new submissions.
+  COUNTS            lock-settlement 15/15 (the six W6 cases in two runs of 3, the other 9 in one).
+  ALSO FOUND        blwp-node client-hash 2 red: the known-good list lacked the blwp-client.js the Daily
+                    serves (it had not been re-pinned since c6fca4c, 09-12, through several bundle commits
+                    of 09-14, mine among them); pinned with tools/known-clients.js - client-hash 3/3.
+                    Two long node --test runs of one shell at once were SIGTERMed (143); the long runs now
+                    go in their own systemd units.
+  NAMED LIMITS      a seat killed before any row of the settlement reached it keeps none and is not
+                    picked up at start (it answers NONE, not REFUSED); once every payout of a settlement
+                    has been collected and its claimed locks are gone the federation shows no proof, and
+                    the row stays SUBMITTING with the reason.
+  LIVE (a)          settle-live W6_KILL=1, 2026-09-15 00:40-00:47, stock fedimintd 0.12.0 (4 guardians, 3 of 4),
+                    a 1000 sat round, two seats on store files: seat 1 combined the signature and submitted;
+                    the real guardians answered accepted: true (txid 26a3b889...); the driver process was
+                    SIGKILLed before any seat wrote it (settle-live-regtest.mjs, dyingAfterAnswer).
+                    What the kill left: both rows SUBMITTING at 26a3b889...; the federation: 3 of 3 claimed
+                    locks gone (the loser's stake lock and two fee locks), 3 of 3 payout contracts stored
+                    (the qualifier and two seats).
+                    Both seats started again on their stores, ports and lock clients (settle-live-w6-resume.mjs):
+                    both ACCEPTED in 2.18 s, "found in the federation after this seat was inside it: 3 of 3
+                    payout contract(s) of 26a3b88918e9 stored, 3 of 3 claimed lock(s) gone".
+                    THE REAL GUARDIANS ANSWER AS THE TEST PORT COPIES THEM: the claimed locks gone and the
+                    payout contracts at (txid, i) stored, read with blwp-stake-lock --mode status.
