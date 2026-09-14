@@ -16,11 +16,12 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE: W4 / 6d REOPENED - the destination is missing. 6d (24A.2): "the client withdraws
-it over Lightning through any listed gateway". The page collects the payout and the
-stake back into a federation wallet kept in the TAB (sessionStorage) and never
-withdraws it: a winner who closes the tab keeps nothing. NEXT: after the collect the
-page withdraws the tab wallet over Lightning to the player's own wallet; measured live.
+LIVE: W4 / 6d, still open (TASKBOOK). DONE: the destination - the page withdraws what it
+collected to the player's own wallet (on screen: 1930649 msat, alice SETTLED); a lock no
+seat will settle comes back by the player's key after expiry from the tab's own record
+(live, the page's code: 980000 back, 961392 withdrawn, alice SETTLED); makeInvoice
+tested. Build 0.0.1247. OPEN, NEXT: that refund driven by the page's collect loop in a
+browser tab; then 0.0.1247 on the Daily (the Daily is 0.0.1239) on Daniel's go.
 Built so far, on the Daily as 0.0.1239 (e00d2ac3): the collect, the three named holes
 closed, the fee-lock door (TASKBOOK). Free rounds mint no fee lock.
 NOTE: the Daily's daily.json names quick tunnels that no longer resolve - no seats reachable.

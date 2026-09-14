@@ -35256,6 +35256,53 @@ M3 W4 6d: THE PAGE COLLECTS THE WINNER'S PAYOUT; A LOSER'S FINDS NONE (Daniel 20
                     tab collected both on screen - but the on-screen withdraw did not run: the harness
                     read the page's withdrawable at once, before the page had read it from its wallet
                     (the page sets its lines first); rerunning with the harness waiting for it.
+                    run 21 (17:14): the 100 sat withdraw again - Success 180346, 188928 -> 0, alice SETTLED
+                    180346; the on-screen withdraw stopped in the HARNESS: "the browser did not answer
+                    Runtime.evaluate in 30 s" - it awaited the page's whole withdraw inside one 30 s ask.
+                    The harness now starts the page's promise and polls short asks for its answer.
+    LIVE, ON SCREEN (settle-live run 22, 17:22-17:30, build 0.0.1246, real federation): the 1000 sat
+                    winner's tab, after collecting 978000 and its 980000 back (collect 239.7 s this run),
+                    withdrew with the page's own window.BLWP_WITHDRAW to an invoice on alice's lnd:
+                      the page's withdrawable   1930649 msat (read by the page from its wallet)
+                      result                    ok, final, state Success, invoice 1930649 msat, through
+                                                the listed gateway 127.0.0.1:30170, 90.6 s
+                      the tab's wallet          1951232 -> 0 msat
+                      alice's invoice           SETTLED, amt_paid_msat 1930649
+                      on screen                 "Withdrawn: 1930649 msat to your own wallet over Lightning
+                                                (this tab's wallet 1951232 -> 0 msat)"
+                    and, the same run, the 100 sat winner through the page's code: Success 180346,
+                    188928 -> 0, alice SETTLED 180346 (the third time). The winner's money leaves the tab.
+  W4 / 6d, A LOCK NO SEAT WILL SETTLE, BACK BY THE PLAYER'S OWN KEY AFTER EXPIRY (found asking "have
+                    you thought of everything"). Before: the page never refunded (index.html: 0 calls to
+                    refundStake), and refundStake finds a lock through the seats (/stake-lock?refund=) -
+                    a player the fee-lock door refused has a lock no seat ever verified, so nothing could
+                    bring it back from the page; its collect asked the seats for a forfeit none would give.
+    BUILT           lock client lockStatus(txid, outIdx) - the federation's block count and, while the
+                    contract is there, its blocks left, spending nothing (wasm rebuilt, 17:35); page-lock
+                    refundKept - from the tab's own record (saveLock: the stake lock and any fee lock,
+                    whole): gone - final; before its expiry - not final, "comes back to your key from
+                    federation block N"; expired - refunded by the player's key into the tab's wallet;
+                    refundLine; index.html: when the stake step is stuck (no forfeit is coming), the collect
+                    runs refundKept through the tab's wallet, paints its line, and the withdraw takes it.
+                    nwc makeInvoice tested against the fake NIP-47 wallet: asked for exactly 1930649 msat,
+                    a non-bolt11 answer refused, an empty withdraw asks nothing. Build 0.0.1247.
+    TESTS           page-lock refundKept: before expiry nothing refunded, "... from federation block 464
+                    (now 320)"; after it both locks back by the player's key, 1000000 msat, "Back by your
+                    own key after expiry: 1000000 msat ... (stake + fee locks; balance 0 -> 993000 msat)";
+                    a lock already gone asks nothing. Client 325/325.
+    LIVE (settle-live run 24, 17:49-17:54, real federation; the page's own code from Node, the refused
+                    player's seed and tab wallet): the door 409 at both seats, seated 2/2; settlement
+                    6746c9a4... (980000 + 2 x 20000 in, 978000 / 18000 / 18000); then the refused player -
+                      before expiry   "Your lock (stake 980000 msat) comes back to your key from federation
+                                      block 464 (now 314)" - nothing spent
+                      mined           157 blocks; the guardians' count 471/471 after 58.5 s
+                      after expiry    refundKept: 980000 msat back by its own key, the tab's wallet 0 ->
+                                      975360 msat; the lock no longer held by the federation
+                      withdrawn       Success 961392 msat, 975360 -> 0; alice's invoice SETTLED 961392
+                    run 23 (17:40) had not mined: getnewaddress without the setup's -rpcwallet answered
+                    nothing ("Invalid address"); the harness now uses the setup's own wallet.
+    NOT YET SEEN    the same refund driven by the page's own collect loop in a browser (a refused tab on
+                    screen); and 0.0.1247 is not on the Daily (the Daily is 0.0.1239).
   NAMED HOLES ON W4 (cause; what it depends on):
                     (1) A RELOAD ONTO THE ROUND LINK STARTS A NEW JOIN - measured, run 8: after the
                         reload the page, holding 1536 msat, set out to fund a second 980000 + 20000
