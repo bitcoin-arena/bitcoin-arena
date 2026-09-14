@@ -16,9 +16,13 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-DONE: W4 / 6d closed - the winner's money path, all three named holes measured closed
-on the real federation; build 0.0.1239 is on the Daily (btc-logistics-core, e00d2ac3,
-2026-09-14; TASKBOOK). Free rounds mint no fee lock, so the door leaves them alone.
+LIVE: W4 / 6d REOPENED - the destination is missing. 6d (24A.2): "the client withdraws
+it over Lightning through any listed gateway". The page collects the payout and the
+stake back into a federation wallet kept in the TAB (sessionStorage) and never
+withdraws it: a winner who closes the tab keeps nothing. NEXT: after the collect the
+page withdraws the tab wallet over Lightning to the player's own wallet; measured live.
+Built so far, on the Daily as 0.0.1239 (e00d2ac3): the collect, the three named holes
+closed, the fee-lock door (TASKBOOK). Free rounds mint no fee lock.
 NOTE: the Daily's daily.json names quick tunnels that no longer resolve - no seats reachable.
 Closed: (1) no second deposit on reload (0.0.1237); (2) pick (a), the fee-lock door -
 live, 1000 sat: a player with no fee lock 409 at both seats, not counted, the others

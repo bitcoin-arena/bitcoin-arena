@@ -35227,6 +35227,35 @@ M3 W4 6d: THE PAGE COLLECTS THE WINNER'S PAYOUT; A LOSER'S FINDS NONE (Daniel 20
                                     seats, stored - the door does not touch a free round.
                       suites        node 624/624 (six chunks 603 + five-of-seven 21/21), protocol 530/530,
                                     client 322/322. Unity EditMode/PlayMode not run (no C# changed).
+  W4 / 6d REOPENED - THE DESTINATION (asked: "have you thought of everything this goal needs?").
+                    6d (24A.2): "a win is a payout contract to the player's key in the federation, and
+                    the client withdraws it over Lightning through any listed gateway. Nothing is
+                    stored between rounds." What was built stopped at the tab: the payout and the stake
+                    came back into a federation wallet kept in the TAB'S storage (lockStoreFor,
+                    sessionStorage), and nothing on the page withdrew it - the wasm withdraw and
+                    withdrawableMsat had no caller. A winner who closed the tab kept nothing.
+    BUILT           nwc makeInvoice (NIP-47 make_invoice, refused unless a bolt11 comes back);
+                    page-lock tabLockWallet (the round's tab wallet: the seed's secret, the same store),
+                    withdrawCollected (the whole withdrawable balance - the stock client's own sum after
+                    the gateway's and the federation's fees - to an invoice from the player's own
+                    wallet; Refunded is not final and says the money is back in the tab), withdrawLine;
+                    index.html: after the collect the newest round's withdrawable is read, the wallet
+                    panel says what is in the tab's wallet ("withdraw it to your own wallet before you
+                    close the tab"), and window.BLWP_WITHDRAW / the "Withdraw to my wallet" button pay it
+                    to the connected wallet's invoice or a pasted one. Build 0.0.1246.
+    TESTS           page-lock: the whole withdrawable to one invoice (1937000 -> "Withdrawn: 1937000 msat
+                    ... 1951232 -> 0 msat"); Refunded not final; an empty wallet asks for no invoice; no
+                    invoice - not final, the reason shown. Client 323/323.
+    LIVE (settle-live run 20, 17:06, stock fedimintd 0.12.0), 100 sat, the winner's tab wallet through the
+                    page's own withdrawCollected to an invoice on alice's lnd: Success, 180346 msat
+                    withdrawable, through the listed gateway (127.0.0.1:30170); the tab's wallet 188928
+                    -> 0 msat; alice's invoice SETTLED, amt_paid_msat 180346 (8582 msat to the gateway's
+                    and the federation's fees).
+                    The same run, 1000 sat: the door (409 at both seats, seated 2/2) and the settlement
+                    9261a42f... (980000 + 2 x 20000 in, 978000 / 18000 / 18000) as before; the winner's
+                    tab collected both on screen - but the on-screen withdraw did not run: the harness
+                    read the page's withdrawable at once, before the page had read it from its wallet
+                    (the page sets its lines first); rerunning with the harness waiting for it.
   NAMED HOLES ON W4 (cause; what it depends on):
                     (1) A RELOAD ONTO THE ROUND LINK STARTS A NEW JOIN - measured, run 8: after the
                         reload the page, holding 1536 msat, set out to fund a second 980000 + 20000
