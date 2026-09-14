@@ -35508,3 +35508,28 @@ M3 W4 6d: LIVE, A REFUSED PLAYER'S OWN TAB WITHDRAWS ITS STAKE BACK BY ITS OWN K
   WORDING FIXED     lookOwed marks a lock gone after its expiry how: 'refund'; the line reads "Stake 980000
                     msat: no longer in the federation - back to your key after its expiry" (was "No stake
                     back: no lock of yours is left ..."). blwp-client 330/330.
+
+M3 W4 6d: A WITHDRAWAL CLAIMED ON ANOTHER DEVICE BY THE SEED (Option A, Daniel ~23:08, 2026-09-14)
+  CASE              alice plays on her desktop, forgets to withdraw, and plays on her iPhone 2 h later.
+  RULED             A: the seed backup moves between devices; the nodes store nothing new and never
+                    hold the seed (spec §0.12). B (an encrypted seed on the nodes) and C (the nodes
+                    indexing a player's open payouts, which links every round of a player) not taken.
+  SEATS             GET /settled?since=<ms>: the rounds this seat settled since then (at most 7 days,
+                    500 rounds), each with its state, time, the keys its settlement pays (qualifiers)
+                    and the refund keys of the locks it verified. No contract (the device takes a
+                    matched round's from /round). The payout keys come from the seat's built plan and
+                    are empty after a restart; a winner is still found, because its payout key is its
+                    own lock's refund key, which the store keeps.
+                    lock-settlement.test.js 9/9: the settled round listed at both seats, paying the
+                    winner's key, both locks' refund keys; a later since lists nothing; since=x 400.
+  CLIENT            findOwedRounds: the lists from each seat; this seed's key per round derived and
+                    matched locally; only a matched round's /round fetched, kept only if it hashes to
+                    its id and names a federation. Measured with 3 rounds listed: 1 found (payout and
+                    lock), the seats asked /settled once and /round only for the 2 rounds naming this
+                    seed's key - the one whose served contract was not its id dropped; a kept round not
+                    fetched again; another seed finds none. page-lock 25/25.
+  PAGE              on lobby start the page runs it over the lobby's seats with a 24 h lookback and
+                    keeps every round found in the vault (invite and seats from the lobby link), then
+                    looks - the Withdraw and Unity's notice follow as for a round the tab joined.
+  NOT MEASURED YET  live: a round settled on a real federation, a second browser profile holding only
+                    the seed, its Withdraw paying alice.

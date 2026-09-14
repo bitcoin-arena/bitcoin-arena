@@ -49,7 +49,11 @@ tab reached 0); one tab at a time holds a round's wallet (browser lock). (2) the
 the newest round not yet final, so an older one is claimed after. (3) the lobby view carries
 the withdrawal; Unity's lobby shows "Withdrawal available: N sat" (C#, not yet compiled).
 blwp-client 330/330. Spec §24 says so.
-OPEN (asked): cross-device - alice's withdrawal on her iPhone 2 h later.
+RULED A (Daniel ~23:08): cross-device - alice's withdrawal on her iPhone 2 h later - by her
+seed backup; the nodes store nothing new. BUILT (simulation): the seats list what they
+settled since a time with the keys it pays and its locks' refund keys (GET /settled); the
+page, on lobby start, derives its key per round and matches locally (asks nothing per
+round), fetches only a matched round's contract and keeps it; lookback 24 h.
 NEXT: Unity compile + EditMode; a live run of (1)-(3); then the Daily. The Daily (0.0.1247,
 70d46f75) still has the hole.
 Built so far, on the Daily as 0.0.1239 (e00d2ac3): the collect, the three named holes
