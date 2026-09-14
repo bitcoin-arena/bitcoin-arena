@@ -35569,3 +35569,18 @@ M3 W4 6d: LIVE, PERSIST / CLAIM LATER / ANOTHER DEVICE / UNITY'S LOBBY (runs C1 
   REMAINING (named) a lock refused at the door, known to no seat, comes back only on the device that made it;
                     a done round's wallet database is not dropped from the browser's storage yet; the
                     Withdraw's duration is M5's (Daniel 23:34).
+
+M3 W4 6d: ON THE DAILY - build 0.0.1265 (2026-09-14 23:57)
+  BUILD             Unity 6000.0.82f1 BuildWebGL.Run at 38baa2d, stamped 0.0.1265, 43 MB, errors 0, 1:27
+                    (the output passed as -buildOutput: the project's default is a macOS path and the
+                    first attempt failed "Permission denied" writing /Users/...). The built page carries
+                    the template at HEAD (vault, one tab per round, newest open round, /settled scan, KEY
+                    import, the Withdraw guard, the lobby's withdraw block); its blwp-client.js is dist.
+  DEPLOY            ./deploy-core.sh -> https://14086895.btc-logistics-core.pages.dev
+  CHECKED           blwp-client.js md5 9f04a9d946f1b6a4111c6071bd43a5ef locally, at the unique URL and
+                    at btc-logistics-core.pages.dev; both index.html name 0.0.1265.
+  GATES MET         (Daniel 23:34) Unity compile, EditMode at HEAD 194/198 (the red CombatFx test was
+                    red before), the live runs A4 / B1 / C2 of the page's Withdraw, a refused player's
+                    refund, persist / claim later / another device / Unity's lobby.
+  NOT MEASURED ON THE DAILY  a round played there: the Daily's seats are unreachable (daily.json's dead
+                    tunnels) - named in PRIORITIES, not this letter.

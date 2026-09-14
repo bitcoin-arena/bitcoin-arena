@@ -61,8 +61,14 @@ reopened 1930649 msat from the browser's storage, Unity's lobby drew "Withdrawal
 1930 sat - press Withdraw in the wallet panel", and the Withdraw paid alice 1930649, SETTLED.
 EditMode at HEAD 194/198 (the one red is CombatFx, red before). Numbers: TASKBOOK.
 Duration of the Withdraw: M5, not this letter (Daniel 23:34).
-NEXT: the Unity build at HEAD, then the Daily (Daniel 23:34: only now, W4/6d finished).
-The Daily (0.0.1247, 70d46f75) still has the hole until that deploy.
+DONE, ON THE DAILY (2026-09-14 23:57): build 0.0.1265 (38baa2d) deployed to
+btc-logistics-core (14086895); the unique URL and the alias serve its blwp-client.js
+(md5 9f04a9d9...) and 0.0.1265. The hole of 0.0.1247 is closed there. W4 / 6d IS CLOSED.
+Still named: the Daily's seats are unreachable (daily.json's dead tunnels), so no round
+is played there yet; a lock refused at the door comes back only on the device that made
+it; a done round's wallet database stays in the browser.
+NEXT (Daniel 23:36: continue M3 at once): W6 - a seat killed inside a lock settlement
+recovers to the right state on restart.
 RULED (Daniel 23:34): (1) deploy to Daily only when that is finished - not 0.0.1247 while
 the hole remains. (2) Withdraw time (414 s live) is OK; shorten it in M5, not now.
 RULED (Daniel 23:36): when this run is through, continue M3 immediately. No pause, no ask.
