@@ -35641,3 +35641,7 @@ M3 W6: A SEAT KILLED INSIDE A LOCK SETTLEMENT RECOVERS TO THE RIGHT STATE ON RES
                     payout contract(s) of 26a3b88918e9 stored, 3 of 3 claimed lock(s) gone".
                     THE REAL GUARDIANS ANSWER AS THE TEST PORT COPIES THEM: the claimed locks gone and the
                     payout contracts at (txid, i) stored, read with blwp-stake-lock --mode status.
+  SUITES            blwp-node 641/641: six chunks 605 (without lock-settlement and, for chunk 2's cap,
+                    forfeit + frost-bip340 11/11 and five-of-seven run on their own), lock-settlement
+                    15/15, five-of-seven 21/21 (11, then name groups of 3, 5 and 2 - the file runs past
+                    175 s alone, as before this letter). Each long run in its own systemd unit.
