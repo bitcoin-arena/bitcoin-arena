@@ -35106,6 +35106,24 @@ M3 W4 6d: THE PAGE COLLECTS THE WINNER'S PAYOUT; A LOSER'S FINDS NONE (Daniel 20
                     the close (980000 + 2 x 20000 in, winner 978000, seats 18000); the real tab's
                     lock gone, its wallet not asked; the winner 978000 (0 -> 973312) and 980000
                     back (973312 -> 1951232). Client 322/322 (+1 keptLockUse).
+  HOLE (3) CLOSED - A STAKE ALREADY BACK IS FINAL (build 0.0.1238, settle-live run 15, 14:32). The
+                    seats forfeit only a qualifier's lock, and after that only the seed's refund key
+                    can spend it (the committee's claim needs P, which only a loser's gives up); so a
+                    redeem refused while the guardians hold no contract there (stored_before null)
+                    means the stake already came back to this key. returnStake: final, spent;
+                    stakeBackLine "Stake already back: ... msat". A refusal while the lock is still
+                    held stays not final, with the federation's reason (unit: "guardians busy").
+                      before (run 14)  the second winner tab: "Stake: not back yet - The transaction
+                                       had an invalid input: 0-No contract found for given
+                                       ContractId", asked every 5 s
+                      after (run 15)   the reloaded tab on its own, 106 s after the settlement
+                                       (f16b1b72...): 978000 (0 -> 973312) and 980000 back (973312
+                                       -> 1951232), the federation holding neither; the second
+                                       winner tab: "Payout already collected: 978000 msat ... ·
+                                       Stake already back: 980000 msat - the stake lock is already
+                                       spent - back to this seed's key", both final, drawn 293x109
+                                       on top; the loser: "No payout · No stake back", both final.
+                    Client 322/322 (assertions in the stake-back test).
   NAMED HOLES ON W4 (cause; what it depends on):
                     (1) A RELOAD ONTO THE ROUND LINK STARTS A NEW JOIN - measured, run 8: after the
                         reload the page, holding 1536 msat, set out to fund a second 980000 + 20000

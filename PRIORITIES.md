@@ -16,12 +16,12 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE: W4 / 6d, the holes left on the winner's money path (TASKBOOK "NAMED HOLES ON W4"):
-(3) NEXT: the stake step does not read an already-redeemed lock as final (a second
-tab asks again every 5 s; no money left in the federation). (2) One entry without a
-fee lock blocks the round's whole settlement - WAITS ON A RULING: refuse it at the
-door, or settle without that fee. (1) closed: a reload onto the round link after the
-commit stops the join and asks no second deposit (build 0.0.1237, TASKBOOK).
+LIVE: W4 / 6d, the one hole left on the winner's money path (TASKBOOK "NAMED HOLES ON W4"):
+(2) One entry without a fee lock blocks the round's whole settlement once any fee lock
+in it is verified - WAITS ON A RULING: refuse such an entry at the door when the
+round's gate mints, or settle the stakes and leave that fee out.
+Closed: (1) a reload onto the round link after the commit asks no second deposit
+(0.0.1237); (3) a stake already back is final, "Stake already back" (0.0.1238).
 DECIDED (Daniel 07:22): a loser loses the stake. How-to art: done (16174f67).
 
 DONE: M3.2 item 6e - amounts (closed 2026-09-13, round 5 live). commit 1: 22A pick A in computePayoutTable
