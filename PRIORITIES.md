@@ -58,6 +58,7 @@ NEXT: Unity compile + EditMode; a live run of (1)-(3); then the Daily. The Daily
 70d46f75) still has the hole.
 RULED (Daniel 23:34): (1) deploy to Daily only when that is finished - not 0.0.1247 while
 the hole remains. (2) Withdraw time (414 s live) is OK; shorten it in M5, not now.
+RULED (Daniel 23:36): when this run is through, continue M3 immediately. No pause, no ask.
 Built so far, on the Daily as 0.0.1239 (e00d2ac3): the collect, the three named holes
 closed, the fee-lock door (TASKBOOK). Free rounds mint no fee lock.
 NOTE: the Daily's daily.json names quick tunnels that no longer resolve - no seats reachable.
