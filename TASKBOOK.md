@@ -35360,3 +35360,32 @@ M3 W4 6d: THE PAGE COLLECTS THE WINNER'S PAYOUT; A LOSER'S FINDS NONE (Daniel 20
                         round's gate mints, or settle the stakes and leave that fee out.
                     (3) THE STAKE STEP DOES NOT READ AN ALREADY-REDEEMED LOCK AS FINAL (run 14, a
                         second tab): no money left in the federation; the tab asks again every 5 s.
+
+M3 W4 6d: NOTHING SPENT BEFORE THE PLAYER WITHDRAWS (2026-09-14, ef88b4d; tests, not live)
+  HOLE              run 15: the page's 5 s collectThePayout redeemed the payout and the stake into the
+                    tab's sessionStorage wallet; withdrawing waited for the player. A closed tab lost it;
+                    a fresh tab read "Payout already collected · Stake already back", nothing to withdraw.
+  NOW               redeemPayout takes the wallet it is handed (as redeemStake did). lookOwed reads the
+                    seats' settlement, /stake-lock, /forfeit and the federation's read-only lockStatus
+                    (payout contract and stake lock still at their outpoints, or gone) and the tab's
+                    withdrawable - no refund, redeem or withdraw. The page's 5 s timer is lookThePayout.
+                    Withdraw = collectAndWithdraw: looks again, collects into the round's one wallet,
+                    pays the player's invoice at once; with no wallet connected and none pasted,
+                    nothing is collected.
+  MEASURED          page-lock.test.js, a federation that keeps contracts and each tab's e-cash:
+                      before  old timer's collect, tab closed: federation 0 contracts, closed tab
+                              1958000 msat, a fresh tab owed 0
+                      after   3 looks: federation holds 978000 (payout) + 980000 (stake), tab 0 msat,
+                              wallet asked lockStatus + withdrawableMsat only, 0 keys written;
+                              fresh tab: both owed; Withdraw without an invoice: 2 contracts still
+                              held; Withdraw: refund -> redeem -> withdraw, 1957000 msat paid out,
+                              tab 0; a third tab: both "no longer in the federation", final
+                    index.html static check: no interval function calls a spending function; the one
+                    collectAndWithdraw call is inside BLWP_WITHDRAW.
+                    blwp-client 328/328 (page-lock 23/23). wallet-nwc's paint test now drives BLWP_OWED
+                    (the collected-payout paint it asserted is gone from the page).
+  RESIDUAL (named)  a pasted invoice larger than the withdrawable after fees fails AFTER the collect -
+                    the money is then in the tab and the page says "withdraw it before you close the
+                    tab". Only the newest round is looked at and withdrawn (as before).
+  NOT DONE          live: settle-live-regtest.mjs and tools/page-lock.mjs read BLWP_PAYOUT /
+                    BLWP_STAKE_BACK / BLWP_REFUND, no longer set. The Daily still runs 0.0.1247.
