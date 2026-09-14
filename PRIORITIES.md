@@ -16,10 +16,10 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-NEXT (not started): W4 - a loser's stake lock claimed into the pool, and with
-it 6d (where a payout goes), the fee collector and the loopback donation
-recipients. Parked behind the fee-lock ruling: until it is ruled a loser's lock
-refunds at expiry. The ruling is Daniel's, not the code's.
+LIVE: W4 - a loser's stake lock claimed into the pool, and with it 6d (where
+a payout goes), the fee collector and the loopback donation recipients.
+DECIDED (Daniel 07:22): a loser loses the stake. Winners are paid from that
+pool. A refund-at-expiry loser would leave nothing to pay with. Do this now.
 
 DONE: M3.2 item 6e - amounts (closed 2026-09-13, round 5 live). commit 1: 22A pick A in computePayoutTable
 (rank weight x net stake within the paying ranks, §18A.6 leftover) - a 2% donor
@@ -914,6 +914,9 @@ is M3.2 item 5.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
 threshold 2 when the contract has 2 slots (Daniel 11:49).
 Daniel 10:18: everything that was set aside is M2, not later.
+
+HARD (Daniel 2026-09-14 07:22): a loser loses the stake. The lock is claimed
+into the pool. Winners are paid from that. W4 is unparked.
 
 HARD (Daniel 2026-09-11 14:19): V1 custody is the STAKE LOCK in FEDERATION.md
 and spec v4.6.2 §23. No single node is needed and no single node can take
