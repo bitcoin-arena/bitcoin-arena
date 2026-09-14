@@ -16,12 +16,13 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE: W4 / 6d, the one hole left on the winner's money path (TASKBOOK "NAMED HOLES ON W4"):
-(2) One entry without a fee lock blocks the round's whole settlement once any fee lock
-in it is verified - WAITS ON A RULING: refuse such an entry at the door when the
-round's gate mints, or settle the stakes and leave that fee out.
-Closed: (1) a reload onto the round link after the commit asks no second deposit
-(0.0.1237); (3) a stake already back is final, "Stake already back" (0.0.1238).
+LIVE: W4 / 6d hole (2), RULED pick (a) (Daniel 2026-09-14): where a round's gate mints,
+a seat refuses an entry that brings no fee lock; its stake is not counted. BUILT
+(5a3b227, 0.0.1239): the /entry door, a stake counted only with its fee lock, the
+settlement over committed entries only; node tests and the 100 sat live round green.
+OPEN until measured live: the 1000 sat door with a third player, and the page's chip
+saying why (rerunning). Closed: (1) no second deposit on reload (0.0.1237); (3) a stake
+already back is final (0.0.1238).
 DECIDED (Daniel 07:22): a loser loses the stake. How-to art: done (16174f67).
 
 DONE: M3.2 item 6e - amounts (closed 2026-09-13, round 5 live). commit 1: 22A pick A in computePayoutTable
