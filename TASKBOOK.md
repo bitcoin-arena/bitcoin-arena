@@ -35645,3 +35645,52 @@ M3 W6: A SEAT KILLED INSIDE A LOCK SETTLEMENT RECOVERS TO THE RIGHT STATE ON RES
                     forfeit + frost-bip340 11/11 and five-of-seven run on their own), lock-settlement
                     15/15, five-of-seven 21/21 (11, then name groups of 3, 5 and 2 - the file runs past
                     175 s alone, as before this letter). Each long run in its own systemd unit.
+  CORRECTED (W7, 2026-09-15) blwp-node was 630/630, not 641: chunk 2's cap left no summary and its 111
+                    passes were counted by hand; 11 of them were five-of-seven tests that finished before
+                    the cap, counted again in five-of-seven's own 21. The W6 commit (8209db6) says 641.
+
+M3 W7: A PAYING FEDERATION ROUND NAMES ITS FEDERATION, AND THAT IS CHECKED (2026-09-15)
+  RULE              a round that takes a stake into a FEDERATION names a non-zero federation_id (§23.6).
+                    A free round (stake 0) and a THRESHOLD_LN round may name none.
+  MEASURED BEFORE   custodyFieldsAreValid and federationIsBonded: 0 callers in node, client and protocol
+                    src. encodeRoundContract / decodeRoundContract checked nothing about custody; the seat
+                    door (POST /round) checked the relays only on a seat holding Lightning; the client
+                    only roundLocks. 19 builders of a paying FEDERATION round: 10 wrote a zero id (the
+                    eight hold-invoice launchers labelled FEDERATION, screen.mjs, make-vectors.js), 7 an
+                    invented b32(0xfe), 2 a real invite id; with the 3 enforcing points, 13 of 22 missing
+                    (20 of 22 counting an invented id as unnamed).
+  BUILT             federationIsNamed (contracts.js): refuses FEDERATION + stake > 0 + a zero or missing id.
+                    Called by encodeRoundContract and decodeRoundContract, and by custodyFieldsAreValid,
+                    which keeps the 144-block and relay rules. The seat door: a refused decode is 400; a
+                    paying FEDERATION round goes through custodyFieldsAreValid in full (409) before
+                    round.open. The client: lockStake checks custodyFieldsAreValid in full before anything
+                    is locked. federationIsBonded: still uncalled (parked with "which guardians"; every
+                    advert writes guardianOf: [], so it would refuse every federation).
+                    The eight hold-invoice launchers say THRESHOLD_LN (018f70e); contractFor's default and
+                    84 test-fixture lines that named FEDERATION with a zero id say THRESHOLD_LN; the
+                    fixture lock port carries TEST_FEDERATION_ID (protocol/src/test-federation.js) and the
+                    tests and five probes on it name it; lock-client-regtest and seat-lock-regtest name the
+                    real federation by their invite (federationIdOf); the golden vector names the test
+                    federation - its round and entry ids changed (348764bb -> 58540aef, f2290933 ->
+                    8ca1278d), nothing else in the vectors moved.
+  MEASURED AFTER    callers: federationIsNamed - contracts.js encode, decode, custodyFieldsAreValid;
+                    custodyFieldsAreValid - server.js POST /round, page-lock.js lockStake;
+                    federationIsBonded - 0. Paying FEDERATION builders writing zero or b32(0xfe): 0 (the
+                    remaining zero ids: testnet4-gate, THRESHOLD_LN; no-mark-probe's free round).
+                    Seat door (federation-named.test.js): zero id 400 "that is not a round this seat
+                    opens: that round takes a stake into a FEDERATION and names no federation_id ...";
+                    named without relays 409; named with expiry 12 409; named FEDERATION, THRESHOLD_LN and
+                    free 201; a refused round does not exist on the seat. Codec (protocol.test.js): encode
+                    refuses the zero id, decode refuses a named round's bytes with the id zeroed, a free
+                    and a THRESHOLD_LN round encode. Client (page-lock.test.js): lockStake refuses a named
+                    round with expiry 12 or no relay and the lock client is never joined.
+  SUITES            protocol 532/532; blwp-client 332/332; blwp-node 632/632 - six chunks 596 (114, 113,
+                    81, 133, 101, 54), lock-settlement 15/15 (3, 3, 9), five-of-seven 21/21 (3, 4, 5, 2, 5, 2).
+  FOUND ON THE WAY  (mine) an import heuristic left TEST_FEDERATION_ID unimported in 5 files; a proximity
+                    relabel turned one real lock round (wallet-nwc, .fill(0xfe)) into THRESHOLD_LN - a check
+                    over all 84 relabelled lines found no other; seatedWithLock left its seat open when the
+                    contract was refused and seat-lock.test.js hung - the fixture now closes it. Two
+                    assertions moved to what their tests claim: the page asks the lock client for the
+                    round's own federation (TEST_FEDERATION_ID, was the literal fefe...), and "a round
+                    naming no federation takes no lock" is a THRESHOLD_LN round, with the zero-id FEDERATION
+                    round now refused before it exists.

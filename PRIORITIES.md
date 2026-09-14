@@ -16,11 +16,19 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE: M3 W7 - THE FEDERATION IS NAMED EVERYWHERE A ROUND IS BUILT, AND CHECKED. Measured
-2026-09-15: custodyFieldsAreValid and federationIsBonded have 0 callers in node, client and
-protocol; 9 launchers still write a zero federation_id (custody-crash, no-mark-probe,
-payout-committee-regtest, custody-restart-lnd, settle-regtest, custody-lnd, payout-regtest,
-testnet4-gate, settle-crash-regtest). W7 of the M3 inventory (TASKBOOK), 1 of the 7 not parked.
+LIVE: M3 - THE SEVEN UNPARKED ITEMS OF THE INVENTORY ARE DONE (W1-W7). WHAT IS LEFT FOR "M3 IS
+DONE WHEN" WAITS ON RULINGS (Daniel): which guardians - and with it federationIsBonded (P3): no
+census lists a guardian today, so it would refuse every federation -; inbound and >= 2 independent
+gateways; the federation's fees; the fee locks' claim hash and 22A node slots; the result window
+(a contract field). A round for testnet sats needs the first two.
+
+DONE: M3 W7 - A PAYING FEDERATION ROUND NAMES ITS FEDERATION, AND THAT IS CHECKED (2026-09-15).
+The codec refuses a paying FEDERATION round with a zero federation_id (encode and decode,
+federationIsNamed); the seat door (POST /round) and the client (lockStake) hold a paying
+FEDERATION round to custodyFieldsAreValid in full. The eight hold-invoice launchers and the hold
+tests say THRESHOLD_LN; fixture tests name TEST_FEDERATION_ID; lock-client-regtest and
+seat-lock-regtest name the real federation by its invite. federationIsBonded stays uncalled.
+Numbers: TASKBOOK.
 
 DONE: M3 W6 - A SEAT KILLED INSIDE A LOCK SETTLEMENT RECOVERS TO THE RIGHT STATE ON RESTART
 (2026-09-15). Measured before: a seat restarted inside one never asked again - its row stayed
