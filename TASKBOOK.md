@@ -35204,6 +35204,29 @@ M3 W4 6d: THE PAGE COLLECTS THE WINNER'S PAYOUT; A LOSER'S FINDS NONE (Daniel 20
                     464 if nobody settles it" - the refused player's lock stays theirs.
     HOLE (2) CLOSED: the door refuses at both seats on the real federation (1000 sat, run 19), the
                     committed players settle (978000 / 18000 / 18000), and the page says why (0.0.1239).
+  DEPLOYED TO THE DAILY (Daniel's go, 2026-09-14 16:33; btc-logistics-core only - btc-logistics-war not
+                    touched, no mN freeze):
+                      wrangler      "Deployment complete!" https://e00d2ac3.btc-logistics-core.pages.dev
+                                    (6 files uploaded, 26 already there); the deploy's own checks: no
+                                    template tokens, the four how-to panels, the payout step and
+                                    redeemPayout in what went up, bundle and lock client = dist's
+                      served        unique URL and alias index 572be682ab80acf0 = the local one; the
+                                    live Build/webgl.data.unityweb (12864648 bytes, brotli, 27757886
+                                    decoded) carries "0.0.1239" - read from the live page, both URLs
+                                    (a second version-like string, "0.0.1128", is in the data too; which
+                                    asset carries it is not traced)
+                      free rounds   the Daily's two seats could NOT be asked: daily.json names two
+                                    trycloudflare quick-tunnel hosts that no longer resolve (curl exit 6,
+                                    000) and no Daily launcher runs on this machine - a Daily with no
+                                    reachable seats, before and apart from this deploy. Measured instead
+                                    on the current seat code with the launcher's own standUpRound (a free
+                                    2-of-2 round, ports 18411/18412) and the page's own entryFor (plus the
+                                    roundId and session key the jslib adds): stake 0, custody FEDERATION,
+                                    no federation named; the gate "this round owes no fee, so there is
+                                    nothing to lock"; the entry names no fee lock; /entry 201 at both
+                                    seats, stored - the door does not touch a free round.
+                      suites        node 624/624 (six chunks 603 + five-of-seven 21/21), protocol 530/530,
+                                    client 322/322. Unity EditMode/PlayMode not run (no C# changed).
   NAMED HOLES ON W4 (cause; what it depends on):
                     (1) A RELOAD ONTO THE ROUND LINK STARTS A NEW JOIN - measured, run 8: after the
                         reload the page, holding 1536 msat, set out to fund a second 980000 + 20000

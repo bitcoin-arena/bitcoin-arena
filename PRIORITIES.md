@@ -16,9 +16,10 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE: W4 / 6d - the winner's money path, all three named holes closed (TASKBOOK). NEXT:
-deploy build 0.0.1239 to btc-logistics-core on Daniel's go (green; the Daily's free
-rounds mint no fee lock, so the door does not touch them).
+DONE: W4 / 6d closed - the winner's money path, all three named holes measured closed
+on the real federation; build 0.0.1239 is on the Daily (btc-logistics-core, e00d2ac3,
+2026-09-14; TASKBOOK). Free rounds mint no fee lock, so the door leaves them alone.
+NOTE: the Daily's daily.json names quick tunnels that no longer resolve - no seats reachable.
 Closed: (1) no second deposit on reload (0.0.1237); (2) pick (a), the fee-lock door -
 live, 1000 sat: a player with no fee lock 409 at both seats, not counted, the others
 settle 978000 / 18000 / 18000; the page's chip says why (0.0.1239); (3) a stake
