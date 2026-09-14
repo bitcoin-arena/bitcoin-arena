@@ -35124,6 +35124,51 @@ M3 W4 6d: THE PAGE COLLECTS THE WINNER'S PAYOUT; A LOSER'S FINDS NONE (Daniel 20
                                        spent - back to this seed's key", both final, drawn 293x109
                                        on top; the loser: "No payout · No stake back", both final.
                     Client 322/322 (assertions in the stake-back test).
+  HOLE (2), PICK (a) - REFUSE AT THE DOOR (Daniel 2026-09-14): "When a round's fee-lock gate mints,
+                    a seat refuses any entry that brings no verified fee lock ... A mixed counted set
+                    is a seat bug: make it unreachable on join." Not (b); no settle-anyway path.
+    THE RULE, WHERE IT LIVES (seat only; settlement unchanged)
+                    stake-lock-seat roundMintsFees: Pick b's gate on the round's contract and the
+                      federation's own fee rule (port.fees()).
+                    POST /entry: where it mints, an entry naming no fee lock or no F is refused 409
+                      and not stored ("this round mints fee locks (...): an entry that brings no fee
+                      lock is not seated - its stake would not be counted, and it would block the
+                      round's settlement"); the rule unreadable - 503, nothing seated.
+                    verifyStakeLock: where it mints, the stake lock is kept but not SEEN until the
+                      fee lock is verified (/lock 201 "... counted once its fee lock is verified");
+                      verifyFeeLock marks it seen then. Unseen: no play ("stake not seen").
+                    settlement entriesOnRecord: only entries whose stake the seat saw (§23.1 step 5).
+                      A seen entry with no fee lock still refuses the settlement, as before.
+    NODE TESTS      lock-settlement: (1) 1000 sat, the gate mints: an entry with no fee lock 409 at
+                      both seats, stored at neither; the two who brought theirs: "claimed 1 loser
+                      lock(s), 980000 msat; paid 1 qualifier(s) 978000 msat; fee locks 2, 40000 msat,
+                      paid 2 seat(s) 36000 msat" - payouts 978000, 18000, 18000; the refused player's
+                      lock untouched. (2) an entry naming a fee lock never handed: entry 201, lock 201
+                      "counted once its fee lock is verified", not seen, its batch "stake not seen";
+                      the settlement runs without it, its lock not claimed.
+                    THE FIXTURE'S FEE RULE: its default was zero, no federation's rule, and under it
+                      the gate mints at 100 sat - so 31 lock-round tests (first-mark, outage, one-seat-
+                      refused, five-of-seven) that seat entries without fee locks were refused at the
+                      door (and two chunks ran past 180 s). The default is now the measured rule (1000
+                      msat per input and output, 0 ppm): a 100 sat round mints nothing there, as with
+                      the real guardians; a test about fees sets its own rule.
+                    Suites: node 623/623 (six chunks 602 + five-of-seven 21/21), protocol 530/530,
+                      client 322/322.
+    LIVE, 100 SAT (settle-live run 16, the gate does not mint: "the fee locks hold 4000 msat and their
+                    inputs alone cost 2000"): two entries with no fee lock, lock 201 at both seats;
+                    settlement 75f1d1fb...: the loser's 98000 in, the winner 96000 out; the winner's
+                    page 96000 (0 -> 92672) and 98000 back (92672 -> 188928); the loser "No payout ·
+                    No stake back". Unchanged.
+    LIVE, A REAL PAGE THAT BRINGS NO FEE LOCK (page-lock nofee, build 0.0.1238; the harness drops the
+                    fee lock from the page's join): one deposit 1016353, the stake lock 980000 made;
+                    /entry 409 at the seat - "the node refused the entry: this round mints fee locks
+                    (every one of 4 seats is paid more than nothing after the federation's fees): an
+                    entry that brings no fee lock is not seated ..."; no lock posted, committed at
+                    neither seat. BUT ON SCREEN the chip read "1 player · waiting · stake dealt, unpaid":
+                    the Client's refusal reached only the console ("[blwp] session: ..."). The jslib's
+                    session catch now also writes it to BLWP_SEAT_REFUSED, which the chip shows as "not
+                    seated · <why>" (build 0.0.1239). The player's stake lock stays theirs: back to
+                    their key from its expiry block.
   NAMED HOLES ON W4 (cause; what it depends on):
                     (1) A RELOAD ONTO THE ROUND LINK STARTS A NEW JOIN - measured, run 8: after the
                         reload the page, holding 1536 msat, set out to fund a second 980000 + 20000
