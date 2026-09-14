@@ -34827,3 +34827,18 @@ M3 W4 PICK (b): FEE LOCKS ARE ONLY CREATED WHEN THEY CAN PAY A SEAT (Daniel 2026
   SUITES            protocol 528/528 (+4), client 318/318 (+2; bundle 368d1781 and the new lock
                     client 0f7dbbd5 / 91b4e496 added to known-good), node 621/621 (six chunks
                     600 + five-of-seven 21/21; +1). Wasm: cargo release wasm32 Finished (1m58s).
+  LIVE, A REAL FEDERATION (lock-client-regtest.sh step D; stock fedimintd 0.12.0, 4 guardians,
+                    3 of 4, one gateway, regtest; the wasm lock client driven from Node):
+                      the federation's fee rule, from the new wasm feeRule: base 1000 msat,
+                        0 ppm - the rule the gate assumed
+                      the gate on it: 1000 sat mints (per-seat net 8500 x 4), 100 sat does not
+                      a real hash-image fee lock: 20000 msat to H(F) in 506 ms at
+                        abe5437e97a49060...:0 (contract 53c62445519a6a2c...)
+                      both seats /fee-lock: 201 and 201, "fee lock verified ... holds 20000
+                        msat", kept; D's stake lock 980000 committed at both
+                      W1a's steps still hold: lock A 980000 committed at both; an outpoint
+                        with no lock and a lock to an unattested key refused at both (409)
+                    The driver still called the W1a one-argument join and died reading the
+                    missing store ("Cannot read properties of undefined (reading 'length')") -
+                    stale since W1b's four-argument join; it now joins with the invite's own
+                    federation id, a fresh secret and an in-memory store.
