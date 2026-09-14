@@ -35389,3 +35389,34 @@ M3 W4 6d: NOTHING SPENT BEFORE THE PLAYER WITHDRAWS (2026-09-14, ef88b4d; tests,
                     tab". Only the newest round is looked at and withdrawn (as before).
   NOT DONE          live: settle-live-regtest.mjs and tools/page-lock.mjs read BLWP_PAYOUT /
                     BLWP_STAKE_BACK / BLWP_REFUND, no longer set. The Daily still runs 0.0.1247.
+
+M3 W4 6d: THE PASTED INVOICE, AND THE LIVE DRIVER ON WHAT THE PAGE LOOKS AT (2026-09-14, 2a063be)
+  PASTE HOLE        a pasted invoice is for a fixed amount; what the tab can pay after the federation's
+                    and the gateway's fees is known only once collected (live, run 15: 978000 + 980000
+                    msat collected became a 1951232 msat balance). The page showed the owed 1958000, so
+                    a player pasting it had the collect go through and the withdraw fail - the money in
+                    the tab, run 15's hole by another door. The wasm offers no pre-collect quote of the
+                    post-fee sum and this worktree has no Rust toolchain to add one.
+  RULE              a pasted invoice never collects: while the federation holds anything owed it is
+                    refused with nothing collected; with money already in the tab it pays when its
+                    amount fits the withdrawable, else it is refused unmoved. The federation's money
+                    leaves only through a wallet asked for the exact sum (the connected NWC wallet;
+                    live, the harness hands the page alice's lnd the same way).
+  MEASURED (sim)    pasted for 1958000, no rule: federation 0 contracts, tab 1958000, "the withdraw
+                    ended Failure"; ruled: federation 2 contracts, tab 0, wallet asked lockStatus +
+                    withdrawableMsat only; already in the tab: 1958000 refused unmoved (1957000
+                    payable), 1957000 paid, tab 0. blwp-client 328/328, page-lock 23/23.
+  CONSEQUENCE       a player with no connected wallet can no longer take the federation's money out by
+                    pasting an invoice; it stays in the federation under their key. A Lightning address
+                    (LNURL-pay, asked for the exact sum after the collect) would give them a way - not
+                    built.
+  DRIVER            settle-live-regtest.mjs reads BLWP_OWED; the 1000 sat round's players: the first
+                    tab only looks (and 16 s more), is closed with no withdraw; the federation read; a
+                    fresh tab handed the SAME SEED (a player's backup - the page keeps the seed and the
+                    join record in sessionStorage, so a closed tab without a backup reaches nothing)
+                    looks; a pasted invoice for the owed sum is tried; then BLWP_WITHDRAW with alice's
+                    lnd handed in; that tab and a third look after. The refused player's tab: its look
+                    finds the lock owed by its key after expiry, then its Withdraw. page-lock.mjs reads
+                    BLWP_OWED; its Node-side winner looks instead of collecting.
+  REMAINDER (named) only the newest round the tab keeps is looked at and withdrawn; an older round's
+                    money stays in the federation under the player's key, unseen by the page.
