@@ -34648,3 +34648,64 @@ M3.2 ITEM 6e: THE THIRD PASS - THE DONATION LEFT THE WALLET BEFORE THE STAKE (20
                     the stake.
   SUITES            client 314/314 (+2), node 616/616 (six chunks 595 + five-of-seven 21/21
                     in four name groups); core 91 and protocol 512 unchanged since 5067260.
+
+M3 LATER: A RUN THAT REACHES ITS LAST TICK TAKES NO MORE TICKS (2026-09-14, 7030267, NOT DEPLOYED)
+  BEFORE (live)     round 5, the idle page: after its run it kept recording; a batch to
+                    tick 9113 of a run ending at 8999 was refused whole and the page's run
+                    ended VOID - the chip read "not publishing · error ... inputs past the end".
+  BEFORE (process)  the page's loop over BLOCK_TICKS + 600 against a node: VOID "the node
+                    refuses this run's inputs at tick 9000 ... this batch reaches 9599:
+                    inputs past the end", 2 refusals (the first resyncs, the second ends it),
+                    the seat holds 9000.
+  FIX               Client.runOver() asks the seat's own line, lastTickOfRun(joinTick);
+                    blwp.jslib net.tick asks it before recording - past the end a tick is
+                    counted, not recorded or marked, and what is still held keeps draining.
+                    record()'s own overflow rule is unchanged (six client tests use it).
+  AFTER             600 ticks past the end not recorded, not ended, published to 9000, the
+                    seat holds exactly 9000. bridge.test.js checks net.tick asks first.
+  SUITES            client 316/316 (+2). The jslib gate reaches the page only with a Unity
+                    build - carried by the how-to build below.
+
+M3 W4: A LOSER'S STAKE LOCK IS CLAIMED INTO THE ROUND'S ONE SETTLEMENT (Daniel 2026-09-14 07:22, 1d8251c)
+  RULED             "a loser loses the stake. The lock is claimed into the pool. Winners are
+                    paid from that." FEDERATION.md money flow step 5 is the design.
+  BEFORE            (W5b) nothing claimed a loser's lock: its forfeit 409, the lock held,
+                    back to the loser at its expiry.
+  BUILT             protocol lock-settlement.js - the hold path's own verdict (holdSettlement)
+                    over one payout table; SETTLE = a loser's lock claimed (Claim(P)), CANCEL =
+                    the forfeit (W5b), NOTHING = left to expire; one pre-expired payout
+                    contract per qualifier owed a share (winnings: row less its own net),
+                    refund_pk = the key its own lock names; the guardians' LNv2 fees pro rata
+                    to what each is owed; inputs by outpoint, payouts by key, nonce from the
+                    round id. blwp-node settlement.js - from the seat's own record, each
+                    loser's P opened by the share conversation and checked against its lock's
+                    point, the txid rebuilt by the stock client, FROST-signed with the peers
+                    (/settle-commit, /settle-share, /settle-signature), intent on disk before
+                    the submit, GET /lock-settlement; run by the close logic once nothing
+                    waits and nothing is suspended. blwp-stake-lock: settle --payouts
+                    PK:MSAT,... (exact, refused if the locks cannot pay), --mode fees.
+  MEASURED          protocol: round 5's outcomes on locks - the page's 98000 claimed, Z0 paid
+                    98000, D2 owed nothing on top; 0.1% fees to the msat (97805 + 97); five
+                    qualifiers and three losers - two paying ranks 167144+424 and
+                    125356+320, input fees 756, unspent 0; a missing or wrong-amount lock
+                    refused; VOID never claimed; the same txid whatever the entry order.
+                    node (two seats, the real guardians' fee rule 1000 msat base, 0 ppm):
+                    the loser's 98000 msat lock claimed, the winner paid one payout contract
+                    of 96000 msat to its own lock key, one signature verifies under claim_pk
+                    over the txid, both seats hold it, the winner's forfeit still 200.
+                    real fedimintd 0.12.0 (stake-lock-step3.sh, the rebuilt tool): two locks
+                    1960000 msat into 1957000 (fee rule base 1000, 0 ppm); a 1-of-2 signature,
+                    a wrong secret and the same claims under a new nonce refused; the same
+                    bytes resubmitted accepted again.
+  CHANGED TEST      forfeit.test.js: the W5b fact loserLockHeld: true pinned the parked hole;
+                    it reads false now, beside loserClaimedBySettlement: true, and the test
+                    waits for the settlement as it waits for the forfeit (a race: measured
+                    once before, once after the forfeit).
+  NOT IN IT         fee locks (claim hash, 22A node slots - F5): a fee lock still expires
+                    back. A round with losers and no qualifier: nothing claimed (the hold path
+                    refuses the same round - "the operator would keep ..."). Still to come:
+                    the daemon path against a real federation (so far the port is the
+                    fixture's; the tool itself was measured real), and the page's redeem of
+                    its payout contract (6d).
+  SUITES            protocol 519/519 (+7), node 618/618 (six chunks 597 + five-of-seven 21/21;
+                    +2), client 316/316.

@@ -920,6 +920,16 @@ HARD (Daniel 2026-09-14 07:55): howto art is transparent on dark. Signal
 whites the bg; the PNGs in Assets/Art/Resources/lobby-howto*.png have white
 knocked out. Lobby + loading. Desktop may split; mobile 1-2 top, 3-4 bottom.
 Must stay readable.
+DONE (W4, 1d8251c): after the window the seats claim every loser's stake lock into
+one settlement and pay each qualifier a pre-expired payout contract from it - one
+claim_pk signature over the txid they each rebuilt. Two seats: the loser's 98000
+msat claimed, the winner paid 96000 (the real guardians' 1000 msat per input and
+output); before, the lock went back to the loser at expiry (TASKBOOK). OPEN in W4:
+the daemon path on a real federation, the page's redeem of the payout (6d); fee
+locks stay with F5.
+IN PROGRESS (how-to): four panels in the Unity lobby (1-2 over 3-4 on a portrait
+phone, one row on a wide desktop, a column on a phone on its side; LobbyScreenTests
+4/4) and on the loading screen; the WebGL build is running, not deployed yet.
 
 HARD (Daniel 2026-09-14 07:22): a loser loses the stake. The lock is claimed
 into the pool. Winners are paid from that. W4 is unparked.
