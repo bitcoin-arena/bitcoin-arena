@@ -35533,3 +35533,39 @@ M3 W4 6d: A WITHDRAWAL CLAIMED ON ANOTHER DEVICE BY THE SEED (Option A, Daniel ~
                     looks - the Withdraw and Unity's notice follow as for a round the tab joined.
   NOT MEASURED YET  live: a round settled on a real federation, a second browser profile holding only
                     the seed, its Withdraw paying alice.
+
+M3 W4 6d: LIVE, PERSIST / CLAIM LATER / ANOTHER DEVICE / UNITY'S LOBBY (runs C1 and C2, 2026-09-14)
+  THE RUNS          settle-live C1 23:24-23:34 and C2 23:38-23:51, stock fedimintd 0.12.0; page = Unity
+                    build 0.0.1260 + the template at dc7168c (vault, one tab per round, newest open round,
+                    /settled scan, KEY import, BLWP_FIND_OWED, the lobby's withdraw block); CLAIM_LATER=1,
+                    each browser closed as a browser closes. exit 0 both.
+  C1 FINDING        the phone's next start read "This round's withdrawal is open in another tab of this
+                    browser" for 181 s and never looked. Taken apart without a federation: headless Chrome
+                    started again on the same profile brings back the tab it had (after Browser.close and
+                    after a SIGKILL alike) and that tab takes the round's lock first - the page did as built,
+                    the driver watched a second tab. The driver now drives the restored tab (as a phone's
+                    browser coming back) and sends it to a lobby link of the Daily's form.
+  C2 DESKTOP        the winner's tab: owed 1958000 msat (payout 978000 + stake 980000), kept in the browser
+                    (1 round), the lobby's block {available, 1958000}; closed with no withdraw - the federation
+                    holds the payout and the stake lock.
+  C2 PHONE          another browser profile, 0 rounds kept; the seed brought in (importSeed); the page's own
+                    scan over the two seats found the round in 36 ms (/settled, its key matched locally);
+                    looked: owed 1958000 in 4.0 s; the federation still holds both.
+  C2 CUT OFF        its Withdraw collected both (the federation holds neither) and reached "asking the
+                    player's wallet for an invoice of 1930649 msat" in 77.4 s, the screen reading "Withdrawing
+                    - do not close this tab ..."; the wallet never answered and the browser was closed there.
+  C2 NEXT START     the same profile, the restored tab sent to the lobby: the kept round and its wallet
+                    from the browser's storage - owed 0, 1930649 msat in the tab, final - "1930649 msat is in
+                    this tab's wallet - withdraw it to your own wallet before you close the tab".
+  C2 UNITY          what Unity's lobby drew, reported by SplashScreen: showing, lobby, "Withdrawal available:
+                    1930 sat - press Withdraw in the wallet panel", 0.6 s after the look
+                    (screenshot claim-phone-lobby.png).
+  C2 WITHDRAW       Success, 1930649 msat through the listed gateway, the tab 1951232 -> 0 msat, alice's
+                    invoice SETTLED 1930649, 285 s; after: final, the lobby's block {available: false}; the
+                    federation holds neither.
+  UNITY             EditMode at HEAD 198: 194 passed, 1 failed, 3 skipped - the lobby's withdrawal test
+                    passes; the failure is CombatFxTests.RifleFireProducesAFlashAndATracer, red before this
+                    letter too.
+  REMAINING (named) a lock refused at the door, known to no seat, comes back only on the device that made it;
+                    a done round's wallet database is not dropped from the browser's storage yet; the
+                    Withdraw's duration is M5's (Daniel 23:34).

@@ -54,8 +54,15 @@ seed backup; the nodes store nothing new. BUILT (simulation): the seats list wha
 settled since a time with the keys it pays and its locks' refund keys (GET /settled); the
 page, on lobby start, derives its key per round and matches locally (asks nothing per
 round), fetches only a matched round's contract and keeps it; lookback 24 h.
-NEXT: Unity compile + EditMode; a live run of (1)-(3); then the Daily. The Daily (0.0.1247,
-70d46f75) still has the hole.
+DONE LIVE (run C2, 23:38-23:51, real federation, build 0.0.1260 on screen): the desktop
+looked (1958000 owed) and closed; another browser profile with only the seed found the round
+in 36 ms and looked; its Withdraw collected and was cut off before the pay-out; its next start
+reopened 1930649 msat from the browser's storage, Unity's lobby drew "Withdrawal available:
+1930 sat - press Withdraw in the wallet panel", and the Withdraw paid alice 1930649, SETTLED.
+EditMode at HEAD 194/198 (the one red is CombatFx, red before). Numbers: TASKBOOK.
+Duration of the Withdraw: M5, not this letter (Daniel 23:34).
+NEXT: the Unity build at HEAD, then the Daily (Daniel 23:34: only now, W4/6d finished).
+The Daily (0.0.1247, 70d46f75) still has the hole until that deploy.
 RULED (Daniel 23:34): (1) deploy to Daily only when that is finished - not 0.0.1247 while
 the hole remains. (2) Withdraw time (414 s live) is OK; shorten it in M5, not now.
 RULED (Daniel 23:36): when this run is through, continue M3 immediately. No pause, no ask.
