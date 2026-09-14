@@ -16,12 +16,12 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE: W4 / 6d hole (2), RULED pick (a) (Daniel 2026-09-14): where a round's gate mints,
-a seat refuses an entry that brings no fee lock; its stake is not counted. BUILT
-(5a3b227, 0.0.1239): the /entry door, a stake counted only with its fee lock, the
-settlement over committed entries only; node tests and the 100 sat live round green.
-OPEN until measured live: the 1000 sat door with a third player, and the page's chip
-saying why (rerunning). Closed: (1) no second deposit on reload (0.0.1237); (3) a stake
+LIVE: W4 / 6d - the winner's money path, all three named holes closed (TASKBOOK). NEXT:
+deploy build 0.0.1239 to btc-logistics-core on Daniel's go (green; the Daily's free
+rounds mint no fee lock, so the door does not touch them).
+Closed: (1) no second deposit on reload (0.0.1237); (2) pick (a), the fee-lock door -
+live, 1000 sat: a player with no fee lock 409 at both seats, not counted, the others
+settle 978000 / 18000 / 18000; the page's chip says why (0.0.1239); (3) a stake
 already back is final (0.0.1238).
 DECIDED (Daniel 07:22): a loser loses the stake. How-to art: done (16174f67).
 

@@ -35189,6 +35189,21 @@ M3 W4 6d: THE PAGE COLLECTS THE WINNER'S PAYOUT; A LOSER'S FINDS NONE (Daniel 20
                     The same run, 100 sat (the gate does not mint): no fee locks, lock 201 at both
                     seats, settlement a051c1d9...: 98000 in, winner 96000, collected 96000 and 98000
                     back; the loser neither.
+    LIVE, THE REAL PAGE'S CHIP (page-lock nofee, build 0.0.1239, 16:22-16:29, real federation; the
+                    harness drops the fee lock from the page's own join): deposit 1016353, the stake
+                    lock 48c3b5f0...:0 made (980000); /entry 409 at the seat, no lock handed, committed
+                    at neither seat. ON SCREEN the chip:
+                      before (0.0.1238)  "1 player · waiting · stake dealt, unpaid" - the reason only
+                                         in the console
+                      after (0.0.1239)   "not seated · the node refused the entry: this round mints
+                                         fee locks (every one of 4 seats is paid more than nothing
+                                         after the federation's fees): an entry that brings no fee
+                                         lock is not seated - its stake would not be counted, and it
+                                         would block the round's settlement"
+                    The panel: "stake locked ... 980000 msat ... back to your key from federation block
+                    464 if nobody settles it" - the refused player's lock stays theirs.
+    HOLE (2) CLOSED: the door refuses at both seats on the real federation (1000 sat, run 19), the
+                    committed players settle (978000 / 18000 / 18000), and the page says why (0.0.1239).
   NAMED HOLES ON W4 (cause; what it depends on):
                     (1) A RELOAD ONTO THE ROUND LINK STARTS A NEW JOIN - measured, run 8: after the
                         reload the page, holding 1536 msat, set out to fund a second 980000 + 20000
