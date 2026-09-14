@@ -946,7 +946,14 @@ path on a live federation, the page's redeem of its payout (6d).
 DONE (W4 live): the whole settlement on stock fedimintd 0.12.0, two seats. 100 sat:
 the loser's 98000 claimed, the winner paid 96000, no fee lock. 1000 sat: 980000 and
 two 20000 fee locks in, the winner paid 978000, each seat 18000, 6000 to the
-federation. One claim-key signature, 5.4-5.9 s after close (TASKBOOK). OPEN: 6d.
+federation. One claim-key signature, 5.4-5.9 s after close (TASKBOOK).
+DONE (6d): after the window the page collects the winner's payout into its own
+federation wallet and tells a loser there is none. Live: 96000 / 978000 collected,
+the loser's lock client asked nothing; on screen in Chrome, winner "Payout collected:
+978000 msat" and loser "No payout" (TASKBOOK). And the winner's own stake back by the
+seats' forfeit into the same wallet: 98000 (wallet 92672 -> 188928) and, on screen,
+980000 (973312 -> 1951232); the federation no longer holds it. A loser: "No stake
+back", its lock client asked nothing.
 
 HARD (Daniel 2026-09-14 07:22): a loser loses the stake. The lock is claimed
 into the pool. Winners are paid from that. W4 is unparked.

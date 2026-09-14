@@ -34883,3 +34883,86 @@ M3 W4: THE WHOLE SETTLEMENT ON A LIVE FEDERATION (Daniel 2026-09-14, step 1 of t
   SUITES            protocol 530/530, node 621/621 (six chunks 600 + five-of-seven 21/21).
                     The node change: GET /lock-settlement also says when the settlement was
                     made and what it moved (LockSettlement.summary).
+
+M3 W4 6d: THE PAGE COLLECTS THE WINNER'S PAYOUT; A LOSER'S FINDS NONE (Daniel 2026-09-14, step 2)
+  BEFORE            nothing on the page spent a payout contract. The wasm lock client's
+                    refund took a point image only ("only a stake lock, whose image is a
+                    point, is refunded here"); a payout contract's image is Hash(zeros). So
+                    the settlement paid the winner's key and nothing collected it.
+  BUILT             lock client: refund spends a hash-image contract too (the pre-expired
+                    payout, by Refund under its key). page-lock: settlementOf (the first
+                    seat whose settlement the guardians ACCEPTED, and what it moved);
+                    redeemPayout (the 'qualifier' payout to this seed's refund key, spent
+                    into the tab's own federation wallet; none - final, the lock client
+                    asked nothing; not settled yet - asked again; collected - kept in the
+                    tab, so a reload does not try to spend a spent contract); payoutLine.
+                    index.html: collectThePayout every 5 s for a lock round, painted in the
+                    wallet panel's settled line; the join keeps BLWP_LOCK_JOIN (invite,
+                    round, seed, nodes). Bundle exports settlementOf, redeemPayout,
+                    payoutLine.
+  TESTS             page-lock: the winner's page spends output 1 of a settlement paying a
+                    seat and the winner (978000 msat, the Refund fields: hash image zeros,
+                    claim = refund = its key, expiration 0); the loser's page: "pays this
+                    seed's key nothing", lock client asked 0 times; not settled: not final;
+                    a reloaded tab answers from its note, asking seats and client nothing.
+                    wallet-nwc drives the shipped paintWallet: the settled line empty before,
+                    "Payout collected: 978000 msat ..." / "No payout: ..." after.
+  LIVE, NODE        settle-live-regtest (stock fedimintd 0.12.0), each player's page code
+                    from its seed alone into a fresh wallet of the federation:
+                      100 sat   winner 96000 collected, wallet 0 -> 92672 msat, the payout
+                                contract spent; loser "No payout", 0 lock-client joins
+                      1000 sat  winner 978000 collected, wallet 0 -> 973312 msat, spent;
+                                loser "No payout", 0 joins
+                    (the 3328 / 4688 msat between payout and wallet: the guardians' fee on
+                    the spend's input and the e-cash notes it is issued in)
+  ON SCREEN         the same run, 1000 sat round, PAGE_DIR = WebGL build 0.0.1234 in headless
+                    Chrome, each tab handed the join state its own join sets (harness
+                    instrumentation, as page-lock's reload mutants); the page's own
+                    collectThePayout and wasm lock client did the rest:
+                      winner  78.7 s after it was handed the round: "Payout collected:
+                              978000 msat from the round's settlement into this tab's
+                              federation wallet (balance 0 -> 973312 msat)", drawn 293x55,
+                              topmost; the payout contract spent in the federation
+                      loser   11.4 s: "No payout: the round's settlement pays this seed's
+                              key nothing: no payout to collect", drawn 293x36, topmost
+                    Screenshots: payout-1000sat-DELIVERED.png / -FAILED.png - the line in the
+                    wallet panel under the stake-lock line, beside the lobby.
+  FOUND ON THE WAY  the driver's world search took a loser world decided at tick 2040; the
+                    seat refused its first mark as FORFEIT (deadline 1400) - correct; the
+                    search now stops at the round's startDeadlineTicks. The page's first
+                    wiring called BLWPCLIENT.payoutLine, which the bundle's explicit export
+                    list did not carry (2 client tests red); added.
+                    A rerun on the rebuilt page was stopped by a seat: "that stake lock
+                    expires at 452, before 315 + 144: a loser could refund before
+                    settlement" (409) - correct. The lock was made at the guardians'
+                    consensus count 302 (144 + the page's 6 margin = 150) and checked at 315:
+                    the setup mines in batches and the federation's count was still
+                    catching up. No miner runs in the background. On a live chain the
+                    count moves one block in ten minutes, so the 6 blocks are about an
+                    hour there; the harness now waits until three reads 5 s apart agree
+                    before any lock, and prints the count.
+  THE WINNER'S OWN STAKE (before: still held after every settlement - 98000 / 980000
+                    msat in the federation; the page never called redeemStake). Now the page's
+                    returnStake, once the seats hold an ACCEPTED settlement: the seats'
+                    forfeit (GET /forfeit, made on demand for a FINAL qualifier), redeemed
+                    into the wallet the payout went into (the same client); a refusal as
+                    "that run is FAILED with score ..." is final - that stake is in the pool,
+                    the lock client asked nothing; any other refusal is asked again. Kept
+                    in the tab, so a reload asks nobody.
+  LIVE (run 9, 11:06, build 0.0.1234 rebuilt with it; the block count 308/308 against
+                    chain 313, then 314/314 at 37 s; every lock 201 at both seats, expiry 464):
+                      100 sat  (Node)    settlement 65a15c71...: loser 98000 in, winner 96000 out
+                        winner  payout 96000, wallet 0 -> 92672; stake 98000 returned, wallet
+                                92672 -> 188928; its lock held before, NOT held after
+                        loser   "No payout" / "No stake back: ... went into the round's pool";
+                                lock client joins 0; its lock already claimed
+                      1000 sat (on screen, headless Chrome) settlement 5da03f7f...: 980000 + 2 x
+                               20000 in, winner 978000, each seat 18000
+                        winner  "Payout collected: 978000 msat ... (balance 0 -> 973312 msat) ·
+                                Stake returned: 980000 msat back to this tab's federation
+                                wallet by the seats' forfeit (balance 973312 -> 1951232 msat)",
+                                drawn 293x91, topmost; the lock NOT held after
+                        loser   "No payout: ... · No stake back: ... went into the round's pool",
+                                drawn 293x91, topmost
+  SUITES            protocol 530/530, client 320/320 (+1 stake-back test; wallet-nwc drives the
+                    joined line), node 621/621 (six chunks 600 + five-of-seven 21/21).
