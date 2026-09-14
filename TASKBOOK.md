@@ -35505,3 +35505,6 @@ M3 W4 6d: LIVE, A REFUSED PLAYER'S OWN TAB WITHDRAWS ITS STAKE BACK BY ITS OWN K
   WORDING (named)   after the withdraw the settled line reads "No stake back: no lock of yours is left in
                     the federation for this round" beside "Withdrawn: 961392 msat ..." - the stake did
                     come back (by the player's key) and was withdrawn; the line says it the wrong way.
+  WORDING FIXED     lookOwed marks a lock gone after its expiry how: 'refund'; the line reads "Stake 980000
+                    msat: no longer in the federation - back to your key after its expiry" (was "No stake
+                    back: no lock of yours is left ..."). blwp-client 330/330.
