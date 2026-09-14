@@ -16,12 +16,11 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-LIVE: W4 / 6d, still open (TASKBOOK). DONE: the destination - the page withdraws what it
-collected to the player's own wallet (on screen: 1930649 msat, alice SETTLED); a lock no
-seat will settle comes back by the player's key after expiry from the tab's own record
-(live, the page's code: 980000 back, 961392 withdrawn, alice SETTLED); makeInvoice
-tested. Build 0.0.1247. OPEN, NEXT: that refund driven by the page's collect loop in a
-browser tab; then 0.0.1247 on the Daily (the Daily is 0.0.1239) on Daniel's go.
+LIVE: W4 / 6d - everything the goal names is measured live (TASKBOOK): the destination
+(the page withdraws to the player's own wallet, on screen 1930649 msat SETTLED) and a
+lock no seat will settle coming back by the player's key after expiry (a refused tab on
+screen: 980000 back, 961392 withdrawn, SETTLED); makeInvoice tested. Build 0.0.1247.
+NEXT: 0.0.1247 on the Daily (the Daily is 0.0.1239) on Daniel's go; then W4 / 6d closes.
 Built so far, on the Daily as 0.0.1239 (e00d2ac3): the collect, the three named holes
 closed, the fee-lock door (TASKBOOK). Free rounds mint no fee lock.
 NOTE: the Daily's daily.json names quick tunnels that no longer resolve - no seats reachable.

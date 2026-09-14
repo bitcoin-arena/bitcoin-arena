@@ -35301,8 +35301,33 @@ M3 W4 6d: THE PAGE COLLECTS THE WINNER'S PAYOUT; A LOSER'S FINDS NONE (Daniel 20
                       withdrawn       Success 961392 msat, 975360 -> 0; alice's invoice SETTLED 961392
                     run 23 (17:40) had not mined: getnewaddress without the setup's -rpcwallet answered
                     nothing ("Invalid address"); the harness now uses the setup's own wallet.
-    NOT YET SEEN    the same refund driven by the page's own collect loop in a browser (a refused tab on
-                    screen); and 0.0.1247 is not on the Daily (the Daily is 0.0.1239).
+    ON SCREEN (settle-live run 25, 18:06-18:15, build 0.0.1247, real federation): the refused player's own
+                    tab - handed the two records its join keeps (saveLock, saveCollect), then left to the
+                    page's own collect loop:
+                      before expiry   "No payout: the round's settlement pays this seed's key nothing ·
+                                      Your lock (stake 980000 msat) comes back to your key from
+                                      federation block 465 (now 315)"
+                      mined           the guardians' count 472/472
+                      after expiry    within 142 s the tab refunded 980000 msat by its own key, its wallet
+                                      0 -> 975360 msat; the lock no longer held by the federation
+                      withdrawn       its own BLWP_WITHDRAW: Success 961392 msat, 975360 -> 0; alice's
+                                      invoice SETTLED 961392
+                      on screen       "... · Back by your own key after expiry: 980000 msat to this tab's
+                                      wallet (stake lock; balance 0 -> 975360 msat) | Withdrawn: 961392
+                                      msat to your own wallet over Lightning (this tab's wallet 975360 ->
+                                      0 msat)"
+                    The same run: the door 409 at both seats, seated 2/2; settlement 4b0ac1a8... (980000 +
+                    2 x 20000 in, 978000 / 18000 / 18000).
+    NIT (named)     while the tab's wallet is still empty the page logs "[blwp] withdraw: Balance is too
+                    low to send any amount after fees" (twice in run 25): the stock client throws where 0
+                    is meant. No money is touched and no withdraw row shows until there is a balance - it
+                    is console noise every 5 s for a tab waiting on an expiry.
+    W4 / 6d, EVERYTHING THE GOAL NAMES IS MEASURED LIVE: a loser's stake into the pool, winners paid from
+                    it, seats paid from the fee locks; the winner's page collects its payout and its own
+                    stake back, after a reload too, and withdraws them to its own wallet; a player refused
+                    at the fee-lock door (or in a round that never settles) gets its lock back by its own key
+                    after expiry and withdraws it; no second deposit on a reload; a stake already back is
+                    final. Not on the Daily yet: the Daily is 0.0.1239.
   NAMED HOLES ON W4 (cause; what it depends on):
                     (1) A RELOAD ONTO THE ROUND LINK STARTS A NEW JOIN - measured, run 8: after the
                         reload the page, holding 1536 msat, set out to fund a second 980000 + 20000
