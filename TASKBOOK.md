@@ -35086,6 +35086,26 @@ M3 W4 6d: THE PAGE COLLECTS THE WINNER'S PAYOUT; A LOSER'S FINDS NONE (Daniel 20
                                         ("No payout · No stake back") - and the join started again,
                                         "funding 980000 + 20000 msat of lock: holding 1536 msat" -
                                         named hole (1) below.
+  HOLE (1) CLOSED - A RELOAD ONTO THE ROUND LINK NO LONGER ASKS A SECOND DEPOSIT (build 0.0.1237,
+                    run 10, 14:21, a real browser join). The session key the run's marks are signed
+                    with is a non-extractable Ed25519 key the player makes per page load
+                    (blwp.jslib: "lives exactly as long as the run"), so a committed run cannot be
+                    resumed after a reload - by design. So page-lock keptLockUse: no kept lock -
+                    a new join; one no seat committed - reused (W1b); one a seat committed - the
+                    join stops, says why, deals no stake, asks no deposit; the collect runs from the
+                    kept record. index.html's join calls it where it tested kept && !committedTo.
+                      before (run 9)  after the reload: "funding 980000 + 20000 msat of lock:
+                                      holding 1536 msat" - a second deposit on its way
+                      after (run 10)  after the reload: no funding line, deposits still 1
+                                      (1016353); "seat refused: this tab's stake in this round
+                                      is already locked and committed to entry f74a582c...: no
+                                      second deposit - the run cannot be resumed after a reload,
+                                      and its payout and stake are collected after the window";
+                                      the lines kept: "No payout · No stake back"
+                    The same run: entry, lock and fee lock 201/201; settlement ACCEPTED 16.0 s after
+                    the close (980000 + 2 x 20000 in, winner 978000, seats 18000); the real tab's
+                    lock gone, its wallet not asked; the winner 978000 (0 -> 973312) and 980000
+                    back (973312 -> 1951232). Client 322/322 (+1 keptLockUse).
   NAMED HOLES ON W4 (cause; what it depends on):
                     (1) A RELOAD ONTO THE ROUND LINK STARTS A NEW JOIN - measured, run 8: after the
                         reload the page, holding 1536 msat, set out to fund a second 980000 + 20000
