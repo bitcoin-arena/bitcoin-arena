@@ -39,8 +39,19 @@ RULED (Daniel ~22:48): a Withdraw this long must survive the tab. (1) The round'
 persisted, so the next start has the same key and wallet. (2) A withdrawal can be claimed
 later. (3) Unity checks after start and tells the player a withdrawal is available. The
 spec (multiplayer_p2p.md §24) says so.
-NEXT: run B live (the refused player on screen); (1)-(3) built and measured; then the Daily.
-The Daily (0.0.1247, 70d46f75) still has the hole.
+DONE LIVE (run B1, 22:50-22:59): the refused player's own tab - before expiry "comes back to
+your key from federation block 464", nothing spent; after it the look found 980000 owed by
+its own key, then its Withdraw paid alice 961392 msat, SETTLED, tab 975360 -> 0.
+BUILT (simulation): (1) the round's record, kept lock and wallet database live in the
+browser's storage (vault), not the tab - a Withdraw cut off after its collect: the next start
+keeps the round, reopens 1958000 msat under the same key and pays 1957000 (before: the next
+tab reached 0); one tab at a time holds a round's wallet (browser lock). (2) the page looks at
+the newest round not yet final, so an older one is claimed after. (3) the lobby view carries
+the withdrawal; Unity's lobby shows "Withdrawal available: N sat" (C#, not yet compiled).
+blwp-client 330/330. Spec §24 says so.
+OPEN (asked): cross-device - alice's withdrawal on her iPhone 2 h later.
+NEXT: Unity compile + EditMode; a live run of (1)-(3); then the Daily. The Daily (0.0.1247,
+70d46f75) still has the hole.
 Built so far, on the Daily as 0.0.1239 (e00d2ac3): the collect, the three named holes
 closed, the fee-lock door (TASKBOOK). Free rounds mint no fee lock.
 NOTE: the Daily's daily.json names quick tunnels that no longer resolve - no seats reachable.

@@ -35487,3 +35487,21 @@ M3 W4 6d: LIVE, THE PAGE'S OWN WITHDRAW PAYS THE PLAYER'S WALLET AFTER A CLOSED 
                     ~22:48): persist the round's session so the next start has the same key, a way to
                     claim the withdrawal later, and Unity checks after start and tells the player a
                     withdrawal is available. Run B (the refused player on screen) is next live.
+
+M3 W4 6d: LIVE, A REFUSED PLAYER'S OWN TAB WITHDRAWS ITS STAKE BACK BY ITS OWN KEY AFTER EXPIRY (run B1, 2026-09-14)
+  THE RUN           settle-live run B1, 22:50-22:59, stock fedimintd 0.12.0; page = 0.0.1247 Unity files +
+                    the template at 2f5a170 (the page only looks; a pasted invoice never collects; the
+                    Withdraw guard); REFUSED_TAB_ONLY=1 SKIP_100=1, in its own systemd unit. exit 0.
+  DOOR              the third player (stake lock, no fee lock): 409 at both seats, not seated.
+  SETTLEMENT        ACCEPTED at both seats, 980000 + 2 x 20000 in, 978000 / 18000 / 18000.
+  BEFORE EXPIRY     the refused tab's look: owed 0, stake "waiting", "No payout · Your lock (stake 980000
+                    msat) comes back to your key from federation block 464 (now 314)"; nothing spent.
+  MINED             to the guardians' count 471/471 (expiration 464).
+  AFTER EXPIRY      the look found 980000 msat owed back by the player's own key within 36.5 s; the
+                    federation still held the lock while it was owed (looking spent nothing).
+  WITHDRAW - GREEN  BLWP_WITHDRAW with alice's lnd handed in: Success, 961392 msat through the listed
+                    gateway; the tab 975360 -> 0 msat; alice's invoice SETTLED, amt_paid_msat 961392; the
+                    lock no longer held. After: final, owed 0.
+  WORDING (named)   after the withdraw the settled line reads "No stake back: no lock of yours is left in
+                    the federation for this round" beside "Withdrawn: 961392 msat ..." - the stake did
+                    come back (by the player's key) and was withdrawn; the line says it the wrong way.
