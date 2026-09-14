@@ -35694,3 +35694,10 @@ M3 W7: A PAYING FEDERATION ROUND NAMES ITS FEDERATION, AND THAT IS CHECKED (2026
                     round's own federation (TEST_FEDERATION_ID, was the literal fefe...), and "a round
                     naming no federation takes no lock" is a THRESHOLD_LN round, with the zero-id FEDERATION
                     round now refused before it exists.
+  LIVE              settle-live-regtest 2026-09-15 01:47-01:53, stock fedimintd 0.12.0 (4 guardians, 3 of 4),
+                    the checks on: the 1000 sat round - custody FEDERATION, federation_id from the invite
+                    (federationIdOf) - opened at both seat doors through custodyFieldsAreValid; settlement
+                    ACCEPTED at both seats (561be5e7..., one signature under the claim key): 980000 claimed,
+                    978000 to the qualifier, fee locks 2 x 20000 -> 2 seats 36000. The winner collected
+                    978000 and its 980000 back, withdrew 1930649 msat, alice SETTLED 1930649; the loser was
+                    paid nothing and its stake went into the pool. exit 0.
