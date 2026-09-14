@@ -34842,3 +34842,44 @@ M3 W4 PICK (b): FEE LOCKS ARE ONLY CREATED WHEN THEY CAN PAY A SEAT (Daniel 2026
                     missing store ("Cannot read properties of undefined (reading 'length')") -
                     stale since W1b's four-argument join; it now joins with the invite's own
                     federation id, a fresh secret and an in-memory store.
+
+M3 W4: THE WHOLE SETTLEMENT ON A LIVE FEDERATION (Daniel 2026-09-14, step 1 of the letter)
+  THE RUN           tools/settle-live-regtest.sh: stock fedimintd 0.12.0, 4 guardians, 3 of
+                    4, one gateway, regtest (rehearsal step 1's setup, up in 137-146 s). Two
+                    seats, each with its own port (blwp-stake-lock) on its own joined client.
+                    Players' locks made by the page's wasm lock client (one 3,000,000 msat
+                    deposit, wallet 2,983,936 after). The winner DELIVERED and the loser
+                    FAILED by the seats' own replay of their drive; both play to FINAL;
+                    close; GET /lock-settlement until ACCEPTED. The federation's fee rule,
+                    asked of it: base 1000 msat, 0 ppm.
+  MEASURED (run 2)  100 sat round - the gate: no fee lock (4000 in, 2000 input fees)
+                      locks: winner 98000, loser 98000, both 201 at both seats
+                      settlement ACCEPTED at both seats, txid 2b0e0fbf612b4b92...
+                      in:  the loser's stake lock          98000 msat
+                      out: the winner's payout             96000
+                           federation fees, 1 in + 1 out    2000
+                      seats paid 0 (no fee lock, by the gate)
+                      the loser's lock spent in the federation; the winner's own lock
+                      still held (it comes back by its forfeit, not through the pool);
+                      the payout contract stored
+                    1000 sat round - the gate: mints a 20000 msat fee lock per player
+                      locks: 980000 + 20000 each, 201 and fee-lock 201 at both seats
+                      settlement ACCEPTED at both seats, txid c355a097ca330cbb...
+                      in:  the loser's stake lock         980000 msat
+                           two fee locks                   40000
+                      out: the winner's payout            978000
+                           seat 0252045757...              18000
+                           seat 02cb6bad7d...              18000
+                           federation fees, 3 in + 3 out    6000
+                      = 1,020,000 in and out, to the msat
+                      both fee locks and the loser's lock spent; 3 payout contracts stored
+                    one committee signature per round, verified under the round's claim
+                    key; made 5910 ms (100 sat) and 5445 ms (1000 sat) after the close,
+                    the window being 3000 ms.
+  FOUND (run 1)     the winner's first mark (tick 1200, deadline 1400) was answered with
+                    something other than a receipt, and the driver printed no answer.
+                    Instrumented: the batch's and the mark's answers are now in the error.
+                    Not seen again in run 2 (marks at 1260 and 660, both receipted).
+  SUITES            protocol 530/530, node 621/621 (six chunks 600 + five-of-seven 21/21).
+                    The node change: GET /lock-settlement also says when the settlement was
+                    made and what it moved (LockSettlement.summary).

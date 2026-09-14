@@ -943,6 +943,10 @@ player's deposits equal a page with no fee rule); measured floor 151 sat; 1000
 sat - a 20000 msat lock, each seat nets 18000 after the claim (TASKBOOK). W4 at
 100 sat unchanged: loser 98000 into the pool, winner paid 96000. OPEN in W4: the
 path on a live federation, the page's redeem of its payout (6d).
+DONE (W4 live): the whole settlement on stock fedimintd 0.12.0, two seats. 100 sat:
+the loser's 98000 claimed, the winner paid 96000, no fee lock. 1000 sat: 980000 and
+two 20000 fee locks in, the winner paid 978000, each seat 18000, 6000 to the
+federation. One claim-key signature, 5.4-5.9 s after close (TASKBOOK). OPEN: 6d.
 
 HARD (Daniel 2026-09-14 07:22): a loser loses the stake. The lock is claimed
 into the pool. Winners are paid from that. W4 is unparked.
