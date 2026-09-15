@@ -36692,6 +36692,8 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     lobby on the first poll - 0 ms): page text 347 chars, the chip "free round", the rows "2 of 2 signer
                     nodes". Both signer nodes hold exactly 1406 ticks. THE COPY PASS IS DONE on the Daily; left, listed:
                     the signer nodes' own server texts on a refusal.
+                    SIGNED (18:31Z): entry 3ee9373f DELIVERED score 559, 2 of 2 on both signer nodes (7291d680, de4dd194),
+                    no no-quorum.
   CLOSE-OUT CHECK   (Daniel 19:5x "anything still player-visible?") The shipped client bundle
                     (unity-proto/.../blwp-client.js 48286859) still carries 33 string literals with seat - the scanner
                     of player-copy.test.js run over the bundle; blwp-core.js 0. They are bundled PROTOCOL and signer-node
