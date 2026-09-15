@@ -36494,3 +36494,31 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
   LISTED, NOT HERE  delivery needs |z| <= 34 m (HALF_MOUTH) while the mouth is open to |z| < 40 m (the tunnel's sides at 40):
                     a truck entering in the 34-40 m strip drives in and never delivers. A geometry rule, not the hang
                     (Daniel 17:3x): not changed in this item.
+  LIVE 1 (0.0.1334) deploy https://d414b8f9.btc-logistics-core.pages.dev (alias serves the same bundle 0c667b9d). mouth-drive.mjs,
+                    free round 9739262d, entry 49e4b2c7, steered off the page's own core from the bay (x -99.8, z -71.4):
+                    the core said DELIVERED at tick 1911 (x 114.37, z 2.02). The run stopped: FINISHED "the core said
+                    DELIVERED at tick 1911", offered = nextTick = 1911, held 0, 31 marks accepted, and 3 s later still
+                    1911; both signer nodes' /transcript hold exactly 1911 ticks. Screen: the DELIVERED card (6,892 sat,
+                    SCORE +217), CARGO empty, DROP-OFF reads DELIVERED; then the Daily lobby (build 0.0.1334, the free
+                    round "1 joined", PLAY live). RED: 2241 ms from DELIVERED to the lobby showing (page's own clock),
+                    against 1 s. WHERE IT WENT (socket trace): the held batches and the final checkpoint, one round trip
+                    each through the tunnels at 450-500 ms; the receipts came back and the run ended, and Unity showed
+                    the lobby 10 ms after - the game was told only once the wire was done.
+  FIX 2             the game is told at the core's word: client.over (ended, or finishing) and endingLine() (FINISHING
+                    then the word it ended with); BlwpNetEnded/BlwpNetEnding read those. Nothing is recorded from the
+                    word; the wire finishes on its own and `ended` still says when. finish test: over false before the
+                    word, true at it, ended false until the last is out, FINISHING then FINISHED; mutant (over = ended)
+                    red. Client 340/340 (bundle 8132308d). C# unchanged since EditMode/PlayMode above.
+  LISTED            the page's status chip still says "free seat" (a 16:22 player-facing leftover); not this item.
+  LIVE 2 (0.0.1340) deploy https://0ac068de.btc-logistics-core.pages.dev (alias serves the same bundle 8132308d). Same free
+                    round 9739262d, a fresh tab (near-otter-6090), entry ebda04ff, from bay z 51: the core said DELIVERED
+                    at tick 1349 (x 114.91, z 2.04). The run stopped: FINISHED "the core said DELIVERED at tick 1349",
+                    offered = nextTick = 1349, held 0, 3 s later still 1349. END TO LOBBY: 0 ms on the page's 10 ms clock -
+                    the first poll that saw DELIVERED already saw Unity's lobby showing, i.e. the same frame (was 2241 ms).
+                    Screen at that moment: the Daily lobby (build 0.0.1340, PLAY live, the free round "2 joined") over the
+                    DELIVERED card (SCORE +102, CARGO empty). Both signer nodes' /transcript (16:00Z, 184-300 ms each):
+                    ebda04ff 1349 ticks, 49e4b2c7 1911 ticks - exactly the finished runs, on both.
+  SIGNED            (16:00:53Z) both signer nodes hold 2 results each for both live entries, no no-quorum:
+                    49e4b2c7 DELIVERED score 217 transcript 19b27a5c; ebda04ff DELIVERED score 103 transcript 273f5bf0;
+                    core 5f3b5176, signed by 7291d680 and de4dd194.
+  HOLE FOUND        the second drive's card read SCORE +102 against the signed 103 (the first: 217 and 217) - being measured.
