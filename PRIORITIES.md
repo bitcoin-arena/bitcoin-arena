@@ -35,6 +35,8 @@ and federation - a hard fork or a second title, not a rewrite of the seats.
 RULED (Daniel 08:07): not only swappable - several games at once, and several rule sets at once.
 Each round names its core and its rules; seats replay what that round names. Two titles and two
 configs can run on the same nodes in the same window.
+RULED (Daniel 12:54): ALWAYS one no-money (FREE) round open AND one 2-of-2 round on our
+regtest/testnet. Both at once. The Daily lobby must not be empty of rounds.
 BUILT UNDER THE RULINGS (2026-09-15, numbers: TASKBOOK):
 - 07:42 a fee lock is sized for the round's sitting seats, the seats its settlement pays (79973c7);
   Daily 0.0.1286.
