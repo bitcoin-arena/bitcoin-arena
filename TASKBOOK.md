@@ -35871,6 +35871,19 @@ M3 - THE SEATS ARE A NETWORK, THE TRUCK GAME IS ONE CORE ON IT (Daniel 08:03): M
                     R4 the truck fields as that config's parameters. Acceptance: two titles (the truck and a second,
                     minimal core) and two truck configs, rounds of each on the same two seats in the same window,
                     each replayed by its own core and config, results signed under its own core hash.
+  FIXTURES          (measured 09:00, for R1's cut) simCoreHash in tests and tools: b32(1) 85, CORE_HASH 13,
+                    contract.simCoreHash 9, CORE 8, b32(4) 6, fromHex(coreHashHex()) 4, b32(0x33) 2, others 4.
+                    configHash: b32(0x43) 96, b32(0x44) 6, b32(0x45) 3 (both only to make round ids distinct),
+                    others 7. The stored GENESIS_CONFIG_HASH equals what genesis.js computes today (04580b8f...), so
+                    the truck's config hash is real and stable. A core's hash is sha256 over every .js under
+                    core/src (hash-core.js): an adapter placed there is part of that core, and the known-good list
+                    and pins move once with it.
+  R1'S CUT          the truck's adapter in core/src; a seat's registry of installed cores and their configs, always
+                    given in production (main.js); POST /round refuses a (simCoreHash, configHash) pair the seat holds
+                    no core/config for (27A.7.5); replay per round through the named core; the result names the
+                    hash of the core that replayed. Fixtures move to the real hashes as W7's did - no default that
+                    takes any hash - and the few that varied configHash only for a distinct round id vary another
+                    field.
 
 M3 - THE RESULT WINDOW IS THE OBJECTION WINDOW (Daniel 07:49) (2026-09-15)
   RULING            the result window equals the objection window - same duration, on the contract
@@ -35918,6 +35931,16 @@ M3 - THE RESULT WINDOW IS THE OBJECTION WINDOW (Daniel 07:49) (2026-09-15)
                     against bond proofs, directory.js), and §25.1 forbids taking one from a server; it is covered
                     meanwhile by the seats - an unseated round gets no claim-key attestation, and lockStake requires
                     the attested key. Its own slice: each counted guardian's advert checked by its bond proof.
-  OPEN (below)      B, back after A decided VOID, signs 1 of 2 and its watch keeps asking - no money moves (A signs no
+  CLOSED (09:00)    the seats now agree. A seat that signed, past its OWN result window, decides by §13C when no
+                    quorum can form any more - counted, not taken on a word: the seats that answer /results with
+                    x-no-quorum (each seat's own word that it decided the entry and will sign nothing); when the
+                    seats left are fewer than the threshold (2-of-2: one such seat; 5-of-7: three). VOID, or FORFEIT
+                    on proven equivocation; a quorum that formed is not touched, and still wins (resultFinality
+                    reads the quorum first). The watch asks no more for a run it decided (verify.js
+                    shortPastWindow, server.js decidedHere). Measured, close-retry 3/3: B back, signs 1 of 2, and
+                    decides W and P VOID 3298 ms after its own close (its window 3000) - both seats VOID, B's
+                    signature kept as history; one-seat-refused 5/5, first-mark 14/14. node 635/635 with it (six
+                    chunks 599, lock-settlement 15/15, five-of-seven 21/21).
+  WAS OPEN          B, back after A decided VOID, signs 1 of 2 and its watch keeps asking - no money moves (A signs no
                     settlement; the locks return at expiry), but the seats do not agree on the entry until B's own
                     window decides it. The next piece: §13C for every seat past its window with no quorum.
