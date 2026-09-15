@@ -36391,3 +36391,48 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
   CRASH TEST        live-join-probe KILL_AFTER_S=40 on the address-link Daily: PLAY's pick free 5a343b8d, entry
                     cbc8404e61e95585 joined 14:02:29Z; driven 40 s - 60 batches, 8 marks, all accepted - then Chrome
                     SIGKILLed at 14:03:18Z. Both seats kept it seated 1, playing 1. Its signed outcome: at the round's end.
+                    OUTCOME (16:31 local, after the round's end): both signer nodes' /results for round 5a343b8d, entry
+                    cbc8404e - 200, x-results 2, no x-no-quorum, 464 B each, identical - hold two signed results:
+                    FAILED, score 0, transcript bef5703d, core 5f3b5176, one signed by 7291d680 and one by de4dd194.
+                    A player whose browser dies mid-run is FAILED 2 of 2 on the ticks it sent - not VOID, not
+                    DELIVERED; the round and the other signer node's word were not disturbed.
+
+## 16:08 ONE FREE ROUND AND ONE PAYING ROUND, THE PAYING ONE PRICED; 16:22 NO "SEAT" TO THE PLAYER (2026-09-15)
+  BEFORE            Daniel 16:08: the plain Daily listed 2 FREE and 2 PAID - 892b28a0 free + fe0a8c1f paying (100000 msat)
+                    closing ~16:23, 5a343b8d free + eb1109af paying closing ~16:27 - the second pair each launcher/seat
+                    restart's first pair. Unity's row: "FREE|PAID · closes m:ss · 2 of 2 seats · N seated", no amount.
+  EXTRAS CLOSED     16:11: `close 892b28a0` and `close fe0a8c1f` on both seats' play sockets -> "closed" x4. Both seats'
+                    /rounds 16:11:06: 5a343b8d free open seated 1 (the crash entry), eb1109af paying open seated 0.
+  WHY TWO OF A KIND a rollover opens the next round 60 s before the last one's entry closes, and each launcher start
+                    opens a fresh pair beside the one it left - the seats hold both until their entry closes.
+  FIX               lobby.js lobbyOnePerKind: per kind (free / paying) one row - joinable over not, open over
+                    pending, then the most entry left; the page lists only those (index.html). lobbyStakeSats: the
+                    paying row's stake in whole sats, carried to Unity's view row (stakeSats); DailyLobby.RowWords:
+                    "PAID · 100 sats · closes m:ss · 2 of 2 signer nodes · N joined" - the stake in every shortened
+                    form. 16:22: the title screen's lobby copy says signer nodes, never seat (RowWords, the ROUNDS
+                    head, the empty-list line, the PLAY hint, "not joined"; the page's claim-key stage line).
+  A MUTANT LEFT IN  the filter's mutant check (`return rows;`) went red (5/6) - but its restore read a backup path that
+                    did not exist (the backup had gone to /tmp/lobby.js.bak, the error was silenced), so lobby.js, the
+                    bundle and the template kept the mutant, and known-clients pinned its hash (5e2e4d35). The full
+                    suite then read 338/339 with the new test red while the earlier alone run (before the mutation)
+                    read 6/6 - not suite order or shared state. Restored from the backup, the mutant's pin removed,
+                    the restored bundle pinned (74924f15). Client suite 339/339, both shipped bundles 74924f159a274cba.
+  COUNTS            client 339/339 (node --test, --test-timeout=120000 under timeout 180). EditMode 196/200 passed,
+                    1 failed, 3 skipped - the red is CombatFxTests.RifleFireProducesAFlashAndATracer, listed red before
+                    this work (195/199 before; the new test is APaidRowSaysItsStakeInSatsInEveryFormAndAFreeRowSaysFree).
+                    PlayMode not run. Unity's lobby report now carries each drawn row's words, so the measurement
+                    reads what the player reads. WebGL build Succeeded, 0 errors, 43 MB, 8:36.
+  DEPLOYED          deploy-core.sh (Daniel's wrangler login) 16:37: both signer nodes /rounds 200, 2 open each ->
+                    https://c294cde8.btc-logistics-core.pages.dev; its daily.json equals the on-disk one (recorded as
+                    the keeper's last deploy). Never btc-logistics-war.
+  MEASURED          Unity's own report, 14:38-14:39Z, unique URL and the PLAIN Daily (https://btc-logistics-core.pages.dev/,
+                    no query): listed 2 -
+                      desktop 1280x800: "FREE · closes 18:44 · 2 of 2 signer nodes · 0 joined · f1dc6915",
+                                        "PAID · 100 sats · closes 18:55 · 2 of 2 signer nodes · 0 joined · c778a9b2"
+                      iPhone 390x844@3: "FREE · closes 18:34 · 2 of 2 signer nodes",
+                                        "PAID · 100 sats · closes 18:45 · 2 of 2 signer nodes"
+                    both "2/2 join", PLAY's pick the free f1dc6915, PLAY enabled; no row says seat. At that moment both
+                    signer nodes held one round of each kind (f1dc6915 free, c778a9b2 paying), so the live lobby did not
+                    exercise the filter - the unit test and its mutant do; the next live check is the rollover minute.
+  NOT YET           join.js refusal texts Unity shows after a refused PLAY can still say "seat" (the page's why);
+                    the launcher still opens a fresh pair on every restart (the lobby shows one of each regardless).

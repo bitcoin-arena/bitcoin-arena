@@ -76,6 +76,9 @@ BUILT UNDER THE RULINGS (2026-09-15, numbers: TASKBOOK):
   that follows tunnel renames (670e15f); after the switch the plain Daily lists FREE and paying 2-of-2
   again (deploy 52f0eaf3, Daniel's wrangler login). Open: the keeper's own Pages token (cloudflare.env)
   for unattended redeploys after a rename.
+- 16:08/16:22 the Daily lists one FREE round and one paying round, marked PAID · 100 sats, PLAY on
+  the free one; its lobby says signer nodes, never seat (Daily c294cde8). A crashed player's run is
+  FAILED 2 of 2, not VOID.
 
 DONE: M3 W7 - A PAYING FEDERATION ROUND NAMES ITS FEDERATION, AND THAT IS CHECKED (2026-09-15).
 The codec refuses a paying FEDERATION round with a zero federation_id (encode and decode,
