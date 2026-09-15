@@ -36613,3 +36613,7 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     signer nodes hold exactly 9000 ticks. WRECKED is covered by the client test and the Unity paths; a live
                     wreck needs the truck destroyed, which a scripted drive does not guarantee. Signed results: after the
                     round.
+  SIGNED            (17:31Z) both signer nodes hold 2 results for entry bb729210, no no-quorum: FAILED score 0 transcript
+                    cca8738e, core 5f3b5176, signed by 7291d680 and de4dd194 - MISSED is FAILED in the replay's words.
+  NOT MEASURED      the address after a MISSED end (the probe closes its browser before it polls the results; the same
+                    BLWP_RUN_OVER path was measured after DELIVERED); a live WRECKED.
