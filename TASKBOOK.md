@@ -36171,3 +36171,24 @@ THE LOBBY HOW-TO ON A PHONE UPRIGHT: TWO PAGES (Daniel 11:57, HARD; option A) (2
                       412x915  copy 305  123.3/114.8/81.0/81.8 -> 184.3/171.5/121.0/122.3  rows 6 -> 6
                       768x1024 copy 568  116.9/108.8/76.7/77.5 -> 198.8 each (the rounds' room)  rows 2 -> 2
                     Panel 1 at 375x667: 111.4 -> 161.9 px (1.45x); 3 and 4: 106.3 and 107.4 px.
+  DEPLOYED          0.0.1304 (561478d) -> https://5035f342.btc-logistics-core.pages.dev; both it and the core
+                    alias index.html name 0.0.1304. Stamp 2e385ea.
+  LIVE (B)          howto-probe (CDP device emulation, the lobby link of the last daily.json - its seats are
+                    dead, so 0 rounds listed and "Not listed: 2"; the bare root has no daily.json and draws no
+                    lobby), Unity's own report of what it drew, ">" pressed where Unity drew it:
+                      375x667 @2      screen 375x667  box 277x162  pages 1-4 drawn 162 / 151 / 106 / 107 px
+                      390x844 @3      screen 390x844  box 288x171  pages 1-4 drawn 171 / 159 / 112 / 113 px
+                      412x915 @2.625  screen 412x915  box 305x184  pages 1-4 drawn 184 / 172 / 121 / 122 px
+                    each page one panel (howToShown [1], [2], [3], [4]), the box one size on all four, arrows
+                    34 px wide at its sides - the heights EditMode measured at the same CSS sizes.
+                    SCREENSHOTS (375x667 all four, 390x844 page 1): every panel's headline reads - "LOAD
+                    MEMPOOL TXS + STAKE 100 / 500 / 1000 SATS", "CROSS THE BITCOIN PRICE WAR FRONT", "DELIVER TO
+                    MINERS at the megastructure DROP-OFF.", "WIN SATS FROM PLAYERS THAT DIDN'T MAKE IT"; the
+                    fee-tier cells inside panel 1's mempool board and panel 2's subline stay small. You, NAME,
+                    KEY, the rounds header, PLAY and SPECTATE all on screen under it.
+                    LANDSCAPE AND DESKTOP UNCHANGED, live: 844x390 @3 - carousel off, 1-2 over 3-4 in a column
+                    beside the rounds (box 242x166, panels 98 / 91 / 64 / 65 px); 1280x800 @1 - carousel off,
+                    1-2-3-4 in one row at 122 px (box 774x122). EditMode asserts both cell for cell against
+                    the grid on every screen that is not portrait.
+  NOT DONE HERE     the lobby's rounds: the bare root still has no daily.json and the Daily's seats are down
+                    (the seats letter waits on its own Go); this ships the how-to with an empty list.

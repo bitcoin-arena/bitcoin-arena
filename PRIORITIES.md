@@ -60,6 +60,9 @@ BUILT UNDER THE RULINGS (2026-09-15, numbers: TASKBOOK):
   contract fields) NOT DONE, decided: read by no seat, page or core, already in the truck's config;
   taking them off the wire is a hard fork (round ids, vectors, stored rounds, §6) - with the next
   protocol version.
+- 11:57 the lobby how-to on a portrait phone is one panel per page, four pages, arrows beside
+  (Daniel, option B; 561478d, Daily 0.0.1304): panel 1 at 375x667 111 -> 162 px. Landscape and
+  desktop unchanged. The Daily's rounds are not back (no daily.json, seats down).
 
 DONE: M3 W7 - A PAYING FEDERATION ROUND NAMES ITS FEDERATION, AND THAT IS CHECKED (2026-09-15).
 The codec refuses a paying FEDERATION round with a zero federation_id (encode and decode,
