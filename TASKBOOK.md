@@ -36378,3 +36378,16 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     opening its first pair - the address-link Daily lists 6 "2/2 join", PLAY on the free 5a343b8d
                     (13:58:56Z); plain Daily 0 (14:00:59Z). A restart did not wipe or reset a round; it left the
                     rounds unjoinable until Cloudflare issued a tunnel name (about 5 min).
+  PLAIN DAILY BACK  (Daniel 16:04: wrangler login succeeded - device grant, pages:write; deploy with it, do not
+                    wait for cloudflare.env) deploy-core.sh with BLWP_BUILD_DIR=/mnt/bitcoin/blwp-2of2/page, 16:05:31:
+                    both seats /rounds 200, 4 rounds, 4 open -> https://52f0eaf3.btc-logistics-core.pages.dev. /daily.json
+                    on it and on the alias: beast-specialized-protein-loved / interstate-incidence-youth-exceptional,
+                    advert 6b2fff10, equal to the on-disk file (recorded as the keeper's last deploy). PLAIN DAILY, no
+                    query string, Unity's own report: desktop 14:06:13Z listed 4 - 892b28a0 free, fe0a8c1f paying,
+                    5a343b8d free (eb1109af paying not drawn at that size) - all "2/2 join", PLAY on the free 5a343b8d;
+                    iPhone portrait 14:06:23Z listed 4, all four drawn, PLAY on the free 5a343b8d. Seat A's own /rounds:
+                    the same four. Still open: the keeper deploys only with its own token, so after a tunnel rename it
+                    restarts the seats but cannot redeploy until cloudflare.env exists; the crash test's result.
+  CRASH TEST        live-join-probe KILL_AFTER_S=40 on the address-link Daily: PLAY's pick free 5a343b8d, entry
+                    cbc8404e61e95585 joined 14:02:29Z; driven 40 s - 60 batches, 8 marks, all accepted - then Chrome
+                    SIGKILLed at 14:03:18Z. Both seats kept it seated 1, playing 1. Its signed outcome: at the round's end.

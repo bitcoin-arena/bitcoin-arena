@@ -68,7 +68,12 @@ BUILT UNDER THE RULINGS (2026-09-15, numbers: TASKBOOK):
 - 12:54 the Daily's bare root lists rounds again: its 2-of-2 seats are up (regtest bitcoind, two new
   tunnels, run-2of2.mjs) and every deploy carries their daily.json or refuses (e9fb4f6). Beside the
   free round a paying 2-of-2 round, THRESHOLD_LN on the committee's regtest Lightning, same seats and
-  core (Daniel: option B; 966d2fb): the lobby lists FREE and PAID, PLAY enabled.
+  core (Daniel: option B; 966d2fb): the lobby lists FREE and PAID, PLAY enabled. PLAY picks a free
+  round first (2016608); a dropped socket no longer ends a free run (c9d6320, Daily 0.0.1318); a free
+  join played to its close is signed 2 of 2. The seats run as persistent user services with a keeper
+  that follows tunnel renames (670e15f); after the switch the plain Daily lists FREE and paying 2-of-2
+  again (deploy 52f0eaf3, Daniel's wrangler login). Open: the keeper's own Pages token (cloudflare.env)
+  for unattended redeploys after a rename.
 
 DONE: M3 W7 - A PAYING FEDERATION ROUND NAMES ITS FEDERATION, AND THAT IS CHECKED (2026-09-15).
 The codec refuses a paying FEDERATION round with a zero federation_id (encode and decode,
