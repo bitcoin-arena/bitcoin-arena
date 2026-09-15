@@ -24,6 +24,7 @@ gateways; the federation's fees; the fee locks' claim hash and 22A node slots; t
 RULED (Daniel 07:33): every guardian / node must have its own bond or it may not take part.
 federationIsBonded stays on: threshold of distinct bonded census nodes advertising guardian_of[].
 RULED (Daniel 07:42): 22A node fee goes to the sitting seats of this round, even if there are only two.
+RULED (Daniel 07:44): Fedimint base fee is 0 (`disable_base_fees`). 22A stays 2% to those sitting seats.
 
 DONE: M3 W7 - A PAYING FEDERATION ROUND NAMES ITS FEDERATION, AND THAT IS CHECKED (2026-09-15).
 The codec refuses a paying FEDERATION round with a zero federation_id (encode and decode,
