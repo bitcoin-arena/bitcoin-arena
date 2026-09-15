@@ -35759,3 +35759,30 @@ M3 W7: A PAYING FEDERATION ROUND NAMES ITS FEDERATION, AND THAT IS CHECKED (2026
                     that build paying FEDERATION rounds run live or in process on a named federation and end with
                     their driver's exit, stores from before W7 stay up, the Daily carries the client check, core
                     and C# untouched.
+
+M3 - WHICH GUARDIANS: RULED (Daniel 07:33, 3701038), MEASURED BEFORE ANY CODE (2026-09-15)
+  RULING            every guardian / node has its own bond or takes no part; federationIsBonded stays: a paying
+                    federation is valid only if its own threshold of guardian keys are advertised by distinct
+                    census nodes bonded >= the round's minimum. None bonds today, so every paying federation is
+                    refused until they do.
+  THE CHECK         protocol federation.js federationIsBonded({ federationId, guardianKeys, threshold, census,
+                    bondMinSats }) - exactly the ruling; 4 tests (federation.test.js). Callers: 0.
+  ITS INPUTS        census: the seat derives one per round from blocks (roster.censusFor; entries carry pubkey,
+                    bondSats, advert.guardianOf) and seats a round from it at POST /round (seatRound, synchronous)
+                    only where it has a chain view; a seat without one seats nothing, and an unseated round gets
+                    no claim-key attestation (409), so no stake lock can name its key. In production chainFor
+                    fills a round's view asynchronously on first sight.
+                    guardianKeys / threshold: fedimint 0.12 GlobalClientConfig.broadcast_public_keys (33-byte
+                    secp256k1 per peer) and NumPeers::threshold = n - floor((n-1)/3) over api_endpoints. The
+                    federation id is consensus_hash(api_endpoints) - the source comment says "broadcast public
+                    keys", the code hashes the endpoints - so the id fixes n and the threshold but NOT the keys:
+                    they come only with the config the stock client downloads. Neither federation client exposes
+                    them: blwp-stake-lock has modes lock/settle/status/fees (+ forfeit/refund witnesses), the
+                    wasm lock client join/lock/feeRule/...; both read only the LNv2 fee rule off the config.
+                    The client (page) derives no census: directory.js checks single adverts against their bond
+                    proofs over agreed headers (acceptAdvert, askForBond), for a round's committee.
+  TOOLCHAIN         none on this machine: no cargo or rustc anywhere (the scratch toolchain of 2026-09-11, Daniel's
+                    go, is gone); the built blwp-stake-lock and the wasm-node3 lock client remain, and wasm-bindgen.
+  WHO WOULD BE HIT  the four live tools seat by assumeSeated (no chain view), as do the 9 node tests on the lock
+                    fixture; 4 node tests derive a census from bonded blocks (seated-committee, roster,
+                    close-peers, receipt-carry) - every advert there writes guardianOf: [].
