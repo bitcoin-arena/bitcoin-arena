@@ -51,6 +51,8 @@ a visual minimum width so a bridge is justified - not a plank over a crack. Not 
 dollars-to-metres. Improvise the look.
 Three bridges across the gorge: left, mid, right (stand-in first). The courier picks
 one. Tanks and soldiers stay on their own side and fire across - they do not cross.
+Edge HUD: a TradingView-style depth chart (bids green left, asks red right, mid in
+the middle) with dots for this truck and the other players. Players read it at once.
 BUILT UNDER THE RULINGS (2026-09-15, numbers: TASKBOOK):
 - 07:42 a fee lock is sized for the round's sitting seats, the seats its settlement pays (79973c7);
   Daily 0.0.1286.
