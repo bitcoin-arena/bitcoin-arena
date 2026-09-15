@@ -36605,3 +36605,11 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     the live parked run follow.
   LISTED            SpawnMark re-seats a parked truck via Respawn -> Teleport on each terrain rebuild; in a round the seed's
                     bay is not the solo bay it re-seats to, so it should not fire - not measured, not changed here.
+  LIVE (0.0.1345)   deploy https://ac734a12.btc-logistics-core.pages.dev (alias serves the same bundle a1cfcacb). parked-missed.mjs:
+                    free round 16b78a11, entry bb729210, departed and parked at the bay (x -100.4, z -44.2) with no input,
+                    ~560-620 ticks a minute. The core said MISSED (state 3) at tick 9000 - the run's last recorded tick, as
+                    measured headless. FINISHED "the core said MISSED at tick 9000"; offered = nextTick = 9000, held 0,
+                    149 marks accepted, 3 s later still 9000; the lobby showing 0.1 ms after the word (the same frame); both
+                    signer nodes hold exactly 9000 ticks. WRECKED is covered by the client test and the Unity paths; a live
+                    wreck needs the truck destroyed, which a scripted drive does not guarantee. Signed results: after the
+                    round.
