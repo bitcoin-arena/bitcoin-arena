@@ -36226,8 +36226,28 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     the row is the round both seats' own signed /rounds served. Screenshots (375x667, 390x844):
                     "FREE · closes 28:05 · 2 of 2 seats", "PLAY joins round e63cd4ff - 2 of 2 seats agree"; who
                     you are, NAME, KEY, the how-to page with its arrows, PLAY and SPECTATE all on screen.
-  NOT YET           the second round Daniel asked for beside the free one (a 2-of-2 round with money): the
-                    launcher's paying round is custody FEDERATION, and under the 07:33 ruling a seat seats one
-                    only if the federation's threshold of guardians are bonded census nodes - the Daily has two
-                    seats, a 4-guardian federation needs 3, and fedimint 0.12 forms no 2-guardian federation.
-                    And the next free round: keepOpen opens it when this one has under a minute of entry left.
+  RULED (B)         (Daniel) the round beside the free one is a paying round with THRESHOLD_LN custody on the
+                    committee's regtest Lightning, seated by the same two seats; no federation id, no invite; the
+                    same core. Not a third seat; federationIsBonded stays on for any later FEDERATION round.
+  LIGHTNING         two lnd 0.21.3 on the Daily's bitcoind (30401, cookie auth, rpcpolling - it runs without ZMQ):
+                    blwp-daily-lnd-committee (rpc 30410) and blwp-daily-lnd-alice (rpc 30420, the test wallet).
+                    The first channel failed "funding failed due to internal error" - the committee lnd had no
+                    on-chain coins for an anchor channel's reserve; with 1 BTC on it, alice opened 2,000,000 sat
+                    pushing 1,000,000 (the next try "channels cannot be created before the wallet is fully
+                    synced" - waited for both synced). Active: committee inbound 976,530 sat (996,530 less a
+                    20,000 reserve); the preflight asks 2 x 98,000 msat for a 100 sat round.
+  LAUNCHER (B)      run-2of2.mjs BLWP_PAID_STAKE_MSAT=100000 with the four BLWP_LND* settings: keepOpen keeps a free
+                    round and a THRESHOLD_LN round open (966d2fb; funding rule 7493b5c, launcher-funded 7/7).
+                    First 6 tries refused by seat A "that node is not synced to its chain" - each try mines to
+                    publish, and lnd's default block polling is about a minute; both lnds now poll every second
+                    (--bitcoind.blockpollinginterval=1s, txpollinginterval=1s). Opened 2f344c1f... at 11:22:00Z.
+                    The restart re-bonded the seats: daily.json got a new advert (bc4c1518...), so the page was
+                    deployed again (f3147f3f; the alias served it from 13:22:11).
+  SEATS (B)         both seats' own signed /rounds, 3 rounds each, agreeing: e63cd4ff... and a5be918a... free
+                    (stake 0, wallet none), 2f344c1f... stake 100000 msat, wallet lightning - all open, 2/2,
+                    seatedHere. Contracts from seat A hash to their ids; all name simCoreHash 5f3b517648bde43d
+                    and the truck config; 2f344c1f... custody THRESHOLD_LN, federation id zero, 2 relays.
+  LIVE LOBBY (B)    bare root, Unity's own report (13:22:57-13:23:46): 375x667 @2, 390x844 @3 and 1280x800
+                    each list 3 rows - "e63cd4ff 2/2 join", "a5be918a 2/2 join", "2f344c1f 2/2 join" -, picked
+                    2f344c1f (the joinable round with the most entry left), PLAY enabled, PLAY and SPECTATE
+                    on screen. Note: PLAY's default pick is the paying round while it has the most time left.

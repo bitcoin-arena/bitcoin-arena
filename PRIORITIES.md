@@ -66,8 +66,9 @@ BUILT UNDER THE RULINGS (2026-09-15, numbers: TASKBOOK):
   (Daniel, option B; 561478d, Daily 0.0.1304): panel 1 at 375x667 111 -> 162 px. Landscape and
   desktop unchanged.
 - 12:54 the Daily's bare root lists rounds again: its 2-of-2 seats are up (regtest bitcoind, two new
-  tunnels, run-2of2.mjs) and every deploy carries their daily.json or refuses (e9fb4f6). Open: the
-  2-of-2 round with money beside the free one (needs a ruling: the seats' guardian rule).
+  tunnels, run-2of2.mjs) and every deploy carries their daily.json or refuses (e9fb4f6). Beside the
+  free round a paying 2-of-2 round, THRESHOLD_LN on the committee's regtest Lightning, same seats and
+  core (Daniel: option B; 966d2fb): the lobby lists FREE and PAID, PLAY enabled.
 
 DONE: M3 W7 - A PAYING FEDERATION ROUND NAMES ITS FEDERATION, AND THAT IS CHECKED (2026-09-15).
 The codec refuses a paying FEDERATION round with a zero federation_id (encode and decode,
