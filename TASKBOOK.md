@@ -36643,3 +36643,38 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     NOT THE HANG, OWN ITEM: another player's ghost of a run that has ended stays at its last picture (in
                     the mouth) until that player takes another seat - ghost-field.js retires a drawn seat only when the
                     same player supersedes it; nothing tells watchers a run is over.
+
+## 16:22 / 19:56 THE PLAYER IS NEVER TOLD "SEAT" - the Signer Node copy pass (2026-09-15)
+  RULED             (Daniel 19:56) Signer Node is ONLY the signing machines ("2 of 2 signer nodes"); the player's place is
+                    never "open signer node": "free seat" -> "free round", a taken player place -> "joined" ("your entry",
+                    "your stake"). Protocol field names, bonds, census and signer logic untouched.
+  INVENTORY         Unity C#: no player-visible "seat" left (DailyLobby's "N joined" came with 16:08); the only literals
+                    were debug logs ("[seat] truck/tanks at tick", "seated on", "stem seat") - renamed ("[ground]",
+                    "resting on", "stem footing") so the strict scan needs no exception. Page: the chip's "round named ·
+                    not seated", the refusal "this page took no seat in that round", and console tags "[blwp] seat
+                    refused" / "settlement seat(s)". Client library (the chip, the lobby line, join refusals, the stake,
+                    wallet, lock and donation panels): ghost-field "not seated · ", "round named · not seated", " · free
+                    seat"; lobby "N of M seats agree", "N seated", "no seat counts", "each seat's signed listing"; join
+                    "seats needed to open this stake", "no seat served a claim key", "take a seat at", "this seat's stake
+                    ..." (4), "msat for this seat", "its seats' attestation", and five more refusals; page-lock "asking
+                    the seats ..." (3), "no seat knows / gave / holds", "the seats' forfeit / settlement", "Waiting for
+                    the seats"; nwc "this seat owes / cannot be paid"; client "no seat count has committed it", "no seat
+                    to count / ask about", "two seats", "quote this seat"; donation-pay (4); identity (1).
+  MAPPING           a signing machine -> "signer node(s)"; the player's place -> "joined" / "your entry" / "your stake"
+                    / "two entries"; "free seat" -> "free round".
+  TESTS             player-copy.test.js: every string literal in the client library and the page's inline scripts and
+                    markup (comments and `${...}` code left out) - no /\bseat(s|ed|ing)?\b/; its own scanner self-test;
+                    mutant (" · free round" -> " · free seat") red on exactly that string. EditMode PlayerCopyTests: the
+                    same over every C# string literal in Assets/Scripts (interpolated and verbatim; holes left out), plus a
+                    scanner self-test. The client tests that asserted the old copy follow the ruling (lobby, page-stake,
+                    ghost-field, lobby-names, join, page-lock, donation-pay, session-pay, wallet-nwc, claim-key-attest).
+                    Client 346/346 (bundle 48286859).
+  LISTED, NOT HERE  the signer nodes' own server texts can still say seat and are passed through verbatim on a refusal
+                    (e.g. "404 this seat holds no signed donation set", "not seated on that round") - node code running on
+                    the Daily's seats; changing it is a node release and a seat restart, not this client/page/Unity pass.
+                    Rough count (pattern scan, not exact): 88 non-comment lines in packages/blwp-node/src put "seat" into
+                    a reason or error - e.g. verify.js "this seat holds the entry ENTRY_VOID", "this seat has already
+                    signed this run", "N seat(s) that were up refused the player's on-time first mark".
+  COUNTS            client 346/346. EditMode 206: 202 pass, 1 red (the listed CombatFxTests.RifleFire), 3 skipped -
+                    PlayerCopyTests 2/2. PlayMode 239: 216 pass, 10 red (the same documented ten), 13 skipped (ended
+                    20:16). The live Daily check follows the deploy.
