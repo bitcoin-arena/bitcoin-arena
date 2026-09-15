@@ -32,6 +32,9 @@ RULED (Daniel 08:03): the truck game is one use of the federated consensus netwo
 network. M3 keeps game logic out of the seats as far as it will go: seats replay a named core
 (`sim_wasm_hash`), they do not embed the truck. A later game is a new core + client, same nodes
 and federation - a hard fork or a second title, not a rewrite of the seats.
+RULED (Daniel 08:07): not only swappable - several games at once, and several rule sets at once.
+Each round names its core and its rules; seats replay what that round names. Two titles and two
+configs can run on the same nodes in the same window.
 
 DONE: M3 W7 - A PAYING FEDERATION ROUND NAMES ITS FEDERATION, AND THAT IS CHECKED (2026-09-15).
 The codec refuses a paying FEDERATION round with a zero federation_id (encode and decode,
