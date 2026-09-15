@@ -35701,3 +35701,24 @@ M3 W7: A PAYING FEDERATION ROUND NAMES ITS FEDERATION, AND THAT IS CHECKED (2026
                     978000 to the qualifier, fee locks 2 x 20000 -> 2 seats 36000. The winner collected
                     978000 and its 980000 back, withdrew 1930649 msat, alice SETTLED 1930649; the loser was
                     paid nothing and its stake went into the pool. exit 0.
+  CHECKED AFTER     (asked "have you thought of everything", 2026-09-15 02:00) - core and C#: W7 changed no file in
+                    packages/core, unity-proto/Assets/Scripts or Tests (git diff 49442c4..HEAD empty), so there is no
+                    engine to compare again; the one Unity file is the template's page bundle.
+  STORES FROM BEFORE W7  4 seat stores on this machine (test leftovers of 09-08/09) each hold one round the new
+                    decoder refuses; no Daily seat store here (the /tmp/daily-close-* dirs are Chrome profiles).
+                    The node decodes stored contracts in ~50 places without a try. Measured
+                    (legacy-round-restart.test.js): a hold round with its hold issued, its stored custody byte
+                    flipped to FEDERATION - the bytes a build before W7 stored - and the seat started again with
+                    its expiry, finality and close-at-end timers on: 0 unhandled rejections, /rounds 200 with the
+                    round not listed, /round still serves its bytes, /invoice 503 "that round takes a stake into a
+                    FEDERATION and names no federation_id ...", the hold still HELD, 0 settled, 0 cancelled. A seat
+                    on such a store stays up and moves no money. 1/1.
+  ON THE DAILY      build 0.0.1271 (7ecca75, the page as of W7 - no page file changed since) deployed to
+                    btc-logistics-core (ff12ab8e); its blwp-client.js is dist, pinned (0e7b886e...), carries
+                    federationIsNamed; the unique URL and the alias serve md5 8734a11b... and 0.0.1271.
+  TOOLS             seat-lock-regtest.sh: my W7 edit put an apostrophe inside "\${WASM_PKG:?...}" - bash read on to
+                    line 38 and died ("INVOICE: unbound variable") before the federation; fixed, run again live.
+                    lock-client-regtest: broken since 5a3b227 (pick (a), 09-14 15:45) - a 1000 sat round mints fee
+                    locks and its entries brought none (409 at the door); the driver printed the error and its .sh
+                    ended 0 regardless. It named the real federation by its invite (joined, deposited, locked A)
+                    before that. Now each entry brings a fee lock and the .sh ends with the driver's exit.
