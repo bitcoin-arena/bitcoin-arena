@@ -36251,3 +36251,18 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     each list 3 rows - "e63cd4ff 2/2 join", "a5be918a 2/2 join", "2f344c1f 2/2 join" -, picked
                     2f344c1f (the joinable round with the most entry left), PLAY enabled, PLAY and SPECTATE
                     on screen. Note: PLAY's default pick is the paying round while it has the most time left.
+  REBUILT (13:23)   a fresh Unity WebGL build, 0.0.1311, "Build Finished, Result: Success." - it left a
+                    build/webgl/daily.json already there in place (13:21:35, advert bc4c1518...), so the
+                    Unity build does not remove it; the earlier comment saying it does was not measured and
+                    is corrected: no deploy copied it in. Deployed with deploy-core.sh to fc371243 (both seats
+                    /rounds 200, 3 rounds, 3 open): /daily.json 200 application/json, advert bc4c1518..., on
+                    fc371243 and on the core alias, which serves 0.0.1311 from 13:26:40. Re-run first: no
+                    daily.json - refused, exit 3; the dead-tunnel file - "did not answer: fetch failed",
+                    refused, exit 3.
+  SUITES            node 644/644 (13:26-13:43: six chunks 608 - 607 and the new launcher-funded test -,
+                    lock-settlement 15/15, five-of-seven 21/21). EditMode 194/198 (C# unchanged since 561478d;
+                    the red CombatFxTests.RifleFire, listed). PlayMode 239: 214 pass, 12 red, 13 skipped - the
+                    documented eleven (nine retired C# army / truck physics, two that need a graphics device
+                    under -nographics) and RampReadyTests.TheRealTransactionsReplaceTheStandIns (recorded before:
+                    "no route to mempool.space"). Protocol unchanged since 531/531. client 337/337 (13:43-13:46:
+                    four chunks 105, 85, 83, 64).
