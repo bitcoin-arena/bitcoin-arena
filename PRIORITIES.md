@@ -52,6 +52,10 @@ RULED (Daniel 12:54): ALWAYS one no-money (FREE) round open AND one 2-of-2 round
 regtest/testnet. Both at once. The Daily lobby must not be empty of rounds.
 RULED (Daniel 16:22): player-facing word is Signer Node, not seat. HUD/lobby: 2 of 2
 signer nodes, open signer node. Seat is unclear. Do player-facing copy first.
+RULED (Daniel 20:32): migrate seat in CODE too - variables, types, function names, comments
+that mean the signing machine become signerNode / signerNodes. Player place stays joined /
+free round. Wire fields that are in a hashed contract: only with a protocol version; else
+rename. No leftover `seat` in new or touched code.
 OPTIONAL (Daniel 17:22): after current M3 work, do not start yet. Two play modes, lobby tabs:
 Mempool histogram (today) and Bid/Ask depth. Bid/Ask = freeze snapshot at round open, hash in
 the contract, both signer nodes build that world for the round (~2 min); next round a new freeze.
