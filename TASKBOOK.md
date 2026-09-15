@@ -36436,3 +36436,30 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     exercise the filter - the unit test and its mutant do; the next live check is the rollover minute.
   NOT YET           join.js refusal texts Unity shows after a refused PLAY can still say "seat" (the page's why);
                     the launcher still opens a fresh pair on every restart (the lobby shows one of each regardless).
+
+## 16:14 / 16:17 / 16:45 / 16:49 MEASURED, NO CORE CHANGE (2026-09-15)
+  METHOD            every run signer node A holds (29 entries; 20 with a beacon), replayed headless on its real seed
+                    (seedWordForEntry(entry, beacon hash)) with the core the signer nodes run (/mnt/bitcoin/blwp-2of2/code
+                    at 670e15f; sim/solids/map/gate/ground byte-equal to this tree). Replay == signed outcome 14/14 (B 13/13),
+                    0 mismatched. Scripts: scratchpad measure-world.mjs, measure-world2.mjs.
+  16:14 MINER       The mouth is driveable: every truck that entered it (4 of 4) is DELIVERED in the core and signed 2 of 2.
+                    Core boxes east of x 85: east wall x 128.5-131.5; facade sides x 108.4-116.4 at |z| 40-84.4; lintel over
+                    |z|<40 from 26 m up; tunnel sides x 111.4-139.4 at |z| 40-44. Ground x 90-120: 0.00 m (apron, every seed).
+                    THE HANG IS AFTER DELIVERED: those runs went on 620 / 5319 / 1485 / 1808 ticks (10-89 s) after the core's
+                    DELIVERED tick (1668 / 1521 / 2697 / 4000), three of them parked against the tunnel's east wall at x 125.2,
+                    where the HUD's DROP-OFF point (114.4, 0, 4 m up) is 16.9 / 21.6 / 29.6 m away (one at x 112.9: 4.5 m) -
+                    Daniel's "14 m" and "15.78 m" are trucks past the line. The only two stalls: x 105.1 at z 64.6 / 71.4,
+                    against the facade's side (box 33), outside the mouth - a correct wall.
+  16:17 GROUND      Drawn mesh = core grid (160 x 96 over 260 x 170 m, same B-C split). Without craters the truck stands
+                    exactly on the drawn ground (0.00 m); a tank seated from four samples (3.4 x 1.8 m half-hull) has the drawn
+                    ground up to 0.29-0.66 m inside its footprint, the tilt clamp hit (roll 14 deg).
+                    CRATER LAG: the core digs a crater (depth 0.225 R, 3.6-9 m) in the tick it takes the liquidation; Unity
+                    draws it 6.4 s (384 ticks) later. The stored runs hold no liquidations; the same real runs with one every
+                    600 ticks (1e6..1e9): the drawn ground stands up to 9.00 m over a unit (tank 9.00, truck 8.84 m), >3 m for
+                    up to 965 unit-ticks in one run. This is "under the mountain".
+  16:45 ARMOUR      army.js:626 - an engaged tank's post is its foe's x; it gives 6 m only inside 24 m. Opposing live tanks:
+                    nearest 7.09-7.49 m in every run with a fight (never wider), pair-ticks inside 12 m 111-3266 per run,
+                    inside 24 m up to 38308 - the two hulls (6.8 m long) nose to nose, holding there. With liquidations,
+                    live foes inside 6 m for up to 19 ticks.
+  16:49 NUKE        StrikeTheatre.cs: the impact is Ground() at one point (172); the cloud sits at _cloudAt (727); the skirt
+                    is lifted to the MAX of five Ground() samples (850-854), so on a slope it floats over the low side.

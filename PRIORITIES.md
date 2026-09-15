@@ -79,6 +79,9 @@ BUILT UNDER THE RULINGS (2026-09-15, numbers: TASKBOOK):
 - 16:08/16:22 the Daily lists one FREE round and one paying round, marked PAID · 100 sats, PLAY on
   the free one; its lobby says signer nodes, never seat (Daily c294cde8). A crashed player's run is
   FAILED 2 of 2, not VOID.
+- 16:14-16:51 measured on real runs, no core change yet: the miner's mouth delivers (4/4); the
+  hang is after DELIVERED. Units go up to 9 m under the drawn ground while a crater is dug but not
+  yet drawn (6.4 s). Engaged tanks close to 7.1-7.5 m of each other. The nuke's skirt floats.
 
 DONE: M3 W7 - A PAYING FEDERATION ROUND NAMES ITS FEDERATION, AND THAT IS CHECKED (2026-09-15).
 The codec refuses a paying FEDERATION round with a zero federation_id (encode and decode,
