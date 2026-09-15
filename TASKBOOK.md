@@ -36615,5 +36615,13 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     round.
   SIGNED            (17:31Z) both signer nodes hold 2 results for entry bb729210, no no-quorum: FAILED score 0 transcript
                     cca8738e, core 5f3b5176, signed by 7291d680 and de4dd194 - MISSED is FAILED in the replay's words.
-  NOT MEASURED      the address after a MISSED end (the probe closes its browser before it polls the results; the same
-                    BLWP_RUN_OVER path was measured after DELIVERED); a live WRECKED.
+  UNMEASURED, SAME PATH (Daniel 17:3x: not holes in the hang, no further run or harness on this letter):
+                    (1) the address after a MISSED end - the probe closes its browser before it polls the results; it is
+                    the same BLWP_RUN_OVER path measured after DELIVERED (the address the plain lobby URL, a reload landing
+                    on the lobby). (2) a live WRECKED - covered by finish-at-delivered.test.js (WRECKED: every held tick
+                    out, nothing after, the word named; mutant red) and the Unity end-run path (TruckHealth does not
+                    respawn inside a round); a scripted drive does not guarantee a write-off.
+  HANG CLOSED       (Daniel 17:3x) the run ends at DELIVERED / MISSED / WRECKED the same way, the lobby is back in the same
+                    frame, a second PLAY in the same tab plays a new round, and the signer nodes hold only the ticks the
+                    page sent. Own items from here: page core vs signed replay; SpawnMark; the 40 m mouth vs 34 m delivery
+                    (ruled, not retuned); the Signer Node copy ("free seat" in the status chip).

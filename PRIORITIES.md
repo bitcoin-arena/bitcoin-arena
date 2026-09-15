@@ -96,6 +96,17 @@ BUILT UNDER THE RULINGS (2026-09-15, numbers: TASKBOOK):
 - 16:14-16:51 measured on real runs, no core change yet: the miner's mouth delivers (4/4); the
   hang is after DELIVERED. Units go up to 9 m under the drawn ground while a crater is dug but not
   yet drawn (6.4 s). Engaged tanks close to 7.1-7.5 m of each other. The nuke's skirt floats.
+- 16:14 DONE, hang after DELIVERED: the run ends at DELIVERED / MISSED / WRECKED the same way, the
+  lobby is back in the same frame, a second PLAY in the same tab plays a new round, and the signer
+  nodes hold only the ticks the page sent (Daily 0.0.1345; numbers: TASKBOOK).
+OWN ITEMS (2026-09-15, after the hang; not part of it):
+- NEXT: the Signer Node copy (ruled 16:22) - the status chip still says "free seat"; HUD/lobby say
+  2 of 2 signer nodes, open signer node.
+- AFTER THE COPY: the page's core parts from the signed replay - live and simulated liquidations and
+  the impact reset change its checkpoints; one run's card read 102 against 103 signed. The
+  player-facing score card can lie.
+- LISTED: SpawnMark can re-seat a parked truck with a teleport - not measured.
+- LISTED (ruled): the mouth is open to 40 m, delivery counts |z| <= 34 m - not retuned.
 
 DONE: M3 W7 - A PAYING FEDERATION ROUND NAMES ITS FEDERATION, AND THAT IS CHECKED (2026-09-15).
 The codec refuses a paying FEDERATION round with a zero federation_id (encode and decode,
