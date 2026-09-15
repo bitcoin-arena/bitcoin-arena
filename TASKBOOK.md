@@ -36678,3 +36678,17 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
   COUNTS            client 346/346. EditMode 206: 202 pass, 1 red (the listed CombatFxTests.RifleFire), 3 skipped -
                     PlayerCopyTests 2/2. PlayMode 239: 216 pass, 10 red (the same documented ten), 13 skipped (ended
                     20:16). The live Daily check follows the deploy.
+  PAGE SOURCE       deploy https://1013d683.btc-logistics-core.pages.dev (0.0.1350; alias serves the same bundle 48286859):
+                    the served page still contains 5 lines matching "free seat|not seated" - lines 567, 836, 1223, 1277,
+                    1444, every one a `//` comment inside an inline script, never rendered; player-copy.test.js skips
+                    comments and passes. Not copy, not changed.
+  LIVE (0.0.1350)   copy-probe.mjs on https://1013d683.btc-logistics-core.pages.dev (the plain alias serves the same bundle
+                    48286859), free round 7d67176d, entry 3ee9373f: every text the page showed (document.body.innerText)
+                    and every row Unity reported it drew, read in 4 states - /\bseat(s|ed|ing)?\b/ found 0 times.
+                    lobby: page text 0 chars (Unity draws it), Unity rows "FREE · closes 6:02 · 2 of 2 signer nodes · 0
+                    joined" and "PAID · 100 sats · closes 6:28 · 2 of 2 signer nodes"; screenshot: "ROUNDS · JOIN NEEDS 2
+                    OF 2 SIGNER NODES", "PLAY joins round 7d67176d - 2 of 2 signer nodes agree". joined and in-run: page
+                    text 344 chars, the chip "1 player · waiting · free round". ended (DELIVERED at tick 1406, x 114.48, the
+                    lobby on the first poll - 0 ms): page text 347 chars, the chip "free round", the rows "2 of 2 signer
+                    nodes". Both signer nodes hold exactly 1406 ticks. THE COPY PASS IS DONE on the Daily; left, listed:
+                    the signer nodes' own server texts on a refusal.

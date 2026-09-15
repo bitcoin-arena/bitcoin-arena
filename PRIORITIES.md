@@ -100,8 +100,10 @@ BUILT UNDER THE RULINGS (2026-09-15, numbers: TASKBOOK):
   lobby is back in the same frame, a second PLAY in the same tab plays a new round, and the signer
   nodes hold only the ticks the page sent (Daily 0.0.1345; numbers: TASKBOOK).
 OWN ITEMS (2026-09-15, after the hang; not part of it):
-- NEXT: the Signer Node copy (ruled 16:22) - the status chip still says "free seat"; HUD/lobby say
-  2 of 2 signer nodes, open signer node.
+- DONE: the Signer Node copy (ruled 16:22, 19:56) - no player-facing string says seat; signing
+  machines are signer nodes, the player's place is joined, a round with no stake is a free round
+  (Daily 0.0.1350; live probe 0 hits in 4 states). Listed: the signer nodes' own server texts can
+  still say seat on a refusal (about 88 lines; a node release, not this pass).
 - AFTER THE COPY: the page's core parts from the signed replay - live and simulated liquidations and
   the impact reset change its checkpoints; one run's card read 102 against 103 signed. The
   player-facing score card can lie.
