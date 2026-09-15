@@ -36349,3 +36349,10 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     13:27:29Z listing free 3f51b8cd and paying 557949ba, both 2/2 join, PLAY on the free one;
                     the default Daily lists 0 (13:29:07Z) only because its deployed daily.json names the
                     tunnels stopped at 14:59.
+  ROLLOVER HELD     (13:36-13:38Z, still gated) the persistent seats rolled both kinds over by themselves, first
+                    try, no notOpened since they came up at 13:00:37Z: paying 557949ba 13:00:44Z, free d6e6ac60
+                    13:30:40Z, paying 78035fe6 13:30:50Z. Both seats' own /rounds (de4dd194, 7291d680): d6e6ac60
+                    free and 78035fe6 paying 100000 msat, open, 2/2, seated here, each listing signed (64 B).
+                    Query-string Daily, Unity's report 13:37:12Z: listed 2 - "d6e6ac60 2/2 join", "78035fe6 2/2
+                    join" - PLAY on the free d6e6ac60. Default Daily 13:38:42Z: listed 0, PLAY disabled.
+                    cloudflare.env absent at 15:36:51; the keeper's last line still the 13:16:14Z hold.
