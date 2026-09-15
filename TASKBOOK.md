@@ -36744,3 +36744,42 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     SIGNED (20:38:04Z, the round over at 20:37:51Z): entry cad1aeea DELIVERED score 157, 2 of 2 on both
                     signer nodes (7291d680, de4dd194), core 5f3b5176, no no-quorum; the close log reads "closed by this
                     signer node".
+
+## NEXT LIVE: THE PAGE'S SCORE CARD AGAINST WHAT THE SIGNER NODES SIGN (2026-09-15)
+  METHOD            score-probe.mjs (scratchpad, measure-only): a real Daily run with a recorder in the page -
+                    every call into the page's core wrapped on Module.blwp.core, the state diffed between calls
+                    (a write that goes around every function is seen too), the start state and the exact
+                    DELIVERED tick kept; the held transcript saved from both signer nodes; replay-shares.mjs
+                    replays it through core/src/adapter.js alone, then + each recorded page write.
+  SIM, BEFORE       0.0.1356, round 8386f6f5, PRACTICE on, SIM pressed once: 1 simulated liquidation reached the
+                    page's core at tick 192 (size 2794062) and no transcript. Card DELIVERED 222 @ 2129; both
+                    signer nodes FAILED 268; transcript alone still live at its end, 268. + that liquidation =
+                    the card exactly: the whole gap. Live liquidations 0, teleports 0; 54 impact clears on word 17
+                    moved only the state hash.
+  SIM, AFTER        e176f96, 0.0.1357, round 1e8dadeb, SIM pressed once: "simulated liquidation not offered: a
+                    signed run is live (switch)", 0 liquidations reach the core. Card DELIVERED 514 @ 1785 = both
+                    signer nodes DELIVERED 514 (2 of 2) = transcript alone. Remainder: 60 impact clears on word 17
+                    (state hash only). EditMode 208 (204 pass, 3 skipped, 1 red: CombatFxTests.RifleFire...);
+                    PlayMode 239 (216 pass, 13 skipped, the same 10 reds by name as both earlier runs).
+  LIVE MARKET,      the handler (Bootstrap OnLiquidation) sends every forced order with usd > 0 to the core. On
+  BEFORE            0.0.1356 (signer-probe2, no recorder) four live liquidations fell inside one signed run -
+                    $684 @19.5 s, $185,072 @105.7 s, $294,853 @107.2 s, $28,579 @115.1 s; DELIVERED @116.5 s -
+                    card 157 = signed 157. Recorded on 2a6c903a (SIM gated), round 16c82625: two runs, a quiet
+                    market - no [feed] liquidation at all while the page was open, so 0 reached the core. Card =
+                    transcript alone on both: DELIVERED 26 @ 1266 (hash identical, no page writes) and DELIVERED
+                    465 @ 1332 (1 impact clear, word 17). On 0.0.1357 the three live liquidations of that page
+                    ($15,124 - $241,167, @7.5-8.7 s) came before its session opened (@13.2 s): outside the run.
+  LIVE MARKET,      the handler asks Bootstrap.LiquidationMayWriteCore(BlwpNet.Live) - the SIM rule, one rule now -
+  AFTER             and logs each one it holds back. 0.0.1358 (a27a982c), round bc691348, entry cbc1ed41, PRACTICE on,
+                    SIM pressed once, a busy market: the feed received 20 forced orders; 2 before the session opened
+                    (@7.4 and 8.1 s; session @13.9 s, world seed @16.3 s) went to the pre-run core as before; 18 inside
+                    the signed run (@132.6-138.8 s, DELIVERED @157.2 s; binance, binance-cm, bybit, okx; $75 -
+                    $9,257,423, $9,659,131 in all) each logged "not offered to the core: a signed run is live"; 0
+                    liquidation calls reached the core (the recorder's wrapper saw none). Card DELIVERED 257 @ 1656 =
+                    transcript alone (1656 ticks, the same bytes on both signer nodes); remainder 35 impact clears on
+                    word 17 (state hash only, pick 3). Before runs signed: 16c82625 entries cc9f9575 DELIVERED 26 and
+                    3fd87f96 DELIVERED 465, 2 of 2 on both, each = its card = its transcript alone.
+                    EditMode 209 (205 pass, 3 skipped, 1 red: CombatFxTests.RifleFireProducesAFlashAndATracer; the 3
+                    SimLiquidationTests pass); PlayMode 239 (216 pass, 13 skipped, the same 10 reds by name).
+                    SIGNED (22:38:33Z, the round over at 22:38:13Z): entry cbc1ed41 DELIVERED 257, 2 of 2 on both
+                    signer nodes, no no-quorum - = the card = the transcript alone.
