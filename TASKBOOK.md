@@ -36625,3 +36625,21 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     frame, a second PLAY in the same tab plays a new round, and the signer nodes hold only the ticks the
                     page sent. Own items from here: page core vs signed replay; SpawnMark; the 40 m mouth vs 34 m delivery
                     (ruled, not retuned); the Signer Node copy ("free seat" in the status chip).
+  CLOSE-OUT CHECKS  (Daniel 17:4x: "have you thought of everything - core vs old, numbers")
+                    CORE VS THE OLD C# RULE (gate-engines.mjs, 9 stored real runs that delivered): the core says DELIVERED
+                    at x >= 114.0 (GATE_X), |z| <= 34; the C# DeliveryGate fallback fired at transform x >= 114.4
+                    (gateX = 260 x 0.44), |z| <= 34. The 4 runs that drove on (before the fix): C# 1 tick after the core,
+                    every one (x 114.54-114.66 against 114.15-114.31). The 5 runs since the fix stop on the core's tick
+                    (x 114.01-114.22) and the C# rule never fires. The HUD's DELIVERED is the core's word, so the 0.4 m
+                    between the drawn gate point and the core's line is not shown to the player; the C# rule remains only
+                    as the no-core editor fallback (DeliveryTests).
+                    PAYING ROUNDS AFTER THE END: the page's post-run flows (findTheRoundsOwed, collect, withdraw, the
+                    donation set) reach the signer nodes through named.nodes; BLWP_CHAIN / BLWP_ADVERT are read only by
+                    session discovery (jslib), so clearing them at the run's end does not touch getting paid (read, not
+                    driven live today).
+                    WRECKED SLOW MOTION: WastedSequence restores timeScale on TruckHealth.Respawned, which still fires
+                    after respawnSeconds = 5 s (unscaled) inside a round - only the teleport was cut; a new join took
+                    15-18 s every time today, so no round starts under slow motion.
+                    NOT THE HANG, OWN ITEM: another player's ghost of a run that has ended stays at its last picture (in
+                    the mouth) until that player takes another seat - ghost-field.js retires a drawn seat only when the
+                    same player supersedes it; nothing tells watchers a run is over.

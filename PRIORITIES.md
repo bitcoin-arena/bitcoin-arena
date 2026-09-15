@@ -107,6 +107,8 @@ OWN ITEMS (2026-09-15, after the hang; not part of it):
   player-facing score card can lie.
 - LISTED: SpawnMark can re-seat a parked truck with a teleport - not measured.
 - LISTED (ruled): the mouth is open to 40 m, delivery counts |z| <= 34 m - not retuned.
+- LISTED: another player's ghost of a run that has ended stays at its last picture until that
+  player takes another seat - nothing tells watchers a run is over.
 
 DONE: M3 W7 - A PAYING FEDERATION ROUND NAMES ITS FEDERATION, AND THAT IS CHECKED (2026-09-15).
 The codec refuses a paying FEDERATION round with a zero federation_id (encode and decode,
