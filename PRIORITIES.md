@@ -51,8 +51,12 @@ BUILT UNDER THE RULINGS (2026-09-15, numbers: TASKBOOK):
   core that replayed, every fixture on the real hashes (684f4b2). Step C, the acceptance - the
   round's config reaches its core; a second title (a test counter) beside the truck on the same two
   seats in one window, the same run DELIVERED under one config and FAILED under the other, every
-  result naming its own core - in its node suite now. Still R1's: R3 (run length and input words
-  from the core, not the protocol) and R4 (the truck's five fields as its config's parameters).
+  result naming its own core (ed8fd84). R3, a run's length is its round's core's under its config,
+  not the truck's constant: the protocol imports no core rule, the seat checks blockTicks against the
+  round's own core, the page reads it off the round it fetches and hashes. R4 (the truck's five
+  contract fields) NOT DONE, decided: read by no seat, page or core, already in the truck's config;
+  taking them off the wire is a hard fork (round ids, vectors, stored rounds, §6) - with the next
+  protocol version.
 
 DONE: M3 W7 - A PAYING FEDERATION ROUND NAMES ITS FEDERATION, AND THAT IS CHECKED (2026-09-15).
 The codec refuses a paying FEDERATION round with a zero federation_id (encode and decode,

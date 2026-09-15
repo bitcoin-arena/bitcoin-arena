@@ -35961,7 +35961,46 @@ M3 - THE SEATS ARE A NETWORK, THE TRUCK GAME IS ONE CORE ON IT (Daniel 08:03): M
                     its peer's, the 2 of 2); the test says so, and that the two agree. core-registry 3/3, replay 9/9,
                     ghost-live 10/10 (the warm pose unchanged with the config handed down). node 641/641 (10:17-10:33):
                     six chunks 605 (114, 107, 78, 125, 111, 70 - step B's 603 and two-titles' 2), lock-settlement
-                    15/15, five-of-seven 21/21; no test process past 200 s.
+                    15/15, five-of-seven 21/21; no test process past 200 s. Committed ed8fd84.
+  R1 R3             (10:34-) A RUN'S LENGTH IS ITS ROUND'S CORE'S, NOT THE TRUCK'S CONSTANT. Measured before: the seat
+                    bounded a batch by the contract's blockTicks and ended a run by the truck's BLOCK_TICKS
+                    (lastTickOfRun, read from core/src/rules/gate.js by the protocol), and round.open held every
+                    contract to the truck's 9000 (runLengthIsTheCores) - so the counter had to claim 9000 ticks.
+                    contracts.js, first-mark.js and transcript.js imported the truck's gate rules. Now: the protocol
+                    imports no core rule (genesis.js alone still encodes the truck - the network's first title's
+                    config); lastTickOfRun(joinTick, blockTicks) and runLengthIsTheCores(contract, coreTicks) take
+                    the length; roundEndMs counts the contract's blockTicks; transcriptBelongsToEntry takes it and
+                    refuses without one. The seat: Round takes the registry, round.open checks blockTicks against the
+                    round's own core and config (cores.js runTicksOf: runTicks(config), else RUN_TICKS - the truck's
+                    file untouched, its hash unmoved); the batch path, replay and RunInProgress count with it. The
+                    page: runOver counts with the round's blockTicks, and resume fetches the round by id and hashes
+                    it (roundFor, as entryFor does the entry) - measured first: 5 reconnect tests refused "that round
+                    names no run length", because resume runs before setRound. The counter's run is its config's 120
+                    ticks; two-titles' counter rounds name blockTicks 120 and a start deadline of 90 (the fixture's
+                    is longer than such a run, and the codec refused it by name).
+                    MEASURED: protocol 530/530 (stopped.test's round end unchanged, 179957 ms at 9000; a round naming
+                    no run length refused; late-join hands the truck's length); run-length 5/5 (the counter opens at
+                    120 and refuses 9000 "this core ends one at 120", a store without it refuses its round,
+                    lastTickOfRun with no length throws); two-titles 2/2 at 120 ticks; round 11/11, replay 9/9,
+                    close-at-end 1/1, core-registry 3/3. The client bundle (6a942436) no longer carries the truck's
+                    gate rules: 53 modules, was 55. client: first run 326/332 - the bundle check (the rebuild) and 5
+                    reconnect tests ("that round names no run length": resume ran before setRound); with roundFor
+                    331/332 - late-join's lying stub served no /round, so resume stopped at "the node has no round"
+                    before the check it is about; the stub now serves a real round (contract(), its own id) and the
+                    refusal is the test's own again ("begins at tick 0 and that entry joined at 50"): 332/332.
+                    node 642/642 (10:41-10:56): six chunks 606 (114, 107, 78, 125, 112, 70 - step C's 605 and the
+                    counter's run-length test), lock-settlement 15/15, five-of-seven 21/21.
+  R4, NOT DONE      (measured 10:49, decided) THE TRUCK'S FIVE CONTRACT FIELDS (exposureReference, corridorHalfWidth,
+                    spawnFreeRadius, timeFloor, timeCeil) are read by no seat, no page and no core: only the contract
+                    codec (encode/decode) and two plausibility warnings (contracts.js exposure_ignored,
+                    time_factor_degenerate); RunScore.cs has same-named fields of its own (the PhysX client, not
+                    the contract). The truck's values are in its config, which the config hash already commits to
+                    (genesis.js encodeGameConfig); a second title fills the five and ignores them (the counter does).
+                    Taking them off the wire is a hard fork of the Round Contract: every round id moves, the golden
+                    vectors are regenerated, rounds already in seat stores (the Daily's) no longer decode, and §6's
+                    field list changes. Not needed for 08:03/08:07 - two titles and two configs run on the same
+                    seats with them in place (R1 step C). So R4 waits for the next protocol version, recorded here
+                    with its cost, not slipped into a day's work.
 
 M3 - THE RESULT WINDOW IS THE OBJECTION WINDOW (Daniel 07:49) (2026-09-15)
   RULING            the result window equals the objection window - same duration, on the contract
