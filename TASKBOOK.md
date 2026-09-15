@@ -36557,3 +36557,18 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     RunEndsAtDeliveredTests 4/4 (+AfterARunIsOverTheNextSessionMayOpenAndTheCoreDrivesAgain). PlayMode 239:
                     216 pass, 10 red (the same documented ten), 13 skipped (ended 18:21). jslib and both inline page
                     scripts parse. Live check follows the deploy.
+  LIVE (0.0.1342)   deploy https://bda1ef40.btc-logistics-core.pages.dev, mouth-twice.mjs, free round b2a23b00, one tab.
+                    PASS 1: DELIVERED at tick 1271 (x 114.28, z -4.46); FINISHED there, 3 s later still 1271; both signer
+                    nodes hold exactly 1271 ticks; the lobby showing on the first poll that saw DELIVERED (0 ms, same frame).
+                    HOLE 2 LIVE: the address after the run is the bare root ("" - no round=, no play=1), BLWP_CHAIN cleared.
+                    PASS 2 - A BUG IN THIS CHANGE, caught live: the second PLAY joined b2a23b00, opened a session, the core
+                    took the truck back - and ~7 s later "run ended FINISHED: the core said DELIVERED at tick 1". The new
+                    client existed a few seconds before the page's core entered the new round (setRound, in net.opened);
+                    the bridge's DELIVERED check read the old core, still DELIVERED from pass 1, and finished the new run.
+  FIX 3             client.coreWord({state, stateHash, tick}): acts only for a run the client has been told it plays
+                    (`where`, set by setRound - the same step the core enters the round's world), and only on DELIVERED;
+                    the jslib hands the word over and decides nothing. Test: a client not yet told its round ignores
+                    DELIVERED; LIVE and WRECKED words are left alone; a told run finishes. Mutant (guard dropped) red.
+  COUNTS            finish-at-delivered.test.js 2/2 (mutant: guard dropped -> "a client not yet told its round finished a
+                    run", red). Client 341/341 (bundle 182efa15). C# unchanged since EditMode 200/204 and PlayMode 216/239
+                    (18:11-18:21). The probe on the buggy 0.0.1342 was stopped; pass 2 is re-measured on the next build.
