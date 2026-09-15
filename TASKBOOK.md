@@ -36192,3 +36192,42 @@ THE LOBBY HOW-TO ON A PHONE UPRIGHT: TWO PAGES (Daniel 11:57, HARD; option A) (2
                     the grid on every screen that is not portrait.
   NOT DONE HERE     the lobby's rounds: the bare root still has no daily.json and the Daily's seats are down
                     (the seats letter waits on its own Go); this ships the how-to with an empty list.
+
+THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel 12:54 HARD) (2026-09-15)
+  BEFORE            the bare root (no query) showed no lobby: /daily.json answered 200 text/html (the page) on
+                    every deploy from 0.0.1265 to 0.0.1304 - a Unity build rewrites build/webgl and
+                    deploy-core.sh put nothing back. The seats were down since 2026-09-13 11:41Z: their regtest
+                    bitcoind stopped ("Could not connect to the server 127.0.0.1:30401"), and the tunnels the
+                    last daily.json named (facing-attachment-klein-initially / sit-benjamin-thing-century) do
+                    not resolve. The lobby link of that file listed 0 rounds ("Not listed: 2").
+  UP (12:58-12:59)  systemd --user units: blwp-daily-btc (bitcoind -regtest, datadir /mnt/bitcoin/blwp-2of2/btc,
+                    rpc 30401, p2p 30402, the flags of its last start; height 8041), blwp-daily-tunnel-a / -b
+                    (cloudflared 2026.9.1 quick tunnels to 100.74.66.98:18080 / :18081 - new names
+                    southwest-holding-discovered-prozac / interviews-package-constitute-webshots), blwp-daily-seats
+                    (tools/run-2of2.mjs from the worktree at e9fb4f6's parent, BLWP_WSS_* the new tunnels): "up",
+                    2 of 2, and daily.json rewritten 12:59:02 naming exactly the two new seats.
+  SEAT PAYLOADS     each seat's own /rounds through its tunnel, 200: one round e63cd4ffdd8eac2f, phase open,
+                    stakeMsat 0, free, wallet none, seatedHere true, needed 2 of seats 2, 0 seated, signed by
+                    that seat (A a361cd83..., B a3b01af4...). Its contract from /round?id= hashes to the id and
+                    names simCoreHash 5f3b517648bde43d (the truck core, by hash) and configHash 04580b8f154d9330
+                    (the truck's), custody FEDERATION at stake 0, blockTicks 9000, 2 nodes.
+  DEPLOY GUARD      deploy-core.sh copies the launcher's daily.json beside the page after checking two https
+                    seats, a bond door, a signed advertisement and every seat's /rounds; otherwise it refuses
+                    (e9fb4f6). Measured: no file - refused, exit 3; the old file (dead tunnels) - "…/rounds did
+                    not answer: fetch failed", refused, exit 3; the live file - both seats /rounds 200, 1 round,
+                    1 open - deployed 0.0.1304 to https://11823bf9.btc-logistics-core.pages.dev.
+  AFTER             /daily.json 200 application/json naming the two live seats on 11823bf9 at once, and on the
+                    core alias three times from 13:01:04 (the alias served the page for about a minute first).
+  LIVE LOBBY        howto-probe on https://btc-logistics-core.pages.dev/ with NO query (13:01:52-13:02:45),
+                    Unity's own report of what it drew:
+                      375x667 @2   lobby, listed 1: e63cd4ff 2/2 join, picked, PLAY enabled; carousel pages 1-4
+                      390x844 @3   lobby, listed 1: e63cd4ff 2/2 join, picked, PLAY enabled; carousel
+                      1280x800 @1  lobby, listed 1: e63cd4ff 2/2 join, picked, PLAY enabled; how-to one row
+                    the row is the round both seats' own signed /rounds served. Screenshots (375x667, 390x844):
+                    "FREE · closes 28:05 · 2 of 2 seats", "PLAY joins round e63cd4ff - 2 of 2 seats agree"; who
+                    you are, NAME, KEY, the how-to page with its arrows, PLAY and SPECTATE all on screen.
+  NOT YET           the second round Daniel asked for beside the free one (a 2-of-2 round with money): the
+                    launcher's paying round is custody FEDERATION, and under the 07:33 ruling a seat seats one
+                    only if the federation's threshold of guardians are bonded census nodes - the Daily has two
+                    seats, a 4-guardian federation needs 3, and fedimint 0.12 forms no 2-guardian federation.
+                    And the next free round: keepOpen opens it when this one has under a minute of entry left.
