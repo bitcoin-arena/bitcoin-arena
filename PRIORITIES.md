@@ -35,6 +35,21 @@ and federation - a hard fork or a second title, not a rewrite of the seats.
 RULED (Daniel 08:07): not only swappable - several games at once, and several rule sets at once.
 Each round names its core and its rules; seats replay what that round names. Two titles and two
 configs can run on the same nodes in the same window.
+BUILT UNDER THE RULINGS (2026-09-15, numbers: TASKBOOK):
+- 07:42 a fee lock is sized for the round's sitting seats, the seats its settlement pays (79973c7);
+  Daily 0.0.1286.
+- 07:44 the regtest federation runs with disable_base_fees; live, both rounds settle with nothing
+  lost to the federation (df41604).
+- 07:49 past the result window a seat that cannot retrieve the transcript decides by §13C (e136861);
+  a seat back after its peer decided decides too once no quorum can form - the seats agree (fef5bd0).
+- 07:33 blwp-stake-lock reads a federation's guardians off its config, live on fedimintd 0.12.0
+  (2d76f66); the seat seats a paying FEDERATION round only on a bonded federation - on today's
+  census it refuses every one (c42492b). The page's own count is its own slice (it derives no census).
+- 08:03/08:07 R1 (several cores and configs at once): step A, the core seam - the truck behind an
+  adapter, one door (cores.js), replay imports no core - in its node suite now. Next: step B, the
+  seat's registry, the door refusing a core/config it does not hold, results naming the core that
+  replayed, fixtures on the real hashes; step C, a second minimal core with two configs beside the
+  truck on the same seats.
 
 DONE: M3 W7 - A PAYING FEDERATION ROUND NAMES ITS FEDERATION, AND THAT IS CHECKED (2026-09-15).
 The codec refuses a paying FEDERATION round with a zero federation_id (encode and decode,
