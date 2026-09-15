@@ -36463,3 +36463,34 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     live foes inside 6 m for up to 19 ticks.
   16:49 NUKE        StrikeTheatre.cs: the impact is Ground() at one point (172); the cloud sits at _cloudAt (727); the skirt
                     is lifted to the MAX of five Ground() samples (850-854), so on a slope it floats over the low side.
+
+## 16:14 THE RUN ENDS WHEN THE CORE SAYS DELIVERED (2026-09-15) - client and Unity only, no core change
+  BEFORE            (measured, see "16:14 MINER" above) all 4 trucks that entered the mouth were DELIVERED in the core and
+                    signed 2 of 2, then the page recorded 620-5319 more ticks (10-89 s), the truck at the tunnel's back wall,
+                    the HUD reading 11-30 m. WHY THE CARGO STAYED ON THE BED: in a live round the core is never restarted on
+                    roll-out (CoreDrivenTruck.RollOutRestarts), and DeliveryGate.Deliver cleared the bed and called
+                    TruckController.Respawn -> BlwpCore.Teleport, which moves the core's truck and leaves S_STATE at
+                    DELIVERED (sim.js teleport). Back at the ramp in a core that still said DELIVERED, the next load could
+                    never deliver: `_settled` stayed true and the core's outcome cannot move off DELIVERED - Daniel's
+                    BANKED 198 and a second trip that never ended. The teleport is also a write into the core in no
+                    transcript. No PhysX value on that path: it reads BlwpCore.RunState (offsets checked: O_SCORE 18,
+                    S_STATE 5 in C#, jslib and state.js); only the no-core editor fallback reads the truck's transform.
+  FIX               client.js finish({stateHash, tick, why}): handed the core's word by the page, it stops taking ticks,
+                    drains every held tick, sends the last checkpoint at that tick, ends FINISHED (no outcome - the
+                    replay's), closes; nothing after. blwp.jslib net.tick: after recording a tick, reads the core's own
+                    word (i32[18+5] === 1) and calls finish. DeliveryGate.BackToTheBay(roundSeed): in a live round the cargo
+                    comes off and nothing is moved (no respawn, no teleport, no fly home). DriveHud.DropOffWords: DELIVERED
+                    instead of metres once the core says so. SplashScreen.BackToLobby: a run PLAY started from the lobby
+                    comes back to it when the page says the run ended.
+  TESTS             finish-at-delivered.test.js on one real daemon: 47 held at the core's word, node holds exactly 107, 0
+                    taken after, FINISHED, socket closed; mutant (record while finishing) red: 30 taken after, node 137.
+                    Client 340/340. EditMode RunEndsAtDeliveredTests (3).
+  COUNTS            (17:35-17:44) finish-at-delivered.test.js 1/1 (node --test, --test-timeout=120000 under timeout 180).
+                    Client 340/340. EditMode 203: 199 pass, 1 red (the listed CombatFxTests.RifleFireProducesAFlashAndATracer),
+                    3 skipped - RunEndsAtDeliveredTests 3/3. PlayMode 239 (ended ~17:29, this tree): 216 pass, 10 red, 13
+                    skipped - all ten in the documented eleven (retired C# army / truck physics x9, VisibilityTests.
+                    ArmiesAreActuallyDrawn needing a graphics device); RoadsAreActuallyDrawn and RampReady passed; nothing new
+                    red. WebGL 0.0.1334 Succeeded, 0 errors, 43 MB. Not yet deployed or driven live when committed.
+  LISTED, NOT HERE  delivery needs |z| <= 34 m (HALF_MOUTH) while the mouth is open to |z| < 40 m (the tunnel's sides at 40):
+                    a truck entering in the 34-40 m strip drives in and never delivers. A geometry rule, not the hang
+                    (Daniel 17:3x): not changed in this item.
