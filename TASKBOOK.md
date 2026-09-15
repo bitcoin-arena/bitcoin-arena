@@ -36360,3 +36360,21 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     13:16:14Z hold, nothing after it. Plain Daily, Unity's report 13:44:30Z: listed 0, PLAY
                     disabled. Address-link Daily 13:42:49Z: listed 2 - free d6e6ac60, paying 78035fe6, both 2/2
                     join - PLAY on the free d6e6ac60. Close-out checks and the held tests wait on the file.
+  TUNNEL RESTART    (Daniel: run it now, against the address-link Daily) BEFORE 15:48-15:51: cloudflare.env absent;
+                    both seats (de4dd194, 7291d680) listed free d6e6ac60 and paying 78035fe6, open, 2/2, signed;
+                    address-link Daily listed 2 "2/2 join", PLAY on the free d6e6ac60; plain Daily 0.
+                    RESTART 15:51:36 tunnel A: cloudflared's request for a new quick tunnel timed out ("failed to
+                    request quick Tunnel: Post https://api.trycloudflare.com/tunnel: context deadline exceeded",
+                    11 restarts by 15:57; api.trycloudflare.com answered a GET in 0.09 s) - Cloudflare's
+                    account-less service, not this host. KEEPER BUG: it took api.trycloudflare.com - the only
+                    trycloudflare address logged - as seat A's name and restarted the seats under it (13:51:52Z):
+                    seat A bonded under an address answering /rounds 405; the address-link Daily then listed 4
+                    rows, each "1/2", no join, PLAY disabled (13:56:07Z). FIX 670e15f: only a hyphenated
+                    *.trycloudflare.com name, never api., and only from an active tunnel unit (checked on the
+                    lines cloudflared printed). AFTER: at 13:56:35Z the fixed keeper saw the real name
+                    beast-specialized-protein-loved and restarted the seats under it (up 13:56:44Z), then held
+                    for the token. Both seats answer 200 and list the same six rounds, all 2/2 - d6e6ac60 and
+                    78035fe6 with their own ids, plus 892b28a0/fe0a8c1f and 5a343b8d/eb1109af, each seat restart
+                    opening its first pair - the address-link Daily lists 6 "2/2 join", PLAY on the free 5a343b8d
+                    (13:58:56Z); plain Daily 0 (14:00:59Z). A restart did not wipe or reset a round; it left the
+                    rounds unjoinable until Cloudflare issued a tunnel name (about 5 min).
