@@ -28,6 +28,10 @@ RULED (Daniel 07:44): Fedimint base fee is 0 (`disable_base_fees`). 22A stays 2%
 RULED (Daniel 07:49): result window equals the objection window (same contract field duration).
 RULED (Daniel 07:51): inbound / >=2 independent gateways PARKED. Continue M3 as far as it goes.
 No blocker that waits on Daniel. A paying testnet round still needs those gateways later.
+RULED (Daniel 08:03): the truck game is one use of the federated consensus network, not the
+network. M3 keeps game logic out of the seats as far as it will go: seats replay a named core
+(`sim_wasm_hash`), they do not embed the truck. A later game is a new core + client, same nodes
+and federation - a hard fork or a second title, not a rewrite of the seats.
 
 DONE: M3 W7 - A PAYING FEDERATION ROUND NAMES ITS FEDERATION, AND THAT IS CHECKED (2026-09-15).
 The codec refuses a paying FEDERATION round with a zero federation_id (encode and decode,
