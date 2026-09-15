@@ -36706,3 +36706,41 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     paying-round join or share check, they can reach the player as a refusal reason. None showed in
                     the 4 live states (a free round, nothing refused). Listed with the ~88 signer-node server lines as
                     PRIORITIES item 5 (later); not changed on this letter (no new game code).
+
+## 20:32 SEAT IN CODE -> SIGNER NODE, ENTRY, ASSIGNED (2026-09-15)
+  ASK               (Daniel 20:32) seat migrates in code too: names, types, functions, comments that mean the signing
+                    machine -> signerNode(s); a player's place stays joined / free round; hashed wire fields only with a
+                    protocol version, everything else renamed; no leftover seat in touched code.
+  BEFORE            5724 changed lines where seat meant a machine; the store a table `seats` and six seat_* columns;
+                    the shipped bundle 33 seat literals (the 19:56 close-out). A first mechanical pass also read two other
+                    senses as a machine - measured by pairing each changed line with HEAD: 63 client lines where "this
+                    seat" is the player's own entry ("what this seat owes"), 97 node/protocol lines of player sense
+                    ("seats this node must hold at once", "one lock is one seat"), and of 499 lines where seated had
+                    become joined, the committee ones (the census ASSIGNS). The listing flag seatedHere is
+                    round.seats(id).length > 0 - assigned, not joined.
+  AFTER             295 fixes by meaning (exact strings, a missing one stops the script): entry for the player's place,
+                    assigned for the census, take for a node taking an entry, rest for wheels on the ground; names
+                    seatedHere -> assignedHere, seated -> joined (the players count), peerSeats -> peerJoins,
+                    seating.js -> assignment.js (assumeAssigned), unit blwp-daily-seats -> blwp-daily-signer-nodes,
+                    seats.env -> signer-nodes.env, x-seat(s) -> x-signer-node(s). Binary encodings keep their field
+                    order (signatures verify unchanged). packages/core untouched (hash pinned in contracts).
+                    0 seat in touched files outside player-copy guards and store.js's old names; bundle 23c26d16: 0.
+  TESTS             protocol 534/534, client 346/346, node 636/636 (chunks under timeout 180; five-of-seven 21 and
+                    lock-settlement 15 by test name). store-signer-node-rename.test.js: an old-schema store with rows
+                    reads every row back under the new names; a second open renames nothing.
+  DAILY (22:03:47)  nobody on (0 joined, 0 playing); install.sh ae917cb; seats stopped; a.db, b.db backed up
+                    (.before-signer-nodes); signer-nodes unit up, keeper restarted, tunnels untouched. Stores after the
+                    rename: a signer_nodes 1214 (was seats 1212), rounds 616 (614), entries 44 (44), dkg 1 (1);
+                    b 1150 (1148), 575 (574), 42 (42), 1 (1) - the new rows are the rounds opened on restart. /rounds on both
+                    names joined / assignedHere. Page 0.0.1356, https://05425f58.btc-logistics-core.pages.dev, alias
+                    serves the same bundle 23c26d16.
+  LIVE (0.0.1356)   copy-probe.mjs on https://05425f58.btc-logistics-core.pages.dev (a first run lost its headless
+                    Chrome 8 s after load - trace ends at "core is driving", no page error, no OOM in the journal; the
+                    rerun is the measurement): the lobby lists 2 rounds, Unity draws "FREE · 2 of 2 signer nodes ·
+                    0 joined" and "PAID · 100 sats · 2 of 2 signer nodes" (the new page counting assignedHere); PLAY's
+                    pick 5aaa0dcf is the free round; joined entry cad1aeea; DELIVERED at tick 1283, lobby back in the
+                    same frame (0 ms); seat hits 0 in 4 states (lobby, joined, in-run, ended); both signer nodes hold
+                    1283 ticks, the ticks the page sent.
+                    SIGNED (20:38:04Z, the round over at 20:37:51Z): entry cad1aeea DELIVERED score 157, 2 of 2 on both
+                    signer nodes (7291d680, de4dd194), core 5f3b5176, no no-quorum; the close log reads "closed by this
+                    signer node".

@@ -24,7 +24,6 @@ NOW (2026-09-15, after the Signer Node copy):
    (~28 m, flank, 10 m spacing) - one core change, one coordinated signer-node restart.
 3. Tank hull seating: no drawn ground inside a hull.
 4. The nuke's stem, skirt and crater as one mesh on the core's ground.
-5. LATER: refusal and result texts from bundled protocol code and the signer nodes still say seat.
 LISTED: SpawnMark re-seats a parked truck by teleport (not measured); the mouth is open to 40 m,
 delivery counts |z| <= 34 m (ruled, not retuned); another player's ghost of an ended run stays
 at its last picture.
@@ -117,8 +116,11 @@ BUILT UNDER THE RULINGS (2026-09-15, numbers: TASKBOOK):
   lobby is back in the same frame, a second PLAY in the same tab plays a new round, and the signer
   nodes hold only the ticks the page sent (Daily 0.0.1345; numbers: TASKBOOK).
 - 19:56 DONE, the Signer Node copy: the lobby, the chip, the PLAY hint and the HUD say signer
-  nodes, joined and free round, never seat (Daily 0.0.1350; numbers: TASKBOOK). Refusal texts from
-  bundled protocol code and the signer nodes are item 5 above.
+  nodes, joined and free round, never seat (Daily 0.0.1350; numbers: TASKBOOK).
+- 20:32 DONE, seat in code: names, files, messages and the stores say signer node for a signing
+  machine, entry for a player's place, assigned for what the census does; the bundle carries no
+  seat (Daily 0.0.1356, stores renamed in place; numbers: TASKBOOK). packages/core untouched: its
+  hash is in the round contracts.
 
 DONE: M3 W7 - A PAYING FEDERATION ROUND NAMES ITS FEDERATION, AND THAT IS CHECKED (2026-09-15).
 The codec refuses a paying FEDERATION round with a zero federation_id (encode and decode,
