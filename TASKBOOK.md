@@ -35870,3 +35870,33 @@ M3 - THE SEATS ARE A NETWORK, THE TRUCK GAME IS ONE CORE ON IT (Daniel 08:03): M
                     R4 the truck fields as that config's parameters. Acceptance: two titles (the truck and a second,
                     minimal core) and two truck configs, rounds of each on the same two seats in the same window,
                     each replayed by its own core and config, results signed under its own core hash.
+
+M3 - THE RESULT WINDOW IS THE OBJECTION WINDOW (Daniel 07:49) (2026-09-15)
+  RULING            the result window equals the objection window - same duration, on the contract
+                    (objection_window_ms); a seat that cannot retrieve the transcript in that window treats the
+                    entry as VOID.
+  MEASURED BEFORE   the node already timed §13C's no-quorum VOID by the seat's close + objectionWindowMs - but only
+                    for one case (a first mark refused by an up seat, #noQuorum). A seat that could not know the
+                    receipted transcript - a seat it cannot reach might hold more receipts - waited with no end:
+                    the close and retryClose answered "waiting on N seat(s)", retryClose's own words "never a
+                    refund, never a VOID", and the finality watch kept asking past the window (M3.3-34's "the window
+                    is for objections, not for abandoning 2 of 2"). Measured: close-retry "past the objection
+                    window" - B down, A HOLDING at close + 3500 ms (window 3000), both runs FINAL 2 of 2 once B was
+                    back; one-seat-refused (4) - A HOLDING "waiting on 1 seat" at the window + 2 s.
+  BUILT             verify.js #unretrievedPastWindow, asked by both waiting branches (the close and retryClose): past
+                    close + objection_window_ms, a seat still unable to retrieve the transcript decides by §13C's
+                    noQuorumRule - VOID, or FORFEIT on proven equivocation; a result at the threshold is not touched
+                    - once, into the no_quorum store the settlement already reads. Inside the window: waiting, as
+                    before.
+  MEASURED AFTER    close-retry 3/3: inside the window A HOLDING (5 attempts); past it W and P VOID at A ("no quorum
+                    at 0 of 2 ... could not retrieve the transcript"), finality VOID, no result signed; B back and
+                    closed: B signs 1 of 2 (P FAILED/0, W FORFEIT/0), finality null - no run A voided is FINAL
+                    anywhere. one-seat-refused 5/5: past the window A VOID, forfeit door 409, lock held; B back, both
+                    VOID. first-mark 14/14 (its waits are inside the window). node 634/634 with it: six chunks 597
+                    (114, 113, 75, 133, 103, 59), lock-settlement 15/15, five-of-seven 21/21 (3, 4, 5, 2, 5, 2).
+  CHANGED TESTS     two, both asserting M3.3-34's hold past the window, now the ruling: close-retry's "past the
+                    objection window ... keeps asking" (it read both runs FINAL after the window) and
+                    one-seat-refused (4)'s "A holds past the window, no VOID". Named in each test.
+  OPEN              B, back after A decided VOID, signs 1 of 2 and its watch keeps asking - no money moves (A signs no
+                    settlement; the locks return at expiry), but the seats do not agree on the entry until B's own
+                    window decides it. The next piece: §13C for every seat past its window with no quorum.
