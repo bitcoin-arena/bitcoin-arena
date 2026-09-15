@@ -45,6 +45,7 @@ the contract, both signer nodes build that world for the round (~2 min); next ro
 Each tab lists one FREE and one PAID. Canyons are driveable: the road is a bridge over the spread.
 Bridge = stand-in first, later a Claude Design custom model. Small hills are driveable. Large
 bid/ask mountains are not: go around. Tanks and soldiers only on small hills, never the large ones.
+Large bid/ask mountains carry a label on top, e.g. `8.5 BTC @ 77600`.
 BUILT UNDER THE RULINGS (2026-09-15, numbers: TASKBOOK):
 - 07:42 a fee lock is sized for the round's sitting seats, the seats its settlement pays (79973c7);
   Daily 0.0.1286.
