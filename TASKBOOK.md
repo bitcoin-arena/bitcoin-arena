@@ -36077,3 +36077,33 @@ M3 - THE RESULT WINDOW IS THE OBJECTION WINDOW (Daniel 07:49) (2026-09-15)
   WAS OPEN          B, back after A decided VOID, signs 1 of 2 and its watch keeps asking - no money moves (A signs no
                     settlement; the locks return at expiry), but the seats do not agree on the entry until B's own
                     window decides it. The next piece: §13C for every seat past its window with no quorum.
+
+M3 - THE PAGE COUNTS THE GUARDIANS ITSELF (Daniel 07:33; the "own slice" above) (2026-09-15)
+  G1 THE READ       the page's wasm lock client answers guardians() - the broadcast keys per peer, fedimint's
+                    NumPeers threshold, the federation id - off the config the stock client downloaded on join,
+                    the same read as blwp-stake-lock --mode guardians (lock-client/src/lib.rs). Rebuilt in scratch
+                    (Cargo.toml's recipe; RUSTFLAGS getrandom_backend="wasm_js", clang/llvm-ar 23.1.1): 477 crates,
+                    wasm-bindgen --target web: blwp_lock_client_bg.wasm 18584137 bytes, glue 69837; into dist and
+                    the WebGL template, pinned (known-good: glue c414af54..., wasm ee7b2317...; old hashes kept).
+                    LIVE, stock fedimintd 0.12.0 (guardians-regtest.sh with WASM_PKG, 11:16-11:19): federation up in
+                    140 s; the seat's tool 4 of 4 keys equal to fedimint-cli config's, threshold 3, id equal to
+                    info's, fee rule 0/0; the page's wasm client joined by the invite in 546 ms and named the same
+                    four keys per peer, threshold 3, the same id - "THE PAGE READS THE SAME GUARDIANS", exit 0.
+  G3 THE COUNT      blwp-client/src/guardians.js bondedGuardians: the keys and threshold from the page's own
+                    guardians(), the round's federation must be the one the page joined; each offered bond proven
+                    into a block of a mined chain (acceptAdvert over every header), at least the round's
+                    census_confirmations deep, its advertisement signed by the node it names (the page's verify);
+                    then federationIsBonded, the seats' own count, over what proved. What did not prove is set
+                    aside by name. guardians.test.js 4/4: 3 of 4 proven - ok, bonded 3, threshold 3; 2 offered -
+                    refused "2 of that federation's 4 guardians ... threshold is 3"; a mis-signed, a 1-block-deep, an
+                    unproven (another chain's) and an under-bond offer beside 2 honest ones - bonded 2, three refused
+                    by name, and the honest guardian 3 in their place lifts it to ok; guardians of another
+                    federation - refused by name. MUTANTS: the signature check removed -> red ("a forged or
+                    unproven guardian was counted"); the depth check removed -> red (same). bundle-fresh 2/2
+                    (red first, measured: the template must carry the new dist lock client byte for byte - copied).
+                    client 337/337 with it (four chunks 105, 85, 83, 64; 333 and these 4).
+                    NOT CHECKED, said in the file: whether a proven bond is still unspent - headers carry no spends;
+                    the seat's census does check, so a spent bond counted here is refused at the seat.
+  OPEN              G2, where the offers come from: nobody serves them yet. A seat can name candidate guardian
+                    bonds as a hint (it can omit, not forge); the page then counts before lockStake. Until then the
+                    page's count is a library, and the seats' door count (c42492b) is what refuses.
