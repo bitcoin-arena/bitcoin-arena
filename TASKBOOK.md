@@ -36122,3 +36122,52 @@ M3 - THE PAGE COUNTS THE GUARDIANS ITSELF (Daniel 07:33; the "own slice" above) 
   OPEN              the page does not ask yet: lockStake does not call the count. It needs headers from two
                     providers (agreedChain) covering the census height, which the Daily's page has none of
                     today - the seats' door count (c42492b) is what refuses meanwhile.
+
+THE LOBBY HOW-TO ON A PHONE UPRIGHT: TWO PAGES (Daniel 11:57, HARD; option A) (2026-09-15)
+  BEFORE            every portrait screen drew the four panels as 1-2 over 3-4 - hard to read, too much of
+                    a phone (Daniel's 0.0.1301 screenshot).
+  CHANGE            DailyLobby.MeasureLobby: a portrait screen that is not wide and short gets two pages in
+                    one box - 1 and 2 side by side at CarouselTaller (1.15) x that grid's top row, 3 and 4 on
+                    page two, as wide, centred - with arrows of at least 34 px; one box size on both pages.
+                    SplashScreen draws only the page shown, either arrow turns it, and exports
+                    howToCarousel / howToPage / howToPrev / howToNext / howToShown. No art file changed.
+  MEASURED FIRST    the carousel as asked, on every portrait phone (EditMode, a measuring test not kept):
+                    at 1x the copy area is 266-318 px and 1 and 2 cannot be 15% taller side by side even
+                    without arrows - 375x667: grid top 111.4, want 128.1, carousel drew 76.9, a full-width
+                    row ~109.2; 390x844: 116.7 / 134.2 / 81.3 / ~113.6; 430x932: 128.8 / 148.1 / 93.0 /
+                    ~125.3; 360x800: 107.6 / 123.8 / 72.6 / ~104.9; 412x915: 123.3 / 141.8 / 87.7 / ~120.0.
+                    At 2x, 2.625x and 3x, every phone and the 768x1024 tablet reach it exactly (103.5-155.4
+                    px), and the round list gains a row (3 instead of 2).
+  RULED             (Daniel, "1" = option A) the carousel only where it reaches 1.15x; elsewhere the grid.
+                    LobbyScreenTests: a carousel only on portrait; where it is on, 1 and 2 >= 1.15 x the
+                    grid's top row on that screen, 3 and 4 side by side, arrows >= 34 px in the box on no
+                    panel; where the grid stays, the least a carousel needs (1.15x row + two 34 px arrows,
+                    no gaps) is wider than the copy area. Desktop one row, landscape phones unchanged.
+  EDITMODE          194/198 = the baseline: LobbyScreenTests 5/5; red: CombatFxTests.RifleFire (red before).
+                    RunOverBodyTests.AThrownBodyIsHandedToThePhysicsEngine red once (0.848 < 1.0) in the first
+                    run, 5/5 alone and green in this one - flaky, not this change. A Unity test run deletes
+                    AddressableAssetsData/link.xml; restored from HEAD each time, not committed deleted.
+  A CHANGES NO PHONE (3489fbc, not deployed) the title screen is laid out in CSS pixels: SplashScreen.OnGUI
+                    measures Screen / UiScale, and blwp.jslib BlwpUiScale is canvas.width / clientWidth - so an
+                    iPhone drawing at 3x is laid out at 390x844, the "1x" rows above, where A kept the grid.
+                    LobbyScreenTests' 2x / 2.625x / 3x rows were shapes no live phone lays out (stale since
+                    0.0.1159); the premise "real phones draw at 2x-3x" given for the choice was wrong. At those
+                    CSS widths 1 and 2 side by side cannot be taller than the grid drew them.
+  RULED             (Daniel) option B: one panel per page, four pages in order 1, 2, 3, 4, arrows beside.
+                    Landscape stays the measured 2x2, desktop one row.
+  CHANGE (B)        DailyLobby.CarouselOf: the box is panel 1's height across the width beside the arrows
+                    (its shape is the tallest), never over the room two round rows leave, one size on every
+                    page; each other panel as big as fits, centred, its own shape. Arrows turn back and on,
+                    round. LobbyScreenTests measures every screen at its CSS size (the density loop gone);
+                    every portrait screen gets the pages, each panel taller than the same panel in that
+                    screen's grid, 1 and 2 at least 1.15 x the grid's top row (the bar kept); on every other
+                    screen the how-to and all four cells exactly the grid's (landscape unchanged).
+  MEASURED (B)      EditMode 194/198 (the baseline; red: CombatFx, red before); LobbyScreenTests 5/5. Panel
+                    heights, grid -> pages, and round rows (CSS px):
+                      375x667  copy 277  111.4/103.7/73.1/73.9 -> 161.9/150.7/106.3/107.4  rows 2 -> 3
+                      390x844  copy 288  116.7/108.6/76.6/77.4 -> 171.0/159.1/112.2/113.4  rows 6 -> 6
+                      430x932  copy 318  128.8/119.9/84.5/85.4 -> 195.1/181.6/128.1/129.5  rows 5 -> 6
+                      360x800  copy 266  107.6/100.2/70.7/71.4 -> 152.8/142.3/100.3/101.4  rows 5 -> 6
+                      412x915  copy 305  123.3/114.8/81.0/81.8 -> 184.3/171.5/121.0/122.3  rows 6 -> 6
+                      768x1024 copy 568  116.9/108.8/76.7/77.5 -> 198.8 each (the rounds' room)  rows 2 -> 2
+                    Panel 1 at 375x667: 111.4 -> 161.9 px (1.45x); 3 and 4: 106.3 and 107.4 px.
