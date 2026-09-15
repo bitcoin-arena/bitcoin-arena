@@ -36317,3 +36317,28 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     12:22:19Z, free 2718ddfe 12:51:13Z (44 s of the old free entry left), paying 8b3400d5
                     12:52:18Z. Both seats' own /rounds at 14:51:39: the closing free round, the paying one and
                     the new free one - a free and a paying round open together, every time.
+  STEP 3 HOLDING    (13:23Z) the Daily's seven user services run and are enabled (lingering on); the keeper
+                    (2311c49) reads cloudflare.env fresh each pass, owner-only mode 600, and runs no wrangler
+                    without it. Measured: /mnt/bitcoin/blwp-2of2/cloudflare.env absent; the keeper's last line
+                    13:16:14Z "holding ... no /mnt/bitcoin/blwp-2of2/cloudflare.env", nothing after it (no
+                    deployFailed, no wrangler login). On-disk daily.json (15:00:37) names the live tunnels
+                    setup-collectables-phase-discover / interstate-incidence-youth-exceptional, advert
+                    dd71b1b1 - equal to the query-string Daily's nodes, bond and advert. The deployed
+                    daily.json still names southwest-holding-discovered-prozac / interviews-package-constitute-
+                    webshots (stopped 14:59). Default Daily, Unity's report 13:22:48Z: listed 0, PLAY disabled.
+                    Query-string Daily 13:13:26Z: listed 4 - free 2718ddfe, 3f51b8cd; paying 8b3400d5, 557949ba
+                    - PLAY on the free 3f51b8cd. Tunnel-restart and crash tests held (a restart would stale the
+                    daily.json the keeper waits to publish).
+  AFTER THE TOKEN   Daniel places cloudflare.env (his, mode 600: CLOUDFLARE_API_TOKEN with Account |
+                    Cloudflare Pages | Edit on account 9bd3aec2218c33affe0c7ce3f2e75a9d only, and
+                    CLOUDFLARE_ACCOUNT_ID=9bd3aec2218c33affe0c7ce3f2e75a9d). Then, in order:
+                    1. keeper.log within 30 s: "deploying ... auth api token (Pages edit)" then "deployed
+                       https://<id>.btc-logistics-core.pages.dev" - no deployFailed.
+                    2. https://btc-logistics-core.pages.dev/daily.json (no query) names the live tunnels.
+                    3. Unity's own report on https://btc-logistics-core.pages.dev/ with NO query string:
+                       listed >= 2 with at least one FREE row and at least one paying 2-of-2 row (both
+                       "2/2 join"), PLAY's pick a free row, PLAY enabled.
+                    4. Then the held tests: restart one tunnel (new name) - the keeper restarts the seats and
+                       redeploys, and the default Daily lists a free and a paying 2-of-2 again under the new
+                       name; kill the seats' process - systemd restarts it, the keeper redeploys the new
+                       advert, and the default Daily lists both again.
