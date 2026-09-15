@@ -39,7 +39,8 @@ BUILT UNDER THE RULINGS (2026-09-15, numbers: TASKBOOK):
 - 07:42 a fee lock is sized for the round's sitting seats, the seats its settlement pays (79973c7);
   Daily 0.0.1286.
 - 07:44 the regtest federation runs with disable_base_fees; live, both rounds settle with nothing
-  lost to the federation (df41604).
+  lost to the federation (df41604). The page refuses a federation that still charges a base fee -
+  before any deposit or lock (1e671a1; on the page, where the players' money is committed).
 - 07:49 past the result window a seat that cannot retrieve the transcript decides by §13C (e136861);
   a seat back after its peer decided decides too once no quorum can form - the seats agree (fef5bd0).
 - 07:33 blwp-stake-lock reads a federation's guardians off its config, live on fedimintd 0.12.0
