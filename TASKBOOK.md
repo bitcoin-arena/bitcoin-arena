@@ -36783,3 +36783,31 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     SimLiquidationTests pass); PlayMode 239 (216 pass, 13 skipped, the same 10 reds by name).
                     SIGNED (22:38:33Z, the round over at 22:38:13Z): entry cbc1ed41 DELIVERED 257, 2 of 2 on both
                     signer nodes, no no-quorum - = the card = the transcript alone.
+  IMPACT CLEAR,     TruckHealth.Update -> BlwpCore.TakeImpact -> jslib BlwpTakeImpact read word 17 (O_TRUCK + T_IMPACT)
+  BEFORE            and wrote it 0 every frame, in a signed run too. No rule reads the word: sim.js prices a crash
+                    from that tick's own v.impact and keeps word 17 only as a running maximum for the host (the
+                    shake and the bang). Recorded inside signed runs, all other page writes being 0: 8386f6f5 54
+                    clears, 1e8dadeb 60, 16c82625/3fd87f96 1, 16c82625/cc9f9575 0, bc691348 35 (0.0.1358, the
+                    current page) - each time outcome, score and tick = transcript alone = both signer nodes, the
+                    state hash off by that one word; the transcript replayed + the recorded clears = the page's
+                    hash exactly.
+  IMPACT CLEAR,     BlwpCore.TakeImpact asks MayClearImpact(BlwpNet.Live): outside a signed run the old read-and-clear;
+  AFTER             in one, jslib BlwpReadImpact reads word 17 and writes nothing, and FeltImpact shakes on a rise
+                    above what was already felt (a crash softer than the run's hardest is charged by the core, not
+                    shaken). 0.0.1359 (b711708e), round d308012d, entry d20eecba, PRACTICE on, SIM pressed once:
+                    inside the signed run (ticks 0-2349) 0 page writes of any kind - the recorder's state diff
+                    between every two calls found none; word 17 stood at 780580 (11.9 m/s) at DELIVERED, felt and
+                    not cleared. The only write was one clear at tick 2352, 3 ticks after DELIVERED (the run over,
+                    BlwpNet.Live false), beside 2 live liquidations the page took then; 7 live ones inside the run
+                    were held ("not offered to the core"). Card DELIVERED 334 @ 2349 = transcript alone (2349 ticks,
+                    the same bytes on both signer nodes) - outcome, score, tick and now the state hash, identical.
+                    A first after run (b47d0526/476b6bc0) lost its headless Chrome at 113 s (tick 840, trace ends
+                    mid-frame, no OOM in the journal; a Unity PlayMode rerun was loading the machine) - void.
+                    EditMode 211 (207 pass, 3 skipped, 1 red: CombatFxTests.RifleFireProducesAFlashAndATracer; the
+                    2 ImpactReadTests pass). PlayMode 239 (215 pass, 13 skipped, 11 red: the 10 known by name plus
+                    ScoreTests.IdlingEarnsNothingEvenOnTheSeam "Stillstand gilt als Fortschritt" - it passed in all 4
+                    runs before this change and failed/failed/passed on this same code, alone twice; in the editor
+                    BlwpCore is the stub, Available false, TakeImpact returns 0 on its first line as before: flaky,
+                    listed, not retuned).
+                    SIGNED (23:38:37Z, the round over at 23:38:20Z): entry d20eecba DELIVERED 334, 2 of 2 on both
+                    signer nodes, no no-quorum - = the card = the transcript alone, state hash included.
