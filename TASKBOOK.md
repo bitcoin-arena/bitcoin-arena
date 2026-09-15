@@ -35884,6 +35884,33 @@ M3 - THE SEATS ARE A NETWORK, THE TRUCK GAME IS ONE CORE ON IT (Daniel 08:03): M
                     hash of the core that replayed. Fixtures move to the real hashes as W7's did - no default that
                     takes any hash - and the few that varied configHash only for a distinct round id vary another
                     field.
+  R1 STEP A         (09:10-09:26) THE SEAM MOVES, NOTHING ELSE DOES. core/src/adapter.js - the truck as a seat
+                    replays it, one object CORE: RUN_TICKS, INPUT_WORDS, start, eventsOf (loads then liquidations,
+                    each before its tick), step, stateHash, result (outcome/score/heat), picture. blwp-node/src/
+                    cores.js - the seats' one door to cores: TRUCK = { hash (hash-core, computed), url, adapter,
+                    configs: the genesis config }; coreForRound returns the truck for every round (step B picks by
+                    the round's hashes). replay.js imports no core: replay and RunInProgress take the core and refuse
+                    without one (NO_CORE_RULE); the worker imports the adapter by its URL; the answer names coreHash.
+                    pool, verify (5 job sites, #coreOf), ghosts (#coreOf) hand the round's core in; the 4 tests and 2
+                    tools that replay truck runs directly hand in TRUCK. The core hash moved with the new file:
+                    5f3b5176... added to the known-good list (the old stays), the client bundle rebuilt (7d41e498),
+                    copied to the template, pinned. The page's core bundle does not carry the adapter (the bundler
+                    walks sim.js/state.js; bundle.test checks only modules the bundle carries).
+                    MEASURED: core 91/91; protocol known-core 2/2; node replay 9/9, verdict 5/5, replay-heat 5/5,
+                    run-length 4/4, ghost-live 10/10 (the warm pose byte-identical to a full replay at every tick),
+                    ghost-produce 6/6, ghost-socket 9/9, replay-ground 4/4, replay-solids 3/3; a replay with no core
+                    refused by name on the thread and in a worker, and one under the truck names its hash. protocol
+                    530/530, client 332/332 (the new bundle in the template).
+                    THE NODE SUITE FOUND THREE, mine, none a regression: pool.test's two queue tests handed the pool
+                    jobs with no core - refused by name, as step A makes it ("no core is named to replay that run
+                    under") - now they carry the truck (pool 4/4); and round.test's guard "the node reaches the
+                    simulator through replay.js and nowhere else" counted replay.js AND cores.js. The door has two
+                    halves now, each still one file: cores.js the only file that imports a core, replay.js the only
+                    one that steps one; the guard says so (round 11/11). On the way it caught replay.js quoting
+                    IMPLEMENTATION's "each importing @blwp/core once" - no longer what a worker does; the comment now
+                    says the worker loads the core the round names by its adapter's URL.
+                    node 636/636 with the fixes: six chunks 600 (114, 113, 72, 125, 112, 64 - chunks 4 and 5 run
+                    again whole with them: 125/125, 112/112), lock-settlement 15/15, five-of-seven 21/21.
 
 M3 - THE RESULT WINDOW IS THE OBJECTION WINDOW (Daniel 07:49) (2026-09-15)
   RULING            the result window equals the objection window - same duration, on the contract
