@@ -36274,3 +36274,46 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     own signed /rounds: 01e305d9... free, 1694 s left, and 81a75ce7... paying, 1761 s left -
                     open, 2/2, seatedHere. On the bare root at 11:54:02Z, Unity's own report at 1280x800:
                     listed 2 - "01e305d9 2/2 join", "81a75ce7 2/2 join" -, picked 81a75ce7, PLAY enabled.
+  HOLES (Daniel)    12:54 not closed: PLAY picked the paying round while a free one was listed; no live free
+                    join had been played to its close; nothing kept the Daily through a reboot. In that order.
+  PLAY FREE FIRST   DailyLobby.PickDefault prefers a joinable free round; SplashScreen keeps only the player's
+                    own tap (it stored the default back, so a paying pick stuck across rollovers) (2016608).
+                    LobbyScreenTests 6/6 - new: the rows after the rollover (old free 48 s, new free 1694 s,
+                    paying 1761 s) - PLAY's target is the new free round; a tap on the paying row stays.
+                    MUTANT free-first removed: red, restored. EditMode 195/199 (RifleFire listed). Daily
+                    0.0.1316 (754249f, 88c9a027). LIVE, Chrome at 1280x800 on the bare root, twice: PLAY's pick
+                    01e305d9 then 75fdc23a, each free in the page's own rows, while the paying round beside
+                    it had more entry left (2:23 against 1:16).
+  LIVE JOIN 1       live-join-probe: PLAY pressed where Unity drew it (12:20:44Z); the page seated entry
+                    6d39781e4bcfa837 in 01e305d9 - free, joined, the title gone; both seats' /rounds: seated 1,
+                    playing 1. AUTO, depart, W. The client's socket dropped ~15 s in; after the reconnect the
+                    screen read "RUN STOPPED - the node refuses this run's inputs at tick 180: error the batch
+                    does not follow the chain head - and it still refused after resyncing". At the close both
+                    seats signed FAILED, score 0, one transcript hash a2d351b1, core 5f3b5176, 2 of 2. Seat A's
+                    store: 12 batches, ticks 0-437, chained, the last (180..437, 258 ticks) on the head the
+                    client resumed from; seat B 11 (0-179); the client had counted 10.
+  CAUSE             not the seat's transcript (it serves the stored batches, uncached - cf-cache-status
+                    DYNAMIC), not a pushed frame (ghosts are filtered by type), not out-of-order replies (the
+                    seat queues each socket's frames). The reconnect opens its socket - state ready - before
+                    resume() re-reads the node's tick and head, and drain() was gated only on a refusal's
+                    resync: the page drained in that window and sent a batch from the pre-drop numbers.
+  FIX               drain() returns while a reconnect is under way (c9d6320). own-socket-drop.test.js new case,
+                    a real seat, answer lost, resume held 200 ms, a drain in the window (reconnecting, socket
+                    open, nextTick still 60): before the fix red - refusals 1; after: no refusal, run alive,
+                    all 130 ticks in place; 4/4. MUTANT only that gate removed: red; restored byte for byte
+                    (a first mutant removed reconnect()'s own identical guard too - redone precisely). Bundle
+                    rebuilt, in the template, pinned 7d9b0e0e. client 338/338.
+  LIVE JOIN 2       traced (the play sockets' frames, the client's own numbers every 5 s): PLAY's pick free
+                    (75fdc23a), entry 1b58e0ceb5ae94b4, 170 s driven with no drop: 194 batches accepted,
+                    nextTick 1914, 0 refusals, 0 closes on either seat's socket. At 12:55:02Z, 6 s after the
+                    round's end (14:54:56), both seats held the same 2 signed results: FAILED, score 139, one
+                    transcript hash bcd2f0b4, core 5f3b5176, signed by both seat keys - final 2 of 2, no
+                    no-quorum. Played through to its close; FAILED is the run's own outcome (throttle held, no
+                    drop-off reached), not a stopped run (join 1: score 0, stopped at tick 180).
+  FIX LIVE          0.0.1318 built from c9d6320, its bundle byte for byte the fixed one (c2ce68d0), deployed
+                    (5f1a946b; the alias served it from 14:45:00) (2a321b0).
+  ROLLOVERS         every opening since the lnds poll each second went through on its first try: free
+                    01e305d9 11:50:57Z, paying 81a75ce7 11:52:06Z, free 75fdc23a 12:21:11Z, paying 7994fa27
+                    12:22:19Z, free 2718ddfe 12:51:13Z (44 s of the old free entry left), paying 8b3400d5
+                    12:52:18Z. Both seats' own /rounds at 14:51:39: the closing free round, the paying one and
+                    the new free one - a free and a paying round open together, every time.
