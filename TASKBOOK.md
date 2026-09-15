@@ -36001,6 +36001,22 @@ M3 - THE SEATS ARE A NETWORK, THE TRUCK GAME IS ONE CORE ON IT (Daniel 08:03): M
                     field list changes. Not needed for 08:03/08:07 - two titles and two configs run on the same
                     seats with them in place (R1 step C). So R4 waits for the next protocol version, recorded here
                     with its cost, not slipped into a day's work.
+  THE BASE FEE, CHECKED (Daniel 07:44; FEDERATION.md item 4 "MUST disable_base_fees") - measured before: nothing
+                    refused a federation that charges one; the page read the fee rule only to size its fee-lock gate.
+                    BUILT, on the page (page-lock.js lockStake): a federation whose rule has a base fee gets no stake -
+                    refused right after the rule is read, before any deposit or lock, by name ("its federation charges
+                    a base fee of N msat on every input and output - a federation for BLWP runs with
+                    disable_base_fees"). An unknown rule is not a base fee (the gate then mints no fee lock). WHY THE
+                    PAGE AND NOT THE SEAT, decided: the base fee comes out of the players' pool, and the page is where
+                    the player's money is committed; a seat reaches the one federation its own operator chose. A seat
+                    refusal would also move the fixture port's default rule to 0, under which the gate mints at 100 sat
+                    - 9 node test files' entries would need fee locks - for no protection the page does not give.
+                    TESTS CHANGED, named: page-lock's 100 sat test measured "no fee lock - the 1000 msat base fee
+                    would eat it"; under the ruling that federation is refused, so it is two tests now - a base-fee
+                    federation refused with 0 deposits and 0 locks, and under the ruled rule the 100 sat round's
+                    2000 msat fee lock minted and named in the entry (deposits 120364, 20364 msat). The 1000 sat test
+                    runs on the ruled rule, its assertions unchanged. page-lock 27/27, client 333/333 (332 and the
+                    split test). Bundle 01ed8f2e (template, pinned).
 
 M3 - THE RESULT WINDOW IS THE OBJECTION WINDOW (Daniel 07:49) (2026-09-15)
   RULING            the result window equals the objection window - same duration, on the contract
