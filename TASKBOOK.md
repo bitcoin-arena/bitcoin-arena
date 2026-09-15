@@ -35722,3 +35722,29 @@ M3 W7: A PAYING FEDERATION ROUND NAMES ITS FEDERATION, AND THAT IS CHECKED (2026
                     locks and its entries brought none (409 at the door); the driver printed the error and its .sh
                     ended 0 regardless. It named the real federation by its invite (joined, deposited, locked A)
                     before that. Now each entry brings a fee lock and the .sh ends with the driver's exit.
+                    LIVE 2026-09-15 02:13-02:18 (stock fedimintd 0.12.0, 4 guardians, 3 of 4): attested claim key
+                    2 of 2; deposit 3200000 msat "Claimed"; fee rule base 1000 msat, ppm 0 - the 1000 sat gate mints
+                    (lock 20000, each of 4 seats nets 8500), the 100 sat gate does not; A (the lock client's own
+                    lock, with its fee lock) 201 at both seats, 980000 committed; B (no lock at its outpoint) 409
+                    at both; C (locked to an unattested key) 409 at both; D's stake lock 201 and its fee lock 20000
+                    msat to H(F) 201, kept, at both. exit 0 - the driver's own.
+                    seat-lock-regtest: the same hole - its .sh piped the driver through a JSON-only grep, so the
+                    run of 02:12 showed no SEAT line at all and ended 0. Run again by hand on its probe dir: "A:
+                    handout 201, entry 409 this round mints fee locks ... an entry that brings no fee lock is not
+                    seated". Now prepare gives each stake an F, the .sh makes one fee lock per entry (blwp-stake-lock
+                    --hash H(F), 20000 msat, +150), the driver hands it to /fee-lock before any stake lock (a stake
+                    lock verified first is not counted until its fee lock is), and the .sh keeps the whole output
+                    and ends with the driver's exit.
+                    LIVE 2026-09-15 02:26-02:29 (stock fedimintd 0.12.0, up in 132 s; the round named by its invite):
+                    fee locks A, B, C 20000 msat to H(F) (+150, ids match) 201 at the seat; B's own stake lock 201,
+                    980000 seen, /stake 200; B -1 msat 409 "its id is another"; an outpoint holding no lock 409;
+                    count 310 -> 316, A's lock at exactly +144 409 "expires at 454, before 316 + 144" - every case
+                    as recorded when the tool was made (30383), the fee locks added. exit 0 - the driver's own.
+                    FIVE PROBES on TEST_FEDERATION_ID (b32(0xfe) before W7 - non-zero too, so the fee-lock door
+                    judged them the same): outage-before, no-mark-probe, entry-void-before, closed-claim-probe,
+                    closed-line-probe all exit 0, their entries seated (201s, lockCommitted [201,201], results and
+                    ENTRY_VOID records stored), none refused. (A first attempt ended 127 in 1 s each: a systemd unit's
+                    PATH has no node - they now run with the shell's PATH.)
+                    settle-live-regtest.sh: the same pipeline shape, no exit passed on - its green runs were read
+                    from their LIVE lines, not their exit. It now ends with the driver's exit (the resume driver's
+                    under W6_KILL, where the first is SIGKILLed on purpose).
