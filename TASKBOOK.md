@@ -36356,3 +36356,7 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     Query-string Daily, Unity's report 13:37:12Z: listed 2 - "d6e6ac60 2/2 join", "78035fe6 2/2
                     join" - PLAY on the free d6e6ac60. Default Daily 13:38:42Z: listed 0, PLAY disabled.
                     cloudflare.env absent at 15:36:51; the keeper's last line still the 13:16:14Z hold.
+  HOLD 15:42        cloudflare.env absent (15:42:28). Keeper alive (pid 1900492, 0 restarts), last line still the
+                    13:16:14Z hold, nothing after it. Plain Daily, Unity's report 13:44:30Z: listed 0, PLAY
+                    disabled. Address-link Daily 13:42:49Z: listed 2 - free d6e6ac60, paying 78035fe6, both 2/2
+                    join - PLAY on the free d6e6ac60. Close-out checks and the held tests wait on the file.
