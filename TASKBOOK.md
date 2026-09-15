@@ -35786,3 +35786,87 @@ M3 - WHICH GUARDIANS: RULED (Daniel 07:33, 3701038), MEASURED BEFORE ANY CODE (2
   WHO WOULD BE HIT  the four live tools seat by assumeSeated (no chain view), as do the 9 node tests on the lock
                     fixture; 4 node tests derive a census from bonded blocks (seated-committee, roster,
                     close-peers, receipt-carry) - every advert there writes guardianOf: [].
+
+M3 - THE NODE FEE TO THE SITTING SEATS (Daniel 07:42) AND THE FEDERATION'S BASE FEE 0 (07:44) (2026-09-15)
+  MEASURED BEFORE   the settlement already paid the sitting seats: feeSettlement -> nodeFeeTable over seatsFor,
+                    which is the round's contract.nodes in both pools, each pool's 1% split among its seats. The
+                    GATE did not: feeLockPays invented one different seat per slot (gameVerifySlots +
+                    settlementSlots), 4 for a 2-of-2. At the 1000 msat rule: 1000 sat - 4 seats, output fees 4000,
+                    net 8500 each, mints; the floor 151 sat. The live settlement of 01:47 paid 2 seats 36000.
+  BUILT             feeLockPays counts the round's contract.nodes, each once, in both pools - the seats the
+                    settlement pays; a round naming no seats mints nothing. Spec §22A: the node fee to the round's
+                    sitting seats, two in a 2-of-2 (taken into the spec by Daniel, 93fb486).
+  MEASURED AFTER    (1000 msat rule) 2-of-2 1000 sat: 2 seats, output fees 2000, net 18000 each - the settlement
+                    over the same seats pays [18000, 18000]; 5-of-7: 7 seats (4428 .. 4430); floor 101 sat; brackets
+                    10 sat no lock, 100 sat no lock, 1000 sat mints.
+  BASE FEE 0        fedimint 0.12 takes disable_base_fees at DKG - a setup code's, else each guardian's
+                    FM_DISABLE_BASE_FEES (set-local-params has no flag) - and LNv2's fee_consensus is then
+                    FeeConsensus::zero() (lnv2-server lib.rs:298/330; the mint modules too). federation-hold-probe.sh
+                    sets FM_DISABLE_BASE_FEES=${DISABLE_BASE_FEES:-1} on all four guardians (0 runs the stock rule).
+  LIVE              settle-live-regtest 07:48-07:53, base fee 0: the federation's rule {base 0, ppm 0}; deposit
+                    5000000 -> 4982784 ecash (4977664 at base 1000). 100 sat round: the gate mints (2000, 2 seats) -
+                    it minted nothing at base 1000; ACCEPTED - claimed 98000, qualifier paid 98000, fee locks
+                    2 x 2000 -> 2 seats 4000; the winner withdrew 190442 (180346). 1000 sat: claimed 980000, qualifier
+                    980000, fee locks 2 x 20000 -> 2 seats 40000; the winner withdrew 1944271 (1930649); the entry
+                    without a fee lock 409, refunded 980000 by its own key after expiry, withdrew 970148 (961392).
+                    driver exit 0.
+  SUITES            protocol 530/530 (+1, the gate's seats test). client 332/332: 328 in the full run and the 4
+                    tests bound to the WebGL template's copy, 30/30 once the new bundle (dist blwp-client.js, md5
+                    7c4981ff...) was copied into the template and pinned (known-good-clients.json). node 633/634 in
+                    one run, 634/634 with the fix below: six chunks 597 (114, 113, 75, 133, 103, 59 - W7's 596 and the
+                    legacy test since), lock-settlement 15/15 (3, 3, 9), five-of-seven 21/21 (3, 4, 5, 2, 5, 2); the
+                    1 failure: see below.
+  CORRECTED         (a) W7's "protocol 532/532" was a miscount: the suite at 48e5376 runs 529 - this run's 530 less
+                    the one test added here (test() calls: 528 before W7, 529 at 48e5376, 530 now).
+                    (b) legacy-round-restart (mine, W7) failed in chunk 3 under the build's load: its SETUP seat ran
+                    the close-at-end timer (every 100 ms, the round's end long past), which closed the round before
+                    the entry came in - /entry 400 "the round is closed". The setup seat now runs no timers; the
+                    restart it measures keeps every timer on. 5 of 5 runs under the same load: pass, 0 unhandled
+                    rejections.
+
+M3 - THE SEATS ARE A NETWORK, THE TRUCK GAME IS ONE CORE ON IT (Daniel 08:03): MEASURED BEFORE ANY CODE
+  RULING            seats replay a named core (sim_wasm_hash); they embed no truck, cargo or map; a later game is a
+                    new core + client on the same nodes and federation; structure M3 so swapping the core is easy.
+  THE DOOR          blwp-node imports the core in ONE file, replay.js: init, step, submitLoad, submitLiquidation,
+                    runScore (core/src/sim.js), hash and the truck's state words O_TRUCK, T_X, T_Z, T_HEADING, O_SCORE,
+                    S_STATE, S_HEAT (state.js) for the ghost picture, RUN_LIVE, RUN_DELIVERED, BLOCK_TICKS (gate.js).
+                    The contract names simCoreHash; nothing picks the core by it - there is one, imported.
+  THE TRANSCRIPT    five input words per tick (INPUT_WORDS) and two truck-game event kinds the seat stores in their
+                    own tables and replays before a tick: loads (fee, btc - the war's heat) and liquidations (size).
+  THE CONTRACT      six game fields: blockTicks, exposureReference, corridorHalfWidth, spawnFreeRadius, timeFloor,
+                    timeCeil. Read by seats/protocol: blockTicks only (a batch's limit, a run's length, and
+                    runLengthIsThisCore against the core's BLOCK_TICKS); the other five are encoded and flagged
+                    (exposure_ignored, time_factor_degenerate), never used by a seat. minScore and the rank curve
+                    are economics over a score, not truck.
+  THE PROTOCOL      contracts.js, first-mark.js, transcript.js take BLOCK_TICKS from core/src/rules/gate.js, not from
+                    the contract; genesis.js writes the core's score, gate and army constants into the genesis config;
+                    hash/tx/shares/bond-spend use core's sha256 and tick.js its tick (generic, not the game).
+  WORDS             in code lines, whole words: replay.js 4, store.js 2 (the loads/liquidations tables), ghosts.js 1,
+                    contracts.js 7 (the six fields), genesis.js 1, leaderboard.js 1.
+  THE PLAN          S1 a core adapter chosen by simCoreHash - init/step/event/stateHash/result/picture, run length,
+                    input words - and replay.js imports no core/src; a seat with no core for a round's hash refuses it
+                    by name. S2 run length from the contract, not the core's gate.js. S3 the five truck fields as the
+                    core's own opaque parameters in the contract (a protocol change: golden vectors). S4 loads and
+                    liquidations as generic core events.
+  AND 08:07         (Daniel: several games and several rule sets AT ONCE - each round names its sim_wasm_hash and its
+                    config_hash, seats replay what that round names, two titles and two configs on the same nodes in
+                    the same window.) Measured further:
+                    CONFIG: one per network today. genesis.js encodes the truck core's constants as THE game config
+                    (TAG_GAME_CONFIG), its hash sits in the genesis parameters and so in network_id. The round's
+                    configHash is checked by contractIsForThisBuild(contract, { anchor, config }) against ONE config
+                    - and that function has 0 callers outside its test: no seat and no page checks configHash.
+                    CORE: a core's hash is its sorted-source sha256 (core/tools/hash-core.js). The page keeps a
+                    known-good list (1 hash) and refuses a paying round on another (join.js). The seat checks
+                    nothing: it replays the one core it imports and signs the result with contract.simCoreHash
+                    (verdict.js:88) - a seat can sign "core X" over a replay of core Y.
+  THE PLAN, 08:07   R1 a seat's core registry: each installed core brings its own hash (computed from itself), its
+                    configs (configHash -> parameters) and the adapter calls (init/step/event/stateHash/result/
+                    picture, run length, input words). POST /round refuses by name a round whose (simCoreHash,
+                    configHash) pair this seat holds no core/config for - 27A.7.5: not selectable, serves nothing,
+                    not slashed. The network_id stays: the genesis config is the first title's, not the only one.
+                    R2 replay per round through the named core and config; the result names the hash of the core
+                    that REPLAYED (checked against the contract's), never the contract's alone. R3 run length,
+                    input words and events from the core/config, not from core/src imported by seats or protocol.
+                    R4 the truck fields as that config's parameters. Acceptance: two titles (the truck and a second,
+                    minimal core) and two truck configs, rounds of each on the same two seats in the same window,
+                    each replayed by its own core and config, results signed under its own core hash.
