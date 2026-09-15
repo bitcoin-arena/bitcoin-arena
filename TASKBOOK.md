@@ -36522,3 +36522,19 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     49e4b2c7 DELIVERED score 217 transcript 19b27a5c; ebda04ff DELIVERED score 103 transcript 273f5bf0;
                     core 5f3b5176, signed by 7291d680 and de4dd194.
   HOLE FOUND        the second drive's card read SCORE +102 against the signed 103 (the first: 217 and 217) - being measured.
+  HOLE MEASURED     WHY THE CARD READ 102 AND THE SIGNED RESULT 103: the page's own checkpoints part from the signer nodes'
+                    replay - ebda04ff from tick 720 (10 of 22 match), 49e4b2c7 from tick 900 (13 of 31) - on both stores.
+                    Not a stale core: the page's bundled core (template blwp-core.js = core/dist, f4f71ab9) and core/src step
+                    both transcripts hash for hash (no tick differs). Two writes into the PAGE's core that no transcript
+                    carries: (1) LIQUIDATIONS - Bootstrap's live-feed handler (Bootstrap.cs:209) and the silent-market /
+                    SIM clock (FireSimulated) call BlwpCore.Liquidation -> jslib BlwpLiquidation -> core.submitLiquidation,
+                    and unlike BlwpSubmitLoad nothing goes to the network; the signer nodes stored 0 liquidations for both
+                    entries. Drive 2's console: "[feed] liquidation bybit short $2,458", bomber away, impact and a 16 m
+                    crater at 71.4,-43.2 in the page's core - the split at 720 comes before the truck's first armour impact
+                    (1034). Drive 1: "[sim] simulated liquidation $209,625,580 offered to the core (silent market)".
+                    (2) BlwpTakeImpact zeroes T_IMPACT in the page's core every frame (TruckHealth), which no replay does:
+                    clearing it after every tick lifts 49e4b2c7's matching marks from 13 to 27 of 31 (the page's exact
+                    per-frame timing is not reproduced). The SIGNED outcomes are right (the signer nodes sign their own
+                    replay); the player's picture and card are of a world nobody signed. Not caused by the end-at-DELIVERED
+                    change (it writes nothing into the core); both paths predate it. Scripts: marks-vs-replay.mjs,
+                    impact-clear.mjs, bundle-vs-src.mjs.
