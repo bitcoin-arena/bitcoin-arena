@@ -35748,3 +35748,14 @@ M3 W7: A PAYING FEDERATION ROUND NAMES ITS FEDERATION, AND THAT IS CHECKED (2026
                     settle-live-regtest.sh: the same pipeline shape, no exit passed on - its green runs were read
                     from their LIVE lines, not their exit. It now ends with the driver's exit (the resume driver's
                     under W6_KILL, where the first is SIGKILLed on purpose).
+                    LIVE 2026-09-15 02:29-02:34, with that script: federation up in 137 s; 100 sat round (the gate
+                    mints nothing) ACCEPTED, the winner collected 96000, got its 98000 back, withdrew 180346 (alice
+                    SETTLED 180346); 1000 sat round (the gate mints) ACCEPTED - 980000 claimed, 978000 to the
+                    qualifier, fee locks 2 x 20000 -> 2 seats 36000 - the winner withdrew 1930649 (alice SETTLED
+                    1930649, as at 01:47); a player with a stake lock and no fee lock 409 at the door, refunded by
+                    its own key after expiry (980000, withdrew 961392). "driver exit 0", unit exit 0 - now the
+                    driver's own.
+  W7 STANDS         nothing else found missing: the three enforcing points and the codec are measured, the tools
+                    that build paying FEDERATION rounds run live or in process on a named federation and end with
+                    their driver's exit, stores from before W7 stay up, the Daily carries the client check, core
+                    and C# untouched.
