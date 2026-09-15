@@ -49,8 +49,8 @@ Large bid/ask mountains carry a label on top, e.g. `8.5 BTC @ 77600`.
 The spread canyon is never a hairline. A 0.01 USD book still opens a real gorge with
 a visual minimum width so a bridge is justified - not a plank over a crack. Not 1:1
 dollars-to-metres. Improvise the look.
-One bridge for the run (stand-in first). The courier crosses it. Tanks and soldiers
-stay on their own side and fire across the gorge - they do not cross.
+Three bridges across the gorge: left, mid, right (stand-in first). The courier picks
+one. Tanks and soldiers stay on their own side and fire across - they do not cross.
 BUILT UNDER THE RULINGS (2026-09-15, numbers: TASKBOOK):
 - 07:42 a fee lock is sized for the round's sitting seats, the seats its settlement pays (79973c7);
   Daily 0.0.1286.
