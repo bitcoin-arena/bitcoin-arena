@@ -36538,3 +36538,22 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     replay); the player's picture and card are of a world nobody signed. Not caused by the end-at-DELIVERED
                     change (it writes nothing into the core); both paths predate it. Scripts: marks-vs-replay.mjs,
                     impact-clear.mjs, bundle-vs-src.mjs.
+
+## 16:14 HOLES 1 AND 2: A SECOND PLAY IN THE SAME TAB, AND THE ADDRESS AFTER THE RUN (2026-09-15)
+  BEFORE            after a run ended in a lobby-started round: the jslib refused a second session while Module.blwpNet
+                    existed, BlwpNet.Running never went false, NetSession kept the finished round's address, and the truck
+                    handed back at the end was never driven by the core again - a second PLAY could not start a round
+                    without a reload. The address still read ?round=<finished>&play=1, so a reload joined the finished
+                    round again.
+  FIX               jslib BlwpNetStart: a new session once the last run has ENDED (while it is finishing, 0 - not yet).
+                    BlwpNet.MayStart(running, over), BlwpNet.Live; Running changes only on a start the page took.
+                    NetSession asks the address afresh once a run is over and opens only against a live session.
+                    CoreDrivenTruck.ResumesDriving: stopped at a run's end + a new live session -> the core drives again
+                    (the page already put the core into the new round's world when that session started recording).
+                    The lobby's join reads BlwpNet.Live. Page: BLWP_RUN_OVER (called at the core's word and when the run
+                    ends) clears BLWP_CHAIN/BLWP_ADVERT - what tells Unity there is a session to open - and puts the
+                    lobby's own address back (BLWP_LOBBY_BACK, kept when PLAY is pressed; the bare root otherwise).
+  TESTS             EditMode 204: 200 pass, 1 red (the listed CombatFxTests.RifleFire), 3 skipped -
+                    RunEndsAtDeliveredTests 4/4 (+AfterARunIsOverTheNextSessionMayOpenAndTheCoreDrivesAgain). PlayMode 239:
+                    216 pass, 10 red (the same documented ten), 13 skipped (ended 18:21). jslib and both inline page
+                    scripts parse. Live check follows the deploy.
