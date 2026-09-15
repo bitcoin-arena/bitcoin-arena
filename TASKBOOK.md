@@ -35812,10 +35812,11 @@ M3 - THE NODE FEE TO THE SITTING SEATS (Daniel 07:42) AND THE FEDERATION'S BASE 
                     driver exit 0.
   SUITES            protocol 530/530 (+1, the gate's seats test). client 332/332: 328 in the full run and the 4
                     tests bound to the WebGL template's copy, 30/30 once the new bundle (dist blwp-client.js, md5
-                    7c4981ff...) was copied into the template and pinned (known-good-clients.json). node 633/634 in
-                    one run, 634/634 with the fix below: six chunks 597 (114, 113, 75, 133, 103, 59 - W7's 596 and the
+                    7c4981ff...) was copied into the template and pinned (known-good-clients.json). node 632/633 in
+                    one run, 633/633 with the fix below: six chunks 597 (114, 113, 75, 133, 103, 59 - W7's 596 and the
                     legacy test since), lock-settlement 15/15 (3, 3, 9), five-of-seven 21/21 (3, 4, 5, 2, 5, 2); the
-                    1 failure: see below.
+                    1 failure: see below. (Corrected 08:54: first written 633/634 and 634/634 - 597 + 15 + 21 is 633;
+                    commit 69e157d's subject says 634/634 and is wrong by one.)
   CORRECTED         (a) W7's "protocol 532/532" was a miscount: the suite at 48e5376 runs 529 - this run's 530 less
                     the one test added here (test() calls: 528 before W7, 529 at 48e5376, 530 now).
                     (b) legacy-round-restart (mine, W7) failed in chunk 3 under the build's load: its SETUP seat ran
@@ -35892,11 +35893,31 @@ M3 - THE RESULT WINDOW IS THE OBJECTION WINDOW (Daniel 07:49) (2026-09-15)
                     at 0 of 2 ... could not retrieve the transcript"), finality VOID, no result signed; B back and
                     closed: B signs 1 of 2 (P FAILED/0, W FORFEIT/0), finality null - no run A voided is FINAL
                     anywhere. one-seat-refused 5/5: past the window A VOID, forfeit door 409, lock held; B back, both
-                    VOID. first-mark 14/14 (its waits are inside the window). node 634/634 with it: six chunks 597
+                    VOID. first-mark 14/14 (its waits are inside the window). node 633/633 with it: six chunks 597
                     (114, 113, 75, 133, 103, 59), lock-settlement 15/15, five-of-seven 21/21 (3, 4, 5, 2, 5, 2).
+                    (Corrected 08:54: first written 634/634, and commit e136861's message says 634/634 - wrong by one.)
   CHANGED TESTS     two, both asserting M3.3-34's hold past the window, now the ruling: close-retry's "past the
                     objection window ... keeps asking" (it read both runs FINAL after the window) and
                     one-seat-refused (4)'s "A holds past the window, no VOID". Named in each test.
-  OPEN              B, back after A decided VOID, signs 1 of 2 and its watch keeps asking - no money moves (A signs no
+  GUARDIANS         (the 07:33 ruling, built on the measurement above) blwp-stake-lock --mode guardians (2d76f66),
+                    live on stock fedimintd 0.12.0 (tools/guardians-regtest.sh, 08:23-08:26): 4 of 4 broadcast keys
+                    equal to fedimint-cli config's per peer, 33 bytes each, threshold 3 = NumPeers' for 4, federation
+                    id equal to fedimint-cli info's; fee rule 0/0. The seat's stake-lock port answers guardians().
+                    THE SEAT DOOR: a paying FEDERATION round, on a seat with a chain view, is counted before it is
+                    seated - census = the seat's own for the round, keys and threshold = its federation's config, the
+                    port's federation must be the round's - federationIsBonded; refused 409 and stored unseated (no
+                    claim key, no lock) otherwise. A seat that reaches no federation seats none. guardians-bonded
+                    2/2: 2-guardian federation, both keys advertised by the bonded seats - 201, 2 seats; 4 guardians,
+                    threshold 3, the same 2 - 409 "2 of that federation's 4 guardians are bonded census nodes, and its
+                    threshold is 3", 0 seats; today's census (guardian_of empty) - 409 "0 of ... 2"; another federation
+                    at the port - 409; a THRESHOLD_LN and a free round on the unbonded census - 201, the federation
+                    not asked. seated-committee 6/6. node 635/635 with it: six chunks 599 (114, 113, 72, 125, 111, 64 -
+                    633's 597 and these 2), lock-settlement 15/15, five-of-seven 21/21. A census node under bond_min is not in the census at all (the
+                    census floor), so federation.test.js's under-bonded case stays the protocol's.
+                    NOT HERE, decided: the page's own count. The page derives no census (it checks single adverts
+                    against bond proofs, directory.js), and §25.1 forbids taking one from a server; it is covered
+                    meanwhile by the seats - an unseated round gets no claim-key attestation, and lockStake requires
+                    the attested key. Its own slice: each counted guardian's advert checked by its bond proof.
+  OPEN (below)      B, back after A decided VOID, signs 1 of 2 and its watch keeps asking - no money moves (A signs no
                     settlement; the locks return at expiry), but the seats do not agree on the entry until B's own
                     window decides it. The next piece: §13C for every seat past its window with no quorum.
