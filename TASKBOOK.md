@@ -35942,6 +35942,26 @@ M3 - THE SEATS ARE A NETWORK, THE TRUCK GAME IS ONE CORE ON IT (Daniel 08:03): M
                     the refused rounds, had hung the chunk's workers past the 175 s cap (killed); none since. A last
                     sweep of node tests and tools finds no core or config hash that is not a real one, except the ones
                     that must not be: core-registry's unknown core and config, rerun-object's result object.
+                    Committed 684f4b2.
+  R1 STEP C         (10:15-) TWO TITLES AND TWO CONFIGS ON THE SAME SEATS, IN ONE WINDOW - the acceptance. The round's
+                    config now reaches its core: coreForRound's config rides with the core the seat hands the replay
+                    (verify and ghosts #coreOf), replay and RunInProgress start(seedWord, config), the worker carries
+                    it with the hash and URL. The truck ignores it (one config, its constants). A second title for
+                    the test, test/cores/counter.js - nothing like the truck: a run adds its first word each tick for
+                    its config's ticks and delivers when the sum reaches its config's target; its hash is sha256 over
+                    its own source (164a21e0...); two configs, a low bar (1000) and a high one (2000000000), each named
+                    by the hash of its bytes. Two seats install it beside the truck (serve's `cores`).
+                    MEASURED (two-titles.test.js): three free rounds opened on the two seats at once - the truck's, the
+                    counter's under each config - each played the same 120 ticks, marks at 60 and 120 hashed by its
+                    own core under its own config: truck FAILED 0 (LIVE at its last mark, §15), naming 5f3b5176...;
+                    counter low DELIVERED 5505000 and counter high FAILED 5505000 - the same run, two rule sets -
+                    both naming 164a21e0...; all three FINAL 2 of 2, each seat holding both seats' two results, equal.
+                    A seat that did not install the counter: its round 409 "this seat holds no core 164a21e0...", the
+                    truck's 201. My first assertion said "one result at A" - measured, each seat holds two (its own and
+                    its peer's, the 2 of 2); the test says so, and that the two agree. core-registry 3/3, replay 9/9,
+                    ghost-live 10/10 (the warm pose unchanged with the config handed down). node 641/641 (10:17-10:33):
+                    six chunks 605 (114, 107, 78, 125, 111, 70 - step B's 603 and two-titles' 2), lock-settlement
+                    15/15, five-of-seven 21/21; no test process past 200 s.
 
 M3 - THE RESULT WINDOW IS THE OBJECTION WINDOW (Daniel 07:49) (2026-09-15)
   RULING            the result window equals the objection window - same duration, on the contract

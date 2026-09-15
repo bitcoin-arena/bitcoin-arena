@@ -46,10 +46,13 @@ BUILT UNDER THE RULINGS (2026-09-15, numbers: TASKBOOK):
   (2d76f66); the seat seats a paying FEDERATION round only on a bonded federation - on today's
   census it refuses every one (c42492b). The page's own count is its own slice (it derives no census).
 - 08:03/08:07 R1 (several cores and configs at once): step A, the core seam - the truck behind an
-  adapter, one door (cores.js), replay imports no core - in its node suite now. Next: step B, the
-  seat's registry, the door refusing a core/config it does not hold, results naming the core that
-  replayed, fixtures on the real hashes; step C, a second minimal core with two configs beside the
-  truck on the same seats.
+  adapter, one door (cores.js), replay imports no core (03022a7; Daily 0.0.1293). Step B, the seat's
+  registry - the door refuses a core or config it does not hold (409, 27A.7.5), a result names the
+  core that replayed, every fixture on the real hashes (684f4b2). Step C, the acceptance - the
+  round's config reaches its core; a second title (a test counter) beside the truck on the same two
+  seats in one window, the same run DELIVERED under one config and FAILED under the other, every
+  result naming its own core - in its node suite now. Still R1's: R3 (run length and input words
+  from the core, not the protocol) and R4 (the truck's five fields as its config's parameters).
 
 DONE: M3 W7 - A PAYING FEDERATION ROUND NAMES ITS FEDERATION, AND THAT IS CHECKED (2026-09-15).
 The codec refuses a paying FEDERATION round with a zero federation_id (encode and decode,
