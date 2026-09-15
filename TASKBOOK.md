@@ -35911,6 +35911,37 @@ M3 - THE SEATS ARE A NETWORK, THE TRUCK GAME IS ONE CORE ON IT (Daniel 08:03): M
                     says the worker loads the core the round names by its adapter's URL.
                     node 636/636 with the fixes: six chunks 600 (114, 113, 72, 125, 112, 64 - chunks 4 and 5 run
                     again whole with them: 125/125, 112/112), lock-settlement 15/15, five-of-seven 21/21.
+                    Committed 03022a7; the Daily is 0.0.1293 (the known-good list carries 5f3b5176...; both URLs serve
+                    bundle 7d41e498).
+  R1 STEP B         (09:49-) THE SEAT RUNS WHAT IT HOLDS, AND SAYS WHICH. cores.js installedCores (the truck always,
+                    serve's `cores` beside it) and coreForRound(contract, installed): the round's simCoreHash, then
+                    its configHash among that core's configs - a pair not held is refused by name, 27A.7.5 ("not
+                    selectable for that round - it serves nothing there, and is not slashed"). POST /round asks it
+                    before anything of the round is stored (409). Verifier and Ghosts resolve through the seat's
+                    registry. resultFrom names the core that REPLAYED (the answer's coreHash) and refuses one that is
+                    not the round's - before, it took the contract's simCoreHash whatever had run. §15's FORFEIT 0 for a
+                    run that never started steps no core; its answer names the core the seat holds for the round
+                    (first run: "replayed under core undefined" at close-retry and first-mark - found, fixed).
+                    FIXTURES on the real hashes: node 60 files by rule (b32(1)/b32(4) -> TRUCK_CORE_HASH, b32(0x43)
+                    -> TRUCK_CONFIG_HASH), and preflight's own b32g; the rounds that varied configHash or simCoreHash
+                    only for a distinct id (reconstruct, handout-accept, federation-named, guardians-bonded,
+                    payout-regtest, federation-invoice's tag, quota's n, client join's seed) vary slashMinimumServed
+                    instead; client 23 files that reach a seat. Left as they are, deliberately: donation-choice's free
+                    round and lobby-names' page-only contract and result (no seat), core-gate's unknown core (the
+                    page's refusal), rerun-object's result object (no seat), protocol's codec fixtures.
+                    MEASURED: core-registry 3/3 (the door: unknown core 409 "this seat holds no core 0101...: it is
+                    not selectable for that round (27A.7.5)", the truck with config 4343... 409 "runs btc-logistics
+                    truck but not the config", neither stored (404); the truck's pair 201; the registry takes a
+                    second core beside the truck, and not its config under another; resultFrom refuses a replay under
+                    another core, and one naming none); client 332/332. A node run was stopped: edits landed while it
+                    loaded - its numbers were a mix. THE CLEAN RUN (09:58-10:15): node 639/639 - six chunks 603 (114,
+                    107, 78, 125, 111, 68 - step A's 600 and core-registry's 3), lock-settlement 15/15, five-of-seven
+                    21/21; its chunk 3 first 75/78 - launcher-funded.test.js varied configHash b32(tag) and my
+                    migration had missed it ("runs btc-logistics truck but not the config 4343..."); it now varies
+                    slashMinimumServed, and chunk 3 run again whole, the same 18 files: 78/78. Its daemons, left up by
+                    the refused rounds, had hung the chunk's workers past the 175 s cap (killed); none since. A last
+                    sweep of node tests and tools finds no core or config hash that is not a real one, except the ones
+                    that must not be: core-registry's unknown core and config, rerun-object's result object.
 
 M3 - THE RESULT WINDOW IS THE OBJECTION WINDOW (Daniel 07:49) (2026-09-15)
   RULING            the result window equals the objection window - same duration, on the contract
