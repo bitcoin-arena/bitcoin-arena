@@ -36692,3 +36692,15 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     lobby on the first poll - 0 ms): page text 347 chars, the chip "free round", the rows "2 of 2 signer
                     nodes". Both signer nodes hold exactly 1406 ticks. THE COPY PASS IS DONE on the Daily; left, listed:
                     the signer nodes' own server texts on a refusal.
+  CLOSE-OUT CHECK   (Daniel 19:5x "anything still player-visible?") The shipped client bundle
+                    (unity-proto/.../blwp-client.js 48286859) still carries 33 string literals with seat - the scanner
+                    of player-copy.test.js run over the bundle; blwp-core.js 0. They are bundled PROTOCOL and signer-node
+                    code, not packages/blwp-client/src (which the copy test scans and passes): protocol shares.js, dkg.js,
+                    handout.js, lock-settlement.js, claim-key.js, posting.js, seal.js, rerun.js, entry-void.js,
+                    payout-spend.js; blwp-node payout.js, verify.js, payout-table.js, forfeit.js, pool-signing.js,
+                    roster.js, settlement.js (attribution by a substring match; the exact count is the bundle's 33).
+                    e.g. "N of M seats refused their share: ...", "seat N was handed a share that is not on the
+                    polynomial ...", "this node is not one of the seats that handout was dealt to". Thrown on a failed
+                    paying-round join or share check, they can reach the player as a refusal reason. None showed in
+                    the 4 live states (a free round, nothing refused). Listed with the ~88 signer-node server lines as
+                    PRIORITIES item 5 (later); not changed on this letter (no new game code).
