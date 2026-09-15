@@ -36572,3 +36572,12 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
   COUNTS            finish-at-delivered.test.js 2/2 (mutant: guard dropped -> "a client not yet told its round finished a
                     run", red). Client 341/341 (bundle 182efa15). C# unchanged since EditMode 200/204 and PlayMode 216/239
                     (18:11-18:21). The probe on the buggy 0.0.1342 was stopped; pass 2 is re-measured on the next build.
+  LIVE (0.0.1343)   deploy https://429b1400.btc-logistics-core.pages.dev (alias serves the same bundle 182efa15 at 16:46Z).
+                    mouth-twice.mjs, one tab, free round b2a23b00. PASS 1: entry 328e3427, DELIVERED at tick 1270 (x 114.54,
+                    z 2.30); the lobby showing on the first poll that saw DELIVERED (0 ms); offered = nextTick = 1270, 3 s
+                    later still 1270; both signer nodes hold exactly 1270 ticks. ADDRESS: "" - no round=, no play=1, the
+                    chain cleared, the page's word FINISHED. PASS 2 (the second PLAY, same tab, no reload): a NEW entry
+                    352edcd1 in the same round, session ready, the core driving from bay z 78.2 into the mouth: DELIVERED
+                    at tick 1254 (x 114.64, z -3.13), FINISHED "the core said DELIVERED at tick 1254", lobby 0 ms, 3 s later
+                    still 1254, both signer nodes hold exactly 1254 ticks. RELOAD: address "", the Daily lobby showing, 2
+                    listed, no join, no round named. HOLES 1 AND 2 CLOSED on the Daily. Signed results: after the round.
