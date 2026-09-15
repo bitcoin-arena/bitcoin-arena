@@ -46,7 +46,8 @@ BUILT UNDER THE RULINGS (2026-09-15, numbers: TASKBOOK):
 - 07:33 blwp-stake-lock reads a federation's guardians off its config, live on fedimintd 0.12.0
   (2d76f66); the seat seats a paying FEDERATION round only on a bonded federation - on today's
   census it refuses every one (c42492b). The page reads the same guardians with its own wasm client,
-  live, and counts bonded ones on proofs it checks (guardians.js); what hands it the bonds is open (G2).
+  live, and counts bonded ones on proofs it checks (guardians.js, fd706ab); a seat serves the bonds
+  (/guardian-bonds). Open: the page asking before its lock - it has no header providers yet.
 - 08:03/08:07 R1 (several cores and configs at once): step A, the core seam - the truck behind an
   adapter, one door (cores.js), replay imports no core (03022a7; Daily 0.0.1293). Step B, the seat's
   registry - the door refuses a core or config it does not hold (409, 27A.7.5), a result names the

@@ -36104,6 +36104,21 @@ M3 - THE PAGE COUNTS THE GUARDIANS ITSELF (Daniel 07:33; the "own slice" above) 
                     client 337/337 with it (four chunks 105, 85, 83, 64; 333 and these 4).
                     NOT CHECKED, said in the file: whether a proven bond is still unspent - headers carry no spends;
                     the seat's census does check, so a spent bond counted here is refused at the seat.
-  OPEN              G2, where the offers come from: nobody serves them yet. A seat can name candidate guardian
-                    bonds as a hint (it can omit, not forge); the page then counts before lockStake. Until then the
-                    page's count is a library, and the seats' door count (c42492b) is what refuses.
+  G2 THE OFFERS     a seat serves them: GET /guardian-bonds?round= (roster.guardianBondsFor) - out of the census
+                    it derived for the round, every node whose advertisement names a guardian key of the round's
+                    federation, with its bond transaction, its position and the merkle branch from the block of
+                    the seat's chain view (protocol chain.js merkleBranchOf, new; merkle-branch.test.js 1/1: all 45
+                    positions of blocks of 1 to 9 txids rebuild the mined root, no other txid does). Candidates,
+                    not a count; the page decodes them (offersFrom) and counts (bondedGuardians).
+                    guardians-bonded 3/3 (fixture adverts now signed by their seats' keys - the page checks it,
+                    the seat census does not): seat A 201, served 2, the page counts ok 2 of 2 over the same
+                    chain's headers; one bond omitted - "1 of that federation's 2 guardians ... threshold is 2";
+                    one branch zeroed - set aside "bond 1: the transaction is not in any block of that chain";
+                    seat B (4 guardians, threshold 3) 409 and served 2, and the page refuses with the seat's own
+                    words "2 of that federation's 4 guardians are bonded census nodes, and its threshold is 3".
+                    MUTANT: the seat serves the neighbouring position's branch -> red, "0 of that federation's 2".
+                    protocol 531/531 (four chunks 153, 105, 102, 171; 530 and merkle-branch). node 643/643 (six
+                    chunks 607 - 606 and this test -, lock-settlement 15/15, five-of-seven 21/21; 11:27-11:43).
+  OPEN              the page does not ask yet: lockStake does not call the count. It needs headers from two
+                    providers (agreedChain) covering the census height, which the Daily's page has none of
+                    today - the seats' door count (c42492b) is what refuses meanwhile.
