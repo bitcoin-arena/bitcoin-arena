@@ -36581,3 +36581,27 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     at tick 1254 (x 114.64, z -3.13), FINISHED "the core said DELIVERED at tick 1254", lobby 0 ms, 3 s later
                     still 1254, both signer nodes hold exactly 1254 ticks. RELOAD: address "", the Daily lobby showing, 2
                     listed, no join, no round named. HOLES 1 AND 2 CLOSED on the Daily. Signed results: after the round.
+  SIGNED            (17:01Z) both signer nodes hold 2 results each, no no-quorum: pass 1 entry 328e3427 DELIVERED score 128
+                    transcript e2ff136c; pass 2 entry 352edcd1 DELIVERED score 59 transcript 39f7974a; core 5f3b5176, signed by
+                    7291d680 and de4dd194. Both entries carry one player key (c601715f - the round's key from the tab's
+                    seed): the signer nodes take a second entry from the same player in one round.
+
+## 16:14 WRECKED AND MISSED END THE RUN THE SAME WAY (Daniel 2026-09-15) - client and Unity only
+  BEFORE            only the core's DELIVERED ended a run. A wrecked or missed run went on recording to the run's last tick,
+                    and inside a round TruckHealth's respawn after a write-off and DeliveryGate.Miss both teleported the
+                    core's truck - a core write in no transcript.
+  FIX               client RUN_ENDING_WORDS {1 DELIVERED, 2 WRECKED, 3 MISSED} (core rules/gate.js): coreWord finishes the
+                    run on any of them, naming the word; LIVE and unknown words are left alone. The jslib hands over every
+                    non-zero word. Inside a live round TruckHealth does not respawn the wreck and Miss() does not respawn
+                    (DeliveryGate.BackToTheBay) - the page ends the run and the lobby comes back.
+  MISSED REACHABLE  measured headless (missed-timing.mjs): the core says MISSED after exactly 9000 steps (BLOCK_TICKS); a
+                    run joined at 0 records through lastTickOfRun(0, 9000) = 8999, i.e. 9000 ticks - the word lands on the
+                    last recorded tick, so the page sees it before recording stops. (Inside a round the core starts at
+                    setRound, so its elapsed counts from the transcript's first tick.)
+  TESTS             finish-at-delivered.test.js 4/4 (WRECKED and MISSED: 40 ticks on the node, nothing after, "FINISHED the
+                    core said WRECKED|MISSED at tick 40"); mutant (ending words = DELIVERED only) red on both. Client
+                    343/343 (bundle a1cfcacb). EditMode 204: 200 pass, 1 red (the listed CombatFxTests.RifleFire), 3
+                    skipped. PlayMode 239: 216 pass, 10 red (the same documented ten), 13 skipped (ended 19:04). Build and
+                    the live parked run follow.
+  LISTED            SpawnMark re-seats a parked truck via Respawn -> Teleport on each terrain rebuild; in a round the seed's
+                    bay is not the solo bay it re-seats to, so it should not fire - not measured, not changed here.
