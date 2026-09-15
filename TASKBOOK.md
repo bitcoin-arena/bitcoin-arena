@@ -36342,3 +36342,10 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                        redeploys, and the default Daily lists a free and a paying 2-of-2 again under the new
                        name; kill the seats' process - systemd restarts it, the keeper redeploys the new
                        advert, and the default Daily lists both again.
+  GATE              Step 3 is OPERATOR-GATED on /mnt/bitcoin/blwp-2of2/cloudflare.env, not a code hole:
+                    absent at 15:32:46 (placed by Daniel only, mode 600; not created, minted or copied here).
+                    Everything else is measured working - seven enabled services, the keeper holding once
+                    without wrangler, on-disk daily.json on the live tunnels, and the query-string Daily at
+                    13:27:29Z listing free 3f51b8cd and paying 557949ba, both 2/2 join, PLAY on the free one;
+                    the default Daily lists 0 (13:29:07Z) only because its deployed daily.json names the
+                    tunnels stopped at 14:59.
