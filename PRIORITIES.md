@@ -46,6 +46,9 @@ Each tab lists one FREE and one PAID. Canyons are driveable: the road is a bridg
 Bridge = stand-in first, later a Claude Design custom model. Small hills are driveable. Large
 bid/ask mountains are not: go around. Tanks and soldiers only on small hills, never the large ones.
 Large bid/ask mountains carry a label on top, e.g. `8.5 BTC @ 77600`.
+The spread canyon is never a hairline. A 0.01 USD book still opens a real gorge with
+a visual minimum width so a bridge is justified - not a plank over a crack. Not 1:1
+dollars-to-metres. Improvise the look.
 BUILT UNDER THE RULINGS (2026-09-15, numbers: TASKBOOK):
 - 07:42 a fee lock is sized for the round's sitting seats, the seats its settlement pays (79973c7);
   Daily 0.0.1286.
