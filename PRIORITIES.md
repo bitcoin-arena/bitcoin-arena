@@ -39,6 +39,12 @@ RULED (Daniel 12:54): ALWAYS one no-money (FREE) round open AND one 2-of-2 round
 regtest/testnet. Both at once. The Daily lobby must not be empty of rounds.
 RULED (Daniel 16:22): player-facing word is Signer Node, not seat. HUD/lobby: 2 of 2
 signer nodes, open signer node. Seat is unclear. Do player-facing copy first.
+OPTIONAL (Daniel 17:22): after current M3 work, do not start yet. Two play modes, lobby tabs:
+Mempool histogram (today) and Bid/Ask depth. Bid/Ask = freeze snapshot at round open, hash in
+the contract, both signer nodes build that world for the round (~2 min); next round a new freeze.
+Each tab lists one FREE and one PAID. Canyons are driveable: the road is a bridge over the spread.
+Bridge = stand-in first, later a Claude Design custom model. Small hills are driveable. Large
+bid/ask mountains are not: go around. Tanks and soldiers only on small hills, never the large ones.
 BUILT UNDER THE RULINGS (2026-09-15, numbers: TASKBOOK):
 - 07:42 a fee lock is sized for the round's sitting seats, the seats its settlement pays (79973c7);
   Daily 0.0.1286.
