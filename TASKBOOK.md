@@ -36266,3 +36266,11 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     under -nographics) and RampReadyTests.TheRealTransactionsReplaceTheStandIns (recorded before:
                     "no route to mempool.space"). Protocol unchanged since 531/531. client 337/337 (13:43-13:46:
                     four chunks 105, 85, 83, 64).
+  ROLLOVER          both kinds opened their next round on the first try, no refusal between them: free
+                    01e305d91067dc22... at 11:50:57Z (a5be918a... still had about 48 s of entry - the lobby never
+                    lacked a free round), paying 81a75ce73498f113... (100000 msat, THRESHOLD_LN) at 11:52:06Z.
+                    The earlier refusal "published at or after its beacon block" (2026-09-13) did not come
+                    back, nor "not synced to its chain" (both lnds poll every second). At 13:53:35 both seats'
+                    own signed /rounds: 01e305d9... free, 1694 s left, and 81a75ce7... paying, 1761 s left -
+                    open, 2/2, seatedHere. On the bare root at 11:54:02Z, Unity's own report at 1280x800:
+                    listed 2 - "01e305d9 2/2 join", "81a75ce7 2/2 join" -, picked 81a75ce7, PLAY enabled.
