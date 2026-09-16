@@ -37232,3 +37232,32 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
   SUITES            in a clean worktree at 779a5e3 + this change only (no M3): core 96/96, protocol 534/534, client
                     346/346, node 646/646 (610 in 11 chunks, five-of-seven 21 in 6 groups, lock-settlement 15 in 4).
                     Unity: no C# change; page 0.0.1396 built with client and core byte-equal to this tree's.
+
+## A ROUND IS ONE RUN LONG, THE RUN CLOCK IS THE CORE'S, THE LOBBY COUNTS PLAYERS AND REFRESHES EVERY SECOND (Daniel 2026-09-16 15:36)
+
+  REPORTED          "when time hits zero the round does not end ... Lobby closes-countdown then restarts the SAME
+                    round. FREE shows closes 30 min but a play is ~2 min. Joinable round id never changes. After
+                    each successful run lobby says 1 joined then 2 then 3 as if he never left. Lobby list should
+                    refresh every second, not 20-30s."
+  BEFORE (measured) CLOCK   BlockClock was a 150 s Unity stopwatch from scene load, looping through the lobby; the core
+                            ends a run MISSED at 9000 of its own ticks (gate.js), dropping ticks on a slow page. Live
+                            0.0.1396 GPU, joined and left idle: the core said MISSED at tick 9000 after 148 s wall and
+                            the lobby came back - the HUD was the only thing out of step. No stored run on the Daily
+                            reached 9000 (max 7325).
+                    WINDOW  round-2of2.mjs: entryCloseMs = committee + 60 s + 1,800,000 ms. Every Daily round had a
+                            30-min entry; the keeper opens the next with 60 s left, so one id stood 30 min.
+                    JOINED  round.js playersOf: COUNT(*) entries. a.db: round def25d55 held 7 entries from 1 player
+                            key (13:28-13:33), 13e60347 3 entries from 2 keys.
+                    REFRESH index.html setInterval(paint, 5000), line made at paint time: countdown in 5 s steps.
+                            /rounds answered in 0.11-0.24 s, cf-cache DYNAMIC - not the node or the tunnel.
+  THE FIX           CLOCK   with a core, Remaining = (9000 - S_ELAPSED) x 1092/65536 s: 0:00 is the MISSED tick.
+                    WINDOW  standUpRound({ entryWindowMs }), 30 min by default; run-2of2.mjs names 150 000 ms
+                            (BLWP_ENTRY_WINDOW_MS overrides): "closes in" at most 3:30, a new id every run's length.
+                    JOINED  distinct playerPubkey of the round's entries; playing = those with ticks.
+                    REFRESH paint every 1000 ms, never two at once; the row's line made when Unity reads it.
+  TESTS             lobby-players.test.js 2/2 (both fail on the old count: 3 entries of one key read 3 joined).
+                    RunEndsAtDeliveredTests.TheRunClockIsTheCoresOwnCount (149.96 s at 0, 0 at 9000 and past).
+  SUITES            clean worktree at 11ea754 + this change: node 612/612 in 11 chunks + lock-settlement g0a 4/4
+                    (the one group naming /rounds); client 346/346 (ten suites read index.html). EditMode 217: 213
+                    pass, 3 skipped, 1 red (rifle flash, listed). PlayMode 241: 216 pass, 13 skipped, 12 red, all
+                    listed, none new. Page 0.0.1397, bundle == HEAD, no gateway code.
