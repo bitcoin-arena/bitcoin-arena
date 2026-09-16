@@ -37466,3 +37466,32 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     b32(0x16) is still LIVE at tick 1000 (was WRECKED at 956). Depends on re-picking the node fixture
                     drives (patch parked in the scratchpad, not in this commit). Protocol, client, the other node chunks
                     and Unity not run on this core.
+
+## THE POST IS HELD UNTIL THE BOUND ARRIVES; TANKS STOP INSIDE THE RULED 1.5 M (hold is the default, 2026-09-16)
+
+  WHAT              tactics.js holdLegs(): at a leg boundary of a living pair with a tank off post (1.5 m of its hold under the
+                    ending leg's roles), the role clock starts one tick later - no post moves under a tank still walking.
+                    army.js: a standing tank corrects across only past 1 m of its slot (was 2 m); a tank already driving
+                    across goes on to 0.5 m. 1 m across with the 1 m depth band lies inside the ruled 1.5 m.
+  WHY               measure-hold.mjs at 1830888: of 41.5 points of unfinished bounds, 20.2 were tanks standing still inside
+                    the old band (2 m x 1 m) and outside 1.5 m; of 36 failed legs, 24 ended with the tank travelling.
+  HOLD PROBE        seeds 1-5 x 3600, 1830888 -> this commit:
+                      on post (living pairs)          30.9% -> 46.8%   (bar >= 50%: 3.2 points short)
+                      bounding tank arrives (H2)      57.1% -> 91.1%   (51 of 56; bar >= 80%: met)
+                    Off-post now (share of off-post | of all): spawn walk-in 63.8% | 33.9, unfinished bound 20.7% | 11.0,
+                    scoot 9.8% | 5.2, push step 3.3% | 1.7, left post after arriving 2.5% | 1.3.
+                    On post by 10 s bucket (same core, earlier run): 0-10 s 5.3%, 10-20 s 44.4%, 20-30 s 71.0%, 30-40 s
+                    62.4%, 40-50 s 50.9%, 50-60 s 58.0%; after the first 10 s 56.9%. First arrival at the opening median
+                    11.7 s (all tanks start 76-79 m back). Of the walk-in 33.9 points, 7.1 are a tank walking in and
+                    waiting on the half-line budget (it is "on the line" once within 40 m of its post).
+  REMAINING 3.2     the opening walk-in. Measured: exempting a tank that has not yet stood on post from the half-line budget
+                    gives 51.3% on post but A4b (probe: any tank within 40 m counts) 19-21% of ticks over half. Needs a
+                    §0 ruling on what a "column walking in" is, or on the opening; not retuned.
+  §0 TABLE          seeds 1-5: 22 of 35. H1 46.81%, H2 91.07%, A4b 0.22%, A1-A3, A5-A8, A10, A12, A13a, O2, O3, O5 green.
+                    Red: A4a 9 of 60 ten-second windows without a post change on a side (swaps now wait), A9 18.83%,
+                    A11a 2/10, A11b 9/10, A11c 18.44%, A13b 19.95%, O1 53.81% / 1.54 m (push 0.95 steps per team-minute),
+                    O4 client, B2-B4 infantry.
+  TESTS             core: bundle/canonical/cbrt/poison/private-world/spawn/specified/transcript/vectors 46/46; rules +
+                    tactics 60/60 before the new test, the new test "a pair swaps roles only with both tanks on post" 1/1
+                    (mutation: without holdLegs it fails at seed 1 tick 4). Node chunk 3 red since 1830888 (fixture drives,
+                    listed above). Protocol, client, other node chunks, Unity not run on this core.
