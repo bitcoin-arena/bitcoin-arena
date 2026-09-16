@@ -37495,3 +37495,29 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     tactics 60/60 before the new test, the new test "a pair swaps roles only with both tanks on post" 1/1
                     (mutation: without holdLegs it fails at seed 1 tick 4). Node chunk 3 red since 1830888 (fixture drives,
                     listed above). Protocol, client, other node chunks, Unity not run on this core.
+
+## COLUMNS WALK IN OFF THE HALF-LINE BUDGET: HOLD IS THE DEFAULT (Daniel 2026-09-16 21:20 rulings; on post 51.7%)
+
+  RULINGS           1. COLUMN: a tank that has not yet stood on its post (within 1.5 m) since it spawned or respawned; columns do
+                    not count against the half-line moving budget or A4b. 2. PUSH RATE: the 20:30 rule stands (re-read every
+                    5 s only with both of the pair on post; a continued verdict steps at once; a new direction needs two
+                    matching re-reads); no extra cap - already the code at a274fbc.
+  WHAT              sim.js: bit 7 of a tank's U_COOLDOWN = it has stood on post since it spawned (cleared at spawn); a tank
+                    without it is off the budget (neither waits nor spends). The bit is set against this tick's post AND the
+                    last tick's: arriving is what lets holdLegs swap the pair, so the tick a bound ends its tank already
+                    stands against the next leg's post. measure-war.mjs rows 2/4b/7 use the same column.
+  WHAT WAS HELD     first cut (this tick's post only): A4b 2.48% on seeds 6-10 and 11-15. Instrumented: of 892 over-half
+                    side-ticks (seeds 6-10), 34 had a mover arriving that tick; the rest had movers the probe called on the
+                    line and the core called columns - 1159 mover-ticks (seeds 6-8) with bit 7 still 0 after the tank had
+                    stood on post: the swap at arrival moved the post before the bit was read (tanks 68, 84, 4 on seed 6).
+  HOLD PROBE        a274fbc -> this commit, seeds 1-5 x 3600: on post 46.8% -> 51.7% (bar 50%: met), bounding tank arrives
+                    91.1% -> 92.2% (47 of 51; bar 80%: met). H1 and H2 pass on seeds 6-10 and 11-15 as well.
+                    Off-post before -> now (share of off-post): walk-in 63.8 -> 59.9%, unfinished bound 20.7 -> 20.4%, scoot
+                    9.8 -> 11.6%, push step 3.3 -> 5.2% (first cut; the arrival fix moved H1 51.3 -> 51.7).
+  §0 TABLE          seeds 1-5: 24 of 35 (6-10: 22, 11-15: 25). Green: A1 0.00%, A2 0.77% fidgets, A3 1.25%, A4a 0/60, A4b
+                    0.11%, A5, A6, A7 97.39%, A8, A10 0 of 197376, A12, A13a, H1 51.74%, H2 92.16%, O1 share 64.73%, O2,
+                    O3, O5. Red, listed: A9 15.48% (was 18.83; the opening), A11a 4/10, A11b 9/10, A11c 21.90%, A13b 31.47%,
+                    O1 lane lead 2.44 m - the push steps 1.10 times per team-minute under ruling 2; A4a 1 of 60 on seeds
+                    6-10 only; O4 client; B2-B4 infantry.
+  TESTS             core 107/107 (rules 48, tactics 13, bundle/vectors/replay/... 46). Re-pinned with numbers in comments:
+                    heat 4,5,4,6 -> 4,6,4,6 (hot > cold on 8 of 8 seeds at both depths); objective-word seeds 5,7 -> 9,10.
