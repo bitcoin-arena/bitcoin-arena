@@ -18,7 +18,7 @@ Top item first. Finish and deploy before starting the next.
 
 NOW (2026-09-16, Daniel playtest):
 1. Hang after DELIVERED is LIVE on Daily 0.0.1377: banner RUN STOPPED - the core said DELIVERED at tick 2558, cannot pick the next round, stuck. FINISH_WAIT_MS is already 300 on the page so this is not the 10s drain. Lobby must return. Then tanks race/teleport.
-2. Tanks race/teleport: in some state they suddenly go very fast (not instant) to another place.
+2. Tanks race/teleport: immediately on login, no special action. They suddenly go very fast (not instant) to another place. Daniel: always reproducible, just open the game.
 3. M3: inbound and at least two independent gateways.
 DONE (2026-09-16): SpawnMark re-seating a parked truck. It does not jump: measured on the Daily,
 the re-seat fires on every terrain rebuild while the truck is held and moves it 0.00 m. Two faults
