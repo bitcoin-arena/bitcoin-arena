@@ -37165,3 +37165,26 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
   SUITES            EditMode 214: CoreBacklogTests 2/2 (3 runs alone, all pass) - 20 s at 3 fps then 60 fps steps
                     at most 1 tick a frame; 45 fps loses nothing. PlayMode 241: 215 pass, 13 red - the 12 listed
                     plus PostOfficeTests.TheGogglesAnimate, the recorded flake: 11/11 PostOfficeTests alone.
+
+## A RUN STARTED FROM A ROUND'S LINK COMES BACK TO THE LOBBY (Daniel 2026-09-16 14:24: "RUN STOPPED, cannot pick the next round")
+
+  THE FAULT         PLAY leaves the address as the round's link with `&play=1`. Opened again - a reload, a
+                    restored tab, a phone bringing the tab back - that address joins the round with no lobby
+                    behind it (a named round skips the page's lobby), and Unity's auto-play starts the run on
+                    the fourth frame, before the first lobby poll, so `_fromLobby` was false. At DELIVERED
+                    nothing went back anywhere: the banner stayed over a truck that cannot drive.
+  NOT THE FAULT     PLAY pressed in the lobby: measured on 0.0.1386, DELIVERED -> lobby 0 ms, second PLAY in the
+                    same tab joined and ran (both signer nodes held its signed DELIVERED result, score 276).
+                    Nor the finish wait: 68139fb (08:12) was already in Daniel's 0.0.1377.
+  BEFORE (live)     0.0.1386 at 4bd615ee, the `&play=1` address opened, drive to DELIVERED at tick 1273:
+                    "RUN STOPPED - the core said DELIVERED at tick 1273", lobby not showing 0 s, 3 s and 30 s
+                    after (screenshot hang-play1/4-lobby.png).
+  THE FIX           Page: BLWP_RUN_OVER on a page with no lobby sets the address back to the link's lobby (the
+                    query without `round` and `play`) and starts the lobby in place. Unity: a run the address
+                    started counts as started from the lobby (SplashScreen.StartedFromLobby).
+  AFTER (live)      0.0.1391 at 3fa756a8, same `&play=1` run, DELIVERED at tick 1417: lobby showing 0 ms after,
+                    page "[blwp] the run is over: the lobby is up", 2 rounds listed, PLAY enabled; PLAY pressed ->
+                    joined, session ready in 1 s, 72 marks accepted by 73 s.
+  SUITES            EditMode 215: 211 pass, 3 skipped, 1 red (rifle flash, listed); new
+                    RunEndsAtDeliveredTests.ARunTheAddressStartedAlsoComesBackToTheLobby passes. PlayMode 241:
+                    216 pass, 13 skipped, 12 red, all listed, none new. Bundle == HEAD, no gateway code.
