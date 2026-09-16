@@ -36931,3 +36931,68 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     window is two frames after setting feed.Offers, and PackageYard rebuilds only while `_open` and
                     `bay.Count == 0` and the signature changed - a race, and RestOnTerrain's ONE caller is the tank
                     hull, so this edit cannot reach it. Listed, not retuned.
+
+## THE NUKE AS ONE MESH ON THE CORE'S GROUND (2026-09-16)
+
+  THE LETTER        The nuke's stem, skirt and crater as one mesh on the core's ground. "One mesh" means one
+                    transform hierarchy seated once on the core's ground, still driven by the core's strike
+                    words so stem and skirt can grow - not a frozen static mesh. No merge was needed: the
+                    hierarchy was already one parent (mushroom-cloud_flying) with the skirt at localPos 0,0,0.
+  THE VENUE         A signed run no longer admits a simulated liquidation (Bootstrap.LiquidationMayWriteCore
+                    gates on BlwpNet.Live), so the measurement venue is the practice phase - the lobby, before
+                    PLAY. PlayMode cannot produce these numbers at all: BlwpCore.Available is set only from
+                    BlwpInit(seed) == 1 and the editor stub returns 0, so HasSurface is false and SurfaceAt
+                    would print NaN.
+  BEFORE (0.0.1368) one practice strike on the Daily, one SIM press ($752,034,790), impact at 4.3,-41.5.
+                    cloud t   SurfaceAt(impact)  Ground/floor  stem foot  skirt underside  skirt vs core
+                    0.3 s     2.90               3.46          3.46       4.38             +1.48 m
+                    1.8 s     -0.65              0.10          0.10       5.69             +6.34 m
+                    Three objects, three seating rules, none of them the core's surface. The stem rested on
+                    Ground() - which is roads.SurfaceHeight wherever there is a lane, the ribbon's chord plus
+                    lift 0.45 m faded across a 2.6 m shoulder - so it stood 0.56 m then 0.75 m above SurfaceAt
+                    at the SAME x,z. The skirt lifted itself onto the HIGHEST of five Ground() samples: at
+                    t=1.8 s its centre hung 5.59 m clear and its north edge 7.88 m. _cloudAt.y stayed frozen
+                    at its pre-crater 3.46 while the core surface under it fell to -0.65, a stale anchor
+                    4.11 m up. The crater was already right: drawn vertices vs the core bowl median 0.007 m,
+                    p90 0.013-0.014 m, worst 0.185-0.189 m, several seeds.
+  NOT THE FAULT     The 0.25 m at StrikeTheatre:1268 is crater-disc clearance and the crater is the one piece
+                    that already tracked the core. Untouched. No strike piece carries a Rigidbody either - the
+                    only bodies in CombatFx are the thrown soldier (~365-379) and GiveWreckASolidBody (~940).
+  THE CLOCK         384 ticks x TICK_DT 1092 / 65536 = 6.3984 s, against Gone = 8.0 s. A prediction that the
+                    cloud spends 80% of its life on pre-crater ground was made from that and MEASURED WRONG:
+                    the floor fell between cloud t=0.3 s and t=1.8 s, not at 6.4 s, because the cloud's clock
+                    starts at IMPACT and the bomb run sits between the liquidation and the impact. That gap
+                    was never instrumented and the drop is not placed on the 384-tick clock here.
+  THE FIX           CoreGround(x,z) = BlwpCore.SurfaceAt, falling back to the BARE terrain (not Ground()), so
+                    no road can reach the cloud by a second route. The parent is seated once per frame on the
+                    lowest point of the WHOLE hierarchy - skirt included - against CoreGround. The skirt's
+                    five-sample highest-ground lift is deleted; it is shaped and reset to its authored local
+                    position BEFORE the seating, so the resting sees this frame's disc rather than last
+                    frame's while it is still spreading. _cloudAt.y is re-read from the core every frame, so
+                    the bowl carries stem, cap and skirt down together. spread, Rise and the strike words stay
+                    core-driven. `after` still EXCLUDES the skirt, so _stemFoot keeps meaning the stem's own
+                    foot - folding it in would make _stemFoot equal the floor by construction and turn a red
+                    test green without moving anything.
+  AFTER (PlayMode)  MushroomRestingTests.TheDustSkirtIsNeverBelowTheGround: RED under stem-foot seating
+                    (underside -1.16 against floor 2.02), GREEN under lowest-point seating. The dust meets the
+                    ground. The 6.34 m air gap cannot return: the lift that caused it no longer exists.
+  THE PRICE, stated The authored skirt hangs BELOW the stem's foot - 0.69 m at t=0.3 s and 1.04 m at t=1.8 s
+                    on the live asset (2.77 vs 3.46, -0.94 vs 0.10). Seating the hierarchy on its lowest point
+                    - player-visible ground contact - therefore leaves the stem that much proud of the crater
+                    floor. TWO assertions are red on exactly that, and both are the SAME assertion:
+                    TheStemStandsOnTheCraterFloorRatherThanUnderIt (foot 5.00, floor 3.64 = 1.36 m proud) and
+                    TheRestingHoldsWhileTheCloudIsStillGrowing (expected 2.96, was 3.44 = 0.48 m proud). Those
+                    are PlayMode FIXTURE numbers, whose skirt is a primitive at localPos y=-1.4; the 0.69-1.04 m
+                    is the real asset on the Daily. Different quantities, same cause, not blended. Neither
+                    assertion retuned. It depends on a later asset reauthor, not on this letter.
+  NOT MEASURED LIVE No deploy was made on this red, by ruling, so the after-numbers here are PlayMode's. The
+                    live 0.69-1.04 m proud, and the live skirt underside against SurfaceAt, remain untaken.
+  SUITES            EditMode 211: 207 pass, 3 skipped, 1 red (CombatFxTests.RifleFireProducesAFlashAndATracer,
+                    red before this work). Unchanged across every run of this letter; zero error CS.
+                    PlayMode 239: 213 pass, 13 skipped, 13 red - the 10 known by name, plus the 2 stem-foot
+                    assertions above, plus PostOfficeTests.TheGogglesAnimate, measured flaky: it passed in all
+                    14 earlier PlayMode runs this session and 11/11 twice when PostOfficeTests was run alone on
+                    this same code. Nothing in PostOffice.cs or PostOfficeTests.cs references StrikeTheatre,
+                    mushroom or _skirt. Listed, not retuned.
+                    ScoreTests.IdlingEarnsNothingEvenOnTheSeam and RampReadyTests.TheRealTransactionsReplace...
+                    both flipped green here; both are recorded flakes, listed, not retuned.

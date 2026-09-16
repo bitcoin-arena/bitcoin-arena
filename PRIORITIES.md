@@ -20,7 +20,9 @@ NOW (2026-09-16, after tank hull seating):
 1. The nuke's stem, skirt and crater as one mesh on the core's ground.
 LISTED: SpawnMark re-seats a parked truck by teleport (not measured); the mouth is open to 40 m,
 delivery counts |z| <= 34 m (ruled, not retuned); another player's ghost of an ended run stays
-at its last picture.
+at its last picture; the mushroom's stem foot stands 0.69-1.04 m proud of the crater floor because
+the authored skirt hangs below it - the cloud is seated on its lowest point so the dust meets the
+ground, and two MushroomRestingTests assertions are red on that offset until the asset is reauthored.
 
 LIVE: M3 - THE SEVEN UNPARKED ITEMS OF THE INVENTORY ARE DONE (W1-W7). WHAT IS LEFT FOR "M3 IS
 DONE WHEN" WAITS ON RULINGS (Daniel): which guardians - and with it federationIsBonded (P3): no
