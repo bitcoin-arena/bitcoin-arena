@@ -37096,3 +37096,28 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     two tests added, ZERO new reds. Remaining: VehicleTests 5, ImportedModelTests 2,
                     MushroomRestingTests 2 (the authored skirt offset, listed), FeatureTests 1,
                     TruckHealthTests 1, VisibilityTests 1. Every truck and spawn test passes.
+
+## THE DRAWN TERRAIN FOLLOWS THE ROUND'S WORLD (Daniel 2026-09-16 12:38: "truck buried in dirt, only the cab roof showing")
+
+  THE FAULT         The core's relief is made from the round's seed, and the drawn terrain was not rebuilt when
+                    it changed. Two ways it changes: C# Init/Restart, and the page's own session start
+                    (blwp.jslib: `b.st = b.core.init(net.seedWord)`), which C# never heard about. The mesh was
+                    rebuilt only on a crater change or the mempool poll every 20 s - skipped outright when no
+                    host answered - so the truck rode the new round's ground through the old round's hills.
+                    Two seeds' reliefs differ by up to 5.59 m (core init(1) vs init(2), 1683 points).
+  NOT THE FAULT     The mesh's own triangles against the core: at most 0.001 m over ~5000 route samples, five
+                    seeds. The truck census could not see this - it compared the hull with the same ground it
+                    computed; `SampleSurface` recomputes from HeightAt and never reads the drawn vertices.
+  BEFORE (live)     Measured by the fix itself, the moment each change was seen, on the drawn vertices:
+                      page start     up to 4.88 m ABOVE the core, 3366 of 3840 vertices off by > 0.5 m
+                      round start    up to 5.26 m ABOVE the core, 1810 of 3840 vertices off by > 0.5 m
+                    Daniel's screenshot was 16 s into a round (2:14 of 2:30) - inside the 20 s stale window.
+  THE FIX           BlwpCore.ReliefEpoch = C#'s count of Init/Restart + the page's count of session-start
+                    inits (BlwpReliefEpoch). MempoolTerrain rebuilds in the same frame the count moves.
+  AFTER (live)      0.0.1385 at 40b5d409: drawn terrain vs core under the truck +0.00 m at every sample,
+                    including hills at 2.60, 2.23, 4.36, 4.90, 5.73 and 4.64 m.
+  SUITES            EditMode 211: 207 pass, 3 skipped, 1 red (rifle flash, listed). PlayMode 241: 215 pass,
+                    13 skipped, 13 red - the 12 listed plus RampReadyTests.TheRealTransactionsReplaceThe
+                    StandInsWhileNothingIsLoaded, the recorded flake: 3/3 RampReadyTests pass run alone on this
+                    code. The deployed bundle is the committed one - the uncommitted M3 contracts.js was set
+                    to HEAD for the build and restored byte for byte after.
