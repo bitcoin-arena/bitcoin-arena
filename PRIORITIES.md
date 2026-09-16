@@ -20,7 +20,10 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-NOW: M3 - five-of-seven, inbound gateways (the two live testnet4 LND nodes, pick A), lock-settlement.
+NOW (2026-09-16 17:59, Daniel HARD playtest — stop M3):
+1. TANKS wiggle in a clump because they almost touch, until one dies. They travel in groups and camp the front line. Looks dumb. Keep tank-tank 12 m / no clip-ram, and truck exception (shoot, ignore, touch=death). Make behaviour more tactical: research how simple games do armour AI (spread, hull-down, overwatch, not a parking lot on the seam). Do not wait.
+Ping Daniel when live on Daily.
+M3 waits.
 DONE (2026-09-16 17:00/17:06 playtest): tanks ignore the truck except by shooting - the truck ring is gone, tank
 vs tank spacing and clip/ram rules kept; a truck that touches a tank is WRECKED at once; WASTED plays ~5 s, then
 the lobby. Live on 0.0.1403 (signer nodes 023b862): WRECKED on touch at tick 581, WASTED at 1 s and 3 s, lobby
