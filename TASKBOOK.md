@@ -37609,3 +37609,54 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     5,6,3,6 (hot > cold on 8 of 8 seeds at both depths). Vectors: straight 31208590 -> 891e0b3d, slalom c02af2e3 -> 635e7108, handbrake 8d57fc1e -> a90987f1, reverse 1a5ea35c -> aba8b0e9, idle f9c55bda -> 89a6f059, practice 1c57daf5 -> 39e8e4c0, liquidation 30917696 -> 8990a525, fallout 4c5d13f7 -> 7f11ea75. Core 9d6bfdff listed.
                     Not run on this core: protocol, client, node (fixture drives re-picked in the working tree, not in this
                     commit), EditMode, PlayMode.
+
+## THE CHART FIGHTS THE WAR: ASSAULT TAKT, LEAD, TREND, SUPPLY IN THE CORE (WAR_TACTICS.md §4.12 / §4.14 / §3, 2026-09-16)
+
+  WHAT              tactics.js: the ASSAULT CLOCK (§4.12, TAC_ASSAULT 6 words): first assault 20-40 s hashed (seed, side), then
+                    45-90 s after the last ends (30-60 s for the trend's side), target hashed (seed, side, n) among objectives
+                    the side does not hold, 30 s push or until the holder flips, then 15 s consolidation; a side holding all
+                    three re-arms 20 s. While pushing: w 3 (4 for the trend's side), rest +16, ceiling 40 on the lane; w >= 2,
+                    ceiling 32 beside. The LEAD and TREND (§4.14, TAC_MARKET 6 words: open, samples, trend, strength, lead,
+                    momentum): submitSample() shifts the tape one sample (world input) and re-reads them; trend = green minus
+                    red over the last six finished 10 s candles (two samples each; a body under 3 bp of the open is a doji),
+                    |net| < 2 SIDEWAYS, else strength 1/2/3 at 2-3/4-5/6 - it changes only on a candle close. Trend effects:
+                    the trend's side w + 1 and rest + 8 on every lane, ceiling 24 + 8 x strength; the other side rest - 8,
+                    ceiling 24 - 8 x strength; the other side's assault clock paused (an assault already running runs out);
+                    gun hit 550 +- 50 x strength and rifle 45 +- 5 x strength per mil for shots at a unit (a shot the truck
+                    outranks keeps the plain threshold: the truck exception is untouched). SUPPLY (§3): reinforce wait x 4 /
+                    (4 + supply), supply = objectives held - held by the other side + the lead's momentum for the side above
+                    the open - the trend's strength for the side it runs against, -3..+3. Chart -> war only; nothing reads the
+                    truck. The seeded tape reads SIDEWAYS on seeds 1-5 (no samples in a SIM round: both sides on the normal
+                    clock).
+  ASSAULT PROBE     tools/measure-assault.mjs, 3-minute runs (10800 ticks) x seeds 1-5, no samples:
+                      takt alone -> with trend and supply: assaults per side 2.0 -> 1.9; target unheld by the attacker at the
+                      start 20/20 -> 19/19; took the objective 50.0% -> 66.7% (row 30-70%); first starts 22-48 s (a side
+                      holding all three re-arms); no start inside 20 s of the side's last end.
+                      RED: lane push >= +8 m inside 600 ticks on 1 of 20 -> 1 of 19 (row >= 80%); no assault running on
+                      62.1% -> 70.3% of ticks (row 25-60%); a forward hull >= 16 m across on 0 of 5 seeds (row: every seed).
+                      Instrumented (first 600 ticks of 20 assaults): 5 had no team of the attacker on the lane; 20 of 31 due
+                      push re-reads on the lane were skipped because a tank was off post; a new direction needs two confirmed
+                      readings (10 s) - the §0.1 600-tick row cannot be met under the 20:30 hold cadence (Daniel 21:20 kept
+                      it). Needs a ruling: the row or the cadence.
+  TREND PROBES      tools/measure-trend.mjs, seeds 1-5 x 3600 (before: HEAD has no sample input, the probes cannot run):
+                      UP (+0.5% over six candles closing at 600-1200, then held): trend UP 3 at tick 1200 on 5/5 seeds; bear
+                      assaults started from tick 900: 0 (row 0) - PASS; ticks with a bear hull across the seam after 1200: 0
+                      (row 0) - PASS; bulls' mean push - bears' >= 12 m on 53.9% of ticks from 1200 (row >= 70%, mean gap
+                      11.99 m) - RED; bear/bull losses from 900 per 60 s 46.9 / 58.1 = 0.81 (row >= 1.30) - RED; bears fewer
+                      living tanks on 85.9% of ticks (row >= 70%) - PASS.
+                      DOWN (mirror): trend DOWN 3; bull assaults from 900: 0 - PASS; bull hulls across: 0 - PASS; push gap
+                      >= 12 m on 44.3% (mean 10.35 m) - RED; bull/bear losses 57.3 / 49.1 = 1.17 - RED; bulls fewer living
+                      tanks on 80.1% - PASS.
+                      SIDEWAYS (5 bp candles alternating, sample every 300 ticks): assaults bull 5, bear 4 - PASS; a holder
+                      flipped on 5 of 5 seeds - PASS; mean push bull 4.30 m, bear 1.60 m, difference 2.70 m (<= 4) - PASS.
+  WHY THE LOSS ROW  instrumented (UP, from tick 900): tanks die as ruled - bears 62, bulls 36 (1.72); men do not - bulls 182, bears
+                    114. With the air held off (O_AIR clocks set out of reach): bears 74 tanks + 39 men = 113, bulls 20 + 26 =
+                    46 (2.46). The bombs (§12.3) fall on the seam band where the pressing bull line stands; §4.14's "the bomb
+                    goes with the trend" is the air arm, parked. The push-gap row is limited by the hold cadence's push rate.
+  TESTS             core 110/110 (rules 48, tactics 16, bundle/vectors/replay 46). New: "an assault starts only on an objective
+                    the side does not hold ..." (mutation: targeting a held objective fails it), "the trend is the colour of
+                    the last six finished candles ..." (six green UP 3, alternating and dojis SIDEWAYS, four red two doji DOWN
+                    2, no bull assault under a bear trend; mutation: removing the pause fails it). The rest test now pins no
+                    assault running (the assault lane rests at 16 by §4.12). Heat counts 5,6,3,6 -> 5,6,4,6 (seam: 8/8 seeds
+                    hot > cold; behind: 7/8, seed 7 equal). Vectors: straight 891e0b3d -> cd2ac90f, slalom 635e7108 -> a58b76bb, handbrake a90987f1 -> 9b45d25c, reverse aba8b0e9 -> 96dede70, idle 89a6f059 -> 45e86f1d, practice 39e8e4c0 -> 1f3d0aa7, liquidation 8990a525 -> e7269cfc, fallout 7f11ea75 -> 55ac3527. Not run on this core: protocol, client, node,
+                    EditMode, PlayMode.
