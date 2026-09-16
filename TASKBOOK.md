@@ -37716,3 +37716,20 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                       front (seeded tape, live tape)                                                 2 of 28
                     Largest single cause inside armour: the 20:30 hold cadence's push rate binds A11, A13b, assault declared,
                     front moves visibly and the trend push gap - 5 of 28 - and it is ruled (kept 21:20).
+
+## "THE CHART IS THE MARKET'S ALONE" AND "LOSSES BITE" MEASURED (WAR_TACTICS.md §0.1, 2026-09-16 23:00, core 8fb47e2)
+
+  WHY THESE         the two §0.1 armour rows never measured (2 of the 28 missing, 8eae740's count); every other armour leftover
+                    is bound by a ruling (hold cadence, supply, opening drive-in, air, client).
+  MARKET (M1)       tools/measure-war.mjs, seeds 1-5 x 3600, tape driven +0.5% then back over ticks 600-1800: lead, trend and
+                    momentum words differ between the truck parked and driven on 0 of 18000 ticks, and between two players'
+                    runs (seeds s and s+1000) on the same samples on 0 of 18000 ticks - PASS. `front` (the round's verdict,
+                    RoundResult) is not a core word yet: that part of the row is not measurable in the core.
+  LOSSES BITE       S2: a side with 2+ objectives lost below 4 living tanks 0.00% of those ticks (row <= 8%) - PASS.
+                    S1: the side holding more objectives has more living tanks on 46.80% of uneven ticks (row >= 55%) - RED.
+                    tools/measure-losses-bite.mjs: holder mean supply +1.21 / other -1.21; living tanks 10.92 / 10.44; tank
+                    deaths per 60 s 15.4 / 10.9, spawns 11.4 / 10.9. By how long the objectives have been uneven: < 10 s
+                    32.6% of 7129 ticks, 10-30 s 60.7% of 5684, > 30 s 56.2% of 2400. The row fails in the 10 s after a
+                    flip: taking an objective costs tanks, and supply is a rate. Ruled numbers (§3); listed, not retuned.
+  SHARE             missing rows 28 -> 27 (M1 closed; S1 keeps "losses bite" red). Armour leftovers 11 of 27, of which 5 are
+                    the 20:30 hold cadence's push rate - still the largest single armour cause, a ruling.
