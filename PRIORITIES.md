@@ -16,9 +16,8 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-NOW (2026-09-16, after the crater and the tank standoff):
-1. Tank hull seating: no drawn ground inside a hull.
-2. The nuke's stem, skirt and crater as one mesh on the core's ground.
+NOW (2026-09-16, after tank hull seating):
+1. The nuke's stem, skirt and crater as one mesh on the core's ground.
 LISTED: SpawnMark re-seats a parked truck by teleport (not measured); the mouth is open to 40 m,
 delivery counts |z| <= 34 m (ruled, not retuned); another player's ghost of an ended run stays
 at its last picture.
@@ -127,6 +126,10 @@ BUILT UNDER THE RULINGS (2026-09-15, numbers: TASKBOOK):
   off the truck and comes at it from the flank, never inside 12 m, with neighbour spacing left as it
   was. One core change, one coordinated signer-node restart with nothing in flight, and a live run
   on the new core signed 2 of 2 on the Daily (numbers: TASKBOOK).
+- TANK HULL SEATING DONE (2026-09-16): no drawn ground inside a hull. A tank is raised until no track
+  corner sits under the core surface under that corner, measured live on the Daily - 0 of 1612
+  corners under, from 270 of 1596 before (numbers: TASKBOOK). The price is named there too: lifting a
+  hull by its worst corner floats the opposite one, 3 corners of 1612 over a metre up.
 
 DONE: M3 W7 - A PAYING FEDERATION ROUND NAMES ITS FEDERATION, AND THAT IS CHECKED (2026-09-15).
 The codec refuses a paying FEDERATION round with a zero federation_id (encode and decode,
