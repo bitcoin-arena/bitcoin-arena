@@ -37188,3 +37188,19 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
   SUITES            EditMode 215: 211 pass, 3 skipped, 1 red (rifle flash, listed); new
                     RunEndsAtDeliveredTests.ARunTheAddressStartedAlsoComesBackToTheLobby passes. PlayMode 241:
                     216 pass, 13 skipped, 12 red, all listed, none new. Bundle == HEAD, no gateway code.
+
+## EXIT FROM SPECTATE GOES BACK TO THE LOBBY (Daniel 2026-09-16 14:45: "Spectate Exit does not return to the lobby")
+
+  THE FAULT         SplashScreen.Spectate hides the lobby and opens the free camera; SpectatorCamera's EXIT only
+                    closed the camera. Nothing showed the lobby again, and the truck stayed locked: no PLAY, no
+                    drive, nothing but a reload.
+  BEFORE (live)     0.0.1391 at 3fa756a8, GPU headless: lobby -> SPECTATE (free camera, EXIT drawn) -> EXIT: the
+                    camera went back over the field; Unity's lobby showing false at 1, 5 and 15 s.
+  THE FIX           Spectate remembers it hid the lobby; once the camera it opened is no longer active, the lobby
+                    comes back (SplashScreen.BackFromSpectating). PLAY clears it, so a run is never sent back.
+  AFTER (live)      0.0.1393 at f401ae06, same probe: showing true at 1, 5 and 15 s after EXIT, 2 rounds listed,
+                    PLAY enabled.
+  SUITES            EditMode 216: 212 pass, 3 skipped, 1 red (rifle flash, listed); new
+                    RunEndsAtDeliveredTests.ExitFromSpectateComesBackToTheLobby passes. PlayMode 241: 216 pass,
+                    13 skipped, 12 red, all listed, none new (PostOfficeTests' SPECTATE test passes). Bundle ==
+                    HEAD, no gateway code.
