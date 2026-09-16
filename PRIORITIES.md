@@ -21,7 +21,7 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 Top item first. Finish and deploy before starting the next.
 
 NOW (2026-09-16 17:00, Daniel HARD playtest — stop M3):
-1. TANKS must NOT react to the truck except by shooting. They still get out of the way when he drives at them. No dodge, no flee, no being pushed. They are stronger than the truck; that must read on screen. They MUST shoot him, especially with a dangerous load.
+1. TANKS must NOT react to the truck except by shooting. They still get out of the way when he drives at them. No dodge, no flee, no being pushed. They are stronger than the truck; that must read on screen. They MUST shoot him, especially with a dangerous load. Touching a tank (either way) kills the truck immediately — that used to work and is broken (Daniel 17:02).
 2. WASTED screen is missing when he dies; lobby comes too soon. Show WASTED first, then lobby.
 Ping Daniel on Signal when both are live on Daily.
 M3 waits.
