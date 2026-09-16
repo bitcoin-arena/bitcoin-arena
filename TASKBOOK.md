@@ -37681,3 +37681,38 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     20:30 rulings (verdict cleared at respawn, two-reading confirmation, re-read only on post), kept by Daniel
                     at 21:20 - a ruling, not a tuning.
   TESTS             core 110/110 (bundle/vectors/replay 46, tactics 16, rules 48).
+
+## TREND SLICE CLOSE-OUT AND SHARE OF WHAT IS MISSING (WAR_TACTICS.md §4.14, HEAD 8fb47e2, 2026-09-16 22:45)
+
+  CADENCE           tools/measure-trend-closeout.mjs, a sample every 300 ticks, candles green to sample 12 then red:
+                    trend after sample k: 1:0 2:+1 ... 8:+2 10:+3 ... 14:+2 16:+1 18:0 20:-1 22:-2 24:-3. It changes only on a
+                    candle close (0 changes on an odd sample) and never by more than one strength step (0): from UP 3 one red
+                    candle makes UP 2, three make SIDEWAYS (30 s), six make DOWN 3 (60 s) - §4.14 as written. CLOSED (9f65d94:
+                    no trend in the core).
+  RUNDOWN           seeds 1-10, a bull assault pushing, the trend turned to DOWN 3 mid-push: 10 of 10 ran out (30 s or took the
+                    objective), 0 cut short, 0 new bull assaults in the next 60 s. CLOSED.
+  SUPPLY            mean supply from tick 1200: UP bull +2.91 (wait x0.58), bear -2.91 (wait x3.65); DOWN bull -2.57 (x2.79),
+                    bear +2.57 (x0.61). CLOSED (9f65d94: no supply in the core).
+  PUSH / DIE        tools/measure-trend.mjs (8fb47e2): losing side starts no assault from 900 (UP 0, DOWN 0), no losing hull
+                    across the seam (0, 0), losing side fewer living tanks (85.9%, 81.7%) - CLOSED. Push gap >= 12 m on 56.9% /
+                    48.8% (row 70%) - OPEN, bound by the 20:30 hold cadence (respawn clears the verdict 39.9%, confirming
+                    reading 24.0%, next read 12.4% of the stuck ticks). Losses: DOWN bull/bear 1.40 (row 1.30) CLOSED; UP
+                    bear/bull 0.85 OPEN - tanks die as ruled (bears 62, bulls 36), bombs kill the pressing side's men; air off
+                    2.46; depends on the air arm (§12.3, parked).
+  O1 REGRESSION     O1 pushed-on-objective-lane share 70.08% (e0f4ed7) -> 51.58%, lane lead 2.66 -> 0.84 m (8fb47e2). Measured
+                    cause: supply (§3) - with supply off 68.38% / 2.54 m; with the assault clock off 49.81% / 0.91 m. A side
+                    holding objectives reinforces faster and wins local odds off the objective lanes. Ruled numbers; listed.
+  SUITES            core 110/110. EditMode 218: 214 pass, 3 skipped, 1 red (CombatFxTests.RifleFireProducesAFlashAndATracer,
+                    listed). PlayMode 241: 216 pass, 13 skipped, 12 red - the 12 listed (VehicleTests 5, ImportedModelTests 2,
+                    MushroomRestingTests 2, FeatureTests 1, TruckHealthTests 1, VisibilityTests 1). Node: red on this core
+                    (fixture drives), re-pick uncommitted.
+  SHARE OF WHAT IS  §0 + §0.1: 47 rows. Passing on 8fb47e2: 19 (armour 11 of 14, objectives O2/O3/O5, infantry B1/B5/B6,
+  MISSING           tempo "fail and win", trend "sideways"). Missing: 28.
+                      armour part A leftovers (A9, A11, A13b, O1, O4 client, assault declared/front moves/lulls, trend push
+                      gap and UP losses, chart-is-the-market's and losses-bite unmeasured)          12 of 28
+                      infantry part B (B2, B3, B4 red; B7 unmeasured; men hide, cover places, suppression, coax, AT man,
+                      not cannon fodder not built)                                                  10 of 28
+                      air (§12.3, parked)                                                            4 of 28
+                      front (seeded tape, live tape)                                                 2 of 28
+                    Largest single cause inside armour: the 20:30 hold cadence's push rate binds A11, A13b, assault declared,
+                    front moves visibly and the trend push gap - 5 of 28 - and it is ruled (kept 21:20).
