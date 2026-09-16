@@ -20,11 +20,16 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-NOW (2026-09-16 14:24, Daniel HARD prio):
-1. Hang after DELIVERED: RUN STOPPED banner, cannot pick the next round. Live on 0.0.1377; confirm on 0.0.1386 then fix. Lobby must return same frame.
-2. Tanks race on login: very fast (not instant) to another place. Always, just open the game.
-3. Spectate Exit does not return to the lobby (Daniel 14:45). After 1 and 2 only.
-M3 gateways wait until 1-3 are named done on the Daily.
+NOW: M3 - five-of-seven, inbound gateways (the two live testnet4 LND nodes, pick A), lock-settlement.
+Nothing waits on the Daily. Five-of-seven g3 passed 4/4; g4 next, then lock-settlement g1 and g2.
+DONE (2026-09-16, playtest 1): the lobby returns at DELIVERED. A run opened from the round's
+`&play=1` link ended on RUN STOPPED with no lobby (0.0.1386); live on 0.0.1393 the lobby is back
+0 ms after DELIVERED and PLAY starts the next run. Numbers in TASKBOOK.md.
+DONE (2026-09-16, playtest 2): tanks no longer race after slow frames. The page stored up the time
+it could not step and paid it back at up to 8x; now it lets it go. Live 0.0.1393: first 10 s after
+slow frames 115.8 -> 60.1 ticks per wall second, tanks 20 -> 9.7 m/s. Numbers in TASKBOOK.md.
+DONE (2026-09-16, playtest 3): spectate EXIT returns the lobby. Before, still hidden 15 s after EXIT;
+live on 0.0.1393 it shows 1 s after EXIT, PLAY enabled. Numbers in TASKBOOK.md.
 DONE (2026-09-16): SpawnMark re-seating a parked truck. It does not jump: measured on the Daily,
 the re-seat fires on every terrain rebuild while the truck is held and moves it 0.00 m. Two faults
 fixed, neither of them moving a truck: Respawn wrote four PhysX values on a body the core holds
