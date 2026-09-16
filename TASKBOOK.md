@@ -37403,3 +37403,34 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     partner, the 12 m test caught it).
   SUITES            clean worktree at c594d69 + this change: core 105/105, protocol 531/531, client 346/346, node 612/612
                     in 11 chunks; five-of-seven and lock-settlement (the two slow files) not run this time. Unity not run.
+
+## HOLD IS THE DEFAULT - WHERE THE GAP IS (WAR_TACTICS.md §0 H1/H2, re-ruled 2026-09-16 20:30; measured, nothing retuned)
+
+  IN THE CODE?      No. HEAD's core (fa951a5) still has the pair cadence: tactics.js `PERIOD_MIN = 360, PERIOD_SPAN = 240`
+                    (6-10 s legs), `SCOOT_TICKS = 600` (10 s), `pressure()` re-reads on every hashed 300th tick with no
+                    on-post gate and no TAC_VERDICT, `scoot()` checks only its cool-down. The three rulings exist only on
+                    a scratch core. H1/H2 are measure-war.mjs rows (fa951a5). 19.13% / 35.57% (1.5 m radius, the spec's
+                    ruler) and the earlier 27.4% / 56.2% (1.5 m in z, 2.5 m in x) are the same core on two rulers.
+  PROBE             tools/measure-hold.mjs, seeds 1-5 x 3600, HEAD core. A tank carries the cause of its last post change
+                    (leg swap, push step, scoot, spawn) until it stands within 1.5 m of its hold; army.js branches hooked on
+                    a copy for what holds it.
+  OFF POST          360028 living-pair tank-ticks, on post 19.1%, off 80.9%. Share of off-post | of all:
+                      unfinished bound (leg swap)   44.9% | 36.3%   moving 18.2, half-line budget wait 14.5, 2 m lateral
+                                                                    deadband 1.7, standing on other holds 1.9
+                      unfinished push step          35.2% | 28.4%   moving 18.1, budget wait 7.7, deadband 1.3, other 1.3
+                      spawn walk-in                 13.7% | 11.0%   moving 9.0, budget wait 1.2, standing 0.8
+                      unfinished scoot               6.1% |  4.9%   moving 3.0, budget wait 0.9, crossing standing 0.8
+                      left post after arriving       0.2% |  0.2%   crowded, gave ground, budget
+                    Across causes: moving 48.3% of all living-pair ticks, half-line budget wait 24.3%, 2 m deadband 3.1%.
+                    Post changes stacked on an unfinished one: 1190 (bound over push 301, push over bound 270, ...).
+  LEGS              H2 basis (both alive through the leg): 253 legs, bounding tank arrived 90 (35.57%), failed 163:
+                      not on the line at the leg start (> 40 m out: walking in)   69   42.3% of failed | 27.3% of legs
+                      post moved mid-leg by a push step                           54   33.1%           | 21.3%
+                      post moved mid-leg by a scoot                               14    8.6%           |  5.5%
+                      short when the leg ended: budget wait 15, travelling 5,
+                      standing on the hold line 5, deadband 1                     26   16.0%           | 10.3%
+                    Plus 60 legs in which a tank of the pair died (not in H2).
+  GAP SHARES        On post needs +30.9 points. The ticks off post split: unfinished bounds 36.3 points, unfinished push
+                    steps 28.4, walk-ins 11.0, scoots 4.9 - by what holds them: travel 48.3, budget queue 24.3, deadband 3.1.
+                    Arrivals need +44.4 points: walking in at the leg start 27.3 points, post moved mid-leg 26.9 (push 21.3,
+                    scoot 5.5), short at the leg end 10.3 (of it the budget 5.9).
