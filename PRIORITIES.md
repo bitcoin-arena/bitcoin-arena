@@ -16,8 +16,15 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-NOW (2026-09-16, after the nuke mesh):
-1. SpawnMark re-seats a parked truck by teleport (not measured).
+NOW (2026-09-16, after SpawnMark):
+1. M3: inbound and at least two independent gateways - a round for testnet sats needs these first.
+DONE (2026-09-16): SpawnMark re-seating a parked truck. It does not jump: measured on the Daily,
+the re-seat fires on every terrain rebuild while the truck is held and moves it 0.00 m. Two faults
+fixed, neither of them moving a truck: Respawn wrote four PhysX values on a body the core holds
+kinematic, and "in its bay" was a 3-D question while the core's rule is 2-D. A height-only lift of
+17.59 m would have failed the old 3-D 12 m guard and now stays in the bay at 2-D 0.00 m with
+commanded x/z 0.00 m; a truck 80 m out is still not dragged back; parkedWithin stays 12 m and the
+3-D figure is recorded, not accommodated. Deployed and live. Numbers in TASKBOOK.md.
 DONE (2026-09-16): the nuke's stem, skirt and crater are one mesh on the core's ground. Photographed
 on the Daily - the dust disc lies on the grass, base inside the frame by the page's own rect. Skirt
 underside against SurfaceAt: 0.01 m. Stem 0.69 m proud at t=0.3s, 1.05 m after, because the authored
