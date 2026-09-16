@@ -37553,3 +37553,24 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     Kill zone (A9): 15.48% of seam-metre samples uncovered (bar 5%), 10.48 points missing. First 10 s (the
                     opening drive from 76-79 m back) 9.12 points = 87% of the missing; after it, tanks in transit 4.96 and
                     post geometry 1.41 (by 10 s bucket 54.7 / 1.9 / 10.8 / 11.6 / 6.3 / 7.7%).
+
+## HULL-DOWN AND KILL ZONE, MEASURED ON 2050c19 (WAR_TACTICS.md §4.1, §4.15, vocabulary)
+
+  PROBE             tools/measure-hulldown-killzone.mjs, seeds 1-5 x 3600, living-pair tank-ticks on post (1.5 m of the hold).
+                    Hull-down in the spec's units (§4.15 "two metres hides a hull (3 m) to the turret"): the highest ground in
+                    the 6 m in front toward the enemy (§4.1's look) minus the ground under the hull; hull hidden >= 2 m,
+                    turret over < 3 m. Kill zone: each hull covers the seam x inside its 46 m gun; a pair covers the same
+                    stretch when those overlap >= 27 m (a slot pitch), from different angles when the bearings to the middle
+                    of the overlap differ >= 10 degrees (neither threshold is in the spec; distributions printed).
+  HULL-DOWN         185704 on-post tank-ticks: hull hidden with the turret over the crest 0.0% (overwatch 0.0%, bounding
+                    0.0%). Crest in front of an on-post hull: median 0.1 m, p90 0.7, p99 1.4. Overwatch with a >= 2 m crest
+                    among its five candidates: 0.0%. Upper bound, every metre of the seam band (x -87..87, z -60..60, both
+                    facings), the seed's relief: highest 6 m crest 1.66 / 1.95 / 1.70 / 1.32 / 1.67 m on seeds 1-5, spots
+                    >= 2 m 0 of 42350 on every seed. The doctrine takes the best crest there is (96.7% of ticks a >= 0.3 m
+                    one exists, 2050c19); the ground holds none that hides a hull. Depends on §4.15 (candle plateaus 2 m,
+                    ramps 5 m) - front geometry, parked.
+  KILL ZONE         61735 pair-ticks with both on post: same stretch from different angles 83.5%; bearings under 10 degrees
+                    8.1%, a hull reaching no seam 4.4%, overlap under 27 m 4.0%. Overlap median 48 m (p10 28); bearing
+                    difference median 32.6 degrees (p10 12.8).
+  SHARES            missing versus the armour doctrine on on-post ticks: hull-down 100% of 100% (all of it terrain), kill zone
+                    16.5% of pair-ticks. The larger gap is hull-down and no armour rule can close it on this ground.
