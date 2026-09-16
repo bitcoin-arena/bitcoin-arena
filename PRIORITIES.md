@@ -20,8 +20,8 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-NOW (2026-09-16 17:59, Daniel HARD playtest — stop M3):
-1. TANKS wiggle in a clump because they almost touch, until one dies. They travel in groups and camp the front line. Looks dumb. Keep tank-tank 12 m / no clip-ram, and truck exception (shoot, ignore, touch=death). Make behaviour more tactical: research how simple games do armour AI (spread, hull-down, overwatch, not a parking lot on the seam). Do not wait.
+NOW (2026-09-16 18:06, Daniel HARD):
+1. TANKS need a REAL MOVEMENT STRATEGY, not a clump that wiggles. Research simple-game armour AI, then implement in the CORE (deterministic). How they move: spread on a frontage, bounding overwatch, hull-down, not camping one metre of the seam, not wiggle-to-death. Keep tank-tank 12 m / no clip-ram. Truck exception: shoot, ignore, touch=death. Do not wait.
 Ping Daniel when live on Daily.
 M3 waits.
 DONE (2026-09-16 17:00/17:06 playtest): tanks ignore the truck except by shooting - the truck ring is gone, tank
