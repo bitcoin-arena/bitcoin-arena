@@ -37280,3 +37280,37 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     restart listed until their entry closed at 14:44 UTC. 4ca0b04e read "joined 3, playing 3" for
                     three probe browsers (three player keys) after nine runs had entered it.
   SPECTATE          re-checked on 0.0.1397: lobby showing 1, 5 and 15 s after EXIT, PLAY enabled.
+
+## TANKS IGNORE THE TRUCK EXCEPT BY SHOOTING, A TOUCH WRITES THE TRUCK OFF, WASTED BEFORE THE LOBBY (Daniel 2026-09-16 17:00 / 17:06)
+
+  REPORTED          17:00 "they still get out of the way when the truck comes. Tanks must NOT react to the truck except
+                    by shooting. No dodge. No being pushed ... They MUST shoot him, especially with a dangerous load.
+                    WASTED: when he dies the WASTED screen is missing and the lobby comes first." 17:06 "the 12 m
+                    keep-away is tank vs tank only ... Tanks ignore the truck except shooting. Touch truck-tank = truck
+                    dies."
+  RING GONE         rules/army.js: the TRUCK_RING push (3c4f849, capped 11ea754) was the only line in stepUnit reading
+                    the truck. tank-truck-measure.mjs, truck held at (0,-15), (0,15), (-30,-25), 5 seeds, 3600 ticks:
+                      ring (HEAD)  tank-ticks inside 12 m 0 everywhere; empty bed wrecked 9/15, full 12/15
+                      no ring      tank-ticks inside 12 m 2906-11756; empty wrecked 14/15, full 15/15, full sooner at
+                                   every place (601-1200 against 989-3003 ticks)
+                    drive-by at 12 m/s: tanks within 34 m max 17.8 m/s with the ring, 11.8 m/s without (their own pace).
+                    Tank-tank separation (separatePair) untouched.
+  TOUCH             sim.js: a crash was priced by speed (write-off from 4 m/s, nothing under 0.5). touch-measure.mjs,
+                    truck put 7 m short of the nearest tank and rolled in, 6 seeds x 4 throttles:
+                      ring (HEAD)        touched 0/24 (the ring moved the tank), wrecked 0/24
+                      no ring, old price touched 17/24, wrecked 2/24
+                      touch rule         wrecked 18/24 (the 6 left never reached the tank in 240 ticks)
+                    Practice still withholds it, as it withholds fire.
+  TESTS             rules.test.js: new - a truck standing against a tank is written off and the tank not moved; practice
+                    spares it; nothing in stepUnit reads the truck after its parameters (fails on HEAD's core: 2 of 3).
+                    Fire, heat and practice-flag tests park the truck in the battle; tanks now roll onto it (first touch
+                    95-1932 ticks wherever it stood), so they pin armour out of contact (keepArmourOff, 6.5 m) as they
+                    already pin the air - their assertions unchanged. Heat counts 7,10,7,9 -> 6,10,3,7: a full bed has
+                    more tanks on the truck on all 8 seeds at both depths (seam hot 8-11 / cold 6-9, behind 4-8 / 1-3).
+  WASTED            SplashScreen: a run the core ended WRECKED returns to the lobby only after the truck's burn
+                    (TruckHealth.respawnSeconds, 5 s unscaled); before, the lobby came up in the frame the run ended
+                    (lobby 0 ms after the core's end word, measured at DELIVERED) over the whole death sequence.
+  SUITES            clean worktree at 337bf36 + this change: core 99/99, protocol 534/534, client 346/346, node 646/646
+                    (612 in 11 chunks, five-of-seven 21, lock-settlement 15). EditMode 218: 214 pass, 3 skipped, 1 red
+                    (rifle flash, listed). PlayMode 241: 216 pass, 13 skipped, 12 red, all listed, none new. Core
+                    bb520121 listed; page 0.0.1403 with this client and core byte-equal.
