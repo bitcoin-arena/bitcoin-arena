@@ -37574,3 +37574,38 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     difference median 32.6 degrees (p10 12.8).
   SHARES            missing versus the armour doctrine on on-post ticks: hull-down 100% of 100% (all of it terrain), kill zone
                     16.5% of pair-ticks. The larger gap is hull-down and no armour rule can close it on this ground.
+
+## HULL-DOWN EMPLACEMENTS: OVERWATCH ON POST IS HULL-DOWN 54% OF THE TIME (WAR_TACTICS.md §4.1 / §4.15, 2026-09-16)
+
+  WHAT              rules/emplacements.js, a height layer in surfaceAt (relief + emplacements - craters; the relief and the
+                    objectives read from it are untouched): in each side's seven slot lanes a berm whose foot is 0.5 m in
+                    front of the resting overwatch line (30 m behind the seam), 5 m ramp up to 2.4 m above the higher of the
+                    ground at its foot and at its top, 4 m flat, 5 m down; full across 8 m of the slot centre, eased out by
+                    11 m (5 m flat between lanes); full height to 83 m from the centre, gone by 86 m (the levelled aprons).
+                    army.js: a tank driving in depth toward its hold goes on to 0.25 m (a standing one corrects past 1 m).
+                    Unity draws the terrain through BlwpCore.SurfaceAt = the core's surfaceAt, so the berm on screen is the
+                    berm in the core.
+  WHY THESE NUMBERS measured on the way (tools/measure-hulldown-killzone.mjs, overwatch hull-down share of on-post ticks):
+                    2 m berm at 30 m, eased with the relief from 66 m: 18.6%; with a 22 m berm on objective lanes, full to
+                    83 m, height over the foot ground and depth arrival: 20.1%; height over the higher of foot and top: 22.0%
+                    (37.9% of served ticks stood a few cm up the ramp seeing 1.96 m); 2.4 m: 43.8%; every lane at 30 m (an
+                    objective lane's overwatch stood at 30 m on most ticks - 22.1% of all overwatch ticks had its berm at
+                    22 m): 54.1%.
+  HULL-DOWN         seeds 1-5 x 3600, bc2cc0b -> this commit, on-post tank-ticks of living pairs:
+                      overwatch hull hidden (>= 2 m crest within 6 m) with the turret over it (< 3 m)   0.0% -> 54.1%
+                      all tanks on post (bounding holds the forward line, no crest search, §4.1)          0.0% -> 34.9%
+                      crest in front of an on-post hull: median 0.1 -> 0.6 m, p90 0.7 -> 2.6, p99 1.4 -> 3.4
+                    Not hull-down (share of overwatch on-post ticks, bc2cc0b-style classification before the last step):
+                    outer hulls at +-87 m on the apron 16.5%, lines 22/14/6/38 m under a push 16.3% (7.0+4.9+1.9+2.5),
+                    crest over the turret where the relief climbs 3.6%. Test: at every inner post (both sides, both hulls,
+                    seeds 1-5) the crest is >= 2 m; 9 posts have > 3 m from the relief (printed by the test).
+  NO REGRESSION     kill zone (same stretch, different angles) 83.5% -> 84.3%; on post 51.7% -> 53.2%; bounding tank reaches
+                    its post 92.2% -> 98.2% (54 of 55); stop distance median 1.12 -> 0.69 m (p90 0.98, max 1.48).
+                    §0 seeds 1-5: 25 of 35 - A2 fidgets 0.40%, A4b 0.09%, A7 97.43%, A10 0 of 197376, H1 53.17%, H2 98.18%;
+                    red as before: A9 15.05% (was 15.48), A11a 4/10, A11b 9/10, A11c 23.88%, A13b 25.77%, O1 lead 2.66 m,
+                    O4 client.
+  TESTS             core 108/108 (rules 48, tactics 14, bundle/vectors/replay 46). New: "an overwatch post on the 30 m line
+                    stands behind a crest that hides the hull" (fails with a 2 m berm: 1.99 m). Heat counts 4,6,4,6 ->
+                    5,6,3,6 (hot > cold on 8 of 8 seeds at both depths). Vectors: straight 31208590 -> 891e0b3d, slalom c02af2e3 -> 635e7108, handbrake 8d57fc1e -> a90987f1, reverse 1a5ea35c -> aba8b0e9, idle f9c55bda -> 89a6f059, practice 1c57daf5 -> 39e8e4c0, liquidation 30917696 -> 8990a525, fallout 4c5d13f7 -> 7f11ea75. Core 9d6bfdff listed.
+                    Not run on this core: protocol, client, node (fixture drives re-picked in the working tree, not in this
+                    commit), EditMode, PlayMode.
