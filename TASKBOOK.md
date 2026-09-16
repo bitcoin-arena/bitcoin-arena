@@ -37660,3 +37660,24 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     assault running (the assault lane rests at 16 by §4.12). Heat counts 5,6,3,6 -> 5,6,4,6 (seam: 8/8 seeds
                     hot > cold; behind: 7/8, seed 7 equal). Vectors: straight 891e0b3d -> cd2ac90f, slalom 635e7108 -> a58b76bb, handbrake a90987f1 -> 9b45d25c, reverse aba8b0e9 -> 96dede70, idle 89a6f059 -> 45e86f1d, practice 39e8e4c0 -> 1f3d0aa7, liquidation 8990a525 -> e7269cfc, fallout 7f11ea75 -> 55ac3527. Not run on this core: protocol, client, node,
                     EditMode, PlayMode.
+
+## A WIDOW ON THE PUSHED-BACK SIDE GIVES GROUND (WAR_TACTICS.md §4.10 widow + §4.14 rest -8; 2026-09-16)
+
+  WHAT              tactics.js pressure(): a widow's rest is 0, or the trend's -8 when the trend runs against its side (§4.10
+                    "a widow never pushes" - giving ground is not a push; §4.14 "the bears are pushed back": rest -8 on every
+                    lane). No effect without a trend: vectors unchanged.
+  INSTRUMENTED      up-trend probe, seeds 1-5, from tick 1200 (push re-reads on the pushed-back side): 49 of its re-reads were
+                    a widow drifting to 0; bear push held 0 on 71.0% of team-ticks, -8 on 29.0%.
+  TREND PROBES      tools/measure-trend.mjs, 1ac947f -> this commit:
+                      UP   push gap >= 12 m 53.9% -> 56.9% (mean 11.99 -> 12.52 m; row 70%, RED); losses bear/bull 0.81 -> 0.85
+                           (row 1.30, RED - the air, above); bear assaults from 900 0, bear hulls across 0, bears fewer tanks 85.9%
+                      DOWN push gap 44.3% -> 48.8% (mean 10.35 -> 11.45 m; RED); losses bull/bear 1.17 -> 1.40 (row 1.30, PASS);
+                           bull assaults 0, bull hulls across 0, bulls fewer tanks 80.1% -> 81.7%
+                      SIDEWAYS unchanged: assaults 5 / 4, holder flips 5 of 5, push difference 2.73 m (PASS)
+  WHAT HOLDS THE    bull team-ticks at push 0 under UP 3 from tick 1200 (27323): a full pair with a tank off post and the verdict
+  PUSH GAP          cleared 39.9% (a respawn walking in: §4.10 clears the verdict at respawn and no read happens off post); on
+                    post with a first TAKE awaiting its confirming reading 24.0%; on post waiting for the next 5 s read 12.4%;
+                    widow 10.0% (never pushes); last reading drift 8.0%; off post after a TAKE 5.7%. All three binds are the
+                    20:30 rulings (verdict cleared at respawn, two-reading confirmation, re-read only on post), kept by Daniel
+                    at 21:20 - a ruling, not a tuning.
+  TESTS             core 110/110 (bundle/vectors/replay 46, tactics 16, rules 48).
