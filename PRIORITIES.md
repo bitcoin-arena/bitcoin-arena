@@ -50,6 +50,7 @@ RULED (Daniel 07:42): 22A node fee goes to the sitting seats of this round, even
 RULED (Daniel 07:44): Fedimint base fee is 0 (`disable_base_fees`). 22A stays 2% to those sitting seats.
 RULED (Daniel 07:49): result window equals the objection window (same contract field duration).
 RULED (Daniel 07:51): inbound / >=2 independent gateways PARKED. Continue M3 as far as it goes.
+  SUPERSEDED (Daniel 2026-09-16): NOW item 1 unparks inbound and >=2 independent gateways. Guardians and federationIsBonded stay parked.
 No blocker that waits on Daniel. A paying testnet round still needs those gateways later.
 RULED (Daniel 08:03): the truck game is one use of the federated consensus network, not the
 network. M3 keeps game logic out of the seats as far as it will go: seats replay a named core
