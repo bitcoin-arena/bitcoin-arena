@@ -20,8 +20,11 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-NOW: M3 - five-of-seven, inbound gateways (the two live testnet4 LND nodes, pick A), lock-settlement.
-Nothing waits on the Daily. Five-of-seven g3 passed 4/4; g4 next, then lock-settlement g1 and g2.
+NOW (2026-09-16 15:36, Daniel HARD playtest — stop M3):
+1. TANKS: driving toward a tank makes it race very fast off the field. The player drives it away. Not the old slow-frame catch-up. Logic broken.
+2. ROUND CLOCK: when time hits zero the round does not end. Expect round over, maybe lose stake, lobby. Lobby shows closes XX:XX then the SAME round restarts. FREE closes 30:03 but a play is ~2 min. Same round id every join. After each successful run lobby says 1 joined, then 2, then 3. List should refresh every 1s, not 20-30s.
+3. Spectate Exit already marked done on 0.0.1393 — re-check if still wrong.
+M3 five-of-seven waits.
 DONE (2026-09-16, playtest 1): the lobby returns at DELIVERED. A run opened from the round's
 `&play=1` link ended on RUN STOPPED with no lobby (0.0.1386); live on 0.0.1393 the lobby is back
 0 ms after DELIVERED and PLAY starts the next run. Numbers in TASKBOOK.md.
