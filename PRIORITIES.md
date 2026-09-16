@@ -20,12 +20,11 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-NOW (2026-09-16 17:00, Daniel HARD playtest — stop M3):
-1. TANKS must NOT react to the truck except by shooting. They still get out of the way when he drives at them. No dodge, no flee, no being pushed. They are stronger than the truck; that must read on screen. They MUST shoot him, especially with a dangerous load. Touching a tank (either way) kills the truck immediately — that used to work and is broken (Daniel 17:02). RULED (Daniel 17:06): never-inside-12 m is TANK vs TANK only (no clip/ram each other). It does not apply to the truck.
-RULED (Daniel 17:08): keep ALL the new spacing/flank/clip-ram rules between tanks. Build exceptions for the truck: those rules do not apply to tank-vs-truck. Truck: shoot, ignore, touch = death.
-2. WASTED screen is missing when he dies; lobby comes too soon. Show WASTED first, then lobby.
-Ping Daniel on Signal when both are live on Daily.
-M3 waits.
+NOW: M3 - five-of-seven, inbound gateways (the two live testnet4 LND nodes, pick A), lock-settlement.
+DONE (2026-09-16 17:00/17:06 playtest): tanks ignore the truck except by shooting - the truck ring is gone, tank
+vs tank spacing and clip/ram rules kept; a truck that touches a tank is WRECKED at once; WASTED plays ~5 s, then
+the lobby. Live on 0.0.1403 (signer nodes 023b862): WRECKED on touch at tick 581, WASTED at 1 s and 3 s, lobby
+at 5.07 s. Numbers in TASKBOOK.md.
 DONE (2026-09-16 15:36 playtest 1): a truck no longer pushes a tank off the field. Live on the Daily
 (signer nodes ee3a635, page 0.0.1397), tanks near the truck max 13.8 m/s, was 89.8; carried 13 m, was 656.
 DONE (2026-09-16 15:36 playtest 2): the HUD's run clock is the core's own count (0:00 is the MISSED tick,
@@ -3579,9 +3578,6 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      Collection clause, which nets the fee out of the stake, contradicts 18 and
      22A's own worked example and is treated as the error. AND THE DONATION IS
      ARITHMETIC NOW: a recipient set whose shares do not sum to exactly 10000
-DONE (2026-09-16 17:00/17:06 playtest): tanks ignore the truck except by shooting (ring gone, tank-tank
-spacing kept); a truck that touches a tank is WRECKED; WASTED plays ~5 s, then the lobby. Live on 0.0.1403,
-signer nodes 023b862. Numbers in TASKBOOK.md.
      basis points does not stand, the split is exact with the remainder to the
      first recipient as published - not the fee's hash order - and a payment
      that fails is NOT redirected to the others, because one unreachable
