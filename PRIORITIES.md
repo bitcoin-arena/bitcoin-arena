@@ -36,6 +36,9 @@ gateways; the federation's fees; the fee locks' claim hash and 22A node slots; t
 (a contract field). A round for testnet sats needs the first two.
 RULED (Daniel 07:33): every guardian / node must have its own bond or it may not take part.
 federationIsBonded stays on: threshold of distinct bonded census nodes advertising guardian_of[].
+RULED (Daniel 08:23): which guardians = census nodes that posted a bond. If more bonded
+nodes exist than the round needs (2 for 2-of-2, 5 for 5-of-7), pick that many
+deterministically each round from the bonded set. No hand-pick.
 RULED (Daniel 07:42): 22A node fee goes to the sitting seats of this round, even if there are only two.
 RULED (Daniel 07:44): Fedimint base fee is 0 (`disable_base_fees`). 22A stays 2% to those sitting seats.
 RULED (Daniel 07:49): result window equals the objection window (same contract field duration).
