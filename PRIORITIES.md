@@ -3579,6 +3579,9 @@ Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
      Collection clause, which nets the fee out of the stake, contradicts 18 and
      22A's own worked example and is treated as the error. AND THE DONATION IS
      ARITHMETIC NOW: a recipient set whose shares do not sum to exactly 10000
+DONE (2026-09-16 17:00/17:06 playtest): tanks ignore the truck except by shooting (ring gone, tank-tank
+spacing kept); a truck that touches a tank is WRECKED; WASTED plays ~5 s, then the lobby. Live on 0.0.1403,
+signer nodes 023b862. Numbers in TASKBOOK.md.
      basis points does not stand, the split is exact with the remainder to the
      first recipient as published - not the fee's hash order - and a payment
      that fails is NOT redirected to the others, because one unreachable

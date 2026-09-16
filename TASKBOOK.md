@@ -37314,3 +37314,11 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     (612 in 11 chunks, five-of-seven 21, lock-settlement 15). EditMode 218: 214 pass, 3 skipped, 1 red
                     (rifle flash, listed). PlayMode 241: 216 pass, 13 skipped, 12 red, all listed, none new. Core
                     bb520121 listed; page 0.0.1403 with this client and core byte-equal.
+
+## LIVE: TANKS IGNORE THE TRUCK, TOUCH = WRECKED, WASTED THEN LOBBY (2026-09-16, signer nodes 023b862, core bb520121, page 0.0.1403)
+
+  LIVE              wasted-live-probe.mjs on fbee3f64, GPU headless: PLAY a free round, AUTO + depart, PRACTICE OFF on the
+                    HUD ("live fire"), drive at the nearest tank (17 m): "the core said WRECKED at tick 581", the truck
+                    against the tank. WASTED on screen at 1 s and 3 s; lobby showing 5.07 s after the wreck (7 s frame:
+                    lobby, 2 rounds, PLAY enabled). Tanks near the truck: no move over 11.2 m/s apart from one respawn
+                    jump 95 m away. Before (0.0.1397 and earlier): the lobby returned 0 ms after the run's end word.
