@@ -37121,3 +37121,23 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     StandInsWhileNothingIsLoaded, the recorded flake: 3/3 RampReadyTests pass run alone on this
                     code. The deployed bundle is the committed one - the uncommitted M3 contracts.js was set
                     to HEAD for the build and restored byte for byte after.
+
+## BLAST DEBRIS STAYS WHERE IT LANDS, ON TOP OF THE ROAD (Daniel 2026-09-16 12:38: "Nuke blast: black cube through the road")
+
+  THE FAULT         CombatFx.Debris: dark cubes 0.15-0.35 m, spawned CENTRED on the blast point, which is on the
+                    road. Landing clamped the centre to ground + half the edge and zeroed the velocity, but the
+                    next frame recomputed the position from the blast point with that zero velocity: a chunk that
+                    had flown was pulled back to the centre, went on spinning there, and a tilted cube (rested on
+                    half its edge, not its rotated extent) stood through the asphalt.
+  BEFORE (EditMode) CombatFxTests.BlastDebrisStaysWhereItLandsAndOnTopOfTheRoad on the committed CombatFx, 40 blasts,
+                    120 chunks: 116 on the road after the first frame; a chunk jumped 10.76 m across the ground in
+                    one frame; deepest corner 12.60 cm below the road. Offline replay of the old rule, 2000
+                    chunks: snap back p90 7.41 m, max 11.05 m; corners 6.2-12.6 cm under.
+  THE FIX           Spawn one size above the blast point; on landing keep the landed x/z, stop the velocity and
+                    the spin; rest on the rotated cube's lowest corner (HalfHeight from the rotation).
+  AFTER (EditMode)  Same test, same 120 chunks: 0 on the road after the first frame; biggest step 0.116 m (a
+                    7 m/s throw at 60 fps); 0.000 m moved after rest; deepest corner 0.00 cm.
+  SUITES            EditMode 212: 207 pass, 3 skipped, 2 red - the listed rifle flash and the new test's first
+                    version (a null mesh in EditMode, fixed; the fixed test passes alone). PlayMode 241: 216
+                    pass, 13 skipped, 12 red - the 12 listed, none new; the RampReady flake passed.
+  DEPLOYED          0.0.1386 at 4bd615ee, bundle == HEAD, no gateway code. Not yet seen in a live strike picture.
