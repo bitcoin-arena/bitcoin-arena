@@ -16,8 +16,9 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-NOW (2026-09-16, after SpawnMark):
-1. M3: inbound and at least two independent gateways - a round for testnet sats needs these first.
+NOW (2026-09-16, Daniel playtest):
+1. Tanks race/teleport: in some state they suddenly go very fast (not instant) to another place. Measure then fix. Not M3 until this is named.
+2. M3: inbound and at least two independent gateways - a round for testnet sats needs these first.
 DONE (2026-09-16): SpawnMark re-seating a parked truck. It does not jump: measured on the Daily,
 the re-seat fires on every terrain rebuild while the truck is held and moves it 0.00 m. Two faults
 fixed, neither of them moving a truck: Respawn wrote four PhysX values on a body the core holds
