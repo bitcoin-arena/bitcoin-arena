@@ -37261,3 +37261,22 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     (the one group naming /rounds); client 346/346 (ten suites read index.html). EditMode 217: 213
                     pass, 3 skipped, 1 red (rifle flash, listed). PlayMode 241: 216 pass, 13 skipped, 12 red, all
                     listed, none new. Page 0.0.1397, bundle == HEAD, no gateway code.
+
+## LIVE ON THE DAILY: TANKS, ROUND CLOCK, LOBBY (2026-09-16, signer nodes 11ea754 -> ee3a635, page 0.0.1396 -> 0.0.1397)
+
+  TANKS (live)      tank-live-probe.mjs, headless Chrome on the GPU, PLAY a free round, AUTO + depart, drive at the
+                    nearest live tank for 60 s steering off the page's core; every animation frame recorded; tanks
+                    within 40 m of the truck, respawn jumps (> 5 m in one frame) left out:
+                      0.0.1386 (old core, 4bd615ee)  15892 samples: p50 9.6, p90 30.1, p99 38.9, max 89.8 m/s;
+                                                     most carried above 9.7 m/s: 656 m (unit 60)
+                      0.0.1397 (live)                16390 samples: p50 6.8, p90 9.5, p99 9.8, max 13.8 m/s;
+                                                     most carried above 9.7 m/s: 13 m (unit 16)
+                    A run on the new core settled at both signer nodes: DELIVERED, score 176, simCoreHash 058556d5.
+  CLOCK (live)      missed-probe.mjs on 0.0.1397: at core tick 8865 the HUD read "0:03 left"; MISSED at tick 9000
+                    three seconds later, lobby showing. (0.0.1396: the core ended the run the same way; the HUD
+                    was a stopwatch from page load.)
+  ROUNDS (live)     /rounds every 30 s after the restart: FREE 0e98a7d2 -> 2b526a85 -> f0a08410 -> 0245238a, a new
+                    id every ~150 s, window 150 s, "closes in" at most 3:30; the two 30-min rounds opened before the
+                    restart listed until their entry closed at 14:44 UTC. 4ca0b04e read "joined 3, playing 3" for
+                    three probe browsers (three player keys) after nine runs had entered it.
+  SPECTATE          re-checked on 0.0.1397: lobby showing 1, 5 and 15 s after EXIT, PLAY enabled.
