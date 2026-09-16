@@ -20,7 +20,11 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-NOW: M3 - five-of-seven, inbound gateways (the two live testnet4 LND nodes, pick A), lock-settlement.
+NOW (2026-09-16 17:00, Daniel HARD playtest — stop M3):
+1. TANKS must NOT react to the truck except by shooting. They still get out of the way when he drives at them. No dodge, no flee, no being pushed. They are stronger than the truck; that must read on screen. They MUST shoot him, especially with a dangerous load.
+2. WASTED screen is missing when he dies; lobby comes too soon. Show WASTED first, then lobby.
+Ping Daniel on Signal when both are live on Daily.
+M3 waits.
 DONE (2026-09-16 15:36 playtest 1): a truck no longer pushes a tank off the field. Live on the Daily
 (signer nodes ee3a635, page 0.0.1397), tanks near the truck max 13.8 m/s, was 89.8; carried 13 m, was 656.
 DONE (2026-09-16 15:36 playtest 2): the HUD's run clock is the core's own count (0:00 is the MISSED tick,
