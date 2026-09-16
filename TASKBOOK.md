@@ -37322,3 +37322,16 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     against the tank. WASTED on screen at 1 s and 3 s; lobby showing 5.07 s after the wreck (7 s frame:
                     lobby, 2 rounds, PLAY enabled). Tanks near the truck: no move over 11.2 m/s apart from one respawn
                     jump 95 m away. Before (0.0.1397 and earlier): the lobby returned 0 ms after the run's end word.
+
+## M3 GATEWAYS PARKED AS A PATCH (Daniel 2026-09-16 17:59 / 18:10: stop M3 for the tank playtest; no stash)
+
+  PATCH             /home/daniel/.claude/projects/-tmp-btc-phase0/m3-park/m3-gateways-2026-09-16.patch (sha256 2f3c4ac1...)
+                    23 files, 347+ / 39-: blwp-client (dist, known-good list, 3 tests), blwp-node (10 tests + lock-fixture),
+                    protocol (contracts.js gateway rule, 3 tests, make-vectors), test-vectors/protocol/contracts.json,
+                    WebGL template blwp-client.js. `git apply --check` clean against 9a4eef7.
+  UNTRACKED         /home/daniel/.claude/projects/-tmp-btc-phase0/m3-park/testnet4-gateways.js (sha256 6032aa91...), goes to
+                    packages/protocol/src/. A scratchpad copy of both sits beside it under /tmp (emptied at boot).
+  RESTORE           from that patch file only: `git apply <patch>` and copy the untracked file back.
+  RESUME PLAN       (Daniel 17:59) one commit for the whole gateway change incl. round-2of2.mjs passing TESTNET4_GATEWAYS on
+                    paying rounds; full protocol/client/node suites green in a clean worktree incl. five-of-seven g2-g4;
+                    known-good list = HEAD's + the measured digest of the rebuilt bundle; signer nodes and page roll together.
