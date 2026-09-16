@@ -37434,3 +37434,35 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     steps 28.4, walk-ins 11.0, scoots 4.9 - by what holds them: travel 48.3, budget queue 24.3, deadband 3.1.
                     Arrivals need +44.4 points: walking in at the leg start 27.3 points, post moved mid-leg 26.9 (push 21.3,
                     scoot 5.5), short at the leg end 10.3 (of it the budget 5.9).
+
+## HOLD CADENCE IN THE CORE (WAR_TACTICS.md §2.6 / §4.3 / §4.10 re-ruled 2026-09-16 20:30)
+
+  IN THE CODE       tactics.js: legs `720 + h % 480` (12-20 s, was 6-10); SCOOT_TICKS 1200 (20 s, was 10) and scoot() returns
+                    before spending the cool-down unless both living tanks of the team are on post; pressure() skips a
+                    team's 5 s re-read while a living tank of it is off post, and steps only when the verdict (take / give
+                    / drift) equals the last re-read's (TAC_VERDICT, 12 words, cleared at init and respawn); drift-to-rest
+                    kept. onPost(): within 1.5 m of the hold (slot x, line, hull-down pick). O_TACTICS 64 -> 76 words.
+  HOLD PROBE        tools/measure-hold.mjs, seeds 1-5 x 3600, before (19d3375) -> after:
+                      living-pair tank-ticks on post   19.13% -> 30.9%    (bar >= 50%: NOT met)
+                      bounding tank arrives, H2 legs   35.57% -> 57.1%    (48 of 84; bar >= 80%: NOT met)
+                    Off-post mix (share of off-post), before -> after: unfinished bound 44.9 -> 60.1%, unfinished push
+                    step 35.2 -> 1.2%, spawn walk-in 13.7 -> 36.7%, scoot 6.1 -> 1.2%.
+                    Unfinished bound (41.5 points of all living-pair ticks): moving 14.7, standing on the hold line but
+                    outside 1.5 m 10.3, standing 1.5-2.0 m off the slot x (the core's 2 m lateral deadband) 9.9, half-line
+                    budget wait 6.5. Walk-in 25.4 points: moving 17.4, budget wait 4.5.
+                    Failed H2 legs 36: still travelling when the leg ended 24, walking in at the leg start 8, budget 3,
+                    deadband 1. Push and scoot no longer bind; the bound does, by stops inside the core's post bands
+                    (2 m across, 1 m deep) that lie outside the ruled 1.5 m.
+  §0 TABLE          measure-war.mjs seeds 1-5: 23 of 35. Newly red with the push nearly frozen (0.45 steps per team-minute,
+                    a push holds a median 23 s): A11a 8 of 10 windows without a crossing (was 1), A11b 9 of 10 without
+                    giving ground (was 0), A11c 9.74% (was 54.87%), A13b 12.23% (was 51.71%), O1 lane lead 1.06 m (was
+                    7.14). H1 30.88%, H2 57.14%. Unchanged green: A1-A8, A10, A12, A13a, O2, O3, O5.
+  TESTS             core 106/106 (a new test: a scoot at most once in 1200 ticks and only on post; the push test runs seeds
+                    1-10 and asserts no step off post or on an unconfirmed verdict - both mutation-checked; heat counts
+                    4,6,3,6 -> 4,5,4,6, behind the line more tanks on a full bed on 8 of 8 seeds, at the seam 6 of 8;
+                    objective-word seeds 1,5 -> 5,7). Node chunk 3 of 11: 53/56 - RED, listed: first-mark "a first mark
+                    in time decides nothing", hold-two-first x2. Cause: the fixture winner's blind drive (world secret
+                    ...1d) now WRECKS at tick 841 instead of delivering; ...35 delivers at 1190 (score 349), and the loser
+                    b32(0x16) is still LIVE at tick 1000 (was WRECKED at 956). Depends on re-picking the node fixture
+                    drives (patch parked in the scratchpad, not in this commit). Protocol, client, the other node chunks
+                    and Unity not run on this core.
