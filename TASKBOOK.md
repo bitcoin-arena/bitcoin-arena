@@ -36906,3 +36906,28 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     under 142 (35.6%); on it 60 (15.0%); 5-30 cm over 127 (31.8%); 0.3-1 m over 31 (7.8%). Under
                     the ground 181 of 399 = 45.4%; deepest -0.66 m, highest +0.66 m. The two disagree because the
                     centre line compares a whole bounding box against one sample - which is why the corners rule.
+  THE FIX           RestOnTerrain fitted a plane through four EDGE MIDPOINTS (+/-3.4 m fore and aft, +/-1.8 m either
+                    side) and the hull rests on four CORNERS it never sampled - and the attitude finally applied is
+                    not the one the fit computed, because pitch and roll are clamped (+/-18 deg, +/-14 deg) and then
+                    eased towards it over frames. The old `saddle` term guessed at the corners from the better of the
+                    two mid-pairs. Now each corner is measured against Ground() under it, with the rotation about to
+                    be used, and the hull is raised by the worst shortfall - a lift along Y only, so the plane fit
+                    still decides the attitude and nothing is coupled into x or z. Core ground throughout: Ground()
+                    is the road deck where there is one, else BlwpCore.SurfaceAt. No PhysX, no Rigidbody.
+  AFTER (0.0.1366)  one Daily run, same route, round a504d3d1, entry 63613d03, DELIVERED at tick 1329; 18 samples.
+                    Track corners, 1612 measured: under 1 m 0; 0.3-1 m under 0; 5-30 cm under 0; on it 756 (46.9%);
+                    5-30 cm over 721 (44.7%); 0.3-1 m over 132 (8.2%); over 1 m 3 (0.2%). UNDER THE GROUND 0 of
+                    1612 = 0.0% (was 270 of 1596 = 16.9%); deepest corner 0.00 m (was -0.63 m).
+                    THE PRICE, stated: the highest corner went 0.88 m -> 1.71 m and 3 corners of 1612 stand over a
+                    metre up. Lifting a hull by its worst corner on a step or a crater rim floats the opposite one;
+                    the ruling is no drawn ground INSIDE a hull, and floating is what buys it.
+                    The centre-referenced line still reads 143 of 403 under (35.5%), deepest -1.01 m - it compares a
+                    whole bounding box, turret included, against ONE sample under the hull's centre, which is the
+                    tilt-blindness the corner rule replaced. It is kept beside the corners as evidence, not as a gate.
+  SUITES            EditMode 211: 207 pass, 3 skipped, 1 red (CombatFxTests.RifleFireProducesAFlashAndATracer, red
+                    before this work). PlayMode 239: 215 pass, 13 skipped, 11 red - the 10 known by name, plus
+                    RampReadyTests.TheRealTransactionsReplaceTheStandInsWhileNothingIsLoaded, measured flaky: it
+                    passed in all six earlier PlayMode runs tonight and 2 of 2 when run alone on this same code. Its
+                    window is two frames after setting feed.Offers, and PackageYard rebuilds only while `_open` and
+                    `bay.Count == 0` and the signature changed - a race, and RestOnTerrain's ONE caller is the tank
+                    hull, so this edit cannot reach it. Listed, not retuned.
