@@ -37345,3 +37345,61 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     before, truck idle 60 s in the bay, 8 seeds: HEAD core 4/8 hit, 0 wrecked; §1.2 truck-fire build
                     7/8 hit, 1 wrecked (seed 4), first hit at tick 10. Target 0 hits, 0 wrecks. Outer slots not moved.
   STATUS            Doctrine NOT live: §0 rows 1, 2, 4b, 7, 9, 13b failed on the first run. No deploy, no ping until green.
+
+## TANKS FIGHT AS SEEDED OVERWATCH/BOUNDING PAIRS ON FRONTAGE SLOTS (WAR_TACTICS.md part A, §4.10, §4.11; 2026-09-16)
+
+  WHAT              rules/tactics.js: pairs by roster id, seeded 6-10 s role clock (one OVERWATCH, one BOUNDING, swap
+                    together), 7 frontage slots a side (27 m, permutation hashed from seed and side), hull-down pick of
+                    five for overwatch, shoot-and-scoot to the adjacent free slot (toward an objective), pressure (push in
+                    8 m steps, take lead 3, give lead 1 - §4.10 allows the retune), RIDGE/HOLLOW/GAP from the seed's ground
+                    with holders. army.js: hold = stand, pivot-then-drive, a hull backs off tail first, one reversal in
+                    2 s, a tank that gave ground holds while the enemy is inside 30 m, depth 0 is a post (`u.tac`). sim.js:
+                    no more than half of a side's line moves; a granted move runs to its end; pushed hulls spend it first;
+                    a respawn is placed clear of every hull's 12 m. Touch = WRECKED and the truck-blind posts unchanged.
+  DOCTRINE          tools/measure-doctrine.mjs, state only, seeds 1-5 x 3600, HEAD core (023b862) -> this tree:
+                    standing tank-ticks 5.63% -> 52.35%; standing within 8 m of the seam 30.18% -> 7.62% (off its post
+                    1.52%, the rest pushed there by §4.10); z reversals per tank-minute 30.32 -> 4.75, inside 2 s
+                    22.86 -> 0.23; stops of >= 0.5 s 73 -> 803, z travel between them median 60.9 -> 13.9 m (a bound is
+                    14 m); pair depth offset when both stand median 10.1 m - posts 14 m on 100% of those ticks, the
+                    overwatch hull-down pick is +-4 m; ground rise in front of a standing hull mean -0.05 -> +0.13 m,
+                    overwatch on its best candidate 73.0% (a >= 0.3 m crest exists on 33.2% of those ticks); tank pairs
+                    inside 11.5 m 6.24% -> 0.00%; tank positions truck parked vs driven along the seam 0 of 59928 ->
+                    0 of 58080 (until a shot at the truck splits the worlds).
+  WHAT WAS HELD     instrumented, standing tank-ticks > 1 m off their hold: 112170 were half-line budget waits (49854
+                    > 8 m out) - the budget was re-decided every tick and froze bounds halfway. Fixed by grants that run
+                    to the end; the partner wait (bounding waits while its partner moved) held tanks posted across the
+                    seam 25277 tank-ticks and was removed (§2.6 swap is simultaneous). Depth 0 read as "no tactics" sent
+                    a bounding tank pushed onto the seam to the old standoff; fixed with an explicit flag.
+  FRONTAGE          same probe: x span of a side's living tanks median 121.8 -> 172.2 m (10th pct 84.9 -> 147.2); nearest tank
+                    of the same side median 8.5 -> 16.1 m; closest pair of any side ever 5.28 -> 11.85 m; two hulls within
+                    1 m 0.00% -> 0.00%, pairs sharing a post x 0.00%. Roles: overwatch 53.19% / bounding 46.84% of living
+                    tank-ticks, pairs with both alive one of each on 100.00%. Scoot vs truck: 80 slot changes, 32 nearer
+                    the truck in its bay and 48 further (mean +5.4 m); against a mirrored bay 48 nearer, 32 further - the
+                    map's geometry (bay at one end, objectives inside), not the truck: posts are bit-identical with it.
+  BAY EXIT          a living tank in the bay's straight exit (40 m, +-6 m), truck idle, seeds 1-20: HEAD 10.1% of ticks,
+                    tree 24.8%, on 20 of 20 seeds both. §1.2 RULED: the outer slots are not moved away from the bay. So
+                    the node fixtures' blind drive changed, not the posts: world secret ...d1 delivered at tick 1270 and
+                    now WRECKS at 284 on the outer-lane tank; ...1d delivers at 1173 (score 367; of 255 last bytes only
+                    1d and a9 deliver by 1320). The loser b32(0x16) wrecks at 956, score 420 (was 547, 128); player 6 at
+                    377. forfeit.test's "Delivered below min_score" moves to minScore 1000 (score 367).
+  §0 TABLE          tools/measure-war.mjs, seeds 1-5: 26 of 32 pass. A1 0.04%, A2 fidgets 1 of 369, A3 1.20%, A4a 0/60,
+                    A4b 0.33%, A5 0/0, A6 0 missed, A7 96.38%, A8 0, A10 0 of 223104, A11b 0/10, A11c 54.87%, A12a 0,
+                    A12b 0.00%, A13a 5/5, A13b 51.71%, O1 68.53% / 7.14 m, O2 84/89/77%, O3 5/5, O5 0 of 60993, B1
+                    81.65% / 94.59%, B5 0.01%, B6 0/10 0/261. Seeds 6-10 and 11-15 as a noise check: 23 and 25 pass.
+  REDS              A9 18.78% seam-metre samples uncovered (bar 5%): 53% of the gaps are the first 10 s - every tank
+                    starts 76-79 m back, 72.9% uncovered then; without them 12.99%, respawns walking in and losses.
+                    Depends on a ruling on the opening (start deployed?) - not a tuning. Bar kept.
+                    A11a 1 of 10 windows without a crossing (seed 5 bull; 0 and 2 of 10 on 6-10, 11-15): the side
+                    reaches push 24 for one 5 s re-read; take lead 2 passes A11a on all 15 seeds and fails O1 on all
+                    three sets (51.95-59.42%). Waits on §4.12 (assault ceilings) - listed, not retuned further.
+                    O4 client markers: Unity, not built. B2 37/347, B3 z 62% x 53%, B4 32/112: infantry rows, wait on
+                    §11.3-§11.5 (cover, prone, suppression change who stands where).
+  TESTS             rules.test.js moved on purpose, numbers in the comments: heat counts 6,10,3,7 -> 4,6,3,6 (8 seeds,
+                    hot > cold at both depths on all 8); parked truck 10 s -> 15 s (first hit 9.53/10.98/11.08 s, was
+                    8.4-8.9; write-off 24-30 s); a driving tank's pace against C# (6.67 vs 6.76 m/s) instead of the side
+                    mean (§0 4b holds half the line); apron leg 40 -> 60 ticks (nearest tank 46.1 m at tick 220, first
+                    exposure tick 222). tactics.test.js 11 tests, the new ones mutation-checked (RIDGE ceiling, rest,
+                    lane spacing, weight, depth 0). A respawn is placed clear of 12 m (it had landed 10.80 m from its
+                    partner, the 12 m test caught it).
+  SUITES            clean worktree at c594d69 + this change: core 105/105, protocol 531/531, client 346/346, node 612/612
+                    in 11 chunks; five-of-seven and lock-settlement (the two slow files) not run this time. Unity not run.
