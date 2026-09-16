@@ -43,6 +43,7 @@ gateways; the federation's fees; the fee locks' claim hash and 22A node slots; t
 (a contract field). A round for testnet sats needs the first two.
 RULED (Daniel 07:33): every guardian / node must have its own bond or it may not take part.
 federationIsBonded stays on: threshold of distinct bonded census nodes advertising guardian_of[].
+RULED (Daniel 11:09): inbound gateways for M3 = the two live testnet4 LND nodes with incoming liquidity (same host is fine). Named pick A. No fake labelled gateways.
 RULED (Daniel 08:23): which guardians = census nodes that posted a bond. If more bonded
 nodes exist than the round needs (2 for 2-of-2, 5 for 5-of-7), pick that many
 deterministically each round from the bonded set. No hand-pick.
