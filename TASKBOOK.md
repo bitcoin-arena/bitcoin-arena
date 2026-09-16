@@ -36811,3 +36811,66 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     listed, not retuned).
                     SIGNED (23:38:37Z, the round over at 23:38:20Z): entry d20eecba DELIVERED 334, 2 of 2 on both
                     signer nodes, no no-quorum - = the card = the transcript alone, state hash included.
+
+## CRATER AT CONSUME+384, AND TANKS AT 28 m ON THE FLANK (2026-09-16)
+  METHOD            crater-tank-measure.mjs (scratchpad, offline): the core stepped from a seed, the truck driven at
+                    full throttle toward the miner under proportional steering with the steer sign MEASURED (a first
+                    run reported an engagement while the truck drove to the map edge at x -125), one liquidation at a
+                    known tick; per tick the crater slots, and each living tank's range to the truck, bearing against
+                    the truck's nose and nearest-neighbour spacing. Five seeds, practice on and off.
+  BEFORE            bowl present on the consume tick (submitted T, consumed T+1, strike T+1, bowl T+1: 0 ticks after);
+                    $300M bowl r 31.18 m, d 7.02 m, 16 rounds. Nearest tank to the truck: median 16.7-20.4 m on four
+                    of five seeds (one 31.2), closest tenth 5.5-16.6 m, closest approach 3.8 m; 42-299 ticks inside
+                    the 12 m floor every run; nearest tank on the flank 443-612 samples against 104-311 face;
+                    neighbour spacing 8.5-13.9 m. Armour held 9 m +/- 10 off the SEAM and nothing off the truck.
+  CHANGE            (1) per-slot dig tick: C_WORDS 5 -> 7 with C_DIG and C_LOAD; the strike ARMS a slot (place + load
+                    + dig tick) and leaves its radius zero, and a pass before the army digs it at consume + 384
+                    (CRATER_DELAY), recomputing craterOf(load). craterSlot treats an armed slot as taken - with all
+                    eight armed the one that opens soonest gives way - and restart drops armed-but-undug bowls (a dig
+                    tick is counted in the round it was armed in). Every reader already tests C_R > 0, so terrain,
+                    army and the page see no bowl until the dig; Unity's layout mirror regenerated (WORDS 2230 ->
+                    2246). (2) TRUCK_RING 28 m in stepUnit, a push after the step in the crater push-out's class, x
+                    and z never rolled into one chase vector, plus a walk round the ring toward the nearer beam at
+                    FLANK_RATE 180 turns a tick. Scoped to armour that has the truck inside courierReach, the reach
+                    the gun itself notices a courier at.
+  AFTER             bowl first present at consume + 384 exactly, on every seed at liquidation tick 200 and 600,
+                    practice on and off; same bowl (r 31.18 m, d 7.02 m, 16 rounds); strike still on the consume tick.
+                    Nearest tank: median 28.0 m every seed (one 28.3), closest tenth 28.0 m, 0 ticks inside 12 m in
+                    every run; flank 633-901 samples against 0-105 face and 24-331 rear; spacing 8.1-15.2 m,
+                    untouched. Two practice seeds delivered at tick 980 and 983, before their dig at 985 - those runs
+                    end with no bowl, which is the delay doing what it was ruled to do.
+  THE ONE TEST      rules.test.js "and it tells further and further behind the line" asserted a RATIO OF SURVIVAL
+  THAT MOVED        TIMES and inverted under the ring: 1.00x at fifty metres against 2.42x at twenty-five. Measured
+                    cause, from the code and not inferred: the hit roll is flat (nextBelow(rng, 1000) < HIT_PER_MIL,
+                    no range term) and a tank shoots the courier only when it outranks its chosen foe
+                    (toTruck < toFoe * (1 + heat)), so pinning toTruck at 28 m hands the shot to any nearer tank.
+                    The reach rule itself never moved: 34.0 m cold, 44.2 m hot, and the tanks that have a parked
+                    truck inside that reach go 4 -> 10 at z -25 and 4 -> 7 at z -50 (medians over a minute, seed
+                    0x5eed1234). Ruled (Daniel): assert the reach, drop the proxy. The test now pins those metres and
+                    those four counts; no threshold was widened.
+  GOLDENS AND PINS  8 vectors + index.json regenerated deliberately (make-vectors.js); the bundle is NOT at fault -
+                    idle bisected tick by tick over 3600 ticks, bundle and modules never part. New core hash
+                    ac526bca added to protocol's known-core list (3 listed); core bundle rebuilt and copied to the
+                    WebGL template (252376 bytes), client bundle rebuilt, known-good-clients carries the new core
+                    fe466f2d.
+  SUITES            core 96/96, protocol 534/534, client 346/346.
+  THE FIXTURES       verify.test.js and verdict.test.js pin "a run that came to nothing": b32(0x16) wrecked player 5
+  THAT MOVED         at tick 547 for 128 - by armour that drove onto the truck. With the ring nothing rams, so that
+                     drive is LIVE at 1000 (score 478) and 0 of 256 secrets end both players inside 1000 ticks. Only
+                     the round's clock is left: `outcome` gives MISSED at BLOCK_TICKS, and measured, 99 of 256 secrets
+                     lose both players - every one at tick 9000, none earlier. Ruled (Daniel): use b32(0x21), both
+                     MISSED at 9000, score 0, and change the SETUP, not the assertions.
+                     Setup, measured at each step: 9000 ticks in ONE batch does not encode (a transcript u16-prefixes
+                     each batch; 20 bytes a row + 109 = 180,109), so six chained batches of 1500 (30,109 each). A
+                     first mark at 9000 is FORFEIT by §15 (join 0 + PLANTED_FIRST_MARK_DEADLINE 1400), so one is
+                     planted at tick 600 naming the batch that holds it, and the mark at 9000 chains onto it naming
+                     the last batch. Both are carried: canonicalTranscript takes the longest carried PREFIX, so the
+                     late-receipt test now carries both marks - its assertions (0 results before, 1 after, score 0,
+                     no second signing) are untouched. Wall time: verify.test.js 20 s, verdict.test.js 7 s, the whole
+                     t-z chunk 22 s, all inside timeout 180 with --test-timeout=120000.
+  SUITES (FINAL)     core 96/96, protocol 534/534, client 346/346, node 637/637 (chunked; five-of-seven and
+                     lock-settlement by test name). EditMode 211: 207 pass, 3 skipped, 1 red -
+                     CombatFxTests.RifleFireProducesAFlashAndATracer, red before this work. PlayMode 239: 215 pass,
+                     13 skipped, 11 red - the 10 known by name plus ScoreTests.IdlingEarnsNothingEvenOnTheSeam,
+                     measured flaky on THIS code (failed, failed, passed, passed, passed - 2 of 5; 0 of 4 before) and
+                     unable to reach it: in the editor BlwpCore is the stub and Available is false. Neither retuned.
