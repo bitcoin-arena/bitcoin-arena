@@ -36874,3 +36874,12 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                      13 skipped, 11 red - the 10 known by name plus ScoreTests.IdlingEarnsNothingEvenOnTheSeam,
                      measured flaky on THIS code (failed, failed, passed, passed, passed - 2 of 5; 0 of 4 before) and
                      unable to reach it: in the editor BlwpCore is the stub and Available is false. Neither retuned.
+  RESTART AND LIVE   The coordinated restart (01:28:22Z): nothing in flight - both signer nodes listed 0 joined and 0
+                     playing, and the two open rounds held 0 entries, so no replay was stranded. install.sh 3c4f849,
+                     blwp-daily-signer-nodes restarted, tunnels and keeper untouched; rounds opened seconds later
+                     (cfd72d04 01:28:29, 7fca01f3 01:28:35) name the new core ac526bca, the two from before keep
+                     5f3b5176 and have no entries. Page 0.0.1361 deployed (a64d89cd), both URLs serving core
+                     fe466f2d - the bundle the signer nodes replay. LIVE on the new core, round cfd72d04, entry
+                     db2e715e: SIM pressed once reached the core 0 times; card DELIVERED 280 @ tick 1196 = the
+                     transcript replayed alone (state hash included, 0 page writes of any kind) = both signer nodes'
+                     signed DELIVERED 280, 2 of 2 at 02:02:41Z, no no-quorum.
