@@ -37141,3 +37141,27 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     version (a null mesh in EditMode, fixed; the fixed test passes alone). PlayMode 241: 216
                     pass, 13 skipped, 12 red - the 12 listed, none new; the RampReady flake passed.
   DEPLOYED          0.0.1386 at 4bd615ee, bundle == HEAD, no gateway code. Not yet seen in a live strike picture.
+
+## THE WAR NO LONGER RACES TO CATCH UP (Daniel 2026-09-16 12:26 / 14:24: "tanks go very fast, not instant, to another place - just open the game")
+
+  THE FAULT         CoreDrivenTruck.Update steps the core in whole ticks, at most 8 a frame, and kept the rest of
+                    the time owed with no end. A frame is at most 1/3 s (Unity's maximumDeltaTime) = 20 ticks, so
+                    every slow frame left 12 ticks owed; fast frames paid them back at 8 a frame, and the whole
+                    war ran at up to 8x its speed until caught up. Loading is slow frames, so: on login.
+  NOT THE FAULT     The core. Replayed idle (no input, as in the lobby), 3 seeds x 3600 ticks: a live tank moves
+                    more than 0.5 m in one tick only at tick 1 (armies spawning, 1-7.6 m) and once 0.51 m; every
+                    other big move is a respawn, which is instant. The protocol defines no tick rate against
+                    wall time, so letting time go changes no replay.
+  BEFORE (live)     0.0.1386 at 4bd615ee, headless Chrome on the AMD GPU (Vulkan), lobby, nothing pressed, 250 ms
+                    samples. Just loaded: up to 115.1 ticks/wall s. After 40 s CPU-throttled, the first 10 s:
+                    p50 115.8, max 138.6 ticks/wall s, 23 samples over 70; fastest tank p50 20, p90 30.4 m/s
+                    (ordinary 10). Software GL earlier: 5.5-10.6 ticks/wall s, ~11,000 ticks owed after 229 s.
+  THE FIX           TicksDue: at most 8 ticks a frame, and time a frame cannot step is dropped, keeping under one
+                    step for drawing between ticks. The drop is logged every 10 s ("the page is slower than the
+                    core").
+  AFTER (live)      0.0.1387 at b0aeaae5, same probe: just loaded max 79.4; after the throttle, first 10 s p50
+                    60.1, max 66.5 ticks/wall s, 0 samples over 70; fastest tank p50 9.7, p90 10.6, max 11.7 m/s.
+                    The page said it let go 375 ticks (6.25 s) during the throttle instead of racing them.
+  SUITES            EditMode 214: CoreBacklogTests 2/2 (3 runs alone, all pass) - 20 s at 3 fps then 60 fps steps
+                    at most 1 tick a frame; 45 fps loses nothing. PlayMode 241: 215 pass, 13 red - the 12 listed
+                    plus PostOfficeTests.TheGogglesAnimate, the recorded flake: 11/11 PostOfficeTests alone.
