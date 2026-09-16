@@ -21,7 +21,7 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 Top item first. Finish and deploy before starting the next.
 
 NOW (2026-09-16 18:06, Daniel HARD):
-1. TANKS need a REAL MOVEMENT STRATEGY in the CORE (deterministic, no live LLM). Doctrine, all of it: FRONTAGE = side by side, not one metre of road; ECHELON = depth, not bumper-to-bumper; OVERWATCH = one holds fire while another moves; BOUNDING OVERWATCH = leapfrog, not all run at once; HULL-DOWN = turret over crest, hull hidden. STOP seam-camping and wiggle-to-death. Keep tank-tank 12 m / no clip-ram. Truck exception: shoot, ignore, touch=death. 12 m is not vs the truck.
+1. TANKS need a REAL MOVEMENT STRATEGY in the CORE (deterministic, no live LLM). Doctrine, all of it: FRONTAGE = side by side, not one metre of road; ECHELON = depth, not bumper-to-bumper; OVERWATCH = one holds fire while another moves; BOUNDING OVERWATCH = leapfrog, not all run at once; HULL-DOWN = turret over crest, hull hidden. STOP seam-camping and wiggle-to-death. Also if they fit this game: KILL ZONE (several hulls cover the same stretch of road from different angles), SHOOT-AND-SCOOT (fire then relocate to new hull-down, not flee the truck), REVERSE SLOPE (sit behind the crest), STAGGERED COLUMN when moving on the road, CROSSFIRE from both sides of the road, 2-tank fire teams. Not: sidescrape, smoke, kiting away from the truck. Keep tank-tank 12 m / no clip-ram. Truck exception: shoot, ignore, touch=death. 12 m is not vs the truck.
 Ping Daniel when live on Daily.
 M3 waits.
 DONE (2026-09-16 17:00/17:06 playtest): tanks ignore the truck except by shooting - the truck ring is gone, tank
