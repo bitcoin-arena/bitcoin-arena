@@ -37521,3 +37521,35 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     6-10 only; O4 client; B2-B4 infantry.
   TESTS             core 107/107 (rules 48, tactics 13, bundle/vectors/replay/... 46). Re-pinned with numbers in comments:
                     heat 4,5,4,6 -> 4,6,4,6 (hot > cold on 8 of 8 seeds at both depths); objective-word seeds 5,7 -> 9,10.
+
+## HOLD IS THE DEFAULT - CLOSE-OUT MEASURED ON 4f9993e (2026-09-16 21:45)
+
+  BARS              tools/measure-hold.mjs seeds 1-5 x 3600: living pair on post 51.7% (bar 50%; 19.13% at 19d3375, 30.9% at
+                    1830888, 46.8% at a274fbc); bounding tank reaches its post 47 of 51 legs = 92.2% (bar 80%; 35.57%, 57.1%,
+                    91.1%). Off post now: walk-in 60.7%, unfinished bound 18.4%, scoot 13.3%, push step 4.5%, left post 2.9%.
+  STOPS             tools/measure-hold-closeout.mjs: a standing tank on post stands a median 1.12 m from its hold (p90 1.33,
+                    max 1.48) - inside the ruled 1.5 m. Posts moved under a tank still off post, other than its own leg
+                    swap: 0 of 414 post changes.
+  SEAM / WIGGLE     tools/measure-doctrine.mjs: standing within 8 m of the seam 2.97% (off its post 0.13%, the rest pushed
+                    there by §4.10); z reversals 3.08 per tank-minute, inside 2 s 0.06 (2.08% of reversals); pairs inside
+                    11.5 m 0.00%, closest ever 11.89 m; truck parked vs driven 0 of 48528 tank positions differ.
+  PHYSX             no tank post, role, hold, scoot, push or arrival reads a Rigidbody: all in packages/core. ArmyRenderer adds
+                    kinematic Rigidbodies to drawn hulls only (collision picture); no Unity script writes unit state into the
+                    core.
+  SUITES            core 107/107 (4f9993e). EditMode 218: 214 pass, 3 skipped, 1 red (CombatFxTests.RifleFireProducesAFlash
+                    AndATracer, listed before this work). PlayMode 241: 216 pass, 13 skipped, 12 red - exactly the 12 listed
+                    (VehicleTests 5, ImportedModelTests 2, MushroomRestingTests 2, FeatureTests 1, TruckHealthTests 1,
+                    VisibilityTests 1). RampReadyTests and SpawnMarkParkedTests, red on 32687a8 with no cause found, pass on
+                    4f9993e with no change on their path: flaky, not fixed. Node: the fixture winner drive (...1d) wrecks at
+                    tick 793 on this core; ...1b delivers at 1182 (score 9) - re-picked in the working tree, chunks 3 and 4
+                    green (56/56, 53/53), the other chunks, protocol and client not re-run; the loser b32(0x16) is LIVE at
+                    tick 1000 (player 5). Not committed: its own commit once node is green.
+  NEXT GAP SHARES   §0 armour rows red on seeds 1-5: 6 - A9 (kill zone) and five "ground changes hands" rows (A11a 4/10,
+                    A11b 9/10, A11c 21.90%, A13b 31.47%, O1 lane lead 2.44 m) under the ruled push rate (1.10 steps per
+                    team-minute). Hull-down + kill zone is 1 of those 6.
+                    Hull-down: overwatch on post with >= 0.3 m of rise in front 36.7% of its on-post ticks; a >= 0.3 m crest
+                    existed among its five candidates on 38.0% - taken on 96.7% of the ticks one exists. Terrain-limited,
+                    not doctrine-limited.
+                    Kill zone (A9): 15.48% of seam-metre samples uncovered (bar 5%), 10.48 points missing. First 10 s (the
+                    opening drive from 76-79 m back) 9.12 points = 87% of the missing; after it, tanks in transit 4.96 and
+                    post geometry 1.41 (by 10 s bucket 54.7 / 1.9 / 10.8 / 11.6 / 6.3 / 7.7%).
