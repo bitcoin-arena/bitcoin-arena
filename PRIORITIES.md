@@ -16,11 +16,9 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 Top item first. Finish and deploy before starting the next.
 
-NOW (2026-09-15, after the Signer Node copy):
-1. Crater dug 384 ticks after the liquidation (Unity draws it on that tick) and tank standoff
-   (~28 m, flank, 10 m spacing) - one core change, one coordinated signer-node restart.
-2. Tank hull seating: no drawn ground inside a hull.
-3. The nuke's stem, skirt and crater as one mesh on the core's ground.
+NOW (2026-09-16, after the crater and the tank standoff):
+1. Tank hull seating: no drawn ground inside a hull.
+2. The nuke's stem, skirt and crater as one mesh on the core's ground.
 LISTED: SpawnMark re-seats a parked truck by teleport (not measured); the mouth is open to 40 m,
 delivery counts |z| <= 34 m (ruled, not retuned); another player's ghost of an ended run stays
 at its last picture.
@@ -124,6 +122,11 @@ BUILT UNDER THE RULINGS (2026-09-15, numbers: TASKBOOK):
   liquidations, live market liquidations and the impact reset (Daily 0.0.1359; numbers: TASKBOOK).
   Cost: a crash softer than the run's hardest so far no longer shakes the camera in a signed run;
   the core charges it in full.
+- CRATER AND TANK STANDOFF DONE (2026-09-16): the core arms the hole at the blast and digs it 384
+  ticks later, so Unity draws the bowl on the tick the core says it exists; armour holds about 28 m
+  off the truck and comes at it from the flank, never inside 12 m, with neighbour spacing left as it
+  was. One core change, one coordinated signer-node restart with nothing in flight, and a live run
+  on the new core signed 2 of 2 on the Daily (numbers: TASKBOOK).
 
 DONE: M3 W7 - A PAYING FEDERATION ROUND NAMES ITS FEDERATION, AND THAT IS CHECKED (2026-09-15).
 The codec refuses a paying FEDERATION round with a zero federation_id (encode and decode,
