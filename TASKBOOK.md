@@ -37335,3 +37335,13 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
   RESUME PLAN       (Daniel 17:59) one commit for the whole gateway change incl. round-2of2.mjs passing TESTNET4_GATEWAYS on
                     paying rounds; full protocol/client/node suites green in a clean worktree incl. five-of-seven g2-g4;
                     known-good list = HEAD's + the measured digest of the rebuilt bundle; signer nodes and page roll together.
+
+## TANK_TACTICS.md RULINGS (Daniel 2026-09-16, after the first §0 run)
+
+  ROW 1             Pile = 3 living tanks of a side all within 12 m of each other (the tank-tank minimum), not "within 20 m".
+                    §2.4's own geometry (pair 12 m, neighbouring inner hulls 15 m) puts every interior tank in a 20 m
+                    triple: measured 31.09% of tank-ticks, formation not clump. Geometry unchanged; probe changed.
+  BAY FIRE          No gun chooses the truck before roll-out (best x >= start + 22 m, APRON_RADIUS; latched). Measured
+                    before, truck idle 60 s in the bay, 8 seeds: HEAD core 4/8 hit, 0 wrecked; §1.2 truck-fire build
+                    7/8 hit, 1 wrecked (seed 4), first hit at tick 10. Target 0 hits, 0 wrecks. Outer slots not moved.
+  STATUS            Doctrine NOT live: §0 rows 1, 2, 4b, 7, 9, 13b failed on the first run. No deploy, no ping until green.
