@@ -14,6 +14,10 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 # Working order
 
+HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute priority. Stop the current letter, measure, fix, then resume the old task.
+
+
+
 Top item first. Finish and deploy before starting the next.
 
 NOW (2026-09-16 14:24, Daniel HARD prio):
