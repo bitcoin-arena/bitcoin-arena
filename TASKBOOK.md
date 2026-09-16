@@ -36996,3 +36996,52 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     mushroom or _skirt. Listed, not retuned.
                     ScoreTests.IdlingEarnsNothingEvenOnTheSeam and RampReadyTests.TheRealTransactionsReplace...
                     both flipped green here; both are recorded flakes, listed, not retuned.
+
+## THE NUKE ON THE CORE'S GROUND: THE LIVE NUMBERS AND THE PHOTOGRAPH (2026-09-16)
+
+  THE VENUE         Practice phase on the Daily, build 0.0.1370 at c942d7d8. A signed run does not admit a
+                    simulated liquidation, and PlayMode has no core at all (BlwpInit returns 0 in the
+                    editor, so HasSurface is false and SurfaceAt would print NaN). The strike path is the
+                    designed one: SIM pressed in the LOBBY where the HUD draws it, then off-press (fires
+                    nothing - ToggleSim only fires going ON), then on-press (fires the second liquidation).
+                    The second is needed because StrikeTheatre.Update discards the first K_SERIAL move a
+                    fresh page sees as a reload, so one press can never raise a cloud - measured twice.
+  AFTER, LIVE       skirt underside vs SurfaceAt(skirt): 5.46/5.46, 6.05/6.05, 3.33/3.33 - and 5.46 vs
+                    5.45, 6.05 vs 6.06, 2.80 vs 2.81. THE RESIDUAL IS 0.01 m, not zero, and is written
+                    here as 0.01 m. Before the seating change it was +1.48 m at t=0.3s and +6.34 m at
+                    t=1.8s, with the disc's centre hanging 5.59 m and its north edge 7.88 m.
+                    stem foot vs crater floor: 0.69 m at t=0.3s, 1.05 m from t=1.7s on, every cloud.
+                    anchor: _cloudAt.y equals SurfaceAt(impact) at every sample and follows the bowl down
+                    - 3.33 -> 2.64 -> 1.82 -> -0.14 -> -2.74 -> -5.84 on one cloud, the hierarchy's lowest
+                    point equal to the floor throughout. It used to freeze at a pre-crater 3.46 while the
+                    core surface under it fell to -0.65.
+                    liquidation -> impact: 151 and 207 ticks (2.52 s, 3.45 s), derived as impact - (dig -
+                    CRATER_DELAY) off the core's own words; the delay is not copied into C#.
+                    crater control, re-measured not argued: median 0.007/0.006/0.007 m, p90 0.014/0.013/
+                    0.013 m, worst 0.185/0.189/0.186 m, three seeds, 3000 samples each. Unmoved.
+  THE PHOTOGRAPH    Four frames caught a standing cloud, and the page's OWN rect says the base is in shot:
+                    rect 553,222 155x114 / 462,158 337x221 / 451,150 358x232 / 448,148 363x235, all of
+                    1280x657 - bottoms at 336, 379, 382, 383 px. Frames 03 and 04 show the dust disc lying
+                    flat on the grass with ground visible all round it. Impact 38.7,-55.1 at 05:10:11,
+                    photographed 05:10:15 and 05:10:17: the picture and the numbers are one event.
+  THE CORRECTION    An earlier report called the floor drop "a single 3.60 m step". That was a sampling
+                    artefact at ~0.4x real time. The floor descends THROUGH the bowl over successive
+                    samples, and the lowest point tracks it at every one.
+  MY OWN FAULTS     Three in the probe, none in the game: a top-level await on a CDP call never settled
+                    when the browser died, so the write-out never ran and cloud-lines.txt was never
+                    created (exit 13, which the harness reported as success); the kept lines were only
+                    written at the end, so a dying run lost them - appended as they arrive now; and
+                    SPECTATE was pressed BEFORE the SIM switch, which hides the HUD, so the press silently
+                    missed and that run's clouds came from live market liquidations by luck. Also: `git
+                    add -A` in the same turn that launched a PlayMode run staged Unity's mid-run deletion
+                    of link.xml into e8d7a2a; restored in 67b4dc9.
+  THE PRICE, LISTED The authored skirt hangs below the stem foot, so seating the hierarchy on its lowest
+                    point - player-visible ground contact - leaves the stem 1.05 m proud of the crater
+                    floor. MushroomRestingTests.TheStemStandsOnTheCraterFloorRatherThanUnderIt and
+                    .TheRestingHoldsWhileTheCloudIsStillGrowing are red on exactly that. NOT retuned, not
+                    reauthored this letter; it waits on the asset.
+  SUITES            EditMode 211: 207 pass, 3 skipped, 1 red (CombatFxTests.RifleFireProducesAFlashAnd
+                    ATracer, red before this work), zero error CS.
+                    PlayMode 239: 213 pass, 13 skipped, 13 red - the 10 known by name, the 2 stem-foot
+                    assertions above, and PostOfficeTests.TheGogglesAnimate (flaky: 14 straight passes,
+                    then 11/11 twice run alone). Zero new reds against 350a290.
