@@ -23,7 +23,8 @@ Top item first. Finish and deploy before starting the next.
 NOW (2026-09-16 14:24, Daniel HARD prio):
 1. Hang after DELIVERED: RUN STOPPED banner, cannot pick the next round. Live on 0.0.1377; confirm on 0.0.1386 then fix. Lobby must return same frame.
 2. Tanks race on login: very fast (not instant) to another place. Always, just open the game.
-M3 gateways wait until both are named done on the Daily.
+3. Spectate Exit does not return to the lobby (Daniel 14:45). After 1 and 2 only.
+M3 gateways wait until 1-3 are named done on the Daily.
 DONE (2026-09-16): SpawnMark re-seating a parked truck. It does not jump: measured on the Daily,
 the re-seat fires on every terrain rebuild while the truck is held and moves it 0.00 m. Two faults
 fixed, neither of them moving a truck: Respawn wrote four PhysX values on a body the core holds
