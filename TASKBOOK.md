@@ -36883,3 +36883,26 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                      db2e715e: SIM pressed once reached the core 0 times; card DELIVERED 280 @ tick 1196 = the
                      transcript replayed alone (state hash included, 0 page writes of any kind) = both signer nodes'
                      signed DELIVERED 280, 2 of 2 at 02:02:41Z, no no-quorum.
+
+## TANK HULL SEATING: NO DRAWN GROUND INSIDE A HULL (2026-09-16)
+  RULE              Four track corners, each against the core ground UNDER THAT CORNER (Daniel): a centre reading
+                    hides tilt - a hull reads as seated while one track is in the dirt, which is what the player
+                    sees. Corners are RestOnTerrain's own half-length 3.4 m and half-width 1.8 m, taken in the
+                    hull's frame at y = 0 (the sole, where WrapOnItsSole puts the model's base).
+  NOT THE MESH      The drawn ground IS the core's surface: MempoolTerrain.HeightAt returns BlwpCore.SurfaceAt and
+                    every vertex takes it. Between vertices (1.63 m by 1.77 m over 260x170 m) the drawn triangle
+                    differs from the core by a median of 0.000 m, 0.002 m at p90, 0.023 m at worst - 4000 points,
+                    three seeds. Nothing reads PhysX or a Rigidbody for tank seating: ArmyRenderer poses hulls from
+                    UnitPosition/UnitHeading and Ground() (road deck, else SurfaceAt, else terrain).
+  THE EDITOR IS     ImportedModelTests.TanksStandOnTheGroundRatherThanInIt and SoldiersStandOnTheGround... fail
+  BLIND             with "keine Panzerruempfe gefunden" / "keine Soldaten gefunden": ArmyRenderer returns early
+                    without a core (CoreReady => BlwpCore.Available), so PlayMode draws ZERO hulls. They measure
+                    nothing about seating today and stay listed, unretuned, by ruling.
+  BEFORE (0.0.1364) one Daily run, round a504d3d1, entry dfa3823d, DELIVERED at tick 1366; 18 census samples.
+                    Track corners, 1596 measured: under 1 m 0; 0.3-1 m under 11 (0.7%); 5-30 cm under 259 (16.2%);
+                    on it 635 (39.8%); 5-30 cm over 601 (37.7%); 0.3-1 m over 90 (5.6%); over 1 m 0. UNDER THE
+                    GROUND 270 of 1596 = 16.9%; deepest corner -0.63 m, highest +0.88 m.
+                    Hull bottom vs the ground under the CENTRE, 399 measured: 0.3-1 m under 39 (9.8%); 5-30 cm
+                    under 142 (35.6%); on it 60 (15.0%); 5-30 cm over 127 (31.8%); 0.3-1 m over 31 (7.8%). Under
+                    the ground 181 of 399 = 45.4%; deepest -0.66 m, highest +0.66 m. The two disagree because the
+                    centre line compares a whole bounding box against one sample - which is why the corners rule.
