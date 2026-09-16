@@ -37204,3 +37204,31 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     RunEndsAtDeliveredTests.ExitFromSpectateComesBackToTheLobby passes. PlayMode 241: 216 pass,
                     13 skipped, 12 red, all listed, none new (PostOfficeTests' SPECTATE test passes). Bundle ==
                     HEAD, no gateway code.
+
+## A TRUCK NO LONGER PUSHES A TANK OFF THE FIELD (Daniel 2026-09-16 15:36: "if he drives toward a tank it races very fast off the field")
+
+  THE FAULT         rules/army.js, the truck ring (3c4f849): a tank that has the truck inside 28 m was WRITTEN onto
+                    the ring point each tick. Driving at it, the ring moved with the truck and carried the tank.
+  BEFORE (core)     tank-push-measure.mjs, 5 seeds, truck put 60 m from the nearest live tank and driven at it 15 s:
+                    tank on the ring 227-380 ticks, carried 111.5-149 m, fastest 38.1-39.5 m/s (a tank's own walk
+                    is 6.8 m/s an axis, ~9.6 m/s diagonal). The 4591 / 6976 m/s single ticks are respawns to z 78,
+                    88-104 m from the truck - in both cores, not pushes.
+  THE FIX           The ring still decides where a tank goes; it gets there at ARMOUR_WALK a second at most, from
+                    where it stood when the tick began (its own step and the giving way together, never added).
+  AFTER (core)      same 5 seeds: on the ring 0-1 ticks, carried 0-0.1 m, fastest 9.6-11 m/s; closest 6.2-25.4 m.
+  STANDOFF KEPT     truck held at (0,-20) and (-40,-30), 5 seeds x 3600 ticks, nearest live tank:
+                      before  median 28.0, p10 28.0, min 28.0, ticks inside 12 m 0
+                      after   median 26.3-28.0, p10 20.8-27.8, min 20.3, ticks inside 12 m 0
+  TESTS MOVED       rules.test.js "and it tells further and further behind the line": 4,10,4,7 -> 7,10,7,9. The
+                    property holds on 8 seeds (0x5eed1234, 1-7), full bed > empty bed at both depths every seed:
+                    before cold 3-7 / hot 8-12 at the seam, cold 2-5 / hot 4-10 behind; after cold 5-11 / hot 9-12,
+                    cold 4-7 / hot 6-10. Strict equality kept.
+                    roster.test.js "on the beacon's seed, and on nothing else": its precondition (the two seeds sit
+                    different pairs) failed at 0x5e because the contract carries the core hash, so the round id and
+                    beacon moved; the fixture now takes the first author seed from 0x5e that separates them. Every
+                    assertion kept.
+  REGENERATED       core bundle + WebGL template, 8 golden vectors + index, known-cores (058556d5 added, 4 listed),
+                    client bundle + template, known-good-clients (core 2de00ada). Layout unchanged.
+  SUITES            in a clean worktree at 779a5e3 + this change only (no M3): core 96/96, protocol 534/534, client
+                    346/346, node 646/646 (610 in 11 chunks, five-of-seven 21 in 6 groups, lock-settlement 15 in 4).
+                    Unity: no C# change; page 0.0.1396 built with client and core byte-equal to this tree's.
