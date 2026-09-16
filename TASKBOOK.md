@@ -37045,3 +37045,54 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     PlayMode 239: 213 pass, 13 skipped, 13 red - the 10 known by name, the 2 stem-foot
                     assertions above, and PostOfficeTests.TheGogglesAnimate (flaky: 14 straight passes,
                     then 11/11 twice run alone). Zero new reds against 350a290.
+
+## SPAWNMARK: PARKED IS 2-D, AND THE CASE THE DAILY NEVER PRODUCED (2026-09-16)
+
+  THE ITEM          "SpawnMark re-seats a parked truck by teleport (not measured)". Measured, then fixed,
+                    then the fix's own unexercised case closed by construction.
+  THE WRITER        Named from source, not inferred: SpawnMark.LateUpdate sets spawnPosition from
+                    post.BayFor(SoloBay) and calls TruckController.Respawn, which - only if
+                    externallyDriven - calls BlwpCore.Teleport, the sole caller in the tree.
+                    CoreDrivenTruck holds the Rigidbody kinematic and rewrites the transform from core
+                    words every frame, so nothing else can move a core-driven truck.
+  LIVE, BEFORE      Daily lobby/practice, build 0.0.1375. Five terrain rebuilds, four fires: mark
+                    unchanged, 2-D 0.00 m, 3-D 0.24 m of 12.0 m, teleport TAKEN and the core moved
+                    0.00 m each time. v1 - the one rebuild whose mark height moved, 4.11 -> 1.40 - had
+                    the truck 80.73 m away, identical in 2-D and 3-D, parked False, no fire.
+                    So the jump the working list suspected is 0.00 m.
+  LIVE, AFTER       Same path, build 0.0.1377: line for line identical. The 2-D guard admitted no
+                    rebuild the 3-D rule had rejected. Correct and SILENT, said plainly.
+  THE HOLE, CLOSED  A height-only rebuild with the truck ALREADY in the bay never occurred live, so it
+                    was built: SpawnMarkParkedTests.AHeightOnlyRebuildStillCountsAsStandingInTheBay.
+                    The lift uses feeHeight, which scales the one flat term the dead-level apron is made
+                    of - the bay stands at postX + bayStandoff = -100.4, u = 0.06, inside
+                    apronLevelFraction 0.19 - so the mark's y moves and its x and z do not.
+                    MEASURED: ground lifted 17.59 m, mark 5.36 -> 22.95;
+                      3-D to the mark      17.59 m   - EXCEEDS the 12 m budget, so the old 3-D rule
+                                                       would have refused the re-seat
+                      2-D to the mark       0.00 m   - x and z did not move: still in its bay
+                      commanded x/z         0.00 m   - the teleport is a no-op across the ground
+                    parkedWithin stays 12 m; the 3-D number is recorded, not accommodated; no assertion
+                    loosened. A second test, ATruckThatHasDrivenOffIsNotDraggedBack, shows the widened
+                    rule did not start dragging a driven-off truck back: 80 m out, moved 0.00 m.
+                    NOTE ON THE MEASUREMENT: PlayMode has no core (BlwpInit stubs to 0), so Teleport
+                    returns false and cannot report core movement. The third number is what the code
+                    COMMANDS in x/z, labelled commanded rather than dressed up as core movement.
+  RESIDUAL, LISTED  The 0.00 m teleport still fires on EVERY terrain rebuild while the truck is held -
+                    four times in ~4 minutes, every 35-107 s - writing into the core on a cadence driven
+                    by mempool polling. Left alone by ruling: not suppressed unless the 2-D guard
+                    produced a wrong fire, and it produced none. Listed here, not a working-list letter.
+  A PREDICTION THAT I predicted the 3-D guard would spend ~6.3 m of the 12 m budget on the boot rebuild
+  WAS WRONG         where stand-in ground at 2.7 m is replaced by relief at 9 m. It did not: that
+                    rebuild had the truck 80 m away and both measures agreed. The real divergence is
+                    0.24 m of hull-below-mark on y (truck 1.16 against mark 1.40), which the core drops
+                    anyway. Closed, no further investigation.
+  CORRECTION        An earlier commit body said the measured build was 0.0.1376. The stamp actually went
+                    0.0.1375 -> 0.0.1377. Recorded here rather than by rewriting history.
+  SUITES            EditMode 211: 207 pass, 3 skipped, 1 red (CombatFxTests.RifleFireProducesAFlashAnd
+                    ATracer, red before this work), zero error CS - unmoved by the code fixes and by the
+                    new test file.
+                    PlayMode 241: 216 pass, 13 skipped, 12 red - was 239/213/13/13, up by exactly the
+                    two tests added, ZERO new reds. Remaining: VehicleTests 5, ImportedModelTests 2,
+                    MushroomRestingTests 2 (the authored skirt offset, listed), FeatureTests 1,
+                    TruckHealthTests 1, VisibilityTests 1. Every truck and spawn test passes.
