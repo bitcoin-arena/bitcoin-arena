@@ -20,6 +20,8 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+NOW (2026-09-17 08:31, Daniel HARD): HUD chart under SIM ON/OFF, 20% larger, do not cover the right steering arrow.
+
 NOW (2026-09-17 08:04, Daniel HARD): order inside WAR_TACTICS build: 1) HUD §0.3 (TradingView, truck on the chart). 2) THEN world candles §4.15 (terrain in the world). Candles in the world come after the HUD. Then the rest of WAR_TACTICS. Before M3.
 NOW (2026-09-16 22:46, Daniel HARD): WAR_TACTICS.md including the new HUD (§0.3 TradingView chart with the truck on it) MUST be implemented with the rest of the war spec. Not optional. Before M3. Ping when live on Daily.
 NOW (2026-09-16 19:53, Daniel HARD): Spec AND WAR_TACTICS.md changed. BUILD both before M3. Priority. Implement WAR_TACTICS.md (armour + infantry + air + front) and the updated game spec. Ping when live on Daily. war-tactics session stays open.
