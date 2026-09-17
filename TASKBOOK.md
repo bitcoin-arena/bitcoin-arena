@@ -38239,3 +38239,12 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
   CORE / CLIENT     core fbfbdd98... listed in known-cores (Daniel 12:55 / 13:07: ship world candles with the signer nodes on
                     the same core, heat pin still the listed red); client bundle rebuilt, blwp-core.js d4a7e54f... listed.
                     WebGL 0.0.1482: built core == dist, built client == dist.
+  LIVE              2026-09-17 ~13:25: signer nodes /mnt/bitcoin/blwp-2of2/code at b2939d2 (core fbfbdd98), restarted, both
+                    answering /rounds (3 open). Page 0.0.1482 deployed (5d0d671b.btc-logistics-core.pages.dev; the root serves
+                    0.0.1482 with the candle core). Live probe on the Daily (headless Chrome, a free round, no teleport):
+                    spawn 26.000 m to the first face; CandleTerrain words = page core 1/1 (1068 vertices); YOU 13/13, GATE
+                    13/13 exact; GATE > pinned at the right edge 13/13; chart top right above the buttons; whole dollars;
+                    HIGH / LOW central. Spectate (second browser): the candle plateaus stand in the world; 0 chart lines.
+  HOLES             while the model list is loading, the HIGH / LOW line shares its row with the "Models loaded" header;
+                    heat pin still the listed red; blwp-node suites not run on this core; full EditMode / PlayMode chain not
+                    re-run after L1 / HIGH-LOW (filtered 28/28 and 19/19 only).
