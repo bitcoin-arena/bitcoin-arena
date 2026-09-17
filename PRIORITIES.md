@@ -20,6 +20,8 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+NOW (2026-09-17 12:40, Daniel HARD): mobile HUD directly above left/right controls; no decimals on the chart. Shot daniel-screens/hud-mobile-1240.jpg.
+
 NOW (2026-09-17 12:35, Daniel HARD FAIL): HUD is center over the truck. Must be top-right above the buttons. Screenshot in daniel-screens/hud-not-top-right-1235.jpg.
 
 NOW (2026-09-17 09:40, Daniel HARD): world-candle spec changed §4.15 - seam ±45 m (was ±61), band |z|<=54, pancake relief x0.15 inside, 40% cone outside. Static smaller chart, not dynamic flattening. Build that.
