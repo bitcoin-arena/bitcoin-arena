@@ -20,6 +20,8 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+NOW (2026-09-17 12:55, Daniel HARD): ship in the next hours. World candles on Daily (0.0.1476+), signer nodes on the SAME core (not the flat one), HUD top-right / mobile above pads, integers only, HIGH/LOW central not on the chart. Deploy. Ping Daniel when live.
+
 NOW (2026-09-17 12:40, Daniel HARD): mobile HUD directly above left/right controls; no decimals on the chart. Shot daniel-screens/hud-mobile-1240.jpg.
 
 NOW (2026-09-17 12:35, Daniel HARD FAIL): HUD is center over the truck. Must be top-right above the buttons. Screenshot in daniel-screens/hud-not-top-right-1235.jpg.
