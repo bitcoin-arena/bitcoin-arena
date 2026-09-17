@@ -38034,3 +38034,35 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     straight +x drive, the reference hills levelled); tactics 1 (overwatch post crest 1.43 m: a candle
                     under the hull); chart 1 (parked YOU moves: seed 7 spawns against candle 0's face). EditMode
                     CandleTerrain 2/2 + ChartHud 13/13. known-cores not listed (deploy call open). No player build yet.
+
+## WORLD CANDLES §4.15 AT 5654dd6: SEAM +-45 M, BAND |z| <= 54, PANCAKE x 0.15, CONE TO 12.4 M (code, not deployed)
+
+  REPORT            Daniel 09:40: smaller static chart, not dynamic flattening - build it with the HUD fix, no extra letter.
+  CHANGE            FRONT_DEPTH 0.72 -> 0.53 (47186 -> 34734): the seam, the HUD chart's ground mapping and the candle z
+                    scale all read it. Band |x| <= 104, |z| <= 54. Inside: apron + 0.15 (relief - apron) (the doc's
+                    "relief x 0.15 about the apron's height"; its test line says apron + 0.15 x relief - the same on
+                    the seed ground, apron 0). Outside, within |x| <= 104: |h - edge| <= 0.4 (|z| - 54), edge = the
+                    pancake at (x, +-54) - symmetric, as before. Candles, walls, view, renderer unchanged.
+  MEASURED          pancake inside the band, off candles and berms: 0.963 / 1.046 / 1.045 / 0.932 / 1.029 m max off the
+                    apron on seeds 1-5 (17026-17061 of 22935 spots), 1.064 m on an uploaded 14.5 m noise grid; steepest
+                    cone grade 0.4000 on every seed; the uploaded noise grid keeps its own cell grade 2.4673 inside the
+                    envelope (a pointwise rule cannot smooth a grid; 0 samples outside the envelope). Bodies 1.43-46.63 m.
+                    Spawn: bays 9-12 (z -17.0..3.4) start on or against candle 0 (was 8-13); SOLO_BAY 13 drives clear
+                    (x -86.70 at 2.7 s, 9.46 m/s).
+  ARMY BEFORE/AFTER seeds 1-5, 3600 ticks, truck parked; before = 5e320c2's core (no candles, +-61 m):
+                      H1 hold                    53.74% -> 53.04%     H2 bounding arrived   94.64% -> 96.00%
+                      hull-down                  36.8% -> 34.2% (overwatch 57.4 -> 54.1)
+                      kill zone                  83.3% -> 86.1%
+                      bound depth median / 12-16 13.6 m 61.1% -> 13.7 m 55.8%
+                      camping (across)           5.35% (0.83) -> 5.70% (1.44)   wiggle/min 3.07 -> 3.12
+                      A9 < 2 cover               15.71% -> 15.92%     O1 objective lanes   51.58% / 0.84 m -> 69.05% / 2.62 m
+                      heat pin                   [5, 6, 4, 6] -> [4, 6, 2, 6]
+                    Nothing retuned, nothing re-pinned.
+  TESTS             candles 6/6; vectors+bundle+chart 24/24 (vectors and both Unity fixtures regenerated);
+                    specified/poison/private/replay/spawn/cbrt/canonical 25/26; tactics 14/16; rules 37/48.
+                    Reds: rules 11 (the ten of 2faefeb less the rider, which passes; the reference drive 0.21 vs 3.811
+                    m/s at 1 s on its own recorded ground), tactics 2 (overwatch crest 0.65 m: a candle under the hull;
+                    seed 9 parked vs driven through RIDGE splits at 330 ticks with 0 holder ticks), replay 1 (thirteen
+                    ticks of steer no longer move the world). Unity chain (EditMode from before the regeneration):
+                    237: 232 pass, 3 skipped, 2 red - rifle flash (listed), AThrownBody (listed PhysX flake under load:
+                    the army measurements ran alongside). Rulings still open: wick, spawn.
