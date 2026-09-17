@@ -38170,3 +38170,46 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     28/28 with ChartPlacement and PostOffice), RampReady and TheGogglesAnimate flakes green alone.
   DEPLOY            no: the Daily signer nodes run 023b862 (flat ground, no candles) and would judge these rounds in another
                     world; this core is not in known-cores; rules has 3 listed reds.
+
+## WORLD CANDLES §4.15 (a): THE THREE RULES REDS, THE CANDLE WALLS, THE ROADS, THE DESKTOP BUTTONS (Daniel 2026-09-17)
+
+  WALL BUG          the truck passed through candles: the x-face walls stood at the apron's absolute height (0..2 m) and
+                    resolveSolids skips a wall whose top is under the truck's floor, so where a berm or the band's relief
+                    lifted the ground past 2 m both faces were skipped. Measured on 184 straight drives at pinned z through
+                    the field (seeds 1-8, z -44..44 every 4 m): 14 drives, 54 face crossings -> 0 and 0. The walls now
+                    stand in the candle layer's own height (0..H, wicks 0..9 m) and are resolved with the truck's height in
+                    that layer (candleHeightAt: 0 in a corridor, H on a plateau). Vectors unchanged.
+  HALF-LOCK TURN    green. Setup: setCandleField(st, false), a test door like setGround (not in the bundle) - the recording's
+                    world without the candle field (band, pancake, berms, craters stay). The 59 m circle and every
+                    tolerance unchanged; no candle-free pad fits it (strips 37 m and 40 m).
+  SEAM BANKS        green. Instrumented first (seed 0x5eed1234, z pinned, full throttle): rim z 62 made the 160.4 m in 867
+                    ticks; seam z 0 stopped 22.73 m out at candle 0's face (x -74.40); inner z 20 stuck at x -42.14 with its
+                    rear circle on candle 11's east face - it had driven THROUGH that candle (the wall bug above); after the
+                    fix it stops 39.99 m out at candle 3's face. The test asserts the bank (exposure and score by distance
+                    from the seam at the same ground made good), not the driving, and x-faces are walls by §4.15: the
+                    truck is carried along its lane at 12 m/s through the candle world as it is (a face it is placed across
+                    still pushes it), every lane alike. Assertions unchanged.
+  HEAT PIN          listed, not re-pinned; the test stays red on [3, 4, 2, 6] against [5, 6, 4, 6]. Instrumented (the
+                    fixture itself, once a second): tanks in reach median cold/hot at z -25: 5/6 -> 3/4, at z -50: 4/6 ->
+                    2/6. Tanks outside reach and standing (moved < 0.1 m in 2 s) near it hold doctrine lines - depth 15.5 -
+                    30.2 m behind the seam (16 / 30 m lines) at slot x +-34, +-49, +-61 - some on 2 m plateaus; no hull is
+                    stuck (tanks resolve no candle wall and their movement reads no slope). The seam at the truck's x moved
+                    -0.99 -> 3.01 m with the remap, carrying those lines. One tank stood 7.1 m across the seam on a plateau
+                    (cold, z -50). The rule still holds: seeds 0x5eed1234 and 1-7, a full bed has more tanks on the truck
+                    behind the line on 8 of 8 and at the seam on 6 of 8 (seeds 4 and 7: 4-4). New pin, measured legitimate
+                    terrain and seam effect: [3, 4, 2, 6].
+  ROADS             no road in the core (§ vocabulary). The four lanes are chart-band roads, not approach corridors: the
+                    deck lies inside |x| <= 104, |z| <= 54 along 110.5 / 208.5 / 208.5 / 107.0 m of 236 m (BullRear / Bull /
+                    Bear / BearRear), centre lines |z| 24.0-72.3 / 9.0-49.8 / 10.2-52.3 / 24.0-78.4. Laid on SurfaceAt the
+                    ribbon climbed candles (8.5 / 26.5 / 11.5 / 8.0 m) and drew a slope where the core has a 2 m wall. It is
+                    laid on TerrainAt now (the ground under the candles); what stands on a road rests on max(core surface,
+                    deck), so a truck or tank on a plateau under a road stands on the plateau. The bank and heat tests use the
+                    core world, which has no road.
+  DESKTOP BUTTONS   Daniel: "have the HUD above the sound button and the other button on desktop". The chart takes the top-
+                    right corner at the margin; the wanted row, the sound and debug buttons (drawn and clicked at
+                    DriveHud.SettingsRect), the debug readout and the score column step down under it in their own order and
+                    spacing. PlayMode, real boxes: 1280x657 chart y 23-260, wanted 271-322, buttons 383-427, score column
+                    436-623; the same stack at 1280x800 .. 1920x1080 and 1024x768, nothing overlapping; 844x390 and 800x600
+                    keep the chart under SIM. ChartPlacementTests + HudLayoutTests 17/17 (HudLayoutTests read the buttons
+                    at SettingsRect).
+  TESTS (core)      rules 48/49 (heat pin listed), tactics + candles + chart 28/28, vectors + bundle 20/20, other 26/26.

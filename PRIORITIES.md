@@ -22,7 +22,7 @@ Top item first. Finish and deploy before starting the next.
 
 NOW (2026-09-17 09:40, Daniel HARD): world-candle spec changed §4.15 - seam ±45 m (was ±61), band |z|<=54, pancake relief x0.15 inside, 40% cone outside. Static smaller chart, not dynamic flattening. Build that.
 
-WORLD CANDLES §4.15 slice (a) at 5654dd6 (seam ±45 m, band 54, pancake, cone): core layer, x-face walls, renderer in code (not deployed). Spawn B, wick w1, seam remap, GATE pin (G1), hull ease, wick drawn; HUD: no RIDGE/HOLLOW/GAP, chart top right on desktop (T1), off in spectate. Not deployable: signer nodes on the flat core. Listed reds: rules 3 (half-lock turn, seam banks, heat pin). Numbers in TASKBOOK.md.
+WORLD CANDLES §4.15 slice (a) at 5654dd6 (seam ±45 m, band 54, pancake, cone): core layer, x-face walls, renderer in code (not deployed). Spawn B, wick w1, seam remap, GATE pin (G1), hull ease, wick drawn; HUD: no RIDGE/HOLLOW/GAP, chart top right on desktop (T1), off in spectate. Not deployable: signer nodes on the flat core. Candle walls fixed (trucks drove through on berms). Half-lock turn and seam banks green; heat pin listed with measured cause ([3,4,2,6], not re-pinned). Roads on the ground under the candles. Desktop: chart above the buttons. Numbers in TASKBOOK.md.
 
 NOW (2026-09-17 09:17, Daniel HARD): the chart marks only HIGH and LOW. RIDGE/GAP/HOLLOW and the BULLS/BEARS ASSAULT banners go central on the screen, not on the chart. Plus everything of 09:13. No separate Unity build - ships with world candles.
 CODE DONE (09:13 + 09:17), not live yet: ships with the world-candles build. Numbers in TASKBOOK.md.
