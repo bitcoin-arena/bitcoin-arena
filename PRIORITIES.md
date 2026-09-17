@@ -20,6 +20,8 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+NOW (2026-09-17 16:42, Daniel HARD): at round start from the cab, candles move LEFT then freeze; miner-ward scroll is otherwise correct.
+
 NOW (2026-09-17 16:38, Daniel HARD): HUD back on spectate.
 
 NOW (2026-09-17 16:01, Daniel HARD): 1) Fable spec ea4c99f/a7324f1 - no glow, wick is 0.5 m ridge of ground, nothing above 1 m, nothing passed through. 2) Desktop HUD 30% smaller, position stays. 3) No candle movement HUD or world - live price samples not arriving. Wire the feed. Shot daniel-screens/hud-desktop-1601.jpg.
