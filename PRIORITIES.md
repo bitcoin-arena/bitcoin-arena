@@ -20,6 +20,8 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+NOW (2026-09-17 09:40, Daniel HARD): world-candle spec changed §4.15 - seam ±45 m (was ±61), band |z|<=54, pancake relief x0.15 inside, 40% cone outside. Static smaller chart, not dynamic flattening. Build that.
+
 WORLD CANDLES §4.15 slice (a): core layer, x-face walls, renderer in code (not deployed). Two rulings open: wick, spawn inside slot 0. Numbers in TASKBOOK.md.
 
 NOW (2026-09-17 09:17, Daniel HARD): the chart marks only HIGH and LOW. RIDGE/GAP/HOLLOW and the BULLS/BEARS ASSAULT banners go central on the screen, not on the chart. Plus everything of 09:13. No separate Unity build - ships with world candles.
