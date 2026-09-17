@@ -38499,3 +38499,24 @@ ASKING WHO IS OWED NO LONGER STOPS THE OTHER TRUCKS (2026-09-17 22:22; the 19:15
                    ghost-live 13/13. LISTED RED: second-closer 0/2 (needs a real lnd, identical before this letter);
                    client world-seed-bridge.test.js does not finish under the test timeout on this host.
 
+THE UNLABELLED STRETCH OF THE SIGNER NODES' OWN THREAD, LISTED (2026-09-18 00:30; the 19:15 ghost letter)
+  WHY A LIST       the loop's watcher names a stall by the labelled phases that ran inside it. Six stalls of 309-366 ms
+                   named only 7-8 ms of frame work while this thread burned 190-210 ms of processor, and four passes had
+                   already ruled out the close chain's continuations (gather, records, counting, keep), the
+                   receipt-taking, the frames, the batch store and the keeper's round opening. So the next step was not
+                   another guessed function: it was a list of what this thread runs during a live round with no name.
+  FIRES, 6 MINUTES custody settle lines (SETTLE -> null, one per entry per pass)      856
+                   payout table lines (1 of 2 signer nodes signed this table)         428
+                   POST /round (the keeper posting each new round)                     12 over 100 ms
+                   claim-key timer / rerun timer / refused-first-mark loop / replay worker results arriving   0 logged
+                   named already, for scale: finality 105, close gather 56, close retry 54, take receipts 27,
+                   keeper opening 16, doors 4, custody expiry 2
+  WHAT WAS LIVE    the five lines the daemon printed immediately before each of the six stalls: POST /round 12,
+                   payout 8, custody 8, and nothing else. 6 of 6 stalls sit inside the settle / payout loop's output.
+  MILLISECONDS     unknown, and that is the finding: this work emits log lines and carries no timer, so the sampler
+                   cannot attribute the 190-210 ms to it. The one row with a duration - POST /round - is 340-406 ms of
+                   wall and 0 ms on the loop, so the door is not it; what runs beside it is.
+  THE TRUCK        that window is the best measured: 3514 pictures in 6 min (9.8/s against the page's 10/s), gaps
+                   p50 100 ms, p90 110 ms, max 425 ms, 0 over 600 ms, 0 at the 3 s retire; 4 stalls over 300 ms seen
+                   from outside, pings median 12 ms, p90 25 ms.
+
