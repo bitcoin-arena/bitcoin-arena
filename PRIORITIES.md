@@ -20,6 +20,8 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+NOW (2026-09-17 12:58, Daniel HARD): order: 1) HUD first (top-right desktop, mobile above pads, no decimals, HIGH/LOW central). 2) THEN world candles + signer nodes on the SAME core. Deploy HUD first if it can ship alone; candles after. Ping when each is live.
+
 NOW (2026-09-17 12:55, Daniel HARD): ship in the next hours. World candles on Daily (0.0.1476+), signer nodes on the SAME core (not the flat one), HUD top-right / mobile above pads, integers only, HIGH/LOW central not on the chart. Deploy. Ping Daniel when live.
 
 NOW (2026-09-17 12:40, Daniel HARD): mobile HUD directly above left/right controls; no decimals on the chart. Shot daniel-screens/hud-mobile-1240.jpg.
