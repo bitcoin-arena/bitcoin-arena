@@ -20,6 +20,26 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+ORDER (Daniel 2026-09-17 17:34 HARD): ghosts -> candle fixes -> WAR_TACTICS army logic already started -> only then M3.
+
+LIVE (2026-09-17 18:05): Daily 0.0.1517 (b7339523), signer nodes on 2939d35.
+- Chart:
+  - Live BTC tape on every core start (Binance 1 s klines, fresh, seed fallback only).
+  - Live samples every 300 ticks, in the transcript.
+  - First sample no longer shoves the chart.
+  - Wick = 0.5 m ridge of ground, no glow.
+  - HUD chart 30% smaller on desktop, and on in spectate.
+- Ghosts:
+  - Signer node no longer freezes (was 20 s stalls; now max 434 ms over 60 s).
+  - The page draws each truck's newest picture.
+  - A silent truck is retired after 3 s.
+  - A new round clears all ghosts.
+- Roads whole again, laid on the ribbon.
+- Remainders:
+  - Ghosts not yet measured with two real browsers on the Daily (this host cannot run two WebGL pages at 60 Hz).
+  - Score column 134 px at 1280x800 with pads (not measured on screen).
+  - Hull-down, tank arrival, heat pin, blwp-node chunks 4-7, small-window model list, ArmiesAreActuallyDrawn (listed).
+
 NOW (2026-09-17 17:34, Daniel HARD order):
 1. Finish ghost realtime (60s lag, leftover ghosts after next round).
 2. THEN candle fixes (live tape, start-left shove, Fable ribbon/spec, HUD 30% smaller, spectate HUD).
