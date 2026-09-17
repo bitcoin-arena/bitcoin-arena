@@ -38248,3 +38248,49 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
   HOLES             while the model list is loading, the HIGH / LOW line shares its row with the "Models loaded" header;
                     heat pin still the listed red; blwp-node suites not run on this core; full EditMode / PlayMode chain not
                     re-run after L1 / HIGH-LOW (filtered 28/28 and 19/19 only).
+
+GHOSTS LIVE AGAIN (2026-09-17 19:15 letter; Daniel: "updates only every 300-600 ms", second-round ghost missing then misplaced,
+and a debug label over the truck. Screen daniel-screens/ghosts-two-tabs-1915.jpg)
+  MEASURED FIRST   the Daily's two signer nodes, from outside, 90 s of 100 ms pings on both /play sockets:
+                     median 40 / 46 ms, p90 ~290 ms, max 28,102 ms - both nodes at the same instants (one process).
+                     37 stalls over 300 ms in 90 s, 300-650 ms, one 28.1 s at 17:25:19Z.
+                   - The process ran at 175% of a core; the host also carries bitcoind at ~5 cores, load 8.
+                   - Every read-only door answers in 130-480 ms (TLS included), so no door is the stall.
+  CAUSE 1          tools/round-2of2.mjs, the round keeper in the signer nodes' own process: each opening read the chain
+                   from 20 below its bonds to the tip with TWO synchronous bitcoin-cli spawns a block, twice or more an
+                   opening (openNext, publishOnChain's beacon loop). The Daily mines ~10 blocks a minute, so the read
+                   grows with uptime: ~450 blocks 20 minutes after a start.
+                   - Profiled on a copy (own store copies, own ports, no Lightning): spawnSync 3.9 s of a 63 s profile,
+                     the rest curve math; the copy's own start stalled 9.8 s.
+                   - A/B on the local regtest chain, ~450 blocks since the bonds, one keeper at a time:
+                       old (2939d35)   round opened: event loop stalled 29,501 ms
+                       new             round opened: 383 ms + 409 ms
+                   - The view GROWS now (only blocks above the ones it holds), and every call on that path is bitcoind's
+                     RPC, awaited. A tool that gave only a cli keeps the cli.
+  CAUSE 2          the page sent a batch only on every sixth tick AND only with the last one answered, so a round trip
+                   over 100 ms cost a whole slot. Through a proxy holding each chunk (packages/blwp-client/tools/
+                   measure-ghost-lag.mjs, a real daemon, the page's cadence):
+                       delay each way    pictures/s   gap ms (median)   age on arrival ms (median)
+                       0 ms              10.0 -> 10.0    100 -> 100        8 -> 10
+                       40 ms              9.8 -> 10.0    100 -> 100       86 -> 85
+                       80 ms              5.0 ->  6.1    200 -> 166      167 -> 175
+                       150 ms                    3.4            309             321
+                   - A drain that finds a batch in flight is OWED and goes on that batch's answer.
+                   - What is left at 80 ms is the two one-way hops themselves (driver -> node -> watcher).
+  CAUSE 3          a ghost run was stepped only when a watcher asked for it (STEP_BUDGET 150 ticks a push), so a truck
+                   that drove alone before the other tab arrived was pictured from its first tick and raced along its old
+                   path - "missing, then at the wrong position" in a second round. Measured in ghost-realtime.test.js: a
+                   truck 1200 ticks in was first pictured at tick 149; now at 1199, its newest published tick.
+                   The node steps a publisher's run on its own batch, watched or not (6 ticks, ~2.4 ms).
+  DEBUG LABEL      over each ghost: line 1 the player's name (the page's checked /names records, else the name its key
+                   makes), line 2 the age in ms and the arrows - up forward, down back, left/right the turn, both when
+                   it did both. The age is now less the driver tab's own clock for the tick that picture names, carried
+                   between the tabs of one browser on a BroadcastChannel (ghost-field.js tickClock); a "~" means no
+                   stamp was found and it is the time since the picture arrived. The arrows are read off the pictures
+                   themselves - what came through the nodes - with the turn mirrored while backing.
+  TESTS            client ghost-field + ghost-label + ghost-realtime + ghost-consume 34: 33 pass, 1 red until the build
+                   copies the bundle into the template (it pins the template against dist). node ghost-live +
+                   assignment 15/15, ghost-socket + ghost-door + ghost-produce 16/16. Unity PlayMode Ghost*Tests 24/24.
+                   Both new rules mutation-checked: without the owed drain the second batch waits for the next slot;
+                   without the warm run the first picture is tick 149.
+
