@@ -20,6 +20,8 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+NOW (2026-09-17 17:05, Daniel HARD): ghosts are wrong. Two tabs: you see a ghost at start, then motion does not match. Ghost is at a completely different place than the player who creates it. Ghost stutters, not instant. Reproduce: 2 browsers side-by-side. Browser 2 drives its truck exactly in front of truck 1 then toward the field. Browser 1 will not see that. 100% repro.
+
 NOW (2026-09-17 16:42, Daniel HARD): at round start from the cab, candles move LEFT then freeze; miner-ward scroll is otherwise correct.
 
 NOW (2026-09-17 16:38, Daniel HARD): HUD back on spectate.
