@@ -38219,3 +38219,23 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     face; candle words = page core 1/1; YOU 20/20 and GATE 20/20 exact; GATE at the right edge 20/20; YOU at
                     the left edge 13/13 before the field, on the chart 7/7 on it.
   DAILY             cannot replay this: its signer nodes run 023b862 (flat ground, no candles, the old walls and seam).
+
+## RELEASE 0.0.1482: HUD (Daniel 12:35 / 12:40 / 12:55, L1) + WORLD CANDLES §4.15 + SIGNER NODES ON THE SAME CORE (one build, Daniel 13:07)
+
+  HUD               desktop: chart top right above the sound/debug buttons with or without pads (Daniel's screen reports a
+                    touch screen; measured from his 12:35 shot: Unity about 3072x1515, PRACTICE's fixed 300 px drawn 200) -
+                    3072x1515 (1913,53,1106,545); 1280x657 (796,23,461,237); 1024x505 scaled 0.95. Phone upright: directly
+                    above the left/right pads - 1170x2532 (41,1975,421,261), 390x844 (14,522,277,223). Phone on its side (L1):
+                    the desktop corner, scaled by one factor - 2532x1170 (1580,41,912,421), 844x390 (573,14,257,145) 0.71,
+                    932x430 0.81 (above the pads it was 20 / 37 px). Mobile = Unity's mobile platform flag, not touch.
+                    Chart prices whole dollars. HIGH / LOW off the chart (4 px ticks stay): one central line in the run-
+                    stopped row (under PRACTICE/SIM on an upright phone, where it lay on the danger bar). No RIDGE / HOLLOW /
+                    GAP, no Tab hint. The score column goes bottom right, left of the pads, where it does not fit under the
+                    chart's row (1000x360 before: over the wanted row). jslib BlwpTerrainAt falls back to groundAt.
+  TESTS             EditMode ChartHud + CandleTerrain + RoadModel 28/28; PlayMode ChartPlacementTests + HudLayoutTests 19/19;
+                    protocol known-core 2/2; client 348/348. Last full chain (the tree before L1 / HIGH-LOW): EditMode 240:
+                    236 pass, 3 skipped, 1 red (rifle flash, listed); PlayMode 244: 218 pass, 13 skipped, 13 red - the 12
+                    listed and HudLayoutTests 1000x360 (fixed, 19/19 above).
+  CORE / CLIENT     core fbfbdd98... listed in known-cores (Daniel 12:55 / 13:07: ship world candles with the signer nodes on
+                    the same core, heat pin still the listed red); client bundle rebuilt, blwp-core.js d4a7e54f... listed.
+                    WebGL 0.0.1482: built core == dist, built client == dist.
