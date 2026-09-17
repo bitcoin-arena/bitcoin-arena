@@ -37820,3 +37820,29 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     ROUND on spectate and on the result screen, M to maximise, crosshair: not built. Objectives are the
                     core's RIDGE/HOLLOW/GAP - HIGH/LOW/OPEN objectives (f17b8c0) are not in the core. OPEN and the price row
                     overlap at the top-left of the plot. Ghost names are entry ids, not player names.
+
+## THE CHART'S OPEN LABEL NO LONGER SITS ON THE PRICE ROW (WAR_TACTICS.md §0.3, 2026-09-17 04:40)
+
+  HOW               ChartHud logs, in the frame it paints, the boxes of the symbol, price and legend rows, OPEN, YOU, HIGH, LOW
+                    and the GATE label (text width from the style) and which of them OPEN shares area with; the two-player
+                    probe (local 2-of-2, headless Chrome 1280x657 canvas) counts the drawn pixels (not #131722 within 24)
+                    inside the OPEN x price-row overlap on each screenshot.
+  BEFORE (0.0.1459, instrumented, layout unchanged)  OPEN 593.2,469.4 42.5x20.3 above its line at the plot's left edge;
+                    price row 593.2,459.2 291.4x20.3: shared box 429 px, 246 drawn pixels in it; OPEN also shared 435.5 px
+                    with the legend row ("FRONT · SMA 21").
+  AFTER             PlaceOpen: above the line, then below it, scanned right from the plot's left edge in 4 px steps; the first
+                    box sharing no area with the symbol/price/legend rows, YOU, HIGH, LOW or GATE (else it stays and logs
+                    openPlaced=False). OPEN 713.2,490.6: shares nothing ("-"), 0 px of box and 0 drawn pixels with the price
+                    row in all 5 screenshots of each of 4 runs.
+  STILL HOLDS       header bright pixels 481 / 484 / 481; YOU orange 68 / 68 / 68 / 56; nothing under the chart (0.000);
+                    Tab GROUND 32 -> ROUND 1 -> GROUND 32; YOU = core 30/30 parked, 39/39 driven (A), 31/31 (B); the other
+                    player = core 9/9 (A) and 16/16 (B), max diff 0; GATE 39/39 and 31/31; assault words 39/39 and 31/31
+                    (none ran); market words parked vs driven and across players 0 of 18000, chart header 0 of 1200.
+                    Ghosts were absent in runs 1-3 (player B's session "play · opening", "1 player · waiting": the local
+                    pair under box load ~33); after restarting the local pair, run 4 carried both.
+  TESTS             core rules 48/48, bundle+vectors+chart 50/50, tactics 16/16; EditMode 229: 225 pass, 3 skipped, 1 red
+                    (rifle flash, listed), OpenKeepsOffThePriceRowTheLegendAndTheLabels passes; PlayMode 241: 216 pass,
+                    13 skipped, 12 red (the 12 listed). The instrumented build's PlayMode also failed
+                    PostOfficeTests.TheGogglesAnimate (listed flaky); it passed on the OPEN build.
+  HOLE              YOU's label can sit on the legend row when the truck's price is near the window's top (seen on run 4,
+                    A driving) - not OPEN, not placed by this rule; listed.
