@@ -37961,3 +37961,31 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     assertion stating the room it passes alone (1/1).
   HOLES             on a landscape phone (844x390) the chart is shorter than before (105 px); at 1024x768 and 800x600 it is
                     narrower than before - no room between the SIM column's pads and the throttle pads.
+
+## PLAYTEST 2026-09-17 09:13 + 09:17: THE CHART MARKS HIGH AND LOW ONLY; OBJECTIVES AND BANNERS CENTRAL (code, not live)
+
+  REPORT            Daniel's screenshots daniel-screens/hud-too-full-0913.jpg and hud-high-low-0917.jpg: "GROUNDTab: ROUND" run
+                    together; the last-price tag "$78,515.00" past the panel's right edge (09:13: 31 px past a 795 px panel,
+                    axis 159 px, text 183; 09:17: axis 86.8 of 434, text 100, the axis prices too); RIDGE / HOLLOW / GAP on the
+                    candles and on each other; "LOW $77,551.25" on the time labels -2:30 and -1:10; "-5:10" read "5:10" (begun
+                    left of the panel); "BULLS ASSAULT HOLLOW  BEARS ASSAULT RIDGE" from the legend row across the world, 239
+                    px past the panel.
+  CHANGE            ChartHud only. No Tab hint (Tab still switches). Price axis = max(64, 20% of panel, widest of lo/hi/last
+                    dollar text + 8) - AxisWidth, measured with the painter's style before Build. LOW: PlaceLow - under the wick
+                    if that still ends inside the plot, else right of the wick, else left, held inside the plot and off
+                    symbol/price/legend/HIGH/GATE; nowhere: not drawn. Time labels centred under their candle, held inside the
+                    panel (TimeLabelBox). Objective dots and names and the banners are off the chart. They are drawn in a strip
+                    central on the screen: the headline stack's run-stopped row (reserved, empty while the run is on), across
+                    the gap, ending above the chart where the chart reaches into the gap. Font = chart's, or smaller to fit two
+                    lines and the gap's width. Not drawn while the run-stopped line shows.
+  MEASURED          room above the chart UNDER the run-stopped row (the first place tried; PlayMode red, 4446 px² on the chart
+                    at 1280x657): 46.1 / 17.6 / 23.2 / -24.5 / 23.2 / 69.1 / 50.8 px at 1280x657 / 1280x800 / 1366x768 /
+                    1920x1080 / 1024x768 / 844x390 / 800x600; two lines need 50-63. In the row (PlayMode, real DriveHud boxes,
+                    strip at the whole room's width): font 18 / 21 / 21 / 21 / 17 / 10 / 16; off the chart, SIM, PRACTICE,
+                    condition, danger, wanted, block clock, liquidation and every pad at all 7 shapes; a 300 px strip
+                    at the screen centre except 844x390 (+56 px) and 800x600 (+58.3), held inside the gap.
+                    At 1920x1080 the chart top (483.2) is above the run-stopped row's bottom (507.7): the row itself
+                    overlaps the chart there since 08:31 (hole, the run-stopped line's, not the strip's).
+  NOT YET           no player-build screenshot: no separate Unity build (Daniel); measured with the world-candles build.
+  HOLES             assault columns (shading, no text) stay on the chart; GATE's label is drawn 34 px wide left of its line
+                    whatever its text width.

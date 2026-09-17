@@ -20,6 +20,9 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+NOW (2026-09-17 09:17, Daniel HARD): the chart marks only HIGH and LOW. RIDGE/GAP/HOLLOW and the BULLS/BEARS ASSAULT banners go central on the screen, not on the chart. Plus everything of 09:13. No separate Unity build - ships with world candles.
+CODE DONE (09:13 + 09:17), not live yet: ships with the world-candles build. Numbers in TASKBOOK.md.
+
 NOW (2026-09-17 09:13, Daniel HARD): HUD too full. Remove RIDGE/GAP/HOLLOW. LOW collides with time labels. Remove Tab: ROUND. Dollar amount must fit. No separate Unity build — fix ChartHud and deploy with world candles.
 
 NOW (2026-09-17 08:31, Daniel HARD): HUD chart under SIM ON/OFF, 20% larger, do not cover the right steering arrow.
