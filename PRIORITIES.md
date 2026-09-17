@@ -20,6 +20,8 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+NOW (2026-09-17 12:35, Daniel HARD FAIL): HUD is center over the truck. Must be top-right above the buttons. Screenshot in daniel-screens/hud-not-top-right-1235.jpg.
+
 NOW (2026-09-17 09:40, Daniel HARD): world-candle spec changed §4.15 - seam ±45 m (was ±61), band |z|<=54, pancake relief x0.15 inside, 40% cone outside. Static smaller chart, not dynamic flattening. Build that.
 
 WORLD CANDLES §4.15 slice (a) at 5654dd6 (seam ±45 m, band 54, pancake, cone): core layer, x-face walls, renderer in code (not deployed). Spawn B, wick w1, seam remap, GATE pin (G1), hull ease, wick drawn; HUD: no RIDGE/HOLLOW/GAP, chart top right on desktop (T1), off in spectate. Not deployable: signer nodes on the flat core. Candle walls fixed (trucks drove through on berms). Half-lock turn and seam banks green; heat pin listed with measured cause ([3,4,2,6], not re-pinned). Roads on the ground under the candles. Desktop: chart above the buttons. Numbers in TASKBOOK.md.
