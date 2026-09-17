@@ -20,6 +20,8 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+NOW (2026-09-17 09:13, Daniel HARD): HUD too full. Remove RIDGE/GAP/HOLLOW. LOW collides with time labels. Remove Tab: ROUND. Dollar amount must fit. No separate Unity build — fix ChartHud and deploy with world candles.
+
 NOW (2026-09-17 08:31, Daniel HARD): HUD chart under SIM ON/OFF, 20% larger, do not cover the right steering arrow.
 
 NOW (2026-09-17 08:04, Daniel HARD): order inside WAR_TACTICS build: 1) HUD §0.3 (TradingView, truck on the chart). 2) THEN world candles §4.15 (terrain in the world). Candles in the world come after the HUD. Then the rest of WAR_TACTICS. Before M3.
