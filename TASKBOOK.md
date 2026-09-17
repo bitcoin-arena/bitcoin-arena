@@ -38111,3 +38111,62 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     load); PlayMode 243: 218 pass, 13 skipped, 12 red - the 12 listed (retired C# army and truck physics
                     x8, ImportedModel x2 no hulls without a core, mushroom stem foot x2 waiting on the asset, visibility
                     under -nographics x1: ArmiesAreActuallyDrawn); WebGL 0.0.1473 built from 40fe360's core, not this one.
+
+## WORLD CANDLES §4.15 (a): SEAM REMAP, GATE PIN (G1), REDS BY SETUP, HULL EASE, WICK DRAWN; HUD: NO OBJECTIVE NAMES, TOP RIGHT ON DESKTOP (T1) (code, not deployed)
+
+  RULINGS           Daniel 2026-09-17: seam remap in this letter (frontlineZ and the HUD chartPoint on the candle field's
+                    x); G1 (gate off the chart with its true t, HUD pins GATE at the right edge); "RIDGE HOLLOW GAP must go,
+                    only LOW and HIGH"; the HUD chart top right on the desktop (T1), not covering the sound and debug
+                    buttons; off in spectate.
+  SEAM / HUD X      frontline.js tapeAtX / xAtTape over FIELD_X0 / FIELD_SLOT (the candles' own), parity by samples taken,
+                    rounding divide so the mapping round-trips. At a candle's centre, before (b323b7f) -> after, samples
+                    0/1/6/7: the seam read the tape up to 9.7 samples off the candle's own -> 0.00; HUD YOU on the wrong
+                    candle 28-29 of 32 -> 0 of 32. YOU leaves the pin at x -75.775 (field -75.800) and returns to it at
+                    108.4125 (field end 108.400).
+  GATE (G1)         gate x 114.000, the field ends 108.400, last face 107.000: 0.9729 of a candle past the last; GATE t
+                    32.9729 of 32, on 0. Before the remap the gate was on the chart at t 29.81. HUD: GatePinned, GateX = the
+                    plot's right edge, "GATE >"; YOU pinned at the left before the field, "YOU >". The "›" of the first
+                    cut did not show in the 0.0.1474 player ("GATE", "YOU" only) although the Editor's embedded font reports
+                    U+203A present - cause not proven; ">" shows in the final build.
+  REDS              tactics seed 9: the worlds split on RNG word 0 at 352 (seed 10: 361), the same ticks as before candles;
+                    an objective is first held at 429 / 441 now, so nothing was compared. Seeds 21 / 109 (split 476 / 462,
+                    201 / 296 holder ticks) of 120 searched; assertion unchanged. Hull-down test: berms read on the relief
+                    the surface stands on (seed 3 forward line 1.391 m raw -> 0.413 m). Rules: measured off-chart ground -
+                    bay lanes z +-78.2 and z +-70 are the recorded relief to 0.000 m, no candle, no berm, 25-33 m from a
+                    collider; PhysX accel and wall/lintel on bay 0's lane, full-lock turn from bay 23 (z 49.3..78.2, 15.9 m
+                    from a candle), hill cost on bay 0's lane (its own lane z -20 is flattened by 4.995 m), armour crash
+                    and rider at z +70, armour blocks from bay 0. Chart test: the field's first / last sample instead of
+                    +-130 m.
+  LISTED RED        rules 3: half-lock turn (its 59 m circle has no candle-free place: strips 37 m and 40 m; from bay 23
+                    into berms and 0.83 m from a collider, from bay 0 into the map wall) - own test, depends on a ruling
+                    (a reference world without the chart, or the turn retired); seam banks (the seam lanes lie inside the
+                    candles by construction) - depends on a route ruling; heat pin [5,6,4,6] -> [3,4,2,6] (terrain and the
+                    remap change which tanks have the truck) - not re-pinned.
+  HULL / WICK       ArmyRenderer.EaseRest: a 2 m face 0.111 m in the first frame, 18 frames (0.300 s); a 2.75 m/s slope
+                    followed with 0 lag. CandleTerrain draws the core's wick words as 1 x 1 m, 9 m pillars only past the
+                    body (24 vertices at 9.00 m, drawn top over the body 1.60 m); today's tape sends none.
+  HUD               the objective strip (names and the assault banners that name them) is gone. T1: DesktopPanelFor right-
+                    aligned under the icons; the score column under the chart; the headline gap ends left of it; used when
+                    the chart and the column fit and the gap stays > 150 px, else under SIM (844x390, 800x600); the debug
+                    readout is not drawn when icons, readout, chart and column do not fit (1920x1080 debug: column at y
+                    1165 of 1080 before). PlayMode, real DriveHud boxes, 1280x657 .. 1920x1080: full 1.2x, at the right
+                    margin, under the icons (1280x657: chart 796..1257 x 184..421, icons end 173), no overlap with icons,
+                    wanted, score column (429..617), headline (434 px), clock, liquidation, run-stopped, condition, danger,
+                    practice, sim. Spectate: ChartHud returns while the spectator camera is active.
+  PLAYER            WebGL 0.0.1474 (final tree; built core == dist), local 2-of-2, touch layout (headless Chrome): spawn
+                    26.000 m to the first face; CandleTerrain words = page core 1/1; YOU 21/21 and GATE 21/21 exact against
+                    the page core in the same frame; GATE at the right edge 21/21; YOU at the left edge 15/15 before the
+                    field, on the chart 6/6 on it; "GATE >" and "YOU >" visible; no RIDGE/HOLLOW/GAP. Spectate (second
+                    browser): 0 chart lines while spectating; the screen shows the price, EXIT and the fly hint (and the
+                    touch fly pads). Roads on SurfaceAt climb candles: deck over a candle along 8.5 / 26.5 / 11.5 / 8.0 m of
+                    236 m (BullRear / Bull / Bear / BearRear), onto 2.00 m plateaus.
+  NOT MEASURED      the desktop layout in the player: headless Chrome and the headless shell both give Unity a touch
+                    screen (pads drawn, chart under SIM), so T1 is measured in PlayMode only.
+  TESTS             core: rules 46/49 (3 listed), tactics 16/16, vectors+bundle+candles 28/28, chart 4/4, other 26/26.
+                    Unity (final tree): EditMode 239: 235 pass, 3 skipped, 1 red (rifle flash, listed). PlayMode 243: 218
+                    pass, 13 skipped, 12 red - the 12 listed (retired C# army and truck physics x8, ImportedModel x2 no hulls
+                    without a core, mushroom stem foot x2 waiting on the asset, ArmiesAreActuallyDrawn without a graphics
+                    device). Earlier runs this letter: HudLayoutTests x3 red on the first T1 cut (fixed by the fit rule,
+                    28/28 with ChartPlacement and PostOffice), RampReady and TheGogglesAnimate flakes green alone.
+  DEPLOY            no: the Daily signer nodes run 023b862 (flat ground, no candles) and would judge these rounds in another
+                    world; this core is not in known-cores; rules has 3 listed reds.
