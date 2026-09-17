@@ -20,6 +20,15 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+LIVE (2026-09-17 15:25): Daily 0.0.1497 (2376ab8c), signer nodes on 44c72d7 (the same core).
+- Shipped: world candles are a moving raised ribbon on one surface. Staircase; 1 m, 25% ramps, no walls. Scroll 0.576 m/s, nothing jumps on a sample tick. Berms withdrawn (passability). HUD from 0.0.1482 kept. Glow and wicks are blended light (additive washed the view white in 0.0.1496).
+- Remainders:
+  - Glow reads heavy from inside the field: a teal/red fog through several volumes. A look call (lower alpha or lids only).
+  - Hull-down holds jump more on the scrolling ribbon (fidget risk; spec 4fa54a8 has the hysteresis).
+  - Tank arrival ≤ 1.2× flat is red on flat ground too (army, not terrain).
+  - The terrain mesh draws the berm-free ground only on its own rebuilds (fine now that berms are gone).
+  - HIGH/LOW overlaps "Models loaded" while loading. Heat pin red. blwp-node suite: chunks 4-7 not run.
+
 NOW (2026-09-17 13:51, Daniel HARD): Fable PLAYTEST FIX 492f128 — candles are a raised ribbon not islands. H 1 m, bodies touching (full slot), 25% ramps 4 m on every free edge, no walls, no corridors, no solids. Implement. One wash.
 
 NOW (2026-09-17 13:49, Daniel HARD): candle scroll is in the spec and not in the build. Implement 0.65 m/s, 3.3 m/sample, no jump.
