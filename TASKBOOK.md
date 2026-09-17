@@ -37912,3 +37912,28 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     with more rows would clear it, not measured yet. YOU's dot (the core position) on HIGH (83.1 / 59 and
                     111.6 / 72) and on GATE's label (47.2 / 40) near the gate at the top: HIGH and GATE's labels have no
                     placement rule. Local probe browsers exit by themselves (code 0) on long runs: 3 of 7 runs.
+
+## THE LEFTOVER OTHER-PLAYER ID IS OFF OPEN WHEN THE ROW UNDER ITS DOT IS TAKEN (WAR_TACTICS.md §0.3, 2026-09-17 08:35)
+
+  BEFORE (6306c4a)  B's screen, A's truck pinned to the plot's top-left, B at the gate: PlaceGhostLabel tried three rows -
+                    level y501.5 off the plot, above y488.4 off the plot, below y514.7 blocked for every label start by OPEN
+                    [650.6-755.7], B's YOU label [742.6-831.8], B's YOU mark [797.1-831.8], GATE [777.1-831.8] and GATE's line
+                    [810.1-831.8]; no free box, and A's id stayed right of its dot at 657.7,501.5 on OPEN: 123.5 px² of box
+                    (EditMode replay of the logged boxes), 122.1 px² / 68 drawn pixels on screen.
+  CHANGE            GhostRows: after level, above and below, further rows below and above the dot one label + 3 px apart while
+                    inside the plot. The dot stays the core mapping; only its label looks further. GhostSlotReport logs, per
+                    ghost, each row tried, what blocked which starts and the first free start (ghostSlots in [chart]).
+  AFTER (0.0.1462)  EditMode, same logged boxes: placed at 657.7,538.0, OPEN 0 px². Player, two headless Chromes on a local
+                    2-of-2 (probe run as a systemd unit; Daily untouched): B's screen with A pinned top-left (x -83.2 m,
+                    z 80.2 m) and B at the gate - the player's own slot log reads y514.7 blocked end to end, y537.9 free at
+                    651.2; A's id at 651.2,537.9 shares 0 px² with OPEN and everything else, 0 drawn pixels; ghostsUnplaced 0.
+                    A's screen with B at the gate near the top (x 99.0 m, z 81.9 m): B's id 0 px² on GATE, GATE's line, the
+                    last-price tag, YOU, HIGH, LOW; YOU's label and mark 0 on the header rows. All 12 frames with a ghost:
+                    0 shares.
+  STILL HOLDS       header rows 0 px into the plot; OPEN vs the price row 0 drawn pixels; Tab GROUND 32 -> ROUND 1 -> GROUND
+                    32; YOU = core 194/194 (A) and 274/274 (B); the other player = core 163/163 and 252/252.
+  TESTS             EditMode 232: 228 pass, 3 skipped, 1 red (rifle flash, listed); PlayMode 241: 216 pass, 13 skipped, 12 red
+                    (the 12 listed). No new red.
+  NEXT HOLE         YOU's dot (the core position) on HIGH: B's screen at the gate at the top, 83.1 px² / 59 drawn pixels (was
+                    111.6 / 72 and 83.1 / 59 in earlier runs); on GATE's label 47.2 / 40 (seen once, 0 in this run). HIGH and
+                    GATE's labels have no placement rule yet.
