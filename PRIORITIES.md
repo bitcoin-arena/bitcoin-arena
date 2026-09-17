@@ -20,6 +20,8 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+NOW (2026-09-17 13:51, Daniel HARD): Fable PLAYTEST FIX 492f128 — candles are a raised ribbon not islands. H 1 m, bodies touching (full slot), 25% ramps 4 m on every free edge, no walls, no corridors, no solids. Implement. One wash.
+
 NOW (2026-09-17 13:49, Daniel HARD): candle scroll is in the spec and not in the build. Implement 0.65 m/s, 3.3 m/sample, no jump.
 
 NOW (2026-09-17 13:42, Daniel HARD PRIO): implement Fable's latest §4.15. Concrete: 1) client draws surfaceAt only, never the raw mempool grid. 2) candle open = previous close (continuous staircase, no gaps). 3) look: 2 m matte slab, glow 2-6 m 30% alpha, wick 9 m light, TV green/red, seam 0.5 m white, no roads in the band. 4) numbers: scroll 0.65 m/s, 3.3 m/sample, body 3.7 m, corridor 2.8 m, slot 6.5 m. Commits 236eefc, 4cfc8c3, ad8c1ba. One wash, no extra build. Ping when live.
