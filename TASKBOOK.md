@@ -38472,3 +38472,30 @@ THE CLOSE NO LONGER HOLDS THE PICTURED TRUCK (2026-09-17 22:05; the 19:15 letter
   ALSO             the keeper's chain reads are retried (0e912b0) after a transient getblockcount took the signer nodes
                    down at 21:22 and the Daily was off for about four minutes.
 
+ASKING WHO IS OWED NO LONGER STOPS THE OTHER TRUCKS (2026-09-17 22:22; the 19:15 letter, step 2)
+  WHAT MOVED       payout gather's synchronous half was peersOf -> committeeFor -> censusFor, and deriving a census
+                   parses every transaction of every block of that round's chain view - on the finality cadence, for an
+                   answer that cannot change. A census is fixed at the round's own census height, so it is derived once
+                   per round and view start, bounded at 64, never kept for a refusal or a root the round does not name.
+                   Custody was left alone again; it still never crosses 100 ms.
+  NAMED PHASES     the daemon's own timing, before this step -> after:
+                     payout gather      142-209 ms on the loop, every call  ->  never over 100 ms (nothing logged)
+                     close settleRound  320-464 ms                          ->  13 ms
+                     largest named hold of any phase since the restart: 13 ms (it was 324 ms after step 1, and
+                     33,734 ms before the letter began)
+  THE PICTURED TRUCK   same outside probe, stake-0 driver and watcher, 8 min each:
+                     after step 1 (21:57)   6.5 pictures/s, gaps p50 103 ms, p90 350 ms, max 1,053 ms,
+                                            87 over 600 ms, 0 at the 3 s retire; pings median 17/17 ms,
+                                            p90 384/393 ms, max 938/949 ms; 601 stalls over 300 ms
+                     after step 2 (22:12)   8.7 pictures/s, gaps p50 102 ms, p90 177 ms, max 467 ms,
+                                            0 over 600 ms, 0 at 3 s; pings median 15/16 ms, p90 106/104 ms,
+                                            max 452 ms; 34 stalls over 300 ms
+                   Daniel's report was "updates only every 300-600 ms". No gap in this window reached 600 ms.
+  WHAT IS LEFT     34 stalls over 300 ms in 8 min (was 601): 2 have a [custody] line in their window, 32 are
+                   unattributed and none is over 452 ms. The host carries bitcoind at ~5 cores, load ~8.
+  TESTS            node roster 17/17 (with a new one: the same round and view derive their census once, a view that
+                   begins elsewhere derives again, a refusal is never kept), assignment + verify 13/13, signer-node-
+                   committee + close-peers 9/9, close-at-end + verify + replay + worker-reads-run 20/20, chain-doors +
+                   ghost-live 13/13. LISTED RED: second-closer 0/2 (needs a real lnd, identical before this letter);
+                   client world-seed-bridge.test.js does not finish under the test timeout on this host.
+
