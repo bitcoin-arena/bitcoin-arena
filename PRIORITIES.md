@@ -38,7 +38,14 @@ LIVE (2026-09-17 18:05): Daily 0.0.1517 (b7339523), signer nodes on 2939d35.
 - Remainders:
   - Ghosts not yet measured with two real browsers on the Daily (this host cannot run two WebGL pages at 60 Hz).
   - Score column 134 px at 1280x800 with pads (not measured on screen).
-  - Hull-down, tank arrival, heat pin, blwp-node chunks 4-7, small-window model list, ArmiesAreActuallyDrawn (listed).
+  - Heat pin, blwp-node chunks 4-7, small-window model list, ArmiesAreActuallyDrawn (listed).
+- DONE (2026-09-17, 434fd6c, core, not deployed): overwatch tanks hold a crest.
+  - §4.1 hysteresis: search every 60 ticks, switch only for >= 0.3 m more rise.
+  - Crest changes on an unchanged post 3089 -> 92 (-97%); H1 45.6% -> 49.1%.
+  - Found, not unwound: hull-down share with >= 0.3 m rise 18.5% -> 16.7%. The 2-3 m crest share is 0% since the berms were withdrawn.
+- RED, listed -> tank arrival (next army item): §0 wiggle row 32.6% fidgets of own-step flips (< 2% required).
+  - Of 282 remaining z fidgets, the hold reversed on 98 and moved one way on 178; the tank is a mean 6.55 m from its hold.
+  - Cause: tanks in transit chasing a seam-moving line, not crest choice.
 
 NOW (2026-09-17 17:34, Daniel HARD order):
 1. Finish ghost realtime (60s lag, leftover ghosts after next round).

@@ -38248,3 +38248,34 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
   HOLES             while the model list is loading, the HIGH / LOW line shares its row with the "Models loaded" header;
                     heat pin still the listed red; blwp-node suites not run on this core; full EditMode / PlayMode chain not
                     re-run after L1 / HIGH-LOW (filtered 28/28 and 19/19 only).
+
+HULL-DOWN HYSTERESIS (2026-09-17, 434fd6c; WAR_TACTICS.md §4.1)
+  RULE              tactics.js updateCrests, once a tick before any post is read.
+                    - Each overwatch tank holds its crest as an offset from its post's line (TAC_CREST, TAC_CREST_KEY;
+                      TAC_WORDS 140), so the held crest moves with the scrolled seam between searches.
+                    - Re-searched every 60 ticks, and at once for a new post.
+                    - Switched only when another candidate's rise beats the held one by >= 0.3 m.
+                    - crestHold is read by army movement, onPost and the line budget.
+                    - C# Army.cs has no crest rule; its intent is a hull that holds its line.
+  MEASURED          tools/measure-hulldown-hysteresis.mjs, seeds 1-5 x 3600, a live-style sample every 300, truck parked;
+                    flips on the tank's own step (st.trace, outside separation):
+                      crest changes on an unchanged post   3089 (990/456/407/821/415) -> 92 (19/14/23/19/17)
+                      wiggle fidgets / own-step flips      400/1175 = 34.04% -> 312/958 = 32.57%   (< 2% required: RED)
+                      overwatch z fidgets                  261 -> 170
+                      H1 within 1.5 m of the hold          45.64% -> 49.11%
+                      hull-down >= 0.3 m, overwatch        18.54% -> 16.68%   (found; not unwound)
+                      hull-down crest 2-3 m                0.00% -> 0.00%     (the berms were withdrawn)
+                    Candle field off, before: 3557 changes, 40.88% fidgets - the churn was the scrolling seam, not the
+                    ribbon. measure-doctrine's 1.39% counted z reversals only and no samples, so it does not read the row.
+  LISTED RED        §0 wiggle row -> tank arrival (next army item).
+                    - Of the 282 remaining z fidgets, the hold reversed on 98, moved one way on 178, stood still on 6.
+                    - At a fidget the tank is a mean 6.55 m from its hold: in transit, chasing a seam-moving line.
+                    - The < 2% assertion is not weakened.
+  TESTS             - Core tactics 17/17: new hysteresis property test (1049 switches, all on a search and >= 0.3 m;
+                      19891 keeps under 0.3 m). The scoot and swap tests read the core's crest.
+                    - Core rules 49/49: heat pin 4,6,3,6 -> 4,6,2,6 (8 seeds: hot > cold at the seam 7, tie 1; behind 8).
+                    - Core candles+chart 13/13; vectors+bundle+misc 46/46; node replay-samples+replay-heat 7/7.
+                    - Unity EditMode ArmyDamageReference+CandleTerrain+ChartHud 20/20.
+                    - Unity PlayMode Army+ArmyReference+Reinforcement+Attrition+Visibility+BlwpBridge 13/14; the red is the
+                      listed VisibilityTests.ArmiesAreActuallyDrawn.
+  NOT DEPLOYED      the §0 wiggle row is red; Daily stays 0.0.1517 on 2939d35.
