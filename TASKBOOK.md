@@ -37989,3 +37989,48 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
   NOT YET           no player-build screenshot: no separate Unity build (Daniel); measured with the world-candles build.
   HOLES             assault columns (shading, no text) stay on the chart; GATE's label is drawn 34 px wide left of its line
                     whatever its text width.
+
+## WORLD CANDLES §4.15, SLICE (a): CORE LAYER, X-FACE WALLS, RENDERER (code, not deployed; two rulings open)
+
+  CHANGE            core rules/candles.js: 32 bodies over x -104..+104 (slot 6.5 m, body 3.7 m, corridor 2.8 m = 183500 Q16),
+                    z from open to close by the seam's own price scale (frontlineZ's raw normalisation), >= 1 m, pairs
+                    follow the round's candle parity (as the HUD chart). candleHeightAt: plateau 2 m, h = H x clamp(d/5 m).
+                    surfaceAt = levelled relief + emplacements (their base read from the levelled relief) + candles -
+                    craters. Band |x|<=104, |z|<=70 levelled to the apron (relief at START_X, 0); outside it within |x|<=104
+                    the relief is held to |h - apron| <= 0.4 (|z| - 70) (symmetric: the doc writes <=, a dip toward the band
+                    is held too). Two zero-thickness wall boxes per candle (apron..apron+2 m) in st.candleSolids, resolved
+                    for the truck only. Rebuilt on init, submitSample, setGround, restart. terrainAt = surface without the
+                    candle layer; candleView words (CV_*) to Unity. No wick (ruling), no scroll/lerp/remap/glow/lips.
+                    Unity: CandleTerrain meshes the words (tops at the ramp's 4 break points, x-faces to the apron, green /
+                    red submeshes); MempoolTerrain draws TerrainAt. Seam and HUD chart still map over +-130 m (no remap).
+  MEASURED          seed 1, candle 0 (no berm): truck up the ramp stands at z -10.917, surface 2.000 m over the apron, x
+                    unchanged; into the x-face from the west it stops at x -105.875 (face -102.600 - 1.275 - 2.0) and
+                    holds 600 ticks at full throttle; the corridor x -97.500 held to the far end, never on the plateau.
+                    Tanks, 60 s, seeds 1/2/3: x-face crossings 45/43/37, step-ups onto a plateau 33/33/34, tank-ticks on
+                    a plateau 19.2/18.6/21.8%. Drawn mesh vs core candle height: worst 0.0000 m over 6867 + 1683 points.
+  ARMY BEFORE/AFTER seeds 1-5, 3600 ticks, truck parked (measure-war / measure-hulldown-killzone / measure-doctrine;
+                    before = HEAD 5e320c2's core):
+                      H1 pair tank-ticks within 1.5 m of the hold    53.74% -> 51.25%
+                      H2 legs whose bounding tank reached its post   94.64% -> 96.15%
+                      hull-down (hull hidden, turret over)           36.8% -> 33.7% (overwatch 57.4 -> 53.4)
+                      kill zone (same stretch, different angles)     83.3% -> 83.2%
+                      bound: pair depth offset median / 12-16 m      13.6 m 61.1% -> 13.7 m 60.1%
+                      camping within 8 m of the seam                 5.35% -> 6.66% (across 0.83 -> 1.85)
+                      wiggle reversals per tank-minute               3.07 -> 3.42 (inside 2 s 0.90% -> 1.90%)
+                      A9 seam metres covered by < 2                  15.71% -> 17.56%; O1 on objective lanes 51.58% -> 39.49%
+                      heat pin (rules.test)                          [5, 6, 4, 6] -> [4, 6, 4, 6]
+                    Nothing retuned, nothing re-pinned.
+  RULINGS OPEN      1) WICK: a 1 m pillar from low to high at the centre x covers the whole plateau of a two-sample
+                       candle (the tape's candles: high/low = body ends), leaving 1.35 m lanes for a 2.55 m truck.
+                    2) SPAWN: START_X -100.4 is inside slot 0's body (x -102.55..-98.85). With the round's tape bays 8-13
+                       (z -23.8..10.2, SOLO_BAY 13 included) start on or against candle 0; seed 7 starts on its plateau.
+                       Any bay can be hit as the tape moves. And a truck driving +x meets an x-face within ~20 m on any bay
+                       line |z| < 62 (seed 1, z 17: candle 3's face at x -83.1).
+  TESTS             core candles 6/6; vectors+bundle 20/20 (vectors regenerated); specified+poison+private-world 9/9;
+                    transcript-replay 5/5; chart+spawn+cbrt+canonical 15/16; tactics 15/16; rules 36/48. The reds, all
+                    from the rulings above or from the terrain itself: rules 12 (PhysX drive 0.23 vs 9.594 m/s at 3 s,
+                    hill cost 0.00, wall/lintel, armour crash, rider, armour blocks, second round, heat pin, empty bed,
+                    apron accrual, wreck banks, seam banks - trucks spawned on candle 0 or stopped by a face on a
+                    straight +x drive, the reference hills levelled); tactics 1 (overwatch post crest 1.43 m: a candle
+                    under the hull); chart 1 (parked YOU moves: seed 7 spawns against candle 0's face). EditMode
+                    CandleTerrain 2/2 + ChartHud 13/13. known-cores not listed (deploy call open). No player build yet.
