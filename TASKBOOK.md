@@ -37733,3 +37733,57 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     flip: taking an objective costs tanks, and supply is a rate. Ruled numbers (§3); listed, not retuned.
   SHARE             missing rows 28 -> 27 (M1 closed; S1 keeps "losses bite" red). Armour leftovers 11 of 27, of which 5 are
                     the 20:30 hold cadence's push rate - still the largest single armour cause, a ruling.
+
+## NEVER HANG FOREVER: THE CONNECTING SCREEN AND THE LOBBY'S WAIT, MEASURED BEFORE ANY CHANGE (2026-09-17 01:45)
+
+  HOW               build 0.0.1455 (HEAD 36373a2 + the paused chart files, which touch neither path), served locally,
+                    headless Chrome 1280x800, software GL, box load ~20. Probes (scratchpad connect-probe.mjs,
+                    run-end-probe.mjs) read #boot/#pct/#stage/#err, Unity's own lobby report and the page's lobby view every
+                    500 ms and log only what changed, in seconds. Signer "silent" = the live Daily as it was at 00:10-01:10
+                    (both tunnels accept and do not answer; /rounds fails after 125 s). Signer "answering" = a separate local
+                    2-of-2 (own regtest bitcoind 30511, nodes 127.0.0.1:18190/18191), nothing of the Daily touched.
+  1 FIRST LOAD      silent signer (daily.json): "0% · Connecting …", no error, 0.5 -> 185.8 s. Cause: index.html adds Unity's
+                    loader only after the lobby's first paint, and fetchLobby asks node a then node b with no timeout -
+                    a/rounds failed at 125.1 s, b/rounds took 60 s, loader requested at 185.3, Unity up 188.6, lobby 191.3.
+                    answering signers: lobby ready 6.5-10.3 s.
+                    induced stalls (no daily.json): loader request held -> "0% · Connecting …" for all 300 s, fail() never
+                    called; Unity code file held -> "0 % · 0.0 / 22.3 MB · Loading the program …" for all 300 s, no error.
+                    Paths out of the screen today: the lobby's first paint returns (any length), the loader's onerror, and
+                    createUnityInstance rejecting. No timer anywhere.
+  2 AFTER A ROUND   answering signers, parked until the signers closed the round (run ended VOID: "the round is closed" at
+                    tick 1980 - the core runs ~6 ticks/s under software GL): Unity's lobby back 9.1 s after the end, rows live,
+                    PLAY enabled; no Connecting screen; stable for the 300 s watched. One gap: "closes 0:00" with PLAY enabled
+                    for 11.7 s until the next round was listed.
+  3 AFTER DELIVERED answering signers but the session did not join (bond door aborted at 12.1 s, "no proven endpoint: no bond
+                    ... provider 0: no answer in 10000 ms"): the DELIVERED card at +2 s, then the player stays in the game - no
+                    lobby, no error on screen beyond the debug status lines at the top - for all 240 s watched.
+  4 SIGNER SILENT   in the lobby (live Daily): a round past its close ("FREE · closes 0:00 · 2 of 2 signer nodes") with PLAY
+                    enabled from 211 s to 448 s (237 s) while the repaint waited on node a (/rounds failed at 126.6 s, then
+                    node b 125.6 s); then no rows, PLAY grey, no message, 448 -> 600 s (end of watch). After PLAY on the silent
+                    Daily: /round and /identity each fail after 125-150 s, the player sits in the lobby "joining". The only error
+                    text anywhere is the small grey hint line after a refused join ("not joined: ... Failed to fetch").
+  AFTER (build     page: each signer read has SIGNER_ANSWER_MS = 10 s (lobby.js answerWithin, both nodes asked at once); a join
+  0.0.1456)         with no named step for JOIN_ANSWER_S = 30 s is refused naming the nodes; a loading line unchanged for
+                    LOAD_STALL_S = 90 s calls fail(); a round whose entry has closed is not joinable. Unity lobby: a red box on
+                    the list names the silent nodes and a refused join.
+                    loader held: fail() at 91.7 s - "Could not start" and, red bold on the loading screen: "Nothing has loaded for
+                      90 seconds - the page stopped at "Connecting …" (0%). Check your connection and reload the page." (was: no
+                      error for all 300 s)
+                    Unity code held: fail() at 91.5 s - same words, stopped at "Loading the program …" (0 % · 0.0 / 22.3 MB)
+                    live Daily, tunnels silent: "Connecting …" 10 s (was 185 s), /rounds aborted at 10.0 s, Unity up 14.2 s,
+                      lobby 17.2 s with the red box "Signer nodes tramadol-...trycloudflare.com and honolulu-...trycloudflare.com
+                      did not answer in 10 s. PLAY waits until every signer node of the round answers - asked again every
+                      second." and PLAY grey (was: a closed round with PLAY enabled for 237 s, then nothing); the box cleared
+                      when both answered (99-103 s) and came back when they fell silent (117 s)
+                    local pair SIGSTOPped in the lobby: red box and PLAY grey 13.0 s after the stop (the last good row stayed
+                      ~7 s while the pending read ran out); SIGCONT at 60 s -> box gone, PLAY enabled by 80.1 s
+                    local pair SIGSTOPped right after PLAY: "joining the round" 10.1 -> 44.5 s, then the red box "Not joined:
+                      signer nodes 127.0.0.1:18190 and 127.0.0.1:18191 did not answer in 30 s." (was: joining for as long as
+                      watched)
+  STILL OPEN        3 (after DELIVERED with a session that never joined): the player stays in the run with only the debug
+                    status line - not this letter's two screens, listed.
+  TESTS             EditMode 228: 224 pass, 3 skipped, 1 red - CombatFxTests.RifleFireProducesAFlashAndATracer (listed); the four
+                    new LobbySilentSignerTests pass. PlayMode 241: 215 pass, 13 skipped, 13 red - the 12 listed plus
+                    PostOfficeTests.TheGogglesAnimate ("nothing moves in two seconds", box load ~20), which passed alone right
+                    after (PostOfficeTests 11 of 11): flaky, listed. Client: lobby 8/8 (2 new), page-curve/stake/threshold/join
+                    30/30, page-lock/two-tabs/ghost-field 52/52, bundle-fresh 2/2.
