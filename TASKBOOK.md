@@ -38381,3 +38381,33 @@ GHOSTS LIVE AGAIN - DEPLOYED (2026-09-17 20:10; the 19:15 letter's close-out)
   HOLES             the two-browser proof is Daniel's (this host cannot run two WebGL pages at 60 Hz); the debug label's
                     age is exact only between tabs of ONE browser (BroadcastChannel) and says "~" otherwise; the node's
                     remaining 300-600 ms stalls are the close / finality path, not measured to a cause yet.
+
+THE GHOSTS' LEFTOVER LAG, MEASURED FROM OUTSIDE (2026-09-17 21:05; the 19:15 letter's remainder)
+  PROBE             packages/blwp-client/tools/measure-daily-ghost.mjs [--minutes=10]. Three streams at once, nothing in
+                    the core and no src change: a stake-0 DRIVER seat in the Daily's free round recording a tick every
+                    1/60 s and draining every sixth (the shipped BatchEvery and drain rule, truck parked); a second
+                    stake-0 WATCHER seat subscribed, recording every picture of the driver with its arrival time (a
+                    picture is never sent to the entry that made it, so watching needs its own seat - two tabs); and a
+                    10 Hz PINGER on both nodes' /play. daily.log is tailed with an arrival stamp per line: a stall is
+                    close/finality ONLY when a [close] / [verify] / [settle] / [payout] / [custody] line falls in its
+                    window, unattributed otherwise. A round change is this probe's own and its gap is not counted.
+  WINDOW 1 (20:37)  pictures 3794 in 10 min (6.3/s against the page's 10/s); gaps p50 103 ms, p90 226 ms;
+                    over 600 ms 167; stalls over 300 ms 713 (71 a minute), of which close/finality 353 - custody 283,
+                    payout 56, close 14 - and 360 unattributed; none over 3 s. Every picture gap over 600 ms lay inside
+                    a stall (0 uncovered). Gaps across a round change were still counted here; window 2 fixes that.
+  WINDOW 2 (20:55)  the same probe with per-session gaps, after the first window's eight entries had rounds to close:
+                    pictures 255 in 10 min (0.4/s); gaps p50 1918 ms, p90 2832 ms, max 4061 ms; over 600 ms 185;
+                    3 s or more 13. Pings: median 1708 / 1705 ms, p90 2653 / 2659 ms. Stalls over 300 ms 615, of which
+                    close/finality 384 - custody 192, payout 144, close 48 - and 231 unattributed; 22 stalls over 3 s,
+                    longest 3964 ms (custody) and 3760 ms (close). Again every gap over 600 ms lay inside a stall.
+  THE ANSWER        close/finality is 353 of 713 (50%) in the first window and 384 of 615 (62%) in the second - not a
+                    small share - and custody is its biggest single named line. The stalls DO move a pictured truck: in
+                    the second window 13 gaps reached the 3 s at which ghost-field.js retires a truck, so the other
+                    player's ghost disappears and comes back, and 185 gaps were longer than the 600 ms Daniel reported
+                    feeling. This is not one picture delayed inside the 100 ms cadence.
+  CONDITIONS        this host carries bitcoind at ~5 cores, load ~8, and the probe's own seats add work: every entry
+                    gives the round another run to close, verify, settle and pay out, and all of it runs on the loop the
+                    ghosts share. That is why window 2 is worse than window 1 - and it is what more players do.
+  NOT MEASURED      which line inside the custody / payout path holds the loop (no profiler on the live daemon), and
+                    two real browsers on the Daily, which stays Daniel's check.
+
