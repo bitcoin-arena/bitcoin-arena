@@ -22,6 +22,11 @@ Top item first. Finish and deploy before starting the next.
 
 ORDER (Daniel 2026-09-17 17:34 HARD): ghosts -> candle fixes -> WAR_TACTICS army logic already started -> only then M3.
 
+LIVE (2026-09-17 19:15) letter: tank arrival - tanks fidget walking onto a hold on the scrolling candle field (crest-hold done).
+- Wiggle row = walking-in hull heading flips: 32.7% at HEAD, red, threshold unchanged (numbers in TASKBOOK).
+- measure-war A2 stays green (0.92%); the hull-guard patch took it to 3.80% and is dropped.
+- Residual: 274 of 311 fidgets are one turn on both axes in one tick (walking in 110 of 127); heading fix measured, not committed - ruling open.
+
 LIVE (2026-09-17 18:05): Daily 0.0.1517 (b7339523), signer nodes on 2939d35.
 - Chart:
   - Live BTC tape on every core start (Binance 1 s klines, fresh, seed fallback only).

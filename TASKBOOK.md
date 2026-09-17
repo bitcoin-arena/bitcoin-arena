@@ -38279,3 +38279,36 @@ HULL-DOWN HYSTERESIS (2026-09-17, 434fd6c; WAR_TACTICS.md §4.1)
                     - Unity PlayMode Army+ArmyReference+Reinforcement+Attrition+Visibility+BlwpBridge 13/14; the red is the
                       listed VisibilityTests.ArmiesAreActuallyDrawn.
   NOT DEPLOYED      the §0 wiggle row is red; Daily stays 0.0.1517 on 2939d35.
+
+TANK ARRIVAL (2026-09-17, letter; §0 wiggle row = walking-in hull heading flips; nothing in the core committed)
+  PROBE             tools/measure-fidget-causes.mjs [--core=DIR], seeds 1-5 x 3600, a sample every 300, truck parked.
+                    - Patches its trace into a temp copy of the core; the shipped core carries none of it.
+                    - A respawn (a > 3 m jump in one tick) restarts the tank's history: 958/312 -> 951/311 at HEAD.
+                    - Buckets, first match: back-off, budget stop-start, walking in (not within 1.5 m of the hold's
+                      depth since the post was set), arrived and chasing (hold moved > 0.02 m a tick), other.
+  HEAD e0e0ac8      fidgets 311 of 951 flips = 32.70%
+                      back-off 19 (2.00 pts), budget 10 (1.05), walking in 127 (13.35), arrived-chase 60 (6.31),
+                      other 95 (9.99)
+                    - One turn on both axes in the same tick: 274 of 311 (28.81 pts); walking in 110 of 127.
+                    - Of those 274, 219 drive along z with the hull 1-27 units off the axis (65536 a turn) and an
+                      x part under 5 mm.
+                    - Walking-in turns follow a post change inside the 2 s: a role swap 79, a push depth 24.
+                    - 1677 of 1762 unasked z steps are hulls crossing to their slot within 30 deg of x.
+  CAUSE             army.js heading, two halves of one fault: the hull never lies exactly on its travel line.
+                    (a) trig.js atan2 is inexact on the axes: atan2(0, 0.113 m) = 2, atan2(0, -0.113 m) = 32770,
+                        atan2(0.113 m, 0) = 16386.
+                    (b) the turn `off * 2365 >> 16` rounds to 0 for off 1-27 on the positive side, so the hull
+                        stops short.
+                    Backing along that hull turns the x sliver with z: one reversal, counted on both axes.
+  TRIED             all on seeds 1-5 x 3600; H1/H2/A2 from measure-war.mjs.
+                    variant                          fidgets   walking in  same-tick  A2              H1      H2
+                    HEAD                             32.70%    13.35 pts   274        PASS 0.92%      27.14%  61.70%
+                    guard on the hull's step         28.19%    12.08 pts   252        FAIL 3.80%      27.22%  59.62%
+                    (b) turn takes the last < 1 step 42.28%    17.66 pts   432        PASS 1.03%      28.04%  65.91%
+                    (a) exact axis travel            29.01%    12.16 pts   204        PASS 1.40%      25.80%  61.22%
+                    (a)+(b)                          10.93%     4.64 pts    40        FAIL 2.76%      24.79%  67.31%
+                    - (b) alone: every hull now settles exactly on atan2's 2-unit-off target, so every z drive leaks x.
+                    - (a)+(b) moves the letter's number; A2 goes red (6 of 217), so it is not committed.
+                    - (a) alone passes both gates by 1.2 pts, inside the seed scatter above; not committed as the fix.
+  TESTS             none run on a variant: nothing reached the tree. Tree = HEAD core + the probe tool.
+  NOT DEPLOYED      no core change.
