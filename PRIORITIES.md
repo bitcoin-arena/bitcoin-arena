@@ -20,6 +20,12 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+NOW (2026-09-17 17:34, Daniel HARD order):
+1. Finish ghost realtime (60s lag, leftover ghosts after next round).
+2. THEN candle fixes (live tape, start-left shove, Fable ribbon/spec, HUD 30% smaller, spectate HUD).
+3. THEN WAR_TACTICS army logic (the work already started).
+4. ONLY THEN M3.
+
 NOW (2026-09-17 17:12, Daniel HARD): ghosts. 1) 60s+ delay looks like wrong position - must be REALTIME. 2) After the next round: 3 ghosts, no updates at all, not even delayed, totally out of sync.
 
 NOW (2026-09-17 17:05, Daniel HARD): ghosts are wrong. Two tabs: you see a ghost at start, then motion does not match. Ghost is at a completely different place than the player who creates it. Ghost stutters, not instant. Reproduce: 2 browsers side-by-side. Browser 2 drives its truck exactly in front of truck 1 then toward the field. Browser 1 will not see that. 100% repro.
