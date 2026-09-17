@@ -38411,3 +38411,27 @@ THE GHOSTS' LEFTOVER LAG, MEASURED FROM OUTSIDE (2026-09-17 21:05; the 19:15 let
   NOT MEASURED      which line inside the custody / payout path holds the loop (no profiler on the live daemon), and
                     two real browsers on the Daily, which stays Daniel's check.
 
+WHICH PHASE HOLDS THE SIGNER NODES' LOOP (2026-09-17 21:28; the 19:15 letter, step 1's target)
+  INSTRUMENT       src/slow.js: every phase of the close, the payout, the custody settle and the ghost push is timed
+                   where the work is and logs its own name over BLWP_SLOW_MS (default 100 ms), with the SYNCHRONOUS
+                   stretch reported apart from the whole call - a socket waits behind the first, not the second. No rule
+                   reads it. Live on the Daily from 21:17 (release 0e912b0).
+  ON THE LOOP      the named phases, 21:17 to 21:28, both nodes in one process:
+                     close settleRound        8 calls: one 33,734 ms (the restart re-running old closes), then
+                                              554, 787, 792, 803, 946, 976, 1511 ms - about 40 s of loop in 11 min
+                     payout gather            13 calls, 259-401 ms each on the loop, 3,684 ms in total
+                     close sweep              2 over the threshold, max 1,519 ms
+                     custody settleHeldInvoices   never over 100 ms
+                     ghost warm step / ghost push never over 100 ms
+  SO               custody does NOT hold the loop: the [custody] lines that sat inside stalls were breadcrumbs of the
+                   close that was running, not its cause. `lncli` is spawned asynchronously and a replay is already in a
+                   worker; what is left on the loop is settleRound's own work and, second, payout gather.
+  PROBE, SAME RUN  the outside probe with the instrument live (8 min): 2371 pictures (4.9/s against 10/s), gaps p50
+                   103 ms, p90 452 ms, max 2787 ms, 132 over 600 ms, none at the 3 s retire. 698 stalls over 300 ms,
+                   median ping 19 / 17 ms, p90 449 / 463 ms. One picture gap over 600 ms lay outside every stall.
+  ALSO FIXED HERE  the keeper's chain reads are retried (0e912b0). Measured at 21:22: one getblockcount answered "fetch
+                   failed" while bitcoind held ~5 cores, the launcher threw at stand-up and the signer service
+                   restart-looped - the Daily was down for about four minutes. A chain read is not a decision.
+  OPEN             the target the letter named (custody and payout to a worker) is not where the loop goes: settleRound
+                   is. Ruling wanted before any move.
+
