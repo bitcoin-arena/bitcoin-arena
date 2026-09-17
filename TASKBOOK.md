@@ -38213,3 +38213,9 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     keep the chart under SIM. ChartPlacementTests + HudLayoutTests 17/17 (HudLayoutTests read the buttons
                     at SettingsRect).
   TESTS (core)      rules 48/49 (heat pin listed), tactics + candles + chart 28/28, vectors + bundle 20/20, other 26/26.
+  UNITY (13fbefd + roads/buttons, build 0.0.1476): EditMode 240: 236 pass, 3 skipped, 1 red (rifle flash, listed; the
+                    road rest test passes). PlayMode 243: 218 pass, 13 skipped, 12 red - the 12 listed, none new. WebGL 0.0.1476
+                    built core == dist. Player, local 2-of-2 (signer pair restarted on this core): spawn 26.000 m to the first
+                    face; candle words = page core 1/1; YOU 20/20 and GATE 20/20 exact; GATE at the right edge 20/20; YOU at
+                    the left edge 13/13 before the field, on the chart 7/7 on it.
+  DAILY             cannot replay this: its signer nodes run 023b862 (flat ground, no candles, the old walls and seam).
