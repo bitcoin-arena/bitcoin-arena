@@ -38435,3 +38435,40 @@ WHICH PHASE HOLDS THE SIGNER NODES' LOOP (2026-09-17 21:28; the 19:15 letter, st
   OPEN             the target the letter named (custody and payout to a worker) is not where the loop goes: settleRound
                    is. Ruling wanted before any move.
 
+THE CLOSE NO LONGER HOLDS THE PICTURED TRUCK (2026-09-17 22:05; the 19:15 letter, step 1)
+  WHAT MOVED       (a) a closing round's runs are read by the replay WORKER, which opens the store read-only and reads
+                   the rows itself - the thread that answers /play and pushes a pictured truck does not read them.
+                   (b) an old round's own chain view (a census below the signer nodes' view start) is read over
+                   bitcoind's RPC, off the loop, once per height; until it is there the view answers PENDING and the
+                   beacon, the census and the committee refuse on that rather than passing a round unchecked.
+                   Custody was left alone: it never crossed 100 ms.
+  THE LOOP, NAMED  the daemon's own timing (src/slow.js), before and after, both nodes in one process:
+                     close settleRound   554, 557, 653, 787, 792, 803, 946, 976, 1511 ms, plus 5,388 and 8,319 ms when
+                                         an old round's view was read, and 33,734 ms in a restart's burst
+                                     ->  320, 320, 335, 439, 464 ms, and the worst hold of ANY named phase since the
+                                         restart is 324 ms
+                     close beacon        7,627 ms once   ->  none over 20 ms
+                     close read transcript 21-31 ms an entry, up to seven an round  ->  none (the worker reads them)
+                     payout gather       259-401 ms  ->  142-209 ms (next, step 2)
+                     custody             never over 100 ms, before or after
+  THE PICTURED TRUCK  the same outside probe, a stake-0 driver and watcher in the Daily's free round, 8 min each:
+                     before (21:19)   6 min of pictures at 4.9/s, gaps p50 103 ms, p90 452 ms, max 2,787 ms,
+                                      132 over 600 ms, 0 at the 3 s retire; pings median 19/17 ms, p90 449/463 ms,
+                                      max 2,668 ms; 698 stalls over 300 ms
+                     the worker read  6.0/s, p50 103 ms, p90 382 ms, max 1,463 ms, 190 over 600 ms, 0 at 3 s;
+                                      pings p90 478/474 ms, max 1,387 ms; 585 stalls
+                     both (21:57)     6.5/s, p50 103 ms, p90 350 ms, max 1,053 ms, 87 over 600 ms, 0 at 3 s;
+                                      pings median 17/17 ms, p90 384/393 ms, max 938/949 ms; 601 stalls
+                   No truck was retired for silence in any window after the change, and every gap over 600 ms still
+                   lies inside a stall - the page is not the source.
+  HONEST CONDITIONS  bitcoind holds ~5 cores of this host and the load is ~8; the probe's own two seats give each round
+                   another run to close, verify, settle and pay out on the same loop. The stall COUNT barely moved
+                   (698 -> 601 in 8 min): what moved is how long each one lasts, which is what a ghost feels.
+  TESTS            node verify + assignment + close-at-end 14/14, replay + replay-samples + replay-heat 16/16, pool 4/4,
+                   chain-doors + ghost-live 13/13, ghost-socket + ghost-door + ghost-produce 16/16, and a new
+                   worker-reads-run 1/1: a worker that reads the store itself returns exactly what a worker handed the
+                   rows returns, and a store that is not there is refused. second-closer 0/2 is a listed red that needs
+                   a real lnd - measured identical at the commit before this change.
+  ALSO             the keeper's chain reads are retried (0e912b0) after a transient getblockcount took the signer nodes
+                   down at 21:22 and the Daily was off for about four minutes.
+
