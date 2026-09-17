@@ -37879,3 +37879,36 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
   HOLES (§0.3)      the other player's id label can sit on the GATE label and the last-price tag (seen at z 64 m, x 105 m);
                     ROUND is one wide candle (no live samples); HIGH TAKEN not drawn; M to maximise, crosshair, ROUND on
                     spectate/result not built; objectives RIDGE/HOLLOW/GAP, not HIGH/LOW/OPEN; ghosts named by entry id.
+
+## THE OTHER PLAYER'S ID SITS CLEAR OF GATE AND THE LAST-PRICE TAG (WAR_TACTICS.md §0.3, 2026-09-17 07:20)
+
+  HOW               ChartHud logs every other player's dot and id-label box, GATE's label and line, the last-price tag, and what
+                    each id shares area with; the probe (two headless Chromes on a local 2-of-2 with a 25-minute round,
+                    BLWP_ENTRY_WINDOW_MS=1500000, the Daily untouched) drives B from its bay to the gate along the window's top
+                    while A stays parked, then A to the top edge; drawn pixels (not #131722 within 24) are counted in each overlap.
+  BEFORE (0.0.1461, instrumented, layout unchanged)  id drawn right of its dot.
+                    B at the gate above the window's top (x 103.1 m, z 80.4 m): id 865,501.5 61.7x20.3 on GATE's label 145.4 px²
+                    / 81 drawn pixels, GATE's line 20.2 / 20, the last-price tag 396.9 / 403, HIGH 362.6.
+                    B approaching (x ~90 m, z ~55 m): GATE 162.8 / 115, GATE's line 40.6 / 40, last-price tag 1.7 / 2.
+                    Mid-field: the id on LOW 91.1 and 275.9 px².
+  CHANGE            PlaceGhostLabel: level with the dot, then above, then below; along each row right then left in 4 px steps;
+                    the first box inside the plot (never on the price axis) sharing no area with GATE's label and line, the
+                    last-price tag, the header rows, OPEN, YOU's mark and label, HIGH, LOW, the ghosts' dots and the ids already
+                    placed; nothing free: right of the dot as before. YOU and OPEN are placed first, the ghosts are drawn after
+                    OPEN and before YOU.
+  AFTER (0.0.1461 + placement)  B at the gate above the window's top (x 98.25 m, z 82.15 m, dot pinned to the plot top): id
+                    773.3,514.7 65.1x20.3 shares 0 px² with GATE, GATE's line, the last-price tag and everything else; the same
+                    in the 5 frames on the way and with A at the top edge (8 frames, 0 in each). Run 1 (B stuck at the gate at
+                    z 36.8 m): 0 px² in all 17 frames.
+  STILL HOLDS       YOU vs the legend row 0 px² with A pinned at the top (z 80.5 m), header rows 0 px into the plot; OPEN vs
+                    the price row 0 drawn pixels; header 481 / 484; nothing under the chart; Tab GROUND 32 -> ROUND 1 -> GROUND
+                    32; YOU = core 156/156 (A) and 196/196 (B); the other player = core 132/132 (A) and 184/184 (B); GATE and
+                    assault words 156/156.
+  TESTS             EditMode 231: 227 pass, 3 skipped, 1 red (rifle flash, listed); TheOtherPlayersIdKeepsOffGateAndTheLast-
+                    PriceTag passes. PlayMode 241: 216 pass, 13 skipped, 12 red (the 12 listed).
+  HOLES             on B's own screen with A pinned at the top-left and B at the gate: the row under A's dot was taken end to end
+                    (OPEN 713-756, B's YOU label 805-838, GATE 840-879; left of the dot is off the plot), no free box, and A's id
+                    stayed right of its dot on OPEN (122.1 px², 68 drawn pixels) - the fallback, same place as before; a rule
+                    with more rows would clear it, not measured yet. YOU's dot (the core position) on HIGH (83.1 / 59 and
+                    111.6 / 72) and on GATE's label (47.2 / 40) near the gate at the top: HIGH and GATE's labels have no
+                    placement rule. Local probe browsers exit by themselves (code 0) on long runs: 3 of 7 runs.
