@@ -20,7 +20,6 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-NOW (2026-09-16 23:42, Daniel HARD): if the page stays on Connecting … it MUST show an error. Never hang forever. Timeout + visible failure. Current feature set, with WAR_TACTICS.
 NOW (2026-09-16 22:46, Daniel HARD): WAR_TACTICS.md including the new HUD (§0.3 TradingView chart with the truck on it) MUST be implemented with the rest of the war spec. Not optional. Before M3. Ping when live on Daily.
 NOW (2026-09-16 19:53, Daniel HARD): Spec AND WAR_TACTICS.md changed. BUILD both before M3. Priority. Implement WAR_TACTICS.md (armour + infantry + air + front) and the updated game spec. Ping when live on Daily. war-tactics session stays open.
 NOW (2026-09-16 18:20, Daniel HARD): army doctrine is WAR_TACTICS.md (was TANK_TACTICS.md; armour part A, infantry part B). Source of truth. Implement it. Ping when live on Daily.
@@ -29,6 +28,12 @@ NOW (2026-09-16 18:06, Daniel HARD):
 Ping Daniel when live on Daily.
 M3 waits.
 LISTED (2026-09-16 22:45, HEAD 8fb47e2): reds, cause, dependency - EditMode 1 (rifle flash, pre-existing); PlayMode 12 (listed since 13:xx, none new); node fixture drives moved by the tank doctrine (re-pick in the working tree, held out of the tactics commits); §0 A9 (opening drive-in), A11/A13b/assault/trend push gap (20:30 hold cadence), O1 (supply §3), trend UP losses (air §12.3, parked), O4 (client markers). Numbers in TASKBOOK.md.
+DONE (2026-09-16 23:42 NOW, closed 2026-09-17): the page never hangs on Connecting. A load that stops shows a red
+error after 90 s ("Nothing has loaded for 90 seconds ... Check your connection and reload the page."), a signer node
+that does not answer is named in red on the lobby within 10 s with PLAY grey, and a join nobody answers is refused
+after 30 s, naming the nodes. Build 0.0.1456, HEAD 68a1120; not deployed. Reds as listed: EditMode rifle flash;
+PlayMode the 12 listed plus the PostOffice goggles flake. Remainder (after DELIVERED, session never joined) in
+TASKBOOK.md. Numbers in TASKBOOK.md.
 DONE (2026-09-16 17:00/17:06 playtest): tanks ignore the truck except by shooting - the truck ring is gone, tank
 vs tank spacing and clip/ram rules kept; a truck that touches a tank is WRECKED at once; WASTED plays ~5 s, then
 the lobby. Live on 0.0.1403 (signer nodes 023b862): WRECKED on touch at tick 581, WASTED at 1 s and 3 s, lobby
