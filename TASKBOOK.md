@@ -37787,3 +37787,36 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     PostOfficeTests.TheGogglesAnimate ("nothing moves in two seconds", box load ~20), which passed alone right
                     after (PostOfficeTests 11 of 11): flaky, listed. Client: lobby 8/8 (2 new), page-curve/stake/threshold/join
                     30/30, page-lock/two-tabs/ghost-field 52/52, bundle-fresh 2/2.
+
+## THE HUD CHART IN THE PLAYER BUILD: THE TRUCK AND THE OTHER PLAYER FROM THE CORE, TAB SWITCHES THE RANGE (WAR_TACTICS.md §0.3, 2026-09-17 03:10)
+
+  WHAT              core src/chart.js lays the chart out (candles, seam, OPEN, HIGH/LOW, lead, trend dots, momentum, YOU,
+                    GATE, objectives, assault columns) for GROUND and ROUND, and chartPoint maps any ground point (the truck,
+                    a ghost's picture) onto it; reading it writes no state. Unity ChartHud paints those words only: one
+                    panel, no bar under it, Tab switches the range (Tab no longer toggles the camera; G does).
+  HOW               build 0.0.1458, served locally, two headless Chromes (1280x800, software GL) joined the same free round
+                    on a local 2-of-2 (own regtest bitcoind; the Daily untouched). Inside each page a console.log wrap
+                    checks every "[chart]" line against the page's own core in the same frame; screenshots are read for
+                    the chart background, the 60 px under the panel, the orange YOU dot and the header's bright pixels.
+  EXACT (core)      YOU = chartPoint(truck): A 38/38 parked and driven (truck -100.40 -> -92.41 m), B 25/25, max diff 0.
+                    GHOST = chartPoint(the picture the page handed Unity): A 6/6 (B's truck), B 7/7 (A's truck), max diff 0.
+                    GATE 38/38 and 25/25; candle count 38/38 and 25/25; assault words 38/38 and 25/25 - no assault ran in
+                    the probe, so assault columns are measured idle only on screen (the EditMode fixture covers a running one).
+  TAB               GROUND 32 candles -> ROUND 1 -> GROUND 32, header word GROUND / ROUND / GROUND (0.0.1456 run; 0.0.1458:
+                    ROUND 1 -> GROUND 32).
+  SCREEN            one chart: chart background outside the panel 0-3 px of 1280x657; under the panel 0.000 in every shot.
+                    header bright pixels before (0.0.1456) 0 / 0 / 0 -> after (0.0.1458) 484 / 481 / 481: labels were
+                    multiplied by the last box's colour (GUI.color not reset), the symbol line drawn in #1f2530.
+                    YOU orange pixels at its logged spot before 0 (A, "Loading models" list drawn over the chart) -> after
+                    68 / 68 / 56 (the chart draws in front, GUI.depth -1).
+  MARKET            lead, trend, momentum words and the chart's header words: parked vs driven 0 of 18000 ticks / 0 of 1200
+                    reads, across players 0 of 18000 / 0 of 1200 (m1-chart.mjs on this core); the header equals the core
+                    market words on every read.
+  TESTS             core rules 48/48, bundle+vectors+chart 50/50 (chart 4/4), tactics 16/16, determinism clean; EditMode 228:
+                    224 pass, 3 skipped, 1 red (CombatFxTests rifle flash, listed), ChartHud 6/6; PlayMode 241: 216 pass,
+                    13 skipped, 12 red (the 12 listed).
+  HOLES             ROUND has one candle: no live samples reach the core (§4.13 live tape), so ROUND is the open's candle
+                    drawn as one wide body and YOU/GATE sit off its range. HIGH TAKEN (assault outcome flash) not drawn.
+                    ROUND on spectate and on the result screen, M to maximise, crosshair: not built. Objectives are the
+                    core's RIDGE/HOLLOW/GAP - HIGH/LOW/OPEN objectives (f17b8c0) are not in the core. OPEN and the price row
+                    overlap at the top-left of the plot. Ghost names are entry ids, not player names.
