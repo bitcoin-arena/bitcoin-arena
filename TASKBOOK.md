@@ -37937,3 +37937,27 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
   NEXT HOLE         YOU's dot (the core position) on HIGH: B's screen at the gate at the top, 83.1 px² / 59 drawn pixels (was
                     111.6 / 72 and 83.1 / 59 in earlier runs); on GATE's label 47.2 / 40 (seen once, 0 in this run). HIGH and
                     GATE's labels have no placement rule yet.
+
+## PLAYTEST 2026-09-17 08:31: THE CHART UNDER SIM ON/OFF, OFF THE STEERING ARROWS, 20% LARGER (live 0.0.1465)
+
+  REPORT            Daniel on the Daily 0.0.1462: the HUD chart covers the right steering arrow and is unreadable.
+  CHANGE            ChartHud.PanelFor(w, h, sim): top edge = DriveHud.SimBox bottom + half a pad margin; left edge = the SIM
+                    switch's, or just right of the right steering arrow when the chart would reach down onto the arrows; right
+                    edge before the handbrake/throttle pads; bottom above the screen margin. Size 1.2x the old one (BaseSize)
+                    where that fits, else the room. Header font cap 18 -> 21.6 px. Layout only.
+  MEASURED          PlayMode ChartPlacementTests on the real DriveHud.SimBox and TouchPad rects (chart top / SIM bottom; chart
+                    left / right-arrow right; scale w x h):
+                      1280x657   379.5 / 368.0   308.8 / 297.3   1.200 x 1.200
+                      1280x800   414.5 / 400.5   376.0 / 362.0   1.200 x 1.200
+                      1366x768   406.7 / 393.2   361.0 / 347.5   1.200 x 1.200
+                      1920x1080  483.2 / 464.3   507.6 / 488.7   1.200 x 1.200
+                      1024x768   406.7 / 393.2   361.0 / 347.5   0.983 x 1.200 (302.08 px between the right arrow and the
+                                 handbrake; the test at first required 1.2 here and was red - the room, not the rule)
+                      844x390    271.1 / 264.1   184.0 / 177.0   1.200 x 0.617 (105 px from SIM to the bottom margin)
+                      800x600    354.9 / 344.4   282.0 / 271.5   0.787 x 1.200
+                    no pad overlapped at any shape. Deployed 0.0.1465 (0fc1b50a.btc-logistics-core.pages.dev), root serves it.
+  TESTS             EditMode 232: 228 pass, 3 skipped, 1 red (rifle flash, listed); ChartHud 10/10. PlayMode 242: 216 pass,
+                    13 skipped, 13 red at first - the 12 listed and ChartPlacementTests (1024x768 width, above); with the
+                    assertion stating the room it passes alone (1/1).
+  HOLES             on a landscape phone (844x390) the chart is shorter than before (105 px); at 1024x768 and 800x600 it is
+                    narrower than before - no room between the SIM column's pads and the throttle pads.

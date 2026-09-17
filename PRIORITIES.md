@@ -31,6 +31,8 @@ NOW (2026-09-16 18:06, Daniel HARD):
 Ping Daniel when live on Daily.
 M3 waits.
 LISTED (2026-09-16 22:45, HEAD 8fb47e2): reds, cause, dependency - EditMode 1 (rifle flash, pre-existing); PlayMode 12 (listed since 13:xx, none new); node fixture drives moved by the tank doctrine (re-pick in the working tree, held out of the tactics commits); §0 A9 (opening drive-in), A11/A13b/assault/trend push gap (20:30 hold cadence), O1 (supply §3), trend UP losses (air §12.3, parked), O4 (client markers). Numbers in TASKBOOK.md.
+DONE (2026-09-17 08:31 playtest): the HUD chart sits under SIM ON/OFF, clear of the steering arrows, 20% larger on
+desktop screens (1280x657 up to 1920x1080; less where the pads leave no room). Live 0.0.1465. Numbers in TASKBOOK.md.
 DONE (2026-09-16 23:42 NOW, closed 2026-09-17): the page never hangs on Connecting. A load that stops shows a red
 error after 90 s ("Nothing has loaded for 90 seconds ... Check your connection and reload the page."), a signer node
 that does not answer is named in red on the lobby within 10 s with PLAY grey, and a join nobody answers is refused
