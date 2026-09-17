@@ -20,6 +20,8 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+NOW (2026-09-17 16:01, Daniel HARD): 1) Fable spec ea4c99f/a7324f1 - no glow, wick is 0.5 m ridge of ground, nothing above 1 m, nothing passed through. 2) Desktop HUD 30% smaller, position stays. 3) No candle movement HUD or world - live price samples not arriving. Wire the feed. Shot daniel-screens/hud-desktop-1601.jpg.
+
 LIVE (2026-09-17 15:25): Daily 0.0.1497 (2376ab8c), signer nodes on 44c72d7 (the same core).
 - Shipped: world candles are a moving raised ribbon on one surface. Staircase; 1 m, 25% ramps, no walls. Scroll 0.576 m/s, nothing jumps on a sample tick. Berms withdrawn (passability). HUD from 0.0.1482 kept. Glow and wicks are blended light (additive washed the view white in 0.0.1496).
 - Remainders:
