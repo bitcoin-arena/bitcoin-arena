@@ -38312,3 +38312,72 @@ TANK ARRIVAL (2026-09-17, letter; §0 wiggle row = walking-in hull heading flips
                     - (a) alone passes both gates by 1.2 pts, inside the seed scatter above; not committed as the fix.
   TESTS             none run on a variant: nothing reached the tree. Tree = HEAD core + the probe tool.
   NOT DEPLOYED      no core change.
+
+GHOSTS LIVE AGAIN (2026-09-17 19:15 letter; Daniel: "updates only every 300-600 ms", second-round ghost missing then misplaced,
+and a debug label over the truck. Screen daniel-screens/ghosts-two-tabs-1915.jpg)
+  MEASURED FIRST   the Daily's two signer nodes, from outside, 90 s of 100 ms pings on both /play sockets:
+                     median 40 / 46 ms, p90 ~290 ms, max 28,102 ms - both nodes at the same instants (one process).
+                     37 stalls over 300 ms in 90 s, 300-650 ms, one 28.1 s at 17:25:19Z.
+                   - The process ran at 175% of a core; the host also carries bitcoind at ~5 cores, load 8.
+                   - Every read-only door answers in 130-480 ms (TLS included), so no door is the stall.
+  CAUSE 1          tools/round-2of2.mjs, the round keeper in the signer nodes' own process: each opening read the chain
+                   from 20 below its bonds to the tip with TWO synchronous bitcoin-cli spawns a block, twice or more an
+                   opening (openNext, publishOnChain's beacon loop). The Daily mines ~10 blocks a minute, so the read
+                   grows with uptime: ~450 blocks 20 minutes after a start.
+                   - Profiled on a copy (own store copies, own ports, no Lightning): spawnSync 3.9 s of a 63 s profile,
+                     the rest curve math; the copy's own start stalled 9.8 s.
+                   - A/B on the local regtest chain, ~450 blocks since the bonds, one keeper at a time:
+                       old (2939d35)   round opened: event loop stalled 29,501 ms
+                       new             round opened: 383 ms + 409 ms
+                   - The view GROWS now (only blocks above the ones it holds), and every call on that path is bitcoind's
+                     RPC, awaited. A tool that gave only a cli keeps the cli.
+  CAUSE 2          the page sent a batch only on every sixth tick AND only with the last one answered, so a round trip
+                   over 100 ms cost a whole slot. Through a proxy holding each chunk (packages/blwp-client/tools/
+                   measure-ghost-lag.mjs, a real daemon, the page's cadence):
+                       delay each way    pictures/s   gap ms (median)   age on arrival ms (median)
+                       0 ms              10.0 -> 10.0    100 -> 100        8 -> 10
+                       40 ms              9.8 -> 10.0    100 -> 100       86 -> 85
+                       80 ms              5.0 ->  6.1    200 -> 166      167 -> 175
+                       150 ms                    3.4            309             321
+                   - A drain that finds a batch in flight is OWED and goes on that batch's answer.
+                   - What is left at 80 ms is the two one-way hops themselves (driver -> node -> watcher).
+  CAUSE 3          a ghost run was stepped only when a watcher asked for it (STEP_BUDGET 150 ticks a push), so a truck
+                   that drove alone before the other tab arrived was pictured from its first tick and raced along its old
+                   path - "missing, then at the wrong position" in a second round. Measured in ghost-realtime.test.js: a
+                   truck 1200 ticks in was first pictured at tick 149; now at 1199, its newest published tick.
+                   The node steps a publisher's run on its own batch, watched or not (6 ticks, ~2.4 ms).
+  DEBUG LABEL      over each ghost: line 1 the player's name (the page's checked /names records, else the name its key
+                   makes), line 2 the age in ms and the arrows - up forward, down back, left/right the turn, both when
+                   it did both. The age is now less the driver tab's own clock for the tick that picture names, carried
+                   between the tabs of one browser on a BroadcastChannel (ghost-field.js tickClock); a "~" means no
+                   stamp was found and it is the time since the picture arrived. The arrows are read off the pictures
+                   themselves - what came through the nodes - with the turn mirrored while backing.
+  TESTS            client ghost-field + ghost-label + ghost-realtime + ghost-consume 34: 33 pass, 1 red until the build
+                   copies the bundle into the template (it pins the template against dist). node ghost-live +
+                   assignment 15/15, ghost-socket + ghost-door + ghost-produce 16/16. Unity PlayMode Ghost*Tests 24/24.
+                   Both new rules mutation-checked: without the owed drain the second batch waits for the next slot;
+                   without the warm run the first picture is tick 149.
+
+GHOSTS LIVE AGAIN - DEPLOYED (2026-09-17 20:10; the 19:15 letter's close-out)
+  DEPLOYED          signer nodes /mnt/bitcoin/blwp-2of2/code at ac3b709, restarted 19:49 - both /rounds 200, 3 open each,
+                    the same tunnel names. Page 0.0.1525 at bb4d521c.btc-logistics-core.pages.dev; the core alias serves
+                    it with this bundle. Release branch release-ghosts-0917 off beef19f: the LIVE core, not the hull-down
+                    hysteresis core, which stays out while its wiggle row is red.
+  MEASURED LIVE     both nodes, 60 s of 100 ms pings each, after the restart settled:
+                      before   median 40 / 46 ms, p90 ~290 ms, max 28,102 ms, 37 stalls over 300 ms in 90 s
+                      after    median 14 ms, p90 21 ms, max 552 / 583 ms, 2 stalls over 300 ms a minute
+                    What is left is the close / finality path and this host's load (bitcoind ~5 cores, load 8).
+                    Two openings right after the restart were refused ("the census assigns 1") and the keeper's next try
+                    carried them; the five openings since are clean. Watched.
+  TESTS AT DEPLOY   client 46 of 49 files: 352 pass, 0 red (ghost-field 21/21 once the build copied the bundle into the
+                    template). Two stale expectations in two-tabs.test.js now read the 17:12 ghost rules: a new field
+                    hands Unity the CLEAR record first, and a backlog draws ONE picture a truck - the newest - with the
+                    rest collapsed and counted. NOT MEASURED: world-seed-bridge.test.js does not finish inside the 120 s
+                    test timeout on this loaded host (twice); wallet-nwc and world-seed were not reached. Listed, and
+                    neither touches the ghost path.
+                    node ghost-live + assignment 15/15, ghost-socket + ghost-door + ghost-produce 16/16, replay-samples +
+                    replay-heat 7/7. Unity PlayMode Ghost*Tests 24/24. WebGL 0.0.1525 errors 0, built core == dist core,
+                    built client == dist client, template client == dist client.
+  HOLES             the two-browser proof is Daniel's (this host cannot run two WebGL pages at 60 Hz); the debug label's
+                    age is exact only between tabs of ONE browser (BroadcastChannel) and says "~" otherwise; the node's
+                    remaining 300-600 ms stalls are the close / finality path, not measured to a cause yet.
