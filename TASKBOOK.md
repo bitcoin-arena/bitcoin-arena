@@ -37846,3 +37846,36 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     PostOfficeTests.TheGogglesAnimate (listed flaky); it passed on the OPEN build.
   HOLE              YOU's label can sit on the legend row when the truck's price is near the window's top (seen on run 4,
                     A driving) - not OPEN, not placed by this rule; listed.
+
+## THE YOU MARKER SITS BELOW THE LEGEND ROW, NOT ON "FRONT · SMA 21" (WAR_TACTICS.md §0.3, 2026-09-17 05:25)
+
+  BEFORE (0.0.1459) the plot began at 22% of the panel (y 480.3 on a 197 px panel) and the three header rows ended at 499.7:
+                    the legend row reached 19.4 px into the plot. A truck whose price sat near the window's top (z 51 m):
+                    YOU label on the legend row 653.3 px² of box, 234 drawn pixels in it; YOU dot 33.6 px², 32 drawn pixels;
+                    114 orange YOU pixels inside the legend row's box.
+  CHANGE            plot top = panel top + 2 + three header rows + MarkClearance 12 px (the dot's half, 4 px, and the heading
+                    tick, 10 px, 2 px wide: a dot pinned to the plot's top edge reaches 11 px above it). Plot 591.2,511.7
+                    303.2x104.6 (was 136 px tall). YOU's dot stays the core position; its label is placed by PlaceYouLabel:
+                    up-right, then below; along the row right then left of the dot in 4 px steps; the first box inside the
+                    plot sharing no area with the mark, the three header rows, HIGH, LOW or GATE. OPEN then keeps off the
+                    YOU mark and label too.
+  AFTER (0.0.1460)  two players, local 2-of-2; player A driven from its bay at z -51 m toward the top edge to z 80.25 m (the
+                    price above the window's top, the dot pinned to the plot top, the tick up): header rows into the plot
+                    0 px; YOU label and YOU mark share 0 px² with the symbol, price and legend rows, OPEN, HIGH, LOW, GATE in
+                    every frame (4 screenshots with logged boxes); orange YOU pixels inside the legend row's box 0 (was 114),
+                    inside all three header rows 0; mark box 642.4,500.8 8.0x14.9 - its top 1.1 px below the rows' end.
+                    The other player (B at z 64 m on A's chart): grey pixels in the legend box 86 with and without the
+                    ghost - the legend text's own edges.
+                    OPEN vs the price row 0 px², 0 drawn pixels; header bright pixels 481 / 484; nothing under the chart;
+                    Tab GROUND 32 -> ROUND 1 -> GROUND 32; YOU = core 31/31 parked, 105/105 driven (A), 99/99 (B); the other
+                    player = core 6/6, 80/80 (A) and 87/87 (B), max diff 0.
+                    Not measured: A parked at z 51 m (the drive toward it timed out at z 3.4 m, and the round had ended
+                    before the parked shots - no [chart] line, the lobby up).
+  TESTS             core rules 48/48, bundle+vectors+chart 50/50, tactics 16/16; EditMode 230: 226 pass, 3 skipped, 1 red
+                    (rifle flash, listed), TheHeaderRowsEndAboveThePlotAndYouKeepsOffThem and OpenKeepsOff... pass;
+                    PlayMode 241: 214 pass, 13 skipped, 14 red - the 12 listed plus PostOfficeTests.TheGogglesAnimate and
+                    RampReadyTests.TheRealTransactionsReplaceTheStandInsWhileNothingIsLoaded ("expected 2, was 10"), which
+                    both passed alone right after (4/4 with the other RampReady tests): load flakes, listed.
+  HOLES (§0.3)      the other player's id label can sit on the GATE label and the last-price tag (seen at z 64 m, x 105 m);
+                    ROUND is one wide candle (no live samples); HIGH TAKEN not drawn; M to maximise, crosshair, ROUND on
+                    spectate/result not built; objectives RIDGE/HOLLOW/GAP, not HIGH/LOW/OPEN; ghosts named by entry id.
