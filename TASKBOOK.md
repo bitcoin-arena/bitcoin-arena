@@ -38066,3 +38066,48 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     ticks of steer no longer move the world). Unity chain (EditMode from before the regeneration):
                     237: 232 pass, 3 skipped, 2 red - rifle flash (listed), AThrownBody (listed PhysX flake under load:
                     the army measurements ran alongside). Rulings still open: wick, spawn.
+
+## WORLD CANDLES §4.15: SPAWN RULING B AND WICK RULING w1 (code, not deployed)
+
+  RULINGS           Daniel 2026-09-17: spawn B - the truck leaves the apron, then meets the chart; 32 slots fitted between
+                    the apron and the miner face, first face 26 m past the spawn centre, corridor kept at 2.8 m, pitch and
+                    body what the fit needs. Wick w1 - a collider only where the wick stands past the body.
+  WHY NOT A OR C    geometry (tools: scratchpad spawn-options): apron end x -78.4 (START_X -100.4 + 22), miner face x 108.4,
+                    186.8 m; 32 bodies at 6.5 m need 205.2 m. A shift alone put candles 29-31 at x 111.1-127.8, in the gate
+                    throat and across the delivery line (x 114); keeping 6.5 m fits 29 of the HUD's 32.
+  CHANGE            CANDLE_X0 -4967627 (-75.79998 m), CANDLE_SLOT 377241 (5.75624 m), CANDLE_BODY_HALF 96870 (1.47812 m).
+                    Layout words CL_LOW / CL_HIGH (the candle's own low and high); candleWalls adds a 1 x 1 m, 9 m pillar
+                    at the centre x over [low, body low end] and [body high end, high] only; view words 8 a candle (+ low
+                    wick from, high wick to). Band |x| <= 104, |z| <= 54, pancake 0.15, cone 40%, seam +-45 m unchanged.
+  MEASURED BEFORE   40fe360: first face x -102.55, 2.2 m BEHIND the spawn centre; bays 9-12 on or against candle 0; seed 1
+                    bay 14 (z 17) straight +x stopped by candle 3's face at x -83.1 (17.3 m out); pitch 6.5, body 3.7.
+  MEASURED AFTER    pitch 5.756 m, body 2.956 m, corridor 2.800 m (183501 Q16), plateau margin 0.203 m a side for the
+                    2.55 m truck. Spawn centre -100.400 -> first face -74.400 = 26.000 m (nose 22.725 m, apron 22.000);
+                    last face 107.000 before the miner face 108.400: no body in the gate throat, none across x 114.
+                    Straight +x from each of the 24 bays, stopped by an x-face: bay 6 120.581 m out, 7 63.018, 8 34.238,
+                    9 22.721, 10-12 22.725, 13 39.993, 14 (the old 17.3 m case) 28.573, 15 54.037, 16 80.287; the rest run
+                    600 ticks without a stop. Every stop is past the apron.
+                    w1 on candle 24 given a low 6 m and a high 10 m past its body: faces x 63.75 / 66.71, z -42.76..-4.31,
+                    2.00 m; wick x 64.73..65.73, z -48.76..-42.76 and -4.31..5.69, 9.00 m - none through the body. From the
+                    south the truck stops at z -52.04 (nose held at -52.03); along the plateau north at -7.59 (nose held at
+                    -7.59); the corridor beside the wick drives through. Today's tape: 0 wick segments, 64 colliders.
+                    Tanks 60 s seeds 1/2/3: x-face crossings 26/58/16 (were 45/43/37 on the 6.5 m field), step-ups 18/29/13
+                    (33/33/34), 4616/4287/4002 tank-ticks on a plateau. The test's bar was 20, a number set from the 6.5 m
+                    measurement, not a spec figure; it is 10 now, stated here.
+                    Mesh vs core candle height: worst 0.0000 m over 5274 + 1302 points.
+  TESTS             core candles 8/8 (the 7 and the spawn test; the truck tests now read the candle layer over
+                    terrainAt - on the pancake the ground is not the apron - and drive the x-face from a z the two
+                    candles west of it leave open); vectors+bundle+chart 24/24 (vectors and both fixtures regenerated);
+                    specified/poison/private/replay/spawn/cbrt/canonical 26/26 (replay red FIXED); tactics 15/16 (overwatch
+                    crest red FIXED); rules 40/48 (second round, empty bed, apron accrual, wreck banks FIXED).
+                    Listed reds with cause: rules - PhysX reference drive (0.87 vs 15.634 m/s at 5 s: an x-face on its
+                    straight route), hill cost (0.00: the recorded hills are pancaked in the band), wall/lintel (the open
+                    run meets an x-face before 100 m), armour crash and armour blocks (the truck stops at candle 0's face,
+                    x -76.7, before the tank), rider (the truck placed at 0,0 has its front circle past candle 13's west
+                    face at x 0.42, resolved before the run-over rule), heat pin [4, 6, 2, 6] (not re-pinned), seam banks
+                    (lane z=20 meets x-faces); tactics - seed 9 parked vs driven through RIDGE splits at 352 ticks with 0
+                    holder ticks. Unity EditMode CandleTerrain+ChartHud 15/15. Full chain on 40fe360 (before this change):
+                    EditMode 237: 232 pass, 3 skipped, 2 red (rifle flash listed; AThrownBody listed PhysX flake under
+                    load); PlayMode 243: 218 pass, 13 skipped, 12 red - the 12 listed (retired C# army and truck physics
+                    x8, ImportedModel x2 no hulls without a core, mushroom stem foot x2 waiting on the asset, visibility
+                    under -nographics x1: ArmiesAreActuallyDrawn); WebGL 0.0.1473 built from 40fe360's core, not this one.
