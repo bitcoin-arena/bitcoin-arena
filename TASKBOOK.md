@@ -38520,3 +38520,29 @@ THE UNLABELLED STRETCH OF THE SIGNER NODES' OWN THREAD, LISTED (2026-09-18 00:30
                    p50 100 ms, p90 110 ms, max 425 ms, 0 over 600 ms, 0 at the 3 s retire; 4 stalls over 300 ms seen
                    from outside, pings median 12 ms, p90 25 ms.
 
+THE PICTURED TRUCK'S LEFTOVER STALL IS THE PUBLISH PATH (2026-09-18 01:50; the 19:15 ghost letter, profiled artefact)
+  THE TRUCK        same probe, six-minute windows, a stake-0 driver and a watcher in the Daily's free round:
+                     keep keyed by the view       9.6 /s, p50 100, p90 109, max 763 ms, 1 over 600 ms, 0 at 3 s,
+                                                  6 stalls over 300 ms, ping p90 25 / 24 ms
+                     keyed by census root + seed  9.5 /s, p50 100, p90 109, max 781 ms, 2 over 600 ms, 0 at 3 s,
+                                                  26 stalls over 300 ms, ping p90 29 / 28 ms
+                     the same, profiled           9.6 /s, p50 100, p90 109, max 1109 ms, 1 over 600 ms, 0 at 3 s,
+                                                  10 stalls over 300 ms, ping p90 27 / 25 ms
+  THE PROFILE      V8, one signer process (both nodes), 390 s of samples, self time:
+                     batch (a player's ticks stored)      22.5 s
+                     curve arithmetic, mod + mul          14.0 s
+                     spawnSync                             3.5 s
+                     garbage collection                    2.9 s
+                     step (the core, in the ghost warm)    2.4 s
+                   SHA-256 is GONE from the top: it was 36.3 s before the committee and beacon were kept, with the
+                   chain's proof-of-work checks at 17.4 s beside it. Both have dropped out.
+  BY OUR CALLER    the socket frame handler 35.0 s, blocksOver (the keeper's chain reads) 8.8 s,
+                   carryReceipts 6.8 s - down from 31.3 s - the doors 3.7 s, settleTheStakes 2.2 s, gather 1.7 s.
+  INSIDE THE FRAME batch 22.5 s, then the ghost warm step (step 2.4 s, frontlineZ 1.4 s, surfaceAt 0.5 s,
+                   stepTo 0.8 s) and the picture set (setFor 0.6 s), nextTick 0.5 s.
+  THE SENTENCE     the leftover 210-250 ms in those stalls is the publish path itself - the batch store dominating,
+                   then the ghost warm and the picture set - not a scan and not a re-verification; what remains of
+                   carryReceipts is signature checking (5.4 s of its 8.1 s in curve arithmetic).
+  RESIDUAL         the restart-only close retry (731-1070 ms once per start, with the committee chain check inside it)
+                   and the wait a page sees while an old round's view is read after a restart.
+
