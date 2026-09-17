@@ -20,6 +20,8 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+NOW (2026-09-17 19:15, Daniel HARD): ghosts still lag ~300-600ms. Debug over truck: 2 lines <name> / <age ms> <fwd|rev> <left|right>. Second round: ghost missing then wrong place. Shot daniel-screens/ghosts-two-tabs-1915.jpg — they should see each other.
+
 ORDER (Daniel 2026-09-17 17:34 HARD): ghosts -> candle fixes -> WAR_TACTICS army logic already started -> only then M3.
 
 LIVE (2026-09-17 19:15) letter: tank arrival - tanks fidget walking onto a hold on the scrolling candle field (crest-hold done).
