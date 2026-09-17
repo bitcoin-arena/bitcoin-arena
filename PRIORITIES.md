@@ -27,7 +27,13 @@ LIVE (2026-09-17 15:25): Daily 0.0.1497 (2376ab8c), signer nodes on 44c72d7 (the
   - Hull-down holds jump more on the scrolling ribbon (fidget risk; spec 4fa54a8 has the hysteresis).
   - Tank arrival ≤ 1.2× flat is red on flat ground too (army, not terrain).
   - The terrain mesh draws the berm-free ground only on its own rebuilds (fine now that berms are gone).
-  - HIGH/LOW overlaps "Models loaded" while loading. Heat pin red. blwp-node suite: chunks 4-7 not run.
+  - Heat pin red.
+  - blwp-node suite: chunks 4-7 not run. Fixture re-picks for forfeit, payout-second-signer and second-closer were restored, red on 44c72d7 (winner 1b ends FAILED, score 3).
+  - Small windows 640x480 and 733x293: the model list's old place (not under HIGH/LOW) runs onto the chart or a pad, and 8.3 px off the bottom at 733x293, at the font's floor. Older than this wash.
+- DONE (2026-09-17, git only, reaches the page with the next Daily build): the loading-models list no longer paints over HIGH/LOW.
+  - 0 px shared on every shape HudLayoutTests uses, with pads and without.
+  - Where 11 rows don't fit under HIGH/LOW (390x844, 640x480, 733x293), HIGH/LOW yields while models load.
+  - A failure kept on screen keeps only its failed rows there, so HIGH/LOW comes back.
 
 NOW (2026-09-17 13:51, Daniel HARD): Fable PLAYTEST FIX 492f128 — candles are a raised ribbon not islands. H 1 m, bodies touching (full slot), 25% ramps 4 m on every free edge, no walls, no corridors, no solids. Implement. One wash.
 
