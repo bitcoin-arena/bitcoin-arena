@@ -38294,3 +38294,27 @@ and a debug label over the truck. Screen daniel-screens/ghosts-two-tabs-1915.jpg
                    Both new rules mutation-checked: without the owed drain the second batch waits for the next slot;
                    without the warm run the first picture is tick 149.
 
+GHOSTS LIVE AGAIN - DEPLOYED (2026-09-17 20:10; the 19:15 letter's close-out)
+  DEPLOYED          signer nodes /mnt/bitcoin/blwp-2of2/code at ac3b709, restarted 19:49 - both /rounds 200, 3 open each,
+                    the same tunnel names. Page 0.0.1525 at bb4d521c.btc-logistics-core.pages.dev; the core alias serves
+                    it with this bundle. Release branch release-ghosts-0917 off beef19f: the LIVE core, not the hull-down
+                    hysteresis core, which stays out while its wiggle row is red.
+  MEASURED LIVE     both nodes, 60 s of 100 ms pings each, after the restart settled:
+                      before   median 40 / 46 ms, p90 ~290 ms, max 28,102 ms, 37 stalls over 300 ms in 90 s
+                      after    median 14 ms, p90 21 ms, max 552 / 583 ms, 2 stalls over 300 ms a minute
+                    What is left is the close / finality path and this host's load (bitcoind ~5 cores, load 8).
+                    Two openings right after the restart were refused ("the census assigns 1") and the keeper's next try
+                    carried them; the five openings since are clean. Watched.
+  TESTS AT DEPLOY   client 46 of 49 files: 352 pass, 0 red (ghost-field 21/21 once the build copied the bundle into the
+                    template). Two stale expectations in two-tabs.test.js now read the 17:12 ghost rules: a new field
+                    hands Unity the CLEAR record first, and a backlog draws ONE picture a truck - the newest - with the
+                    rest collapsed and counted. NOT MEASURED: world-seed-bridge.test.js does not finish inside the 120 s
+                    test timeout on this loaded host (twice); wallet-nwc and world-seed were not reached. Listed, and
+                    neither touches the ghost path.
+                    node ghost-live + assignment 15/15, ghost-socket + ghost-door + ghost-produce 16/16, replay-samples +
+                    replay-heat 7/7. Unity PlayMode Ghost*Tests 24/24. WebGL 0.0.1525 errors 0, built core == dist core,
+                    built client == dist client, template client == dist client.
+  HOLES             the two-browser proof is Daniel's (this host cannot run two WebGL pages at 60 Hz); the debug label's
+                    age is exact only between tabs of ONE browser (BroadcastChannel) and says "~" otherwise; the node's
+                    remaining 300-600 ms stalls are the close / finality path, not measured to a cause yet.
+

@@ -22,6 +22,15 @@ Top item first. Finish and deploy before starting the next.
 
 ORDER (Daniel 2026-09-17 17:34 HARD): ghosts -> candle fixes -> WAR_TACTICS army logic already started -> only then M3.
 
+LIVE (2026-09-17 20:10): Daily 0.0.1525 (bb4d521c), signer nodes on the ghost release. Ghosts, after Daniel 19:15:
+- Both signer nodes froze together (p90 290 ms, one 28.1 s): the round keeper re-read the whole chain per opening with
+  synchronous bitcoin-cli spawns. Now median 14 ms, p90 21 ms, max 552 ms, 2 stalls over 300 ms a minute.
+- A batch slot the page missed while the last batch was in flight goes on the answer (80 ms link: 5.0 -> 6.1 pictures/s).
+- A publisher's picture is kept warm, so a second-round ghost is drawn at its newest tick, not replayed from its start.
+- DEBUG over each truck: name, then age in ms and arrows (up/down, left/right); "~" = no stamp of the driver's clock.
+- Not measured: two real browsers on the Daily (this host cannot run two WebGL pages at 60 Hz). The stalls that are left
+  are the close / finality path; client test/world-seed-bridge.test.js does not finish under the test timeout (listed).
+
 LIVE (2026-09-17 18:05): Daily 0.0.1517 (b7339523), signer nodes on 2939d35.
 - Chart:
   - Live BTC tape on every core start (Binance 1 s klines, fresh, seed fallback only).
