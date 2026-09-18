@@ -39349,3 +39349,37 @@ budget's own ranking already puts "a hull correcting a metre" last). Measured, i
 
 - so it is out of the core, and the hypothesis with it. Letting near tanks drive freely does not settle them; it puts
 more hulls in motion among each other. The next lever is the walk-in share (38% of pair tank-ticks), not the budget.
+
+### H1 is measured against a line the core does not use (2026-09-19 01:1x)
+
+The steady state first, so the walk-in is not blamed for this: in the last third of a 60 s run 73-74% of pair
+tank-ticks are settled, and only 40-43% of those are on post. So the gap is the settled tanks, not the arrivals.
+
+Then what a settled tank off its post is doing, from fields the hook actually carries: standing still 63%, halted
+(the §11.2 halt cycle) 12%, holding a budget grant 37%, a median 4.4 m from a hold that had not moved under it. A tank
+standing still four metres from a stationary post is a tank that believes it has arrived.
+
+It has. The probe and the rules are measuring two different places:
+
+  the row's hold against the mover's own    median 1.37 m, q3 2.70 m, max 22.80 m
+  H1 against the row's own hold             31.16%
+  H1 against the MOVER'S hold (the hook)    53.3%      - over the doctrine's 50% bar
+  on-post radius                            1.50 m     - smaller than the median disagreement
+
+Where the difference is NOT: the hull-down crest. §4.1 rules that an overwatch tank holds its crest and switches only
+for 0.3 m more rise, while the probe rescans the five candidates every tick - so the probe was swapped to the
+doctrine's own `crestHold`, and H1 got WORSE, 31.16% -> 27.53%, with the gap to the mover's hold unchanged at 1.40 m.
+
+Where it is: the SEAM. The probe's line is frontlineZ(st.tape, x, ...); the core's is seamAtX - the glided tape, on
+this tick's scale, with the scroll and the window (st.glide, samplesTaken, seamScroll, seamLo/seamHi). Both the
+bounding post and the crest scan hang off that line, so every hold the probe computes is shifted by whatever those two
+readers disagree by.
+
+Left as it is on purpose: the probe still measures the old way, so the table's numbers keep their meaning until the
+seam is fixed properly - the harness patches the core COPY at named anchors, so the honest repair is to hook the
+core's own seam out and use it, not to re-derive it a third time. That is the next step on this row, and it is
+bookkeeping, not doctrine: H1 may already be met.
+
+Two of my own probes were wrong before this and are named so they are not repeated: reading `crowded`, `crowdedLoose`
+and `tacWait` off the hook returned undefined and printed a tidy "0%" for all three, and an earlier version measured a
+"tank standing still" without separating walk-ins from settled tanks.
