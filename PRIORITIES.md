@@ -24,18 +24,24 @@ NOW (2026-09-17 19:15, Daniel HARD): ghosts still lag ~300-600ms. Debug over tru
 
 ORDER (Daniel 2026-09-17 17:34 HARD): ghosts -> candle fixes -> WAR_TACTICS army logic already started -> only then M3.
 
-LIVE (2026-09-18 07:05): Daily 0.0.1580 (95d46578), signer nodes on the ghost release. Ghosts, after Daniel 19:15:
+LIVE (2026-09-18 10:10): Daily 0.0.1586 (7c6f7cbe), signer nodes on the ghost release. Ghosts, after Daniel 19:15:
+- THE DAILY COULD NOT OPEN A ROUND AT ALL until 0.0.1586, and that is why two tabs saw nothing: the page shipped a
+  2338-word core into a player whose C# expects 2386, so the core never drove, no session was ever asked for, and no
+  ghost could arrive - for every player. It dates from the hull-down layout bump (434fd6c). The page now carries the
+  core its own build was generated from, which also brings the hull-down crest behaviour live. The client suite had
+  been saying it: ghost-field.test.js was 20 of 21 on exactly that comparison, and is 21 of 21 now.
 - Shipped on 0.0.1580: the hole-check - the label eye is a camera that can see the truck (never the loadout panel's,
   2000 m under the map), a truck off the screen is marked at its rim, and a new round's truck is drawn at its first
   picture. Pictures 9.7/s, the drawn pose 38 ms old at the land frame, 24 of 24 doors cue the player. Every number and
   every step is in TASKBOOK.
-- THE GATE ON 19:15, Daniel's own and the only thing left: two tabs on btc-logistics-core.pages.dev (0.0.1580), the
+- THE GATE ON 19:15, Daniel's own and the only thing left: two tabs on btc-logistics-core.pages.dev (0.0.1586), the
   shot ghosts-two-tabs-1915.jpg - they should see each other. Each truck carries two lines, name then age and arrows;
   the age should read tens of ms, not 300-600; a truck off screen is named at the rim; and after PLAY again the other
   truck should stand at its new pose at once, not be missing and not be where the last round left it. This host cannot
   run two WebGL pages at 60 Hz, so it stays his.
   Listed red: client test/world-seed-bridge.test.js does not finish under the test timeout; node second-closer 0/2
-  needs a real lnd; EditMode CombatFxTests rifle flash.
+  needs a real lnd; EditMode CombatFxTests rifle flash. (The fourth, ghost-field 20/21, was not cosmetic: it was the
+  core mismatch above, and it is green.)
 
 LIVE (2026-09-17 19:15) letter: tank arrival - tanks fidget walking onto a hold on the scrolling candle field (crest-hold done).
 - Wiggle row = walking-in hull heading flips: 32.7% at HEAD, red, threshold unchanged (numbers in TASKBOOK).

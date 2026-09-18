@@ -38860,3 +38860,41 @@ TWO REAL BROWSERS ON THIS HOST, AND WHAT THEY COULD AND COULD NOT SHOW (2026-09-
                       one round; it cannot reliably keep two of them up, and it never got as far as reading a label
                       out of a browser.
 
+THE DAILY COULD NOT OPEN A ROUND AT ALL, AND THAT IS WHY TWO TABS SAW NOTHING (2026-09-18 10:10; the 19:15 letter)
+  HOW IT WAS FOUND    Daniel 09:00 asked for two things: how often a paired start stalls, and a way to read what the
+                      renderer draws from a headless client. The first cleared the host. The second - one log line
+                      naming which of `NetSession.ShouldOpen`'s three conditions was unmet - answered in both tabs at
+                      once: "no session yet: the core is not driving here".
+  THE FAULT           the page shipped a core the player cannot use. Measured:
+                        BlwpLayout.WORDS, in every WebGL build        2386
+                        packages/core/dist/blwp-core.js, from source  2386
+                        the core in the page and in the build         2338
+                      The page said so itself, in every browser that opened it: "core reports 2338 state words, this
+                      build expects 2386", then "no core answered - falling back to PhysX". With no core driving,
+                      `NetSession` never asks for a session; with no session there is no round, no picture of another
+                      truck, no label and no rim marker. FOR EVERY PLAYER, not only a headless one.
+  SINCE WHEN          434fd6c (the hull-down crest search) moved the layout to 2386; the template's core was last
+                      written at df08399. Every Daily deploy in between - 1525 through 1585, this whole letter - was
+                      in that state. Every ghost number measured on this letter came from node clients holding the
+                      core directly, which is exactly why the wire read healthy while the screen stayed empty.
+  IT WAS ON THE LIST  client ghost-field.test.js had been 20 of 21 for days, comparing the template's core with the
+                      build's, and it was carried as "the undeployed hull-down core, cosmetic". It was this bug. With
+                      the core in step: 21 of 21.
+  THE FIX             the page now carries the core its own build was generated from. That core is the hull-down one,
+                      so the crest behaviour ships with it: a player cannot have a working round and the older core
+                      at the same time. PlayMode 26/26, EditMode 243 (239 pass, 3 skipped, 1 listed rifle flash),
+                      WebGL 0.0.1586, built core == template core == 2386 words, deployed to btc-logistics-core
+                      (7c6f7cbe), war untouched. Commit 19b7b96.
+  MEASURED AFTER      two headless tabs on 1586, the same tool: "tabA: the bridge is up", "tabB: the bridge is up",
+                      and both logged "session opening against the chain" after the world settled (0 -> 30 ticks).
+                      That is the first time in nine runs a browser on this host opened a round at all.
+  AND THE HOST'S OWN  no ghost was exchanged even so, and the page says why in its own words: "the page is slower
+  CEILING             than the core: 26.98 s (1619 ticks) let go so far rather than raced through at 8 ticks a
+                      frame; this frame 333 ms". Three frames a second against sixty: the tab lets go of 27 seconds
+                      of a 150 second round, so there is nothing left of the round to trade pictures in. Paired
+                      starts themselves are fine - 4 of 4 both up, 8-12 s each, host 7.2 GB free, no OOM, no context
+                      loss - and the browser reaches both signer nodes (http 200). It is frame rate, and it is why
+                      the 60 Hz check stays Daniel's.
+  NOT CLOSED          Daniel's two tabs, now on 0.0.1586 - and this is the first build on which that check can mean
+                      anything, because on 1580 no page could open a round.
+
