@@ -38755,3 +38755,28 @@ THE OVERLAY WAS DRAWING NOTHING IN A PLAYER, AND THE DOORS KEEP THE TRUCKS APART
                       btc-logistics-core (e68b60c6); btc-logistics-war untouched. Commit 856b038.
   NOT CLOSED          Daniel's two tabs, now on 0.0.1576 - and the doors question above is his to rule on.
 
+A TRUCK OFF THE SCREEN IS MARKED AT ITS RIM (2026-09-18 06:50; the 19:15 ghost letter, Daniel's named pick)
+  THE RULING          Daniel 06:45: off-screen marker. Not a nearer spawn, not nothing. The 24 doors at 6.8 m are the
+                      map and a mean 54 m between two parked trucks is the intended bay; the cue is a renderer fact.
+  THE CUT             `GhostField.SpotFor` decides where one truck's two lines go: over the hull while the hull is on
+                      screen, and pinned to the rim of the screen in the truck's own direction when it is not. Same
+                      two lines, same clock, same `ghostLabels` text - name, then age in ms and the arrows. A hull on
+                      screen is never drawn twice. A truck BEHIND the camera has its screen point reflected back
+                      through the centre first, or `WorldToScreenPoint`'s negative-z mirroring would mark it on the
+                      wrong side. Renderer only: no rigidbody, no collider, no second clock, no invented pose.
+  THE DOOR TABLE      from the chase camera in Follow, 10.3 m behind the truck, fov 59 (the suite refuses to count
+                      anything unless the camera is within 20 m of the truck, and prints the camera it used):
+                        doors the camera frames            3 of 24   (own +-6.8 m; unchanged, that is the lens)
+                        doors with a label on the hull     1 of 24   (unchanged)
+                        doors that give the player a CUE  24 of 24   (23 of them not the player's own)
+                      Before the marker the other 21 doors were nothing on screen at all.
+  SUITES              PlayMode 26/26, errorCS 0 - GhostAcrossTheDoorsTests 2, GhostDrawnPoseTests 3, GhostFieldTests
+                      8, GhostInThePlayerTests 5, GhostOnScreenTests 2, GhostTests 6.
+                      EditMode 243: 239 pass, 3 skipped, 1 red - CombatFxTests.RifleFireProducesAFlashAndATracer,
+                      which is the long-listed rifle-flash red and nothing this work touches.
+  SHIPPED             WebGL 0.0.1578 errors 0, built client == dist, built core == the live template core. Deployed
+                      to btc-logistics-core (17a71e78); btc-logistics-war untouched. Commit 5409c1f.
+  NOT CLOSED          Daniel's two tabs, now on 0.0.1578: each tab parked at its own door should carry the other
+                      truck's name and age at the rim without hunting, and the age should be the same clock as a hull
+                      label - tens of ms.
+

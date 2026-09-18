@@ -24,7 +24,7 @@ NOW (2026-09-17 19:15, Daniel HARD): ghosts still lag ~300-600ms. Debug over tru
 
 ORDER (Daniel 2026-09-17 17:34 HARD): ghosts -> candle fixes -> WAR_TACTICS army logic already started -> only then M3.
 
-LIVE (2026-09-18 06:30): Daily 0.0.1576 (e68b60c6), signer nodes on the ghost release. Ghosts, after Daniel 19:15:
+LIVE (2026-09-18 06:50): Daily 0.0.1578 (17a71e78), signer nodes on the ghost release. Ghosts, after Daniel 19:15:
 - The other player's truck arrives 9.6 times a second (the page publishes 10), gap p50 100 ms, p90 109 ms, one gap over
   600 ms in six minutes, none near the 3 s that retires a ghost. Measured from outside the Daily with a stake-0 driver
   and a watcher; numbers and every step in TASKBOOK.
@@ -43,10 +43,11 @@ LIVE (2026-09-18 06:30): Daily 0.0.1576 (e68b60c6), signer nodes on the ghost re
 - DEBUG over each truck: name, then age in ms and arrows (up/down, left/right); "~" = no stamp of the driver's clock.
   It was drawing NOTHING in a player until 0.0.1576: it took its camera from Camera.main, and nothing in this build
   tags a MainCamera. The label now uses the camera that renders, as StrikeTheatre already did.
-- AND THE TWO TRUCKS ARE USUALLY NOT IN ONE PICTURE, which is a layout fact and not lag: one player per loading-bay
-  door, 24 doors at 6.8 m, so two seats are a mean 54 m apart. From the camera a player drives with, 3 of the 24 doors
-  are in frame and 1 carries a label. Daniel's ruling, not ours: spawn nearer, an off-screen marker, or nothing.
-- THE GATE ON 19:15, Daniel's own: two tabs on btc-logistics-core.pages.dev (0.0.1576, the current build). Each truck
+- AND A TRUCK OFF THE SCREEN IS MARKED AT ITS RIM (Daniel's pick, 06:45). One player per loading-bay door, 24 doors at
+  6.8 m, two seats a mean 54 m apart: the camera a player drives with frames 3 of the 24 doors and labels 1 on the
+  hull, so the other 21 were nothing on screen. With the marker every one of the 24 gives a cue - the same two lines,
+  the same clock, at the rim in the truck's direction. The doors and the spawn are untouched.
+- THE GATE ON 19:15, Daniel's own: two tabs on btc-logistics-core.pages.dev (0.0.1578, the current build). Each truck
   carries two lines, name then age and arrows; the age should read tens of ms, not 300-600; and after PLAY again the
   other truck should stand at its new pose at once, not be missing and
   not be where the last round left it. This host cannot run two WebGL pages at 60 Hz, so it stays his.
