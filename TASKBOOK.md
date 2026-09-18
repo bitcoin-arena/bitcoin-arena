@@ -38968,3 +38968,39 @@ A SILENCE NO LONGER TAKES THE OTHER TRUCK AWAY (2026-09-18 11:55; the 10:42 lett
   SHIPPED             WebGL 0.0.1591, built client == dist, built core == template. btc-logistics-core (9424dc92),
                       alias serving it; war untouched. Commit 4ff9b29, with both 10:42 shots.
 
+THE SECOND ROUND'S SESSION NEVER OPENS, AND THAT IS WHY NEITHER TAB SEES THE OTHER (2026-09-18 16:30; the 12:02
+letter, measured in two real browsers)
+  WHAT WAS ASKED      Daniel 12:02: the other truck does not line up, and after the second round Truck 1 cannot see
+                      Truck 2, age 6736 ms. Then 15:55: measure in the page, not with a node client standing in.
+  ITEM 1, CLOSED      in a LIVE round the drawn ghost is the other page's own core pose: 0.000 m and 0.00 deg at
+                      every matched tick, both directions, while both trucks drive. Each tab reads its own truck out
+                      of `Module.blwp.st.i32` - the words the C# layout is generated from - and one tab's picture of
+                      the other is held against that other page's core at the same tick. Commit f007b98.
+  ITEM 2, THE CAUSE   both tabs play a first round and see each other; both press the page's own PLAY again; both
+                      enter the SAME second round (`join joined`, one round id); and neither is ever shown the
+                      other. What each page holds afterwards says why:
+                        tabA  client NO, ghosts NO, state error: "no proven endpoint: no chain: only 1 of 2
+                              providers gave a chain (provider 1: no answer in 10000 ms)"; its field is still the
+                              FIRST round's - drawn 28, retired 1
+                        tabB  client NO, ghosts NO, state opening, and at the end "client ended"; a fresh field with
+                              every counter at zero
+                      A session that never opens publishes nothing, so the other tab has nothing to be sent. The
+                      pictures are not late and not wrong: there are none.
+  THE CHAIN READ      the page proves a chain over `/headers` from both signer nodes and `agreedChain` wants 2 of 2
+                      inside 10 s. Timed from inside the page at the moment a round ends: 240 bytes in 8746 ms and
+                      8745 ms, and once past this probe's own 20 s ceiling. From this host with curl, the same
+                      endpoints answer the same 240 bytes in 0.52 s and 1.43 s. So the endpoints are not slow; the
+                      TAB is - headless WebGL here draws under one frame a second, and a fetch lands behind it.
+                      What is not an artifact of a slow host: when the read does miss, nothing retries. The page
+                      stays in the round with no client, its core still stepping, and the player sees no other truck
+                      for the whole round.
+  ALSO CONFIRMED      between the rounds both pages held trucks 0, roundEnded 1, retired 1 - the 0.0.1595 rule
+                      working in a browser, not only in a test.
+  WITHDRAWN           every large pose figure taken with a node client standing in for the page core: a loop counter
+                      used as a run tick, a second seat's join tick, a transcript overwritten by the empty signer's
+                      answer, a field keyed by player matched against an entry id. None measured the game.
+  NOT THIS LETTER'S   whether a fast machine hits the same window, and how often, cannot be measured from here.
+  TO DECIDE           The fix is a client one and is not written: retry the chain read at a round boundary, or reuse
+                      the chain this page proved for the round it just played, rather than leaving a joined round
+                      with no client.
+
