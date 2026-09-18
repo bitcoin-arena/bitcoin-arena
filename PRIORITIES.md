@@ -35,12 +35,13 @@ NOW (2026-09-18 12:02, Daniel HARD): ghost position still does not line up with 
 - Shipped 0.0.1604: a page opens its next round from the chain it already proved, so PLAY again no longer waits on a
   fresh 2-of-2 read of the same headers. Measured in two browsers: a proof is kept (3 headers), the second session
   logs REUSED and comes up with a client and ghosts at once - where before both tabs had no client at all.
-- Open, and now named: a tab that presses PLAY again JOINS the next round at the page level - client yes, ghosts yes,
-  the same round id in both tabs - while the game side never leaves the first. Measured in two browsers: net.where
-  still names round one after 3.7 minutes, the client sits in state "opening" (never ready, never ended) and is still
-  publishing into the finished round (902 ticks). Neither tab is in round two at all, which is why neither sees the
-  other. The suspect is the session swap: the bridge keeps the existing client unless it says it is over, so a client
-  that never finishes opening blocks every later round. Numbers in TASKBOOK.
+- Shipped 0.0.1607: a join of another round closes the session on the one before, so PLAY again leaves the finished
+  run. Measured in two browsers: both game sides now follow the joined round (net.where names it in BOTH tabs, where
+  every run before said "it never left the first"), nothing publishes into the old run any more, and one tab drove
+  409 ticks of the new one on the chain it had already proved.
+- Open: in that same round two, one tab's new session died on "Failed to fetch" - a call refused outright, not the
+  10 s chain timeout that 0.0.1604 fixed - so it published nothing and the other tab had nothing of it to draw
+  (others 0 at ticks 300 through 1500). Which request failed, and against which node, is the next measurement.
 
 DONE (2026-09-18 10:42, Daniel HARD playtest) on 0.0.1591, all four:
 - Hills: a ghost lies on the same four contact points as the local truck. Still no rigidbody and no collider.
