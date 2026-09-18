@@ -38807,3 +38807,26 @@ THE HOLE-CHECK ON 19:15, AND THE ONE IT FOUND (2026-09-18 07:05)
   NOT CLOSED          Daniel's two tabs, now on 0.0.1580. No further hole is named: what is left on 19:15 is eyes on
                       a screen, not another green suite.
 
+THE LAST CANDIDATE HOLE: DO TWO TABS EVEN LAND IN ONE ROUND? (2026-09-18 07:20; the 19:15 two-tab gate)
+  WHY IT WAS ASKED    every ghost number on this letter was measured with BOTH seats pinned to one round id - the
+                      probe reads the lobby once and hands the same round to the driver and the watcher. A player
+                      does not: two tabs each pick a round out of their own lobby listing, a minute apart. If the
+                      first tab's round stops being offered in between, the second joins the NEXT one, neither is
+                      ever shown the other, and nothing in the draw path is wrong. That would fail the gate with
+                      every number on this letter still green.
+  MEASURED            `tools/measure-two-tab-join.mjs`, eight minutes of the Daily lobby through the same
+                      `fetchLobby` the page reads, seating nobody:
+                        looks that found NO joinable free round      0 of 92
+                        free rows offered at once                    1, every look
+                        how long one round stays the offered row     106-205 s (four rounds)
+                        gap between one round and the next          -48 to -53 s, i.e. they OVERLAP: the next round
+                                                                     is offered about 50 s before the current one
+                                                                     closes, so the row rolls over rather than empties
+  THE ANSWER          no hole. A second tab that presses PLAY while the same row is offered - a window of at least
+                      106 s, and there is always a row - joins the round the first tab is in. And a tab that has
+                      pressed PLAY carries `?round=<id>&play=1` in its own address (index.html), so the second tab
+                      can be opened on the first tab's link and join that round by name whatever the lobby is
+                      offering. The only way to split the pair is to press PLAY in the second tab more than a couple
+                      of minutes after the first AND let it pick from the lobby.
+  NOT CLOSED          Daniel's two tabs on 0.0.1580. No host-side hole is left to name.
+
