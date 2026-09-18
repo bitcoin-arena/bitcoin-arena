@@ -21,6 +21,12 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 Top item first. Finish and deploy before starting the next.
 
 NOW (2026-09-18 12:02, Daniel HARD): ghost position still does not line up with what is seen. Plus 2nd round: Truck 1 cannot see Truck 2, age 6736ms. Shots ghosts-round2-1200-a.jpg / -b.jpg.
+- Shipped 0.0.1595: a truck of a round that is OVER leaves the screen; a live round still keeps its trucks through any
+  stall. Measured: a watcher that kept its field carried 1 truck of the round it had left into each new round and got
+  no picture of the new one (first picture NEVER, superseded 0).
+- And the drawn pose IS the other client's truck: a parked driver's 1122 pictures sat 0.000 m and 0.00 deg from a core
+  of that driver's own world at the same tick. What is seen in the wrong place is staleness, not a second world.
+- Open: Truck 1 seeing Truck 2 inside ONE live round is not proven by those numbers. Daniel's next two tabs decide it.
 
 DONE (2026-09-18 10:42, Daniel HARD playtest) on 0.0.1591, all four:
 - Hills: a ghost lies on the same four contact points as the local truck. Still no rigidbody and no collider.
@@ -36,7 +42,7 @@ facing with it; the two-line debug draws in a player; an off-screen truck is nam
 drawn at its first picture. The Daily could not open a round at all until 0.0.1586 - a 2338-word core in a build
 expecting 2386 - which is why two tabs saw nothing.
 
-NOW: candle fixes (ORDER below). Not started.
+NEXT, after 12:02: candle fixes (ORDER below). Not started.
 
 ORDER (Daniel 2026-09-17 17:34 HARD): ghosts -> candle fixes -> WAR_TACTICS army logic already started -> only then M3.
 
