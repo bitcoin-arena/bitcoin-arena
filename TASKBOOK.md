@@ -38717,3 +38717,41 @@ THE HULL POINTS WHERE THE LANDED PICTURE SAYS, AND PLAY-AGAIN MEASURED ON SCREEN
                       to btc-logistics-core (744290b7), alias serving it; btc-logistics-war untouched. Commit 7cec5b5.
   NOT CLOSED          Still Daniel's two tabs, now on 0.0.1574.
 
+THE OVERLAY WAS DRAWING NOTHING IN A PLAYER, AND THE DOORS KEEP THE TRUCKS APART (2026-09-18 06:30; 19:15)
+  WHAT WAS ASKED      Daniel 06:00, five questions before any new code: is the overlay exactly the two lines on the
+                      Daily hull; is anything missing for two tabs to see each other; the red list; deployable; and
+                      the rare stalls as a share of the original 300-600 ms.
+  THE OVERLAY         the rule is right and was never drawn. `GhostField.OnGUI` read `Camera.main` and returned when
+                      it was null, and `Camera.main` is the first camera tagged MainCamera - which nothing in this
+                      build tags, because `Bootstrap` makes the chase camera in code. Measured in the world Bootstrap
+                      builds: cameras 1, tagged MainCamera 0, Camera.main null. `StrikeTheatre` had hit the same null
+                      twice (the drone's distance, the crater's ring) and written it down both times. `LabelEye()`
+                      now takes the first enabled rendering camera, which is what the theatre does.
+                      The text itself was never wrong: `<name>` then `<age>ms` and arrows, client ghost-label suite
+                      4/4, and the deployed blwp-client.js is byte-identical to dist and to the built one.
+  THE DOORS           from the chase camera in the view a player drives in - 11 m behind the truck, fov 59:
+                        doors framed                3 of 24   (the player's own and the two beside it, +-6.8 m)
+                        doors with a label on screen 1 of 24   (the player's own)
+                      24 doors, 6.8 m pitch, one per seed: two seats are a mean 54.3 m apart and up to 156.4 m, the
+                      same door 4.2% of the time. So two PARKED tabs are usually not in each other's picture at all -
+                      which is what the 19:15 screenshot shows, and it is not lag. What to do about it (spawn nearer,
+                      an off-screen marker, nothing) is Daniel's ruling, not this letter's invention.
+  A MEASUREMENT THAT  the first run of the door table said 24 of 24. The camera was the God overview, 174 m up,
+  LIED, AND THE FIX   forward (0.01,-0.88,0.47) - an overview frames everything. Two more runs did not move the pose,
+                      so the third did not guess: it printed every camera, which one is Camera.main, and the chase
+                      camera's state. That is what found `view God` AND the null Camera.main. The suite now toggles
+                      to Follow and refuses to count anything unless the camera is within 20 m of the truck.
+  THE RARE STALLS     on 0.0.1574, 5815 pictures in 10 min: 27 poses over 300 ms (0.46%), 7 over 600 ms (0.12%) -
+                      one over-300 every 22 s, one over-600 every 86 s. Before any draw work: 3462 of 3483 (99.4%).
+                      So of the 99.4 per cent that was in the 300-600 band, 0.46 is what is left - under one
+                      two-hundredth of the original report. No stall investigation opened.
+  REDS                client world-seed-bridge.test.js does not finish under the test timeout (no ghost path; wants
+                      its own budget). node second-closer 0/2 wants a real lnd on this host. client
+                      ghost-field.test.js 20/21: line 224 compares the template's core with packages/core/dist - the
+                      template ships the LIVE core, dist holds the undeployed hull-down core; it clears when that
+                      core ships. None of the three is a ghost fault.
+  SHIPPED             PlayMode 26/26 (the 24 plus the two new: the label eye, and the door table). WebGL 0.0.1576
+                      errors 0, built client == dist, built core == the live template core. Deployed to
+                      btc-logistics-core (e68b60c6); btc-logistics-war untouched. Commit 856b038.
+  NOT CLOSED          Daniel's two tabs, now on 0.0.1576 - and the doors question above is his to rule on.
+
