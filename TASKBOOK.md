@@ -38546,3 +38546,30 @@ THE PICTURED TRUCK'S LEFTOVER STALL IS THE PUBLISH PATH (2026-09-18 01:50; the 1
   RESIDUAL         the restart-only close retry (731-1070 ms once per start, with the committee chain check inside it)
                    and the wait a page sees while an old round's view is read after a restart.
 
+THE STEP AND THE PUSH LEFT THE PUBLISH FRAME (2026-09-18 02:10; the 19:15 ghost letter, measured window)
+  THE CUT          the batch store and its answer stay in the socket frame - that number is the publisher's chain rule.
+                   The ghost warm step and the picture set are queued once per round for the end of the same turn of
+                   the loop, so batches that land together step once to the newest tick and push once. The step walks
+                   TO the newest tick in bounded slices: a burst does not leave a truck half way, a run still steps on
+                   its own batches, nothing replays from a run's start and no truck is left cold.
+  THE TRUCK        same probe, six-minute windows:
+                     before (committee once per round)   9.5 /s, p50 100, p90 109, max 781 ms, 2 over 600 ms,
+                                                         0 at the 3 s retire, 26 stalls over 300 ms, ping p90 29 / 28 ms
+                     after (step and push off the frame) 9.6 /s, p50 100, p90 109, max 849 ms, 1 over 600 ms,
+                                                         0 at the 3 s retire, 10 stalls over 300 ms, ping p90 25 / 24 ms
+                   Pictures a second went UP, so the coalescing did not cost a picture per burst: the 9.5 veto did not
+                   fire.
+  NAMED PHASES     `ghost warm step` and `ghost push` no longer appear in any stall - they are off the publish frame.
+  LEFTOVER         stalls of ~230-360 ms on this thread are unnamed again, the same shape the profile last gave the
+                   batch store (22.5 s of 390 s), which stays on the frame because it owes the publisher its answer.
+                   Restart-only, not the live path: a 3,316 ms burst at start-up (2,980 ms of processor) and the
+                   822 ms close retry of the one old round, with its committee chain check of 157 ms inside it.
+  UNTOUCHED        the batch store and its answer, close and finality, the 3 s retire, the 10 Hz cadence, the debug
+                   overlay on the trucks, and carryReceipts' signature checking.
+  TESTS            node ghost-live + ghost-socket 20/20; verify + close-at-end + ghost-door + ghost-produce 17/17;
+                   client ghost-realtime 2/2 (its "pictured at its newest tick" test caught the coalescing losing
+                   catch-up, which is why the queued step walks to the newest tick); ghost-field 20/21 with the listed
+                   template-core red. second-closer 0/2 and world-seed-bridge.test.js stay listed. No Unity.
+  STILL OPEN       two real browsers on the Daily (this host cannot run two WebGL pages at 60 Hz), the unnamed
+                   leftover stalls, and Daniel's own reading of the 300-600 ms lag and the second-round ghost.
+
