@@ -24,14 +24,17 @@ NOW (2026-09-17 19:15, Daniel HARD): ghosts still lag ~300-600ms. Debug over tru
 
 ORDER (Daniel 2026-09-17 17:34 HARD): ghosts -> candle fixes -> WAR_TACTICS army logic already started -> only then M3.
 
-LIVE (2026-09-17 20:10): Daily 0.0.1525 (bb4d521c), signer nodes on the ghost release. Ghosts, after Daniel 19:15:
-- Both signer nodes froze together (p90 290 ms, one 28.1 s): the round keeper re-read the whole chain per opening with
-  synchronous bitcoin-cli spawns. Now median 14 ms, p90 21 ms, max 552 ms, 2 stalls over 300 ms a minute.
-- A batch slot the page missed while the last batch was in flight goes on the answer (80 ms link: 5.0 -> 6.1 pictures/s).
-- A publisher's picture is kept warm, so a second-round ghost is drawn at its newest tick, not replayed from its start.
+LIVE (2026-09-18 02:10): Daily 0.0.1525 (bb4d521c), signer nodes on the ghost release. Ghosts, after Daniel 19:15:
+- The other player's truck arrives 9.6 times a second (the page publishes 10), gap p50 100 ms, p90 109 ms, one gap over
+  600 ms in six minutes, none near the 3 s that retires a ghost. Measured from outside the Daily with a stake-0 driver
+  and a watcher; numbers and every step in TASKBOOK.
+- The signer nodes' own stalls: the round keeper, the close, the census, the beacon, the committee and the publish frame
+  are each off the thread that draws the other trucks. What is left is ~230-360 ms unnamed, shaped like the batch store,
+  which stays on that frame because it owes the publisher its answer.
 - DEBUG over each truck: name, then age in ms and arrows (up/down, left/right); "~" = no stamp of the driver's clock.
-- Not measured: two real browsers on the Daily (this host cannot run two WebGL pages at 60 Hz). The stalls that are left
-  are the close / finality path; client test/world-seed-bridge.test.js does not finish under the test timeout (listed).
+- NOT MEASURED, and Daniel's own check: two real browsers on the Daily (this host cannot run two WebGL pages at 60 Hz) -
+  the overlay on screen, the second-round ghost, and whether the lag still shows. Listed red: client
+  test/world-seed-bridge.test.js does not finish under the test timeout; node second-closer 0/2 needs a real lnd.
 
 LIVE (2026-09-17 19:15) letter: tank arrival - tanks fidget walking onto a hold on the scrolling candle field (crest-hold done).
 - Wiggle row = walking-in hull heading flips: 32.7% at HEAD, red, threshold unchanged (numbers in TASKBOOK).
