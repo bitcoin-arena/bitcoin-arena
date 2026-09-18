@@ -20,6 +20,8 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+NOW (2026-09-18 10:42, Daniel HARD): ghosts have no physics (must climb hills like the local truck). Age often >100ms. Position only right at start, drifts the longer the other drives (maybe off-screen). Shot B: ghost in the wrong place. Tanks desync between the two tabs — they must be the same world. Shots daniel-screens/ghosts-physics-1042-a.jpg and -b.jpg.
+
 NOW (2026-09-17 19:15, Daniel HARD): ghosts still lag ~300-600ms. Debug over truck: 2 lines <name> / <age ms> <fwd|rev> <left|right>. Second round: ghost missing then wrong place. Shot daniel-screens/ghosts-two-tabs-1915.jpg — they should see each other.
 
 ORDER (Daniel 2026-09-17 17:34 HARD): ghosts -> candle fixes -> WAR_TACTICS army logic already started -> only then M3.
