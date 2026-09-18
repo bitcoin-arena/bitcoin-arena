@@ -39286,3 +39286,12 @@ photographing the loading bay, where there is no band at all, and two of its pai
 Two harness faults of mine, both fixed in the tool: it read st.samplesTaken, which is a function of the state in
 sim.js and not a field on it, and printed samples 0 -> 0; and a backtick inside an injected template literal aborted
 the run before it began.
+
+The drawn check, now done: 41 m out of the depot, on the road with the field in view, eight frames a second apart with
+the core's shift beside each - shift 3.08, 3.69, 4.92, 0.36, 1.55, 2.80, 3.99, 5.30 m, ticks 1821 -> 2652. Changed
+pixels between consecutive frames over the world band: 240494, 307820, 299890, 228304, 17354, 82141, 78849 of 430080.
+The world redraws continuously while the shift advances; nothing freezes. Shots in scratchpad/candle-band/f*.png.
+
+Seen while measuring, not part of this letter: from the cab the price headline is drawn very large across the middle
+left of the screen ("$81,186 +6.14% 24h", about 80 px tall) over the world, where in spectate it is a small corner
+note. Photographed in scratchpad/candle-band/f5.png. Worth a HUD letter of its own.
