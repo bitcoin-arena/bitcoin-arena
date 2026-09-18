@@ -38657,3 +38657,28 @@ THE EYE, NOT THE WIRE: THE DRAWN TRUCK STOPPED TRAILING A WHOLE PICTURE (2026-09
   NOT CLOSED         Daniel's two tabs on 0.0.1570: the age over each truck near 100 ms, and after PLAY again the other
                      truck at its new pose at once.
 
+THE FRAME A PICTURE LANDS IN NOW SHOWS THAT PICTURE (2026-09-18 05:30; the 19:15 ghost letter, the 100 ms term)
+  THE SAME THREE      same probe, same pictures, ten minutes, four rounds, 5851 pictures of the driver:
+  COLUMNS, AGAIN        the label's own age      p50 22, p90 34, max 749 ms   (unchanged: it is the picture's own age)
+                        the same pictures, wire  p50 22, p90 34, max 749 ms   (identical, as before)
+                        where the truck is drawn p50 322 -> 171 -> 38 ms, p90 50 ms, max 765 ms, AT THE LAND INSTANT
+                      eased poses over 300 ms: 22 of 5851 (was 29 of 3500, and 3462 of 3483 before any draw cut); over
+                      600 ms 2. Picture rate 9.8/s, gaps p50 100 ms, p90 109 ms, five over 600 ms, none at the 3 s
+                      retire. Four rounds in the window: first picture 110-151 ms in, 2-4 ticks behind, none retired,
+                      no leftover pose of the round before.
+  THE ARITHMETIC      38 ms at the median is 22 ms of wire plus 16 ms of label refresh. The whole-interval term is
+                      gone: the truck no longer stands on picture N-1 when N lands. What the eye averages over an
+                      interval is 38 + 50 = 88 ms, because the pose is correct at land and then ages until the next
+                      picture - that ageing is the 10 Hz cadence itself and nothing in the page can shorten it.
+  THE CUT             GhostTruck.Show sets transform.position to the new picture's place in the same frame it lands,
+                      and Ease walks only the hull's facing round (a hull that snaps its heading in one frame is the
+                      stutter the 17:05 report named; a facing is not a place). Nothing is extrapolated, no pose is
+                      invented between pictures, no rigidbody, collider or second clock is read. The probe decides
+                      which arithmetic to use by looking for that assignment in the shipped C#, so the column keeps
+                      measuring the page and not a number typed here.
+  SHIPPED             PlayMode Ghost suites 24/24 (GhostDrawnPoseTests now asserts the pose is ON the landed picture
+                      within 0.001, where it used to assert a walk), WebGL 0.0.1572 errors 0, built client == dist,
+                      built core == the live template core. Deployed to btc-logistics-core (177bac0d), alias serving
+                      1572; btc-logistics-war untouched. Commit 61133f9.
+  NOT CLOSED          Still Daniel's two tabs. 19:15 stays open until he sees it.
+

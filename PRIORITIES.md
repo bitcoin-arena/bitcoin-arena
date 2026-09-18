@@ -24,10 +24,13 @@ NOW (2026-09-17 19:15, Daniel HARD): ghosts still lag ~300-600ms. Debug over tru
 
 ORDER (Daniel 2026-09-17 17:34 HARD): ghosts -> candle fixes -> WAR_TACTICS army logic already started -> only then M3.
 
-LIVE (2026-09-18 02:10): Daily 0.0.1525 (bb4d521c), signer nodes on the ghost release. Ghosts, after Daniel 19:15:
+LIVE (2026-09-18 05:30): Daily 0.0.1572 (177bac0d), signer nodes on the ghost release. Ghosts, after Daniel 19:15:
 - The other player's truck arrives 9.6 times a second (the page publishes 10), gap p50 100 ms, p90 109 ms, one gap over
   600 ms in six minutes, none near the 3 s that retires a ghost. Measured from outside the Daily with a stake-0 driver
   and a watcher; numbers and every step in TASKBOOK.
+- What the eye sees, not the wire: the frame a picture lands in now draws that picture. The drawn truck was 322 ms
+  behind, then 171, and is 38 ms at the median at the moment a picture lands - the wire plus the label refresh. Only
+  the hull's facing still turns over a frame or two.
 - The signer nodes' own stalls: the round keeper, the close, the census, the beacon, the committee and the publish frame
   are each off the thread that draws the other trucks. The frame's own parts - authority, store, answer, chain parse -
   never cross 20 ms, so the store was not cut. What is left is a burst of 200-230 ms of which our labels own 19 ms
@@ -36,9 +39,9 @@ LIVE (2026-09-18 02:10): Daily 0.0.1525 (bb4d521c), signer nodes on the ghost re
 - Second round, on the wire: every new round's other truck arrived in 113-190 ms, 2-6 ticks behind the driver, never a
   leftover pose, never retired for silence (five rounds, eleven minutes).
 - DEBUG over each truck: name, then age in ms and arrows (up/down, left/right); "~" = no stamp of the driver's clock.
-- THE GATE ON 19:15, Daniel's own: two tabs on btc-logistics-core.pages.dev (0.0.1525, the current build - nothing a
-  player runs has changed since it). Each truck carries two lines, name then age and arrows; the age should read about
-  100 ms, not 300-600; and after PLAY again the other truck should stand at its new pose at once, not be missing and
+- THE GATE ON 19:15, Daniel's own: two tabs on btc-logistics-core.pages.dev (0.0.1572, the current build). Each truck
+  carries two lines, name then age and arrows; the age should read tens of ms, not 300-600; and after PLAY again the
+  other truck should stand at its new pose at once, not be missing and
   not be where the last round left it. This host cannot run two WebGL pages at 60 Hz, so it stays his.
   Listed red: client test/world-seed-bridge.test.js does not finish under the test timeout; node second-closer 0/2
   needs a real lnd.
