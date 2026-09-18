@@ -39437,3 +39437,35 @@ That is a doctrine question, not a bug in the mover: either §4.10's re-read cad
 a normal part of the front", or the GIVE condition (foe >= own + 1 + weight inside the reach) is too strict for the
 densities this game has. Both are Daniel's to rule. It is written here rather than guessed at, and the instrument
 (--verdicts) stays in the harness so the next attempt starts from the step count.
+
+### The army starts deployed: measured, and it collides with the C# parity rule (2026-09-19 02:4x)
+
+Every row now reads the core's seam, not only the H rows: 26 of 39 pass (A4b turned green on the fix alone). Then the
+A9 coverage gap was measured rather than guessed at:
+
+  gaps by where on the seam   |x|<=20 18%, 20-45 30% / 17%, 45-65 33% / 18%, 65-81 31% / 17%
+  tanks alive when a metre was short   median 12 - a full side, so it is not attrition
+  of those, within a gun's reach of the seam   MEDIAN 0 (q1 0, q3 7)
+
+And with the seam right, the H1 miss profile over the opening 30 s is unanimous: 100% of misses are tanks that have
+never stood on a post, 99% stepping toward it, 1% standing still, a median 31.6 m out. The army spends the opening
+walking in from the back edge, and covers nothing while it does.
+
+The infantry does not: "a rifleman is put ON his post when he spawns" (sim.js). Only the armour was given its lane's
+x and left at the spawn's z. So the tanks were placed on their posts at init as well - a respawn still walks in (§3).
+Measured, seeds 1-5 x 3600:
+
+  H1   49.89% -> 58.80%   PASS        A4b  3.62% -> 0.01%   PASS
+  H2   green -> 100.00%               A9  16.28% -> 12.27%  (still red, bar 5%)
+  A11c and S1 turned green; rows passing 26 of 39 -> 27 of 39
+  new reds, both marginal: A2 fidgets 2.11% against a 2% bar (0.89-1.10% on other seed sets), A4a 1 of 60 windows
+
+THEN IT WAS REVERTED, because it is not mine to rule: `rules.test.js` pins the opening approach against the recorded
+C# army (test/vectors/csharp-army.json) - "the army closes at the pace the C# army closes" and "it tells further and
+further behind the line". Starting the tanks on post deletes the approach those two measure, and they fail. Golden
+vectors also move, as any deliberate core change moves them.
+
+RULING NEEDED (Daniel): does the armour form up on its posts at the start, as the infantry already does - and the two
+C# closing-pace rules retire with the walk-in - or does the approach stay and the doctrine rows live with an army
+that covers nothing for its first half-minute? The change is four lines and its numbers are above; core, vectors and
+rules are back at HEAD (49/49 rules, 8/8 vectors) until it is ruled.
