@@ -39556,3 +39556,36 @@ asks for a ragged line with depth: 20-60 m wide and 4-12 m deep.
 
 Nothing was changed for this measurement: B3's bands are untouched, A9 is untouched and still red, spawn-on-post
 stands, and the table is still 27 of 39.
+
+### B3's share of the remaining reds: one of twelve (2026-09-19 04:3x)
+
+The two-way miss, restated: when the infantry's on-post men are out of band they are TOO TIGHT along the seam - 1683
+of 1705 x-misses, 23% of all side-ticks inside a 10 m lateral spread where §11.1 asks 20-60 m - and TOO LOOSE in
+depth, 1627 of 2146 z-misses, 21% of all side-ticks scattered 20-40 m deep where the band is 4-12 m. A knot with a
+long tail. Probe and row agree at 4092 side-ticks.
+
+B3'S BUNCHING ACCOUNTS FOR 1 OF THE 12 REMAINING REDS - itself. Measured, not reasoned:
+
+  B2  5 s squad windows without a halted team / a mover
+      failing windows (11) spent 60.6% of their ticks with that side's line out of band
+      passing windows (124) spent 83.1%            -> B2 fails LESS when the line is knotted: independent, if anything
+                                                      anti-correlated
+  B4  push changes the squad did not follow in 10 s
+      missed windows (3) spent 83.2% of the follow window out of band
+      followed windows (13) spent 81.2%            -> indistinguishable: independent
+  the other nine rows never read a rifleman at all: `liveM` appears only in B1-B6, and A2, A4a, A9, A11a, A11b, A13b,
+  O1 (both) and O4 are armour, team-push, objective or client rows.
+
+ON A9'S COVERAGE PATH: none of them, and B3 least of all. A9 counts seam metres against `liveT` - living TANKS - so
+no infantry spread can reach it. A11a, A11b, A13b and O1 read tank posts and the team push words; they are off A9's
+path too. A9's own cause stays the seam's climb, and its levers stay pinned until Daniel rules.
+
+So B3 is listed here with its reason rather than fixed: the share is small, the fix is a formation rule, and the
+knot-and-tail direction does not tell us which of §11.1's two numbers - the lateral scatter draw or the standoff
+spread - is the one that is wrong. That is a rule question and it waits.
+
+THE LARGEST REMAINING RED, and the next measure on this table: the PUSH MACHINERY - A11b (6 of 10 windows with no
+team giving ground, bar 0), A13b (41.91% of ticks where the sides' mean push differs by 4 m, bar > 50%) and O1 (58.10%
+against a 60% bar, and 3.87 m against a 6 m bar). Four of the twelve reds, one mechanism, and it already has a
+measured cause from this session: the push word is re-read about once per team-minute - 28 steps in a whole run, none
+from zero downward - so every row that asks the push to DO something inherits that rate.
