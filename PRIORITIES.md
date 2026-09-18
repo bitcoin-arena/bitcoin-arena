@@ -26,7 +26,14 @@ NOW (2026-09-18 12:02, Daniel HARD): ghost position still does not line up with 
   no picture of the new one (first picture NEVER, superseded 0).
 - And the drawn pose IS the other client's truck: a parked driver's 1122 pictures sat 0.000 m and 0.00 deg from a core
   of that driver's own world at the same tick. What is seen in the wrong place is staleness, not a second world.
-- Open: Truck 1 seeing Truck 2 inside ONE live round is not proven by those numbers. Daniel's next two tabs decide it.
+- Inside ONE live round both tabs are shown every picture of each other: 830 and 745 pictures one way, 827 and 741 the
+  other, the first 113-141 ms after the round begins, none naming another round, one tick behind the driver. Both tabs
+  take their endpoint from the same signed advert, so a tab is never left on a signer that holds nothing of the other
+  truck; that the second signer holds 0 ticks of a run is true and is a settlement item, not this.
+- Open, and only this: whether a MOVING truck's drawn pose is the other player's core pose. Every large figure this
+  session came from the measuring harness, not the game, and is withdrawn. Taking it properly needs the page's own
+  core in a browser - a node client is not that core - which is what client/test/world-seed-bridge.test.js is for, and
+  that test does not finish under the test timeout (listed red, untouched).
 
 DONE (2026-09-18 10:42, Daniel HARD playtest) on 0.0.1591, all four:
 - Hills: a ghost lies on the same four contact points as the local truck. Still no rigidbody and no collider.
