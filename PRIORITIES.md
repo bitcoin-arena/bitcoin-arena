@@ -20,6 +20,21 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+SHIPPED (2026-09-18 22:16, Daniel HARD playtest, photographed) on 0.0.1617: the whitepaper is inside its plaque.
+- Two faults, both in how the plaque was MEASURED, neither in the text. Show() static-batches everything not named
+  live, and the whitepaper plate was not on that list: Combine swaps a batched renderer's mesh for the whole
+  building, so the plate and the text under it both reported the building's box. The same trap the comments in Room
+  already name - last time streaming swapped the mesh, this time batching did.
+- And Face() called the LARGEST axis the width. Read off the model file, whitepaper_print is a PORTRAIT quad, 9.4
+  wide x 12.2 tall in a 9.6 x 12.4 backing - read as 12.2 x 9.4, so a landscape block was sized to 11.4 m of width
+  on a 9.4 m plaque and hung over both edges. Face now drops the thin axis and keeps the other two in their order,
+  and plate and lettering are both measured in the plate's own axes at the size they are drawn.
+- Live on the Daily: plate 9.4 x 12.2 m, text 8.8 x 6.7 m, inside the frame. Photographed from spectate, close crop
+  and whole: daniel-screens/whitepaper-inside-plaque-1617*.png. Before: "94% x 92%" of a box that was not the plaque.
+- TheWhitepaperIsInsideItsPlaque guards it: the plaque must be a small part of the building (a batched whole-building
+  box fails), the words inside the plaque's own face, and still filling it. PostOfficeTests 11/12, the one red being
+  TheGogglesAnimate, the load-dependent flake TASKBOOK already lists. EditMode 252: 248 pass, 1 known red.
+
 SHIPPED (2026-09-18 21:52, Daniel HARD playtest, photographed) on 0.0.1616: the mouse flies the spectator camera.
 - The fault was not the driving pads. In SPECTATE the camera collected its pointers from the touchscreen alone and
   returned at once when there was none - a desktop has none, so the list was always empty and the pads moved nothing.

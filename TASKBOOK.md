@@ -39108,3 +39108,28 @@ the photographs are the result.
 The DRIVING pads, measured on 1613 before this was understood: idle 0.00 m/s, UP pad held with the mouse 10.47 m/s,
 keyboard 12.65 m/s; at devicePixelRatio 2, 0.00 -> 6.36 m/s. They were never dead - the letter's fault was in the
 other mode, and measuring a driving seat could not have found it.
+
+## The whitepaper was fitted to the wrong box, twice (2026-09-18 22:16 letter, shipped 0.0.1617)
+
+Daniel photographed it from spectate: the six lines sprawled across the depot, off the plaque.
+
+  model file, mempool_post_office.glb   whitepaper_print is a quad 9.4 x 12.2 (portrait), backing 9.6 x 12.4
+  shipped 1616, live log                "drawn plate 12.2 x 9.4 m, text 11.5 x 8.6 m, covering 94% x 92%"
+  after the fix, live log on 1617       "drawn plate 9.4 x 12.2 m, text 8.8 x 6.7 m, covering 94% x 55%"
+  editor, after the fix                 [whitepaper] plaque 9.40 x 12.20 m on a 73.8 m building, text 8.84 x 6.86 m
+
+Fault 1: PostOffice.Show batches every renderer not named by IsLive, and whitepaper_print was not named.
+StaticBatchingUtility.Combine swaps the batched renderer's mesh for the combined building, so after it ran the
+plate's own renderer - and the TextMesh hanging under it - answered with the building's box. Fixed by naming the
+whitepaper live: anything carrying drawn lettering stays out of the batch, whether or not the words change.
+
+Fault 2: Face() returned (largest axis, middle axis) as (width, height), which turns every portrait plate into a
+landscape one. The plate is 9.4 wide and 12.2 tall; it was read as 12.2 wide, so the fit was allowed 11.4 m of width
+on a 9.4 m plaque - 21% over on one axis and short on the other, and the lines were shaped for a landscape page that
+does not exist. Face now drops the THIN axis and keeps the remaining two in their own order, and both Room and Fit
+measure in the plate's local axes times what it is drawn at, never a world-axis box round a wall at an angle.
+
+Why the old test passed while the screen was wrong: TheLetteringFillsItsPlates measures the text against
+PostOffice.Room, and batching had replaced both with the same combined mesh - two wrong boxes agreeing with each
+other, the third time this shape of answer has been recorded here. TheWhitepaperIsInsideItsPlaque refuses it: the
+plaque must be under a quarter of the building it hangs on, the text inside the plaque's own face, still filling it.
