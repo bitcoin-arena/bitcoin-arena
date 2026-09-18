@@ -20,10 +20,13 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-OPEN, first: one tab's second session dies on `Failed to fetch` - a call refused outright, not the 10 s chain
-timeout 0.0.1604 fixed - so it publishes nothing and the other tab has nothing of it to draw (others 0 at ticks 300
-through 1500). Which request failed, and against which node, is the next measurement. The parked 12:02 ghost letter
-below is what it belongs to; nothing of it has been started.
+OPEN, first: at the round boundary a page's calls are dropped by its OWN 8 s names timeout, because the signer node
+blocks. Measured twice on the MacBook: GET /names?round=... aborted at 8.8-9.4 s, /rounds at 11.5 s, /name at 12.8 s -
+net::ERR_ABORTED, which is the page giving up, not a refusal - while the node answered a LAN request in 15.00 s at
+its worst against a median of 0.011 s, with its tunnel answering in 0.14 s beside it. Not the 10 s chain timeout:
+/headers came back 200 in 1925 ms at that same boundary. WHAT BLOCKS THE NODE is the next measurement. The exact
+`Failed to fetch` of 12:02 did not reproduce in 19 minutes of two-tab play, and the trace is armed for it. Numbers in
+TASKBOOK. The parked 12:02 ghost letter below owns this; nothing of it has been started.
 
 SHIPPED on the Daily, three playtest letters, numbers and causes in TASKBOOK:
 - 0.0.1617 (22:16, photographed): the whitepaper is inside its plaque - 9.4 x 12.2 m plate, 8.8 x 6.7 m text. Two

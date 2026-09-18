@@ -39178,3 +39178,47 @@ What the table settles, in numbers rather than by name:
 
 Counts with the change in: PlayMode PostOfficeTests + PlateMeshDiagnosticTests 13/13 (TheGogglesAnimate green on this
 run; it stays listed as the load-dependent flake). EditMode 252: 248 pass, 1 red, the long-listed rifle flash.
+
+## The refused call at the round boundary, named (2026-09-18 22:5x, two runs on the MacBook)
+
+Two two-tab runs on the Daily, both tabs real browser pages, CDP Network capture in each tab beside the page's own
+fetch log, and a paired latency sampler hitting the signer nodes DIRECTLY on the LAN and through their tunnels at the
+same instants. 19 minutes of play, both runs joined, drove and pressed PLAY again into a second round.
+
+THE CALL, from the browser rather than from JavaScript:
+
+  page says      GET https://honolulu-...trycloudflare.com/names?round=bbd65101... -> TimeoutError: signal timed out (8816-9421 ms)
+  browser says   GET honolulu-...trycloudflare.com/names -> net::ERR_ABORTED / canceled after 9196-10056 ms
+  also, run 1    GET tramadol-... and honolulu-.../rounds -> AbortError, net::ERR_ABORTED / canceled after 11542 ms
+  also, run 1    POST honolulu-.../name -> net::ERR_ABORTED / canceled after 12750 ms
+  counts         tabA 627 calls / 12 refused and 409 / 8; tabB 616 / 10. Both nodes appear; honolulu more often.
+
+`net::ERR_ABORTED / canceled` is the browser saying the PAGE dropped the call, not that anything refused it. The
+timeout is ours: index.html:1339 `AbortSignal.timeout(8000)` on the names lookup (`namesOf`, identity.js:149).
+
+WHY THE PAGE HAD TO WAIT, measured with Cloudflare taken out of the picture - curl to 100.74.66.98:18080/18081 and to
+the tunnel, same second, 28 samples:
+
+  direct-a  median 0.017 s  worst 15.00 s (curl's own cap)  over 5 s: 3 of 28
+  direct-b  median 0.011 s  worst 15.00 s                   over 5 s: 4 of 28
+  tunnel-a  median 0.137 s  worst 12.87 s                   over 5 s: 2 of 28
+  tunnel-b  median 0.125 s  worst 15.00 s                   over 5 s: 1 of 28
+
+  21:12:41  direct-b 14.98 s while tunnel-b answered in 1.59 s
+  21:13:40  direct-a  9.12 s while tunnel-a answered in 0.14 s
+  21:15:08  direct-b 13.95 s while tunnel-b answered in 0.14 s
+  21:14:06  everything timed out at 15 s, direct and tunnelled alike
+
+So the signer node process itself blocks for seconds at a time - up to and past 15 s - on the LAN, with the tunnel
+answering beside it in a tenth of a second. The tunnel is not the hop that fails. A page whose names lookup waits 8 s
+gives up first, and that is every "refused" line above.
+
+NOT THE 10 s CHAIN TIMEOUT that 0.0.1604 fixed, with both numbers: these calls die at 8.8-12.8 s on /names, /rounds
+and /name, while `/headers` - the call `agreedChain` waits 10 000 ms for - answered http 200 in 1925 and 1941 ms in
+both tabs at the same round boundary, and both tabs kept a proved chain of 3 headers.
+
+WHAT DID NOT REPRODUCE: the exact `Failed to fetch` of the 12:02 letter. Zero occurrences in either run. That string
+is a network-level failure, where everything measured here is an abort we asked for. Both tabs also SAW each other in
+round two this time - 15.6 s and 16.2 s after PLAY in run 1, 35.5 s in run 2 - so "others 0 at ticks 300 through
+1500" did not reproduce either. The Network capture stays in measure-ghost-in-page.mjs, so the next occurrence is
+caught with its cause attached.
