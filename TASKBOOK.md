@@ -39533,3 +39533,26 @@ RULING NEEDED, because every lever is pinned by another row or by the spec:
 - the reach is 46 m (§4.2) and the depths are 14 / 26 / 30 m (§4.3), both spec;
 - or A9's 95% bar is read as a bar on flat stretches and the steep ones are accepted as thin.
 The measurement is done and the cause named; which lever moves is Daniel's.
+
+### B3 measured, after the probe was made to agree with the row (2026-09-19 04:1x)
+
+The withdrawn probe counted about one qualifying side-tick per seed against a row reporting thousands, so it was
+rebuilt to count through the row's own `add` counters, beside the row, and the first thing it prints is whether the
+two agree. Seeds 1,2 x 3600:
+
+  side-ticks 4092, probe events 4092                AGREE
+  row z out 2146   =  probe z tight 519 + loose 1627
+  row x out 1705   =  probe x tight 1683 + loose 22
+
+Only then the direction, which is the finding:
+
+  z spread, band 4-12 m     <4: 519 (13%)   4-12: 1946 (48%)   12-20: 749 (18%)   20-40: 878 (21%)   >40: 0
+  x spread, band 20-60 m   <10: 942 (23%)  10-20:  741 (18%)  20-60: 2387 (58%)    >60:  22 (0.5%)
+
+So when the line is out of band it is out in two opposite ways at once: along the seam it is TOO TIGHT - 1683 of the
+1705 x-misses, with 23% of all side-ticks inside a 10 m lateral spread - and in depth it is TOO LOOSE, 1627 of the
+2146 z-misses, with a fifth of all side-ticks scattered 20-40 m deep. A knot with a long tail behind it, where §11.1
+asks for a ragged line with depth: 20-60 m wide and 4-12 m deep.
+
+Nothing was changed for this measurement: B3's bands are untouched, A9 is untouched and still red, spawn-on-post
+stands, and the table is still 27 of 39.
