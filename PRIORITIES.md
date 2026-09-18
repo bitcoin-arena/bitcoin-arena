@@ -53,6 +53,10 @@ for the machine - so a page's 8 s names call was aborted and its next session st
 and a peer's /results has a 2500 ms deadline. After: worst hold 1872 ms, 0 refused calls in 1048, both tabs saw the
 other truck in round two after 12.4 s and 12.6 s. Node-side only: the Daily page stays 0.0.1617.
 
+B3 (the infantry line's spread) is still UNMEASURED: a probe written for it counted about one qualifying side-tick
+per seed while the row reports 52.44% of them out of band, so the two were not counting the same thing. It was
+withdrawn rather than reported; whatever replaces it must agree with the row first.
+
 THEN, once A9 is ruled: finish the army's remaining reds (A11a, A13b, O1, S1-adjacent, B2/B3/B4), ship it to the
 Daily, ping Daniel, and start M3 without asking (Daniel 2026-09-18 23:47 HARD). His eyes on drop-off / result /
 SPECTATE stay deferred until the army is finished.
