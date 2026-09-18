@@ -20,6 +20,8 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+NOW (2026-09-18 12:02, Daniel HARD): ghost position still does not line up with what is seen. Plus 2nd round: Truck 1 cannot see Truck 2, age 6736ms. Shots ghosts-round2-1200-a.jpg / -b.jpg.
+
 DONE (2026-09-18 10:42, Daniel HARD playtest) on 0.0.1591, all four:
 - Hills: a ghost lies on the same four contact points as the local truck. Still no rigidbody and no collider.
 - Tanks: one world. A page that fell behind jumps the debt in one frame instead of dropping it.
