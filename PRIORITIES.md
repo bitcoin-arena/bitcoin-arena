@@ -20,55 +20,21 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-SHIPPED (2026-09-18 22:16, Daniel HARD playtest, photographed) on 0.0.1617: the whitepaper is inside its plaque.
-- Two faults, both in how the plaque was MEASURED, neither in the text. Show() static-batches everything not named
-  live, and the whitepaper plate was not on that list: Combine swaps a batched renderer's mesh for the whole
-  building, so the plate and the text under it both reported the building's box. The same trap the comments in Room
-  already name - last time streaming swapped the mesh, this time batching did.
-- And Face() called the LARGEST axis the width. Read off the model file, whitepaper_print is a PORTRAIT quad, 9.4
-  wide x 12.2 tall in a 9.6 x 12.4 backing - read as 12.2 x 9.4, so a landscape block was sized to 11.4 m of width
-  on a 9.4 m plaque and hung over both edges. Face now drops the thin axis and keeps the other two in their order,
-  and plate and lettering are both measured in the plate's own axes at the size they are drawn.
-- Live on the Daily: plate 9.4 x 12.2 m, text 8.8 x 6.7 m, inside the frame. Photographed from spectate, close crop
-  and whole: daniel-screens/whitepaper-inside-plaque-1617*.png. Before: "94% x 92%" of a box that was not the plaque.
-- TheWhitepaperIsInsideItsPlaque guards it: the plaque must be a small part of the building (a batched whole-building
-  box fails), the words inside the plaque's own face, and still filling it. PostOfficeTests 11/12, the one red being
-  TheGogglesAnimate, the load-dependent flake TASKBOOK already lists. EditMode 252: 248 pass, 1 known red.
+OPEN, first: one tab's second session dies on `Failed to fetch` - a call refused outright, not the 10 s chain
+timeout 0.0.1604 fixed - so it publishes nothing and the other tab has nothing of it to draw (others 0 at ticks 300
+through 1500). Which request failed, and against which node, is the next measurement. The parked 12:02 ghost letter
+below is what it belongs to; nothing of it has been started.
 
-SHIPPED (2026-09-18 21:52, Daniel HARD playtest, photographed) on 0.0.1616: the mouse flies the spectator camera.
-- The fault was not the driving pads. In SPECTATE the camera collected its pointers from the touchscreen alone and
-  returned at once when there was none - a desktop has none, so the list was always empty and the pads moved nothing.
-  The pad still LIT UP under the pointer, because the pads themselves read the mouse, and the look-drag rightly
-  refused to turn the view because the press was on a control. Press registers, nothing happens - exactly the photo.
-- Now everything pressing the glass flies the pads: fingers and the mouse. The two-finger height pinch stays with real
-  fingers, because one mouse is not two.
-- Three PlayMode tests press a real mouse device on the pads' own rectangles: the forward pad flies the way the camera
-  looks, the right pad flies to its right, and a press on a pad does not also turn the view. 6/6 with the driving pads.
-- Measured live on the deploy: SPECTATE pressed at the rectangle the splash itself publishes, then the forward pad
-  held - the pad draws gold and the camera flies forward through the building. Photographed, 04-forward-pad-held.png.
-- The DRIVING pads were never dead: on 1613, idle 0.00 m/s, the UP pad held with the mouse 10.47 m/s, the keyboard
-  12.65 m/s, and the same at retina scale. That is why the first measurement could not find his fault - it was
-  measuring a driving seat, not spectate.
-
-SHIPPED (2026-09-18 19:30 + 20:00 + 20:04, Daniel HARD playtest) on 0.0.1613:
-- The result is read before the lobby: a run's outcome holds the screen 5 s (SplashScreen.ResultHoldSeconds), a wreck
-  still waiting for its own burn on top. FINISH_WAIT_MS stays 300 ms - that is the wire drain, not a screen.
-- SPECTATE keeps the line to the nodes: finish() no longer closes the socket, so a spectator after a round still sees
-  the other trucks. Nothing can be published past the end - `ended` refuses record, drain and mark - and the page
-  still closes the socket when it leaves the round.
-- EditMode ResultHoldTests 3/3, client finish-at-delivered 4/4 (its socket assertion rewritten to the new rule, and
-  stricter: a tick offered after the end is refused and the node holds no more).
-- The hold is timed from the instant the CORE names the outcome, the same clock the result card uses, so there is no
-  strip of plain world between the card fading and the lobby.
-- SPECTATE measured, not assumed: after a seat finished its own run it was still shown the other truck 424 times -
-  first at 90 ms, then every 99 ms at the median for 105 s, all naming the live round.
-- No sky billboard (20:00 shot): a spectator sees the market only when there IS one, as a corner note in the small
-  style. And a broken connection names itself where the player already looks - the price feed is down and the chart
-  may be stale, the round feed is lost and other trucks may freeze, or spectate lost the live feed - and the line goes
-  when the feed returns. The socket's own word stays in the debug panel.
-- EditMode 252: 248 pass, 3 skipped, 1 red (the long-listed rifle flash). PlayMode Ghost 26/26. The old subline tests
-  were rewritten to the new rule, not loosened, and now run the English check over the sentences too.
-- Eyes still needed: Daniel drives into the drop-off and reads the result, then presses SPECTATE.
+SHIPPED on the Daily, three playtest letters, numbers and causes in TASKBOOK:
+- 0.0.1617 (22:16, photographed): the whitepaper is inside its plaque - 9.4 x 12.2 m plate, 8.8 x 6.7 m text. Two
+  measuring faults, not a text fault: the plate had been swallowed by static batching, and a portrait quad was read
+  as landscape. Plate and lettering are now measured in the plate's own axes, fallback included, and 21 lettered
+  plates were checked one by one for the same two faults.
+- 0.0.1616 (21:52, photographed): in spectate the mouse flies the camera. The pads collected fingers only, so on a
+  desktop the pad lit up under the pointer and nothing moved.
+- 0.0.1613 (19:30 / 20:00 / 20:04): the result holds the screen 5 s before the lobby, spectate keeps the line to the
+  nodes, and a broken connection names itself in English on the HUD instead of a sky billboard.
+- Eyes still needed from Daniel: drive into the drop-off, read the result, then press SPECTATE.
 
 PARKED mid-measurement (2026-09-18 12:02, Daniel HARD): ghost position still does not line up with what is seen. Plus 2nd round: Truck 1 cannot see Truck 2, age 6736ms. Shots ghosts-round2-1200-a.jpg / -b.jpg.
 - Shipped 0.0.1595: a truck of a round that is OVER leaves the screen; a live round still keeps its trucks through any

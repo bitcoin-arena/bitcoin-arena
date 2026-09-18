@@ -39153,3 +39153,28 @@ stride, not the road's tiling.
 Why it waits: retuning that test is not this letter (Daniel 2026-09-18 22:16: "Do not retune that test as part of
 this letter"), and the fix is a stride of `RoadNetwork.Across`, measured against the drawn mesh, in the letter that
 owns the roads. Nothing a player sees is wrong from it - the asphalt tiles every 4 m on the build that shipped.
+
+## Plate diagnostic, the whole building, one row per lettered plate (2026-09-18 22:16 close-out)
+
+PlateMeshDiagnosticTests over the built world. Columns: plate | batched | mesh at the scale it is drawn | world box |
+text local | text world. 21 rows, every one "own" - nothing lettered is in a static batch, so no other plate was
+sitting on the combined mesh the whitepaper had been fitted to.
+
+  fee_rate_0..3     own   5.2 x 1.5 x 0.0    world 0.0 x 1.5 x 5.2    text  0.6 x 1.3   world 0.0 x 1.3
+  fee_usd_0..3      own   4.4 x 1.2 x 0.0    world 0.0 x 1.2 x 4.4    text  2.6 x 1.1   world 0.0 x 1.1
+  mined_face_00..04 own   8.2 x 8.2 x 0.0    world 3.9 x 8.2 x 7.8    text  4.4 x 2.5 and 7.5 x 2.4
+  next_face_00..04  own   8.2 x 8.2 x 0.0    world 3.9 x 8.2 x 7.8    text  3.4 x 2.5 and 7.5 x 2.4
+  terminal_screen   own  96.0 x 36.0 x 0.0   world 0.0 x 36.0 x 96.0  text  6.1 x 2.5 up to 32.7 x 3.8
+  unconf_count      own  19.0 x 5.2 x 0.0    world 0.0 x 5.2 x 19.0   text 12.4 x 4.6   world 0.0 x 4.6
+  whitepaper_print  own   9.4 x 12.2 x 0.0   world 0.0 x 12.2 x 9.4   text  8.8 x 6.9   world 0.0 x 6.9
+
+What the table settles, in numbers rather than by name:
+- No lettered plate but the whitepaper was ever batched, and that one is out of the batch now. The miner's own batch
+  (DeliveryGate) excludes terminal_screen through IsMoving, and MinerTerminal already fits on local bounds.
+- A world-axis box is the wrong ruler here and the rows show it: every plate on this building is turned a quarter
+  round, so its own 5.2 x 1.5 face reads 0.0 x 1.5 x 5.2 in the world - width and thickness swapped. Room's fallback
+  and the lettering guard both used that box; both now read localBounds at the scale the thing is drawn at.
+- The text columns are what closed it: local 8.8 x 6.9 against world 0.0 x 6.9 for the same glyphs.
+
+Counts with the change in: PlayMode PostOfficeTests + PlateMeshDiagnosticTests 13/13 (TheGogglesAnimate green on this
+run; it stays listed as the load-dependent flake). EditMode 252: 248 pass, 1 red, the long-listed rifle flash.
