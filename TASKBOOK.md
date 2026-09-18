@@ -38898,3 +38898,39 @@ THE DAILY COULD NOT OPEN A ROUND AT ALL, AND THAT IS WHY TWO TABS SAW NOTHING (2
   NOT CLOSED          Daniel's two tabs, now on 0.0.1586 - and this is the first build on which that check can mean
                       anything, because on 1580 no page could open a round.
 
+THE 10:42 PLAYTEST: FOUR THINGS, TWO FIXED IN THE PAGE AND TWO MEASURED (2026-09-18 11:20)
+  1 GHOSTS HAVE NO    a ghost was handed the ground's HEIGHT (`Rest`) and nothing else, so it stood dead level on a
+    PHYSICS, THEY     hillside while the local truck - drawn from the same four contact points through `Contacts`
+    MUST CLIMB HILLS  and `Lie` - tilted with the slope. `GhostField.Lie` now hands a ghost that same rule from the
+                      same driver. It adds no physics: a ghost has no rigidbody and no collider, and the local truck
+                      has none here either; `Lie` is a drawing rule over the surface and preserves the heading
+                      exactly, so the pose tests do not move. SHIPPED 0.0.1589.
+  4 TANKS IN A        `CoreDrivenTruck.TicksDue` threw away the time a slow frame could not step, so each tab's core
+    DIFFERENT WORLD   sat at its own tick: his two tabs showed one block at 0:34 and at 0:20 with the tanks in
+                      different places. A browser throttles the tab it is not showing, so the tab he was not
+                      watching fell behind and stayed there. A debt over one second is now stepped in ONE frame -
+                      his own 12:26 words, "not instant" - capped at 600 ticks so a page left for ten minutes gives
+                      up the rest once. Measured by the rule's own tests: 8 s hidden steps 479 ticks in one frame
+                      and lets go 0.000 s; 20 s at 3 fps steps the whole 1200 ticks and lets go 0.00 s; a 60 fps
+                      frame after all that steps at most 1 tick, so the 12:26 racing stays fixed. SHIPPED 0.0.1589.
+  3 THE POSE DRIFTS   measured, and it does NOT drift. How far behind the driver each picture is, by third of the
+    THE LONGER HE     round, 5231 pictures in ten minutes: first p50 2 p90 3, middle p50 2 p90 3, last p50 2 p90 3
+    DRIVES            ticks. An earlier run read p90 3 -> 11 with max 342, but that one shared the host with a Unity
+                      build and two browsers; on a quieter host the growth is gone, so it was my own load.
+                      WHAT DOES HAPPEN is retirement: in the same window the picture gaps reached 5131 ms, 32 were
+                      over 600 ms and NINE were over 3000 ms, which is the rule that takes a silent truck away. A
+                      truck that is retired and then drawn again at its next picture is exactly "missing, and then
+                      in the wrong place". The gaps are the signer nodes stalling: 85 stalls over 300 ms in ten
+                      minutes, pings to 4993 ms.
+  2 AGE OVER 100 MS   the overlay would print p50 25 ms, p90 42 ms, max 5141 ms. The tens of ms are the usual case;
+                      the ones he sees over 100 ms are the same node stalls as above, not the draw path.
+  THE HOST THEY       the signer nodes run on THIS machine, beside bitcoind (47% of a core at the time of writing,
+  SHARE               9 GB resident), mysqld and signal-cli, and during his 10:42 playtest also beside a Unity build
+                      and two headless browsers of mine. Earlier today the same probe on the same nodes read max
+                      912 ms and no retirement at all. That is not a ghost-path fault and is not opened here.
+  SUITES              PlayMode Ghost 26/26 errorCS 0. EditMode 244: 239 pass, 3 skipped, 2 red - the long-listed
+                      CombatFxTests rifle flash, and RunOverBodyTests.AThrownBodyIsHandedToThePhysicsEngine, which
+                      passes 5 of 5 on its own and failed once in a full run on a loaded host: a flake to watch, not
+                      counted as green. WebGL 0.0.1589, built client == dist, built core == template core.
+  SHIPPED             btc-logistics-core (db9ef03d), alias serving 1589; war untouched. Commit b2bc54a.
+

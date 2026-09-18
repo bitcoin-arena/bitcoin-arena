@@ -22,11 +22,17 @@ Top item first. Finish and deploy before starting the next.
 
 NOW (2026-09-18 10:42, Daniel HARD): ghosts have no physics (must climb hills like the local truck). Age often >100ms. Position only right at start, drifts the longer the other drives (maybe off-screen). Shot B: ghost in the wrong place. Tanks desync between the two tabs — they must be the same world. Shots daniel-screens/ghosts-physics-1042-a.jpg and -b.jpg.
 
-NOW (2026-09-17 19:15, Daniel HARD): ghosts still lag ~300-600ms. Debug over truck: 2 lines <name> / <age ms> <fwd|rev> <left|right>. Second round: ghost missing then wrong place. Shot daniel-screens/ghosts-two-tabs-1915.jpg — they should see each other.
+NOW (2026-09-18 10:42, Daniel HARD playtest): ghosts must climb hills like his own truck; age mostly tens of ms but often over 100; the other truck's position drifts the longer it drives; tanks must be the same world in both tabs. Shots daniel-screens/ghosts-physics-1042-a.jpg and -b.jpg.
+WAS (2026-09-17 19:15, Daniel HARD): ghosts still lag ~300-600ms. Debug over truck: 2 lines <name> / <age ms> <fwd|rev> <left|right>. Second round: ghost missing then wrong place. Shot daniel-screens/ghosts-two-tabs-1915.jpg — they should see each other.
 
 ORDER (Daniel 2026-09-17 17:34 HARD): ghosts -> candle fixes -> WAR_TACTICS army logic already started -> only then M3.
 
-LIVE (2026-09-18 10:10): Daily 0.0.1586 (7c6f7cbe), signer nodes on the ghost release. Ghosts, after Daniel 19:15:
+LIVE (2026-09-18 11:20): Daily 0.0.1589 (db9ef03d), signer nodes on the ghost release. Ghosts, after Daniel 19:15:
+- From the 10:42 playtest, shipped on 0.0.1589: a ghost lies on the ground the way the local truck does (same four
+  contact points, still no physics), and a tab that fell behind rejoins the round instead of living in its own time -
+  a debt over a second is stepped in one frame, so two tabs hold the same tanks. Measured and NOT drifting: the
+  picture's lag behind the driver is p50 2, p90 3 ticks in every third of a round. What does bite is the signer nodes
+  stalling on this shared host - 9 gaps over 3 s in ten minutes, which retires a truck and draws it again elsewhere.
 - THE DAILY COULD NOT OPEN A ROUND AT ALL until 0.0.1586, and that is why two tabs saw nothing: the page shipped a
   2338-word core into a player whose C# expects 2386, so the core never drove, no session was ever asked for, and no
   ghost could arrive - for every player. It dates from the hull-down layout bump (434fd6c). The page now carries the
@@ -36,7 +42,7 @@ LIVE (2026-09-18 10:10): Daily 0.0.1586 (7c6f7cbe), signer nodes on the ghost re
   2000 m under the map), a truck off the screen is marked at its rim, and a new round's truck is drawn at its first
   picture. Pictures 9.7/s, the drawn pose 38 ms old at the land frame, 24 of 24 doors cue the player. Every number and
   every step is in TASKBOOK.
-- THE GATE ON 19:15, Daniel's own and the only thing left: two tabs on btc-logistics-core.pages.dev (0.0.1586), the
+- THE GATE ON 19:15, Daniel's own and the only thing left: two tabs on btc-logistics-core.pages.dev (0.0.1589), the
   shot ghosts-two-tabs-1915.jpg - they should see each other. Each truck carries two lines, name then age and arrows;
   the age should read tens of ms, not 300-600; a truck off screen is named at the rim; and after PLAY again the other
   truck should stand at its new pose at once, not be missing and not be where the last round left it. This host cannot
