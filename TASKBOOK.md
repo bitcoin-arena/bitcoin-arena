@@ -38632,3 +38632,28 @@ THE PLAYER-FACING GATE THAT CLOSES 19:15 (2026-09-18 03:55)
                   300-600 ms while the wire shows 100 ms, the remainder is in the page (GhostField drawing, the clear
                   record, the overlay's own clock) and that is the next letter's first measurement.
 
+THE EYE, NOT THE WIRE: THE DRAWN TRUCK STOPPED TRAILING A WHOLE PICTURE (2026-09-18 05:00; the 19:15 ghost letter)
+  THE THREE COLUMNS  same probe, same pictures, six-minute windows, a stake-0 driver and a watcher stamping and reading
+                     each other's clock the way two tabs of one browser do:
+                       the label's own age      before p50 22, p90 35, max 728 ms    after p50 22, p90 31, max 734 ms
+                       the same pictures, wire  before p50 22, p90 35, max 728 ms    after p50 22, p90 31, max 733 ms
+                       where the truck is drawn before p50 322, p90 340, max 1292 ms after p50 171, p90 181, max 1361 ms
+                     eased poses over 300 ms: 3462 of 3483 before, 29 of 3500 after; over 600 ms 28 before, 8 after.
+                     Picture rate 9.7 /s both times, gaps p50 100 ms, p90 108 ms, none at the 3 s retire.
+  THE CUT            GhostTruck walked onto each picture over 0.1 s - exactly the gap between pictures - so it arrived
+                     as the next one landed and the player always saw the previous pose. The walk is 0.033 s now and the
+                     label is read every 0.016 s instead of every 0.1 s. The probe reads both constants out of the
+                     shipped C#, so the column measures the page rather than a number typed here. Renderer only.
+  WHAT IS LEFT       171 ms at the median, of which: ~100 ms is the publish cadence itself (when a picture lands the
+                     truck is standing on the previous one, which is a tenth of a second old by construction), 22 ms is
+                     the wire, 33 ms the ease it has not finished, 16 ms the label refresh. That is cadence, not a
+                     leftover trail: of Daniel's 300-600 ms the eye now carries 171 ms, so between 43 and 71 per cent of
+                     the reported lag is gone, and what remains would only move by publishing faster than 10 Hz, which
+                     is not this letter.
+  SHIPPED            PlayMode Ghost suites 24/24, WebGL 0.0.1570 errors 0, built client == dist, built core == the live
+                     template core (the undeployed hull-down core stayed out). Deployed to btc-logistics-core
+                     (9741d219), the alias serves it; btc-logistics-war untouched. Commits 8c15fb3 (the probe with the
+                     three numbers) and 532da0d (the draw cut).
+  NOT CLOSED         Daniel's two tabs on 0.0.1570: the age over each truck near 100 ms, and after PLAY again the other
+                     truck at its new pose at once.
+
