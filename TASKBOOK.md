@@ -39295,3 +39295,35 @@ The world redraws continuously while the shift advances; nothing freezes. Shots 
 Seen while measuring, not part of this letter: from the cab the price headline is drawn very large across the middle
 left of the screen ("$81,186 +6.14% 24h", about 80 px tall) over the world, where in spectate it is a small corner
 note. Photographed in scratchpad/candle-band/f5.png. Worth a HUD letter of its own.
+
+## Army, H1 "hold is the default": why the row sits at 25-27% (2026-09-19 00:2x)
+
+The doctrine table on HEAD, seeds 1-5 x 3600: 24 of 39 rows pass. A2 - the §0 wiggle row that PRIORITIES still carried
+as red at 32.6% - is GREEN: holding tanks move 0.00% of their own, and fidgets are 2 of 218 = 0.92%.
+
+H1 asks that, of tank-ticks with both of a pair alive, >= 50% have the tank within 1.5 m of its post. It measures
+25.54% (seeds 1-3 x 1800) / 27.14% (seeds 1-5 x 3600). measure-war.mjs now takes --h1why and prints the shape of the
+miss rather than only its size:
+
+  H1 misses 54630 (seeds 1,2 x 1800)
+  |dz| min/q1/med/q3/max   0.8 / 4.2 / 12.0 / 33.7 / 71.3 m
+  |dx| min/q1/med/q3/max   0.0 / 0.2 /  0.7 /  0.8 / 27.7 m
+  short of the hold        79%      (on its own side of it, not past it)
+  bounding                 56%
+  standing still           26%      (the rules asked for no step at all this tick)
+  stepping toward the hold 67%
+  never yet stood on a post 53%     (bit 7 of U_COOLDOWN: a column, since it spawned or respawned)
+  the hold itself moves     median 0.000 m per tick, q3 0.000, max 33.50 m (a leg swap or a push, not a drift)
+
+What that settles, and what it kills:
+- The post does NOT chase the scrolling seam. The hold is stationary between swaps, so "tanks chasing a seam-moving
+  line" is not what keeps them off it. I had that hypothesis and the measurement killed it.
+- The miss is in z, not x: tanks are in their lane (0.7 m) and 12 m behind their hold.
+- And most of it is walking in: 53% of misses are tanks that have not once stood on a post since they spawned, with a
+  tail to 71 m - the length of the field from the back edge. A force this heavily attrited spends much of its life in
+  transit, and every transit tick is an H1 miss by the row's own words.
+
+So the lever is not "follow the line better". It is either the walk-in (how long a respawn takes to reach its first
+post, and whether the budget or the halt cycle slows it) or the row's own reading of a tank that has never yet been
+on post. The next measurement is the walk-in itself: time from spawn to first post, and how much of it is spent
+standing.
