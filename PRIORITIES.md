@@ -20,7 +20,17 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-NOW (2026-09-18 12:02, Daniel HARD): ghost position still does not line up with what is seen. Plus 2nd round: Truck 1 cannot see Truck 2, age 6736ms. Shots ghosts-round2-1200-a.jpg / -b.jpg.
+NOW (2026-09-18 19:30, Daniel HARD playtest) - shipped 0.0.1611:
+- The result is read before the lobby: a run's outcome holds the screen 5 s (SplashScreen.ResultHoldSeconds), a wreck
+  still waiting for its own burn on top. FINISH_WAIT_MS stays 300 ms - that is the wire drain, not a screen.
+- SPECTATE keeps the line to the nodes: finish() no longer closes the socket, so a spectator after a round still sees
+  the other trucks. Nothing can be published past the end - `ended` refuses record, drain and mark - and the page
+  still closes the socket when it leaves the round.
+- EditMode ResultHoldTests 3/3, client finish-at-delivered 4/4 (its socket assertion rewritten to the new rule, and
+  stricter: a tick offered after the end is refused and the node holds no more).
+- Eyes still needed: Daniel drives into the drop-off and reads the result, then presses SPECTATE.
+
+PARKED mid-measurement (2026-09-18 12:02, Daniel HARD): ghost position still does not line up with what is seen. Plus 2nd round: Truck 1 cannot see Truck 2, age 6736ms. Shots ghosts-round2-1200-a.jpg / -b.jpg.
 - Shipped 0.0.1595: a truck of a round that is OVER leaves the screen; a live round still keeps its trucks through any
   stall. Measured: a watcher that kept its field carried 1 truck of the round it had left into each new round and got
   no picture of the new one (first picture NEVER, superseded 0).
