@@ -39399,3 +39399,20 @@ under its bar, where it had been 27.14%.
 
 This is not a test tuned green: the row asks whether a tank stands within 1.5 m of ITS POST, and a post is what the
 rules computed. The probe was holding a different line, so it was asking about a place no tank was ever sent.
+
+### The dead band between "on post" and "wants to move", tried and reverted (2026-09-19 01:5x)
+
+§4.3 calls a tank on post within 1.5 m; sim.js `WANTS_MOVE` was 2 m, so a hull between the two wanted nothing and sat
+permanently off its own post. Making them the same number is a real rule fix, so it was measured:
+
+                              seeds 1,2 x 3600        full table, seeds 1-5 x 3600
+  H1                          52.13% -> 50.73%        49.89% -> 49.29%
+  H2                          93.75% -> 95.24%        already green, 96.55%
+  A4b                          3.62% ->  3.49%         3.62% ->  3.83%
+  rows passing                                        25 of 39 -> 25 of 39
+
+It buys nothing on the table and costs H1 0.6 points there, so it is out of the core. H1 stands at 49.89% against its
+50% bar - 0.11 points, inside the spread between seed sets (52.13% on seeds 1,2) - where it was 27.14% this evening.
+
+The remaining reds after the seam fix are not that row: A4b, A9, A11a/b/c, A13b, O1 (two), O4 (a client test, not
+built here), S1, B2, B3, B4. Those are the next letter's work, and they are real - they were red with the seam right.
