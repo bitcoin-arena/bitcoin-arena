@@ -20,9 +20,20 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-NOW (2026-09-18 20:22, Daniel HARD playtest): on desktop the mobile pads are drawn but drive nothing. They must stay
-drawn AND move the truck - pointer on a pad is throttle, steer, handbrake; the keyboard still works. Not started;
-19:30 shipped first, as ordered.
+SHIPPED (2026-09-18 21:52, Daniel HARD playtest, photographed) on 0.0.1616: the mouse flies the spectator camera.
+- The fault was not the driving pads. In SPECTATE the camera collected its pointers from the touchscreen alone and
+  returned at once when there was none - a desktop has none, so the list was always empty and the pads moved nothing.
+  The pad still LIT UP under the pointer, because the pads themselves read the mouse, and the look-drag rightly
+  refused to turn the view because the press was on a control. Press registers, nothing happens - exactly the photo.
+- Now everything pressing the glass flies the pads: fingers and the mouse. The two-finger height pinch stays with real
+  fingers, because one mouse is not two.
+- Three PlayMode tests press a real mouse device on the pads' own rectangles: the forward pad flies the way the camera
+  looks, the right pad flies to its right, and a press on a pad does not also turn the view. 6/6 with the driving pads.
+- Measured live on the deploy: SPECTATE pressed at the rectangle the splash itself publishes, then the forward pad
+  held - the pad draws gold and the camera flies forward through the building. Photographed, 04-forward-pad-held.png.
+- The DRIVING pads were never dead: on 1613, idle 0.00 m/s, the UP pad held with the mouse 10.47 m/s, the keyboard
+  12.65 m/s, and the same at retina scale. That is why the first measurement could not find his fault - it was
+  measuring a driving seat, not spectate.
 
 SHIPPED (2026-09-18 19:30 + 20:00 + 20:04, Daniel HARD playtest) on 0.0.1613:
 - The result is read before the lobby: a run's outcome holds the screen 5 s (SplashScreen.ResultHoldSeconds), a wreck

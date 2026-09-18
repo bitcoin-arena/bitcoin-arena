@@ -39032,3 +39032,79 @@ THE CHAIN IS REUSED ON PLAY AGAIN, AND WHAT STILL STOPS A SECOND ROUND HERE (202
   SHIPPED             WebGL 0.0.1604, built client == dist, built core == template. btc-logistics-core (3272ce8f);
                       war untouched. Commit 6004760.
 
+
+## Desktop pads, measured (2026-09-18 20:22 letter)
+
+Daily 0.0.1613, MacBook headless Chrome over CDP, one seat joined from the lobby, every window started from a
+standstill and read off the PAGE'S OWN core (`unityInstance.Module.blwp.st.i32`, T_VX/T_VZ, heading in 1/65536 turns,
+O_SCORE+S_STATE for the run word). Tool: packages/blwp-client/tools/measure-desktop-pads.mjs.
+
+  devicePixelRatio 1   nothing held 0.00 m/s | UP pad held with the mouse 10.86 m/s | keyboard W 13.55 m/s
+  devicePixelRatio 2   nothing held 0.00 m/s | UP pad held with the mouse  6.36 m/s   (canvas 2560x1600)
+
+So a held mouse press on a pad already drives the truck on the shipped build, at both pixel ratios. The UP pad's
+centre computed from TouchPad.RectFor matched the page's own debug line exactly (padUp=1092,438,160,160 -> css
+1172,518), so the rectangle was never in doubt.
+
+Two false trails, both mine, withdrawn:
+- Run 1 measured a truck still parked in the LOADING BAY - pads drawn, nothing moving, and the page had refused to
+  join at all ("no proven endpoint: only 1 of 2 providers gave a chain, provider 1: no answer in 10000 ms" - a stale
+  tab; both signers answered from the Mac in 0.08-4.4 s when asked directly). The probe now presses the bay's own
+  computed rects and proves the run is live with the keyboard before it believes any pad number.
+- Run 2 compared metres travelled. A coasting truck covers 20 m with nothing held, which read as "the pad drives".
+  Speed replaced distance.
+
+The fault that was real: TouchControls.Visible hung on Touchscreen.current existing, so the pads - and the mouse read
+behind them - were on or off by accident of the browser. TouchControls.Shown is now "a pointer exists", and
+DriveHud.PadsShown asks it instead of asking about touchscreens.
+
+### What the pads-shown question turned up, measured and NOT fixed here
+
+Pointing DriveHud.PadsShown at "anything that can press a pad" instead of "Unity found a touchscreen" is the honest
+question, and the HUD cannot answer it yet. With the pads on screen (EditMode probe over ManifestBox / StreamingBox /
+SendOffBox / TouchPad.RectFor, desktop, no overrides):
+
+  1024x768   score column x 611.58 w  55.30   model list 352.26..624.62   handbrake pad x 676.48   chart 739..997
+  1000x360   score column x 765.29 w  56.71   model list 338.00..628.00   handbrake pad x 827.00   chart 775..986
+   844x390   score column x 563.41 w  98.59   and it grazes the send-off card by 5x2 px at (563.4..568, 245..246.9)
+  1920x1080  score column x 1167.24 w 250.56  - the only one of the four with room
+
+The column is pinched between the model list and the handbrake pad. There is nowhere else on those screens: above the
+pad block the band under the chart's own row is 191 px where the column needs 218 at 1024x768, and 49 px against 131
+at 1000x360. Two ways out were tried and both were wrong - taking room from the left puts the column on the model
+list (32.7 px left at 1024x768), and taking the pads' own room puts SCORE across the throttle arrows, which
+TheChartIsTopRightAboveTheButtonsOnEveryScreenWithPadsOrWithout catches by name (8512 px on the Up pad at 1280x800),
+and which Daniel's 2026-09-17 12:35 HARD forbids in so many words.
+
+So PadsShown still asks about the touchscreen, which is what Daniel's own desktop reports. The layout letter is its
+own letter and these are its numbers.
+
+## Spectate: the pads answered fingers only (2026-09-18 21:52 letter, shipped 0.0.1616)
+
+Daniel, photographed in spectate on the Daily: "I can press it with the mouse but it won't do anything ... and only on
+spectate". The photograph is the measurement - the forward pad is drawn HELD (gold) under his pointer while the camera
+has not moved.
+
+  SpectatorCamera.Fingers()   read Touchscreen.current and `return`ed when it was null
+  a desktop                   has no touchscreen, so _fingers was empty every frame
+  Move()                      hit-tests the pads against _fingers -> never moved
+  Look()                      DOES read the mouse, and skips a press that is OnAControl -> no turn either
+  TouchControls               reads the mouse, which is why the pad still lit up - two paths, one of them deaf
+
+Fixed by collecting everything pressing the glass into `_pressed` (fingers + the mouse, in GUI space) and hit-testing
+the flying pads against that. The two-finger height pinch still reads `_fingers`: one mouse is not two fingers.
+
+Tests (PlayMode, a real Mouse device queued onto the pads' own rectangles, editor focus rules named and restored):
+  SpectatePadsTests.TheForwardPadFliesTheCameraWithAMouse      travel > 1 unit and within 45 deg of the facing
+  SpectatePadsTests.TheSidePadsFlySidewaysWithAMouse           travel to the camera's own right
+  SpectatePadsTests.PressingAPadDoesNotAlsoTurnTheCamera       rotation < 0.5 deg while the pad is held
+  6/6 with VehicleTests' three pad tests. EditMode 252: 248 pass, 1 red (the known C# rifle).
+
+Live on the deploy 7da801f4 (MacBook, headless Chrome, SPECTATE pressed at the rectangle window.BLWP_UNITY_LOBBY
+publishes): with the forward pad held the pad draws gold and the camera flies forward through the mempool building -
+scratchpad/spectate-pads/04-forward-pad-held.png. The frame-difference number the probe prints is noise (PNG bytes);
+the photographs are the result.
+
+The DRIVING pads, measured on 1613 before this was understood: idle 0.00 m/s, UP pad held with the mouse 10.47 m/s,
+keyboard 12.65 m/s; at devicePixelRatio 2, 0.00 -> 6.36 m/s. They were never dead - the letter's fault was in the
+other mode, and measuring a driving seat could not have found it.
