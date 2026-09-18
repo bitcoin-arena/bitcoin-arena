@@ -32,11 +32,13 @@ NOW (2026-09-18 12:02, Daniel HARD): ghost position still does not line up with 
   truck; that the second signer holds 0 ticks of a run is true and is a settlement item, not this.
 - A MOVING truck's drawn pose is the other page's own core pose: 0.000 m and 0.00 deg at every matched tick, both
   ways, measured in two real browsers reading each page's own core. That half is closed.
-- Open: after PLAY again both tabs JOIN the same second round and neither gets a client, so neither publishes and
-  neither is shown the other. The page proves a chain over /headers and wants 2 of 2 signers inside 10 s; inside a
-  starved tab that read took 8746 and 8745 ms where curl on this host gets the same 240 bytes in 0.52 and 1.43 s - and
-  nothing retries, so the page sits in a joined round with no client. Numbers in TASKBOOK. The fix is a client one and
-  is not written: retry the chain read at a boundary, or reuse the chain this page already proved.
+- Shipped 0.0.1604: a page opens its next round from the chain it already proved, so PLAY again no longer waits on a
+  fresh 2-of-2 read of the same headers. Measured in two browsers: a proof is kept (3 headers), the second session
+  logs REUSED and comes up with a client and ghosts at once - where before both tabs had no client at all.
+- Open: round two has still not been measured to pictures IN A BROWSER on this host. These headless tabs need about
+  three minutes to splash, load and depart while a round's entry window is about a minute and a half, so they join a
+  round that closes before they publish ("ended - not publishing - error the round is closed"). With node clients,
+  which keep up, both tabs of a live second round are shown every picture of each other, first at 113-141 ms.
 
 DONE (2026-09-18 10:42, Daniel HARD playtest) on 0.0.1591, all four:
 - Hills: a ghost lies on the same four contact points as the local truck. Still no rigidbody and no collider.

@@ -39004,3 +39004,31 @@ letter, measured in two real browsers)
                       the chain this page proved for the round it just played, rather than leaving a joined round
                       with no client.
 
+THE CHAIN IS REUSED ON PLAY AGAIN, AND WHAT STILL STOPS A SECOND ROUND HERE (2026-09-18 17:25; the 12:02 letter)
+  THE RULING          Daniel 16:45: reuse the chain this page already proved. Retrying the same 8.7 second read
+                      against a 10 second budget would miss again; keep a read only for a page that has never proved
+                      one.
+  WHAT WAS WRITTEN    `discover` takes a proved chain and skips `agreedChain` when it has one. The BOND is never
+                      reused - it is checked against the chain every time - and a bond the kept proof cannot carry
+                      makes the chain be read afresh once; if that read fails the answer is still the bond's own
+                      refusal, because naming the chain there would name the wrong fault. `Client.at` carries
+                      `provedChain`, and the page keeps it across rounds and logs which of the two opened a session.
+  MEASURED, 0.0.1604  two real browsers: both pages kept a proved chain after round one (3 headers). On PLAY again
+                      one tab logged "the chain was REUSED from this page's last round to open this session" and had
+                      client yes, ghosts yes at once - where before the fix BOTH tabs had no client at all and one
+                      said "only 1 of 2 providers gave a chain (provider 1: no answer in 10000 ms)".
+  WHAT STILL BLOCKS   the second round could still not be measured to pictures on this host, and the page says why in
+  ROUND TWO HERE      its own words: "ended - not publishing - error the round is closed", with the lobby already
+                      offering the next round. These headless tabs draw under a frame a second and need about three
+                      minutes to get through the splash, the bay and the departure; a round's entry window is about
+                      a minute and a half. They joined a round that closed before they could publish, so neither
+                      could be shown the other. That is the harness against the clock, not the ghost path.
+  WHAT THE PATH DOES  with node clients, which keep up: both tabs of a live second round are shown every picture of
+  WHEN IT KEEPS UP    each other, 830 and 745 one way, 827 and 741 the other, first at 113-141 ms, none naming
+                      another round. In a browser, in a live round, the drawn pose is the other page's own core pose
+                      to the integer.
+  SUITES              client chain-reuse 1/1, discovery 18/18, ghost-field 22/22, ghost-label 4/4. PlayMode Ghost
+                      26/26. EditMode 244: 240 pass, 3 skipped, 1 red - the listed CombatFxTests rifle flash.
+  SHIPPED             WebGL 0.0.1604, built client == dist, built core == template. btc-logistics-core (3272ce8f);
+                      war untouched. Commit 6004760.
+
