@@ -38780,3 +38780,30 @@ A TRUCK OFF THE SCREEN IS MARKED AT ITS RIM (2026-09-18 06:50; the 19:15 ghost l
                       truck's name and age at the rim without hunting, and the age should be the same clock as a hull
                       label - tens of ms.
 
+THE HOLE-CHECK ON 19:15, AND THE ONE IT FOUND (2026-09-18 07:05)
+  ASKED               Daniel 07:00: have you thought of everything - two tabs seeing each other, the two-line debug,
+                      the second round, the overlay in the player build, the rim marker, one label per truck, the
+                      same clock at the rim as on the hull. Name any hole with a number.
+  THE SEVEN, WITH     two tabs: 24 of 24 doors cue, 3 of 24 in the lens, wire p50 22 ms, drawn pose 38 ms at land.
+  THEIR NUMBERS       two lines: client ghost-label suite 4/4, deployed blwp-client.js byte-identical to dist and to
+                      the built one. Second round: first picture drawn 38-80 ms, eight rounds, 0 leftover poses, 0
+                      retired for silence, 0 pictures of a round the pair had left. Overlay in the player: the world
+                      Bootstrap builds has 1 camera and 0 tagged MainCamera, so Camera.main is null and LabelEye is
+                      what makes it draw at all. Rim marker: only when the hull is off screen; a hull on screen is
+                      one label and never a second at the rim. Same clock: the rim draws the same `ghostLabels`
+                      string as the hull - only the position differs, there is no second age anywhere.
+  THE HOLE IT FOUND   the eye itself. The player's world has TWO cameras and the second is not a view of the world:
+                      `PackageYard` makes a YardCamera 2000 m under the map (cullingMask 2048, the yard layer alone)
+                      and enables it for as long as the loadout panel is open. `LabelEye` took the first enabled
+                      camera, and `Camera.allCameras` is an enumeration, not a promise - so with the panel open the
+                      names, the ages and every rim marker could have been placed from under the map. Now the eye
+                      must be a camera whose cullingMask contains the truck's layer, which the yard camera by
+                      definition is not. Measured with the yard camera switched ON: the eye is still ChaseCamera.
+  SUITES              PlayMode 26/26 errorCS 0 (GhostAcrossTheDoors 2, GhostDrawnPose 3, GhostField 8,
+                      GhostInThePlayer 5, GhostOnScreen 2, GhostTests 6). EditMode 243: 239 pass, 3 skipped, 1 red -
+                      the long-listed CombatFxTests rifle flash, untouched.
+  SHIPPED             WebGL 0.0.1580 errors 0, built client == dist, built core == the live template core. Deployed
+                      to btc-logistics-core (95d46578); btc-logistics-war untouched. Commit 8598c22.
+  NOT CLOSED          Daniel's two tabs, now on 0.0.1580. No further hole is named: what is left on 19:15 is eyes on
+                      a screen, not another green suite.
+

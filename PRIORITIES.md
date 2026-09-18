@@ -24,7 +24,7 @@ NOW (2026-09-17 19:15, Daniel HARD): ghosts still lag ~300-600ms. Debug over tru
 
 ORDER (Daniel 2026-09-17 17:34 HARD): ghosts -> candle fixes -> WAR_TACTICS army logic already started -> only then M3.
 
-LIVE (2026-09-18 06:50): Daily 0.0.1578 (17a71e78), signer nodes on the ghost release. Ghosts, after Daniel 19:15:
+LIVE (2026-09-18 07:05): Daily 0.0.1580 (95d46578), signer nodes on the ghost release. Ghosts, after Daniel 19:15:
 - The other player's truck arrives 9.6 times a second (the page publishes 10), gap p50 100 ms, p90 109 ms, one gap over
   600 ms in six minutes, none near the 3 s that retires a ghost. Measured from outside the Daily with a stake-0 driver
   and a watcher; numbers and every step in TASKBOOK.
@@ -46,8 +46,9 @@ LIVE (2026-09-18 06:50): Daily 0.0.1578 (17a71e78), signer nodes on the ghost re
 - AND A TRUCK OFF THE SCREEN IS MARKED AT ITS RIM (Daniel's pick, 06:45). One player per loading-bay door, 24 doors at
   6.8 m, two seats a mean 54 m apart: the camera a player drives with frames 3 of the 24 doors and labels 1 on the
   hull, so the other 21 were nothing on screen. With the marker every one of the 24 gives a cue - the same two lines,
-  the same clock, at the rim in the truck's direction. The doors and the spawn are untouched.
-- THE GATE ON 19:15, Daniel's own: two tabs on btc-logistics-core.pages.dev (0.0.1578, the current build). Each truck
+  the same clock, at the rim in the truck's direction. The doors and the spawn are untouched. The label is placed from
+  a camera that can see the truck: the loadout panel's own camera sits 2000 m under the map and must never be the eye.
+- THE GATE ON 19:15, Daniel's own: two tabs on btc-logistics-core.pages.dev (0.0.1580, the current build). Each truck
   carries two lines, name then age and arrows; the age should read tens of ms, not 300-600; and after PLAY again the
   other truck should stand at its new pose at once, not be missing and
   not be where the last round left it. This host cannot run two WebGL pages at 60 Hz, so it stays his.
