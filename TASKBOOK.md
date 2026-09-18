@@ -39133,3 +39133,23 @@ Why the old test passed while the screen was wrong: TheLetteringFillsItsPlates m
 PostOffice.Room, and batching had replaced both with the same combined mesh - two wrong boxes agreeing with each
 other, the third time this shape of answer has been recorded here. TheWhitepaperIsInsideItsPlaque refuses it: the
 plaque must be under a quarter of the building it hangs on, the text inside the plaque's own face, still filling it.
+
+## An unnamed red, named: VehicleTests.RoadsAreBuiltOnTheGroundWithMaterials (2026-09-18 22:16 close-out)
+
+It has been red without a line here, which is why it is written down now. Measured cause, read off the code rather
+than guessed:
+
+  RoadNetwork.cs:53   public const int Across = 5     - five vertices per ring since the roads were laid on the
+                                                        candle ribbon (4f75aa5); an 8 m chord edge to edge had been
+                                                        missing the ribbon's 4 m ramps
+  RoadNetwork.cs:319  float v = run / TileMetres      - TileMetres 4, so the mesh still emits one tile every 4 m
+  VehicleTests.cs:426 for (i = 2; i < verts.Length; i += 2)  - the test walks the ribbon two vertices at a time, as
+                                                        if each ring still held two
+
+With five across, a stride of two crosses the road as often as it runs along it, so the length it sums is the
+zig-zag and not the road: it reports one tile every 52.8 m where the UVs say four. The red is the test's stale
+stride, not the road's tiling.
+
+Why it waits: retuning that test is not this letter (Daniel 2026-09-18 22:16: "Do not retune that test as part of
+this letter"), and the fix is a stride of `RoadNetwork.Across`, measured against the drawn mesh, in the letter that
+owns the roads. Nothing a player sees is wrong from it - the asphalt tiles every 4 m on the build that shipped.
