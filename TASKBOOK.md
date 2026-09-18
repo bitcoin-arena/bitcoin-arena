@@ -39383,3 +39383,19 @@ bookkeeping, not doctrine: H1 may already be met.
 Two of my own probes were wrong before this and are named so they are not repeated: reading `crowded`, `crowdedLoose`
 and `tacWait` off the hook returned undefined and printed a tidy "0%" for all three, and an earlier version measured a
 "tank standing still" without separating walk-ins from settled tanks.
+
+### The seam hooked out of the core copy: H1 52.13%, H2 93.75% (2026-09-19 01:3x)
+
+measure-war.mjs now patches the core COPY to export its own seam reader (`seamOfCore` -> `seamAtX`) and every row uses
+it, instead of re-deriving the line as frontlineZ(st.tape, x). The rows measure the line the rules used:
+
+  the row's hold against the mover's own    median 1.37 m  ->  0.00 m   (max 23.23 m: a leg swap, as before)
+  H1 pair tank-ticks within 1.5 m           31.16%         ->  52.13%   (seeds 1,2 x 3600)
+  H2 legs whose bounding tank arrived       56.25%         ->  93.75%
+  of settled tank-ticks, on post            39.2%          ->  76.7%
+
+On the full table (seeds 1-5 x 3600): 24 of 39 rows pass -> 25 of 39. H2 is green. H1 reads 49.89% there - 0.11 points
+under its bar, where it had been 27.14%.
+
+This is not a test tuned green: the row asks whether a tank stands within 1.5 m of ITS POST, and a post is what the
+rules computed. The probe was holding a different line, so it was asking about a place no tank was ever sent.
