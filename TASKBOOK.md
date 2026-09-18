@@ -38830,3 +38830,33 @@ THE LAST CANDIDATE HOLE: DO TWO TABS EVEN LAND IN ONE ROUND? (2026-09-18 07:20; 
                       of minutes after the first AND let it pick from the lobby.
   NOT CLOSED          Daniel's two tabs on 0.0.1580. No host-side hole is left to name.
 
+TWO REAL BROWSERS ON THIS HOST, AND WHAT THEY COULD AND COULD NOT SHOW (2026-09-18 08:55; the 19:15 two-tab gate)
+  ASKED               Daniel 07:30: run two clients on this host anyway, even if they cannot hold 60 Hz; if the
+                      second WebGL context will not start, that is the result.
+  THE TOOL            `tools/measure-two-tabs.mjs`: two headless Chromes (separate profiles, swiftshader) at the
+                      deployed page, the page's own PLAY, then each tab asked what it holds of the other - round,
+                      entry, ghost count and the very string `ghostLabelText` builds. Six runs.
+  WHAT IT SHOWED      1. TWO CONTEXTS DO START, usually. Runs 3 and 4: both tabs loaded the 22.3 MB player, drew the
+                         loading bay, took cargo, departed and drove - photographed. No context loss, no OOM, only
+                         swiftshader's own "Exiting GPU process" lines, which are the software fallback.
+                      2. AND ONE OF THEM SOMETIMES DOES NOT. Run 6, photographed: tabA stopped at "90 % - 20.1 /
+                         22.3 MB", the page's own words "Could not start" and "Nothing has loaded for 90 seconds -
+                         the page stopped at Building the battlefield". The host is 12 cores and 36 GB with 28 GB
+                         already in use, and one run of this tool costs 20-47 minutes of processor for ten minutes
+                         of wall clock. That is the failure Daniel asked to have logged.
+                      3. BOTH TABS TAKE THE SAME ROUND, every run: by the lobby row (76b83f67, eb9a683e) and by the
+                         round's own link (b22aeb1c, d7bb48d2). The split-round worry is measured shut from a
+                         browser as well as from the lobby.
+                      4. WHAT WAS NEVER REACHED: a ghost label in a browser. `Module.blwpNet` - the bridge the
+                         labels are read through - was never built in either tab: the page's own line read
+                         "play - not started, 1 player - waiting" while the truck drove. Whether that is the
+                         headless page never starting its round session, or something a player would also hit, is
+                         NOT decided by these runs and must not be reported as either.
+  HARNESS FAULTS      four of the six runs failed on the tool, not the page, and each is written into it: a global
+                      `Module` that this page keeps inside `unityInstance`; a lobby row read seven seconds before
+                      `join(id)` was called, by which time the list had been replaced; waiting for `blwpNet` BEFORE
+                      the bay clicks that start a run; and a readiness check answered by the pre-navigation context.
+  NOT CLOSED          Daniel's two tabs on 0.0.1580 at 60 Hz. This host can start two players and can put both in
+                      one round; it cannot reliably keep two of them up, and it never got as far as reading a label
+                      out of a browser.
+
