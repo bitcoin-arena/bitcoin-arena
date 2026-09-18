@@ -39327,3 +39327,25 @@ So the lever is not "follow the line better". It is either the walk-in (how long
 post, and whether the budget or the halt cycle slows it) or the row's own reading of a tank that has never yet been
 on post. The next measurement is the walk-in itself: time from spawn to first post, and how much of it is spent
 standing.
+
+### H1 decomposed, and one fix tried and reverted (2026-09-19 00:4x)
+
+  H1 split (seeds 1,2 x 1800)   settled tank-ticks 48060 of 77382 (62%), of which ON POST 46.1%
+                                walking in 29322 (38%) - a tank that has not stood on a post since it spawned
+  settled and off post          bounding 12298, overwatch 13617 - the two roles miss about equally
+  the hold under them           jumped on 0.4% / 0.3% of those ticks: the post is stationary, they simply are not on it
+  how far out                   q1 2.5 m, median 4.8 m, q3 10.4 m; 43% are within 4 m
+  of those near misses          only 18% held a budget grant (bit 6 of U_COOLDOWN)
+  walk-ins that reached a post  94, median 6.4 s, q3 9.4 s, max 25.6 s; standing still for a median 0% of it
+
+So to reach 50% overall, settled tanks must hold about 81% of the time (0.62 x 0.81) where they hold 46% now.
+
+TRIED AND REVERTED: exempting a correction under 4 m from the half-line budget (a creep is not the line moving; the
+budget's own ranking already puts "a hull correcting a metre" last). Measured, it made every number worse -
+
+  H1 overall            29.40%  ->  26.40%
+  settled on post        46.1%  ->  41.1%
+  A4b over-half ticks     5.90% ->   5.76% (same run to run; this row is noisy across seed sets, 3.62% on seeds 1,2,3)
+
+- so it is out of the core, and the hypothesis with it. Letting near tanks drive freely does not settle them; it puts
+more hulls in motion among each other. The next lever is the walk-in share (38% of pair tank-ticks), not the budget.
