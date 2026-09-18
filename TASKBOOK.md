@@ -39262,3 +39262,27 @@ WHAT IS LEFT: one phase still holds the loop 1853 ms (`finality` / `close`), whi
 is the next lever if the boundary ever tightens again. And `second-closer.test.js` is red - HELD where it expects
 SETTLED - measured red on HEAD before this change as well, so it is not this fix; it is named here so it is not an
 unnamed red, and it waits for the letter that owns settlement.
+
+## Candles at round start: the scroll is not frozen on 0.0.1617 (2026-09-18 23:4x)
+
+Daniel 2026-09-17 16:42 (HARD, carried open since): "at round start from the cab, candles move LEFT then freeze".
+Measured on the Daily with the page's own core, from the cab, after a real ROLL OUT and 119 m of driving
+(tools/measure-candle-scroll.mjs, 91 s, sampled twice a second):
+
+  shift, every 5 s   3.66 1.21 4.69 2.13 5.29 2.64 0.03 3.19 0.64 3.75 1.25 4.35 1.74 4.98 2.41 5.58 2.98 m
+  ticks              1282 -> 6611 (5400 ticks)
+  candles            count=32, forming=31 at rebuild 600
+  frozen             never: no stretch over 1.5 s where the tick ran on and the shift did not
+
+The shift is a sawtooth inside one slot (CANDLE_SLOT 5.756 m): it slides, wraps, and the candle indices step one
+across - which is what continuous scrolling looks like in that number. So the core's scroll runs; the 16:42 freeze
+does not reproduce at the core on this build.
+
+NOT YET CHECKED, and named so it is not mistaken for done: the DRAWN band from a vantage point where it fills the
+view. The run above drove 119 m along x and ended on open dirt ("NO SCORE OUT HERE"), so its screenshots show no
+ribbon to compare frame to frame. An earlier frame-by-frame comparison was worthless for the same reason - it was
+photographing the loading bay, where there is no band at all, and two of its pairs differed by 0 and 9 pixels.
+
+Two harness faults of mine, both fixed in the tool: it read st.samplesTaken, which is a function of the state in
+sim.js and not a field on it, and printed samples 0 -> 0; and a backtick inside an injected template literal aborted
+the run before it began.
