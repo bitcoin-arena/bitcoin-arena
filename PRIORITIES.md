@@ -35,10 +35,12 @@ NOW (2026-09-18 12:02, Daniel HARD): ghost position still does not line up with 
 - Shipped 0.0.1604: a page opens its next round from the chain it already proved, so PLAY again no longer waits on a
   fresh 2-of-2 read of the same headers. Measured in two browsers: a proof is kept (3 headers), the second session
   logs REUSED and comes up with a client and ghosts at once - where before both tabs had no client at all.
-- Open: round two has still not been measured to pictures IN A BROWSER on this host. These headless tabs need about
-  three minutes to splash, load and depart while a round's entry window is about a minute and a half, so they join a
-  round that closes before they publish ("ended - not publishing - error the round is closed"). With node clients,
-  which keep up, both tabs of a live second round are shown every picture of each other, first at 113-141 ms.
+- Open, and now named: a tab that presses PLAY again JOINS the next round at the page level - client yes, ghosts yes,
+  the same round id in both tabs - while the game side never leaves the first. Measured in two browsers: net.where
+  still names round one after 3.7 minutes, the client sits in state "opening" (never ready, never ended) and is still
+  publishing into the finished round (902 ticks). Neither tab is in round two at all, which is why neither sees the
+  other. The suspect is the session swap: the bridge keeps the existing client unless it says it is over, so a client
+  that never finishes opening blocks every later round. Numbers in TASKBOOK.
 
 DONE (2026-09-18 10:42, Daniel HARD playtest) on 0.0.1591, all four:
 - Hills: a ghost lies on the same four contact points as the local truck. Still no rigidbody and no collider.
