@@ -39508,3 +39508,28 @@ A9, THE NEXT MEASUREMENT ON THIS ITEM, asked before any deeper probe: the remain
 
 So A9's 12.27% is a spread problem on one flank, not a presence problem: the guns are at the seam, and the +x side of
 it is thinly held. That is where the next probe goes.
+
+### A9's remaining gap is the seam's own climb, not the army (2026-09-19 03:3x)
+
+With the army deployed, every short metre has two or more guns within reach (median 8), so the question became where
+those metres are. They are on one flank, and the flank is the steep one:
+
+  band        -81..-65  -65..-45  -45..-20  |x|<=20  +20..45  +45..65  +65..81
+  gap share        9%        4%        3%       3%      23%      24%      24%
+  seam climb     0.34      0.37      0.18     0.21     0.57     0.73     0.67   m of z per metre of x
+
+The hulls are not lopsided: bull hulls run min -88 / q1 -59 / median -6 / q3 49 / max 88 m, 30% past +40 and 33% past
+-40, and the slots they are sent to span -81..+81 with 32% past +40. Bear the same. So the frontage is manned on both
+flanks and the gaps still sit on the +x one.
+
+The mechanism, in the row's own arithmetic: a tank stands at its slot's x, a depth BELOW THE SEAM AT THAT X. A sample
+40 m along a stretch climbing 0.7 m per metre is 28 m further up in z, so the distance from that tank to the sample is
+sqrt(40^2 + (28 + 30)^2) = 70 m, past the 46 m reach - where on the flat side the same 40 m is comfortably inside it.
+Each hull covers about +-25 m of x on the steep side against +-35 m on the flat.
+
+RULING NEEDED, because every lever is pinned by another row or by the spec:
+- the slot pitch is 27 m in X (`slotX`), and A8 asserts every slot change is exactly 27 m - spacing slots along the
+  seam's arc instead would break that row by design;
+- the reach is 46 m (§4.2) and the depths are 14 / 26 / 30 m (§4.3), both spec;
+- or A9's 95% bar is read as a bar on flat stretches and the steep ones are accepted as thin.
+The measurement is done and the cause named; which lever moves is Daniel's.
