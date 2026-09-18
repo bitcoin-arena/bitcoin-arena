@@ -33,6 +33,8 @@ LIVE (2026-09-18 02:10): Daily 0.0.1525 (bb4d521c), signer nodes on the ghost re
   never cross 20 ms, so the store was not cut. What is left is a burst of 200-230 ms of which our labels own 19 ms
   (8%); the rest is one promise continuation we do not own, listed. Six stalls over 300 ms and one gap over 600 ms in
   six minutes are the rare remainder, not the usual age.
+- Second round, on the wire: every new round's other truck arrived in 113-190 ms, 2-6 ticks behind the driver, never a
+  leftover pose, never retired for silence (five rounds, eleven minutes).
 - DEBUG over each truck: name, then age in ms and arrows (up/down, left/right); "~" = no stamp of the driver's clock.
 - NOT MEASURED, and Daniel's own check: two real browsers on the Daily (this host cannot run two WebGL pages at 60 Hz) -
   the overlay on screen, the second-round ghost, and whether the lag still shows. Listed red: client

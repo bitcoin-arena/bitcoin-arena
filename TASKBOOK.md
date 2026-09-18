@@ -38590,3 +38590,25 @@ THE PUBLISH FRAME IS MEASURED, AND THE LEFTOVER BURST IS LISTED (2026-09-18 03:3
                    pings median 12 ms, p90 27 / 28 ms. Daniel's 300-600 ms was the usual picture; it is now the rare
                    remainder - one gap over 600 ms in six minutes.
 
+THE SECOND-ROUND GHOST, ON THE WIRE (2026-09-18 03:45; the 19:15 ghost letter, Daniel: "in the second round the ghost
+does not appear reliably - sometimes missing, then at the wrong position")
+  HOW             the same outside probe, eleven minutes, a stake-0 driver and a watcher joining a NEW round each time
+                  the run reached its last tick - which is a player pressing PLAY again. For every round: when the
+                  first picture of that round's driver arrived, measured from the driver's first published tick; how
+                  far behind the driver it was; pictures naming an entry of a round the pair had left; trucks retired
+                  for silence.
+                    round 1  4fa82eeb  first picture 116 ms in, 2 ticks behind, 0 left-over, 0 retired
+                    round 2  bf2dd582  114 ms in, 2 ticks behind, 0, 0
+                    round 3  6b3b424d  190 ms in, 6 ticks behind, 0, 0
+                    round 4  398db061  116 ms in, 2 ticks behind, 0, 0
+                    round 5  329b2ae9  113 ms in, 2 ticks behind, 0, 0   (the window closed mid-round)
+  THE TRUCK       6435 pictures in 11 min (9.8 /s against the page's 10), gap p50 100 ms, p90 108 ms, max 615 ms,
+                  1 over 600 ms, 0 at the 3 s retire; 25 stalls over 300 ms, 15 of them close/finality; pings median
+                  12 ms, p90 21 ms.
+  WHAT IT SETTLES on the wire, both halves: the picture exists within ~120 ms of a new round starting, it names the new
+                  entry, and its pose is the driver's own tick within 2-6 ticks (33-100 ms). Never a leftover pose,
+                  never a truck retired for silence.
+  WHAT IT CANNOT  the screen half: whether GhostField draws that picture, whether a previous round's truck is still on
+                  screen, and what the overlay reads. That is the two-browser check and stays Daniel's - this host
+                  cannot run two WebGL pages at 60 Hz.
+
