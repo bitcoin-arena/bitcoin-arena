@@ -29,8 +29,10 @@ LIVE (2026-09-18 02:10): Daily 0.0.1525 (bb4d521c), signer nodes on the ghost re
   600 ms in six minutes, none near the 3 s that retires a ghost. Measured from outside the Daily with a stake-0 driver
   and a watcher; numbers and every step in TASKBOOK.
 - The signer nodes' own stalls: the round keeper, the close, the census, the beacon, the committee and the publish frame
-  are each off the thread that draws the other trucks. What is left is ~230-360 ms unnamed, shaped like the batch store,
-  which stays on that frame because it owes the publisher its answer.
+  are each off the thread that draws the other trucks. The frame's own parts - authority, store, answer, chain parse -
+  never cross 20 ms, so the store was not cut. What is left is a burst of 200-230 ms of which our labels own 19 ms
+  (8%); the rest is one promise continuation we do not own, listed. Six stalls over 300 ms and one gap over 600 ms in
+  six minutes are the rare remainder, not the usual age.
 - DEBUG over each truck: name, then age in ms and arrows (up/down, left/right); "~" = no stamp of the driver's clock.
 - NOT MEASURED, and Daniel's own check: two real browsers on the Daily (this host cannot run two WebGL pages at 60 Hz) -
   the overlay on screen, the second-round ghost, and whether the lag still shows. Listed red: client

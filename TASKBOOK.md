@@ -38573,3 +38573,20 @@ THE STEP AND THE PUSH LEFT THE PUBLISH FRAME (2026-09-18 02:10; the 19:15 ghost 
   STILL OPEN       two real browsers on the Daily (this host cannot run two WebGL pages at 60 Hz), the unnamed
                    leftover stalls, and Daniel's own reading of the 300-600 ms lag and the second-round ghost.
 
+THE PUBLISH FRAME IS MEASURED, AND THE LEFTOVER BURST IS LISTED (2026-09-18 03:30; the 19:15 ghost letter)
+  THE FRAME        every part timed over a six-minute window on the Daily, threshold 20 ms:
+                     frame authority (the bytes' authority check)   0 times over 20 ms
+                     batch stored (what the publisher waits on)     0
+                     frame answered                                 0
+                     play frame bytes (the whole frame)             0
+                     chain block read (a block's hex into bytes)    0
+                   The store never crosses 20 ms a batch, so it is not the bulk and it was NOT cut.
+  THE SHARE        of the 200-230 ms this thread burns inside a leftover stall, our own labels account for 19 ms -
+                   about 8 per cent. The rest is one promise continuation of 183-225 ms that no label of ours covers:
+                   not the frame, the store, the chain parse, the close chain, the receipts, the keeper, settle/payout
+                   or the committee. Listed, not cut.
+  THE TRUCK        clean window, no instrument overhead: 3458 pictures in 6 min (9.6 /s against the page's 10),
+                   gap p50 100 ms, p90 110 ms, max 974 ms, 1 over 600 ms, 0 at the 3 s retire, 6 stalls over 300 ms,
+                   pings median 12 ms, p90 27 / 28 ms. Daniel's 300-600 ms was the usual picture; it is now the rare
+                   remainder - one gap over 600 ms in six minutes.
+
