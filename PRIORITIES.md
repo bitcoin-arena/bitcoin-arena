@@ -27,7 +27,10 @@ WAS (2026-09-17 19:15, Daniel HARD): ghosts still lag ~300-600ms. Debug over tru
 
 ORDER (Daniel 2026-09-17 17:34 HARD): ghosts -> candle fixes -> WAR_TACTICS army logic already started -> only then M3.
 
-LIVE (2026-09-18 11:20): Daily 0.0.1589 (db9ef03d), signer nodes on the ghost release. Ghosts, after Daniel 19:15:
+LIVE (2026-09-18 11:55): Daily 0.0.1591 (9424dc92), signer nodes on the ghost release. Ghosts, after Daniel 19:15:
+- And a silence no longer takes the other truck away (0.0.1591): it stands where its last picture put it and its age
+  grows, and it leaves the screen only when the page knows it is gone - the player's next entry, or a new round. On
+  the Daily: taken away for silence 0 in four rounds, where 11 silences past 3 s would have done it before.
 - From the 10:42 playtest, shipped on 0.0.1589: a ghost lies on the ground the way the local truck does (same four
   contact points, still no physics), and a tab that fell behind rejoins the round instead of living in its own time -
   a debt over a second is stepped in one frame, so two tabs hold the same tanks. Measured and NOT drifting: the
@@ -42,7 +45,7 @@ LIVE (2026-09-18 11:20): Daily 0.0.1589 (db9ef03d), signer nodes on the ghost re
   2000 m under the map), a truck off the screen is marked at its rim, and a new round's truck is drawn at its first
   picture. Pictures 9.7/s, the drawn pose 38 ms old at the land frame, 24 of 24 doors cue the player. Every number and
   every step is in TASKBOOK.
-- THE GATE ON 19:15, Daniel's own and the only thing left: two tabs on btc-logistics-core.pages.dev (0.0.1589), the
+- THE GATE ON 19:15, Daniel's own and the only thing left: two tabs on btc-logistics-core.pages.dev (0.0.1591), the
   shot ghosts-two-tabs-1915.jpg - they should see each other. Each truck carries two lines, name then age and arrows;
   the age should read tens of ms, not 300-600; a truck off screen is named at the rim; and after PLAY again the other
   truck should stand at its new pose at once, not be missing and not be where the last round left it. This host cannot

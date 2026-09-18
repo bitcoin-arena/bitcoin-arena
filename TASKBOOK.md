@@ -38934,3 +38934,37 @@ THE 10:42 PLAYTEST: FOUR THINGS, TWO FIXED IN THE PAGE AND TWO MEASURED (2026-09
                       counted as green. WebGL 0.0.1589, built client == dist, built core == template core.
   SHIPPED             btc-logistics-core (db9ef03d), alias serving 1589; war untouched. Commit b2bc54a.
 
+A SILENCE NO LONGER TAKES THE OTHER TRUCK AWAY (2026-09-18 11:55; the 10:42 letter, the last of the four)
+  THE RULING          Daniel 11:45: fix retirement in the game, not the host. The truck must stay at its last pose
+                      until a fresh picture arrives; age may grow; it must not vanish and teleport. No PhysX or
+                      rigidbody on a ghost, Contacts + Lie stays, no test loosened.
+  THE RULE BEFORE     `ghost-field.js` retired a truck that had sent nothing for SILENT_MS = 3000 ms, and Unity
+                      destroyed the body. Measured on the Daily at 10:42-11:20: gaps to 5131 ms, nine over three
+                      seconds in ten minutes - each one took the truck off the screen and the next picture drew it
+                      again metres away. The pose was never the problem: 2 ticks behind the driver at the median and
+                      3 at the ninetieth, in every third of a round.
+  THE RULE NOW        silence is COUNTED, not acted on. A truck stands where its last picture put it and the age
+                      over its head grows. It leaves the screen only when the page knows it is gone: the player's
+                      next entry supersedes it (the 2026-09-10 reload rule, kept) or a new round clears the field
+                      (the 17:12 rule, kept).
+  BEFORE / AFTER      the rewritten test, at the two gaps that bite: at 3 s the old rule emitted a retire and the
+                      field dropped to one truck; now no retire, `others` stays 2, and at 5 s it is still there. The
+                      next fresh picture moves it with no retire in between, so nothing vanishes and reappears. A
+                      superseding entry still retires - that assertion is in the same test.
+                      On the Daily, 0.0.1591, ten minutes, four rounds, the field drained every frame the way Unity
+                      drains it: taken away for silence 0, 0, 0, 0; silences past 3000 ms that used to take it away
+                      3, 2, 3, 3. Eleven vanishings in ten minutes, gone.
+  A PROBE THAT SAID   this probe reported "retired for silence 0" for weeks and it meant nothing: it drained the
+  NOTHING             CLIENT and never `field.drain()`, so the field's own silence rule never ran in it. It now
+                      drains the field every frame and counts the silences the old rule would have acted on, which
+                      is what makes the line above a measurement instead of a hope.
+  SUITES              client ghost-field 21/21 on the new rule, ghost-label 4/4. PlayMode Ghost 26/26 errorCS 0.
+                      EditMode 244: 240 pass, 3 skipped, 1 red - the listed CombatFxTests rifle flash alone.
+  THE FLAKE           RunOverBodyTests.AThrownBodyIsHandedToThePhysicsEngine failed once in a full EditMode run at
+                      11:08 ("er taumelt nicht", tumble 0.60 against > 1.0) and passed 5 of 5 on its own minutes
+                      later, and again in the full run at 11:30. It is PhysX settling under a loaded host - the run
+                      that failed shared the machine with a WebGL build - not a change of ours: nothing in this
+                      letter touches a rigidbody. The assert is NOT tuned. Listed, and watched.
+  SHIPPED             WebGL 0.0.1591, built client == dist, built core == template. btc-logistics-core (9424dc92),
+                      alias serving it; war untouched. Commit 4ff9b29, with both 10:42 shots.
+
