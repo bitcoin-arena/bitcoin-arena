@@ -20,13 +20,16 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-OPEN, first: at the round boundary a page's calls are dropped by its OWN 8 s names timeout, because the signer node
-blocks. Measured twice on the MacBook: GET /names?round=... aborted at 8.8-9.4 s, /rounds at 11.5 s, /name at 12.8 s -
-net::ERR_ABORTED, which is the page giving up, not a refusal - while the node answered a LAN request in 15.00 s at
-its worst against a median of 0.011 s, with its tunnel answering in 0.14 s beside it. Not the 10 s chain timeout:
-/headers came back 200 in 1925 ms at that same boundary. WHAT BLOCKS THE NODE is the next measurement. The exact
-`Failed to fetch` of 12:02 did not reproduce in 19 minutes of two-tab play, and the trace is armed for it. Numbers in
-TASKBOOK. The parked 12:02 ghost letter below owns this; nothing of it has been started.
+SHIPPED to the live signer nodes (2026-09-18 23:25): the round boundary no longer starves the page. The finality
+watch ran every entry's close work back to back on its own event loop - the node's log caught a loop held 26151 ms
+with 134 phases in it, none of it waiting for the machine - so a page's 8 s names call was aborted and its next
+session starved. The watch now yields between entries and a peer's /results has a 2500 ms deadline. Measured after:
+worst loop hold 1872 ms, no LAN call over 5 s in 93 samples, 0 refused calls in 1048, and both tabs saw the other
+truck in round two after 12.4 s and 12.6 s. Numbers in TASKBOOK. Node-side only: the Daily page stays 0.0.1617.
+
+NOW: candle fixes (ORDER below), then WAR_TACTICS army - ping Daniel when the army is live on the Daily - then M3.
+Daniel 2026-09-18 23:20 HARD: do not wait for his eyes on drop-off / result / SPECTATE; that check is deferred until
+the army is finished.
 
 SHIPPED on the Daily, three playtest letters, numbers and causes in TASKBOOK:
 - 0.0.1617 (22:16, photographed): the whitepaper is inside its plaque - 9.4 x 12.2 m plate, 8.8 x 6.7 m text. Two

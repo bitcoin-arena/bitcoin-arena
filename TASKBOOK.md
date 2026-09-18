@@ -39222,3 +39222,43 @@ is a network-level failure, where everything measured here is an abort we asked 
 round two this time - 15.6 s and 16.2 s after PLAY in run 1, 35.5 s in run 2 - so "others 0 at ticks 300 through
 1500" did not reproduce either. The Network capture stays in measure-ghost-in-page.mjs, so the next occurrence is
 caught with its cause attached.
+
+## What blocked the signer node, and what it cost the page (2026-09-18 23:2x, fixed live)
+
+The node's own log already carried the answer once it was read the right way: `[lag]` lines say how long the loop was
+held, what ran in it, and whether the process was merely unscheduled.
+
+  BEFORE (4193 lag events in the log)      AFTER the fix (22 events, 238 KB of log)
+  waiting for the machine        0 (0%)    0 - it was never the box, and never my Unity runs
+  worst loop hold          26151 ms        1872 ms
+  median lag                  ~300 ms      309 ms
+  in the worst hold        134 close phases totalling 64785 ms
+  close gather on loop     n=4727 median 381 ms worst 1318 ms
+  finality   on loop       n=3116 median 399 ms worst 1319 ms
+
+The finality watch (`server.js` `ticked`) awaited `retryClose` and then `gather` for every entry back to back. Each of
+those holds the loop for its own synchronous share, so a round's worth of entries chained into one wall where nothing
+was served - 26 s of it at the worst. That is what the page met at the round boundary: its 8 s `AbortSignal.timeout`
+on `/names` fired at 8.8-9.4 s, `/rounds` at 11.5 s, `POST /name` at 12.8 s.
+
+THE FIX, scheduling only - same work, same order, no outcome touched: the watch yields to the event loop between
+entries, and the peer `/results` call gets the 2500 ms deadline it never had ("a peer that is down is not a fault"
+was already that function's rule).
+
+MEASURED ON THE DAILY, same probes, same box:
+
+  paired LAN vs tunnel, /rounds     before                      after (93 samples)
+    direct-a                        median 0.017 s worst 15.00 s, 3/28 over 5 s   median 0.022 s worst 1.25 s, 0/93
+    direct-b                        median 0.011 s worst 15.00 s, 4/28 over 5 s   median 0.025 s worst 0.38 s, 0/93
+    tunnel-a                        median 0.137 s worst 12.87 s                  median 0.124 s worst 0.42 s
+    tunnel-b                        median 0.125 s worst 15.00 s                  median 0.122 s worst 0.26 s
+
+  two tabs through a round boundary  before                     after
+    calls refused                    tabA 12, tabB 10 (and 8)   tabA 0 of 507, tabB 0 of 541
+    the other truck in round two     15.6 s / 16.2 s, once 35.5 s   12.4 s / 12.6 s
+    on joining                       one tab had client NO      both "join joined, client yes, ghosts yes"
+
+WHAT IS LEFT: one phase still holds the loop 1853 ms (`finality` / `close`), which is inside the page's 8 s budget but
+is the next lever if the boundary ever tightens again. And `second-closer.test.js` is red - HELD where it expects
+SETTLED - measured red on HEAD before this change as well, so it is not this fix; it is named here so it is not an
+unnamed red, and it waits for the letter that owns settlement.
