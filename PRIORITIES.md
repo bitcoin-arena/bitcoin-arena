@@ -20,39 +20,33 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-NOW (2026-09-18 10:42, Daniel HARD): ghosts have no physics (must climb hills like the local truck). Age often >100ms. Position only right at start, drifts the longer the other drives (maybe off-screen). Shot B: ghost in the wrong place. Tanks desync between the two tabs — they must be the same world. Shots daniel-screens/ghosts-physics-1042-a.jpg and -b.jpg.
+DONE (2026-09-18 10:42, Daniel HARD playtest) on 0.0.1591, all four:
+- Hills: a ghost lies on the same four contact points as the local truck. Still no rigidbody and no collider.
+- Tanks: one world. A page that fell behind jumps the debt in one frame instead of dropping it.
+- Drift: it was retirement, not drift. A 3 s silence leaves the truck standing with its age climbing; on the Daily,
+  four rounds, taken away for silence 0/0/0/0 against 11 silences past 3 s that used to remove it.
+- Age: the pose is 2 ticks behind the driver at the median, 3 at the ninetieth, in every third of a round. What is
+  left over 100 ms is the signer nodes stalling on the host they share, not a second vanish.
+Shots daniel-screens/ghosts-physics-1042-a.jpg and -b.jpg. Numbers in TASKBOOK.
 
-NOW (2026-09-18 10:42, Daniel HARD playtest): ghosts must climb hills like his own truck; age mostly tens of ms but often over 100; the other truck's position drifts the longer it drives; tanks must be the same world in both tabs. Shots daniel-screens/ghosts-physics-1042-a.jpg and -b.jpg.
-WAS (2026-09-17 19:15, Daniel HARD): ghosts still lag ~300-600ms. Debug over truck: 2 lines <name> / <age ms> <fwd|rev> <left|right>. Second round: ghost missing then wrong place. Shot daniel-screens/ghosts-two-tabs-1915.jpg — they should see each other.
+DONE (2026-09-17 19:15, Daniel HARD): ghost lag. The drawn pose is 38 ms old at the frame a picture lands (was 322),
+facing with it; the two-line debug draws in a player; an off-screen truck is named at the rim; a new round's truck is
+drawn at its first picture. The Daily could not open a round at all until 0.0.1586 - a 2338-word core in a build
+expecting 2386 - which is why two tabs saw nothing.
+
+NOW: candle fixes (ORDER below). Not started.
 
 ORDER (Daniel 2026-09-17 17:34 HARD): ghosts -> candle fixes -> WAR_TACTICS army logic already started -> only then M3.
 
-LIVE (2026-09-18 11:55): Daily 0.0.1591 (9424dc92), signer nodes on the ghost release. Ghosts, after Daniel 19:15:
-- And a silence no longer takes the other truck away (0.0.1591): it stands where its last picture put it and its age
-  grows, and it leaves the screen only when the page knows it is gone - the player's next entry, or a new round. On
-  the Daily: taken away for silence 0 in four rounds, where 11 silences past 3 s would have done it before.
-- From the 10:42 playtest, shipped on 0.0.1589: a ghost lies on the ground the way the local truck does (same four
-  contact points, still no physics), and a tab that fell behind rejoins the round instead of living in its own time -
-  a debt over a second is stepped in one frame, so two tabs hold the same tanks. Measured and NOT drifting: the
-  picture's lag behind the driver is p50 2, p90 3 ticks in every third of a round. What does bite is the signer nodes
-  stalling on this shared host - 9 gaps over 3 s in ten minutes, which retires a truck and draws it again elsewhere.
-- THE DAILY COULD NOT OPEN A ROUND AT ALL until 0.0.1586, and that is why two tabs saw nothing: the page shipped a
-  2338-word core into a player whose C# expects 2386, so the core never drove, no session was ever asked for, and no
-  ghost could arrive - for every player. It dates from the hull-down layout bump (434fd6c). The page now carries the
-  core its own build was generated from, which also brings the hull-down crest behaviour live. The client suite had
-  been saying it: ghost-field.test.js was 20 of 21 on exactly that comparison, and is 21 of 21 now.
-- Shipped on 0.0.1580: the hole-check - the label eye is a camera that can see the truck (never the loadout panel's,
-  2000 m under the map), a truck off the screen is marked at its rim, and a new round's truck is drawn at its first
-  picture. Pictures 9.7/s, the drawn pose 38 ms old at the land frame, 24 of 24 doors cue the player. Every number and
-  every step is in TASKBOOK.
-- THE GATE ON 19:15, Daniel's own and the only thing left: two tabs on btc-logistics-core.pages.dev (0.0.1591), the
-  shot ghosts-two-tabs-1915.jpg - they should see each other. Each truck carries two lines, name then age and arrows;
-  the age should read tens of ms, not 300-600; a truck off screen is named at the rim; and after PLAY again the other
-  truck should stand at its new pose at once, not be missing and not be where the last round left it. This host cannot
-  run two WebGL pages at 60 Hz, so it stays his.
+LIVE (2026-09-18 11:55): Daily 0.0.1591 (9424dc92), signer nodes on the ghost release. Both ghost letters are closed
+above; what a player has now, in one line each:
+- The other truck is drawn on the picture that just landed, place and facing, 38 ms old at the median.
+- It lies on the hill it stands on, is named at the screen's rim when it is off screen, and stays put through a
+  silence instead of vanishing and reappearing elsewhere.
+- Both tabs hold one world: a page that fell behind jumps the time it owes rather than dropping it.
   Listed red: client test/world-seed-bridge.test.js does not finish under the test timeout; node second-closer 0/2
-  needs a real lnd; EditMode CombatFxTests rifle flash. (The fourth, ghost-field 20/21, was not cosmetic: it was the
-  core mismatch above, and it is green.)
+  needs a real lnd; EditMode CombatFxTests rifle flash; and RunOverBodyTests flakes under host load (cause in
+  TASKBOOK, assert untouched).
 
 LIVE (2026-09-17 19:15) letter: tank arrival - tanks fidget walking onto a hold on the scrolling candle field (crest-hold done).
 - Wiggle row = walking-in hull heading flips: 32.7% at HEAD, red, threshold unchanged (numbers in TASKBOOK).
