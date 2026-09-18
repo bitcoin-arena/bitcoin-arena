@@ -20,16 +20,42 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-SHIPPED to the live signer nodes (2026-09-18 23:25): the round boundary no longer starves the page. The finality
-watch ran every entry's close work back to back on its own event loop - the node's log caught a loop held 26151 ms
-with 134 phases in it, none of it waiting for the machine - so a page's 8 s names call was aborted and its next
-session starved. The watch now yields between entries and a peer's /results has a 2500 ms deadline. Measured after:
-worst loop hold 1872 ms, no LAN call over 5 s in 93 samples, 0 refused calls in 1048, and both tabs saw the other
-truck in round two after 12.4 s and 12.6 s. Numbers in TASKBOOK. Node-side only: the Daily page stays 0.0.1617.
+OPEN, first, and the only thing waiting on Daniel: A9's coverage bar. The army is deployed and every short seam metre
+now has two or more guns within reach, so the remaining 12.27% is the SEAM'S OWN CLIMB - gaps of 23-24% where it rises
+0.57-0.73 m per metre of x against 3-4% where it rises 0.18-0.21. A tank stands a depth below the seam at its own x,
+so on the steep flank a sample 40 m away is 70 m from the hull, past the 46 m reach. Every lever is pinned by another
+rule: the 27 m slot pitch is in x and A8 asserts exactly that; the reach and the depths are spec; or the 95% bar is
+read as flat-stretch only. Which one moves is Daniel's. Numbers in TASKBOOK. No deploy while A9 is red.
 
-NOW: candle fixes (ORDER below), then WAR_TACTICS army - ping Daniel when the army is live on the Daily - then M3.
-Daniel 2026-09-18 23:20 HARD: do not wait for his eyes on drop-off / result / SPECTATE; that check is deferred until
-the army is finished.
+ARMY, tonight, on the same letter: rows passing 24 -> 27 of 39.
+- The table was measuring a line the core does not use. Every row now reads the core's own seam, hooked out of the
+  copy: H1 27.14% -> 49.89% on that alone, A4b green, and the §0 wiggle row PRIORITIES carried as red at 32.6% was
+  already green at 0.92%.
+- Tanks now spawn ON their posts, the way riflemen already did (Daniel ruled 2026-09-19: the C# walk-in is a spawn
+  fault of the recording, not doctrine). H1 -> 60.00%, A4b -> 0.18%, H2 95.12%, settled tanks on post 46% -> 74%,
+  still-walking-in 38% -> 19%. The two pins that measured the walk-in retired with it; goldens regenerated from the
+  new start; tactics fixture seeds re-picked the way that test re-picked them before.
+- Suites, each on its own: rules 48/48, vectors 8/8, tactics 17/17, transcript-replay 5/5, spawn 4/4, canonical 3/3,
+  specified 3/3, candles 9/9, private-world 3/3, chart 4/4, poison 3/3, bundle 12/12 after rebuilding dist.
+- A11b is a rate, not a direction: 28 push steps in a whole run, none from zero downward, at one step per team-minute.
+  That is §4.10's cadence or its GIVE condition - doctrine, written down rather than guessed.
+- Four hypotheses died to measurement and were reverted with their numbers: seam-drift chasing, budget starvation, the
+  crest mismatch, and the on-post dead band.
+
+CANDLES: closed by measurement. The 16:42 report (candles move left then freeze at round start) does not reproduce on
+0.0.1617 - from the cab the core's shift slides and wraps 0.03 -> 5.58 m across 5400 ticks, and the drawn band changes
+17354 to 307820 pixels between consecutive frames. One thing photographed for a HUD letter of its own: from the cab
+the price headline is drawn about 80 px tall across the middle of the screen.
+
+SHIPPED to the live signer nodes (2026-09-18 23:25): the round boundary no longer starves the page. The finality
+watch ran every entry's close work back to back on its own event loop - worst loop hold 26151 ms, none of it waiting
+for the machine - so a page's 8 s names call was aborted and its next session starved. It now yields between entries
+and a peer's /results has a 2500 ms deadline. After: worst hold 1872 ms, 0 refused calls in 1048, both tabs saw the
+other truck in round two after 12.4 s and 12.6 s. Node-side only: the Daily page stays 0.0.1617.
+
+THEN, once A9 is ruled: finish the army's remaining reds (A11a, A13b, O1, S1-adjacent, B2/B3/B4), ship it to the
+Daily, ping Daniel, and start M3 without asking (Daniel 2026-09-18 23:47 HARD). His eyes on drop-off / result /
+SPECTATE stay deferred until the army is finished.
 
 SHIPPED on the Daily, three playtest letters, numbers and causes in TASKBOOK:
 - 0.0.1617 (22:16, photographed): the whitepaper is inside its plaque - 9.4 x 12.2 m plate, 8.8 x 6.7 m text. Two
