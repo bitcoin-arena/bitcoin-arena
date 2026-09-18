@@ -36,9 +36,12 @@ LIVE (2026-09-18 02:10): Daily 0.0.1525 (bb4d521c), signer nodes on the ghost re
 - Second round, on the wire: every new round's other truck arrived in 113-190 ms, 2-6 ticks behind the driver, never a
   leftover pose, never retired for silence (five rounds, eleven minutes).
 - DEBUG over each truck: name, then age in ms and arrows (up/down, left/right); "~" = no stamp of the driver's clock.
-- NOT MEASURED, and Daniel's own check: two real browsers on the Daily (this host cannot run two WebGL pages at 60 Hz) -
-  the overlay on screen, the second-round ghost, and whether the lag still shows. Listed red: client
-  test/world-seed-bridge.test.js does not finish under the test timeout; node second-closer 0/2 needs a real lnd.
+- THE GATE ON 19:15, Daniel's own: two tabs on btc-logistics-core.pages.dev (0.0.1525, the current build - nothing a
+  player runs has changed since it). Each truck carries two lines, name then age and arrows; the age should read about
+  100 ms, not 300-600; and after PLAY again the other truck should stand at its new pose at once, not be missing and
+  not be where the last round left it. This host cannot run two WebGL pages at 60 Hz, so it stays his.
+  Listed red: client test/world-seed-bridge.test.js does not finish under the test timeout; node second-closer 0/2
+  needs a real lnd.
 
 LIVE (2026-09-17 19:15) letter: tank arrival - tanks fidget walking onto a hold on the scrolling candle field (crest-hold done).
 - Wiggle row = walking-in hull heading flips: 32.7% at HEAD, red, threshold unchanged (numbers in TASKBOOK).

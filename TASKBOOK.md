@@ -38612,3 +38612,23 @@ does not appear reliably - sometimes missing, then at the wrong position")
                   screen, and what the overlay reads. That is the two-browser check and stays Daniel's - this host
                   cannot run two WebGL pages at 60 Hz.
 
+THE PLAYER-FACING GATE THAT CLOSES 19:15 (2026-09-18 03:55)
+  THE BUILD       btc-logistics-core.pages.dev serves 0.0.1525, built from 9f49bc0 (release fa5333a). The page's client
+                  bundle is byte-identical to dist and its core to the template's, and no commit since that build
+                  touches packages/blwp-client/src, unity-proto/Assets, packages/core/src or packages/protocol/src -
+                  everything since is signer-node code (live on both nodes), the probe tool and documents. So the Daily
+                  a player opens IS the current build, and a two-tab check on it is a check of HEAD's player half.
+  WHAT DANIEL RUNS  two browsers side by side on that page, both joined to the same free round:
+                    1. each truck carries two lines - the player's name, then the age in ms and the arrows (up forward,
+                       down back, left / right for the turn, both when it did both). A "~" before the age means this
+                       browser holds no stamp of the other tab's clock; between two tabs of ONE browser it should not.
+                    2. the age should read about 100 ms and stay there - not 300-600 ms. The wire is p50 100 ms and
+                       p90 109 ms, so anything much larger is the page, not the nodes.
+                    3. drive tab 2 across tab 1's view: the ghost should follow, not stutter and not sit where it was.
+                    4. let a round end and press PLAY again in both: the other truck should appear at its NEW pose
+                       within about a fifth of a second - on the wire it is 113-190 ms and 2-6 ticks behind - and no
+                       truck of the finished round should be left standing.
+  WHAT IT DECIDES   if the ages read ~100 ms and the second round draws at once, 19:15 is closed. If the screen shows
+                  300-600 ms while the wire shows 100 ms, the remainder is in the page (GhostField drawing, the clear
+                  record, the overlay's own clock) and that is the next letter's first measurement.
+
