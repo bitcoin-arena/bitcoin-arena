@@ -20,7 +20,11 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-NOW (2026-09-18 19:30, Daniel HARD playtest) - shipped 0.0.1611:
+NOW (2026-09-18 20:22, Daniel HARD playtest): on desktop the mobile pads are drawn but drive nothing. They must stay
+drawn AND move the truck - pointer on a pad is throttle, steer, handbrake; the keyboard still works. Not started;
+19:30 shipped first, as ordered.
+
+SHIPPED (2026-09-18 19:30 + 20:00 + 20:04, Daniel HARD playtest) on 0.0.1613:
 - The result is read before the lobby: a run's outcome holds the screen 5 s (SplashScreen.ResultHoldSeconds), a wreck
   still waiting for its own burn on top. FINISH_WAIT_MS stays 300 ms - that is the wire drain, not a screen.
 - SPECTATE keeps the line to the nodes: finish() no longer closes the socket, so a spectator after a round still sees
@@ -28,6 +32,16 @@ NOW (2026-09-18 19:30, Daniel HARD playtest) - shipped 0.0.1611:
   still closes the socket when it leaves the round.
 - EditMode ResultHoldTests 3/3, client finish-at-delivered 4/4 (its socket assertion rewritten to the new rule, and
   stricter: a tick offered after the end is refused and the node holds no more).
+- The hold is timed from the instant the CORE names the outcome, the same clock the result card uses, so there is no
+  strip of plain world between the card fading and the lobby.
+- SPECTATE measured, not assumed: after a seat finished its own run it was still shown the other truck 424 times -
+  first at 90 ms, then every 99 ms at the median for 105 s, all naming the live round.
+- No sky billboard (20:00 shot): a spectator sees the market only when there IS one, as a corner note in the small
+  style. And a broken connection names itself where the player already looks - the price feed is down and the chart
+  may be stale, the round feed is lost and other trucks may freeze, or spectate lost the live feed - and the line goes
+  when the feed returns. The socket's own word stays in the debug panel.
+- EditMode 252: 248 pass, 3 skipped, 1 red (the long-listed rifle flash). PlayMode Ghost 26/26. The old subline tests
+  were rewritten to the new rule, not loosened, and now run the English check over the sentences too.
 - Eyes still needed: Daniel drives into the drop-off and reads the result, then presses SPECTATE.
 
 PARKED mid-measurement (2026-09-18 12:02, Daniel HARD): ghost position still does not line up with what is seen. Plus 2nd round: Truck 1 cannot see Truck 2, age 6736ms. Shots ghosts-round2-1200-a.jpg / -b.jpg.
