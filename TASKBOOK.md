@@ -39416,3 +39416,24 @@ It buys nothing on the table and costs H1 0.6 points there, so it is out of the 
 
 The remaining reds after the seam fix are not that row: A4b, A9, A11a/b/c, A13b, O1 (two), O4 (a client test, not
 built here), S1, B2, B3, B4. Those are the next letter's work, and they are real - they were red with the seam right.
+
+### A11b "no team gives ground": the rate, not the direction (2026-09-19 02:0x)
+
+The row wants every 60 s window to contain a team whose push word is negative. Measured with --verdicts (seeds 1,2 x
+3600, 86400 team-ticks):
+
+  the push word          min 0 m, p05 0, median 0, p95 8, max 16; below zero 0.00%
+  team verdicts          none 56.3%, take 11.7%, GIVE 1.2%, drift 30.7%
+  push STEPS             28 in the whole run - 12 down, 16 up, none landing below zero
+  steps from 0 downward  0
+  H3's own reading       1.00 steps per team-minute
+
+So the direction is not broken: teams do read GIVE (1022 tick-readings, 1019 with the reading before agreeing), and
+PUSH_MIN is -8 m, so a negative push is allowed. What is missing is the RATE. The push word is re-read about once per
+team-minute, and GIVE is the standing reading on 1.2% of ticks, so the chance a re-read lands on one is about a
+hundredth: over the 24 team-minutes of this run the expected number of GIVE steps is under one, and zero were taken.
+
+That is a doctrine question, not a bug in the mover: either §4.10's re-read cadence is too slow for "giving ground is
+a normal part of the front", or the GIVE condition (foe >= own + 1 + weight inside the reach) is too strict for the
+densities this game has. Both are Daniel's to rule. It is written here rather than guessed at, and the instrument
+(--verdicts) stays in the harness so the next attempt starts from the step count.
