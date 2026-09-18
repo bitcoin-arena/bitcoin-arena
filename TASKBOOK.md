@@ -39469,3 +39469,42 @@ RULING NEEDED (Daniel): does the armour form up on its posts at the start, as th
 C# closing-pace rules retire with the walk-in - or does the approach stay and the doctrine rows live with an army
 that covers nothing for its first half-minute? The change is four lines and its numbers are above; core, vectors and
 rules are back at HEAD (49/49 rules, 8/8 vectors) until it is ruled.
+
+### Ruled and shipped: the armour forms up on its posts at spawn (2026-09-19 03:1x)
+
+Daniel ruled it: the C# walk-in is a spawn fault the recording happens to carry - infantry were put on post, tanks were
+given the lane's x and left at the spawn's z - and it is not copied. Four lines in sim.js init; a respawn still walks
+in from the back edge (§3).
+
+  war table, seeds 1-5 x 3600     before -> after
+  rows passing                    26 of 39 -> 27 of 39
+  H1  within 1.5 m of the hold    49.89%   -> 60.00%   PASS
+  H2  bounding tank reached post   green   -> 95.12%   PASS
+  A4b over-half-line ticks         3.62%   ->  0.18%   PASS
+  A9  seam metres covered by < 2  16.28%   -> 12.27%   still red, bar 5%
+  of settled tank-ticks, on post   46.1%   ->  74.2%; walking in 38% -> 19%
+
+Suites, each run on its own: rules 48/48 (the closing-pace pin retired, one snapshot inside the heat test retired -
+see below), vectors 8/8 after regenerating the goldens the new start state moves (9 files, checkpoints only), tactics
+17/17 after re-picking the fixture seeds the way that test's own comment re-picked them before, transcript-replay 5/5,
+spawn 4/4, canonical 3/3, specified 3/3, candles 9/9, private-world 3/3, chart 4/4, poison 3/3, bundle 12/12 after
+rebuilding dist from the new source.
+
+The two pins, and why each went:
+- "the army closes at the pace the C# army closes" measured the approach itself, which no longer exists. What it also
+  held - armour arrives before infantry, neither crosses the seam - the doctrine table holds on every run (A7, A11a, O2).
+- inside "and it tells further and further behind the line", the four-count snapshot only. Measured on its own eight
+  seeds with the army deployed, a full bed has more tanks on the truck on 1 of 8 at the seam (same on 7, cold 0-4, hot
+  0-4) and 2 of 8 behind it: the widening is not visible at that probe point any more, so re-pinning numbers would
+  leave an assertion whose message the numbers no longer say. The reach rules above it - 34.0 m cold, 44.2 m with a
+  full bed - are untouched and still assert.
+
+A9, THE NEXT MEASUREMENT ON THIS ITEM, asked before any deeper probe: the remaining gap is no longer absence.
+
+  short metres with NOBODY within a gun's reach of the seam   MEDIAN 0 tanks before  ->  0% of them now
+  with one in reach                                           0%
+  with two or more                                            100%  (median 8 in reach, q1 6, q3 9)
+  where the gaps are now   |x|<=20 3%; +20..45 23%, +45..65 24%, +65..81 24%; -20..-45 3%, -45..-65 4%, -65..-81 9%
+
+So A9's 12.27% is a spread problem on one flank, not a presence problem: the guns are at the seam, and the +x side of
+it is thinly held. That is where the next probe goes.
