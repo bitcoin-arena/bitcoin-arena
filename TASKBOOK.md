@@ -38682,3 +38682,38 @@ THE FRAME A PICTURE LANDS IN NOW SHOWS THAT PICTURE (2026-09-18 05:30; the 19:15
                       1572; btc-logistics-war untouched. Commit 61133f9.
   NOT CLOSED          Still Daniel's two tabs. 19:15 stays open until he sees it.
 
+THE HULL POINTS WHERE THE LANDED PICTURE SAYS, AND PLAY-AGAIN MEASURED ON SCREEN (2026-09-18 06:05; 19:15)
+  THE TWO HOLES       Daniel 05:45, on the same letter: the place binds in the landing frame but the facing still
+                      turned over a frame or two - measure that turn against the same land-frame clock; and measure
+                      PLAY-again where the eye is, not on the wire, because 110-151 ms of arrival does not prove the
+                      hull is at the new pose in that frame.
+  THE FACING, THREE   same probe, same clock, ten minutes a window, a stake-0 driver and a watcher:
+  COLUMNS               on 0.0.1572   place   p50 38, p90 52, max 907 ms, over 300 ms 32 of 5813
+                        on 0.0.1572   FACING  p50 138, p90 156, max 1639 ms, over 300 ms 67 of 5813
+                        on 0.0.1574   place   p50 38, p90 52, max 987 ms, over 300 ms 27 of 5815
+                        on 0.0.1574   FACING  p50 38, p90 52, max 987 ms, over 300 ms 27 of 5815
+                      138 less 38 is 100 ms: one publish interval exactly, which is the whole-interval term the place
+                      had already lost and the facing went on carrying. It was the leftover of the old walk and
+                      nothing else. Overlay age and wire unchanged at p50 22 ms, p90 36, in both windows; pictures
+                      9.7/s, gaps p50 100, p90 109-110 ms, none at the 3 s retire.
+  THE CUT             `Show` ends in SetPositionAndRotation on the newest picture, so place and facing bind in the
+                      same frame. The walk is GONE rather than left dead: no Update, no Ease, no PictureSeconds, no
+                      _from, no _since. `Settled` is now "it has been given a picture". The probe reads the shipped
+                      C# for both bindings and prints 0 ms of ease, which is how the two windows above know which
+                      arithmetic they are measuring. No rigidbody, no collider, no second clock, nothing invented
+                      between two pictures.
+  PLAY-AGAIN, DRAWN   the first picture of a new round, as the hull stands in it on the frame its truck is made:
+                        0.0.1572   44, 42, 41, 38 ms   (four rounds)
+                        0.0.1574   49, 40, 80, 42 ms   (four rounds)
+                      Against a wire arrival of 108-151 ms and 1-4 ticks behind. A new round destroys every truck at
+                      tick -2, so a round's first picture builds a truck with nothing to walk from - which is why
+                      this side already measured clean before the facing was bound. In both windows: pictures of a
+                      round the pair had left 0, retired for silence 0, no leftover pose, in all eight rounds.
+  TESTS               PlayMode Ghost suites 24/24 (GhostFieldTests, GhostTests, GhostDrawnPoseTests, GhostOnScreenTests,
+                      GhostInThePlayerTests). Nothing loosened, two things tightened: the drawn-pose test turns its
+                      jump picture 45 degrees and reads the facing one frame in, and the new-round test requires the
+                      new round's truck to stand at 9 m and point a quarter turn in the frame it was drawn.
+  SHIPPED             WebGL 0.0.1574 errors 0, built client == dist, built core == the live template core. Deployed
+                      to btc-logistics-core (744290b7), alias serving it; btc-logistics-war untouched. Commit 7cec5b5.
+  NOT CLOSED          Still Daniel's two tabs, now on 0.0.1574.
+
