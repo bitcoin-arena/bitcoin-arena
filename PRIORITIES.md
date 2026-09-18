@@ -25,35 +25,17 @@ NOW (2026-09-17 19:15, Daniel HARD): ghosts still lag ~300-600ms. Debug over tru
 ORDER (Daniel 2026-09-17 17:34 HARD): ghosts -> candle fixes -> WAR_TACTICS army logic already started -> only then M3.
 
 LIVE (2026-09-18 07:05): Daily 0.0.1580 (95d46578), signer nodes on the ghost release. Ghosts, after Daniel 19:15:
-- The other player's truck arrives 9.6 times a second (the page publishes 10), gap p50 100 ms, p90 109 ms, one gap over
-  600 ms in six minutes, none near the 3 s that retires a ghost. Measured from outside the Daily with a stake-0 driver
-  and a watcher; numbers and every step in TASKBOOK.
-- What the eye sees, not the wire: the frame a picture lands in now draws that picture, place and facing together. The
-  drawn truck was 322 ms behind, then 171, and is 38 ms at the median at the moment a picture lands - the wire plus the
-  label refresh. The facing was 138 ms, one publish interval more, and reads the same 38 ms now. Nothing walks.
-- PLAY again, measured where the eye is: the first picture of a new round is 38-80 ms old in the frame the new truck is
-  made, over eight rounds; no pose of the round before, none retired for silence.
-- The signer nodes' own stalls: the round keeper, the close, the census, the beacon, the committee and the publish frame
-  are each off the thread that draws the other trucks. The frame's own parts - authority, store, answer, chain parse -
-  never cross 20 ms, so the store was not cut. What is left is a burst of 200-230 ms of which our labels own 19 ms
-  (8%); the rest is one promise continuation we do not own, listed. Six stalls over 300 ms and one gap over 600 ms in
-  six minutes are the rare remainder, not the usual age.
-- Second round, on the wire: every new round's other truck arrived in 113-190 ms, 2-6 ticks behind the driver, never a
-  leftover pose, never retired for silence (five rounds, eleven minutes).
-- DEBUG over each truck: name, then age in ms and arrows (up/down, left/right); "~" = no stamp of the driver's clock.
-  It was drawing NOTHING in a player until 0.0.1576: it took its camera from Camera.main, and nothing in this build
-  tags a MainCamera. The label now uses the camera that renders, as StrikeTheatre already did.
-- AND A TRUCK OFF THE SCREEN IS MARKED AT ITS RIM (Daniel's pick, 06:45). One player per loading-bay door, 24 doors at
-  6.8 m, two seats a mean 54 m apart: the camera a player drives with frames 3 of the 24 doors and labels 1 on the
-  hull, so the other 21 were nothing on screen. With the marker every one of the 24 gives a cue - the same two lines,
-  the same clock, at the rim in the truck's direction. The doors and the spawn are untouched. The label is placed from
-  a camera that can see the truck: the loadout panel's own camera sits 2000 m under the map and must never be the eye.
-- THE GATE ON 19:15, Daniel's own: two tabs on btc-logistics-core.pages.dev (0.0.1580, the current build). Each truck
-  carries two lines, name then age and arrows; the age should read tens of ms, not 300-600; and after PLAY again the
-  other truck should stand at its new pose at once, not be missing and
-  not be where the last round left it. This host cannot run two WebGL pages at 60 Hz, so it stays his.
+- Shipped on 0.0.1580: the hole-check - the label eye is a camera that can see the truck (never the loadout panel's,
+  2000 m under the map), a truck off the screen is marked at its rim, and a new round's truck is drawn at its first
+  picture. Pictures 9.7/s, the drawn pose 38 ms old at the land frame, 24 of 24 doors cue the player. Every number and
+  every step is in TASKBOOK.
+- THE GATE ON 19:15, Daniel's own and the only thing left: two tabs on btc-logistics-core.pages.dev (0.0.1580), the
+  shot ghosts-two-tabs-1915.jpg - they should see each other. Each truck carries two lines, name then age and arrows;
+  the age should read tens of ms, not 300-600; a truck off screen is named at the rim; and after PLAY again the other
+  truck should stand at its new pose at once, not be missing and not be where the last round left it. This host cannot
+  run two WebGL pages at 60 Hz, so it stays his.
   Listed red: client test/world-seed-bridge.test.js does not finish under the test timeout; node second-closer 0/2
-  needs a real lnd.
+  needs a real lnd; EditMode CombatFxTests rifle flash.
 
 LIVE (2026-09-17 19:15) letter: tank arrival - tanks fidget walking onto a hold on the scrolling candle field (crest-hold done).
 - Wiggle row = walking-in hull heading flips: 32.7% at HEAD, red, threshold unchanged (numbers in TASKBOOK).
