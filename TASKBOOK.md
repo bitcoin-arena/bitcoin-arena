@@ -39698,3 +39698,49 @@ walked in and pushed 6.4 times a team-minute; the world now holds its posts and 
 So all five are LISTED, not loosened, each with its dependency: A11a and A11b depend on §4.10's window against its
 cadence; A13b on how fast two sides' means can part at 8 m a step; both O1 rows on §4.11's weight against the same
 step rate. None of them is touched, and none is silent.
+
+### The push cluster, swept across twelve seeds (2026-09-19 06:1x)
+
+One run per seed, 3600 ticks each, so a seed that behaves differently cannot hide inside an average.
+
+  seed  steps/team-min  on post at re-read  widow share  H1      A11a   A11b   A13b     O1a      O1b
+    1        3.0            54.2%             30.8%      60.97%   0/2    1/2   49.81%   82.88%   1.15 m
+    2        4.4            60.4%             24.1%      56.35%   1/2    1/2   72.75%   45.75%   4.52 m
+    3        3.2            53.5%             22.1%      58.70%   0/2    1/2    9.97%   50.41%   3.49 m
+    4        3.1            52.8%             34.2%      60.88%   1/2    2/2    0.00%   60.64%   3.09 m
+    5        4.1            61.1%             18.2%      62.83%   1/2    1/2   77.00%   67.98%   7.19 m
+    6        3.4            54.9%             34.2%      62.43%   1/2    2/2    0.00%   79.59%   2.72 m
+    7        2.2            48.6%             28.6%      55.55%   1/2    1/2   36.22%   94.91%   4.23 m
+    8        3.6            55.6%             30.0%      55.62%   0/2    2/2   77.22%   44.88%   0.11 m
+    9        3.1            52.1%             29.3%      60.69%   1/2    2/2   59.69%   44.31%   1.41 m
+   10        3.8            52.8%             31.6%      55.77%   0/2    1/2   76.61%   52.96%   1.01 m
+   11        3.8            61.1%             23.9%      61.48%   1/2    1/2   70.25%   66.73%   3.61 m
+   12        3.3            58.3%             25.0%      59.66%   1/2    2/2    2.39%    0.00%   1.57 m
+
+  steps per team-minute  min 2.2, median 3.4, max 4.4      widow share  min 18.2%, median 29.0%, max 34.2%
+  H1                     min 55.55%, median 60.17%, max 62.83%  - PASSES ON EVERY SEED, bar 50%
+  A11a  8 of 24 windows short (passes outright on seeds 1, 3, 8, 10)
+  A11b 17 of 24 windows short (never passes)
+  A13b  min 0.00%, median 54.75%, max 77.22%  - passes on 5 of 12
+  O1a   min 0.00%, median 56.80%, max 94.91%  - passes on 6 of 12
+  O1b   min 0.11 m, median 2.91 m, max 7.19 m - passes on 1 of 12
+
+NO SEED SHOWS A DIFFERENT MECHANISM, and the three things a core hole would look like are absent on all twelve:
+- posts are never abandoned: H1 is 55.55% at its worst, above its own 50% bar on every seed;
+- GIVE reaches the -8 m floor wherever it is read twice: seeds 1, 2, 3, 5, 7, 10, 11 step below zero;
+- every brake is the spec's - rule (a), the two-reading confirmation, and §4.10's widow drift - and no fourth appears.
+
+WHAT THE SWEEP DOES SHOW is one mechanism with a wide spread, and A13b is downstream of it:
+
+  GIVE read  1-2 times (seeds 4, 6, 9)     ->  A13b 0.00%, 0.00%, 59.69%
+  GIVE read 6-15 times (seeds 1, 2, 5, 7, 10, 11)  ->  A13b 49.81 / 72.75 / 77.00 / 36.22 / 76.61 / 70.25%
+
+A13b asks that the two sides' MEAN push differ by 4 m. Where no team gives ground the two sides sit at the same
+drift and their means never part, so the row reads zero - it is the GIVE rate seen from another angle, not a
+separate fault.
+
+And one number that is not a mechanism at all: seed 12's O1a 0.00% is 0 of 0. Its pushed team-ticks (push >= 16) are
+ZERO for the whole run - no team reached the seam on that seed - against 19044 team-ticks on an objective lane and
+24156 off it. An empty denominator, printed as a failure.
+
+So: every seed is the same bar-versus-cadence fight. The five rows stay listed, none loosened, and A9 is untouched.
