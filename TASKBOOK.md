@@ -40998,3 +40998,38 @@ other four rulings, no number falls out of the spec's own arithmetic here, and a
 
 Nothing in the infantry moved: not the standoff, not the spread, not the squad z, not the anchors, not the squad
 count. Tool only.
+
+### B3's remaining red, SPLIT before any hypothesis (2026-09-19)
+
+Both halves measured on the current tree, population cut at §12.1's 40 m, bands untouched. Every failing tick asked
+which clause it failed and what the code was holding when it did.
+
+THE X HALF - 5615 of 28812 side-ticks = 19.49% missing.
+  under the 0.6 x anchor floor      4627  = 82.4% of the failures  (16.06 points of the 19.49)
+  over the 60 m ceiling              988  = 17.6%                  ( 3.43 points)
+  of ALL failures, also under the old absolute 20 m floor   3585 = 63.8%  (12.44 points)
+  the remaining                                             2030 = 36.2%  ( 7.05 points) fail ONLY because that
+    side's own anchors were drawn wide - the men are inside 20 m but their anchors span more than 33 m.
+  anchor sd, min/q1/med/q3/max   failing 6.5 / 32.6 / 46.8 / 55.6 / 66.7   passing 0.6 / 17.9 / 29.9 / 43.6 / 66.1
+  men's x sd                     failing 1.4 /  8.2 / 12.9 / 27.4 / 76.8   passing 4.3 / 16.4 / 25.6 / 36.9 / 59.7
+  the floor those anchors imply  failing 3.9 / 19.6 / 28.1 / 33.4 / 40.0   passing 0.3 / 10.7 / 18.0 / 26.2 / 39.7
+  SO: a failing side-tick is one where the anchors were drawn nearly twice as wide as on a passing tick (median
+  46.8 m against 29.9 m) and the men cover half as much (12.9 m against 25.6 m). Two thirds of the miss is men who
+  are tight in absolute terms as well; one third is only the relative floor biting on a wide draw.
+
+THE Z HALF - 12140 of 64753 squad-ticks = 18.75% missing.
+  looser than 12 m   8978 = 73.9% of the failures  (13.86 points of the 18.75)
+  tighter than 2 m   3162 = 26.0%                  ( 4.88 points)
+  squad z sd on failing ticks, min/q1/med/q3/max   0.6 / 1.9 / 13.4 / 15.5 / 23.3 - the loose half sits just over
+    the ceiling, not far beyond it.
+  men per squad there 4 / 5 / 7 / 9 / 21, OF THEM HALTED 0 / 0 / 0 / 2 / 11.
+  SO: the median failing squad has NOBODY standing still. Only 957 of the 12140 failures have four or more halted
+  men - 7.9% - and of those, 310 = 32.4% would be inside the band if only their halted men were counted.
+  The z miss is overwhelmingly squads in motion, and their depth spread is a squad walking, not a squad standing
+  wrong. That is consistent with the population ruling (the whole line counts, transit included) and it is why
+  counting the line made this half worse rather than better.
+
+WHAT THIS DOES NOT YET SAY: whether the tight men of the x half, and the loose-in-transit squads of the z half, are
+the core placing men wrongly or the row asking for something the movement rules cannot give while men are walking.
+That is the named fork and it is not picked here. No band, floor, ceiling or doctrine number was touched, no
+population changed, nothing tuned. Probe flag: --b3split.
