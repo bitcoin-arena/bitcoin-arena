@@ -93,6 +93,15 @@ listed with its cause and nothing it asserts was touched; nothing is deployed wh
   and is false: the seam at these slots is flat, none of the readings sits on a climb like A9's, and the distances
   run the wrong way for it. What the poorer odds are is attrition - a thinner side, not a wider one. Every link
   measured; tables in TASKBOOK. §4.10 stays as written.
+- B4's CAUSE IS NOW SPLIT, and the infantry is the smaller part of it: of the misses, most are the push moving again
+  inside the ten seconds the row allows - one of them coming back to where it started, so standing still was the
+  right answer - and one is a squad the row's own instrument could not see, because the reading is built only from
+  men standing still and that squad never stood. Only two are a squad that stood and did not follow. The follow is
+  bimodal: a squad either overshoots what it owes or does not move at all. No C# path matters here - the recording
+  steers every man to the frontline every frame and has no push for a squad to follow. Numbers in TASKBOOK.
+- CORRECTED: the push-cadence table gave B4's gates-on figure from the run before the give-ground band, while its
+  other columns came from after it. The consistent pair is in TASKBOOK; the conclusion is unchanged and stronger -
+  taking the gates off makes B4 worse, so the cadence is not its cause.
 - O1 mean and B4 stay red with their cause listed, not fixed: an objective lane's +8 rest is STEPPED on the same
   five-second clock that §4.11 uses to move the objective, so a lane that just became the objective still sits at 0
   while the +8 moves on. The failing seeds move it twice as often (35 lane changes against 18). Ruled 2026-09-19:

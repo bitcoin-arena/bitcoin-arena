@@ -40492,3 +40492,57 @@ The level window stays a named rule fact, not a wait of its own: seed 4 side +1 
 take lead 12 times of 42 readings, never climbed past 8 m, and the seam's slope at its slots is 0.003 m/m - so the
 layout does not explain that one either. Three consecutive confirmed takes on one team are needed to reach the
 ceiling, and on a level stretch a take is followed by a drift that steps the push back toward rest.
+
+### CORRECTION to the push-cadence share table: B4's gates-on figure was the pre-A2 run (2026-09-19)
+
+The table filed under "The push cadence, measured against §4.10 and against the recording" gave B4 as 9 of 41 with
+the gates on. That 9 of 41 was measured on HEAD BEFORE the give-ground band went in (e2575f1); every other column of
+that table - (a) off, (b) off, both off - was measured with it in. The consistent gates-on figure is 7 of 41.
+
+  B4, gates on, with the band in   7 of 41 = 17.1%   (not 9 of 41 = 22%)
+  B4, both gates off               25 of 86 = 29.1%
+
+The conclusion is unchanged and slightly stronger: more push changes means more changes the squad did not follow,
+17.1% -> 29.1%, so the cadence is not B4's cause and taking the gates off would make the row worse. No other row in
+that table is affected - the rest were all measured on the same build. Caught by re-running B4 on the current tree
+and finding 7 where the table said 9.
+
+### B4: the infantry's following accounts for 2 of the 7 misses (2026-09-19)
+
+The row: whenever a squad's `pushNear` changes, the mean on-post z of its men must move at least half of that change,
+the same way, inside 600 ticks. 7 of 41 changes are not followed; the bar is 0.
+
+WHAT THE SNAPSHOT HOLDS, because it decides what a miss can mean: the squad reading is built ONLY from men who are
+standing still this tick (`if (!u || u.dx !== 0 || u.dz !== 0) continue`). A squad still walking is absent from it
+altogether, so a miss with almost no readings is a squad that never stood, not a squad that stood in the wrong place.
+
+  what the miss was                            of the 7
+    the push moved again inside the window        3
+    the push came back before the 10 s were up    1
+    stood and did not follow at all               2
+    never stood still (unreadable, 9 readable ticks of 600)  1
+
+  group     n   mean readable ticks   mean men standing   mean push change   best follow, as a share of the half owed
+  misses    7        162.7 of 600           3.95              -2.29 m                      0.00
+  follows  34        201.2 of 600           4.42              +6.12 m                      1.90
+
+SO: THE INFANTRY'S FOLLOWING ACCOUNTS FOR 2 OF THE 7. The remainder, with cause and not with a second hypothesis:
+  - 4 of 7: the push moved again inside the 10 s the row allows, one of those coming back to where it started. The
+    squad was asked for a move that was then altered or withdrawn; standing still is the right answer to a push that
+    returns. This is §4.10's stepping oscillating under the squad - the same take-then-drift already measured on
+    A11a's level window - and not the infantry.
+  - 1 of 7: the row's own instrument could not see the squad. It stood still for 9 ticks of the 600, so there is
+    almost no reading to judge; that is evidence about neither side of the claim.
+
+AND THE FOLLOW IS BIMODAL: a squad that follows overshoots the half it owes, 1.90x on average, while every miss
+achieved 0.00 - nothing moved at all. There is no population of squads following slowly. Recorded as measured, not
+built into a cause: both genuine misses were WITHDRAWALS (want -16 m and -8 m), while the changes that were followed
+average +6.12 m. Whether men follow a take but not a give is a further measurement, not a claim made here.
+
+CORE AGAINST THE RECORDING: no C# path matters to this row. Army.cs `StepInfantry` steers every man, every frame, to
+`front - Dir * (standoff + squadOffsetZ)` - the frontline at his x, plus a fixed standoff, with random rests of
+0.4-1.8 s every 3-11 s. There is no push word for a squad to follow, exactly as there was none for the tanks, so
+B4's claim is doctrine, not a recording behaviour, and there is no C# fault to copy. The per-frame steer stays out.
+
+Nothing changed: no assertion loosened, no gate, no cadence constant, pressure() untouched, A13b and O1's lane still
+red by the ruling, the truck-condition red still listed. Tool only (--b4why).
