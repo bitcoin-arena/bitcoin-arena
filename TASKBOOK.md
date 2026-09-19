@@ -39772,3 +39772,32 @@ SEED 12's O1a, 0 of 0: listing-only for now. The row's assert stays exactly as i
 the PRINT should carry the sample size, so an empty denominator cannot read as a failure of the army. The tool
 already prints the denominators on one line; making the row itself say "0 of 0" rather than "0.00%" is a display
 change of one line, and it is named here as the next thing to do on this letter if Daniel wants it.
+
+### A2, A4a and B2: a measured cause each, not a comparison (2026-09-19 06:5x)
+
+Seeds 1,2,3 x 3600, with --cause hooked beside each row's own counters.
+
+A2 (fidgets, 5 of 155 = 3.23% on these seeds against a 2% bar):
+  flips by axis      x 2, z 153, both 0          - the line barely flips sideways at all
+  flips by role      bounding 55, overwatch 100
+  the fidgets        axis z 5, x 0, both 0; overwatch 5, bounding 0
+  CAUSE: every fidget is an OVERWATCH tank reversing its z step inside two seconds. Not the bounding leg, not the
+  lateral slot - the hull-down creep on its crest, which §4.1 holds with hysteresis and which still turns round twice
+  in two seconds five times in three minutes of play.
+
+A4a (10 s windows with no post change on a side, 1 of 36 here):
+  what a post change is   of slot 48, of line 290    - nine in ten are the LINE moving (a leg swap or a push), not a
+                                                       scoot to another slot
+  windows by how many     none 1, 1-2 1, 3-6 7, 7+ 27
+  CAUSE: the distribution is busy - 27 of 36 windows carry seven or more changes - and exactly one window carried
+  none. This is not a still army; it is one quiet window in a loud distribution, and the row asks for zero such
+  windows.
+
+B2 (5 s squad windows without a halted team / a mover, 18 of 207 here):
+  no team halted in the window   18
+  nobody moved while some were off post   0
+  CAUSE: every failure is the HALT half, none is the movement half. §11.2 gives each side's nine fire teams one halt
+  clock hashed from (seed, side, team), with odd teams half a rest behind and no team halting while its lower
+  neighbour does; in those 18 windows no team's halt landed inside the five seconds. The infantry always had a mover.
+
+None of the three rows was touched, and none of these numbers is a comparison with another seed set.
