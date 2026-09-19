@@ -106,7 +106,18 @@ listed with its cause and nothing it asserts was touched; nothing is deployed wh
   of it, most misses are the push altered or withdrawn inside the ten seconds the row allows, and one is a squad the
   row's own instrument cannot see. No C# path bears on it. One piece is deferred by ruling, not left hanging -
   whether men follow a take but not a give, which is a later measurement.
-- NEXT ON THE WORKING LIST: O1's unexplained third of mean push, then A11b's residual. Not started.
+- O1's MEAN PUSH IS HALF HELD BY A CEILING IN THE RULES. RIDGE's own objective lane is capped 8 m below what every
+  ordinary lane may reach, and it sits on that cap as often as the uncapped lanes sit on theirs, so one of the three
+  lanes the row averages over is held down by §4.11 itself - about half the live shortfall. The cap and the cadence
+  overlap and must not be added. The rest of the difference is given back at both ends: objective lanes sit below
+  their own rest, and non-objective teams sit above theirs, because §4.10 lets any winning team push toward its
+  ceiling whether or not it holds an objective. That last part is the row against the rule, A11a's shape again.
+  The stepping lag already ruled is real but small in the sample: some lanes lose the objective before ever reaching
+  the rest the row prices them at. No C# path bears on it - the recording has no objective and no push word at all.
+  Numbers in TASKBOOK. Nothing retuned: the cap, the ceiling and the bar all stand.
+- CORRECTED, as with B4: this row's live value is 4.00 m, not the 3.87 m carried from before the give-ground band, so
+  the live shortfall is 2.00 m. Checked bit-for-bit across seven runs on the current tree.
+- NEXT ON THE WORKING LIST: A11b's residual. Not started.
 - O1 mean stays red with its cause listed, not fixed: an objective lane's +8 rest is STEPPED on the same
   five-second clock that §4.11 uses to move the objective, so a lane that just became the objective still sits at 0
   while the +8 moves on. The failing seeds move it twice as often (35 lane changes against 18). Ruled 2026-09-19:

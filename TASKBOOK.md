@@ -40546,3 +40546,57 @@ B4's claim is doctrine, not a recording behaviour, and there is no C# fault to c
 
 Nothing changed: no assertion loosened, no gate, no cadence constant, pressure() untouched, A13b and O1's lane still
 red by the ruling, the truck-condition red still listed. Tool only (--b4why).
+
+### O1's mean push: RIDGE's 16 m cap is half the shortfall (2026-09-19)
+
+CORRECTION FIRST, same shape as B4's: the live value of this row is 4.00 m, not 3.87 m. The 3.87 came from the run
+BEFORE the give-ground band went in (e2575f1). Checked across every run on the current tree - war-in-tree,
+push-verdicts, a11a-why, a11-odds, a11-geom2, b4-why2, o1-ridge - the row reads 4.00 m on 91551 team-ticks against
+124449 in all seven, bit for bit. So the live shortfall against the >= 6 m bar is 2.00 m, not 2.13 m. The 0.73 m
+"unheld" figure survives unchanged, being 6 - 5.27 and independent of the baseline.
+
+THE PROBE AGREES WITH THE ROW IT MEASURES: 6.60 - 2.61 = 4.00 m on 29886 + 61665 = 91551 lane team-ticks, which is
+the row's own number and its own denominator.
+
+  group                n       mean push   mean ceiling   mean rest   capped at 16   sitting ON its ceiling
+  RIDGE's lane        29886      4.46 m       17.3 m        8.67 m       94.6%             19.8%
+  the other two       61665      7.64 m       25.8 m        9.00 m        0.0%             19.4%
+  the rest           124449      2.61 m       24.8 m        0.00 m        0.0%              4.9%
+
+THE CAP: `goalOf` gives RIDGE's own lane a ceiling of RIDGE_GOAL 16 m where every other lane may reach PUSH_MAX 24.
+RIDGE's lane sits on that ceiling 19.8% of its ticks, as often as the uncapped lanes sit on theirs, so it is a live
+limit and not a formality. Counting only the two UNCAPPED objective lanes the row would read 5.04 m instead of 4.00.
+
+  THIS ACCOUNTS FOR 1.04 m OF THE 2.00 m LIVE SHORTFALL = 51.9%.
+
+It is also LARGER than the 0.73 m that had no holder, which means the cap and the cadence OVERLAP rather than add:
+1.27 m (what removing both gates would give) + 1.04 m (the cap) = 2.31 m against a 2.00 m shortfall. Part of what the
+cadence would deliver on RIDGE's lane is blocked by the cap whatever the cadence does. They are not independent
+shares and must not be summed.
+
+WHERE THE REST OF IT GOES, in the row's own terms. The rules price a lane 8.89 m of rest against the rest's 0.00 m -
+comfortably over the 6 m bar if both sat still at home. The difference is given back at both ends:
+  lanes sit 2.29 m BELOW their own rest   (RIDGE 4.21 m below, the other two 1.36 m below)
+  the rest sits 2.61 m ABOVE its own rest (its rest is 0, and §4.10 lets any winning team push toward 24)
+  8.89 - 2.29 - 2.61 = 3.99 m, which is the row.
+So the non-objective teams erode this row slightly MORE than the objective lanes' own lag does. §4.10 lets a team
+that is winning its stretch push to 24 whether or not it holds an objective; the row asks objective lanes to lead
+that by 6 m. That is the same shape as A11a - the row against the rule - and it is written down, not acted on.
+
+THE STEPPING LAG, ruled 2026-09-19 to keep stepping, measured: a lane that became an objective reached its +8 rest
+5 times, taking a mean 22.1 s, and lost the objective again before ever reaching it 3 times, after a mean 22.6 s. So
+3 of 8 resolved hand-overs never got the lane to the rest the row prices it at. 56.3% of lane team-ticks sit below
+their own rest, by a mean 9.20 m while below. The sample of transitions is small (8 over five seeds) and is reported
+as such; the 56.3% is not.
+  (Instrument note: the first run of this printed a mean lag of -0.4 s. The since-map was module level and a tick of
+  seed 2 was being differenced against a start from seed 1. Cleared per seed and re-run; an impossible number was
+  fixed, not reported.)
+
+CORE AGAINST THE RECORDING, re-confirmed rather than remembered: Army.cs contains ZERO occurrences of objective,
+Objective, Ridge or RIDGE, and zero push words (pushZ, PushStep, TAC_PUSH, pushNear). Every goal depth there is a
+fixed offset from the frontline - `front - Dir * 9f` up to the line, `front - Dir * 34f` falling back, and for
+infantry `front - Dir * (standoff + squadOffsetZ)`. There is no objective rest and no ceiling to port, so nothing of
+this row is a C# leftover: no distance used as a speed, and the per-frame steer stays out.
+
+Nothing retuned: RIDGE_GOAL, PUSH_MAX and the >= 6 m bar are untouched, as are pressure(), the gates, the cadence and
+every assertion. Tool only (--o1ridge).
