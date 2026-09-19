@@ -102,7 +102,12 @@ listed with its cause and nothing it asserts was touched; nothing is deployed wh
 - CORRECTED: the push-cadence table gave B4's gates-on figure from the run before the give-ground band, while its
   other columns came from after it. The consistent pair is in TASKBOOK; the conclusion is unchanged and stronger -
   taking the gates off makes B4 worse, so the cadence is not its cause.
-- O1 mean and B4 stay red with their cause listed, not fixed: an objective lane's +8 rest is STEPPED on the same
+- B4 IS DONE as a diagnosis and stays red by measurement, not by guess: the infantry's following is the smaller part
+  of it, most misses are the push altered or withdrawn inside the ten seconds the row allows, and one is a squad the
+  row's own instrument cannot see. No C# path bears on it. One piece is deferred by ruling, not left hanging -
+  whether men follow a take but not a give, which is a later measurement.
+- NEXT ON THE WORKING LIST: O1's unexplained third of mean push, then A11b's residual. Not started.
+- O1 mean stays red with its cause listed, not fixed: an objective lane's +8 rest is STEPPED on the same
   five-second clock that §4.11 uses to move the objective, so a lane that just became the objective still sits at 0
   while the +8 moves on. The failing seeds move it twice as often (35 lane changes against 18). Ruled 2026-09-19:
   keep stepping; a rest taken at once would be a new rule. Numbers in TASKBOOK.
