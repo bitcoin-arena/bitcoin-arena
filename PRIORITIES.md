@@ -41,7 +41,13 @@ ARMY, tonight, on the same letter: rows passing 24 -> 27 of 39.
   reaching the -8 m floor. A11b is red by that cadence against its own 60 s window, not by a dead GIVE. Table in
   TASKBOOK.
 - Four hypotheses died to measurement and were reverted with their numbers: seam-drift chasing, budget starvation, the
-  crest mismatch, and the on-post dead band.
+  crest mismatch, and the on-post dead band. Three probes of mine were withdrawn the same way, each with the check
+  that caught it.
+- All twelve remaining reds are listed in TASKBOOK, one line of reason and what each depends on, none of them silent:
+  five hang on the push cadence (A11a, A11b, A13b, both O1), A9 is Daniel's ruling, O4 is a client test not written,
+  B2 and B4 are measured independent of B3, and three are single-window or seed-spread misses with no cause measured.
+- NOT DEPLOYABLE, and A9 alone is reason enough: nothing ships while a doctrine row is red. The Daily stays 0.0.1617
+  with the node-side round-boundary fix live.
 
 CANDLES: closed by measurement. The 16:42 report (candles move left then freeze at round start) does not reproduce on
 0.0.1617 - from the cab the core's shift slides and wraps 0.03 -> 5.58 m across 5400 ticks, and the drawn band changes
