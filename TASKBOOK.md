@@ -40304,7 +40304,7 @@ THE SHARE, measured by taking the gates off IN THE COPY THIS TOOL ALREADY PATCHE
 --nogates; the core is untouched and no assertion was moved):
   row                                   bar        both gates on   (a) off   (b) off   both off
   A11a windows with no crossing         0 of 10    3               2         1         3
-  A11b windows with no giving           0 of 10    6               3         4         1
+  A11b windows with no giving           0 of 10    7 [corrected]   3         4         1
   A13b sides' mean push differs >= 4 m  > 50%      41.91%          67.19%    59.44%    64.65%
   O1 pushed >= 16 on an objective lane  >= 60%     58.10%          59.50%    61.78%    63.35%
   O1 mean push, lanes minus the rest    >= 6 m     3.87 m          3.11 m    3.88 m    5.27 m
@@ -40314,7 +40314,8 @@ THE SHARE, measured by taking the gates off IN THE COPY THIS TOOL ALREADY PATCHE
 SO THE CADENCE ACCOUNTS FOR, OF THE SIX:
   A13b                    ALL of it - green under any of the three, 41.91% -> 64.65%.
   O1 pushed-on-a-lane     ALL of it - green with gate (b) off or both off, 58.10% -> 63.35%.
-  A11b                    MOST of it - 6 of 10 windows -> 1 of 10, still short of a zero bar.
+  A11b                    MOST of it - 7 of 10 windows -> 1 of 10, still short of a zero bar. (The 6 first written
+                          here was the pre-A2 run; see the correction note below.)
   O1 mean push            PART of it - 3.87 -> 5.27 m of a 6 m bar, about two thirds of the gap, still red.
   A11a                    NONE of it - 3 of 10 with the gates on and 3 of 10 with both off. Its cause is elsewhere
                           and is NOT the push rate; it is listed here as still unexplained.
@@ -40600,3 +40601,75 @@ this row is a C# leftover: no distance used as a speed, and the per-frame steer 
 
 Nothing retuned: RIDGE_GOAL, PUSH_MAX and the >= 6 m bar are untouched, as are pressure(), the gates, the cadence and
 every assertion. Tool only (--o1ridge).
+
+### CORRECTION: A11b's gates-on figure was also the pre-A2 run (2026-09-19)
+
+The third of the same kind, and the last one I have found. The push-cadence share table gave A11b as 6 of 10 windows
+with the gates on. That 6 was measured on HEAD BEFORE the give-ground band (e2575f1); the three columns beside it -
+(a) off 3, (b) off 4, both off 1 - were all measured after it. Every post-A2 run on this tree reads 7 of 10
+identically: war-in-tree, push-verdicts, a11a-why, a11-odds, b4-why2, o1-ridge3.
+
+  A11b, gates on, with the band in   7 of 10   (not 6 of 10)
+  A11b, both gates off               1 of 10
+
+So the cadence accounts for 6 of the 7 failing windows, not 5 of 6, and the residual is one window of ten. The
+conclusion is unchanged in direction and slightly larger in size. Three figures in that table were quoted from the
+pre-A2 build - B4's 9 of 41, O1's 3.87 m and this - and all three are now corrected; the rest of the table was
+measured on one build and stands.
+
+WHY IT KEPT HAPPENING, so it stops: the table was assembled from runs taken across the A2 commit, and a row was
+quoted from whichever file was open rather than from a run of the current tree. Every figure in this section is now
+taken from a run of the tree it is reported against, and a row quoted from an older run says so.
+
+### A11b at twelve seeds: the residual is a tail, and closes as a remainder (2026-09-19)
+
+Widened before opening anything, the way A4a was - where widening killed the hypothesis before a pass was spent on
+it. Twelve seeds, 3600 ticks, current tree, gates on and then both gates off in the tool's own copy:
+
+  windows with no team giving ground      bar 0        5 seeds        12 seeds
+    gates on (live)                                    7 of 10        18 of 24 = 75.0%
+    both 20:30 gates off                               1 of 10         1 of 24 =  4.2%
+
+THE ROW IS A RATE: 70% of windows at five seeds, 75% at twelve. THE RESIDUAL IS NOT. It is one window at five seeds
+and STILL ONE WINDOW at twelve, so its share falls from 10.0% to 4.2% as the sample more than doubles. It does not
+rise, which is the test that was set for it. No window is opened and no investigation follows.
+
+  THE CADENCE ACCOUNTS FOR 17 OF THE 18 FAILING WINDOWS = 94.4%. The remainder is one window of twenty-four.
+
+The give path, both sample sizes, from the runs they are reported against:
+                                    gates on (12 seeds)     both gates off (12 seeds)
+  re-reads due                            1728                      1728
+  survived gate (a), on post               985                      1728 (gate off)
+  GIVE readings                             81                       226
+  GIVE confirmed                            30                        81
+  of the GIVE reads, already at push <= 0   66 of 81                 195 of 226
+  steps that landed below zero              25                       195
+So the two gates remove about seven of every eight below-zero steps the army would otherwise take. That is the whole
+of this row bar one window, and the gates are ruled ON, so A11b is explained and not fixable - the same standing as
+A13b and O1's lane row.
+
+NAMED REMAINDER: one 60 s window in twenty-four in which no team of a side held a negative push even with both gates
+removed. No cause is measured for it and none is guessed. It is a tail of the same kind as A4a's single quiet window,
+and it is written down rather than chased. If A11b is ever taken further, that window is the first print - not before.
+
+### Army.cs IsOverrun against the core's overrun path (2026-09-19, read not remembered)
+
+Checked because a fixed distance sitting next to a push word is exactly where a unit error hides.
+
+  C#     `IsOverrun(u, frontZ) => (frontZ - u.z) * u.Dir < -OverrunDepth`, `OverrunDepth = 14f`, and on overrun
+         `goalZ = front - v.Dir * 34f`. Armour only: StepInfantry has no overrun at all, it walks to
+         `front - Dir * (standoff + squadOffsetZ)`.
+  CORE   `OVERRUN_DEPTH = 14 m` (commented "Army.OverrunDepth"), `FALL_BACK_LINE = 34 m` (§1.1), and
+         `const overrun = u.armour && past > OVERRUN_DEPTH` - armour only, which army.js records as "C#'s own
+         division, not a preference", with the measurement behind it: applied to riflemen it parked the infantry
+         36.5 m behind the front against a FALL_BACK of 34.
+
+Same quantities, same units, both distances in metres: 14 m of depth and a 34 m fall-back line. NOTHING IS PORTED AS
+A PUSH. The one deliberate divergence is documented in the core and required by a rule the recording does not have:
+C# measures overrun from `front` (the seam), while the core measures it from the team's PUSHED forward line -
+`u.tacSeam + side * u.tacForward` - because §4.10 did not exist in the recording, and measuring from the seam would
+throw back every push across the seam on the tick it arrived. That is a rule, not a leftover.
+
+So the standing finding holds, now verified rather than asserted: Army.cs has no push word; its only giving-ground is
+this fixed overrun fall-back, which the core holds separately with the same numbers in the same units. No distance
+used as a speed, no 2-D coupling, and the per-frame steer stays out.

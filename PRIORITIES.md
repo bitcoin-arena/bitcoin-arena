@@ -87,7 +87,16 @@ Army.cs has no push word, no objective and no objective rest: every goal depth t
 frontline, re-checked this pass and not remembered. So §4.10's push and §4.11's objectives are doctrine, not C#
 leftovers - there is nothing to port, no distance used as a speed, and the per-frame steer stays out of the core.
 
-NEXT: A11b's residual. Not started.
+A11b IS CLOSED as a remainder. Widened to twelve seeds before anything was opened: the row itself is a rate, near
+enough three windows in four, but the leftover after the cadence does NOT rise with the sample - one window at five
+seeds and still one window at twelve. The cadence holds almost all of it, the gates are ruled on, so A11b is
+explained and not fixable, the same standing as A13b and O1's lane row. The remainder is one 60 s window in
+twenty-four, with no cause measured and none guessed; if the row is ever taken further that window is the first
+print. Army.cs was read against the core on the way past: its overrun is a fixed depth and a fixed fall-back line,
+armour only, and the core holds the same two numbers in the same units - nothing ported as a push, and the one
+divergence (the core measures overrun from the pushed line, not the seam) is §4.10's own requirement.
+
+NEXT: nothing unblocked on this letter but the five waits. Every other red is green, closed, or listed with a holder.
 
 SUITES, each on its own run: rules 47/48 - the one red is `incoming fire costs the truck condition`, listed with its
 cause, its 15 s window a fixture whose own comment is stale against HEAD, and nothing it asserts touched - tactics
