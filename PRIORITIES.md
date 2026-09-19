@@ -163,6 +163,12 @@ for another, since the alias still serves 0.0.1723. The fixtures that also write
 tidy-up. NOT on this letter - it is not the door, the rims or the world's width - but it goes at the top of
 whatever follows, because a three-minute round that dies at two and a half is worse than any drawing bug.
 
+STILL OPEN ON THE CANDLES, seen in the same top-down that proved the roads clear (0.0.1734,
+daniel-screens/roads-clear-of-candles-0.0.1734-crop.png): from above the bodies read as flat coloured slabs lying
+on the grass rather than as a chart standing on the ground. The roads no longer cross them and the ramps are no
+longer buried - that half is measured and done - but Daniel's "still mixed with terrain" may be this, and it is a
+look question I cannot settle by measuring. Listed for his eye rather than guessed at.
+
 DANIEL'S PLAYTEST CHAIN OF 2026-09-19 12:55-13:10 IS CLOSED. All nine items are done and LIVE on the Daily at
 0.0.1723 (08a117ac), alias and unique URL both serving it, the built core byte-identical to packages/core/dist,
 2d48a05a listed in known-cores and known-good-clients, signer nodes restarted, btc-logistics-war untouched. Items 1
