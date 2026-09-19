@@ -39913,3 +39913,45 @@ the cadence §4.10 rules and that this letter has already measured end to end.
 
 Nothing was changed for either measurement: B2, A11a and A11b keep their asserts, A2 / A4a / O1 / O4 / B4 stay
 listed, and A9's levers are untouched.
+
+### The share table: the twelve still-red rows, each as a fraction of them (2026-09-19 09:0x)
+
+Canonical run is seeds 1-5 x 3600 (27 of 39 pass). Per-seed columns are one run per seed, seeds 1-12 x 3600, the same
+instrument. No rule, assert or bar was touched to build this.
+
+  row        what it asserts                                          canonical      seeds failing   share of the 12
+  A9         >= 95% of seam metres inside 46 m of two living tanks      12.27%          12 of 12          1/12  8.3%
+  A11a       every 60 s window has a team of each side across the seam  3 of 10 win.     8 of 12          1/12  8.3%
+  A11b       ... and a team of each side giving ground                  6 of 10 win.    12 of 12          1/12  8.3%
+  A13b       the sides' mean push differs >= 4 m on > 50% of ticks      41.91%           6 of 12          1/12  8.3%
+  O1 pushed  >= 60% of pushed team-ticks on an objective lane           58.10%           6 of 12          1/12  8.3%
+  O1 mean    mean push on objective lanes minus the rest >= 6 m         3.87 m          11 of 12          1/12  8.3%
+  O4         the CLIENT draws the objective markers                     not built       12 of 12          1/12  8.3%
+  A2         fidgets (2nd flip inside 2 s) under 2% of flips            2.11%            6 of 12          1/12  8.3%
+  A4a        no 10 s window without a post change on a side             1 of 60 win.     2 of 12          1/12  8.3%
+  B2         every 5 s squad window has a halted team and a mover       34 of 341       12 of 12          1/12  8.3%
+  B3         men on post: z spread 4-12 m, x spread 20-60 m             z 58.6 x 51.6   12 of 12          1/12  8.3%
+  B4         a squad follows its push change within 10 s                9 of 41         10 of 12          1/12  8.3%
+
+Each row is one twelfth of the reds by count. By HOW OFTEN they fail, the twelve split three ways:
+  fails on every seed (12 of 12): A9, A11b, O4, B2, B3        - five rows, and three of them are Daniel's waits
+  fails on most (10-11 of 12):    O1 mean, B4
+  fails on some (2-8 of 12):      A11a 8, A2 6, A13b 6, O1 pushed 6, A4a 2
+
+THE FIVE THIS TURN ASKED ABOUT, with their causes as already measured:
+  A2   6 of 12 seeds. Every fidget is an OVERWATCH tank reversing in z (5 of 5 fidgets, 153 of 155 flips in z);
+       the bounding leg and the lateral slot are not in it.
+  A4a  2 of 12 seeds, the rarest red on the table. Post changes are 290 of line against 48 of slot, and the windows
+       hold none (1), 1-2 (1), 3-6 (7), 7+ (27): one quiet window in a loud distribution.
+  O1   two rows, 6 and 11 of 12 seeds. Both are the §4.10 cadence measured end to end; samples are full now
+       (45802-101522 pushed team-ticks at five minutes), so the empty denominator was a reporting fault only.
+  O4   12 of 12, and not this probe's to answer: it asks whether the CLIENT draws the markers, and that test is not
+       written in packages/blwp-client. It is the only red on the table that no core change can turn green.
+  B4   10 of 12 seeds. Measured independent of B3 (83.2% of missed follow windows out of band against 81.2% of
+       followed ones) and inherits how often the push is asked at all - the same cadence as A11a/A11b.
+
+AND WHAT THE PER-SEED RUNS SHOW THAT THE CANONICAL ONE DOES NOT - flagged, not folded into the table: B1 fails on 7
+of 12 seeds, A11c on 5, S1 on 2, O2 on 1 and H2 on 1, while all five PASS in the seeds 1-5 aggregate. They are
+marginal rows whose bar is met in aggregate and missed on single seeds, not new reds. O3 reads FAIL on every single
+seed and PASSES 5 of 5 in the aggregate - it asks "seeds on which an objective changed hands", so one seed is a
+sample of one and the row is not meaningful per seed. None of these five was touched.
