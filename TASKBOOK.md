@@ -41397,3 +41397,42 @@ postures that do not exist.
 THE ORDER, and it is the only honest one: §11.3 cover claims (still GAP) -> §11.4 posture, derived and written into
 the TAC_COVER word's high bits, which is a state-layout change -> §11.5 suppression -> then §4.4 coax. Not started on
 this letter by ruling.
+
+### §4.13 Rule 1 in: the init tape is seeded, and three tactics rows now see a trend at open (2026-09-19)
+
+RULE 1 IS IN. The init tape's step was `(i + 1) * 2654435761 >>> 20`, a function of the SAMPLE INDEX alone, so every
+round of every seed drew the identical tape. It is now `mix(seedHash, 0x7e5a1c3d + i)`, the rule's own words. The
+walk's shape, magnitude and starting level are unchanged and no doctrine number moves.
+
+  MEASURED: eight seeds, eight different fronts - seam z -15.9, +27.43, +8.28, +17.21, +13.56, -1.17, -1.18, +11.17.
+  Seed 1's tape and seed 2's share 0 of 64 samples. Before: every seed opened on the same front.
+
+THE GOLDENS ALL MOVED, as a deliberate world change must: 9 of 9 regenerated, vectors 8/8 again, asserts untouched.
+
+TWO rules.test.js FIXTURES NEEDED THEIR SETUP RE-MEASURED - setup, never an assert:
+  "nothing accrues while the truck is still on the apron" - the ground this run crosses is the round's own now and
+    the same throttle covers it more slowly: 16.8 m at tick 180 as ever, but 22 m with exposure only at tick 276.
+    The second leg goes 60 -> 100 ticks.
+  "a second round starts where the first one did" - this seed's seam runs +25.8 m at x -60 to -31.0 m at x 120 while
+    the truck starts at z 10.2, so driving straight it never comes inside anyone's reach: 3000 ticks of full throttle
+    and the exposure word is still 0. The drive steers now (-16000), first exposure at tick 211.
+  "the seam banks more than the quiet lane" - its lanes were pinned at z 0 / 20 / 62 from when the seam sat near 0.
+    Measured for this seed, exposure by lane in metres: z -80 0.0, -60 1.1, -40 31.3, -18 62.8, 0 45.9, 20 58.7,
+    40 37.7, 62 1.4, 80 0.0 - the seam lane is still the busiest, at the seam. The lanes are taken from `frontAt`
+    now and the rim from the field edge away from it, so the test reads the round it is given.
+
+AND THREE TACTICS ROWS ARE RED, LISTED, NOT REWRITTEN - this is a rule question and not mine:
+  "push moves one 8 m step on its re-read only"      seed 8 tick 3103: team 11 push moved off its re-read tick
+  "a team rests at +8 m on an objective's lane"      seed 1: team 0 on slot 2 rests at 8 m
+  "an assault starts only on an objective ..."       seed 1 tick 1: team 0 outside the assault lanes has weight 2
+  THE CAUSE, measured: with a seeded tape some rounds OPEN with a market trend. trendFor at tick 0 is +1 on seeds 1
+  and 2, 0 on seed 3, where with the old flat tape it was 0 on every seed always. §4.14 gives the trend's side +1
+  weight on EVERY lane and moves rest and ceiling with it, so a team outside the assault lanes legitimately reads
+  weight 2. The three rows compute their expectation as `objectiveWeight(slot)` alone - they omit §4.14's trend term,
+  which was invisible while every tape was flat.
+  The spec settles the neighbouring word and not this one: "Round open ... in SIM the seeded tape's newest sample at
+  init ... every LATER sample against it is the lead", and the lead does read 0 at tick 0, as measured. The trend is
+  not the lead: it comes from the tape's own candles, and 64 samples is far more than §4.14's six closed ones, so a
+  trend at open is defensible. Whether the rows should model the trend term or the seeded tape should open without
+  one is the row-or-rule call, and it is written down rather than taken.
+NOT DEPLOYED: three doctrine rows are red, so nothing ships on this.
