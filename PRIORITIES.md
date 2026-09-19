@@ -37,8 +37,9 @@ ARMY, tonight, on the same letter: rows passing 24 -> 27 of 39.
   new start; tactics fixture seeds re-picked the way that test re-picked them before.
 - Suites, each on its own: rules 48/48, vectors 8/8, tactics 17/17, transcript-replay 5/5, spawn 4/4, canonical 3/3,
   specified 3/3, candles 9/9, private-world 3/3, chart 4/4, poison 3/3, bundle 12/12 after rebuilding dist.
-- A11b is a rate, not a direction: 28 push steps in a whole run, none from zero downward, at one step per team-minute.
-  That is §4.10's cadence or its GIVE condition - doctrine, written down rather than guessed.
+- The push is §4.10's intended cadence: 3.6 steps per team-minute, both brakes working, GIVE read, confirmed and
+  reaching the -8 m floor. A11b is red by that cadence against its own 60 s window, not by a dead GIVE. Table in
+  TASKBOOK.
 - Four hypotheses died to measurement and were reverted with their numbers: seam-drift chasing, budget starvation, the
   crest mismatch, and the on-post dead band.
 

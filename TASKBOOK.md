@@ -39623,3 +39623,42 @@ TWO OF MY EARLIER NUMBERS ARE WITHDRAWN, both from this session:
 
 Nothing was retuned: A11b, A13b and O1 keep their bars, B3 keeps its bands, A9 is untouched and still red, and the
 table is 27 of 39 as before.
+
+### The twelve remaining reds, each with its reason (2026-09-19 05:2x)
+
+Seeds 1-5 x 3600, 27 of 39 rows pass. None of these is silent:
+
+   1  A2  fidgets 5 of 237 = 2.11% (bar < 2%)          0.11 points over, and 0.89-1.10% on other seed sets - seed
+                                                        spread, not a behaviour; depends on nothing, unmeasured cause
+   2  A4a 1 of 60 windows (bar 0)                      one 10 s window where a side changed no post at all; with the
+                                                        army holding its posts, post changes are rarer; depends on the
+                                                        leg clock (§2.6)
+   3  A9  12.27% (bar <= 5%)                           the seam's own climb on the +x flank; every lever pinned
+                                                        (27 m slot pitch in x and A8, the 46 m reach, the depths);
+                                                        DEPENDS ON DANIEL'S RULING
+   4  A11a 3 of 10 windows (bar 0)                     no team crossed the seam in those windows; needs a take path
+                                                        carrying push past 16 m; depends on the same re-read cadence
+   5  A11b 6 of 10 windows (bar 0)                     1.4 confirmed gives per side per minute against a row wanting
+                                                        one per side per 60 s window; measured as the intended
+                                                        cadence; depends on §4.10's brakes, a doctrine question
+   6  A13b 41.91% (bar > 50%)                          the sides' mean push differs by 4 m on fewer ticks than asked;
+                                                        same push cadence - 3.6 steps per team-minute moves the two
+                                                        means apart slowly; depends on §4.10
+   7  O1  58.10% (bar >= 60%)                          share of pushed team-ticks that are on an objective lane;
+                                                        same machinery, 1.9 points short
+   8  O1  3.87 m (bar >= 6 m)                          mean push on objective lanes minus the rest; same machinery
+   9  O4  not built                                    a CLIENT test (the page drawing objective markers), not this
+                                                        probe; depends on writing it in packages/blwp-client
+  10  B2  34 of 341 windows (bar 0)                    squad windows with no halted team and no mover; measured
+                                                        INDEPENDENT of B3 (failing windows 60.6% out-of-band against
+                                                        83.1% for passing ones); cause unmeasured
+  11  B3  z 58.60%, x 51.59% (bar 0)                   a knot with a tail: too tight along the seam, too loose in
+                                                        depth; which of §11.1's two numbers is wrong is a rule
+                                                        question; depends on Daniel
+  12  B4  9 of 41 (bar 0)                              push changes a squad did not follow inside 10 s; measured
+                                                        INDEPENDENT of B3 (83.2% against 81.2%); depends on the same
+                                                        push cadence for how often it is even asked
+
+Four of the twelve (A11a, A11b, A13b, both O1 - five rows counting O1 twice) hang on the one push cadence; one is
+Daniel's coverage ruling; one is a client test not written; two are infantry rows measured independent of each other;
+three are single-window or seed-spread misses with no cause measured yet.
