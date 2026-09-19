@@ -143,6 +143,16 @@ SUITES, each on its own run: rules 47/48 - the one red is `incoming fire costs t
 cause, its 15 s window a fixture whose own comment is stale against HEAD, and nothing it asserts touched - tactics
 17/17, vectors 8/8. The others stand from e2575f1, no core source having moved since. No Unity: no C# path moved.
 
+IN THE TREE BUT NOT ON THE DAILY: §4.13's Rule 1, the seeded init tape (579437c). The tape's step was a function of
+the sample index alone, so every round of every seed drew the same tape and a SIM round had no general; it is now
+mix(seedHash, 0x7e5a1c3d + i), the rule's own words. Eight seeds now give eight fronts and no doctrine number moved.
+All nine goldens were regenerated and three rules.test.js fixtures had their setup re-measured, never an assert.
+BLOCKED ON ONE RULING, and nothing ships until it is made: three TACTICS rows are red because a seeded tape means
+some rounds OPEN with a market trend (trendFor is +1 at tick 0 on seeds 1 and 2, 0 before on every seed), and §4.14
+gives the trend's side +1 weight on every lane - while those three rows compute their expectation as
+objectiveWeight(slot) alone and omit the trend term. Either the rows model §4.14 or the tape opens without a trend.
+Not taken alone. Numbers in TASKBOOK. Daily stays 0.0.1711.
+
 THE ARMY IS LIVE ON THE DAILY: 0.0.1711 (2026-09-19, 4b2db733), carrying Fable's c09f992 rulings - a tank wreck is a
 crest to the hull-down search (tank wrecks only, never the truck's), a round is three minutes with the contract
 owning it, and a bomb inside 16 m costs the truck condition with no draw. §4.12's assault and §4.13's fed tape were
