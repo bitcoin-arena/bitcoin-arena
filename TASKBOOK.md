@@ -117,6 +117,64 @@ be theatre.
    flash). PlayMode 229 of 256, 13 skipped, 14 red - the same fourteen, name for name, none new. The renderer still
    does not read the cover word, so a quiet Unity result is the expected one.
 
+§11.4 POSTURE - THE BITS WRITTEN (2026-09-19). Before and after, five seeds x 180 s, a nuke every 30 s.
+
+THE WRITE. COVER_POSTURE_SHIFT now carries STAND 0 / PRONE 1 / COVER 2 in TAC_COVER's reserved high bits. No new
+word, no layout change, no draw. STAND is 0 on purpose: a tick before the first write reads as the most exposed
+posture, so nothing moves for a reason other than the rule. The pass runs last in the movement step, after §8.3's
+hull clearance and the truck's clear-out, so a man's FINAL position decides COVER while his OWN step - captured at
+his write-back, before anything can shove him - decides STAND.
+
+THE RIFLE READS IT ONE TICK LATE, DELIBERATELY. Men fire and move in the same pass, so reading a posture written
+mid-pass would make the outcome depend on unit order. The written word agrees with the rule's own derivation on
+97.2% of man-ticks; the 2.8% is that lag, and every node pays it identically.
+
+1. MEN WITH A HOLE ARE WRITTEN DOWN AS BEING IN IT.
+
+     of man-ticks where a man HOLDS a cover claim        before        after
+       written PRONE or COVER                            0  (0.0%)    1004637  (52.3%)
+       written STAND                                     all          917304   (47.7%)
+
+   Before the write the word was unwritten, so every man read STAND whatever he was doing. The 47.7% still STAND
+   after it is not a fault: §11.4 says running men run upright, and a man walking to his hole is stepping. What
+   changed is that a man who has arrived is now written down as being there.
+
+     posture mix, all living man-ticks   STAND 70.6% -> 64.8%   PRONE 13.9% -> 12.2%   COVER 15.5% -> 23.0%
+
+   COVER grew by half again because men in cover now survive to accumulate cover-ticks.
+
+2. THE THRESHOLD DOES EXACTLY WHAT THE SECTION SAYS. One draw, unchanged; only the number it is compared against
+   moves - half at a PRONE man, a quarter at a COVER man, applied after §4.14 ("posture multiplies after"). At
+   §4.14-neutral that is the section's own 45 / 22 / 11 per mil, by shift, in per mil.
+
+     rifle deaths per 100k man-ticks     before      after
+       STAND                              3.1         3.3
+       PRONE                             14.5        16.1
+       COVER                             22.4         5.7      <- a clean quarter, as ruled
+
+     men lost a side per 60 s   quiet 34.1 -> 32.2    with a nuke every 30 s 48.1 -> 42.2
+     share of deaths by fire    quiet 31.3% -> 30.0%  with nukes 21.2% -> 15.8%
+
+3. §0's SECOND FODDER CLAUSE IS STILL SHORT, AND IS LISTED RATHER THAN CHASED.
+
+     STAND / (PRONE+COVER) rifle deaths per man-tick    0.17 -> 0.35    the row wants >= 2.0
+
+   No threshold was retuned to reach it. The cause is the row's denominator, not the rule: STAND is dominated by
+   men walking in from the back edge who are never shot at, so a standing man's deaths-per-man-tick is structurally
+   tiny, while a man on his place is on the line in contact. Posture cut COVER deaths by exactly the quarter it
+   promised and the ratio still cannot reach 2.0, because the gap is unmatched exposure. CARRIED INTO §11.5 with
+   this number and this cause.
+
+4. THE DEPLOY STOP IS UNCHANGED and is not this letter's to clear: men in holes draw below the mesh (Unity carves a
+   crater bowl the core does not), the renderer does not read TAC_COVER, and the signer nodes would refuse a round
+   while goldens are deliberately stale. One golden regeneration at the close of §11.4, not mid-stream.
+
+   SUITES at this step: rules 50/50, tactics 21/21, candles+chart+spawn 18/18, canonical group 22/22.
+   vectors+bundle stays red by instruction (goldens stale). No C# changed, so the Unity counts stand where they
+   were measured at 359ba8a3: EditMode 254/258 (1 red, CombatFx rifle flash), PlayMode 229/256 (14 red, each listed
+   with cause). The §4.12 assault count is re-measured a second time, 10 -> 11, because posture moves who survives
+   and survivors decide who holds an objective; asserted exactly with its per-seed table.
+
 §11.4 POSTURE - THE MEASUREMENT BEFORE THE WORK (2026-09-19, on HEAD 359ba8a3, no bit written).
 
 Posture is DERIVED, not chosen (§11.4: STAND = own step over 0.01 m, COVER = within 0.5 m of his claimed place and
