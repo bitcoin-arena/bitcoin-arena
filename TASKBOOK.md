@@ -41322,3 +41322,45 @@ is one thing to fix, not thirteen.
 NEXT MEASUREMENT, named and not started: which core change stopped that drive delivering. A2 is already excluded by
 measurement. The armour doctrine work is the obvious suspect and the fixture's own comment shows the score moved with
 it once before (12 -> 367).
+
+### The drive stopped delivering at 1830888, the 20:30 hold cadence (2026-09-19, bisected)
+
+THE FIXTURE AND THE RUN. window-fixture.js's WINNER is not a stored input log: forfeit.test.js builds it with
+`init(seedWordForEntry(entry, RANDOMNESS))` and 1320 steps of `wordsAt(t)`. The seed depends only on the round
+randomness, the player's key, the world secret and joinTick - all fixed - and `wordsAt` is a pure function of the
+tick, so the drive replays against the core alone, with no daemons, no HTTP and no settlement.
+Probe kept: packages/blwp-node/tools/measure-winner-drive.mjs (exit 0 while it delivers 367, 1 once it does not).
+
+BOTH ENDS CONFIRMED BEFORE BISECTING, as required:
+  HEAD (4168604)   WRECKED, score 0,   truck x -67.57 z 72.18, hp 0,     wrecked at tick 192
+  32687a8          DELIVERED, score 367, truck x 125.54 z 21.86, hp 63.33, delivered at tick 1172
+The lower bound is the commit that wrote 367 into the fixture, found with `git log -S'367'`, and 1172 is the
+fixture's own "tick 1173" counted from zero. 274 commits in range.
+
+THE FLIP, by `git bisect run` in a throwaway worktree under /tmp - this checkout never moved, and the Daily's
+signer nodes, bitcoind and lnd were not touched:
+
+  19d3375  (parent)  DELIVERED  score 367  truck x 125.54 z 21.86  hp 63.33  delivered at tick 1172
+  1830888  (flip)    WRECKED    score 173  truck x  61.23 z 65.14  hp 0      wrecked   at tick 840
+
+1830888 is "tank legs last 12-20 s, a team scoots at most every 20 s and only from post, and a push is read only
+with both tanks on post and steps only on a confirmed verdict" - WAR_TACTICS §2.6 / §4.3 / §4.10 as re-ruled
+2026-09-16 20:30. It changes packages/core/src/rules/tactics.js and sim.js: armour inputs, not settlement, not the
+client. So the cause IS armour doctrine, and it is the same cadence that holds A11a, A11b, A13b and both O1 rows
+red to this day.
+
+IT IS NOT THE REVERSE OF THE 12 -> 367 MOVE. It is the same break one step later. The fixture's own comment records
+that when the armour doctrine first landed (32687a8) the old winner - last byte d1 - stopped delivering and wrecked
+at tick 284 "on a tank holding the outer lane in front of the bay", and 1d was chosen out of 255 candidates because
+it still delivered, at tick 1173 with score 367. The 20:30 cadence then made 1d wreck too, at tick 840 with score
+173. A world secret picked to survive one armour doctrine did not survive the next.
+
+AND IT HAS DEGRADED SINCE: at the flip the truck still reached x 61.23 and scored 173 before dying at tick 840; at
+HEAD it dies at tick 192 with score 0 at x -67.57, barely out of the bay. Later army work moved it further, which is
+why the node reds look total rather than marginal.
+
+WHY IT WENT UNNOTICED: 1830888's own message records "Tests: core 106/106". The core suites were run and the node
+suites were not, and nothing in the core tests drives this fixture.
+
+NO FIX IN THIS STEP. Re-picking a world secret is what was done last time and it is a fixture change, so it is not
+taken here.
