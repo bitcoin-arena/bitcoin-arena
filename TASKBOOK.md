@@ -40245,3 +40245,26 @@ living tanks are, so the off-post share H1 reports and this delay are the same f
 
 Not a ruling request of its own: it sits under the two H1 already carries - §3's respawn entry (52-87 m from post,
 137-176 times in five minutes) and this cadence. See A4a's entry above for the window these were measured from.
+
+### A4a at five minutes: the rate does not climb with attrition (2026-09-19, the hypothesis measured false)
+
+A4a had been measured at one minute only, and its cause is attrition-driven - widows do not alternate at all, and
+respawns restart the role clock - so the rate should have climbed over a longer run, the way H1 passed on all twelve
+seeds at one minute and slipped under its bar on two at five. Measured instead of assumed, seeds 1-12 x 18000:
+
+  windows with no post change on a side    1 minute   1 of 144 = 0.69%
+                                           5 minutes  2 of 720 = 0.28%
+  windows by how many changes they held (5 min)   none 2, 1-2 22, 3-6 252, 7+ 444
+  post changes by kind (5 min)                    of slot 749, of line 4975
+  changes per window across the run               272 in the opening window, then 150-215, flat to the end
+
+So the rate is LOWER over five minutes, not higher: the hypothesis is false and the one-minute number was not the
+cheap end of a trend. Changes do thin slightly after the opening window (272 -> about 180) as attrition takes pairs
+apart, but not nearly enough to move the row.
+
+The second failing window is seed 7, side 1, t13200-13800 - 10 live tanks, 5 bounding, every scoot word outside the
+window. Same shape as seed 1's: nothing was due. Two windows in 720, on two different seeds and at opposite ends of
+a run, is a tail of the phase interleaving and not a drift.
+
+A4a is closed as LISTED on this evidence: bar unchanged, nothing retuned, §2.6 not rewritten, the cadence untouched.
+The dependency stands as before - the row or the cadence, Daniel's pick.
