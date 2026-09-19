@@ -117,7 +117,8 @@ be theatre.
    flash). PlayMode 229 of 256, 13 skipped, 14 red - the same fourteen, name for name, none new. The renderer still
    does not read the cover word, so a quiet Unity result is the expected one.
 
-§11.5 SUPPRESSION - WRITTEN, NOT CLOSED: THE ROW IS OVER ITS CEILING AND THE WRITE HAS TWO HOLES (2026-09-20). Five seeds x 180 s, frozen tape, a
+§11.5 SUPPRESSION - WRITTEN, NOT CLOSED (2026-09-20). The pin row is INSIDE its ceiling at 43.8% per team;
+what is open is §0's 0.01 m clause and the cover row this letter knocked down. Five seeds x 180 s, frozen tape, a
 nuke every 30 s, `tools/measure-suppression.mjs`.
 
 THE WRITE. TAC_SUPP, one word per fire team, 18 appended after §11.3's cover words: TAC_WORDS 212 -> 230. No new
@@ -239,14 +240,19 @@ genuinely is §8.1's 26 m and is untouched.
    rounds, which is the section's own intent. Duration is short in the median - 3.0 s - and only its tail is long,
    because a blast puts the word at 600 and 8.0 s must then decay off it.
 
-   The overage is the ROW'S OWN READING. §0 counts a side as pinned when AT LEAST ONE of its NINE fire teams is
-   pinned. At a per-team rate of 43.8%, at-least-one-of-nine saturates: 1 - (1 - 0.438)^9 is 99.5% if the teams
-   were independent, and the core measures 96.0% / 95.6%. For the row to sit under its 70% ceiling the PER-TEAM
-   rate would have to fall to 12.5% or less, because 1 - (1 - 0.125)^9 = 0.70.
+   RULED 2026-09-20, AND THE OVERAGE IS RETRACTED. The 70% ceiling is the SHARE OF TEAMS actually pinned -
+   pinned-teams / 9, or the matching fraction of riflemen in the pin state where the row is read on men. It is NOT
+   the fraction of time at least one of nine teams is pinned.
 
-   So a per-team pin rate that looks reasonable - 43.8%, inside any band one would write for a single team - is
-   read by §0 as 96%. That is a doctrine question about how the row counts, not a tuning question about +60, -1 or
-   120, and none of those three has been touched.
+     the pinned share          43.8% per team        INSIDE the 70% ceiling
+     the retracted figure      96.0% / 95.6%         the OR saturating, not a share
+
+   At 43.8% per team, at-least-one-of-nine is 99.5% if the teams were independent and 96.0% / 95.6% as measured -
+   which says nothing about how much of the front is pinned, only that nine chances rarely all miss. Reading an OR
+   as a share is the same class of misread as hole 2 above, and it was mine both times.
+
+   So §11.5's pin is INSIDE its ceiling and was never over it. +60, -1 and 120 stand untouched; two rounds pinning
+   a team and a median episode of three seconds are the section's intent and are working.
 
 4. IT MOVES §11.4's LISTED 2x REMAINDER THE WRONG WAY, as predicted from the open loop and now measured: 876907 of
    2505404 STAND man-ticks belong to a pinned team, so STAND falls to 1628497 while the down count rises to

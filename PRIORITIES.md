@@ -112,10 +112,10 @@ TWO CORE HOLES ARE OPEN, measured, and they are why this item is not closed:
 2. **The bounding rule reads the pin instead of the clock**, so a pinned team forces its neighbour to rush where
    §11.5 says the neighbour may halt on the pinned team's clock.
 
-LISTED, OVER ITS CEILING, NOT RETUNED: §0 wants each side pinned on 10-70% of ticks and it reads 96.0% / 95.6%.
-The cause is §11.5's own arithmetic - decay is 60 a second and a round is +60, so one shooter landing a round a
-second holds a team pinned forever, and the half-rate doubles a RELOAD while a suppressing round rides the
-look-again clock. +60, -1 and 120 are left exactly as the section writes them. Numbers in TASKBOOK.
+THE PIN IS INSIDE ITS CEILING (ruled 2026-09-20): §0's 70% is the share of TEAMS pinned, which is **43.8%**. The
+96.0% / 95.6% previously listed as an overage was "at least one of nine teams" - an OR read as a share - and is
+retracted. +60, -1 and 120 stand untouched; two rounds pinning a team and a median pin of three seconds are the
+section's intent. Numbers in TASKBOOK.
 
 ON TOP NOW: **§11.5's two holes above**, then §4.4 coax (posture and suppression must both apply to it). M3's
 remainder stands behind them, its fixture pair needing a third re-pick.
