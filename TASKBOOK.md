@@ -113,7 +113,11 @@ be theatre.
    new tactics row runs, and the dying is where it was, which is the point - cover moves where men stand, and the
    killing waits for §11.4's thresholds.
 
-   SUITES with cover in. Core, each on its own run: rules 50/50, tactics+candles+chart+spawn 37/37,
+   SUITES with the lips in: EditMode 254 of 258, 3 skipped, 0 error CS, one red (the long-listed CombatFx rifle
+   flash). PlayMode 229 of 256, 13 skipped, 14 red - the same fourteen, name for name, none new. The renderer still
+   does not read the cover word, so a quiet Unity result is the expected one.
+
+   SUITES with cover in (wrecks and craters only). Core, each on its own run: rules 50/50, tactics+candles+chart+spawn 37/37,
    canonical+specified+replay+poison+private-world+cbrt 22/22, vectors+bundle 20/20, goldens regenerated because
    the state grew 140 -> 212 words. Unity EditMode 254 of 258, 3 skipped, 0 error CS, one red (the long-listed
    CombatFx rifle flash). Unity PlayMode 229 of 256, 13 skipped, 14 red - the same fourteen as before this letter,
