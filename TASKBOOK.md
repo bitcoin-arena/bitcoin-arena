@@ -39955,3 +39955,37 @@ of 12 seeds, A11c on 5, S1 on 2, O2 on 1 and H2 on 1, while all five PASS in the
 marginal rows whose bar is met in aggregate and missed on single seeds, not new reds. O3 reads FAIL on every single
 seed and PASSES 5 of 5 in the aggregate - it asks "seeds on which an objective changed hands", so one seed is a
 sample of one and the row is not meaningful per seed. None of these five was touched.
+
+### O1 mean and B4: the objective moves faster than a lane can climb to its rest (2026-09-19 09:4x)
+
+Ownership first, from the share table in HEAD: of the five always-red rows, A9 and B3 are Daniel's waits and O4 is
+client work, so only A11b and B2 are ours - A11b IS this cadence and B2's one lever was sized and closed at 8 of 18
+against 130 passing windows. So nothing of ours is always-red, larger, and unexplored. THIS ACCOUNTS FOR 21 OF THE 21
+SEED-FAILURES O1 MEAN AND B4 ARE MISSING, and the cadence family is 6 of 12 rows and 53 of 109 seed-failures (49%).
+
+What the core holds, five minutes a seed, passing seed against failing:
+
+  seed 6, O1 mean +6.30 m (PASS)     objective lanes 11.23 m mean push, the rest 4.93 m
+                                     at or above 8 m on 69.5% of objective-lane team-ticks, exactly at rest 17.0%
+                                     ordinary lanes at their 0 rest 56.1%;  THE OBJECTIVE MOVED LANE 18 TIMES
+                                     re-reads 720 due, 328 on post, 166 steps; take 91, give 67, drift 170
+  seed 9, O1 mean -2.62 m (FAIL)     objective lanes 5.69 m, THE REST 8.31 m - the ordinary line is pushed higher
+                                     at or above 8 m on 47.0%, exactly at rest 22.5%
+                                     ordinary lanes at their 0 rest 43.8%;  THE OBJECTIVE MOVED LANE 35 TIMES
+                                     re-reads 720 due, 290 on post, 150 steps; take 97, give 20, drift 173
+
+The ceilings and rests are the spec's on both seeds: an objective lane carries a mean ceiling of 21.9-22.8 m (24,
+pulled down by RIDGE's 16) and a rest of +8.5, the rest of the line a ceiling of 24.4-24.5 and a rest of 0.
+
+THE MECHANISM: an ordinary lane's rest is 0, which is where every lane starts, so it is at its rest for free. An
+objective lane's rest is +8 and has to be STEPPED there - one PUSH_STEP per confirmed re-read, with rule (a) skipping
+half. Meanwhile §4.11 re-reads the objective itself every PUSH_TICKS, so the objective can move every five seconds:
+measured, 18 moves on the passing seed and 35 on the failing one. Each move hands the +8 to a lane sitting at 0 and
+leaves the lane that climbed to drift back down. O1 mean asks the objective lanes to average 6 m above the rest while
+those two cadences run at the same rate.
+
+NO CORE BUG, AND NO PORTED UNIT: both cadences are what §4.10 and §4.11 specify, in push metres, and nothing here
+reads the recording. The one change that would close the row is a rule change - a lane that BECOMES an objective
+taking its +8 rest at once instead of stepping to it - and that is Daniel's to rule, not mine to apply. O1's and B4's
+bars are untouched, and B4 inherits the same cadence: it asks a squad to follow a push change inside 10 s, and the
+pushes it must follow are these.
