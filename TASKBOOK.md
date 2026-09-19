@@ -40477,3 +40477,18 @@ by a drift that steps the push back toward rest. Layout does not explain it eith
 Nothing changed: no gate dropped, no cadence constant, no assertion, no A9/H1/B3/A4a lever, no C# copied and no 2-D
 coupling introduced - the elevation columns are printed beside the odds, never multiplied into them. Tool only
 (--a11geom).
+
+### RULED 2026-09-19: §4.10 stays as written; A11a is the row against the rule
+
+Daniel's pick, recorded: a side three hulls down is losing its stretch, so it gives ground - the 12 and 14 give
+readings on the two outnumbered sides are the rule doing what it says, not a fault in the gates. A11a asking a team
+of EACH side to cross every 60 s is therefore the row against §4.10, the same shape as A4a's quiet-window bar against
+the 20:30 cadence. It is wait 5 on the letter.
+
+Nothing is retuned under this ruling: A11a's assertion stands, both 20:30 gates stay on, no cadence constant moves,
+and `pressure()` keeps its two dimensions - no height goes into the odds. A9, H1, B3 and A4a are untouched.
+
+The level window stays a named rule fact, not a wait of its own: seed 4 side +1 was level at own - foe +0.05, met the
+take lead 12 times of 42 readings, never climbed past 8 m, and the seam's slope at its slots is 0.003 m/m - so the
+layout does not explain that one either. Three consecutive confirmed takes on one team are needed to reach the
+ceiling, and on a level stretch a take is followed by a drift that steps the push back toward rest.

@@ -20,7 +20,7 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-FOUR WAITS, all Daniel's, none of them mine to pick. Nothing else on this letter is blocked by them.
+FIVE WAITS, all Daniel's, none of them mine to pick. Nothing else on this letter is blocked by them.
   1. A9's coverage bar, red at 12.27% against 5%: is that bar flat-stretch only? The remainder is the seam's own
      climb - a sample 40 m away in x is 70 m from a hull that sits a depth below it. Pitch, reach and depths stay.
   2. §3's respawn entry: H1 falls under 50% on 2 of 12 seeds at five minutes (49.77%, 48.15%). A returning hull
@@ -32,6 +32,11 @@ FOUR WAITS, all Daniel's, none of them mine to pick. Nothing else on this letter
   4. A4a's 10 s quiet-window bar against the 20:30 cadence: the bar was a guarantee under a 6-10 s leg, and the
      re-ruling made legs 12-20 s with a 20 s scoot cool-down, so no rule obliges a change inside a window. The row
      or the cadence. Numbers in TASKBOOK; §2.6 and the cadence stay as they are.
+  5. A11a's crossing bar against §4.10 itself. §4.10 says a team losing its stretch gives ground, and RULED
+     2026-09-19 it stays as written: a side three hulls down is losing, so it gives, and the give readings are that
+     rule working. A11a asks a team of EACH side to cross every minute, which on those seeds the rule forbids. The
+     row or the rule. Diagnosed to the bottom - not layout, not the seam's climb, not the cadence, but attrition -
+     and nothing is retuned: the assertion, the gates, the cadence and pressure()'s two dimensions all stay.
 
 OPEN, first, and the only thing waiting on Daniel: A9's coverage bar. The army is deployed and every short seam metre
 now has two or more guns within reach, so the remaining 12.27% is the SEAM'S OWN CLIMB - gaps of 23-24% where it rises
@@ -82,28 +87,12 @@ listed with its cause and nothing it asserts was touched; nothing is deployed wh
   teams are off post, which is H1's quantity. The C# has no push word to copy: there `pressure` is the market's trade
   flow and every tank re-aims at the line every frame. Same shape of ruling as A4a - the rows or the cadence - and
   A11a and B4 need their own causes either way. Numbers in TASKBOOK.
-- A11a's CAUSE IS NAMED, and it is not the cadence: in all three failing windows no team of that side ever reached
-  push 24, so no post lay across the seam at any tick. That accounts for 3 of the 3. Overshooting a bound, scooting
-  in x and giving ground are real but small, and contributed none of these three: they put a hull over the seam for
-  a few ticks at a post that is not. Reaching 24 needs three confirmed TAKE readings in a row and these sides barely
-  read TAKE at all, which is why more re-reads would not have helped. Table and split in TASKBOOK.
-- AND WHY THEY NEVER READ TAKE is measured too, from every odds reading the core actually took. Two of the three were
-  simply outnumbered at their own slots: the verdict the row needs was never true, so there was nothing for the
-  cadence to carry. The third was level, met the take lead more often than the side that did cross, and still never
-  got a post across - because climbing to the ceiling needs three consecutive confirmed takes on one team, and on a
-  level stretch a take is followed by a drift that steps the push back toward its rest. Level odds cannot climb,
-  however many re-reads they get. Of the three: outnumbered two, level-but-oscillating one.
-- THE LAYOUT PRINT IS IN, and it says no. The slots are not under the steep climb: the seam at them is flat, not one
-  reading of the four hundred sits on a climb like A9's, the hulls stand level with the seam they hold, and the 3-D
-  distance runs the wrong way for the idea - the failing windows are NEARER their sample and past the reach less
-  often. A9's steep stretches are elsewhere in x and its levers are untouched. What the poorer odds are instead is
-  attrition: those sides were about three hulls down on their enemy, while the share of each side's living hulls
-  standing inside the 46 m is the same in both groups - a thinner side, not a wider one. The chain is closed and
-  every link measured: no post across the seam, because no TAKE, because fewer hulls alive.
-- AND THE ROW NOW SITS AGAINST ITS OWN RULE. §4.10 says a team losing its stretch GIVES ground; A11a asks that a team
-  of each side crosses every minute. On a seed where one side is three hulls down the rule forbids what the row
-  requires, and the give readings are there in the odds. Same shape as A4a - the row or the rule - and NOT declared a
-  wait here: Daniel picks. Numbers in TASKBOOK.
+- A11a IS DIAGNOSED END TO END and is now wait 5 below. No team of the failing sides ever got a post across the
+  seam, because none of them read TAKE; two were outnumbered at their own slots and the third was level and could
+  not climb, a take being followed by a drift that steps the push back toward its rest. The layout idea was measured
+  and is false: the seam at these slots is flat, none of the readings sits on a climb like A9's, and the distances
+  run the wrong way for it. What the poorer odds are is attrition - a thinner side, not a wider one. Every link
+  measured; tables in TASKBOOK. §4.10 stays as written.
 - O1 mean and B4 stay red with their cause listed, not fixed: an objective lane's +8 rest is STEPPED on the same
   five-second clock that §4.11 uses to move the objective, so a lane that just became the objective still sits at 0
   while the +8 moves on. The failing seeds move it twice as often (35 lane changes against 18). Ruled 2026-09-19:
