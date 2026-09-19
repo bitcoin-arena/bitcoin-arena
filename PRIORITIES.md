@@ -130,14 +130,14 @@ hold that word shut. The recording, having no word, would fail this row in every
 Free corroboration in the same run: the core's hulls stand at exactly the mean of §2.5's two lines at spawn, where
 the recording stands at 77 m and walks in. Numbers in TASKBOOK.
 
-B3 IS LISTED RED on both halves and is why the army does not ship: z 18.75% of squad-ticks, x 19.49% of side-ticks.
-RULED 2026-09-19: keep the bar and change nothing. The riflemen stand on the posts the core writes - a failing tick's
-men are no further from their posts than a passing tick's - so there is no placement fault to fix. The x miss is a
-floor that still spans squads with no living man on them; the z miss is squads in motion, which the ruled population
-counts on purpose; and the recording is more spread in depth than the core, so there is nothing to port. No core
-change is opened for it. Dependency: the in-transit tolerance B3 alone does not carry. Numbers in TASKBOOK. The other
-eight reds are held: A11b, A13b and O1's lane row explained-not-fixable under the 20:30 gates; O1's mean push and B4
-diagnosed by measurement; O4 passes its own client suite; B2 closed as measured.
+B3 IS LISTED RED on both halves and is why the army does not ship: z 13.04% of squad-ticks, x 12.18% of side-ticks,
+both zero-tolerance, measured under the 2026-09-19 ruling (240d818) with both halves of it implemented in the probe -
+the x floor now spans only the anchors of squads that still have a living man, and a squad inside §12.1's own 10 s is
+not counted on z. It moved x from 19.49% and z from 18.75%, and both stayed red, which the ruling allowed for. The
+riflemen stand on the posts the core writes, so there is no placement fault; the recording is more spread in depth
+than the core, so there is nothing to port; no core change is opened and no tolerance was invented. Numbers in
+TASKBOOK. The other eight reds are held: A11b, A13b and O1's lane row explained-not-fixable under the 20:30 gates;
+O1's mean push and B4 diagnosed by measurement; O4 passes its own client suite; B2 closed as measured.
 Then the army to the Daily, then M3 without asking (Daniel 2026-09-18 23:47 HARD).
 
 SUITES, each on its own run: rules 47/48 - the one red is `incoming fire costs the truck condition`, listed with its

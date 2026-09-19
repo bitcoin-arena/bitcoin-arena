@@ -41166,3 +41166,32 @@ in-transit tolerance §0 gives every other distributional row and B3 alone does 
 
 STATE: z 18.75% of 64753 squad-ticks, x 19.49% of 28812 side-ticks, both red, both zero-tolerance. 35 of 44 rows
 pass. The army does not ship while B3 is red.
+
+### B3 under the 2026-09-19 ruling (240d818): measured, and still red on both halves
+
+The last piece was ruled after the placement measurement, and both halves of the ruling are implemented in the PROBE.
+No core source moved, no infantry number moved, no tolerance was added, both bars stay zero-tolerance.
+
+  x - RULED: the floor's reference frontage is the anchors of the squads that STILL HAVE A LIVING MAN.
+      before  19.49% of 28812 side-ticks     after  12.18% of the same 28812 side-ticks
+      The ruling predicted "about 12.2%" from the 37.5% of failures that carried a wiped squad. Measured 12.18%.
+
+  z - RULED: a squad whose post moved inside the last 600 ticks is in the transit §12.1 itself licenses
+      ("within 2 re-reads, 10 s") and is not counted on those ticks. A squad still out of band after its 10 s counts.
+      before  18.75% of 64753 squad-ticks    after  13.04% of 22946 squad-ticks
+      41807 squad-ticks - 64.6% of the old denominator - are inside §12.1's 10 s and no longer counted. That share
+      is large and is reported as such: the push moves on a 300-tick clock, so a squad whose lane keeps stepping can
+      sit inside a 600-tick window most of the time. What the row now measures is the line when §12.1 is NOT
+      licensing its movement, which is what the ruling asked for.
+
+  BOTH HALVES STAY RED, as the ruling anticipated for x and allowed for z: z 13.04%, x 12.18%, zero tolerance on
+  both. 35 of 44 rows pass, unchanged - no other row moved.
+
+  The rest of the listing stands unchanged and is not re-argued: the riflemen are on the posts the core writes
+  (median 10.0 m from post on failing ticks against 7.9 m passing, 51.4% more than 5 m off against 53.8%), so there
+  is no placement fault; the recording is more spread in depth than the core (17.78 m against 8.76 m side-wide from
+  t=30, the core's per-squad median 7.70 m inside the band), so there is nothing to port and no C# rewrite; and no
+  core item is opened to chase the residual.
+
+  SUPERSEDED: the note written at b90b4c5 that B3's bar would "change nothing" was written after this ruling landed
+  and is wrong on that point. Two row definitions changed by the ruling; nothing in the core did.
