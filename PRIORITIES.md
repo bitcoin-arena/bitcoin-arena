@@ -20,6 +20,16 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+THREE WAITS, all Daniel's, none of them mine to pick. Nothing else on this letter is blocked by them.
+  1. A9's coverage bar, red at 12.27% against 5%: is that bar flat-stretch only? The remainder is the seam's own
+     climb - a sample 40 m away in x is 70 m from a hull that sits a depth below it. Pitch, reach and depths stay.
+  2. §3's respawn entry: H1 falls under 50% on 2 of 12 seeds at five minutes (49.77%, 48.15%). A returning hull
+     enters 52-87 m from its post, 137-176 times in five minutes, and that count tracks the row - seed 7 with 137
+     passes, seeds 1 and 8 with 176 and 172 fail. The opening is NOT this: at tick 0 the hulls are on their lines,
+     where the recording's army stood at 77.3 m and walked in.
+  3. §11.1's two numbers for B3: the infantry line is a knot with a tail - too tight along the seam, too loose in
+     depth. Which number is wrong is a rule question.
+
 OPEN, first, and the only thing waiting on Daniel: A9's coverage bar. The army is deployed and every short seam metre
 now has two or more guns within reach, so the remaining 12.27% is the SEAM'S OWN CLIMB - gaps of 23-24% where it rises
 0.57-0.73 m per metre of x against 3-4% where it rises 0.18-0.21. A tank stands a depth below the seam at its own x,

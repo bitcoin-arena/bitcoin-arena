@@ -39863,3 +39863,24 @@ THE LEVER IS §3's ENTRY, and it is not mine: the same shape of question as A9's
 A respawn that enters nearer its post would lift H1 on the bloody seeds, and it would also change what a reinforcement
 means. Written down, not picked. H1 stays listed as red on 2 of 12 seeds at five minutes, green at one minute and on
 the other ten.
+
+### The opening deployment against §3's respawn, measured apart (2026-09-19 08:0x)
+
+So the listed cause for H1's five-minute slip cannot be confused with the spawn walk-in Daniel already retired:
+
+  seed   armour |z| at tick 0 (min/median/max)   respawns in five minutes   where they enter, from their post
+    1        6.7 / 25.6 / 39.3 m                        176                   53.0 / 76.0 / 87.0 m
+    7        0.6 / 22.8 / 39.3 m                        137                   52.0 / 63.0 / 87.0 m
+    8        4.3 / 23.2 / 46.6 m                        172                   52.0 / 77.0 / 87.0 m
+
+  the recording (test/vectors/csharp-army.json): its bull armour stands at -77.32 m at t=0 and is at -43.51 by t=5
+  and -18.70 by t=10 - the walk-in, 77 m of it, which the core no longer has at all.
+
+At tick 0 the core's hulls are ON their lines (14 m forward, 30 m overwatch, either side of a seam that itself sits
+off centre), which is why their |z| reads 0.6 to 46.6 m rather than the recording's 77.3. The respawns are the
+opposite: they enter 52 to 87 m from their post, 137 to 176 times in five minutes, and their COUNT tracks H1 - seed 7
+with 137 passes at 59.08%, seeds 1 and 8 with 176 and 172 fail at 49.77% and 48.15%.
+
+The two are not the same thing and the fifths say so: the walk-in share climbs through a run (22% -> 44% on seed 1)
+while the opening contributes one arrival per hull. H1's cause is §3's entry, which is Daniel's lever, and the
+retired C# spawn walk-in is not in the core at all.
