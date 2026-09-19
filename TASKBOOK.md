@@ -40035,3 +40035,34 @@ WHAT THAT RANKING SAYS, before any code:
 
 So the pick is between O4 (20.7%, client, no doctrine question) and A2 (10.3%, core, unexplored). Nothing else in Y
 is both unblocked and unanswered.
+
+### O4 measured: the page does not draw the core's objective markers (2026-09-19 10:3x)
+
+The test exists now - packages/blwp-client/test/objective-markers.test.js - and it asks the PAGE, not a stand-in: it
+reads the three markers out of the core the page is running (chart.js `chartView`, CH_OBJ, five words each: kind,
+point t, price, holder, on-screen) and then asks the HUD what it drew.
+
+  MEASURED, live on the Daily through the MacBook's CDP, in spectate where the chart is on:
+    the core put THREE objective markers on the chart, all on screen -
+      [{kind 0, t 596994, price 20807111, holder 1}, {kind 1, t 1519196, price 20825179, holder 2},
+       {kind 2, t 1211795, price 20814460, holder 1}]
+    the HUD's own line names a box for NONE of them. It names priceBox, gateBox, youBox, ghostLabelBoxes,
+    lastTagBox, highLow - every box it draws - and no objective box at all.
+
+  THE CODE SAYS THE SAME THING: ChartHud builds the labels into its frame (ChartHud.cs:275, `f.Objectives.Add`, with
+  the text from ObjectiveName and the colour from the holder - Bull, Bear or Axis when unheld) and NOTHING consumes
+  that list. The only other reference in the whole of Assets is a test helper
+  (Tests/EditMode/ChartHudTests.cs:41) which uses it for overlap arithmetic. So the markers are built every frame and
+  never drawn.
+
+  So O4's answer is NO, measured twice and agreeing. The row stays red and now has a test that says why rather than
+  "not built".
+
+A PROBE FAULT OF MINE, caught and fixed before it was reported: the first version searched the HUD's line for the
+words HIGH and LOW and found two - but those are `highLow=HIGH_$81,044 · LOW_$80,916`, the chart's own high and low
+PRICE marks, nothing to do with the objectives. It asks for an objective box now, which the line would carry if one
+were drawn.
+
+Also recorded: §4.11 names the three HIGH, LOW and OPEN, while the client's ObjectiveName renders them RIDGE, HOLLOW
+and GAP (ChartHud.cs:359). That is a second gap in the same row and it is not fixed here either - drawing them under
+the wrong names would still not be drawing them.
