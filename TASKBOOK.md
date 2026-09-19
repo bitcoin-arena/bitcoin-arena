@@ -40222,3 +40222,26 @@ was retuned and no bar was moved. The dependency is the one TASKBOOK already nam
 this same cadence: THE ROW OR THE CADENCE. Either §2.6 goes back to a 6-10 s leg, which the 20:30 re-ruling moved on
 purpose, or the row is restated for the leg the doctrine now has - and the doctrine table's own "(a leg is 6 to 10 s)"
 and §2.6's `360 + (h % 240)` are stale against the core either way. I did not rewrite either: that is the B3 rule.
+
+### H1, from the other side: the swap waits on the bound, so the delivered leg runs past the cadence (2026-09-19)
+
+These numbers came out of A4a's window and belong here too: H1 counts the share of tank-ticks a living pair spends on
+post, and this is the same shortfall counted as TIME rather than as share. Recorded under H1 because the lever is
+H1's, not A4a's. Nothing here was changed: holdLegs, onRespawn and the 20:30 cadence all stand as they are.
+
+Legs measured end to end, seeds 1-5 x 3600, a leg being one bounding/overwatch alternation of an intact pair (58 legs):
+  in spec for the 20:30 numbers (720-1200 ticks / 12-20 s)   33 = 56.9%
+  min 6 ticks   median 1111 (18.5 s)   p90 2456 (40.9 s)   max 3021 (50.4 s)
+  over 20 s   24 of 58        over 40 s   6 of 58
+  role clock nudged +1 by holdLegs   3154 times
+  role clock restarted by a respawn (§3)   126 times
+  team-ticks holding a widow, which do not alternate at all   55115 of 216000 = 25.5%
+
+`holdLegs` pushes the team's role clock one tick later for every tick a leg boundary is due while the team is not on
+post - "the swap waits for the bound to finish, and no post moves under a tank still walking to it", measured at
+1830888 and kept. The wait has no ceiling, so a team that is chronically off post postpones its swap for as long as
+it stays off: that is how a 12-20 s leg is delivered as 40.9 s at p90. A pair is only counted on post when BOTH its
+living tanks are, so the off-post share H1 reports and this delay are the same fact twice.
+
+Not a ruling request of its own: it sits under the two H1 already carries - §3's respawn entry (52-87 m from post,
+137-176 times in five minutes) and this cadence. See A4a's entry above for the window these were measured from.
