@@ -143,7 +143,15 @@ SUITES, each on its own run: rules 47/48 - the one red is `incoming fire costs t
 cause, its 15 s window a fixture whose own comment is stale against HEAD, and nothing it asserts touched - tactics
 17/17, vectors 8/8. The others stand from e2575f1, no core source having moved since. No Unity: no C# path moved.
 
-THE ARMY IS LIVE ON THE DAILY: 0.0.1697, deployed 2026-09-19 (7f3aa1a8), alias and unique URL both serving it, the
+THE ARMY IS LIVE ON THE DAILY: 0.0.1711 (2026-09-19, 4b2db733), carrying Fable's c09f992 rulings - a tank wreck is a
+crest to the hull-down search (tank wrecks only, never the truck's), a round is three minutes with the contract
+owning it, and a bomb inside 16 m costs the truck condition with no draw. §4.12's assault and §4.13's fed tape were
+measured as already in; §4.13's seeded init tape and the whole coax chain (§11.3 cover, §11.4 posture, §11.5
+suppression) are listed as the next letter, not built here. Alias and unique URL both serve it, the built core is
+byte-identical to dist, the core hash and the client scripts are listed, and the signer nodes were restarted to load
+them. btc-logistics-war is untouched. No M-freeze: no numbered milestone closed.
+
+SUPERSEDED, kept for the record: THE ARMY WAS LIVE ON THE DAILY AT 0.0.1697, deployed 2026-09-19 (7f3aa1a8), alias and unique URL both serving it, the
 built core byte-identical to packages/core/dist. B3 went green on B1's tolerance and §0's ship rule says a red with a
 holder does not block, so the seven that remain shipped listed with their numbers and holders. The core suites are
 green but for the named stale fixture (rules 47/48, incoming fire costs the truck condition). M3 IS STARTED, and its
