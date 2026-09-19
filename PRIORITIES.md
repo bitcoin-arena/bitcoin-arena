@@ -69,9 +69,22 @@ deliberately stale. The Daily stays at 0.0.1739.
 LISTED against §11.3, measured, not blocking its row: a candle-lip place id is the chart SLOT, not the body, so a
 tape shift hands a man a different candle - 3 of 94 lip claims on a scrolling tape, 0 on a frozen one.
 
-ON TOP NOW: **§11.4 posture** in the TAC_COVER high bits - STAND / PRONE / COVER and the hit thresholds that make
-cover worth something - then §11.5 suppression, then §4.4 coax. M3's remainder stands behind them, its fixture pair
-needing a third re-pick.
+§11.4 POSTURE IS **DONE IN THE CORE** (2026-09-19). STAND / PRONE / COVER are written into the high bits §11.3
+reserved, no new word and no draw. The rifle's threshold is the VICTIM's - half at a PRONE man, a quarter at a
+COVER man - and it is still one draw, so only the number the roll is compared against moves. COVER rifle deaths
+fell 22.4 -> 5.7 per 100k man-ticks, the ruled quarter; a bomb reaches a COVER man only inside 8 m. Men lost a side
+per 60 s: 34.1 -> 32.2 quiet, 48.1 -> 42.2 with a nuke every 30 s. Numbers in TASKBOOK.
+
+LISTED, carried into §11.5 with its cause, NOT loosened: §0's "rifle deaths per man-tick of STAND >= 2x PRONE and
+COVER together" is 0.17 -> 0.35 against a bar of 2.0. No threshold was retuned. The cause is the row's denominator
+- STAND is dominated by men walking in from the back edge who are never shot at, so a standing man's deaths per
+man-tick is structurally tiny while a man on his place is in contact.
+
+POSTURE IS INVISIBLE TO THE PLAYER TODAY and that is by ruling, not oversight: the renderer does not read
+TAC_COVER, and it is one of the three deploy stops rather than part of this item.
+
+ON TOP NOW: **§11.5 suppression**, then §4.4 coax (when the coax lands, posture must apply to it - it does not
+exist in the core yet). M3's remainder stands behind them, its fixture pair needing a third re-pick.
 
 LISTED, each its own thing and none of them B:
 1. **91 files write `blockTicks: 9000`** against cores that end at 10800 - 21 client tests, the node suite, four

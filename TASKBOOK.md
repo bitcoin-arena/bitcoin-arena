@@ -165,6 +165,18 @@ mid-pass would make the outcome depend on unit order. The written word agrees wi
    promised and the ratio still cannot reach 2.0, because the gap is unmatched exposure. CARRIED INTO §11.5 with
    this number and this cause.
 
+3b. ONE EXTRA FOUND AT THE CLOSE AND FIXED HERE, not deferred: the claim pass wrote the whole cover word, so
+   taking a claim WIPED §11.4's posture bits to STAND (0). The claim pass runs at the top of the infantry step and
+   the posture pass at the end of the movement pass, with the rifle firing in between - so for the rest of that
+   tick a man who had just taken a hole was shot at as if standing in the open. `setCoverClaim` now writes the
+   place id without touching the bits above it.
+
+   MEASURED, AND IT DID NOT MOVE THE AGREEMENT NUMBER: written-vs-derived agreement 96.9% -> 96.8%, so the wipe
+   was NOT the cause of that 3% - the lag is. A man who takes a new claim is usually walking to it and reads STAND
+   either way, which is why a real defect showed almost nothing. It changed the war slightly all the same: the
+   §4.12 assault count went 11 -> 10, re-measured and asserted with its table. The fix is kept because the rule is
+   right, not because the number moved.
+
 4. THE DEPLOY STOP IS UNCHANGED and is not this letter's to clear: men in holes draw below the mesh (Unity carves a
    crater bowl the core does not), the renderer does not read TAC_COVER, and the signer nodes would refuse a round
    while goldens are deliberately stale. One golden regeneration at the close of §11.4, not mid-stream.
