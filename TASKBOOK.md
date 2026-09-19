@@ -41248,3 +41248,37 @@ THE ONE RED, measured rather than assumed:
   changed, except this one was never regenerated.
   NOT FIXED HERE, and deliberately not tuned: regenerating the run is a fixture change and the cause is older than
   this letter. Listed with its measurement.
+
+### M3's survey finds ONE root under the settlement reds: the fixture's winner no longer delivers (2026-09-19)
+
+THE TEST SAYS IT ITSELF. forfeit.test.js asserts on the node's own words and got:
+  expected  /DELIVERED with score 367 and this round's minimum is 1000: not a qualifier/
+  actual    "that run is FAILED with score 0 and this round's minimum is 1000: not a qualifier, ..."
+The scripted winner that used to deliver with score 367 now FAILS with score 0. The fixture's own comment records
+that this score was already re-set once - "the fixture's winner delivers with score 367 since the armour doctrine
+(window-fixture.js; it was 12)" - so the drive's outcome has moved with the world before, and has moved again.
+
+THAT ONE FACT ACCOUNTS FOR THE SETTLEMENT REDS, and each of them fails in the way a round with no winner should:
+  first-mark.test.js     the ONLY test of its 14 whose run must deliver; the other 13, which expect FORFEIT,
+                         ENTRY_VOID or a late start, all pass. DELIVERED -> FAILED, forfeit 200 -> 409.
+  hold-two-first.test.js two tests, both reporting winnerMsat null, owed NOTHING_OWED, "a pool of 196000 against 0"
+                         - there is no winner to pay, so the stake cannot move to one.
+  forfeit.test.js        as above, in the node's own sentence.
+  lock-settlement, objection-window, one-signer-node-refused, outage, payout-second-signer-node,
+  publication-finality  all carry failures of the same family (lock-settlement 14 of 15).
+So the settlement logic is not what is broken: it behaves correctly on a round nobody won. What moved is the drive.
+
+NOT THE A2 FIX, measured not assumed: e2575f1^'s army.js put back for a run leaves first-mark at 13 of 14 and
+ghost-live failing with the identical 0.638 m. The cause is older than the army letter.
+
+A SEPARATE RED, not of this family: ghost-live.test.js, "a load moved this drive 0.638 m, which is not enough to be
+the fault" - a driving quantity, deterministic across runs and identical before and after A2.
+
+AND AN INSTRUMENT NOTE THAT COST TWO FALSE READINGS: the settlement suites hold single tests of 20-40 s, and
+`timeout 175` around a chunk of them kills the run mid-test. Twice that printed ✖ lines for tests that had only been
+interrupted - the run says "Interrupted while running" and prints no ℹ summary. Neither set was reported as failures.
+The region is now run one file at a time under systemd-run with no outer timeout, which is what the standing rule
+means by not wrapping a long legitimate run in a short timeout.
+
+NOT FIXED HERE: regenerating that drive is a fixture change of the same class as the golden vectors, and which core
+change moved it is the next measurement - the army doctrine work is the obvious suspect and A2 is already excluded.
