@@ -32,7 +32,7 @@ WHAT IS LIVE is the 19:47 letter and nothing since: the world grown east, the de
 pathing around craters, a nuke that kills everything in its blast, no asphalt where a candle stands, spectate
 carrying the war, and rounds living their three minutes again. Numbers for all of it in TASKBOOK.
 
-WHAT HAS LANDED ON THE BRANCH SINCE AND IS **NOT** LIVE (HEAD 75d5bdae):
+WHAT HAS LANDED ON THE BRANCH SINCE AND IS **NOT** LIVE (each named by its own commit):
 - **The HUD stopped lying about the trend** (236e0ab4). A candle is two samples and the war was grading the wick,
   so a drawn body of $2.44 to $4.88 read RED on screen and DOJI to the war - five red candles printed SIDEWAYS.
   chart.js and the core now share one `trendCandle`. Proven on the MacBook against build 0.0.1755 through the real
