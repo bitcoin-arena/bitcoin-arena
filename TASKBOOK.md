@@ -40787,3 +40787,45 @@ was wrong. Both are below.
 
 No restyle either way: the decision "does this leave the road clear" now has the numbers under both readings of
 "road", and which reading governs is not mine to pick. Nothing in the HUD was changed.
+
+### The cab headline on RISING GROUND: the road stays clear, with rows (2026-09-19)
+
+The gap named in the correction: the truck never climbed, so a rising view was untested. Taken properly this time.
+
+WHY THE LAST PASS NEVER LEFT THE BAY, since it was reported as unexplained: that page's round had ENDED and the truck
+was back in the bay awaiting roll-out, and the probe attached to it without re-doing the splash / auto / roll
+sequence. Pose sat at x -39, z -80 - the bay lane - through all eight frames. This probe joins a free round and rolls
+out before it drives, and it asks the page's own core for the height under the truck (`b.core.groundAt`) rather than
+assuming a slope.
+
+  THE CLIMB, from the core, not from the picture:
+    roll-out            x -94, z 10, ground under the truck 0.00 m
+    driving bursts      ground 0.07 -> 0.39 -> 0.60 -> 0.32 -> 0.96 -> 0.37 -> 3.11 m
+    at the shots        x ~54, z ~72, ground 2.09 - 2.22 m
+  A climb of about 2.1 to 3.1 m, which is most of what this world has: a grid of the core's own surface puts the
+  steepest rise reachable from the bay at 2.9 m, so this is a real climb and near the steepest available.
+
+  THE MEASURE, the same one as the flat pass - topmost non-sky row inside the headline's own column (x 400-880),
+  against a glyph band of y 27-111 and a drawn row reaching about y 135:
+
+    frame        topmost non-sky in the column     solid ground ahead of the truck
+    climb-0      y 164  (20.5% down the screen)    from y 160
+    climb-1      y 155  (19.4%)                    from y 153
+    climb-2      y 155  (19.4%)                    from y 153
+
+  RISING GROUND DOES NOT ENTER THE HEADLINE'S BAND. The closest it came is y 155, which is 44 rows below the glyphs
+  and 20 rows below the bottom of the drawn row. The drop-off marker sits around y 180, also below it. On the climb
+  the band behind the price is sky, because standing high puts the horizon low in the view - the frames where the
+  price was over world were the ones driving AT the mempool, where the building, not the terrain, fills the column.
+
+  THE CORE'S PRICE AGAINST THE DRAWN ONE, kept on the climb as instructed: core tape $80,993.99 at the third shot,
+  headline drew $80,994. Exact to the dollar again, a third matched reading after the two on the flat. The client is
+  drawing the core's tape, not a private MarketFeed value.
+
+  Size numbers unchanged by the climb and not re-derived: 77 px of numeral, a 135 px drawn row,
+  round(min(w,h) * 0.13), no shrink-to-fit.
+
+SO THE PROBE CLOSES: the road stays clear. Measured on flat ground and on the steepest climb this world offers, no
+driving surface reaches the headline, the smallest clearance being 20 rows under the drawn row. Nothing was restyled,
+no font rule, layout or assertion was touched, and the decision needed no font edit.
+Probe kept: packages/blwp-client/tools/measure-cab-climb.mjs.

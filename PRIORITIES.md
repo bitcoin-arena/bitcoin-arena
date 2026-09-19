@@ -122,7 +122,9 @@ a restyle: the number was right - 77 px of numeral - and "the middle" is the hor
 the top eighth of the view. CORRECTED on the same day: I first reported it as standing over sky, and out on the map
 it stands over the WORLD - the mempool facade and the battlefield reach the top of its column. What is true is the
 narrower claim: the driving surface, the truck and the drop-off marker sit well below it in every frame measured.
-Rising ground was never reached in those runs and is untested. Also measured, and the comparison the law asks for:
+Rising ground has now been driven: the truck climbed from 0.0 m to 3.1 m of
+ground, near the steepest this world offers, and the terrain still stops well below the headline - the road stays
+clear, on the flat and on the climb. Also measured, and the comparison the law asks for:
 the price drawn in the cab equals the core's own tape price to the dollar, so the client holds no private number. The road is clear, so nothing was restyled; the
 size is a fixed share of the short side, so that holds at every window size. Numbers in TASKBOOK.
 
