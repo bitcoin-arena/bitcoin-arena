@@ -151,17 +151,11 @@ of 4, which is a three-seed run against a five-seed row, not a regression.
 
 CANDLES: closed by measurement. The 16:42 report (candles move left then freeze at round start) does not reproduce on
 0.0.1617 - from the cab the core's shift slides and wraps 0.03 -> 5.58 m across 5400 ticks, and the drawn band changes
-17354 to 307820 pixels between consecutive frames. One thing photographed for a HUD letter of its own: from the cab
-the price headline is drawn about 80 px tall across the middle of the screen. MEASURED 2026-09-19 and closed without
-a restyle: the number was right - 77 px of numeral - and "the middle" is the horizontal one. Vertically it stands in
-the top eighth of the view. CORRECTED on the same day: I first reported it as standing over sky, and out on the map
-it stands over the WORLD - the mempool facade and the battlefield reach the top of its column. What is true is the
-narrower claim: the driving surface, the truck and the drop-off marker sit well below it in every frame measured.
-Rising ground has now been driven: the truck climbed from 0.0 m to 3.1 m of
-ground, near the steepest this world offers, and the terrain still stops well below the headline - the road stays
-clear, on the flat and on the climb. Also measured, and the comparison the law asks for:
-the price drawn in the cab equals the core's own tape price to the dollar, so the client holds no private number. The road is clear, so nothing was restyled; the
-size is a fixed share of the short side, so that holds at every window size. Numbers in TASKBOOK.
+17354 to 307820 pixels between consecutive frames. The cab price headline is CLOSED, and closed as NOT BROKEN
+(HARD Daniel 2026-09-19 08:42): do not restyle it, do not measure it again, do not open a HUD letter for it. It was
+measured once on the flat and once on a climb - the road is clear in every frame, and the price drawn in the cab is
+the core's own tape price to the dollar, so the client holds no number of its own. Numbers in TASKBOOK; nothing in
+the HUD was changed and nothing is to be changed.
 
 SHIPPED to the live signer nodes (2026-09-18 23:25): the round boundary no longer starves the page. The finality
 watch ran every entry's close work back to back on its own event loop - worst loop hold 26151 ms, none of it waiting
