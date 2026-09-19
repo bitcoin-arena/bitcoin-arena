@@ -40829,3 +40829,133 @@ SO THE PROBE CLOSES: the road stays clear. Measured on flat ground and on the st
 driving surface reaches the headline, the smallest clearance being 20 rows under the drawn row. Nothing was restyled,
 no font rule, layout or assertion was touched, and the decision needed no font edit.
 Probe kept: packages/blwp-client/tools/measure-cab-climb.mjs.
+
+### THE FIVE WAITS, RULED (2026-09-19, Daniel's delegation)
+
+Daniel: *"Lies die war tactics specs und beantworte dir die Fragen, am besten was einem dynamischen Krieg
+entspricht"*, then the five restated with *"Entscheide"*. So these are mine, made against §0's own definition of a
+dynamic war and written into WAR_TACTICS.md beside the measurement that forced each.
+
+ALL FIVE WENT AGAINST THE ROW, NOT THE RULE. That is a suspicious-looking result and it is why each one carries its
+own arithmetic here. Three were arithmetic defects (a window sized for a leg length the doctrine had replaced; two
+generator ranges copied onto a standard deviation; a coverage bar that dropped its own "at full strength"
+qualifier); two were contradictions with a rule already ruled to stay (§4.10's give-ground, §0's own column rule).
+NO DOCTRINE NUMBER MOVED on this pass: not the 27 m slot pitch, not the 46 m gun, not the 14/26/30 m depths, not
+§2.6's 12-20 s leg, not §4.3's 20 s cool-down, not §3's respawn entry, not §11.1's standoff or spread or squad z,
+not §4.10's gates, thresholds or ceilings. No core source file was touched at all - the diff is WAR_TACTICS.md,
+PRIORITIES.md and the probe.
+
+#### A9 - the cause is attrition, and the climb hypothesis was measured and withdrawn
+
+The first ruling written was "the two-gun bar is a bar on flat stretches", from the earlier band table (gap share
+23-24% where the seam climbs 0.57-0.73 m/m against 3-4% at 0.18-0.37). It was implemented at a 0.40 m/m threshold,
+measured, AND IT FAILED: flat stretches still ran 10.85% short against a 5% bar. Per metre of x, seeds 1-3:
+
+  climb m/m     0.0-0.1   0.1-0.2   0.2-0.3   0.3-0.4   0.4-0.6   0.6-0.9    0.9+
+  under 2 guns    9.72%    11.72%     6.03%     6.90%    11.26%    20.94%   18.22%
+  under 1 gun     1.12%     2.21%     1.35%     0.91%     1.05%     5.27%    1.16%
+
+So the climb roughly doubles the shortfall at 0.6+ and is real, but the FLATTEST ground is still 9.72% - nowhere
+near the bar. The climb was never the cause. The competing hypothesis, measured in the same run:
+
+  living hulls      12      10-11      8-9      6-7
+  under 2 guns    2.00%     9.70%   25.05%   33.20%
+  under 1 gun     0.15%     1.47%    5.20%    7.42%
+
+Monotonic in attrition and nothing else, and AT FULL STRENGTH THE ROW PASSES OUTRIGHT at 2.00% against its own 5%
+bar. The row admitted any side with >= 6 alive and then demanded double cover; a 46 m gun on a 27 m pitch covers
+163 m of seam twice over with twelve hulls and arithmetically cannot with six. §4.1's own kill-zone sentence already
+carries the qualifier the row had dropped - "every metre of the seam between the outer slots is inside the reach of
+at least 3 slots of a side AT FULL STRENGTH" - so the row contradicted the section it guards. RULED: two-gun bar at
+full strength, one-gun floor at any strength. Canonical 5 x 3600: 1.71% and 2.88%, both green. A thinned army
+leaving holes in its kill zone is losses biting (§0.1, §3's supply), not a fault to engineer away.
+
+#### H1 - §3's entry stays; the row stops counting columns
+
+Measured before: the walk-in share and the row move together and inversely on every seed - seed 7 settles near 30%
+walking in and the row CLIMBS to 59.08%, seeds 1 and 8 reach 44% and 48% and the row falls to 49.77% and 48.15%.
+The hold is stationary throughout, no post is abandoned, the settled hulls keep holding. §0's own reading rule
+already says a hull more than 40 m from its post is a COLUMN and that line rows do not count it - it had been
+applied to rows 2, 4b and 7 and missed on the hold row. Applied: canonical 65.69% against 60.48%, with 53248 of
+321770 pair tank-ticks excluded as columns. §3's entry deliberately NOT changed: a replacement still enters 52-87 m
+from its post, 137-176 times in five minutes, because that column is the one thing on the field that reads as
+resupply from the cab, and it is worth more than the row was.
+
+#### B3 - half ruled, still red, and the tempting answer measured false
+
+z: the band 4-12 m is `RIFLE_STANDOFF` 4 + `RIFLE_SPREAD` 8, whose own comment reads "so 4 to 12" - a DISTANCE from
+the seam, copied onto a STANDARD DEVIATION. Computed from the constants that write the posts, over a side's 36 men,
+nobody dead and no push applied: sd 2.98 m on one side and 4.52 m on the other. One side was under the old floor on
+every tick of every seed before a shot was fired. Corrected to 2 m, and measured PER SQUAD, which is §11.1's own
+scope (the scatter it writes is per man inside a squad; the differences between squads are §12.1's push doing its
+job, and a side-wide sd added the two together). Still red: 13.51% of 7296 squad-ticks out of band.
+
+x: the obvious ruling was that the 20 m floor is a bar on a DRAW - three squad anchors, uniform on [-80, +80]
+(`sim.js`), a man within +-8 m of his; over 200k draws the men's sd lands below 20 m on 19.6% of rounds. A relative
+bar was written against that (>= 0.6 x the anchors' own sd) and MEASURED FALSE, so it was withdrawn: the layout
+alone puts a side under a 10 m sd on about 3% of rounds, and the core does it on 46.5% of side-ticks - twelve times
+as often. The knot is NOT the draw. Left measured for the next probe: a squad's centre sits more than 12 m off its
+own anchor on 25.9% of squad-ticks (>24 m on 2.3%) and per-squad x spread is outside 2-12 m on 24.3%. The first
+question is whether that drift is §11.3's cover claims (12 m), §12.1's follow, or casualties collapsing a side onto
+one surviving squad. The 20 m floor STAYS until that is answered, and B3 stays red on both halves.
+
+#### A4a - the row, restated to the leg the cadence actually delivers
+
+The 10 s window was arithmetic under `period = 360 + (h % 240)` - a leg of at most 600 ticks puts a boundary inside
+every 600-tick window, for every team. The 20:30 re-ruling doubled the leg to 720-1200 and §4.3's cool-down to 1200,
+ON MEASUREMENT (at 6-10 s the new bounding tank reached its post on 56% of legs and a pair was on post together
+17.5% of the time - the cadence was moving the tanks the spec calls hold), and left the window at 10 s. The row
+carried the contradiction in its own middle column: "(a leg is 12 to 20 s)" beside a demand for a change every 10 s.
+Restated to 20 s. Canonical: 0 of 30. The cadence does not go back - reverting it to green a window would break H2,
+the hold row and §0's "Hold is the default" together.
+
+#### A11a - the row, and §4.10 stays
+
+The chain was already closed: no post across the seam in 3 of 3 failing windows <- no TAKE verdict (2 of 3
+outnumbered, 1 of 3 level) <- fewer hulls alive, 8.48 against 11.25 where crossing windows ran 10.81 against 9.86.
+§4.10 was RULED on 2026-09-19 to stay as written, and it says a side losing its stretch gives ground - so asking a
+team of EACH side to cross every 60 s asks for what the rule forbids. It is also anti-dynamic on its own terms: a
+test demanding both sides cross every minute is a front that oscillates symmetrically for ever, which is §0.1's
+point 2 (the homeostatic war) written as a bar. A beaten side must be allowed to stay beaten. Restated to three
+clauses: some side crossed in every window; a side that did not cross was outnumbered while it did not; and no side
+crossed in no window of its whole run. Canonical: 0 of 5 windows with neither side across, and all 3 non-crossing
+windows outnumbered.
+
+ONE DEFECT IN MY OWN ROW, FOUND AND FIXED: at TICKS = 3600 each side-run holds exactly one 60 s window, so the third
+clause restated the second and failed by construction with it (3 of 10 side-runs). It is now asserted only on a run
+with a second window (>= 7200 ticks) and prints "not asserted" below that, rather than printing a red that is the
+same fact twice.
+
+#### The table
+
+  canonical 5 x 3600, before: 28 of 39 rows, 11 red
+  canonical 5 x 3600, after:  35 of 44 rows,  9 red
+The count moved because three rows were SPLIT, not because the army changed: A9 into two bars plus an information
+line carrying the old number (12.32%, unchanged), A11a into three clauses, B3 into its ruled half and its unruled
+half. Reds 11 -> 9: A9, A4a and A11a's crossing bar green by ruling, B3 now two reds. The remaining nine are A11b,
+A13b, O1 (two), O4, B2, B3 (two) and B4, each with the holder it already had.
+
+#### The rulings at five minutes (3 seeds x 18000), which is where H1 failed before
+
+The canonical is 5 x 3600 (§0), but three of the five rulings had to survive a longer run to mean anything: H1
+passed at one minute before this pass and failed at five, and A11a's third clause has no meaning at a run length
+that holds one window.
+
+  A9    1.09% at full strength, 4.33% on the one-gun floor   green (the floor is closer to its bar here)
+  A4a   0 of 90 windows                                      green
+  A11a  0 of 15 windows with neither side across; 7 of 7 non-crossing windows outnumbered; 0 of 6 side-runs
+        that never crossed - the clause that only bites at this length, and it is green
+  H1    59.43% of 623288 pair tank-ticks, 228650 of 851938 excluded as columns (26.8%)   green
+        - and this is the decisive one: seeds 1 and 8 read 49.77% and 48.15% at this length before the ruling,
+          seed 1 is in this run, and the slip is gone because it was the columns all along
+
+NOT GREEN AT FIVE MINUTES, listed rather than buried, none of them one of the five waits: A2 4.1% of flips are
+fidgets against a 2% bar (canonical 0.42%), B1 74.48% against an 80% bar (canonical 84.11%), and B3 degrades
+further (z 31.43%, x 64.35% against canonical 13.51% and 61.21%). B3 getting WORSE with run length is evidence for
+its own named hypothesis - attrition collapsing a side onto its surviving squads - and is the first thing the next
+probe should test. O3 reads 3 of 3 against a bar of "4 of 5 seeds": a three-seed run against a five-seed row, an
+artifact of the run and not a regression.
+
+DEPLOY POSITION: A9 was the named blocker and it is green, but B3 is a red §0 doctrine row whose x number is
+unruled, and the standing rule is that nothing ships while a doctrine row is red. The army was NOT deployed on this
+pass and the Daily stays 0.0.1617. B3's concentration bug is the next work and the shortest path to the ship.

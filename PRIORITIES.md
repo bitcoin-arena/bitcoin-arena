@@ -20,32 +20,48 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-FIVE WAITS, all Daniel's, none of them mine to pick. Nothing else on this letter is blocked by them.
-  1. A9's coverage bar, red at 12.27% against 5%: is that bar flat-stretch only? The remainder is the seam's own
-     climb - a sample 40 m away in x is 70 m from a hull that sits a depth below it. Pitch, reach and depths stay.
-  2. §3's respawn entry: H1 falls under 50% on 2 of 12 seeds at five minutes (49.77%, 48.15%). A returning hull
-     enters 52-87 m from its post, 137-176 times in five minutes, and that count tracks the row - seed 7 with 137
-     passes, seeds 1 and 8 with 176 and 172 fail. The opening is NOT this: at tick 0 the hulls are on their lines,
-     where the recording's army stood at 77.3 m and walked in.
-  3. §11.1's two numbers for B3: the infantry line is a knot with a tail - too tight along the seam, too loose in
-     depth. Which number is wrong is a rule question.
-  4. A4a's 10 s quiet-window bar against the 20:30 cadence: the bar was a guarantee under a 6-10 s leg, and the
-     re-ruling made legs 12-20 s with a 20 s scoot cool-down, so no rule obliges a change inside a window. The row
-     or the cadence. Numbers in TASKBOOK; §2.6 and the cadence stay as they are.
-  5. A11a's crossing bar against §4.10 itself. §4.10 says a team losing its stretch gives ground, and RULED
-     2026-09-19 it stays as written: a side three hulls down is losing, so it gives, and the give readings are that
-     rule working. A11a asks a team of EACH side to cross every minute, which on those seeds the rule forbids. The
-     row or the rule. Diagnosed to the bottom - not layout, not the seam's climb, not the cadence, but attrition -
-     and nothing is retuned: the assertion, the gates, the cadence and pressure()'s two dimensions all stay.
+THE FIVE WAITS ARE RULED (2026-09-19), on Daniel's delegation - *"lies die war tactics specs und beantworte dir
+die Fragen, am besten was einem dynamischen Krieg entspricht"* / *"Entscheide"*. Every one of the five went against
+the ROW, not against the rule, and no doctrine number moved: not the 27 m pitch, not the 46 m gun, not the
+14/26/30 m depths, not §2.6's 12-20 s leg, not §4.3's 20 s cool-down, not §3's respawn entry, not §11.1's standoff,
+not §4.10's gates or ceilings. Written into WAR_TACTICS.md beside the measurement that forced each one. Where a
+ruling makes a red go green it says so, so nobody reads a greener table as the army having improved.
+  1. A9 - the two-gun coverage bar is read AT FULL STRENGTH, which is the qualifier §4.1's own kill-zone sentence
+     carries and the row had dropped; a one-gun floor holds at every strength. The cause was never the seam's climb -
+     that hypothesis was written, measured and withdrawn: the FLATTEST ground was still 9.72% short. It is attrition
+     alone, monotonic: 2.00% short at twelve hulls, 9.70% at ten or eleven, 25.05% at eight or nine, 33.20% at six or
+     seven. A 46 m gun on a 27 m pitch covers 163 m of seam twice over with twelve hulls and arithmetically cannot
+     with six, so below full strength the row asked for what no lever in the spec can give - and a thinned army
+     leaving holes IS losses biting (§0.1, §3's supply). GREEN: 1.71% at full strength, 2.88% on the floor.
+  2. H1's respawn - §3's entry STAYS (a replacement still walks in 52-87 m from the back edge; that column is the
+     war's visible resupply, and it is worth more than the row was). The ROW stops counting columns, which §0's own
+     reading rule already excluded from every other line row. It had scored a pair as not-holding whenever either
+     hull was walking in, so on a bloody seed it measured attrition and not holding. GREEN, and higher than
+     before: 65.69% against 60.48%.
+  3. B3's two numbers - HALF RULED, and B3 STAYS RED on both halves. The z band 4-12 m was the standoff's own RANGE
+     copied onto a STANDARD DEVIATION; the sd that generator produces is 2.98 m and 4.52 m on the two sides with
+     nobody dead and no push on, so the floor was unmeetable by the rule that writes the posts. Corrected to 2-12 m
+     and measured per squad, which is §11.1's own scope - still red at 13.51% of squad-ticks. The x floor is NOT
+     ruled: the obvious answer (that it is a bar on the three-anchor draw) was written and MEASURED FALSE - the
+     layout alone puts a side under a 10 m sd on about 3% of rounds and the core does it on 46.5% of side-ticks.
+     Something concentrates the line beyond where the anchors fell. That is a bug to find, not a bar to move.
+  4. A4a's quiet window - the ROW. Its 10 s was arithmetic under the 6-10 s leg it was written against; the 20:30
+     re-ruling doubled the leg to 12-20 s and the cool-down to 20 s on measurement and left the window behind, so
+     nothing obliged a change inside it and the row demanded one every 10 s while naming a 12-20 s leg in its own
+     middle column. Restated to 20 s, where the guarantee is arithmetic again. The cadence does NOT go back: at
+     6-10 s it moved the tanks the spec calls hold. GREEN: 0 of 30.
+  5. A11a's crossing bar - the ROW, and §4.10 stays as written (Daniel's own 2026-09-19 ruling). Asking a team of
+     EACH side to cross every 60 s is exactly what §4.10 forbids when a side is three hulls down, and a front that
+     oscillates symmetrically for ever is §0.1's own disease - the homeostatic war - written as a test. A beaten side
+     must be allowed to stay beaten; that is what ground changing hands means. Restated: some side crossed in every
+     window, and a side that did not cross was outnumbered while it did not. GREEN: 0 of 5, all 3 non-crossing
+     windows outnumbered - the row now guards §4.10 instead of fighting it.
 
-OPEN, and first of the five: A9's coverage bar. The army is deployed and every short seam metre now has two or more
-guns within reach, so the remainder is the SEAM'S OWN CLIMB - steep stretches where a sample 40 m away in x is past
-the 46 m reach from a hull standing a depth below it. Every lever is pinned by another rule: the slot pitch is in x
-and A8 asserts exactly that; the reach and the depths are spec; or the bar is read as flat-stretch only. Which one
-moves is Daniel's. Numbers in TASKBOOK. No deploy while A9 is red.
-
-ARMY, live: 28 of 39 rows pass, 11 red, and every one of the 11 is listed with a measured cause and a named
-dependency. Nothing is silent, nothing was retuned to make a row green, and nothing is deployed.
+ARMY, live: **35 of 44 rows pass, 9 red**, every one listed with a measured cause and a named holder. The count
+moved from 28 of 39 because three rows were SPLIT by the rulings, not because the army changed: A9 is now two bars
+plus an information line, A11a is three clauses, B3 is its ruled half and its unruled half. Reds went 11 to 9 - A9,
+A4a and A11a's crossing bar are green by ruling (each stated as such), B3 became two reds. Nothing was retuned to
+make a row green: no rule, no constant, no assertion in the core moved on this pass at all.
 
 WHAT WENT IN
 - A2 is fixed and in the tree (e2575f1): the give-ground branch used the step's own length as its deadband, so a hull
@@ -105,14 +121,33 @@ hold that word shut. The recording, having no word, would fail this row in every
 Free corroboration in the same run: the core's hulls stand at exactly the mean of §2.5's two lines at spawn, where
 the recording stands at 77 m and walks in. Numbers in TASKBOOK.
 
-NEXT: nothing unblocked on this letter but the five waits. Every other red is green, closed, or listed with a holder.
+NEXT: B3's concentration bug, which is now the shortest path to the ship. A9 no longer blocks, but the standing
+rule is "never deploy on red" and B3 is a red §0 doctrine row with an UNRULED number and a named, unexplained
+mechanism - so the army does NOT ship on this pass and I did not ship it. The other eight reds are held: A11b, A13b
+and O1's lane row are explained-not-fixable under the 20:30 gates Daniel ruled on; O1's mean push and B4 are
+diagnosed by measurement; O4 is a client test passing in its own suite; B2 is closed as measured. B3 is the only one
+of the nine with an open question in it, and it is mine to answer: the line is concentrated twelve times more often
+than the squad-anchor layout explains, and a squad's centre sits >12 m off its own anchor on 25.9% of squad-ticks.
+Then the army to the Daily, then M3 without asking (Daniel 2026-09-18 23:47 HARD).
 
 SUITES, each on its own run: rules 47/48 - the one red is `incoming fire costs the truck condition`, listed with its
 cause, its 15 s window a fixture whose own comment is stale against HEAD, and nothing it asserts touched - tactics
 17/17, vectors 8/8. The others stand from e2575f1, no core source having moved since. No Unity: no C# path moved.
 
-NOT DEPLOYABLE, and A9 alone is reason enough: nothing ships while a doctrine row is red. The Daily stays 0.0.1617
-with the node-side round-boundary fix live.
+A9 NO LONGER BLOCKS, AND THE ARMY STILL DOES NOT SHIP. A9 is green (1.71% at full strength against a 5% bar, 2.88%
+on the one-gun floor), so the item Daniel named as the blocker is closed - but B3 is a red §0 doctrine row and the
+standing rule is that nothing ships while one is red. I did not deploy. What is also NOT claimed: the army did not
+get better on this pass. A9 went green because the row was corrected to read as §4.1 already words it, and the
+measured army is the same army that was measured yesterday. The Daily stays 0.0.1617.
+
+CONFIRMED AT FIVE MINUTES (3 seeds x 18000), which is the length the rulings had to survive because it is where H1
+failed before: A9 1.09% at full strength and 4.33% on the floor; A4a 0 of 90; A11a 0 of 15 windows with neither side
+across, 7 of 7 non-crossing windows outnumbered, and 0 of 6 side-runs that never crossed - the clause that only has
+meaning at this length. H1 59.43%, where seeds 1 and 8 read 49.77% and 48.15% before, with 228650 of 851938 pair
+tank-ticks excluded as columns. NOT GREEN AT FIVE MINUTES, and listed rather than buried: A2 4.1% of flips are
+fidgets against a 2% bar, B1 74.48% against 80%, and B3 gets worse (z 31.43%, x 64.35%) - which is itself evidence
+for B3's named hypothesis, that attrition collapses a side onto its surviving squads. O3 reads 3 of 3 against a bar
+of 4, which is a three-seed run against a five-seed row, not a regression.
 
 CANDLES: closed by measurement. The 16:42 report (candles move left then freeze at round start) does not reproduce on
 0.0.1617 - from the cab the core's shift slides and wraps 0.03 -> 5.58 m across 5400 ticks, and the drawn band changes
@@ -134,12 +169,16 @@ for the machine - so a page's 8 s names call was aborted and its next session st
 and a peer's /results has a 2500 ms deadline. After: worst hold 1872 ms, 0 refused calls in 1048, both tabs saw the
 other truck in round two after 12.4 s and 12.6 s. Node-side only: the Daily page stays 0.0.1617.
 
-B3 (the infantry line's spread) is still UNMEASURED: a probe written for it counted about one qualifying side-tick
-per seed while the row reports 52.44% of them out of band, so the two were not counting the same thing. It was
-withdrawn rather than reported; whatever replaces it must agree with the row first.
+B3 IS MEASURED AND HALF RULED (2026-09-19). Its z band was a generator range copied onto a standard deviation and is
+corrected (2-12 m, per squad, §11.1's own scope) - still red at 13.51% of squad-ticks. Its x floor is NOT ruled and
+the tempting answer was measured false: the three-anchor layout alone puts a side under a 10 m sd on about 3% of
+rounds, the core does it on 46.5% of side-ticks, so the knot is not the draw. Measured and waiting for the next
+probe: a squad's centre sits more than 12 m off its own anchor on 25.9% of squad-ticks, and per-squad x spread is
+outside 2-12 m on 24.3%. The first question is whether that drift is §11.3's cover claims, §12.1's follow, or
+casualties collapsing a side onto one surviving squad.
 
-THEN, once A9 is ruled: finish the army's remaining reds (A11a, A13b, O1, S1-adjacent, B2/B3/B4), ship it to the
-Daily, ping Daniel, and start M3 without asking (Daniel 2026-09-18 23:47 HARD). His eyes on drop-off / result /
+A9 IS RULED, so: ship the army to the Daily, ping Daniel, and start M3 without asking (Daniel 2026-09-18 23:47
+HARD). The remaining reds are listed above with holders and none blocks the ship. His eyes on drop-off / result /
 SPECTATE stay deferred until the army is finished.
 
 SHIPPED on the Daily, three playtest letters, numbers and causes in TASKBOOK:
