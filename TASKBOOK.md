@@ -39841,3 +39841,25 @@ TWO CONCLUSIONS CHANGE, and both are the longer run's doing, not a code change:
 What does NOT change: A11b never passes on any seed at either length, and O1 fails on eleven of twelve at five
 minutes with full samples - so the empty denominator was a reporting fault, not the reason that row is red. The five
 cadence rows stay listed, none loosened, and A9 is untouched.
+
+### H1's five-minute slip has a cause: the walk-in share, set by attrition (2026-09-19 07:4x)
+
+H1 counted by fifth of an 18000-tick run, with the share of tank-ticks belonging to a hull that has not yet stood on
+a post since it spawned printed beside it:
+
+  seed 1  (fails, 49.77%)   61.0% (22% walking in) | 54.0% (34%) | 48.5% (39%) | 40.1% (43%) | 43.4% (44%)
+  seed 8  (fails, 48.15%)   55.6% (23%)            | 50.3% (32%) | 46.0% (36%) | 47.4% (34%) | 40.5% (48%)
+  seed 7  (passes, 59.08%)  55.6% (21%)            | 55.3% (30%) | 64.1% (25%) | 61.6% (27%) | 60.1% (30%)
+
+The two move together, inversely, on every seed: where the walk-in share settles near 30% the row passes and even
+climbs (seed 7 ends higher than it started); where it climbs past 40% the row falls under its bar. Nothing else in
+the row moves - the hold is stationary, the posts are not abandoned, and the settled tanks keep holding.
+
+So the deployed start is not undone by anything in the hold rules; it is diluted by RESPAWNS. §3 enters a returning
+hull at the back edge, which is a walk of up to 70 m, and a bloodier seed simply has more hulls walking at any
+moment. Seeds 1 and 8 end with 44% and 48% of their pair tank-ticks in transit; seed 7 ends with 30%.
+
+THE LEVER IS §3's ENTRY, and it is not mine: the same shape of question as A9's pinned levers and B3's §11.1 numbers.
+A respawn that enters nearer its post would lift H1 on the bloody seeds, and it would also change what a reinforcement
+means. Written down, not picked. H1 stays listed as red on 2 of 12 seeds at five minutes, green at one minute and on
+the other ten.

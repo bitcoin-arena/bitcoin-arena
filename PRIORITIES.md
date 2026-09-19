@@ -48,9 +48,11 @@ ARMY, tonight, on the same letter: rows passing 24 -> 27 of 39.
 - All twelve remaining reds are listed in TASKBOOK, one line of reason and what each depends on, none of them silent:
   five hang on the push cadence (A11a, A11b, A13b, both O1), A9 is Daniel's ruling, O4 is a client test not written,
   B2 and B4 are measured independent of B3, and three are single-window or seed-spread misses with no cause measured.
-- NEW, and the short sweep hid it: H1 falls UNDER its own 50% bar on 2 of 12 seeds at five minutes (49.77% and
-  48.15%) where every seed passed at one. Spawning on post is not the whole of "hold is the default" - the gain
-  decays as attrition puts hulls back on the walk-in. Not started; it belongs on this letter next.
+- NEW, and now measured: H1 falls under its own 50% bar on 2 of 12 seeds at five minutes (49.77%, 48.15%), and the
+  cause is the WALK-IN SHARE, which attrition sets. By fifth of a run, on-post and walking-in move together
+  inversely - seed 1 goes 61.0% on post / 22% walking in to 43.4% / 44%, seed 8 to 40.5% / 48%, while seed 7 settles
+  at 30% walking in and ENDS HIGHER than it started (60.1%). Nothing in the hold rules moves; §3 enters a respawn at
+  the back edge, up to 70 m from its post. That lever is Daniel's, like A9's and B3's.
 - A SECOND QUESTION FOR DANIEL, beside A9: do the push bars still describe the army that holds its posts? A13b is 8
   points short and O1 1.9 points, at a cadence the spec itself slowed on purpose. And because the widow brake ties the
   push rate to attrition, judging these five wants a seed sweep rather than another probe of the same run.
