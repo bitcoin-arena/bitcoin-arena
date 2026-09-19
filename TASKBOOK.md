@@ -89,6 +89,15 @@ be theatre.
    drifts with its squad. §11.3's own sentence settles it ("it is his post while he holds the claim"): a held place
    is 0 m from his post, and only the clamp and the living-tank rule can take it. After, 6.8 s and 80 against 61.
 
+   SUITES with cover in. Core, each on its own run: rules 50/50, tactics+candles+chart+spawn 37/37,
+   canonical+specified+replay+poison+private-world+cbrt 22/22, vectors+bundle 20/20, goldens regenerated because
+   the state grew 140 -> 212 words. Unity EditMode 254 of 258, 3 skipped, 0 error CS, one red (the long-listed
+   CombatFx rifle flash). Unity PlayMode 229 of 256, 13 skipped, 14 red - the same fourteen as before this letter,
+   name for name: ten read Battlefield.Army, RoadsAreActuallyDrawn needs a graphics device, two MushroomResting
+   rows sit on the authored skirt offset, GhostAcrossTheDoors is the full-suite flake. Nothing new, nothing
+   loosened - and a quiet Unity result is the one to expect, because the renderer does not read the cover word at
+   all yet: §11.4's posture bits are what it will read.
+
 PLAYTEST CHAIN 2026-09-19 12:55-13:10 (Daniel), nine items. Numbers.
 
 Item 2, the doji band. Daniel's shot hud-sideways-vs-upside-1255.png, measured on the Daily's own tape: the six
