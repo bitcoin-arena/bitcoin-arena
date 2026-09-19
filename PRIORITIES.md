@@ -20,13 +20,13 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-# LIVE LETTER  -  2026-09-19 23:40
+# LIVE LETTER  -  2026-09-20 00:30
 
-WHERE THE GAME IS: **btc-logistics-core.pages.dev at 0.0.1739** (deploy 9cac533f), unchanged since 19:47. The core in that
-build was byte-identical to packages/core/dist AS IT STOOD AT 9cac533f - today's dist is three commits ahead of it
-and is NOT what is serving - and it is listed in known-cores and known-good-clients, with the signer nodes at
-/mnt/bitcoin/blwp-2of2/code running that same commit. btc-logistics-war untouched. No milestone freeze URL:
-no numbered milestone closed.
+WHERE THE GAME IS: **btc-logistics-core.pages.dev at 0.0.1739** (deploy 9cac533f), unchanged since 19:47 on the
+19th. The core in that build was byte-identical to packages/core/dist AS IT STOOD THEN - today's dist is many
+commits ahead and is NOT what is serving - and it is listed in known-cores and known-good-clients, with the signer
+nodes at /mnt/bitcoin/blwp-2of2/code running that same commit. btc-logistics-war untouched. No milestone freeze
+URL: no numbered milestone closed.
 
 WHAT IS LIVE is the 19:47 letter and nothing since: the world grown east, the delivery line at 168.6 m, tanks
 pathing around craters, a nuke that kills everything in its blast, no asphalt where a candle stands, spectate
@@ -40,18 +40,31 @@ WHAT HAS LANDED ON THE BRANCH SINCE AND IS **NOT** LIVE (each named by its own c
 - **§11.3 cover is closed** (cf0cb8b4). Men claim wrecks, craters and candle lips and stay in them; a held claim is
   no longer re-clamped, so clamp deaths on held claims went 106 -> 1. §0's "wrecks and craters are used" wanted
   >= 70% and stands at 72.9% frozen, 82.0% scrolling, bar untouched, up from 1.0%.
-- **§11.4 posture is measured, not written** (75d5bdae). The share is in TASKBOOK.
+- **§11.4 posture is closed in the core** (7bc7c1f6). STAND / PRONE / COVER in the bits §11.3 reserved; the rifle
+  that fires at a man reads them; COVER rifle deaths 22.4 -> 5.7 per 100k man-ticks, the ruled quarter; a bomb
+  reaches a COVER man only inside 8 m. §0's 2x clause stays listed at 0.35, not retuned.
+- **§11.5 suppression is WRITTEN BUT NOT CLOSED** (2383c95b). Fire pins a rifleman: TAC_SUPP, 18 words, +60 a
+  round, -1 a tick, pinned at 120; a pinned team does not rush, a pinned man crawls and reloads at half rate.
+  Rifle volume fell 6967 -> 3920 rounds. TWO CORE HOLES ARE OPEN AND MEASURED - see below.
 
-WHY IT IS NOT LIVE, and none of these is test colour:
+§11.5's OPEN HOLES, found by measuring the write rather than trusting it:
+- **A pinned man reads STAND on four ticks in five.** §0 says he is never STAND and never steps past 0.01 m. The
+  crawl is 0.00833 m a tick, but x and z are steered by separate controllers and the probe reads |dx| + |dz|, so a
+  diagonal crawl spends the budget twice: 105381 of 133536 pinned man-ticks step past 0.01 m (78.9%) and 106402
+  are written STAND (79.7%). The suites are green because nothing asserts that row.
+- **The bounding rule reads the pin instead of the clock.** §11.5 says a pinned team's neighbour may halt when the
+  pinned team's CLOCK says halt; the pin was OR-ed into `halted` before the neighbour test reads it, so a pinned
+  team forces its neighbour to rush.
+
+WHY NOTHING IS LIVE, and none of these is test colour:
 1. **Men in holes draw below the mesh.** Unity carves a crater bowl the core does not, so the men §11.3 correctly
    put in cover are drawn sunk into the ground. On screen that reads as broken. This is the first blocker.
-2. **The renderer does not read TAC_COVER.** Until §11.4's bits are written AND drawn, a man in cover is shot
-   exactly as often as a man in the open: the player gets the visual regression above and no benefit at all.
-3. **The signer nodes would refuse the round.** Goldens are deliberately stale through §11.4 (vectors+bundle 3/20)
-   and the core hash is unpinned. RULED 2026-09-19: the regeneration belongs to the DEPLOY that ships the whole
-   cover block together - occupancy, posture and suppression - and is neither a §11.4 task nor a letter of its own.
-   §11.5 changes rifle and movement behaviour again, so regenerating before it would pin a core hash that will
-   never be served and cost two regenerations instead of one.
+2. **The renderer does not read TAC_COVER.** Posture is written and acted on, but a man in cover looks exactly like
+   a man in the open - he is only harder to kill. The player gets the visual regression above and no visible
+   benefit at all.
+3. **The signer nodes would refuse the round.** Goldens are deliberately stale (vectors+bundle 2/20) and the core
+   hash is unpinned. RULED: the regeneration belongs to the DEPLOY that ships the whole cover block together -
+   occupancy, posture and suppression - and is neither a letter's task nor a letter of its own.
 
 NOT A BLOCKER, and listed so it is not raised again: "not cannon fodder" at 34.1 a side per 60 s quiet and 48.1
 with a nuke every 30 s, against a bar of 20. Bombs and nukes clear circles; cover is for the rifle and the coax.
