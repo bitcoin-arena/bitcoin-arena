@@ -41139,3 +41139,30 @@ SO B3 CANNOT BE MADE GREEN WITHOUT A RULING. The core places men where §11.1 sa
 spread in depth. Every remaining lever is the row's: the floor's anchor set, or the in-transit tolerance. Neither is
 taken here - both were explicitly forbidden - and no band, floor, ceiling, population or doctrine number was moved.
 The measurement is the answer; the change is a decision.
+
+### B3 LISTED RED, final (2026-09-19, ruled: keep the bar, keep the measurement, change nothing)
+
+RULED: B3 stays listed red on both halves. The floor, the in-transit tolerance, the band, the ceiling, the
+population, every doctrine number, every assert and the core source all stay as they are. Dropping a dead squad's
+anchor from the floor would be a row change made after the five-wait ruling, and it would leave the row red anyway -
+about 12.2% x miss instead of 19.49%.
+
+THE CAUSE, in the four numbers that carry it:
+  1. THE RIFLEMEN ARE ON THE POSTS THE CORE WRITES. Distance from each man to his own post (anchor +-9 m) is the
+     same whether the tick fails or passes: mean |man - post| in x, median 10.0 m failing against 7.9 m passing;
+     share of men more than 5 m off post, median 51.4% failing against 53.8% passing. There is no placement fault.
+  2. X - the floor spans squads that are dead. 48.0% of failing side-ticks have a wiped squad against 11.1% of
+     passing ones, and 2107 of the 5615 failures - 37.5% - would pass if the floor used only the anchors of squads
+     that still have a living man. The remaining 62.5% is genuinely tight men and the 60 m ceiling.
+  3. Z - squads in motion. The median failing squad has ZERO halted men; 73.9% of failures are looser than 12 m at
+     a median z sd of 13.4 m, just over the ceiling. The ruled population counts men in transit on purpose.
+  4. THE RECORDING IS MORE SPREAD THAN THE CORE - side-wide infantry z sd 17.78 m against the core's 8.76 m from
+     t=30, with the core's per-squad median at 7.70 m, inside the band. So there is no C# rewrite to make, no
+     spread or halt number to port, and no reason to change what the core does.
+
+NO LATER ITEM IS OPENED TO "FIX B3 IN THE CORE". The residual is the row's, not a placement fault, and moving the
+army to fit a bar would be worse than tuning the bar. The dependency stands where the letter named it: the
+in-transit tolerance §0 gives every other distributional row and B3 alone does not carry.
+
+STATE: z 18.75% of 64753 squad-ticks, x 19.49% of 28812 side-ticks, both red, both zero-tolerance. 35 of 44 rows
+pass. The army does not ship while B3 is red.

@@ -130,12 +130,14 @@ hold that word shut. The recording, having no word, would fail this row in every
 Free corroboration in the same run: the core's hulls stand at exactly the mean of §2.5's two lines at spawn, where
 the recording stands at 77 m and walks in. Numbers in TASKBOOK.
 
-B3 IS LISTED RED on both halves and is the reason the army does not ship: z 18.75% of squad-ticks, x 19.49% of
-side-ticks, cause and dependency in TASKBOOK. The zero tolerance stays - a number picked to clear today's figure
-would be tuning - and the recording closed the rewrite fork, being more spread in depth than the core and carrying
-neither of B3's asserts. The other eight reds are held: A11b, A13b and O1's lane row are explained-not-fixable under
-the 20:30 gates; O1's mean push and B4 are diagnosed by measurement; O4 passes its own client suite; B2 is closed as
-measured.
+B3 IS LISTED RED on both halves and is why the army does not ship: z 18.75% of squad-ticks, x 19.49% of side-ticks.
+RULED 2026-09-19: keep the bar and change nothing. The riflemen stand on the posts the core writes - a failing tick's
+men are no further from their posts than a passing tick's - so there is no placement fault to fix. The x miss is a
+floor that still spans squads with no living man on them; the z miss is squads in motion, which the ruled population
+counts on purpose; and the recording is more spread in depth than the core, so there is nothing to port. No core
+change is opened for it. Dependency: the in-transit tolerance B3 alone does not carry. Numbers in TASKBOOK. The other
+eight reds are held: A11b, A13b and O1's lane row explained-not-fixable under the 20:30 gates; O1's mean push and B4
+diagnosed by measurement; O4 passes its own client suite; B2 closed as measured.
 Then the army to the Daily, then M3 without asking (Daniel 2026-09-18 23:47 HARD).
 
 SUITES, each on its own run: rules 47/48 - the one red is `incoming fire costs the truck condition`, listed with its
