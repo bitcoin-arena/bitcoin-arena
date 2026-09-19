@@ -315,10 +315,14 @@ genuinely is §8.1's 26 m and is untouched.
    2505404 STAND man-ticks belong to a pinned team, so STAND falls to 1628497 while the down count rises to
    1974236. The remainder stays listed at 0.35 and is not touched here.
 
-   SUITES: rules 50/50, tactics 21/21, candles+chart+spawn 18/18, canonical group 22/22, vectors+bundle 2/20 with
-   goldens deliberately stale until the deploy that ships occupancy, posture and suppression together. No C#
-   touched, so no EditMode and no PlayMode run. The §4.12 assault count is re-measured a fourth time, 10 -> 11,
-   because pinning stops teams that were rushing; asserted exactly with its per-seed table.
+   SUITES AT THE WRITE (2383c95b): rules 50/50, tactics 21/21, candles+chart+spawn 18/18, canonical group 22/22,
+   vectors+bundle 2/20 with goldens deliberately stale until the deploy that ships occupancy, posture and
+   suppression together. No C# touched, so no EditMode and no PlayMode run. The §4.12 assault count is re-measured
+   a fourth time, 10 -> 11, because pinning stops teams that were rushing; asserted exactly with its per-seed table.
+
+   SUITES NOW (f320932a onward, and this line is the current one): tactics is 20/21 - the §11.3 cover row went red
+   at 64.7% against 70 when the pose fix landed, listed with its cause and dependency in 3c and 3e. Everything else
+   is unchanged: rules 50/50, candles+chart+spawn 18/18, canonical group 22/22, vectors+bundle 2/20.
 
 §11.4 POSTURE - THE BITS WRITTEN (2026-09-19). Before and after, five seeds x 180 s, a nuke every 30 s.
 
