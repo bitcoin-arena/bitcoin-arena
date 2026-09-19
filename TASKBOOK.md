@@ -117,6 +117,65 @@ be theatre.
    flash). PlayMode 229 of 256, 13 skipped, 14 red - the same fourteen, name for name, none new. The renderer still
    does not read the cover word, so a quiet Unity result is the expected one.
 
+7. THE PUSH AND THE CLAMP - what actually closed the row (2026-09-19, e722a87d and cf0cb8b4).
+
+   Two faults, both measured before they were touched, neither a loosened bar.
+
+   (a) THE 0.6 m MAN. C#'s AvoidWrecks pushes a unit out of a bowl by (r + size) - d, 3.2 m for a tank and 0.6 m
+   for a man, and both sizes were carried across because they sat on one line. §11.3 overrules the man's half, and
+   §0's fault list names the result. Kept, the two rules fought every tick: a crater place sits 1 m INSIDE the rim
+   and the shove put him 0.6 m outside it.
+
+     crater claims held 802, reached 0 (0.0%)  ->  21.5%
+     wreck  claims held 901, reached 3 (0.3%)  ->   5.9%
+     occupancy 55.8% -> 57.9%, claim man-ticks reached 5.3% -> 6.7%
+     living man-samples inside a live crater bowl 0.0% -> 6.8%; tanks 0 of 3165 either way
+
+   (b) THE CLAMP TAKING BACK A HOLE. [seam - side x 40, seam + side x 8] says which places a man may be SENT to;
+   applied again every tick to a claim he already held it took the hole from under him mid-walk, by a hair:
+
+     clamp deaths 106, of which 105 broke the FRONT bound
+     overshoot past the bound     mean 0.08 m, p90 0.13 m
+     the seam moved since taking  mean 5.45 m, p90 11.72 m
+     walk still left at the drop  mean 35.3 m = 12.6 s at his gait, closing at 2.71 of a 2.79 m/s gait
+     the place itself moved       0.00 m over eight seconds
+
+   A held claim is no longer re-clamped. The living-tank rule still takes it (§0's fault list) and a respawning
+   wreck or an expiring crater still ends it. AFTER:
+
+     clamp deaths                106 -> 1 (and that one had 0.1 m left to walk)
+     occupancy                 57.9% -> 71.6%   claim man-ticks reached 6.7% -> 17.5%
+     a lip claim's life         7.8s -> 13.0s   claims 151 -> 76
+     a wreck claim's life       4.0s ->  5.6s   claims  60 -> 38
+     §11.3 suite metric                72.9% against the 70% bar, 38.5% of man-ticks holding a claim
+
+   ON A LIVE SCROLLING TAPE (a sample every 5 s, which is the game rather than the suite's frozen drive):
+   occupancy 82.0%, reached 10.9%, a lip claim 14.8 s. LISTED, not blocking: a lip place id is the chart SLOT and
+   not the body, so a tape shift hands a man a different candle - `body moved` 3 of 94 lip claims scrolling, 0 of
+   151 frozen.
+
+   RULED OBSERVATIONS, not loosened asserts: the §4.10 verdict is read AT the step, because §4.10's own respawn
+   clear lands in the same tick (seed 4 tick 2668); and the §4.12 assault quota is the measured count, 8 with
+   §4.14 alive and 10 after cover moved who holds an objective, asserted exactly with the per-seed table beside it.
+
+   WHY IT IS NOT DEPLOYABLE YET, and it is not test colour: Unity carves a crater bowl the core does not, so men
+   correctly standing in holes draw below the mesh (ImportedModelTests.SoldiersStandOnTheGroundAndAreAnimated,
+   listed with that cause, assert untouched); the renderer does not read the TAC_COVER word and §11.4's hit
+   thresholds do not exist, so a man in cover is shot as often as a man in the open and the dying is unchanged;
+   goldens are deliberately not regenerated, so vectors+bundle is 3/20 and the core hash is unpinned.
+
+   SUITES at the close: rules 50/50, tactics 21/21, candles+chart+spawn 18/18,
+   canonical+specified+replay+poison+private-world+cbrt 22/22, vectors+bundle 3/20 (goldens stale by instruction).
+   Unity EditMode 254/258, 3 skipped, 1 red (CombatFx rifle flash, long-listed). Unity PlayMode 229/256, 13
+   skipped, 14 red: nine read the retired Battlefield.Army, RoadsAreActuallyDrawn needs a graphics device, two
+   MushroomResting sit on the authored skirt offset, GhostAcrossTheDoors is the full-suite flake, and Soldiers...
+   is the one above. None new, none unexplained. PostOfficeTests.TheGogglesAnimate appeared once and passed on
+   re-run - a flake, named.
+
+   ALSO FOUND HERE, and it cost three empty runs: `-quit` together with `-runTests` makes the Unity editor exit
+   before the test runner starts. One earlier run only produced results because a slow asset import delayed the
+   quit, and it reported five reds off a stale assembly. Drop `-quit` for every -runTests invocation.
+
    SUITES with cover in (wrecks and craters only). Core, each on its own run: rules 50/50, tactics+candles+chart+spawn 37/37,
    canonical+specified+replay+poison+private-world+cbrt 22/22, vectors+bundle 20/20, goldens regenerated because
    the state grew 140 -> 212 words. Unity EditMode 254 of 258, 3 skipped, 0 error CS, one red (the long-listed

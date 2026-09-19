@@ -53,15 +53,24 @@ the Editor's army rows (no core outside the browser), RoadsAreActuallyDrawn (no 
 MushroomRestingTests (authored skirt offset), GhostAcrossTheDoors (full-suite flake), CombatFx rifle flash
 (retired C# army). None loosened.
 
-ON TOP NOW: **§11.3 cover**, MEASURED, not started. The share is in TASKBOOK and it decides what the letter is
-worth: the row it can close, "wrecks and craters are used", stands at **1.0% against a 70% bar** with a place free
-within 12 m of a man on **96.9%** of ticks - entirely undone, and closable. The row it cannot close, "not cannon
-fodder", is at **34.0 men a side per 60 s** with no nukes and **43.1** with them, against a bar of 20 - and cover
-reaches at most **9.0%** of those deaths in the quiet world, **3.6%** with nukes landing, because bombs and nukes
-clear circles and cover does not answer them. The player sees nothing until §11.4's thresholds exist: a man in
-cover is shot as often as a man in the open until then. The old army has no cover to port; its only artefact is
-AvoidWrecks, the inverse, already in the core for tanks. Then §11.4 posture in the TAC_COVER high bits, §11.5
-suppression, §4.4 coax. M3's remainder stands behind them, its fixture pair needing a third re-pick.
+§11.3 COVER IS **DONE** (2026-09-19, cf0cb8b4). §0's "wrecks and craters are used" wanted >= 70% and stands at
+**72.9%** on the suite's drive and **82.0%** on a live scrolling tape, the bar untouched. Men claim wrecks, craters
+and candle lips, walk to them at their own gait, and stay: a held claim is no longer re-clamped, so clamp deaths on
+held claims went 106 -> 1. A man is no longer pushed out of a bowl and a tank still is - 6.0% of man-samples inside
+a live crater, 0 of 3165 tank-samples. The old army had none of this: its only cover artefact was AvoidWrecks,
+pushing men OUT. Numbers in TASKBOOK.
+
+NOT DEPLOYED, and not on test colour: Unity carves a bowl the core does not, so men correctly standing in holes
+draw below the mesh (PlayMode SoldiersStandOnTheGroundAndAreAnimated, listed with that cause); the renderer does
+not read the TAC_COVER word and §11.4's thresholds do not exist, so cover buys the player nothing yet; goldens are
+deliberately stale. The Daily stays at 0.0.1739.
+
+LISTED against §11.3, measured, not blocking its row: a candle-lip place id is the chart SLOT, not the body, so a
+tape shift hands a man a different candle - 3 of 94 lip claims on a scrolling tape, 0 on a frozen one.
+
+ON TOP NOW: **§11.4 posture** in the TAC_COVER high bits - STAND / PRONE / COVER and the hit thresholds that make
+cover worth something - then §11.5 suppression, then §4.4 coax. M3's remainder stands behind them, its fixture pair
+needing a third re-pick.
 
 LISTED, each its own thing and none of them B:
 1. **91 files write `blockTicks: 9000`** against cores that end at 10800 - 21 client tests, the node suite, four
