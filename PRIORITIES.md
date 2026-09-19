@@ -54,16 +54,18 @@ ARMY, tonight, on the same letter: rows passing 24 -> 27 of 39.
   here and tunnelled to the MacBook; the Daily stays 0.0.1617 because A9 is red. The unblocked miss is six rows now,
   not seven. The war table still prints O4 red on purpose: that probe cannot run a client test, and its row now names
   the file that can, so a core run is never read as having answered it.
-- A2's FIDGET ROW: the fix is one line, it is measured, and it is HELD on a ruling. The give-ground branch used the
-  step's own length as its deadband - about 4 cm - so a tank already inside its back-off point stepped a whole step,
-  landed the other side of it and reversed next tick; the walk-to-post branch eight lines below records fixing that
-  same fault with POST_DEPTH and this one was left out. With the post's band there: A2 2.11% -> 0.42% against a 2%
-  bar, rows passing 27 -> 28 of 39, and not one other row changes verdict. It is NOT in the tree: it turns
-  `incoming fire costs the truck condition` red on 2 of 3 seeds. That test parks the truck under fire for 15 s, and
-  on HEAD it already passes by 1.31 of 100 points while its own comment records numbers eight seconds out of date.
-  The army is not more exposed - identical tank-ticks in reach, the third seed unchanged, the first ten seconds of
-  the first seed identical - so this is jitter on a fixture standing on its edge. Moving that 15 s is Daniel's, not
-  mine. Numbers and the patch in TASKBOOK.
+- A2 IS GREEN AND IN THE TREE (Daniel ruled it in). The give-ground branch used the step's own length as its
+  deadband - about 4 cm - so a tank already inside its back-off point stepped a whole step, landed the other side of
+  it and reversed next tick; the walk-to-post branch eight lines below records fixing that same fault with
+  POST_DEPTH and this one was left on the C# leftover. With the post's band: A2 2.11% -> 0.42% against a 2% bar,
+  rows passing 27 -> 28 of 39, and the only line that differs in the whole table is A2's own.
+  Goldens regenerated on purpose, as the spawn-on-post change regenerated them: the vectors hash the whole state, so
+  6 of 8 moved with the army (practice and liquidation did not). The truck's own line was compared first.
+  ONE RED LISTED, NOT LOOSENED: `incoming fire costs the truck condition`, 2 of 3 seeds. Nothing it asserts moved and
+  the 15 s stands. The army is not deadlier - sampled over twelve seeds, write-offs 8 of 12 either way, hits 3.7
+  either way, the army marginally FURTHER out - and one vector that looked deadlier (`fallout`) was measured and is
+  one draw, not a trend. The fixture's own comment is eight seconds out of date and HEAD passes it by 1.31 of 100
+  points; it stays red until that window is re-measured. Numbers in TASKBOOK.
 - O1 mean and B4 stay red with their cause listed, not fixed: an objective lane's +8 rest is STEPPED on the same
   five-second clock that §4.11 uses to move the objective, so a lane that just became the objective still sits at 0
   while the +8 moves on. The failing seeds move it twice as often (35 lane changes against 18). Ruled 2026-09-19:

@@ -40137,3 +40137,42 @@ THE RULING, Daniel's, not mine: the 15 s is that test's setup and I will not mov
 (a) 15 s still states the doctrine - then HEAD is already nearly failing it and the army's lethality is a bug of its
 own, older than this patch; or (b) it is a fixture whose numbers are eight seconds out of date and it gets
 re-measured from the army that exists, at which point the patch goes in as it stands. A2 stays listed until then.
+
+### A2 is in the tree: the give-ground branch uses the post's band (2026-09-19, Daniel ruled it in)
+
+Ruled: core keeps the intended rule in the right units, not the C# leftover. The 15 s of `incoming fire costs the
+truck condition` is NOT moved and nothing it asserts is touched.
+
+  A2 fidgets      before  5 of 237 = 2.11%  FAIL        after  1 of 240 = 0.42%  PASS
+  rows passing    before  27 of 39                      after  28 of 39
+  whole table     the only line that differs between the two runs is A2's own. No row changes verdict either way.
+
+GOLDENS REGENERATED ON PURPOSE, the way the spawn-on-post change regenerated them (e6ccab1). The vectors hash the
+WHOLE state, army included, so a ruled army change moves them by construction: 6 of 8 diverged (straight, slalom,
+handbrake, reverse, idle, fallout), and practice and liquidation did not - practice is shielded, so nothing fires.
+Before regenerating, the truck's own line was compared tick for tick on every vector to be sure this was the army
+and not the driving.
+
+ONE VECTOR LOOKED LIKE A DEADLIER ARMY AND IS NOT. On `fallout` the truck ends written off where it had ended at
+69.05 hp: hits 5 -> 13, damage 30.9 -> 100.0, tank-ticks in reach 3918 -> 4499, mean nearest tank 42.9 -> 36.1 m.
+That reads as a closer, deadlier line, so it was sampled instead of argued - twelve seeds, 3600 ticks, truck under
+full throttle, same measurements:
+                       hp (mean)   hits   tank-ticks in reach   mean nearest   written off
+  HEAD                   25.03      3.7          6382              29.7 m         8 of 12
+  with the post's band   25.01      3.7          6330              30.2 m         8 of 12
+Same write-offs, same hits, marginally FEWER tank-ticks in reach and the army marginally further out. `fallout` is
+one draw of a chaotic run going the other way, not a trend. The claim "the army is not deadlier" survives a sample
+it could have died on.
+
+SUITES, each on its own run: rules 47/48, vectors 8/8, tactics 17/17, transcript-replay 5/5, canonical 3/3,
+specified 3/3, spawn 4/4, candles 9/9, private-world 3/3, chart 4/4, poison 3/3, cbrt 5/5, bundle 12/12 after
+rebuilding dist with the fix in it. No PlayMode: no C# path moved.
+
+THE ONE RED, listed and not loosened: `incoming fire costs the truck condition` (rules.test.js), seeds 20260901 and
+20268820, "nach 15 s schon zerstoert - hp 0.00". Its neighbour `enough fire writes the truck off` passes. Cause as
+measured, unchanged by the sample above: tank-ticks inside the 34 m courier reach identical on all three of its
+seeds (5228 / 5046 / 4481), 20260901's first ten seconds identical (14 hits, 77.1 points, hp 22.93 both ways), the
+whole difference in the last five seconds, where a halted hull ranks the truck against its foe differently and a
+shot or two a run goes to the truck. HEAD passes that fixture by 1.31 of 100 points, and its own comment records
+write-offs at 24.38 / 30.00 / 25.37 s where HEAD measures 16.58 / 17.90 / 15.20 s - eight seconds stale, older than
+this patch. It stays red until that window is re-measured against the army that exists.
