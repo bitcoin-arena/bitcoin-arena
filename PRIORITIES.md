@@ -149,8 +149,23 @@ contract, and a node refuses a contract whose run length is not its core's - so 
 refused (measured: 6 of ghost-field.test.js). Real contracts carry the core's number, so nothing a player touches is
 affected, and the Daily has shipped with it since 0.0.1711. The fix is the fixtures, in their own letter.
 
-DANIEL'S PLAYTEST CHAIN OF 2026-09-19 12:55-13:10, nine items in his order, no pause between them. The work is in
-the tree and green in every core suite; nothing is on the Daily yet - one build, one deploy at the end, as ruled.
+DANIEL'S PLAYTEST CHAIN OF 2026-09-19 12:55-13:10 IS CLOSED. All nine items are done and LIVE on the Daily at
+0.0.1723 (08a117ac), alias and unique URL both serving it, the built core byte-identical to packages/core/dist,
+2d48a05a listed in known-cores and known-good-clients, signer nodes restarted, btc-logistics-war untouched. Items 1
+to 9 below, in Daniel's order, each with what was measured.
+
+ON TOP NOW, not started: §11.3 cover, then §11.4 posture in the TAC_COVER high bits, then §11.5 suppression, then
+§4.4 coax - the letter the army close-out named. M3's remainder stands behind it with its own holders (the fixture
+pair needs a third re-pick: the seeded tape, the hull rectangle and now ruling B's refit each changed its world).
+
+ONE HOLE MEASURED AND LEFT LISTED, not this door's to close: the core's collision miner and the drawn miner do not
+agree where the building is. The core's map solids put the facade at x 112.4 (half 4 m, so 108.4 .. 116.4) with the
+tunnel sides at 125.4; the model stands on the ground from 53.8 m. On the entry line it does not bite - inside
+|z| <= 34 m the only ground-touching part is the power cables at x 53.8 .. 66.2 hard against |z| 34, and
+mass_behind_tunnel clears the ground by 2.7 m, so a truck drives under it - but off the corridor, at |z| 35 .. 75,
+a truck or a tank passes through drawn legs and feet (x 62.8 .. 82, 1 m tall) that the core does not know about.
+Pre-existing: the model has always been that size, and nothing in this letter moved a solid. Holder: the core's
+map solids (rules/map.js), which would need the model's real footprint and a golden regeneration.
 
   1. DONE, live at 0.0.1715 already: the truck died 1/4 inside a tank because contact was a 3 m circle. The core
      carries the hull's rectangle now (§1.2), 1.8 m x 3.6 m half-extents in the hull's own frame.

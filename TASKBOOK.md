@@ -85,6 +85,25 @@ Two test setups moved with the world, no assertion:
   89.7 / 43.5 / 88.7, all three written off inside 90 s. At x -80, two metres further west, nothing reaches the
   truck at all - that is the guns' edge, not a knob.
 
+THE DRAWN MINER AGAINST THE CORE'S SOLIDS (measured on the close-out of the door, 2026-09-19). The core's
+mapSolids puts the miner's facade at x = MINER_X - 2 = 112.4 with half-x 4 m (108.4 .. 116.4), its side walls at
+|z| 40 .. 84.4, a lintel over the mouth above 26 m, and the tunnel's two sides at x 111.4 .. 139.4, |z| ~ 42. The
+model stands on the ground from x 53.8 m. So between 53.8 and 108.4 the drawn building has no collision at all.
+It does not bite on the drive line: inside |z| <= 34 m the only ground-touching part is power_cable_0/1 at x 53.8 ..
+66.2, hard against |z| 34, and mass_behind_tunnel's underside is 2.7 m up, which a 2.5 m truck passes under. Off the
+corridor it does: at |z| 35 .. 75 the feet (x 62.8 .. 82, y 0 .. 1) and the legs (66.9 .. 77.9, y 0 .. 2.7) are
+drawn and not solid. Pre-existing - the model has been this size all along and this letter moved no solid - and
+listed with the core's map solids as its holder.
+
+THE OLD RECORDING against the new ribbon end: the PhysX reference rows (rules.test.js, "the core drives like the
+PhysX truck it replaces" and its siblings) are green, 49/49. They drive from the spawn at x -100.4 with the field
+held clear and pin acceleration, heading and turn rate; the only stretch the door moved is x 90.4 .. 114, at the far
+end. The ribbon's west end, its lift and its wear are untouched.
+
+THE EAST MERGE against the cut: RoadModel merges every lane onto the gate's centreline over MergeSpan 54 m ending at
+DepotX - GateX = 84 m. The ribbon's new end is 90.4 m, past that, so the lanes are already one line where the ribbon
+stops - it ends as a single road pointing at the tunnel, not mid-turn.
+
 PlayMode after the refit, measured twice in full: 229 of 256, 13 skipped, 14 red both times but not the same 14.
 Run 1 red on VehicleTests.RoadsAreBuiltOnTheGroundWithMaterials ("eine Kachel alle 58.5 m"): the row walked the mesh
 two vertices at a time, a station has been five across since the ribbon was laid on the chart, so it hopped sideways
