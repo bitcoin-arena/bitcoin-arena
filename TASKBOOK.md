@@ -135,10 +135,11 @@ port and no number to inherit. Its `CourierRange = 34f` is the range at which a 
 a different quantity from §11.5's 34 m reach at an enemy MAN; Core has its own `SUPPRESS_REACH`. `RifleRange = 26f`
 genuinely is §8.1's 26 m and is untouched.
 
-1. OPEN LOOP, BEFORE ANY CODE - the accumulator derived from rounds the core already fired:
+1. OPEN LOOP, BEFORE ANY CODE - the accumulator derived from rounds the core already fired. THE "OVER THE BAND"
+   VERDICTS HERE ARE RETRACTED (3a): these are ORs of nine teams, not shares.
 
-     today's rifle fire alone          bulls 82.7%  bears 84.1%   OVER the band   6967 rounds
-     with §11.5 suppressing rounds     bulls 95.1%  bears 95.5%   OVER the band   +7865 suppressing rounds
+     today's rifle fire alone          bulls 82.7%  bears 84.1%   [OR, not the row]   6967 rounds
+     with §11.5 suppressing rounds     bulls 95.1%  bears 95.5%   [OR, not the row]   +7865 suppressing rounds
 
    (On a 2 seeds x 40 s drive the same derivation reads 65.0% / 62.5%, inside the band. That window holds less
    sustained contact than a three-minute round; the long drive is the one that counts.)
@@ -148,9 +149,13 @@ genuinely is §8.1's 26 m and is untouched.
      rifle volume     6967 -> 3920 rounds     the half-rate is working, and cuts 44% of the firing
      bulls pinned     96.0%    under fire 97.4%
      bears pinned     95.6%    under fire 96.5%
-     -> STILL OVER §0's 10-70 band
 
-3. THE RESIDUAL, WITH ITS CAUSE, AND NOTHING RETUNED. The arithmetic is the reason and it is in §11.5's own
+   THOSE TWO PERCENTAGES ARE RETRACTED - read 3a below before using them. They are "at least one of nine teams
+   pinned", an OR, and §0's band is the SHARE of teams, which is 43.8%, inside the ceiling. Everything in 1 and 2
+   that treats 96.0% / 95.6% as the row is superseded; the rifle-volume line and the open-loop figures stand.
+
+3. THE RESIDUAL AS IT WAS FIRST READ - SUPERSEDED BY 3a, kept because the arithmetic in it is true and useful even
+   though the conclusion was wrong. NOTHING WAS RETUNED THEN AND NOTHING IS NOW. The arithmetic is the reason and it is in §11.5's own
    numbers: decay is 1 a tick, which is 60 a second, and one round is +60. So a SINGLE shooter landing one round a
    second on a team holds that team at break-even forever, and the pin threshold is only two rounds. The half-rate
    doubles a pinned man's RELOAD, but a suppressing round is fired on the LOOK-AGAIN clock (0.4-1.1 s), which
