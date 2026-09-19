@@ -40959,3 +40959,42 @@ artifact of the run and not a regression.
 DEPLOY POSITION: A9 was the named blocker and it is green, but B3 is a red §0 doctrine row whose x number is
 unruled, and the standing rule is that nothing ships while a doctrine row is red. The army was NOT deployed on this
 pass and the Daily stays 0.0.1617. B3's concentration bug is the next work and the shortest path to the ship.
+
+### B3's real defect was its POPULATION (2026-09-19, after the five rulings)
+
+Chasing B3's x knot - "the line is concentrated twelve times more often than the anchor layout explains" - found the
+cause in the row again, and this one was the biggest of its three defects.
+
+§11.1's row says "a side's men ON POST". §11.1's own body uses that word for where a man IS: "whenever a man is on
+post AND his fire team's clock says halt" - two conditions. The probe implemented "on post" as `dx == 0 && dz == 0`,
+which is §11.2's HALT clock, and §11.2 halts a fire team 0.4-1.8 s out of every 3-11 s. So the row measured the
+spread of whichever men happened to be mid-halt on that tick. Measured, same run, same seeds:
+
+  men counted per side-tick        8.3  of the 30.1 on the line  (of 36 a side)
+  x spread out of the 20-60 m band    61.21%  ->  25.84%
+  x spread under a 10 m sd            46.48%  ->   9.02%      (the layout alone gives about 3%)
+
+A spread of eight men drawn from three squads is tight whatever the line is doing. AND THIS OVERTURNS A CONCLUSION
+I PUBLISHED EARLIER TODAY: the relative x bar (>= 0.6 x the side's own anchor sd) had been written, measured at
+61.21% against it, and withdrawn as "measured false" with the note that the knot is not the draw. It was the
+population underneath. With it corrected the measured 25.84% sits against the 19.6% the three-anchor uniform draw
+predicts on its own, so the floor IS very largely a bar on the draw, as first suspected. The relative bar is
+restored and the withdrawal is recorded here rather than quietly dropped.
+
+B3 STAYS RED ON BOTH HALVES, canonical 5 x 3600 with the population and both bands corrected:
+
+  z per squad out of 2-12 m      22.58%  of 69007 squad-ticks
+  x under 0.6 x anchor sd, or over 60 m   18.91%  of 29837 side-ticks (under a 10 m sd on 13.55%)
+
+Sample sizes are 5x the old ones because a side-tick now qualifies whenever six men are on the line, not only when
+six are simultaneously mid-halt.
+
+THE LAST PIECE IS NOT RULED, deliberately. Both bars are ZERO-TOLERANCE, and B3 is the only spread-band row in §0
+carrying no tolerance while every other distributional row here carries one (2%, 5%, 80%, 95%). §0's own sentence -
+"a tolerance is a measurement allowance for respawns and transit, not a licence" - points straight at the men who
+blow these bands, because 72% of the men on the line are in transit on any tick (8.3 halted of 30.1). But unlike the
+other four rulings, no number falls out of the spec's own arithmetic here, and a tolerance chosen to clear today's
+22.58% would be tuning to pass. Left open, named, with the measurement done.
+
+Nothing in the infantry moved: not the standoff, not the spread, not the squad z, not the anchors, not the squad
+count. Tool only.

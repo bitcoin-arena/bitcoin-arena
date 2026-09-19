@@ -42,9 +42,15 @@ ruling makes a red go green it says so, so nobody reads a greener table as the a
      copied onto a STANDARD DEVIATION; the sd that generator produces is 2.98 m and 4.52 m on the two sides with
      nobody dead and no push on, so the floor was unmeetable by the rule that writes the posts. Corrected to 2-12 m
      and measured per squad, which is §11.1's own scope - still red at 13.51% of squad-ticks. The x floor is NOT
-     ruled: the obvious answer (that it is a bar on the three-anchor draw) was written and MEASURED FALSE - the
-     layout alone puts a side under a 10 m sd on about 3% of rounds and the core does it on 46.5% of side-ticks.
-     Something concentrates the line beyond where the anchors fell. That is a bug to find, not a bar to move.
+     ruled at first: the answer that it is a bar on the three-anchor draw was written, measured at 61.21% against
+     it and withdrawn as false - WRONGLY, and the withdrawal is recorded. Chasing it found B3's biggest defect:
+     §11.1's "men ON POST" had been implemented as §11.2's HALT clock, so the row measured whichever 8.3 of the
+     side's 30.1 men on the line were mid-halt that tick. Corrected: x out of the old band 61.21% -> 25.84%,
+     under a 10 m sd 46.48% -> 9.02%, against the 19.6% the draw predicts by itself. So the floor IS the draw and
+     the relative bar is restored. B3 STILL RED on both halves: z per squad 22.58%, x 18.91%. The last piece is
+     NOT ruled - both bars are zero-tolerance and B3 is the only spread-band row in §0 with no tolerance, while
+     72% of the men on the line are in transit on any tick. No number falls out of the spec's arithmetic there,
+     and one picked to clear 22.58% would be tuning. Named and left open.
   4. A4a's quiet window - the ROW. Its 10 s was arithmetic under the 6-10 s leg it was written against; the 20:30
      re-ruling doubled the leg to 12-20 s and the cool-down to 20 s on measurement and left the window behind, so
      nothing obliged a change inside it and the row demanded one every 10 s while naming a 12-20 s leg in its own
