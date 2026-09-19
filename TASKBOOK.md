@@ -39589,3 +39589,37 @@ team giving ground, bar 0), A13b (41.91% of ticks where the sides' mean push dif
 against a 60% bar, and 3.87 m against a 6 m bar). Four of the twelve reds, one mechanism, and it already has a
 measured cause from this session: the push word is re-read about once per team-minute - 28 steps in a whole run, none
 from zero downward - so every row that asks the push to DO something inherits that rate.
+
+### The push machinery measured at its own re-read (2026-09-19 05:0x)
+
+A11b, A13b and both O1 rows all ask the push word to DO something, so the re-read itself was hooked in the core copy:
+every scheduled tick, whether rule (a) skipped it, the verdict read, whether it was confirmed, and the step written.
+Seeds 1-5 x 3600, main pass only:
+
+  re-reads due                   720   = 12 teams x 12 chances a minute x 5 seeds, exactly PUSH_TICKS = 300
+  the team was on post           406   (56.4%) - the other 314 skipped by §4.10 rule (a), a tank off post
+  verdicts read                  406   take 131, give 36, drift 239, none 0
+  confirmed by the last reading   213  (52.5%) - and every confirmed verdict took its step: steps 213
+  step rate                      213 steps / (12 teams x 5 team-minutes) = 3.6 per team-minute
+  the GIVE path                  read 36 times, confirmed 14, and 33 of the 36 were at a push already <= 0
+  steps that landed below zero   13
+  the push word, written vs seen  lowest written -8 m and lowest seen -8 m; highest 24 m both ways - they agree
+
+SO IT IS THE INTENDED CADENCE, NOT A GIVE THAT NEVER FIRES. GIVE fires, is confirmed, and reaches the -8 m floor.
+§4.10 re-ruled itself down from 6.4 steps per team-minute by adding two brakes, and both are doing exactly what they
+were written to do: rule (a) removes 44% of re-reads because a tank is off post, and the two-reading confirmation
+removes another 47% of what is left. 3.6 steps per team-minute is inside that intent.
+
+Why A11b still fails at 6 of 10 windows: 14 confirmed gives in five minutes across twelve teams is about 1.4 give
+steps per side per minute, and the row wants at least one team of EACH side below zero in EVERY 60 s window. The rate
+is marginal against the row by construction, not broken.
+
+TWO OF MY EARLIER NUMBERS ARE WITHDRAWN, both from this session:
+- "28 push steps in a whole run, none from zero downward, one per team-minute" was measured BEFORE the army was
+  deployed on post. With tanks walking in, rule (a) skipped almost every re-read. The same run today gives 213 steps.
+- the first hooked run read 1728 re-reads where twelve teams over two seeds can have 288: the hooks were counting the
+  extra worlds this tool steps for the parked-vs-driven rows. The hooks are now gated to the main pass, and the
+  written/seen extremes agree, which is the check that catches it.
+
+Nothing was retuned: A11b, A13b and O1 keep their bars, B3 keeps its bands, A9 is untouched and still red, and the
+table is 27 of 39 as before.
