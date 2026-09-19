@@ -39662,3 +39662,39 @@ Seeds 1-5 x 3600, 27 of 39 rows pass. None of these is silent:
 Four of the twelve (A11a, A11b, A13b, both O1 - five rows counting O1 twice) hang on the one push cadence; one is
 Daniel's coverage ruling; one is a client test not written; two are infantry rows measured independent of each other;
 three are single-window or seed-spread misses with no cause measured yet.
+
+### The five push-cadence reds: what each asserts against what the core holds (2026-09-19 05:4x)
+
+  row    asserts                                              the core holds            short by
+  A11a   every 60 s window has a team of each side across      3 of 10 windows have      3 windows
+         the seam                        (bar 0 windows)       none
+  A11b   every 60 s window has a team of each side giving      6 of 10 windows have      6 windows
+         ground                          (bar 0 windows)       none
+  A13b   the sides' mean push differs >= 4 m on > 50% of ticks  41.91% of ticks          8.09 points
+  O1     of pushed team-ticks (push >= 16), >= 60% are on an    58.10%                   1.90 points
+         objective lane
+  O1     mean push on objective lanes minus the rest >= 6 m     3.87 m                   2.13 m
+
+FIVE OF THE TWELVE REMAINING REDS, one mechanism.
+
+What the step clock, GIVE and both brakes hold, hooked inside the core copy (seeds 1,2 x 3600, main pass only; the
+five-seed run agrees at 720 / 406 / 213):
+
+  re-reads due 288  ->  on post 165 (57.3%)  ->  confirmed 89 (53.9%)  ->  89 steps = 3.6 per team-minute
+  verdicts: take 51, give 14, drift 100, none 0
+  WIDOWS 45 of 165 (27%): §4.10 forces a widow to drift, and with a pair broken by attrition that is a third brake
+    beside rule (a) and the confirmation - it was not counted before tonight
+  §4.11's weight IS live at the verdict: w0 16, w1 79, w2 66, w3 4; ceilings 16 (21), 24 (130), 32 (10), 40 (4)
+  the odds are near even: mean own 3.3 against mean foe 3.0; ours 79, theirs 57, level 29
+  TAKE needs own + weight >= foe + 3, GIVE needs foe >= own + 1 + weight - so at these odds TAKE fires 31% of
+    verdicts and GIVE 8.5%, and the weight that biases a team toward its objective lane also makes it give ground
+    LESS there, which is what §4.11 asks for
+
+NO CORE BUG IS VISIBLE IN THIS PATH. Every brake is the one §4.10 and §4.11 specify, each fires at the rate its rule
+implies, the weight reaches the verdict, GIVE reaches the -8 m floor, and the units are metres of push in Q16.16
+throughout. The five rows are a bar-versus-cadence fight of the same kind as A9: the bars were written when the world
+walked in and pushed 6.4 times a team-minute; the world now holds its posts and pushes 3.6 times.
+
+So all five are LISTED, not loosened, each with its dependency: A11a and A11b depend on §4.10's window against its
+cadence; A13b on how fast two sides' means can part at 8 m a step; both O1 rows on §4.11's weight against the same
+step rate. None of them is touched, and none is silent.
