@@ -45,9 +45,12 @@ ruling makes a red go green it says so, so nobody reads a greener table as the a
      ruled at first: the answer that it is a bar on the three-anchor draw was written, measured at 61.21% against
      it and withdrawn as false - WRONGLY, and the withdrawal is recorded. Chasing it found B3's biggest defect:
      §11.1's "men ON POST" had been implemented as §11.2's HALT clock, so the row measured whichever 8.3 of the
-     side's 30.1 men on the line were mid-halt that tick. Corrected: x out of the old band 61.21% -> 25.84%,
-     under a 10 m sd 46.48% -> 9.02%, against the 19.6% the draw predicts by itself. So the floor IS the draw and
-     the relative bar is restored. B3 STILL RED on both halves: z per squad 22.58%, x 18.91%. The last piece is
+     side's 30.1 men on the line were mid-halt that tick. Corrected, and RE-MEASURED with both populations counted on the
+     same ticks of one run: x out of the old band 61.21% -> 42.21%, under a 10 m sd 46.48% -> 13.58%, men counted
+     8.3 -> 23.6. The 25.84% / 9.02% / 30.1 first published here do not reproduce on this tree by either cut. The
+     draw explains about half of the x miss, not nearly all of it. And the fix made the z half WORSE, which was not
+     said: z per squad 13.51% -> 18.75%. B3 STILL RED on both halves: z per squad 18.75%, x 19.49%, the population
+     now cut at §12.1's stated 40 m rather than the probe's undocumented 44 m. The last piece is
      NOT ruled - both bars are zero-tolerance and B3 is the only spread-band row in §0 with no tolerance, while
      72% of the men on the line are in transit on any tick. No number falls out of the spec's arithmetic there,
      and one picked to clear 22.58% would be tuning. Named and left open.
@@ -132,8 +135,9 @@ rule is "never deploy on red" and B3 is a red §0 doctrine row with an UNRULED n
 mechanism - so the army does NOT ship on this pass and I did not ship it. The other eight reds are held: A11b, A13b
 and O1's lane row are explained-not-fixable under the 20:30 gates Daniel ruled on; O1's mean push and B4 are
 diagnosed by measurement; O4 is a client test passing in its own suite; B2 is closed as measured. B3 is the only one
-of the nine with an open question in it, and it is mine to answer: the line is concentrated twelve times more often
-than the squad-anchor layout explains, and a squad's centre sits >12 m off its own anchor on 25.9% of squad-ticks.
+of the nine with an open question in it, and it is mine to answer: the line is concentrated more often than the
+squad-anchor layout explains - measured on one run, the x miss is 42.21% under the old absolute band against the
+19.6% the draw predicts, so the draw is about half of it and the rest is the infantry's own.
 Then the army to the Daily, then M3 without asking (Daniel 2026-09-18 23:47 HARD).
 
 SUITES, each on its own run: rules 47/48 - the one red is `incoming fire costs the truck condition`, listed with its
