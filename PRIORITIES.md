@@ -130,14 +130,12 @@ hold that word shut. The recording, having no word, would fail this row in every
 Free corroboration in the same run: the core's hulls stand at exactly the mean of §2.5's two lines at spawn, where
 the recording stands at 77 m and walks in. Numbers in TASKBOOK.
 
-NEXT: B3's concentration bug, which is now the shortest path to the ship. A9 no longer blocks, but the standing
-rule is "never deploy on red" and B3 is a red §0 doctrine row with an UNRULED number and a named, unexplained
-mechanism - so the army does NOT ship on this pass and I did not ship it. The other eight reds are held: A11b, A13b
-and O1's lane row are explained-not-fixable under the 20:30 gates Daniel ruled on; O1's mean push and B4 are
-diagnosed by measurement; O4 is a client test passing in its own suite; B2 is closed as measured. B3 is the only one
-of the nine with an open question in it, and it is mine to answer: the line is concentrated more often than the
-squad-anchor layout explains - measured on one run, the x miss is 42.21% under the old absolute band against the
-19.6% the draw predicts, so the draw is about half of it and the rest is the infantry's own.
+B3 IS LISTED RED on both halves and is the reason the army does not ship: z 18.75% of squad-ticks, x 19.49% of
+side-ticks, cause and dependency in TASKBOOK. The zero tolerance stays - a number picked to clear today's figure
+would be tuning - and the recording closed the rewrite fork, being more spread in depth than the core and carrying
+neither of B3's asserts. The other eight reds are held: A11b, A13b and O1's lane row are explained-not-fixable under
+the 20:30 gates; O1's mean push and B4 are diagnosed by measurement; O4 passes its own client suite; B2 is closed as
+measured.
 Then the army to the Daily, then M3 without asking (Daniel 2026-09-18 23:47 HARD).
 
 SUITES, each on its own run: rules 47/48 - the one red is `incoming fire costs the truck condition`, listed with its

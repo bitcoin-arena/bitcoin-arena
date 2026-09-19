@@ -41072,3 +41072,35 @@ THE FORK, against the criteria set for it:
 B3 stays RED on both halves - z 18.75% of 64753 squad-ticks, x 19.49% of 28812 side-ticks - listed with this as the
 state of the evidence. Nothing moved: no band, floor, ceiling, population, doctrine number or assert, no C# number
 copied and no 2-D coupling introduced. The army does not ship. Probe kept: tools/measure-line-engines.mjs.
+
+### B3 IS LISTED RED, with cause and dependency, and the zero tolerance stays (2026-09-19, ruled)
+
+RULED: no tolerance is invented. Both B3 bars stay zero-tolerance. A number picked against today's 18.75% z or
+19.49% x would be loosening the assert to fit the line, which is tuning a test green.
+
+THE LISTING.
+  z half - 18.75% of 64753 squad-ticks out of the 2-12 m band, population cut at §12.1's 40 m.
+     73.9% of the failures are looser than 12 m, 26.0% tighter than 2 m; the failing squad's z sd has a median of
+     13.4 m, just over the ceiling. The median failing squad has NOBODY standing still: men per squad 4/5/7/9/21
+     with halted 0/0/0/2/11, and only 957 of the 12140 failures have four or more halted men, of which 32.4% would
+     be inside the band counting halted men only. CAUSE: squads in motion, whose depth spread is a line walking and
+     not a line standing wrong. Counting the whole line - which is the ruled population - made this half worse, not
+     better: 13.51% -> 18.75%.
+  x half - 19.49% of 28812 side-ticks under the 0.6 x anchor floor or over the 60 m ceiling.
+     82.4% of failures are under the floor, 17.6% over the ceiling. 63.8% of failures (12.44 of the 19.49 points)
+     are also under the OLD absolute 20 m floor - genuinely tight men - and 36.2% (7.05 points) fail only because
+     that side's anchors were drawn wide. On failing ticks the anchor sd runs 6.5/32.6/46.8/55.6/66.7 against
+     0.6/17.9/29.9/43.6/66.1 when passing, while the men's own x sd runs 1.4/8.2/12.9/27.4/76.8 against
+     4.3/16.4/25.6/36.9/59.7. CAUSE: two thirds genuinely tight men; one third the relative floor biting on a wide
+     draw.
+  THE DEPENDENCY: the in-transit tolerance §0 names for every other distributional row and B3 alone does not carry,
+  while most of the line is walking on any tick. It is not invented here and no number is proposed.
+
+AND THE REWRITE FORK IS CLOSED THE WAY IT WAS SET. Against the recording, same seed and cadence, from t=30:
+  recording side-wide infantry z sd 17.78 m   core side-wide 8.76 m   core per-squad median 7.70 m
+The recording is MORE spread in depth than the core, would MISS the 2-12 m band where the core's 8.76 m and 7.70 m
+sit inside it, and carries neither of B3's asserts - no squad structure, no infantry x, only an armour xSpread. So
+there is no C# figure to copy and no mechanism to name against it. No rewrite, no band change, no ported leftover,
+no 2-D coupling. The core keeps its intended units.
+
+B3 STAYS RED ON BOTH HALVES AND IS NOT CLOSED GREEN. The army does not ship while it is red.
