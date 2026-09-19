@@ -40066,3 +40066,27 @@ were drawn.
 Also recorded: §4.11 names the three HIGH, LOW and OPEN, while the client's ObjectiveName renders them RIDGE, HOLLOW
 and GAP (ChartHud.cs:359). That is a second gap in the same row and it is not fixed here either - drawing them under
 the wrong names would still not be drawing them.
+
+### O4 closed: the page draws the three markers (2026-09-19 11:2x, build 0.0.1659)
+
+  before   the core put three objective markers on the chart, all on screen, and the HUD's own line named a box for
+           none of them. ChartHud built them into its frame every tick (holder's colour, ObjectiveName text) and
+           nothing consumed the list outside a test helper.
+  after    objBox=1009.1,175.6,37.5,20.3 | 1120.8,143.0,34.2,20.3 | 1083.5,175.0,42.5,20.3
+           objNames=HIGH+LOW+OPEN     objUnplaced=0
+           O4's test 1 of 1 against the built page, its assertion unchanged.
+
+Three edits, and no second path: the draw consumes the list ChartHud already builds (a dot at the core's point plus
+the label, in the holder's colour - Bull, Bear, or the axis colour when unheld), placed with the same placer the
+ghost labels use so it does not sit on the chrome, and drawn before the truck so the truck stays on top.
+ObjectiveName now renders §4.11's own names - HIGH, LOW, OPEN - where it rendered RIDGE, HOLLOW and GAP, which are
+the core's kind words and not the player's. And the HUD reports what it drew (objBox, objNames, objUnplaced) beside
+the boxes it already reported, so the test reads a drawn box instead of matching a word - the trap that made the
+first version of this test count the chart's own HIGH/LOW price marks as objectives.
+
+MEASURED WITHOUT DEPLOYING: the page was built (0.0.1659), served from this box and reverse-tunnelled to the
+MacBook's browser, and the test was pointed at that. The Daily is untouched at 0.0.1617 because A9 is still red.
+
+Suites: EditMode ChartHudTests + ChartPlacementTests 13/13 with the draw in, errorCS 0; webgl build exit 0;
+blwp-client objective-markers 1/1. No second hole surfaced on these markers - none was unplaced, none collided with
+the chrome, and the holder's colour is the core's word, not a guess.
