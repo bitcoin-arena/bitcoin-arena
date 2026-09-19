@@ -37,15 +37,20 @@ ARMY, tonight, on the same letter: rows passing 24 -> 27 of 39.
   new start; tactics fixture seeds re-picked the way that test re-picked them before.
 - Suites, each on its own: rules 48/48, vectors 8/8, tactics 17/17, transcript-replay 5/5, spawn 4/4, canonical 3/3,
   specified 3/3, candles 9/9, private-world 3/3, chart 4/4, poison 3/3, bundle 12/12 after rebuilding dist.
-- The push is §4.10's intended cadence: 3.6 steps per team-minute, both brakes working, GIVE read, confirmed and
-  reaching the -8 m floor. A11b is red by that cadence against its own 60 s window, not by a dead GIVE. Table in
-  TASKBOOK.
+- The five push-cadence reds (A11a, A11b, A13b, both O1) are one mechanism and NO CORE BUG: 288 re-reads due, 165
+  survive rule (a), 89 confirmed, 89 steps - 3.6 per team-minute where the bars were written at 6.4, when the army
+  still walked in. Every brake is the one the spec names, including a third nobody had counted: 45 of 165 verdicts
+  are WIDOWS, which §4.10 forces to drift. §4.11's weight reaches the verdict and GIVE reaches the -8 m floor. All
+  five stay listed, none loosened. Table in TASKBOOK.
 - Four hypotheses died to measurement and were reverted with their numbers: seam-drift chasing, budget starvation, the
   crest mismatch, and the on-post dead band. Three probes of mine were withdrawn the same way, each with the check
   that caught it.
 - All twelve remaining reds are listed in TASKBOOK, one line of reason and what each depends on, none of them silent:
   five hang on the push cadence (A11a, A11b, A13b, both O1), A9 is Daniel's ruling, O4 is a client test not written,
   B2 and B4 are measured independent of B3, and three are single-window or seed-spread misses with no cause measured.
+- A SECOND QUESTION FOR DANIEL, beside A9: do the push bars still describe the army that holds its posts? A13b is 8
+  points short and O1 1.9 points, at a cadence the spec itself slowed on purpose. And because the widow brake ties the
+  push rate to attrition, judging these five wants a seed sweep rather than another probe of the same run.
 - NOT DEPLOYABLE, and A9 alone is reason enough: nothing ships while a doctrine row is red. The Daily stays 0.0.1617
   with the node-side round-boundary fix live.
 
