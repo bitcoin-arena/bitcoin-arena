@@ -241,6 +241,12 @@ facing with it; the two-line debug draws in a player; an off-screen truck is nam
 drawn at its first picture. The Daily could not open a round at all until 0.0.1586 - a 2338-word core in a build
 expecting 2386 - which is why two tabs saw nothing.
 
+NEXT LETTER (not this one): the path to coax, in the only order that works - §11.3 cover claims, then §11.4 posture
+derived into the TAC_COVER word's high bits (a state-layout change), then §11.5 suppression, then §4.4 coax. Measured
+2026-09-19: none of those three exists in the core, so coax cannot be written from the spec without inventing hit
+thresholds against postures that are not there. Also listed there: §4.13's Rule 1, the seeded init tape - the market
+moves the front when a tape is fed, but a SIM round with nothing submitted has a frozen seam and no trend all round.
+
 NEXT, after 12:02: candle fixes (ORDER below). Not started.
 
 ORDER (Daniel 2026-09-17 17:34 HARD): ghosts -> candle fixes -> WAR_TACTICS army logic already started -> only then M3.

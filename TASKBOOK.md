@@ -41364,3 +41364,36 @@ suites were not, and nothing in the core tests drives this fixture.
 
 NO FIX IN THIS STEP. Re-picking a world secret is what was done last time and it is a fixture change, so it is not
 taken here.
+
+### §4.12 and §4.13 measured on seeded rounds (2026-09-19, army letter)
+
+Asked of behaviour, not of function names: initMarket/readMarket existing proves nothing.
+
+§4.12 ASSAULT TOWARD THE OBJECTIVE - IN, and working. Five seeds x 10800 ticks (one round at the new length):
+  assaults declared                                            17
+  side-ticks with an assault running                           27997 of 108000 = 25.9%  (§0's row wants 25-60%)
+  declared assaults whose side already holds a team on the      15 of 17
+  target objective's lane
+So a side declares, runs and consolidates assaults, and it declares them at lanes it is already on.
+
+§4.13 THE TAPE IS THE GENERAL - IN for a fed tape, STILL GAP for its own Rule 1. Seed 3, a sample every 5 s:
+  rising tape (+0.4% a sample)   trend 0 -> +1, strength 1 -> 2 -> 3, seam z 2.05 -> -16.39 -> +19.40
+  falling tape (-0.4%)           trend 0 -> -1, strength 1 -> 2 -> 3, seam z 2.05 -> -15.81 -> +21.98
+  NOTHING SUBMITTED             seam z 2.58 -> 2.05 and there it stays; trend 0 at every reading of a whole round
+The market moves the front, and the direction it moves is the tape's. But §4.13's "Rule 1 - seeded (GAP)" is not in:
+the init tape should be mix(seedHash, 0x7e5a1c3d + i) per sample, walked, so that a SIM round with no live feed
+still has a tape. With nothing submitted the seam is frozen for the whole round and the trend never leaves 0 - a SIM
+round has no general. LISTED, not built: this letter ships what is ruled and measured, and a seeded tape is its own
+piece.
+
+### The path to coax, as its own letter (2026-09-19)
+
+§4.4's coax cannot be written from the spec as it stands, because the spec writes it in terms of two things the core
+does not have. Measured: `TAC_COVER` appears nowhere in tactics.js, there is no suppression word, and §11.4/§11.5
+appear nowhere in army.js or sim.js. §4.4 sets the coax's hit by posture (STAND 400 / PRONE 200 / COVER 100 per mil)
+and adds +60 to the man's fire-team suppression word, so writing coax first would mean inventing thresholds against
+postures that do not exist.
+
+THE ORDER, and it is the only honest one: §11.3 cover claims (still GAP) -> §11.4 posture, derived and written into
+the TAC_COVER word's high bits, which is a state-layout change -> §11.5 suppression -> then §4.4 coax. Not started on
+this letter by ruling.
