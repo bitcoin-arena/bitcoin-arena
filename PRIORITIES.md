@@ -143,11 +143,25 @@ SUITES, each on its own run: rules 47/48 - the one red is `incoming fire costs t
 cause, its 15 s window a fixture whose own comment is stale against HEAD, and nothing it asserts touched - tactics
 17/17, vectors 8/8. The others stand from e2575f1, no core source having moved since. No Unity: no C# path moved.
 
-LISTED, NOT ON THIS LETTER (holder: the three-minute ruling, c01cc65). Every client and node test fixture writes
-`blockTicks: 9000` while the core has ended a run at 10800 since the round became three minutes owned by the
-contract, and a node refuses a contract whose run length is not its core's - so daemon-backed fixture rounds are
-refused (measured: 6 of ghost-field.test.js). Real contracts carry the core's number, so nothing a player touches is
-affected, and the Daily has shipped with it since 0.0.1711. The fix is the fixtures, in their own letter.
+THE 9000-TICK MISMATCH IS NOT A FIXTURE RED. IT STOPS LIVE RUNS (seen in the cab 2026-09-19 on build 0.0.1734,
+driving a free round off the Daily's own signer nodes). The page said, in these words:
+
+    RUN STOPPED - the node refuses this run's inputs at tick 8948: error that run
+    not publishing - error that run ends at tick 8999 - 9000 ticks from its join at 0 - and this batch reaches
+    9015: inputs past the end are inputs for a run that is over
+
+The cause is measured, and it is not the fixtures: THE DAILY'S DAEMONS RUN AN OLD CHECKOUT. The signer nodes run
+from /mnt/bitcoin/blwp-2of2/code (systemd WorkingDirectory), and that copy's packages/core/src/rules/gate.js still
+says `BLOCK_TICKS = 9000`, while the page's core has said 10800 since the three-minute ruling (c01cc65). So the
+node ends a run at 9000 ticks and the page keeps driving to 10800, and every run past 150 s is refused from tick
+9000 on. I had listed this as a fixture-only red on the grounds that "real contracts carry the core's number" -
+that was wrong, and the cab is what showed it.
+
+Fix, when B is deployed and not before: update /mnt/bitcoin/blwp-2of2/code to the deployed tree and restart
+blwp-daily-signer-nodes, so the daemons and the page hold one core. Updating them now would only swap one mismatch
+for another, since the alias still serves 0.0.1723. The fixtures that also write 9000 are a separate, smaller
+tidy-up. NOT on this letter - it is not the door, the rims or the world's width - but it goes at the top of
+whatever follows, because a three-minute round that dies at two and a half is worse than any drawing bug.
 
 DANIEL'S PLAYTEST CHAIN OF 2026-09-19 12:55-13:10 IS CLOSED. All nine items are done and LIVE on the Daily at
 0.0.1723 (08a117ac), alias and unique URL both serving it, the built core byte-identical to packages/core/dist,
