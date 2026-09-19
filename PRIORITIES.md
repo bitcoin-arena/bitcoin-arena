@@ -20,7 +20,7 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-# LIVE LETTER  -  2026-09-20 00:30
+# LIVE LETTER  -  2026-09-20 01:20
 
 WHERE THE GAME IS: **btc-logistics-core.pages.dev at 0.0.1739** (deploy 9cac533f), unchanged since 19:47 on the
 19th. The core in that build was byte-identical to packages/core/dist AS IT STOOD THEN - today's dist is many
@@ -37,31 +37,45 @@ WHAT HAS LANDED ON THE BRANCH SINCE AND IS **NOT** LIVE (each named by its own c
   so a drawn body of $2.44 to $4.88 read RED on screen and DOJI to the war - five red candles printed SIDEWAYS.
   chart.js and the core now share one `trendCandle`. Proven on the MacBook against build 0.0.1755 through the real
   Binance feed: a falling chart reads DOWN 3 with six red dots, a rising one UP 3 with six green.
-- **§11.3 cover is closed** (cf0cb8b4). Men claim wrecks, craters and candle lips and stay in them; a held claim is
-  no longer re-clamped, so clamp deaths on held claims went 106 -> 1. §0's "wrecks and craters are used" wanted
-  >= 70% and stands at 72.9% frozen, 82.0% scrolling, bar untouched, up from 1.0%.
+- **§11.3 cover is closed, but its row is currently RED** (cf0cb8b4). Men claim wrecks, craters and candle lips and
+  stay in them, and the row reached 72.9%. §11.5's crawl has since knocked it to **64.7% against a 70% bar** - see
+  below. The bar is not loosened.
 - **§11.4 posture is closed in the core** (7bc7c1f6). STAND / PRONE / COVER in the bits §11.3 reserved; the rifle
   that fires at a man reads them; COVER rifle deaths 22.4 -> 5.7 per 100k man-ticks, the ruled quarter; a bomb
   reaches a COVER man only inside 8 m. §0's 2x clause stays listed at 0.35, not retuned.
-- **§11.5 suppression is WRITTEN BUT NOT CLOSED** (2383c95b). Fire pins a rifleman: TAC_SUPP, 18 words, +60 a
-  round, -1 a tick, pinned at 120; a pinned team does not rush, a pinned man crawls and reloads at half rate.
-  Rifle volume fell 6967 -> 3920 rounds. TWO CORE HOLES ARE OPEN AND MEASURED - see below.
+- **§11.5 suppression is WRITTEN, NOT CLOSED** (2383c95b, f320932a). Fire pins a rifleman: TAC_SUPP, 18 words,
+  +60 a round, -1 a tick, pinned at 120; a pinned team does not rush, a pinned man crawls at 0.5 m/s and reloads
+  at half rate, and a suppressing round rides the look-again draw so the draw count does not move. The pose writer
+  reads the pin, so a pinned man on a diagonal is down rather than standing: STAND while pinned 79.7% -> 0.2%.
 
-§11.5's OPEN HOLES, found by measuring the write rather than trusting it:
-- **A pinned man reads STAND on four ticks in five.** §0 says he is never STAND and never steps past 0.01 m. The
-  crawl is 0.00833 m a tick, but x and z are steered by separate controllers and the probe reads |dx| + |dz|, so a
-  diagonal crawl spends the budget twice: 105381 of 133536 pinned man-ticks step past 0.01 m (78.9%) and 106402
-  are written STAND (79.7%). The suites are green because nothing asserts that row.
-- **The bounding rule reads the pin instead of the clock.** §11.5 says a pinned team's neighbour may halt when the
-  pinned team's CLOCK says halt; the pin was OR-ed into `halted` before the neighbour test reads it, so a pinned
-  team forces its neighbour to rush.
+§11.5's STATE, and two of the four items on it turned out to be my own misreadings rather than faults:
+- **The pin is INSIDE its ceiling.** §0's 70% is the share of TEAMS pinned, which is 43.8%. The 96.0% / 95.6% once
+  listed as an overage was "at least one of nine teams" - an OR read as a share - and is retracted. +60, -1 and
+  120 stand untouched.
+- **The neighbour already sees the pin.** 426193 of 426193 pinned team-ticks look halted to the neighbour, and on
+  86.5% of them the timer would have had the team rushing. That was never a hole; my diagnosis was the error.
+- **OPEN: the shell clause does not exist.** §11.5 says a shell landing inside 8 m of a man adds 60 to his team.
+  Nothing does it. The hit half is buildable now; the miss half needs a landing point that waits on §4.4.
+- **OPEN: a bomb adds 300 per MAN, not per TEAM** (sim.js, inside the per-man loop). A team with two men in one
+  blast takes 600 and is clamped there, so it stays pinned 8.0 s instead of 3.0 s. Bombs open 36.4% of all pinned
+  episodes, so this sits on a live path.
+- **LISTED, parked:** §0's "never a step past 0.01 m" fails on 78.9% of pinned man-ticks. 0.01 m is ruled to be
+  combined Euclidean displacement, not a per-axis clamp; building it now would slow a diagonal crawl further and
+  take more men off their holes while cover is already down.
+
+WHY THE COVER ROW IS RED, attributed and not re-investigated: occupancy 70.9% -> 61.6% on one drive with sim.js
+swapped either side, living man-ticks unchanged at 317444 -> 316959. Of 1114 lost reached man-ticks, 746 (67%) are
+pinned men who cannot cross what they were given at 0.5 m/s against a walk of 2.788, and 368 (33%) are men
+crossing into the pinned bucket - the FREE rate did not move at all, 9.6% before and after. None of it is a
+counting artefact.
 
 WHY NOTHING IS LIVE, and none of these is test colour:
 1. **Men in holes draw below the mesh.** Unity carves a crater bowl the core does not, so the men §11.3 correctly
    put in cover are drawn sunk into the ground. On screen that reads as broken. This is the first blocker.
-2. **The renderer does not read TAC_COVER.** Posture is written and acted on, but a man in cover looks exactly like
-   a man in the open - he is only harder to kill. The player gets the visual regression above and no visible
-   benefit at all.
+2. **The renderer does not read TAC_COVER.** Posture and suppression are written and acted on, but a man in cover
+   looks exactly like a man in the open and a PINNED man crawling on his belly is drawn walking upright - he is
+   only harder to kill and slower. The player gets the visual regression above and no visible benefit at all, so
+   §11.5 is not separately playable either: on screen today it changes nothing a player could see.
 3. **The signer nodes would refuse the round.** Goldens are deliberately stale (vectors+bundle 2/20) and the core
    hash is unpinned. RULED: the regeneration belongs to the DEPLOY that ships the whole cover block together -
    occupancy, posture and suppression - and is neither a letter's task nor a letter of its own.
@@ -117,8 +131,10 @@ THE PIN IS INSIDE ITS CEILING (ruled 2026-09-20): §0's 70% is the share of TEAM
 retracted. +60, -1 and 120 stand untouched; two rounds pinning a team and a median pin of three seconds are the
 section's intent. Numbers in TASKBOOK.
 
-ON TOP NOW: **§11.5's two holes above**, then §4.4 coax (posture and suppression must both apply to it). M3's
-remainder stands behind them, its fixture pair needing a third re-pick.
+ON TOP NOW: **§11.5's two open clauses** - a shell landing inside 8 m of a man adds 60 (unbuilt), and the bomb's
+300 lands per MAN where the section says per TEAM (sim.js, in the per-man loop). Then the cover row it knocked
+down, then §4.4 coax (posture and suppression must both apply to it). M3's remainder stands behind them, its
+fixture pair needing a third re-pick.
 
 LISTED, each its own thing and none of them B:
 1. **91 files write `blockTicks: 9000`** against cores that end at 10800 - 21 client tests, the node suite, four
