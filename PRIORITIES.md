@@ -52,7 +52,8 @@ ARMY, tonight, on the same letter: rows passing 24 -> 27 of 39.
   the client rendered the core's kind words - and the HUD reports the boxes it drew. objNames=HIGH+LOW+OPEN,
   objUnplaced=0, O4's test 1 of 1 with its assertion untouched. Measured on a page built for it (0.0.1659), served
   here and tunnelled to the MacBook; the Daily stays 0.0.1617 because A9 is red. The unblocked miss is six rows now,
-  not seven.
+  not seven. The war table still prints O4 red on purpose: that probe cannot run a client test, and its row now names
+  the file that can, so a core run is never read as having answered it.
 - O1 mean and B4 stay red with their cause listed, not fixed: an objective lane's +8 rest is STEPPED on the same
   five-second clock that §4.11 uses to move the objective, so a lane that just became the objective still sits at 0
   while the +8 moves on. The failing seeds move it twice as often (35 lane changes against 18). Ruled 2026-09-19:
