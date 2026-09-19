@@ -39801,3 +39801,43 @@ B2 (5 s squad windows without a halted team / a mover, 18 of 207 here):
   neighbour does; in those 18 windows no team's halt landed inside the five seconds. The infantry always had a mover.
 
 None of the three rows was touched, and none of these numbers is a comparison with another seed set.
+
+### The five-minute sweep: two conclusions change (2026-09-19 07:2x)
+
+Twelve seeds, 18000 ticks each, so A11a and A11b are judged on ten 60 s windows a seed instead of two.
+
+  seed  A11a 1m -> 5m   A11b 1m -> 5m   A13b 1m -> 5m     O1a 5m           O1b 5m    H1 1m -> 5m
+    1    0/2 -> 1/10     1/2 -> 6/10    49.81 -> 46.68   45.49% (38174/83923)  1.33   60.97 -> 49.77
+    2    1/2 -> 3/10     1/2 -> 3/10    72.75 -> 73.95   37.29% (25528/68459)  0.98   56.35 -> 51.31
+    3    0/2 -> 3/10     1/2 -> 4/10     9.97 -> 70.93   44.53% (43247/97121)  2.13   58.70 -> 53.18
+    4    1/2 -> 2/10     2/2 -> 6/10     0.00 -> 72.39   43.10% (34034/78966)  1.22   60.88 -> 52.64
+    5    1/2 -> 4/10     1/2 -> 5/10    77.00 -> 95.40   52.13% (45073/86458)  4.47   62.83 -> 54.77
+    6    1/2 -> 2/10     2/2 -> 4/10     0.00 -> 73.47   63.78% (51577/80872)  6.30   62.43 -> 54.60
+    7    1/2 -> 4/10     1/2 -> 5/10    36.22 -> 87.24   55.73% (37978/68141)  2.72   55.55 -> 59.08
+    8    0/2 -> 0/10     2/2 -> 6/10    77.22 -> 68.96  47.46% (48178/101522)  1.35   55.62 -> 48.15
+    9    1/2 -> 4/10     2/2 -> 6/10    59.69 -> 70.24   30.97% (20672/66740) -2.62   60.69 -> 52.25
+   10    0/2 -> 2/10     1/2 -> 5/10    76.61 -> 95.32   45.69% (45625/99854)  0.98   55.77 -> 51.73
+   11    1/2 -> 5/10     1/2 -> 5/10    70.25 -> 94.05   46.89% (40395/86148)  2.36   61.48 -> 54.29
+   12    1/2 -> 3/10     2/2 -> 6/10     2.39 -> 69.98   49.44% (22645/45802)  0.75   59.66 -> 58.91
+
+  A11a  33 of 120 windows short (27.5%) against 8 of 24 (33%) at one minute - passes outright only on seed 8
+  A11b  61 of 120 (50.8%) against 17 of 24 (70.8%) - never passes
+  A13b  PASSES ON 11 OF 12 at five minutes; min 46.68, median 72.93, max 95.40, where one minute gave min 0.00
+  O1a   passes on 1 of 12 (seed 6, 63.78%); NO SEED HAS AN EMPTY SAMPLE any more - denominators 45802 to 101522
+  O1b   passes on 1 of 12 (seed 6, 6.30 m); seed 9 is NEGATIVE at -2.62 m
+  H1    passes on 10 of 12; seeds 1 (49.77%) and 8 (48.15%) fall UNDER the 50% bar, where every seed passed at one minute
+  rows passing 24 to 28, median 27
+
+TWO CONCLUSIONS CHANGE, and both are the longer run's doing, not a code change:
+
+1. A13b IS NOT A CADENCE FAILURE. Its zeros at one minute (seeds 4, 6, 12 read 0.00, 0.00, 2.39%) were a run too
+   short for the two sides' means to part: at five minutes the same seeds read 72.39, 73.47, 69.98% and eleven of
+   twelve pass. What I recorded earlier - "A13b is the GIVE rate seen from another angle" - holds only inside a
+   one-minute window; over five it is met.
+2. H1 SLIPS UNDER ITS OWN BAR ON TWO SEEDS at five minutes (49.77% and 48.15%) where it passed on all twelve at one
+   minute. The gain from spawning on post decays as attrition puts hulls back on the walk-in: this is the first
+   number that says the deployed start is not the whole answer for "hold is the default".
+
+What does NOT change: A11b never passes on any seed at either length, and O1 fails on eleven of twelve at five
+minutes with full samples - so the empty denominator was a reporting fault, not the reason that row is red. The five
+cadence rows stay listed, none loosened, and A9 is untouched.
