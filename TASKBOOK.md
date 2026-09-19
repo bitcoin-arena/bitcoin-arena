@@ -117,6 +117,57 @@ be theatre.
    flash). PlayMode 229 of 256, 13 skipped, 14 red - the same fourteen, name for name, none new. The renderer still
    does not read the cover word, so a quiet Unity result is the expected one.
 
+§11.5 SUPPRESSION - WRITTEN, AND THE ROW IS OVER ITS CEILING (2026-09-20). Five seeds x 180 s, frozen tape, a
+nuke every 30 s, `tools/measure-suppression.mjs`.
+
+THE WRITE. TAC_SUPP, one word per fire team, 18 appended after §11.3's cover words: TAC_WORDS 212 -> 230. No new
+bit in TAC_COVER and no posture value changed. +60 per round aimed at a team's living man (hit or miss), -1 a
+tick, clamped [0, 600]; under fire above 0, pinned at 120. A pinned team does not rush; a pinned man crawls at
+0.5 m/s toward his claimed place or his post, which is the same walk to the same target at a sixth of the pace and
+not a second movement path - at 0.0083 m a tick it sits under §11.4's 0.01 m step probe, so a pinned man is never
+STAND by the number already in the core. A pinned man's reload draw is taken as always and doubled. A suppressing
+round takes the look-again draw he was already taking, so the draw count does not move. A bomb adds 300 to every
+team with a living man inside 16 m.
+
+C# VS CORE, RESTATED: `Army.cs` has ZERO occurrences of suppress, pinned, morale or cower. There is no path to
+port and no number to inherit. Its `CourierRange = 34f` is the range at which a rifleman engages the TRUCK and is
+a different quantity from §11.5's 34 m reach at an enemy MAN; Core has its own `SUPPRESS_REACH`. `RifleRange = 26f`
+genuinely is §8.1's 26 m and is untouched.
+
+1. OPEN LOOP, BEFORE ANY CODE - the accumulator derived from rounds the core already fired:
+
+     today's rifle fire alone          bulls 82.7%  bears 84.1%   OVER the band   6967 rounds
+     with §11.5 suppressing rounds     bulls 95.1%  bears 95.5%   OVER the band   +7865 suppressing rounds
+
+   (On a 2 seeds x 40 s drive the same derivation reads 65.0% / 62.5%, inside the band. That window holds less
+   sustained contact than a three-minute round; the long drive is the one that counts.)
+
+2. CLOSED LOOP, WITH THE RULE IN - the core's own word, the feedback live:
+
+     rifle volume     6967 -> 3920 rounds     the half-rate is working, and cuts 44% of the firing
+     bulls pinned     96.0%    under fire 97.4%
+     bears pinned     95.6%    under fire 96.5%
+     -> STILL OVER §0's 10-70 band
+
+3. THE RESIDUAL, WITH ITS CAUSE, AND NOTHING RETUNED. The arithmetic is the reason and it is in §11.5's own
+   numbers: decay is 1 a tick, which is 60 a second, and one round is +60. So a SINGLE shooter landing one round a
+   second on a team holds that team at break-even forever, and the pin threshold is only two rounds. The half-rate
+   doubles a pinned man's RELOAD, but a suppressing round is fired on the LOOK-AGAIN clock (0.4-1.1 s), which
+   §11.5 does not halve - so a pinned man with no target still suppresses roughly once a second. With men of both
+   sides inside 34 m of each other along the whole seam, the word saturates and never decays below 120.
+
+   +60, -1 and 120 are §11.5's own numbers and are left exactly as written. The row stays LISTED as over its
+   ceiling with this cause. Changing any of the three to paint it green would be tuning the rule to the row.
+
+4. IT MOVES §11.4's LISTED 2x REMAINDER THE WRONG WAY, as predicted from the open loop and now measured: 876907 of
+   2505404 STAND man-ticks belong to a pinned team, so STAND falls to 1628497 while the down count rises to
+   1974236. The remainder stays listed at 0.35 and is not touched here.
+
+   SUITES: rules 50/50, tactics 21/21, candles+chart+spawn 18/18, canonical group 22/22, vectors+bundle 2/20 with
+   goldens deliberately stale until the deploy that ships occupancy, posture and suppression together. No C#
+   touched, so no EditMode and no PlayMode run. The §4.12 assault count is re-measured a fourth time, 10 -> 11,
+   because pinning stops teams that were rushing; asserted exactly with its per-seed table.
+
 §11.4 POSTURE - THE BITS WRITTEN (2026-09-19). Before and after, five seeds x 180 s, a nuke every 30 s.
 
 THE WRITE. COVER_POSTURE_SHIFT now carries STAND 0 / PRONE 1 / COVER 2 in TAC_COVER's reserved high bits. No new

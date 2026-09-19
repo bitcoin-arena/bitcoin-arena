@@ -86,8 +86,18 @@ man-tick is structurally tiny while a man on his place is in contact.
 POSTURE IS INVISIBLE TO THE PLAYER TODAY and that is by ruling, not oversight: the renderer does not read
 TAC_COVER, and it is one of the three deploy stops rather than part of this item.
 
-ON TOP NOW: **§11.5 suppression**, then §4.4 coax (when the coax lands, posture must apply to it - it does not
-exist in the core yet). M3's remainder stands behind them, its fixture pair needing a third re-pick.
+§11.5 SUPPRESSION IS **IN THE CORE** (2026-09-20). TAC_SUPP, one word per fire team, 18 appended: TAC_WORDS
+212 -> 230, no new bit in TAC_COVER. Fire pins men: +60 a round, -1 a tick, pinned at 120; a pinned team does not
+rush, a pinned man crawls at 0.5 m/s and reloads at half rate, and a suppressing round takes the look-again draw
+he was already taking so the draw count does not move. Rifle volume fell 6967 -> 3920 rounds on five seeds.
+
+LISTED, OVER ITS CEILING, NOT RETUNED: §0 wants each side pinned on 10-70% of ticks and it reads 96.0% / 95.6%.
+The cause is §11.5's own arithmetic - decay is 60 a second and a round is +60, so one shooter landing a round a
+second holds a team pinned forever, and the half-rate doubles a RELOAD while a suppressing round rides the
+look-again clock. +60, -1 and 120 are left exactly as the section writes them. Numbers in TASKBOOK.
+
+ON TOP NOW: **§4.4 coax** (posture and suppression must both apply to it). M3's remainder stands behind it, its
+fixture pair needing a third re-pick.
 
 LISTED, each its own thing and none of them B:
 1. **91 files write `blockTicks: 9000`** against cores that end at 10800 - 21 client tests, the node suite, four
