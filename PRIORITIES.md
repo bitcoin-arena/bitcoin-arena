@@ -96,6 +96,15 @@ print. Army.cs was read against the core on the way past: its overrun is a fixed
 armour only, and the core holds the same two numbers in the same units - nothing ported as a push, and the one
 divergence (the core measures overrun from the pushed line, not the seam) is §4.10's own requirement.
 
+AND THE TWO ENGINES WERE COMPARED IN NUMBERS, not only in code. The recording has no push word, so they cannot be
+compared on it - but they can be compared on what the word is meant to produce, a line standing further back than it
+did. Measured at the same cadence over the same ninety seconds, in metres of each side's own depth: the CORE gives
+ground MORE often than the recording, and in bigger steps. A11b is red while the behaviour it is named for happens
+more in the core than in the thing the core was written from, because the row measures the push WORD and the gates
+hold that word shut. The recording, having no word, would fail this row in every window while visibly falling back.
+Free corroboration in the same run: the core's hulls stand at exactly the mean of §2.5's two lines at spawn, where
+the recording stands at 77 m and walks in. Numbers in TASKBOOK.
+
 NEXT: nothing unblocked on this letter but the five waits. Every other red is green, closed, or listed with a holder.
 
 SUITES, each on its own run: rules 47/48 - the one red is `incoming fire costs the truck condition`, listed with its

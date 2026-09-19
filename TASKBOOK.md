@@ -40673,3 +40673,40 @@ throw back every push across the seam on the tick it arrived. That is a rule, no
 So the standing finding holds, now verified rather than asserted: Army.cs has no push word; its only giving-ground is
 this fixed overrun fall-back, which the core holds separately with the same numbers in the same units. No distance
 used as a speed, no 2-D coupling, and the per-frame steer stays out.
+
+### A11b, core against the recording IN NUMBERS: the core gives more ground, not less (2026-09-19)
+
+The code read said Army.cs has no push word. That is necessary but not sufficient: it says the two cannot be compared
+on §4.10's word, not that they cannot be compared at all. What the word is supposed to PRODUCE can be compared, and
+in the same units - a side's armour standing further back from the seam than it did five seconds ago.
+
+csharp-army.json holds each side's mean armour z every 5 s for 90 s (seed 20260901, flat world, seam at 0, no trade
+flow, no truck, 24 armour a side). The core was sampled at the same cadence for the same 90 s, its depth taken from
+its OWN seam at each hull's x - the seam wanders with the chart, so a depth measured from z = 0 would be measuring a
+line the army does not hold. An interval counts as giving ground when the mean depth grows by more than 0.5 m.
+
+Read from t = 20 s, after the recording's army has closed: the recording walks in from 77 m and the core spawns on
+post (ruled 2026-09-19), so the opening is not comparable by design.
+
+  side    recording gave ground      core gave ground
+  bull     7 of 14 intervals          5 of 14 intervals
+  bear     4 of 14 intervals          9 of 14 intervals
+  BOTH    11 of 28 = 39.3%           14 of 28 = 50.0%
+  worst single fall-back   recording bull 5.7 m / bear 3.8 m      core bull 10.8 m / bear 11.9 m
+
+SO THE CORE'S ARMY GIVES GROUND MORE OFTEN THAN THE RECORDING'S, AND IN BIGGER STEPS - 50.0% of intervals against
+39.3%, and a worst fall-back of 10.8-11.9 m against 3.8-5.7 m. A11b is red while the behaviour it is named for
+happens more in the core than in the thing the core was written from.
+
+That is because A11b does not measure the behaviour. It measures the WORD: a 60 s window passes only if some team's
+`TAC_PUSH` goes below zero, and that word is what the two 20:30 gates hold shut. The recording, having no push word
+at all, would fail A11b in every window of every seed - 24 of 24 - while visibly falling back on 39.3% of its
+intervals. The row is about the instrument, not the army's conduct.
+
+CAVEAT, stated rather than buried: the two runs are not the same world. The recording is flat with 24 armour a side
+and no chart; the core has 12 a side and a seam that wanders. The comparison is of the RATE at which each line falls
+back, in metres of its own depth, not of absolute depths, and it is reported as such.
+
+CORROBORATION, free and worth keeping: at t = 0 the core's mean armour depth is 23.0 m, which is exactly the mean of
+§2.5's two lines, (16 + 30) / 2. The hulls stand on their posts at spawn, measured here in a file that has nothing to
+do with that ruling - while the recording stands at 77.3 m and walks in, which is the spawn fault that ruling named.
