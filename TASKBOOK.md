@@ -40090,3 +40090,50 @@ MacBook's browser, and the test was pointed at that. The Daily is untouched at 0
 Suites: EditMode ChartHudTests + ChartPlacementTests 13/13 with the draw in, errorCS 0; webgl build exit 0;
 blwp-client objective-markers 1/1. No second hole surfaced on these markers - none was unplaced, none collided with
 the chrome, and the holder's colour is the core's word, not a guess.
+
+### A2's fidget row: the fix is one line, measured both ways, and HELD on a ruling (2026-09-19)
+
+THE CAUSE, measured on the six seeds where the row fails (--cause, 12 fidgets of 318 flips = 3.77% against a 2% bar):
+flips by axis x 4 / z 314; the hold had NOT moved on 9 of the 12; and by branch, 8 of the 12 were stepped by the
+GIVE-GROUND branch, 4 by the walk-to-post one. That branch's deadband was the step's own length -
+`abs(g) > mulFast(CROWD_WALK, dt)`, about 4 cm at 60 Hz - so a tank already inside its back-off point still stepped a
+whole step, landed the other side of the point and reversed on the next tick. The walk-to-post branch eight lines
+below records fixing exactly this with POST_DEPTH; the give-ground branch was left on the old band.
+
+THE PATCH, one line in `stepUnit` (rules/army.js, the crowdedTight branch):
+    -    const want = abs(g) > mulFast(CROWD_WALK, dt) ? (g > 0 ? ONE : -ONE) : 0;
+    +    const want = abs(g) > POST_DEPTH ? (g > 0 ? ONE : -ONE) : 0;
+Nothing else moves: the ground given is still BACK_OFF, the pace is still CROWD_WALK, a tank further out still walks.
+Kept at scratchpad/a2-give-ground-band.patch.
+
+WHAT IT DOES, canonical seeds 1-5 x 3600 ticks, the same table both runs:
+  A2 fidgets      before  5 of 237 = 2.11%  FAIL        after  1 of 240 = 0.42%  PASS
+  rows passing    before  27 of 39                      after  28 of 39
+  other rows      not one changed verdict either way; the only diff in the whole table is A2's own line.
+On the six failing seeds: 3.77% -> 1.60%, pass.
+
+WHY IT IS NOT IN THE TREE: with it in, `rules.test.js` goes 48/48 -> 47/48 on `incoming fire costs the truck
+condition`, which parks the truck on the seam with the air held off and asserts 0 < hp < 100 after 15 s.
+                       hp@15s          first hit    written off    tank-ticks in reach   mean nearest
+  20260901  HEAD        1.31             0.43 s        16.58 s           5228              14.5 m
+            with band   0.00  RED        0.43 s        13.38 s           5228              14.6 m
+  20268820  HEAD       19.16             0.45 s        17.90 s           5046              14.8 m
+            with band   0.00  RED        0.45 s        12.53 s           5046              15.0 m
+  20276739  HEAD        9.17             0.58 s        15.20 s           4481              16.0 m
+            with band   9.17  same        0.58 s        15.20 s           4481              16.0 m
+
+THE ARMY IS NOT MORE EXPOSED. The tank-ticks inside the 34 m courier reach are IDENTICAL on all three seeds, the
+mean nearest tank moves by 0.1-0.2 m, and the third seed is unchanged to the hundredth. On 20260901 the first ten
+seconds are identical too - 14 hits, 77.1 points, hp 22.93 both ways - and the whole difference falls in the last
+five seconds, against 1.31 points of margin. What the band changes is which foe a halted hull outranks
+(`outranksTheFoe` reads the distance to the truck against the distance to the foe), so a shot or two per run goes to
+the truck instead of to the enemy tank. That is jitter on a fixture standing on its edge, not a deadlier doctrine.
+
+AND THE FIXTURE WAS ALREADY STALE BEFORE THIS. The test's own comment records the write-off at 24.38 / 30.00 /
+25.37 s; HEAD measures 16.58 / 17.90 / 15.20 s. The army got about eight seconds deadlier at some point since that
+comment was written and the window was never re-measured, which is why one seed now passes by 1.31 of 100 points.
+
+THE RULING, Daniel's, not mine: the 15 s is that test's setup and I will not move it to fit a greener army. Either
+(a) 15 s still states the doctrine - then HEAD is already nearly failing it and the army's lethality is a bug of its
+own, older than this patch; or (b) it is a fixture whose numbers are eight seconds out of date and it gets
+re-measured from the army that exists, at which point the patch goes in as it stands. A2 stays listed until then.

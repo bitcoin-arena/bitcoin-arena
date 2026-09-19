@@ -54,6 +54,16 @@ ARMY, tonight, on the same letter: rows passing 24 -> 27 of 39.
   here and tunnelled to the MacBook; the Daily stays 0.0.1617 because A9 is red. The unblocked miss is six rows now,
   not seven. The war table still prints O4 red on purpose: that probe cannot run a client test, and its row now names
   the file that can, so a core run is never read as having answered it.
+- A2's FIDGET ROW: the fix is one line, it is measured, and it is HELD on a ruling. The give-ground branch used the
+  step's own length as its deadband - about 4 cm - so a tank already inside its back-off point stepped a whole step,
+  landed the other side of it and reversed next tick; the walk-to-post branch eight lines below records fixing that
+  same fault with POST_DEPTH and this one was left out. With the post's band there: A2 2.11% -> 0.42% against a 2%
+  bar, rows passing 27 -> 28 of 39, and not one other row changes verdict. It is NOT in the tree: it turns
+  `incoming fire costs the truck condition` red on 2 of 3 seeds. That test parks the truck under fire for 15 s, and
+  on HEAD it already passes by 1.31 of 100 points while its own comment records numbers eight seconds out of date.
+  The army is not more exposed - identical tank-ticks in reach, the third seed unchanged, the first ten seconds of
+  the first seed identical - so this is jitter on a fixture standing on its edge. Moving that 15 s is Daniel's, not
+  mine. Numbers and the patch in TASKBOOK.
 - O1 mean and B4 stay red with their cause listed, not fixed: an objective lane's +8 rest is STEPPED on the same
   five-second clock that §4.11 uses to move the objective, so a lane that just became the objective still sits at 0
   while the +8 moves on. The failing seeds move it twice as often (35 lane changes against 18). Ruled 2026-09-19:
