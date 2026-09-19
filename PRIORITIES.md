@@ -118,13 +118,26 @@ appended: TAC_WORDS 212 -> 230, no new bit in TAC_COVER. Fire pins men: +60 a ro
 pinned team does not rush, a pinned man crawls at 0.5 m/s and reloads at half rate, and a suppressing round takes
 the look-again draw he was already taking so the draw count does not move. Rifle volume fell 6967 -> 3920 rounds.
 
-TWO CORE HOLES ARE OPEN, measured, and they are why this item is not closed:
-1. **A pinned man reads STAND on four ticks in five.** §0 says never, and never a step past 0.01 m. The crawl is
-   0.00833 m a tick but x and z are steered by separate controllers while the probe reads |dx| + |dz|, so a
-   diagonal crawl spends the budget twice: 105381 of 133536 pinned man-ticks step past 0.01 m, 106402 are written
-   STAND. Every suite is green through it because nothing asserts that row.
-2. **The bounding rule reads the pin instead of the clock**, so a pinned team forces its neighbour to rush where
-   §11.5 says the neighbour may halt on the pinned team's clock.
+CLOSED SINCE, and two of them were my misreadings rather than faults:
+- **A pinned man read STAND on four ticks in five.** FIXED (f320932a): the crawl is 0.00833 m on EACH axis and the
+  probe reads |dx| + |dz|, so a diagonal crawl spent the budget twice. The cap stays per axis and the pose writer
+  reads the pin instead. STAND while pinned 79.7% -> 0.2%, the remainder being the decay boundary.
+- **The bounding rule reads the pin instead of the clock.** RETRACTED - never a hole. The covering team is the one
+  on the ground, so a pinned team must look halted to its neighbour: 426193 of 426193 pinned team-ticks do, and on
+  86.5% of them the timer would have had the team rushing.
+
+TWO CORE HOLES ARE OPEN, and they are why this item is not closed:
+1. **The shell clause does not exist.** §11.5: a shell landing inside 8 m of a man - hit or miss - adds 60 to his
+   team. Nothing in the core does it. The hit half is buildable now; the miss half needs a landing point that
+   waits on §4.4.
+2. **A bomb adds 300 per MAN, not per TEAM** (sim.js, inside the per-man loop). A team with two men in one blast
+   takes 600 and is clamped there, so it stays pinned 8.0 s instead of the section's 3.0 s. Bombs open 36.4% of
+   all pinned episodes, so this is a live path.
+
+AND IT KNOCKED §11.3's ROW DOWN: cover occupancy 64.7% against a 70% bar, attributed to the crawl - 746 of 1114
+lost reached man-ticks are pinned men who cannot cross at 0.5 m/s, 368 are men crossing into the pinned bucket,
+the free rate unmoved at 9.6%, none of it counting. Not loosened. §0's "never a step past 0.01 m" stays listed at
+78.9% of pinned man-ticks, ruled combined Euclidean and parked while cover is down.
 
 THE PIN IS INSIDE ITS CEILING (ruled 2026-09-20): §0's 70% is the share of TEAMS pinned, which is **43.8%**. The
 96.0% / 95.6% previously listed as an overage was "at least one of nine teams" - an OR read as a share - and is
