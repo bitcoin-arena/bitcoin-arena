@@ -92,8 +92,18 @@ listed with its cause and nothing it asserts was touched; nothing is deployed wh
   cadence to carry. The third was level, met the take lead more often than the side that did cross, and still never
   got a post across - because climbing to the ceiling needs three consecutive confirmed takes on one team, and on a
   level stretch a take is followed by a drift that steps the push back toward its rest. Level odds cannot climb,
-  however many re-reads they get. Of the three: outnumbered two, level-but-oscillating one. What is NOT measured is
-  why that side's odds are the poorer ones, and the widow share does not explain it. Numbers in TASKBOOK.
+  however many re-reads they get. Of the three: outnumbered two, level-but-oscillating one.
+- THE LAYOUT PRINT IS IN, and it says no. The slots are not under the steep climb: the seam at them is flat, not one
+  reading of the four hundred sits on a climb like A9's, the hulls stand level with the seam they hold, and the 3-D
+  distance runs the wrong way for the idea - the failing windows are NEARER their sample and past the reach less
+  often. A9's steep stretches are elsewhere in x and its levers are untouched. What the poorer odds are instead is
+  attrition: those sides were about three hulls down on their enemy, while the share of each side's living hulls
+  standing inside the 46 m is the same in both groups - a thinner side, not a wider one. The chain is closed and
+  every link measured: no post across the seam, because no TAKE, because fewer hulls alive.
+- AND THE ROW NOW SITS AGAINST ITS OWN RULE. §4.10 says a team losing its stretch GIVES ground; A11a asks that a team
+  of each side crosses every minute. On a seed where one side is three hulls down the rule forbids what the row
+  requires, and the give readings are there in the odds. Same shape as A4a - the row or the rule - and NOT declared a
+  wait here: Daniel picks. Numbers in TASKBOOK.
 - O1 mean and B4 stay red with their cause listed, not fixed: an objective lane's +8 rest is STEPPED on the same
   five-second clock that §4.11 uses to move the objective, so a lane that just became the objective still sits at 0
   while the +8 moves on. The failing seeds move it twice as often (35 lane changes against 18). Ruled 2026-09-19:

@@ -40415,3 +40415,65 @@ widow share does not separate the two groups (failing 28% / 43% / 22% against pa
 that the failing side is the one losing hulls. That is the slot-layout-versus-seam-shape print, deferred.
 
 Nothing changed: no cadence constant, no gate, no assertion, no C# copied. Tool only (--a11odds).
+
+### A11a's layout print: the slots are not on the climb, and the poorer odds are attrition (2026-09-19)
+
+Asked: do side +1's slots sit under the steep climb, where a 40 m gap in x becomes 70 m in three dimensions and falls
+past the 46 m reach? Measured at the same re-read ticks the odds were read at, per seed and side (410 readings).
+
+SAID FIRST, FROM THE CODE: §4.10's odds are a TWO-DIMENSIONAL test. `pressure()` compares `dx` and `dz` against
+`reach` and reads no height anywhere, so the climb cannot enter `own` or `foe` by any path. The elevation columns
+below are A9's quantity measured at these slots because the question was asked; they are not a term in this verdict,
+and nothing here couples them into one.
+
+  window   n   slotX(m)  seamZ(m)  slope(m/m)  depth below seam(m)  3-D to the 40 m sample(m)  past 46 m  own   foe
+   1|-1    39     -8.3      0.1     -0.000            0.05                  56.8                 30      3.74  2.74
+   1|+1    43     -8.2      1.5      0.007            0.21                  51.6                 40      3.42  3.30
+   2|-1    34    -12.7      0.2      0.002           -0.02                  56.1                 33      4.03  2.32
+  *2|+1    53     -0.5      2.3      0.003            0.04                  46.4                 25      2.23  3.47
+   3|-1    38      6.4     -2.0     -0.011            0.20                  55.0                 32      4.21  2.42
+   3|+1    40    -19.6     -0.0      0.002            0.03                  51.9                 33      3.52  3.15
+   4|-1    36     -4.5      0.7      0.001            0.03                  57.0                 34      3.67  3.36
+  *4|+1    42    -11.6      0.5      0.003            0.23                  49.2                 37      3.45  3.40
+   5|-1    39    -27.0      0.7      0.007           -0.14                  51.6                 37      4.59  2.21
+  *5|+1    46     -0.6      1.0      0.000            0.03                  47.9                 33      2.33  3.83
+  (* = a window with no crossing)
+
+  group                     n    mean |slope|   readings at 0.57 m/m or steeper   depth below seam   3-D to sample   past 46 m
+  the three failing        141      0.015 m/m            0 = 0.0%                     0.09 m           47.7 m        67.4%
+  every other window       269      0.015 m/m            0 = 0.0%                     0.06 m           54.1 m        88.8%
+
+THE HYPOTHESIS IS FALSE, and not marginally. The seam at these slots is flat - 0.015 m per metre in BOTH groups, and
+NOT ONE reading of the 410 sits on a climb of 0.57 m/m or steeper. The hulls stand level with the seam they hold
+(0.09 m and 0.06 m below it, which is nothing). And the 3-D distance runs the WRONG WAY for the hypothesis: the
+failing windows are nearer their 40 m sample (47.7 m against 54.1 m) and past the 46 m reach LESS often (67.4%
+against 88.8%). A9's steep stretches are somewhere else in x; they are not where these teams stand. A9's levers are
+untouched and this changes nothing about that row.
+
+WHAT THE POORER ODDS ACTUALLY ARE: hulls alive, at those same ticks.
+  group                  own hulls alive   enemy hulls alive   of its own living, the share inside 46 m   of the enemy's
+  the three failing            8.48             11.25                       31.0%                            31.7%
+  every other window          10.81              9.86                       35.8%                            28.4%
+The failing sides were down about 2.8 hulls against their enemy where the crossing sides were up about 1. The SHARE
+of each side's living hulls that stood inside the 46 m disc is near enough the same in both groups (31.0% against
+35.8%), so this is not a side spread thinner over the field: it is a side with fewer tanks left. `own` tracks the
+living roster, and the roster is what differs. That also answers the earlier widow check, which was too coarse a
+measure to separate the groups - the count of living hulls does.
+
+SO THE CHAIN IS CLOSED, and every link is measured: no post across the seam (3 of 3) <- no TAKE verdict (2 of 3
+outnumbered, 1 of 3 level) <- fewer hulls alive on that side (8.48 against 11.25). Not layout, not seam shape, not
+spread, not the cadence, not the gates.
+
+AND THAT PUTS THE ROW AGAINST ITS OWN RULE. §4.10 says in its own words: "A team that is winning its stretch takes
+ground across the seam; a team that is losing it gives ground." A11a asks that in every 60 s window at least one team
+of EACH side crosses. On a seed where one side is three hulls down, the rule forbids exactly what the row requires -
+and the give readings are there in the odds print (12 and 14 of them on the two outnumbered sides). This is the same
+shape as A4a: the row or the rule. NOT declared a wait here; it is written down for Daniel to pick.
+
+THE LEVEL-OSCILLATION WINDOW stays a rule fact, as ruled: seed 4 +1 was level at +0.05, met the take lead 12 times of
+42, and still never climbed, because three consecutive confirmed takes on one team are needed and a take is followed
+by a drift that steps the push back toward rest. Layout does not explain it either - seed 4 +1's slope is 0.003 m/m.
+
+Nothing changed: no gate dropped, no cadence constant, no assertion, no A9/H1/B3/A4a lever, no C# copied and no 2-D
+coupling introduced - the elevation columns are printed beside the odds, never multiplied into them. Tool only
+(--a11geom).
