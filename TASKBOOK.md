@@ -160,8 +160,8 @@ genuinely is §8.1's 26 m and is untouched.
    +60, -1 and 120 are §11.5's own numbers and are left exactly as written. The row stays LISTED as over its
    ceiling with this cause. Changing any of the three to paint it green would be tuning the rule to the row.
 
-3b. TWO CORE HOLES IN THIS WRITE, found by measuring it rather than trusting it (2026-09-20). Both are §11.5's
-   own sentences, both are open, and neither is coded.
+3b. TWO THINGS I RAISED AGAINST THIS WRITE, and BOTH ARE NOW ANSWERED (2026-09-20) - one was a real fault, the
+   other was my misreading. Kept in full because the second is the more useful record.
 
    (a) A PINNED MAN READS STAND ON FOUR TICKS IN FIVE. §0: "a pinned man is never STAND and never steps more than
    0.01 m in a tick (a crawl)". The crawl is 0.5 m/s = 0.00833 m a tick and §11.4's probe is 0.01 m, so the write
@@ -198,6 +198,25 @@ genuinely is §8.1's 26 m and is untouched.
    A third, latent and harmless today: `u.pinned` is written only inside the !armour branch of a reused scratch
    object, so for a tank it holds the previous man's value. The gait tests `u.armour` first so nothing reads it,
    but it is a stale field waiting for its first reader.
+
+3f. THE TWO CLAUSES OF §11.5 THAT ARE ACTUALLY OPEN (2026-09-20, found by reading the section against the write
+   at the close-out, not by measuring). Neither is coded.
+
+   (a) THE SHELL CLAUSE DOES NOT EXIST. §11.5: "A shell (§4.4) that lands - hit or miss - inside 8 m of a man adds
+   60 to his team's word too; a tank's fire pins infantry, which is what infantry hides from." Nothing in the core
+   does this. Tank guns fire today and a connecting shot lands on the target hull, so the HIT half is buildable
+   now - men within 8 m of a hull that was just hit take +60. The MISS half needs a landing point the core does
+   not model at all: a gun shot either connects or does not, and a miss goes nowhere in particular. That half
+   belongs with §4.4, which owns the shell.
+
+   (b) A BOMB ADDS 300 PER MAN, NOT PER TEAM. §11.5 says a blast "adds 300 to every TEAM with a living man inside
+   16 m of it". The call sits inside the per-man loop (sim.js, the blast pass), so every man of a team inside the
+   circle adds his own 300. With the clamp at 600, a team with two men in one blast is pinned at the ceiling.
+
+   IT IS NOT COSMETIC, by the decay arithmetic already recorded above: from 600 the word needs 480 ticks (8.0 s)
+   to fall under the pin line, against 180 ticks (3.0 s) from 300. So a team caught with two men in a blast stays
+   pinned about THREE TIMES as long as the section says. Bombs open 36.4% of all pinned episodes, so this sits on
+   a live path rather than in a corner - and it is one of the reasons the crawl is starving cover.
 
 3c. THE POSE WRITER READS THE PIN (2026-09-20, f320932a), and one clause of §0 is still open.
 
