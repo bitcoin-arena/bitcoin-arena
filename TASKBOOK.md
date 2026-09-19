@@ -56,6 +56,38 @@ So the building stands on the ground from x 53.8 m, and the chart's last nine sl
 (to 114) are inside it. The entry corridor proper - |z| <= 34 m, which is the tunnel's own 40 m mouth less the
 sides - is clear of legs and feet from x 90.4 eastward: mass_behind_tunnel is the last thing in it.
 
+RULING B REFITTED (Daniel's named pick, 2026-09-19): the chart and the road end at the miner's door, the world is
+not enlarged. FIELD_SLOT 377241 -> 339558 (5.75624 -> 5.18124 m), FIELD_X0 unchanged at -4967627 (-75.79998 m),
+32 slots, CANDLE_EAST 108.39969 -> 89.99983 m. MINER_DOOR_X = 5924454 (90.4 m) added to map.js and exported to C#
+through gen-unity-layout.js; RoadNetwork's x1 is that constant instead of DepotX - 4 (114 m), so 24 m of ribbon that
+was drawn inside the building is gone. measure-miner-door.mjs prints it:
+
+  field           -75.80 .. 90.00 m, 32 slots of 5.18 m      last slot 84.82 .. 90.00 m
+  door             90.40 m     face / origin 114.40 m        band still -104 .. 104 m
+  the building     power cables from 53.8, feet 62.8, lower mass 64.4, legs 66.9
+  the corridor     mass_behind_tunnel ends at 90.40 m and tunnel_floor starts at 90.40 m, running to the facade
+
+  OK  no candle body stands past the door        last slot ends 90.00, door 90.40
+  OK  the road ribbon ends at the door           RoadNetwork x1 = Layout.MINER_DOOR_X
+  OK  the door is where the tunnel begins        tunnel floor from 90.40
+  OK  nothing of the building stands east of the door in the corridor
+  OK  the delivery line is still past it all     gate 114.40
+
+Two test setups moved with the world, no assertion:
+- chart.test.js's G1 row: the gate at x 114 is now 4.632 of a candle past the last instead of 0.97, because the
+  field ends at 90.0 and a candle is 5.181 m. The identity above the band (t is the gate's own distance past the
+  newest candle) is unchanged and is what the row tests.
+- rules.test.js's parked truck moved from x 0 to x -78, 2.2 m west of the first candle face. At x 0 it now stands
+  among the bodies: seed 20260901 went hp 93.39 -> 0 in one tick at t=87 with every hull AND hulk held 7 m off,
+  which is a crash, not fire. keepArmourOff also stopped skipping hulks (it skipped anything with no hp, so a wreck
+  beside the truck was never moved). Measured at the flanks first - z 56 / 58 / 60 / 64 / 70 - and the three seeds
+  disagree there from untouched at 90 s to written off at 20 s. West of the chart the line still runs: hp at 10 s
+  89.7 / 43.5 / 88.7, all three written off inside 90 s. At x -80, two metres further west, nothing reaches the
+  truck at all - that is the guns' edge, not a knob.
+
+Core hash after the refit: 2d48a05ade3a264ce5cbec21839249d88c204a60c10d982c11e5deea4b9a0013.
+
+SUPERSEDED by the pick above, kept because the measurement stands:
 Two worlds clear it, and they are different rulings, not a choice of implementation:
   (a) the chart's east end refitted to the measured entry at ~90 m: 32 slots from FIELD_X0 -75.8 m gives a pitch of
       5.18 m instead of 5.756 m. Spawn ruling B's own words ("the last slot ending before the miner face", "no body

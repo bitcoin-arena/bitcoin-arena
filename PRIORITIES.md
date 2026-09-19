@@ -143,6 +143,12 @@ SUITES, each on its own run: rules 47/48 - the one red is `incoming fire costs t
 cause, its 15 s window a fixture whose own comment is stale against HEAD, and nothing it asserts touched - tactics
 17/17, vectors 8/8. The others stand from e2575f1, no core source having moved since. No Unity: no C# path moved.
 
+LISTED, NOT ON THIS LETTER (holder: the three-minute ruling, c01cc65). Every client and node test fixture writes
+`blockTicks: 9000` while the core has ended a run at 10800 since the round became three minutes owned by the
+contract, and a node refuses a contract whose run length is not its core's - so daemon-backed fixture rounds are
+refused (measured: 6 of ghost-field.test.js). Real contracts carry the core's number, so nothing a player touches is
+affected, and the Daily has shipped with it since 0.0.1711. The fix is the fixtures, in their own letter.
+
 DANIEL'S PLAYTEST CHAIN OF 2026-09-19 12:55-13:10, nine items in his order, no pause between them. The work is in
 the tree and green in every core suite; nothing is on the Daily yet - one build, one deploy at the end, as ruled.
 
@@ -160,14 +166,14 @@ the tree and green in every core suite; nothing is on the Daily yet - one build,
      the tunnel's 46-character URL is a node letter or a 14-character host. The price is untouched.
   5. DONE: the road ribbon was laid ON the live candle layer, so it rode up onto every body it crossed. It lies on
      the ground under the candles now - the chart covers the road, the road is still whole.
-  6. NOT DONE, and MEASURED (numbers in TASKBOOK). The field is ruled to end at "the miner face x 108.4", which is
-     where the model's ORIGIN sits; the model stands on the ground from x 53.8 m, so the chart's last nine slots and
-     the roads are inside the building. Two worlds clear it and they are different rulings: (a) refit spawn ruling
-     B's own fit to the measured entry - 32 slots ending at ~90 m, pitch 5.18 m instead of 5.756 m, nothing else
-     moves; (b) Daniel's sentence taken literally - the world made larger, the miner east until it clears 108.4,
-     which puts the facade at 169 m and the map's edge past 180 m from 130 m, and every number measured against
-     +-130 m moves. I take (a) unless Daniel says otherwise: it applies his own ruling to a measured face instead of
-     to the model's origin, and it is the change that can be measured in one pass.
+  6. DONE, by Daniel's named pick: RULING B REFITTED, the world NOT enlarged. The ruling's "miner face x 108.4" is
+     where the model's origin sits; the building stands on the ground from x 53.8 m and its tunnel begins at 90.4 m.
+     The same 32 slots and the same west end are refitted to that door: pitch 5.75624 -> 5.18124 m, the last slot
+     ending at 89.99983 m, and the road ribbon ends at the door too, reading the core's MINER_DOOR_X rather than
+     keeping a second idea of where the world ends. The miner does not move, the map's edges do not move, and no
+     WAR_TACTICS number moves - not the 27 m army pitch, not the 46 m gun, not the depths, legs or cool-down.
+     `node packages/core/tools/measure-miner-door.mjs` prints the layout, the building part by part, and the four
+     checks it must pass.
   7. DONE: no tank stands on the loading dock. The pair's centre is clamped to 77.4 m so the outer tank stands on
      the kerb at 83.4 m with its partner 12 m behind it. The 27 m slot pitch did not move.
   8. DONE: a liquidation now says what it cost across the middle of the screen - "$305,000 SHORT LIQUIDATED" - for
