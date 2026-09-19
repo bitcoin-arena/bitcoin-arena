@@ -39996,3 +39996,42 @@ A jump to +8 on the tick the objective lands would be a new rule, not a Core fix
 B4 keep their bars and stay listed red with this cause: the +8 is stepped on the same five-second clock that moves
 the objective, and the failing seeds move it twice as often (35 against 18 lane changes in five minutes). That is 21
 of the 21 seed-failures those two rows are missing.
+
+### The remaining unblocked miss, ranked (2026-09-19 10:0x)
+
+Y is the doctrine miss with Daniel's three waits and the listed cadence taken out: the twelve reds minus A9 and B3
+(waits), minus O1 pushed, O1 mean and B4 (the objective-rest cadence, listed and ruled). H1's five-minute slip is a
+wait too and is not one of the twelve. That leaves SEVEN ROWS AND 58 SEED-FAILURES.
+
+  row    share of Y   seeds        what it is, as already measured
+  A11b   12 of 12  20.7%   13 of 13 short windows had NO give step at all - the SAME §4.10 cadence just listed, seen
+                           through a 60 s window instead of a lane's rest
+  O4     12 of 12  20.7%   the CLIENT drawing objective markers; the test is not written in packages/blwp-client. The
+                           only red on the table no core change can turn green, and the only one with no doctrine
+                           question attached
+  B2     12 of 12  20.7%   the halt half of §11.2, all 18 failures and none the movement half. Its one lever was
+                           measured and ruled a thin slice: 8 of 18 failures carried a suppression against 130
+                           PASSING windows, 5.8% fail with one against 14.5% without. No lever named since
+  A11a    8 of 12  13.8%   4 of 7 short windows had no take step at all, 3 stepped nobody across - cadence again
+  A13b    6 of 12  10.3%   at ONE minute. Over five it passes on 11 of 12; the one-minute zeros were a window too
+                           short for two sides' means to part
+  A2      6 of 12  10.3%   every fidget is an overwatch tank reversing in z (5 of 5; 153 of 155 flips in z), never
+                           the bounding leg and never the lateral slot. THE ONLY ROW HERE WITH AN UNEXPLORED CORE
+                           MECHANISM
+  A4a     2 of 12   3.4%   one quiet 10 s window against 27 windows carrying seven or more post changes
+
+  single-seed flags, outside Y because they PASS in the five-seed aggregate: B1 7/12, A11c 5/12, S1 2/12, O2 1/12,
+  H2 1/12 - marginal bars, not reds of the twelve.
+
+WHAT THAT RANKING SAYS, before any code:
+- The three biggest shares are each 20.7%, and two of them are already answered. A11b is the cadence this letter
+  just listed and ruled - opening it would reopen a closed mechanism. B2's only measured lever came out anti-
+  correlated and was closed; nothing new is named for it.
+- O4 is the same size and is the only one of the seven with no doctrine question and no closed mechanism behind it.
+  It is client work, not core: writing the test that asks whether the page draws the objective markers.
+- A2 at 10.3% is the largest share whose mechanism is in the CORE and still unexplored: an overwatch tank reversing
+  its z step inside two seconds, on 6 of 12 seeds, with the hull-down crest hysteresis (§4.1) the obvious place to
+  look and no measurement yet of why the held crest still reverses.
+
+So the pick is between O4 (20.7%, client, no doctrine question) and A2 (10.3%, core, unexplored). Nothing else in Y
+is both unblocked and unanswered.
