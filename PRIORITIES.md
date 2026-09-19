@@ -160,10 +160,14 @@ the tree and green in every core suite; nothing is on the Daily yet - one build,
      the tunnel's 46-character URL is a node letter or a 14-character host. The price is untouched.
   5. DONE: the road ribbon was laid ON the live candle layer, so it rode up onto every body it crossed. It lies on
      the ground under the candles now - the chart covers the road, the road is still whole.
-  6. NOT DONE, and it is the one item that needs a world change: the chart field is ruled to end at the miner face
-     (x 108.4, spawn ruling B) and the miner MODEL's dock reaches further west than that face. Daniel's own sentence
-     allows the world to be made larger; how much larger is a measurement I do not have yet - the model is streamed,
-     so its reach is read on the running page. First measure after this deploy.
+  6. NOT DONE, and MEASURED (numbers in TASKBOOK). The field is ruled to end at "the miner face x 108.4", which is
+     where the model's ORIGIN sits; the model stands on the ground from x 53.8 m, so the chart's last nine slots and
+     the roads are inside the building. Two worlds clear it and they are different rulings: (a) refit spawn ruling
+     B's own fit to the measured entry - 32 slots ending at ~90 m, pitch 5.18 m instead of 5.756 m, nothing else
+     moves; (b) Daniel's sentence taken literally - the world made larger, the miner east until it clears 108.4,
+     which puts the facade at 169 m and the map's edge past 180 m from 130 m, and every number measured against
+     +-130 m moves. I take (a) unless Daniel says otherwise: it applies his own ruling to a measured face instead of
+     to the model's origin, and it is the change that can be measured in one pass.
   7. DONE: no tank stands on the loading dock. The pair's centre is clamped to 77.4 m so the outer tank stands on
      the kerb at 83.4 m with its partner 12 m behind it. The 27 m slot pitch did not move.
   8. DONE: a liquidation now says what it cost across the middle of the screen - "$305,000 SHORT LIQUIDATED" - for

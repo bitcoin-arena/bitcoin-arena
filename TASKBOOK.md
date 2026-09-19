@@ -40,9 +40,31 @@ Item 4, the debug over the price. #blwp-players was top-centre at 14 px with thr
 Bottom-left at 12 px now, above the pad row on a phone in landscape (23.5vh, the wallet's own keep-off), and the
 host is cut to its first label and 14 characters.
 
-Item 6, NOT DONE. The chart field is ruled to end at the miner face x 108.4 (spawn ruling B) and the miner model's
-dock plainly reaches west of it (miner-entrance-covered-1309.jpg). The model is streamed at runtime, so its western
-reach has to be read on the running page; that measurement is the first thing after this deploy.
+Item 6, NOT DONE, but MEASURED. The chart field is ruled to end at "the miner face, x 108.4" (spawn ruling B) and
+the face the ruling means is the facade, where the model's ORIGIN is placed. The model itself reaches far west of
+it. Read out of bitcoin_miner_megastructure.glb, per node, through the 180-degree turn and the (1, 0.45, 1) scale
+that DeliveryGate applies (world x = 114.4 - model x):
+
+  power_cable_0/1   world x  53.8 ..  66.1   y 0.1 ..  9.3   |z| 34
+  foot_2/3                   62.8 ..  82.0   y 0.0 ..  1.0   |z| 72
+  corner_rib_l/r             63.7 .. 115.1   y 2.7 .. 40.5   |z| 76
+  mass_lower_l/r             64.4 .. 114.4   y 2.7 .. 11.7   |z| 75
+  mass_behind_tunnel         64.4 ..  90.4   y 2.7 .. 11.7   |z| 34
+  leg_2/3                    66.9 ..  77.9   y 0.0 ..  2.7   |z| 68
+
+So the building stands on the ground from x 53.8 m, and the chart's last nine slots (96 .. 108.4) and the roads
+(to 114) are inside it. The entry corridor proper - |z| <= 34 m, which is the tunnel's own 40 m mouth less the
+sides - is clear of legs and feet from x 90.4 eastward: mass_behind_tunnel is the last thing in it.
+
+Two worlds clear it, and they are different rulings, not a choice of implementation:
+  (a) the chart's east end refitted to the measured entry at ~90 m: 32 slots from FIELD_X0 -75.8 m gives a pitch of
+      5.18 m instead of 5.756 m. Spawn ruling B's own words ("the last slot ending before the miner face", "no body
+      in the gate throat") are satisfied better by 90 than by 108.4 - the ruling is applied to a measured face
+      rather than to the model's origin. The world gets a slightly denser chart and nothing else moves.
+  (b) the world made larger, which is Daniel's own sentence: the miner moved east until its westernmost ground part
+      clears 108.4, which puts the facade at 169 m and the map's east edge past 180 m from the present 130 m.
+      Spawn ruling B is untouched; the map's half width, the terrain, the gate, the camera and every number
+      measured against +-130 m move.
 
 M1.a16 2026-09-07 playable hunt. Heat-zero recordings unchanged. Full-heat
 factors were 1.4 / 2.5 / 0.6 (tanks noticed at 81.6 m on an 85 m half-map).
