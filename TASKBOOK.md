@@ -117,6 +117,71 @@ be theatre.
    flash). PlayMode 229 of 256, 13 skipped, 14 red - the same fourteen, name for name, none new. The renderer still
    does not read the cover word, so a quiet Unity result is the expected one.
 
+§11.4 POSTURE - THE MEASUREMENT BEFORE THE WORK (2026-09-19, on HEAD 359ba8a3, no bit written).
+
+Posture is DERIVED, not chosen (§11.4: STAND = own step over 0.01 m, COVER = within 0.5 m of his claimed place and
+not stepping, PRONE = everything else that did not step), so it can be computed from state the core already has
+and every row it grades can be given a number before a single bit of TAC_COVER's high bits is touched.
+`tools/measure-posture.mjs`, five seeds x 180 s, a nuke every 30 s, on both drives.
+
+1. THE POSTURE MIX
+
+                        frozen tape (the §11.3 assert drive)   live scrolling tape (the game)
+     STAND                   2494745  70.6%                        2598274  74.2%
+     PRONE                    489561  13.9%                         454332  13.0%
+     COVER                    548529  15.5%                         450296  12.9%
+
+   A PUSH IS NOT A STEP: §8.3 stands a man 3 m off a hull after his own step, and counting that as a step would
+   have inflated STAND by 20189 man-ticks on the line (53200 over all men). The tool corrects it.
+
+2. §0's "MEN HIDE" ROW IS A TAUTOLOGY, and that has to be said before it is claimed as a win. It grades men on the
+   line who did NOT step and wants >= 85% of them PRONE or COVER. By §11.4's own derivation a man who did not step
+   is COVER if he is on his place and PRONE otherwise - there is no third outcome. Measured: 549202 of 549202 on
+   the frozen tape and 460049 of 460049 scrolling, 100.0% on both, before any code. Its second clause ("a man in
+   the open who did not step is PRONE") is definitional in the same way: 107436 of 107436, and 69089 of 69089.
+
+   So the row goes green the moment the bits are written and proves nothing. The letter's worth is NOT here. (The
+   "under fire" qualifier needs §11.5's suppression word and cannot be read at all yet.)
+
+3. §0's SECOND FODDER CLAUSE - rifle deaths per man-tick of STAND >= 2x PRONE and COVER together - IS NOT REACHED
+   BY THIS LETTER'S OWN THRESHOLDS, and the gap is a factor of four.
+
+     rifle deaths per 100k man-ticks      frozen              scrolling
+       STAND                               3.1  (77)           3.6  (94)
+       PRONE                              14.5  (71)          20.2  (92)
+       COVER                              22.4 (123)          19.3  (87)
+       STAND / (PRONE+COVER)               0.17                0.18      <- the row wants >= 2.0
+
+   A man in cover is today shot at SEVEN TIMES the rate of a standing man, and that is not an anomaly: STAND is
+   dominated by men walking in from the back edge who are never shot at, while a man on his place is on the line in
+   contact. The row compares rates on wildly unmatched exposure.
+
+   Applying §11.4's own thresholds to the measured split (STAND 45 per mil unchanged, PRONE x 22/45, COVER x 11/45)
+   gives 0.17 -> 0.50 frozen and 0.18 -> 0.49 scrolling. It moves a quarter of the distance and stops.
+
+   A FIRST TOOL FAULT, caught and named: the claim was first read AFTER the step, and a dead man's claim is cleared
+   the tick he dies (§11.3), so COVER was structurally impossible for a casualty - it printed 0 COVER deaths in
+   548070 COVER man-ticks and filed every man killed in a hole under PRONE. The tool now grades a man on the
+   posture he HELD while he was being shot at. The 0.17 above is the corrected figure; the faulty one was the same
+   0.17 for the wrong reason.
+
+4. THE SHARE, in the form the letter is owed: THIS ACCOUNTS FOR ABOUT HALF OF THE RIFLE KILLING, WHICH IS A SIXTH
+   OF THE DYING IN A QUIET WORLD AND A TENTH WITH NUKES LANDING.
+
+   Dying re-measured on HEAD (`tools/measure-fodder.mjs`, five seeds x 180 s) - the 35.7 / 43.1 split is stale
+   after the clamp repair and is not quoted:
+
+     no nukes submitted   mean 34.1 a side per 60 s    fire 31.3%  bomb 68.8%  nuke  0.0%
+     a nuke every 30 s    mean 48.1 a side per 60 s    fire 21.2%  bomb 41.5%  nuke 37.3%
+
+   Of 271 rifle deaths on the frozen drive, the thresholds would leave 77 + 71 x 0.489 + 123 x 0.244 = 142, a 48%
+   cut in rifle killing. At 31.3% of deaths that is a 15% cut in the quiet world (34.1 -> about 29) and at 21.2%
+   about 10% with nukes landing (48.1 -> about 43). The bomb clause (a COVER man is reached only inside 8 m
+   instead of 16 m, a quarter of the area) takes a further slice of the 13-15% of man-ticks that are COVER.
+
+   §0's "<= 20 a side per 60 s" is NOT this letter's to close and is not blocked on: bombs and nukes clear circles,
+   and cover is for the rifle and the coax. Listed with its measured number, not loosened.
+
 7. THE PUSH AND THE CLAMP - what actually closed the row (2026-09-19, e722a87d and cf0cb8b4).
 
    Two faults, both measured before they were touched, neither a loosened bar.
