@@ -39884,3 +39884,32 @@ with 137 passes at 59.08%, seeds 1 and 8 with 176 and 172 fail at 49.77% and 48.
 The two are not the same thing and the fifths say so: the walk-in share climbs through a run (22% -> 44% on seed 1)
 while the opening contributes one arrival per hull. H1's cause is §3's entry, which is Daniel's lever, and the
 retired C# spawn walk-in is not in the core at all.
+
+### B2's halt collision, and what A11a/A11b's short windows are made of (2026-09-19 08:3x)
+
+B2 first, with a counter on §11.2's own clock (seeds 1,2,3 x 3600):
+
+  raw halts drawn                         24562
+  cancelled by a lower neighbour           2278  (9.3%)
+  B2's halt-half failures                    18
+    of which had a suppression in the window  8
+    of which had none                        10
+  PASSING windows that carried a suppression 130
+
+So the collision is a thin slice and not the cause: a window carrying a suppression fails on 8 of 138 (5.8%), while a
+window without one fails on 10 of 69 (14.5%) - a suppressed halt goes with FEWER failures, not more, exactly as B2's
+relation to B3 went. The hunt stops here rather than growing: §11.2's rule is not what leaves those windows unhalted,
+and B2 keeps its assert and its listing.
+
+A11a and A11b next, with the step instrument already in place (seeds 1,2,3 x 18000, ten 60 s windows a seed):
+
+  A11a  7 short windows:  4 had NO take step at all,  3 took steps that did not carry a team across the seam
+  A11b 13 short windows: 13 had NO give step at all,  0 gave steps that failed to reach below zero
+
+So A11b is entirely the first kind - in those thirteen minutes no team of that side ever read GIVE twice in a row, so
+nothing was stepped at all. A11a is mostly the same (4 of 7) with three windows where takes did happen and still did
+not carry a hull over the line. Neither row is a step that arrived too late; both are steps that were never taken, at
+the cadence §4.10 rules and that this letter has already measured end to end.
+
+Nothing was changed for either measurement: B2, A11a and A11b keep their asserts, A2 / A4a / O1 / O4 / B4 stay
+listed, and A9's levers are untouched.
