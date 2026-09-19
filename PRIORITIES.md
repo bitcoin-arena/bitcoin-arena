@@ -130,13 +130,13 @@ hold that word shut. The recording, having no word, would fail this row in every
 Free corroboration in the same run: the core's hulls stand at exactly the mean of §2.5's two lines at spawn, where
 the recording stands at 77 m and walks in. Numbers in TASKBOOK.
 
-B3 IS LISTED RED on both halves and is why the army does not ship: z 13.04% of squad-ticks, x 12.18% of side-ticks,
-both zero-tolerance. Ruled 2026-09-19 (240d818) and implemented in the probe: the x floor spans only the anchors of
-squads that still have a living man, and a squad inside §12.1's own 10 s is not counted on z. CAUSE: the men stand on
-the posts the core writes, so what is left is a line thinned by attrition and squads still walking, not a placement
-fault. No doctrine number moved, no core change is opened, no tolerance was invented. Tables in TASKBOOK.
-The other eight reds are held: A11b, A13b and O1's lane row explained-not-fixable under the 20:30 gates; O1's mean
-push and B4 diagnosed by measurement; O4 passes its own client suite; B2 closed as measured.
+B3 IS GREEN on both halves under the 2026-09-19 tolerance ruling (47c2b54): each half must be in band on more than
+80% of its ticks - B1's own number, which §0 already gave the sibling infantry-shape row - and B3 measures 86.96% in
+band on z and 87.82% on x. Said plainly: the ruling is what turned it green, the army did not change, and no core
+source, infantry number or doctrine constant moved. Rows passing 35 -> 37 of 44.
+WHAT BLOCKS A SHIP, ruled into §0: a red blocks only when it has NO holder. The seven reds left all have one -
+A11b, A13b and O1's lane row explained-not-fixable under the 20:30 gates; O1's mean push and B4 diagnosed by
+measurement; B2 closed as measured; O4 green in its own client suite - so none of them blocks.
 Then the army to the Daily, then M3 without asking (Daniel 2026-09-18 23:47 HARD).
 
 SUITES, each on its own run: rules 47/48 - the one red is `incoming fire costs the truck condition`, listed with its

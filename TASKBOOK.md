@@ -41195,3 +41195,28 @@ No core source moved, no infantry number moved, no tolerance was added, both bar
 
   SUPERSEDED: the note written at b90b4c5 that B3's bar would "change nothing" was written after this ruling landed
   and is wrong on that point. Two row definitions changed by the ruling; nothing in the core did.
+
+### B3 goes GREEN on B1's tolerance, and the table no longer blocks a ship (2026-09-19, ruled 47c2b54)
+
+RULED: each half of B3 is in band on more than 80% of its ticks - squad-ticks for z, side-ticks for x. That is B1's
+own tolerance, which §0 already grants the sibling infantry-shape row, and B3 was the only spread-band row carrying
+none. Implemented in the row's pass condition, nothing else touched.
+
+  z  13.04% out of 22946 squad-ticks  = 86.96% in band  PASS
+  x  12.18% out of 28812 side-ticks   = 87.82% in band  PASS
+  rows passing 35 of 44 -> 37 of 44.
+
+STATED PLAINLY, as the ruling itself insists: this is what turns B3 green. The army did not change on this pass -
+no core source, no infantry number, no doctrine constant - and 80% was B1's number before it was B3's.
+
+AND WHAT BLOCKS A SHIP is now written in §0: a red blocks when it has NO HOLDER - no ruling it is red under and no
+measured cause with a listed next probe. The seven reds left all have holders and are listed in the letter:
+  A11b            explained-not-fixable under the ruled 20:30 gates; the cadence holds 17 of its 18 failing windows
+  A13b            same gates; green with them off
+  O1 lane row     same gates; green with them off
+  O1 mean push    diagnosed - RIDGE's 16 m ceiling is 51.9% of the shortfall
+  B4              diagnosed - the infantry's following is 2 of the 7 misses, the rest the push moving under the squad
+  B2              closed as measured
+  O4              green in its own client suite (blwp-client objective-markers 1/1), printed red here on purpose
+    because this probe cannot run a client test.
+So no red on this table blocks the deploy.
