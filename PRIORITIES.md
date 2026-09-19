@@ -53,8 +53,15 @@ the Editor's army rows (no core outside the browser), RoadsAreActuallyDrawn (no 
 MushroomRestingTests (authored skirt offset), GhostAcrossTheDoors (full-suite flake), CombatFx rifle flash
 (retired C# army). None loosened.
 
-ON TOP NEXT, not started: **§11.3 cover**, then §11.4 posture in the TAC_COVER high bits, §11.5 suppression, §4.4
-coax. M3's remainder stands behind it, its fixture pair needing a third re-pick.
+ON TOP NOW: **§11.3 cover**, MEASURED, not started. The share is in TASKBOOK and it decides what the letter is
+worth: the row it can close, "wrecks and craters are used", stands at **1.0% against a 70% bar** with a place free
+within 12 m of a man on **96.9%** of ticks - entirely undone, and closable. The row it cannot close, "not cannon
+fodder", is at **34.0 men a side per 60 s** with no nukes and **43.1** with them, against a bar of 20 - and cover
+reaches at most **9.0%** of those deaths in the quiet world, **3.6%** with nukes landing, because bombs and nukes
+clear circles and cover does not answer them. The player sees nothing until §11.4's thresholds exist: a man in
+cover is shot as often as a man in the open until then. The old army has no cover to port; its only artefact is
+AvoidWrecks, the inverse, already in the core for tanks. Then §11.4 posture in the TAC_COVER high bits, §11.5
+suppression, §4.4 coax. M3's remainder stands behind them, its fixture pair needing a third re-pick.
 
 LISTED, each its own thing and none of them B:
 1. **91 files write `blockTicks: 9000`** against cores that end at 10800 - 21 client tests, the node suite, four

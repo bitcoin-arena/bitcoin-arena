@@ -5,6 +5,72 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+§11.3 COVER - THE MEASUREMENT BEFORE THE WORK (2026-09-19, on the tree deployed at 0.0.1739).
+
+WHAT THE OLD ARMY DOES ABOUT COVER: nothing, and that is a statement, not a run. §11.3 is a declared GAP ("GAP,
+all of it"), the earlier no-cover ruling is overruled, and the only C# artefact in this area is `AvoidWrecks`,
+which pushes a man OUT of a crater - the inverse of this letter. It is already in the core, where it belongs, for
+tanks: it is what the crater-post rule of 15:57 works against. Porting it for men would port the fault the ruling
+overturned. There is nothing to compare because the recording has no cover; spending a run to measure zero would
+be theatre.
+
+1. MEN LOST PER SIDE PER 60 s, five seeds x 180 s, by cause (`tools/measure-fodder.mjs`):
+
+     no nukes submitted      mean 34.0 a side      fire 23.2%   bomb 76.8%   nuke 0%
+     a nuke every 30 s       mean 43.1 a side      fire  9.2%   bomb 39.4%   nuke 51.4%
+
+   §0's bar is <= 20. The 2026-09-16 figure in the spec (26.5 to 41.5, mean 32.7) is NOT today's: it predates the
+   seeded tape, the hull rectangle, the dock clamp, the world grown east and the lethal nuke. Today's number is
+   34.0 without nukes and 43.1 with them, and the shape has changed more than the total - three quarters of
+   infantry deaths are now the gunships' bombs, and with nukes landing half are the nuke.
+
+2. COVER'S ROOM, three seeds x 120 s with a nuke every 30 s (`tools/measure-cover-baseline.mjs`):
+
+     places standing, mean per tick                    30.5
+     ticks with a place within 12 m of a man           96.9%
+     ticks with a man ON a place (within 0.5 m)         1.0%   <- the GAP, and the 1% is accident
+     men killed by fire                                  54
+     ...with a free place within 12 m when they died      21   (38.9%)
+
+   Two simplifications, both stated, both making the denominator LARGER than the spec's, so the conclusions below
+   are ceilings: candle lips are not counted as places (their geometry scrolls with the chart), and the 12 m is
+   measured from where the man stands rather than from his post.
+
+3. THE SHARE, in metres rather than adjectives. Cover is one of three (§11.3 cover, §11.4 posture, §11.5
+   suppression) and §0 grades the three with two rows.
+
+   - "Wrecks and craters are used" (>= 70% of the ticks where a place is free within 12 m of a post, a man is on
+     one): today 1.0% against a 70% bar, with the room available on 96.9% of ticks. THIS LETTER CAN CLOSE IT, and
+     it is entirely undone.
+   - "Not cannon fodder" (<= 20 lost a side per 60 s; and STAND deaths >= 2x PRONE + COVER together): the second
+     clause cannot exist before §11.4 writes the postures and their hit thresholds. The first clause is 34.0 / 43.1
+     against 20.
+
+   What cover can reach of today's losses: fire is 23.2% of deaths without nukes and 9.2% with them, and 38.9% of
+   fire deaths had a place within 12 m. So cover alone touches at most 9.0% of infantry deaths in the quiet world
+   and 3.6% in the world a player drives through. The rest is bombs and nukes, which clear circles: §11.3 itself
+   says a bomb "does not wound a rifleman, it clears the circle", and the nuke kills everything in its blast by
+   the 15:55 ruling. NO AMOUNT OF COVER BRINGS 43.1 UNDER 20. Saying otherwise before building it would be the
+   stale-number fault in a new coat.
+
+4. THE PORT PLAN, and it is not a port - there is nothing to port. All of it in packages/core, integer fixed-point,
+   no draw, no truck:
+
+   - `TAC_COVER`, 72 words appended to O_TACTICS, laid out ONCE with §11.4's posture bits reserved in the high
+     bits, so the next letter does not reshape the state and regenerate goldens a second time.
+   - Places as pure functions of the state: a wreck's two, a crater's four (four sin/cos constants in Q16.16), a
+     candle lip's one every 4 m. Each a function of (state, side) alone, so every node computes the same bits.
+   - Eligibility as §11.3 states it: within 12 m of the man's POST (18 m for the side the trend runs against),
+     inside his clamp, not within 3 m of a living tank.
+   - Claims: the living men of a side visited in `mix(seedHash, 600 + index)` order, each keeping an eligible free
+     claim or taking the nearest, ties by the place's own order. No draw is taken, so no stream shifts.
+   - The walk: his own gait to the place when his fire team's clock says rush; COVER once within 0.5 m; the place
+     is his post while he holds the claim.
+
+   WOULD THE PLAYER SEE IT? Not yet, and that is worth saying plainly: with the hit thresholds of §11.4 absent, a
+   man in cover is shot exactly as often as a man in the open, so the only visible change is where the men stand.
+   The row goes green, the killing does not change, and the value arrives with §11.4.
+
 PLAYTEST CHAIN 2026-09-19 12:55-13:10 (Daniel), nine items. Numbers.
 
 Item 2, the doji band. Daniel's shot hud-sideways-vs-upside-1255.png, measured on the Daily's own tape: the six
