@@ -199,6 +199,22 @@ genuinely is §8.1's 26 m and is untouched.
    object, so for a tank it holds the previous man's value. The gait tests `u.armour` first so nothing reads it,
    but it is a stale field waiting for its first reader.
 
+3g. IS §11.5 DEPLOYABLE, AND IS IT PLAYABLE ON ITS OWN? No to both, and the second answer matters more.
+
+   NOT SEPARATELY SHIPPABLE. The goldens are deliberately stale and the core hash unpinned, so signer nodes would
+   refuse the round; that regeneration is ruled to belong to the deploy which ships cover, posture and suppression
+   TOGETHER, so §11.5 cannot go out by itself even when it is finished.
+
+   NOT VISIBLE EITHER, which is the part worth writing down. The renderer does not read TAC_COVER, so a PINNED man
+   crawling on his belly at 0.5 m/s is drawn walking upright, exactly like a man who is not pinned. Suppression is
+   entirely in the numbers: a player watching the field would see men move more slowly and die less, with no
+   posture, no going to ground, and no sign of why. Men in holes also still draw below the mesh, so the one thing
+   cover DOES change on screen currently reads as broken.
+
+   So on screen today §11.5 changes nothing a player could see, while the cover row it knocked down IS visible as
+   fewer men in holes. That is the wrong way round, and it is the argument for the renderer work being the next
+   player-facing thing after this block closes - it is listed as a deploy stop, not as part of any letter.
+
 3f. THE TWO CLAUSES OF §11.5 THAT ARE ACTUALLY OPEN (2026-09-20, found by reading the section against the write
    at the close-out, not by measuring). Neither is coded.
 
