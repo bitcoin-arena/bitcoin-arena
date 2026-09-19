@@ -41033,3 +41033,42 @@ WHAT THIS DOES NOT YET SAY: whether the tight men of the x half, and the loose-i
 the core placing men wrongly or the row asking for something the movement rules cannot give while men are walking.
 That is the named fork and it is not picked here. No band, floor, ceiling or doctrine number was touched, no
 population changed, nothing tuned. Probe flag: --b3split.
+
+### B3 step 5: the recording cannot be asked B3's question, and where it can, the core's line is TIGHTER (2026-09-19)
+
+WHAT THE RECORDING ACTUALLY HOLDS, checked field by field before comparing anything. `csharp-army.json` rows carry,
+per side every 5 s for 90 s: infantry `n`, mean `z`, and `spread` (the z sd). Its `density` block carries an
+`xSpread` for the ARMOUR only. There is no squad structure anywhere in the file and no infantry x at all.
+
+  B3 asserts (1) z sd PER SQUAD between 2 and 12 m and (2) the side's x sd against its own three anchors.
+  THE RECORDING CARRIES NEITHER. It cannot be asked either half of this row. That is a fact about the reference,
+  not a result, and it is why this comparison cannot decide the fork on B3's own terms.
+
+WHAT CAN BE COMPARED is the side-wide infantry z sd, measured on both engines at the recording's own cadence, its
+own seed (20260901), with the core's depth taken from its own seam at each man's x. From t=30, which the recording's
+own comment calls the steady grind:
+
+  recording, side-wide infantry z sd    17.78 m
+  core,      side-wide infantry z sd     8.76 m
+  core,      z sd per squad (median)      7.70 m
+  core,      side x sd                   30.88 m
+
+THE CORE'S LINE IS LESS THAN HALF AS SPREAD IN DEPTH AS THE RECORDING'S. And read side-wide against B3's own 2-12 m
+band, the RECORDING would fail it at 17.78 m while the core would pass it at 8.76 m. The core's per-squad median,
+7.70 m, is inside the band too - the row's 18.75% is a tail of ticks, not a line that stands wrong on average.
+
+CAVEAT, stated: the two armies are not the same size. The recording fields 70-72 infantry a side; the core fields
+16-35 living men a side over this run. A sd from 20 men is noisier than one from 70, so this compares the shape of
+the line and not counts, and the direction of the difference - core tighter - is far larger than that noise.
+
+THE FORK, against the criteria set for it:
+  - "the recording is already this spread on z while walking, so the row asks for what the movement rules do not
+    produce" - NOT supported: the recording is MORE spread, not less.
+  - "the recording holds the band and core does not, so Core is placing wrongly" - ALSO NOT supported: the recording
+    does not hold the band either, and misses it by more than the core does.
+  BOTH MISS, and by the instruction that case stops here rather than turning into a rewrite. No mechanism is named
+  against the recording because the recording has nothing to name it with.
+
+B3 stays RED on both halves - z 18.75% of 64753 squad-ticks, x 19.49% of 28812 side-ticks - listed with this as the
+state of the evidence. Nothing moved: no band, floor, ceiling, population, doctrine number or assert, no C# number
+copied and no 2-D coupling introduced. The army does not ship. Probe kept: tools/measure-line-engines.mjs.
