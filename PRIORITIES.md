@@ -86,8 +86,14 @@ listed with its cause and nothing it asserts was touched; nothing is deployed wh
   push 24, so no post lay across the seam at any tick. That accounts for 3 of the 3. Overshooting a bound, scooting
   in x and giving ground are real but small, and contributed none of these three: they put a hull over the seam for
   a few ticks at a post that is not. Reaching 24 needs three confirmed TAKE readings in a row and these sides barely
-  read TAKE at all, which is why more re-reads would not have helped. Recorded and not chased: the failing windows
-  are all one side. Table and split in TASKBOOK.
+  read TAKE at all, which is why more re-reads would not have helped. Table and split in TASKBOOK.
+- AND WHY THEY NEVER READ TAKE is measured too, from every odds reading the core actually took. Two of the three were
+  simply outnumbered at their own slots: the verdict the row needs was never true, so there was nothing for the
+  cadence to carry. The third was level, met the take lead more often than the side that did cross, and still never
+  got a post across - because climbing to the ceiling needs three consecutive confirmed takes on one team, and on a
+  level stretch a take is followed by a drift that steps the push back toward its rest. Level odds cannot climb,
+  however many re-reads they get. Of the three: outnumbered two, level-but-oscillating one. What is NOT measured is
+  why that side's odds are the poorer ones, and the widow share does not explain it. Numbers in TASKBOOK.
 - O1 mean and B4 stay red with their cause listed, not fixed: an objective lane's +8 rest is STEPPED on the same
   five-second clock that §4.11 uses to move the objective, so a lane that just became the objective still sits at 0
   while the +8 moves on. The failing seeds move it twice as often (35 lane changes against 18). Ruled 2026-09-19:

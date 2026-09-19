@@ -40368,3 +40368,50 @@ level 79. Whether that asymmetry is the chart's trend, the slot layout or the se
 is not guessed at here; it is the next number if this row is taken further.
 
 Nothing changed: no cadence constant, no gate, no assertion. Tool only (--a11awhy).
+
+### A11a: why the side that never crossed never read TAKE (2026-09-19, one print)
+
+§4.10 decides on `own` and `foe` - living tanks of each side inside 46 m of the team's slot centre on the seam - and
+TAKE is `own + weight >= foe + 3`, GIVE is `foe >= own + 1 + weight` (tactics.js PUSH_TAKE_LEAD 3, PUSH_GIVE_LEAD 1).
+The core computes the odds only when the re-read survives gate (a), so these are every reading the code ACTUALLY took;
+where it skipped, it held no odds at all. Seeds 1-5, one 60 s window each per side.
+
+  window   due  past (a)  mean own  mean foe  own-foe  weight  widow rd  met take  met give  verdicts
+  2 | +1    72     53       2.23      3.47     -1.25    1.19     15         2        12      drift 39, take 2, give 12
+  4 | +1    72     42       3.45      3.40     +0.05    1.48     18        12         1      take 12, drift 29, give 1
+  5 | +1    72     46       2.33      3.83     -1.50    1.13     10         1        14      drift 31, give 14, take 1
+  ---- the windows that did cross, for contrast ----
+  1 | -1    72     39       3.74      2.74     +1.00    1.51      9        16         2      drift 21, take 16, give 2
+  1 | +1    72     43       3.42      3.30     +0.12    1.44     13        16         2      take 16, drift 25, give 2
+  2 | -1    72     34       4.03      2.32     +1.71    1.35      2        22         0      drift 12, take 22
+  3 | -1    72     38       4.21      2.42     +1.79    1.61      7        23         1      drift 14, take 23, give 1
+  3 | +1    72     40       3.52      3.15     +0.38    1.50     14        15         3      drift 22, take 15, give 3
+  4 | -1    72     36       3.67      3.36     +0.31    1.42      8         6         0      drift 30, take 6
+  5 | -1    72     39       4.59      2.21     +2.38    1.21      6        24         2      drift 13, take 24, give 2
+
+  own + weight - foe, the quantity TAKE is a threshold on:
+    the three failing windows   n 98,  min -5, median 0, max 5, at or over the lead of 3: 15
+    every other window          n 210, min -4, median 3, max 8, at or over the lead of 3: 122
+
+TWO OF THE THREE NEVER READ TAKE BECAUSE THEY WERE OUTNUMBERED AT THEIR OWN SLOTS. Seeds 2 and 5 on side +1 read
+own - foe at -1.25 and -1.50, met the take lead 2 and 1 times in 53 and 46 readings, and spent the window on drift
+and give (12 and 14 give readings). There is nothing for the cadence to carry there: the verdict the row needs was
+never true.
+
+THE THIRD IS A DIFFERENT FAULT AND IT IS THE INTERESTING ONE. Seed 4 side +1 was LEVEL - own - foe +0.05 - and met
+the take lead 12 times of 42 readings, more often than seed 4's own side -1 (6 of 36), which DID cross. It still
+never got a post across, because it took only 4 take steps (recorded with the crossing table) and its push topped out
+at 8 m. Climbing 0 -> 8 -> 16 -> 24 needs THREE CONSECUTIVE CONFIRMED TAKE readings on the SAME team, and on a level
+stretch the readings alternate: a take confirms a take, then a drift confirms a drift and §4.10's drift rule steps the
+push back toward its rest. So a team that wins its stretch half the time oscillates around 8 m and never reaches the
+ceiling. Level odds cannot climb, however many re-reads they get.
+
+SO, OF THE 3: outnumbered 2, level-but-unable-to-hold-a-direction 1. Neither is the cadence, and this is consistent
+with the gates run (3 of 10 with them on, 3 of 10 with both off): removing the gates gives more readings of a verdict
+that was either never TAKE or never TAKE twice running.
+
+WHAT IS STILL NOT MEASURED, and is not guessed at here: why side +1's odds are the poorer ones on those seeds. The
+widow share does not separate the two groups (failing 28% / 43% / 22% against passing 6% to 35%), so it is not simply
+that the failing side is the one losing hulls. That is the slot-layout-versus-seam-shape print, deferred.
+
+Nothing changed: no cadence constant, no gate, no assertion, no C# copied. Tool only (--a11odds).
