@@ -143,17 +143,18 @@ SUITES, each on its own run: rules 47/48 - the one red is `incoming fire costs t
 cause, its 15 s window a fixture whose own comment is stale against HEAD, and nothing it asserts touched - tactics
 17/17, vectors 8/8. The others stand from e2575f1, no core source having moved since. No Unity: no C# path moved.
 
-IN THE TREE BUT NOT ON THE DAILY: §4.13's Rule 1, the seeded init tape (579437c). The tape's step was a function of
-the sample index alone, so every round of every seed drew the same tape and a SIM round had no general; it is now
-mix(seedHash, 0x7e5a1c3d + i), the rule's own words. Eight seeds now give eight fronts and no doctrine number moved.
-All nine goldens were regenerated and three rules.test.js fixtures had their setup re-measured, never an assert.
-BLOCKED ON ONE RULING, and nothing ships until it is made: three TACTICS rows are red because a seeded tape means
-some rounds OPEN with a market trend (trendFor is +1 at tick 0 on seeds 1 and 2, 0 before on every seed), and §4.14
-gives the trend's side +1 weight on every lane - while those three rows compute their expectation as
-objectiveWeight(slot) alone and omit the trend term. Either the rows model §4.14 or the tape opens without a trend.
-Not taken alone. Numbers in TASKBOOK. Daily stays 0.0.1711.
+THE ARMY LETTER IS CLOSED AND LIVE ON THE DAILY: 0.0.1715 (2026-09-19, a881bb67). It carries Fable's c09f992
+rulings - a tank wreck is a crest to the hull-down search (tank wrecks only, never the truck's), a round is three
+minutes with the contract owning it, a bomb inside 16 m costs the truck condition with no draw - and §4.13's Rule 1,
+the seeded init tape, so every round is a different war: eight seeds, eight fronts, and seed 1 shares 0 of 64 tape
+samples with seed 2. Measured as already in and not rebuilt: §4.12's assault, §4.13's fed tape, and supply feeding
+the clock. Three tactics rows were corrected to model §4.14's trend, which a flat tape had hidden; no doctrine
+number moved and no assert was weakened. Alias and unique URL both serve it, built core byte-identical to dist, core
+hash and client scripts listed before the deploy, signer nodes restarted, btc-logistics-war untouched, no M-freeze.
+NOT IN, and listed as the next letter: §11.3 cover, §11.4 posture in the TAC_COVER high bits, §11.5 suppression, then
+§4.4 coax - none of the three exists in the core, so coax cannot be written without inventing hit thresholds.
 
-THE ARMY IS LIVE ON THE DAILY: 0.0.1711 (2026-09-19, 4b2db733), carrying Fable's c09f992 rulings - a tank wreck is a
+SUPERSEDED, kept for the record: THE ARMY WAS LIVE ON THE DAILY AT 0.0.1711 (2026-09-19, 4b2db733), carrying Fable's c09f992 rulings - a tank wreck is a
 crest to the hull-down search (tank wrecks only, never the truck's), a round is three minutes with the contract
 owning it, and a bomb inside 16 m costs the truck condition with no draw. §4.12's assault and §4.13's fed tape were
 measured as already in; §4.13's seeded init tape and the whole coax chain (§11.3 cover, §11.4 posture, §11.5
