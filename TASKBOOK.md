@@ -179,7 +179,10 @@ mid-pass would make the outcome depend on unit order. The written word agrees wi
 
 4. THE DEPLOY STOP IS UNCHANGED and is not this letter's to clear: men in holes draw below the mesh (Unity carves a
    crater bowl the core does not), the renderer does not read TAC_COVER, and the signer nodes would refuse a round
-   while goldens are deliberately stale. One golden regeneration at the close of §11.4, not mid-stream.
+   while goldens are deliberately stale. RULED 2026-09-19: that regeneration belongs to the DEPLOY that ships the
+   whole cover block - occupancy, posture, suppression - not to §11.4 and not to a letter of its own. §11.5 moves
+   rifle and movement behaviour again, so regenerating here would pin a core hash that is never served and force a
+   second pass. vectors+bundle stays listed at 2/20, deliberately stale, waiting on that deploy.
 
    SUITES at this step: rules 50/50, tactics 21/21, candles+chart+spawn 18/18, canonical group 22/22.
    vectors+bundle stays red by instruction (goldens stale). No C# changed, so the Unity counts stand where they

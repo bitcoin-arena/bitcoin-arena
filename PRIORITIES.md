@@ -48,7 +48,10 @@ WHY IT IS NOT LIVE, and none of these is test colour:
 2. **The renderer does not read TAC_COVER.** Until §11.4's bits are written AND drawn, a man in cover is shot
    exactly as often as a man in the open: the player gets the visual regression above and no benefit at all.
 3. **The signer nodes would refuse the round.** Goldens are deliberately stale through §11.4 (vectors+bundle 3/20)
-   and the core hash is unpinned. One regeneration at the close of §11.4, which is what a deploy needs.
+   and the core hash is unpinned. RULED 2026-09-19: the regeneration belongs to the DEPLOY that ships the whole
+   cover block together - occupancy, posture and suppression - and is neither a §11.4 task nor a letter of its own.
+   §11.5 changes rifle and movement behaviour again, so regenerating before it would pin a core hash that will
+   never be served and cost two regenerations instead of one.
 
 NOT A BLOCKER, and listed so it is not raised again: "not cannon fodder" at 34.1 a side per 60 s quiet and 48.1
 with a nuke every 30 s, against a bar of 20. Bombs and nukes clear circles; cover is for the rifle and the coax.
