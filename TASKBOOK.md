@@ -89,6 +89,30 @@ be theatre.
    drifts with its squad. §11.3's own sentence settles it ("it is his post while he holds the claim"): a held place
    is 0 m from his post, and only the clamp and the living-tank rule can take it. After, 6.8 s and 80 against 61.
 
+6. THE CANDLE LIPS, §11.3's third kind of place, measured before they were written (Daniel's own step 1):
+
+     a wreck or crater within 12 m of a man's post    34.2% of men
+     a CANDLE LIP within 12 m of his post             38.5%
+     either                                           54.4%
+     lip places standing per tick                     64, against 30.6 wrecks and craters
+
+   Not a 1% fix: the lips are the places that stand where the LINE is, which is exactly where the miss was. Built
+   on the same claim and walk path, one place at each body's middle (a 5.18 m body takes one place at "every 4 m
+   along the edge"), at the foot of the ramp on the man's side and half a metre out, scrolling with the chart.
+
+   AFTER, same tool, same three seeds x 120 s with a nuke every 30 s:
+
+     ticks with a man ON a place     1.0% -> 12.9% (wrecks and craters) -> 89.8% (with lips)
+     man-ticks holding a claim       none -> 9.4% -> 35.2%
+     places standing per tick        30.6 -> 97.1
+     fire-kills with a place in reach 38.9% -> 46.7% -> 76.3%
+     a claim's life                  3.2 s -> 6.8 s -> 10.3 s
+     men lost a side per 60 s        34.0 quiet / 43.1 nuked -> 35.7 / 41.4
+
+   §0's "wrecks and craters are used" wants >= 70%: MET at 89.8% on the tool's three seeds and 73.5% on the two the
+   new tactics row runs, and the dying is where it was, which is the point - cover moves where men stand, and the
+   killing waits for §11.4's thresholds.
+
    SUITES with cover in. Core, each on its own run: rules 50/50, tactics+candles+chart+spawn 37/37,
    canonical+specified+replay+poison+private-world+cbrt 22/22, vectors+bundle 20/20, goldens regenerated because
    the state grew 140 -> 212 words. Unity EditMode 254 of 258, 3 skipped, 0 error CS, one red (the long-listed
