@@ -85,15 +85,37 @@ Two test setups moved with the world, no assertion:
   89.7 / 43.5 / 88.7, all three written off inside 90 s. At x -80, two metres further west, nothing reaches the
   truck at all - that is the guns' edge, not a knob.
 
-THE DRAWN MINER AGAINST THE CORE'S SOLIDS (measured on the close-out of the door, 2026-09-19). The core's
-mapSolids puts the miner's facade at x = MINER_X - 2 = 112.4 with half-x 4 m (108.4 .. 116.4), its side walls at
-|z| 40 .. 84.4, a lintel over the mouth above 26 m, and the tunnel's two sides at x 111.4 .. 139.4, |z| ~ 42. The
-model stands on the ground from x 53.8 m. So between 53.8 and 108.4 the drawn building has no collision at all.
-It does not bite on the drive line: inside |z| <= 34 m the only ground-touching part is power_cable_0/1 at x 53.8 ..
-66.2, hard against |z| 34, and mass_behind_tunnel's underside is 2.7 m up, which a 2.5 m truck passes under. Off the
-corridor it does: at |z| 35 .. 75 the feet (x 62.8 .. 82, y 0 .. 1) and the legs (66.9 .. 77.9, y 0 .. 2.7) are
-drawn and not solid. Pre-existing - the model has been this size all along and this letter moved no solid - and
-listed with the core's map solids as its holder.
+THE TWO ENGINES AT THE MINER, COMPARED BOX FOR BOX (close-out of the door, 2026-09-19). Not feel: the core's
+`mapSolids` read out of a live state against Unity's own `DeliveryGate.Slab` calls, turned about y at gateX 114.4.
+
+  Unity FacadeLeft    x 108.4 .. 116.4   z -84.4 .. -40.0      core box 32  x 108.4 .. 116.4   z -84.4 .. -40.0
+  Unity FacadeRight   x 108.4 .. 116.4   z  40.0 ..  84.4      core box 33  x 108.4 .. 116.4   z  40.0 ..  84.4
+  Unity FacadeLintel  x 108.4 .. 116.4   z -40.0 ..  40.0      core box 34  x 108.4 .. 116.4   z -40.0 ..  40.0 (y 26 .. 133.2)
+  Unity TunnelLeft    x 111.4 .. 139.4   z -44.0 .. -40.0      core box 35  x 111.4 .. 139.4   z -44.0 .. -40.0
+  Unity TunnelRight   x 111.4 .. 139.4   z  40.0 ..  44.0      core box 36  x 111.4 .. 139.4   z  40.0 ..  44.0
+
+Identical, every edge. There is no core-versus-old divergence at this door: the core's collision miner is a faithful
+copy of the PhysX one, and the recording rows (rules.test.js, the PhysX reference) are green at 49/49.
+
+WHAT THE COMPARISON DID TURN UP is that BOTH engines have always been smaller than the drawn building, which stands
+on the ground from x 53.8 m. Measured per node, world metres, full z ranges:
+
+  power_cable_0    x 53.8 .. 66.1   z -34.2 .. -22.4   y  0.1 ..  9.3      touches the ground
+  power_cable_1    x 53.8 .. 66.2   z  23.1 ..  33.6   y  0.1 ..  9.4      touches the ground
+  mass_behind_tunnel x 64.4 .. 90.4 z -34.0 ..  34.0   y  2.7 .. 11.7      hangs over the approach
+  mass_lower_l/r   x 64.4 .. 114.4  z |34| .. |75|     y  2.7 .. 11.7
+  foot_2/3         x 62.8 .. 82.0   z |52.4| .. |71.6| y  0.0 ..  1.0
+  leg_2/3          x 66.9 .. 77.9   z |56.5| .. |67.5| y  0.0 ..  2.7
+
+Two of those meet something that moves, and neither is this letter's doing:
+  1. A TANK CAN STAND IN A DRAWN CABLE. Armour is clamped to |x| <= 83.4 m (the dock kerb) and follows the seam, so
+     x 53.8 .. 66.2 at |z| 22 .. 34 is inside its range, and the cables touch the ground there.
+  2. THE TRUCK'S ROOF PASSES THROUGH mass_behind_tunnel. Its underside is 2.7 m over the apron across the whole
+     approach lane (|z| <= 34) from x 64.4 to the door at 90.4; the truck's body is 3.26 m tall (solids.js
+     BODY_HEIGHT), so it drives through the drawn ceiling by about 0.56 m for those 26 m.
+Both predate the refit: the model, the truck's height and every collision box are what they were. Holder: the miner
+model's own geometry, and `rules/map.js` if the boxes are ever to be grown to it - which cannot be done without
+moving or rescaling the building, and Daniel's pick was that the building does not move.
 
 THE OLD RECORDING against the new ribbon end: the PhysX reference rows (rules.test.js, "the core drives like the
 PhysX truck it replaces" and its siblings) are green, 49/49. They drive from the spawn at x -100.4 with the field

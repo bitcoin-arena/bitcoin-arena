@@ -158,14 +158,18 @@ ON TOP NOW, not started: §11.3 cover, then §11.4 posture in the TAC_COVER high
 §4.4 coax - the letter the army close-out named. M3's remainder stands behind it with its own holders (the fixture
 pair needs a third re-pick: the seeded tape, the hull rectangle and now ruling B's refit each changed its world).
 
-ONE HOLE MEASURED AND LEFT LISTED, not this door's to close: the core's collision miner and the drawn miner do not
-agree where the building is. The core's map solids put the facade at x 112.4 (half 4 m, so 108.4 .. 116.4) with the
-tunnel sides at 125.4; the model stands on the ground from 53.8 m. On the entry line it does not bite - inside
-|z| <= 34 m the only ground-touching part is the power cables at x 53.8 .. 66.2 hard against |z| 34, and
-mass_behind_tunnel clears the ground by 2.7 m, so a truck drives under it - but off the corridor, at |z| 35 .. 75,
-a truck or a tank passes through drawn legs and feet (x 62.8 .. 82, 1 m tall) that the core does not know about.
-Pre-existing: the model has always been that size, and nothing in this letter moved a solid. Holder: the core's
-map solids (rules/map.js), which would need the model's real footprint and a golden regeneration.
+THE TWO ENGINES WERE COMPARED AGAIN AT THIS DOOR, box for box, and they are identical: the core's map solids and
+Unity's own DeliveryGate colliders give the same five boxes to the edge (facade 108.4 .. 116.4 with its two side
+walls and its lintel, tunnel sides 111.4 .. 139.4 at |z| 40 .. 44), and the PhysX recording rows are green 49/49.
+No core-versus-old divergence at the miner. Numbers in TASKBOOK.
+
+WHAT THAT COMPARISON TURNED UP, listed and not this door's to close: BOTH engines have always been smaller than the
+drawn building, which stands on the ground from x 53.8 m. Two places where that meets something that moves - a tank
+can stand inside a drawn power cable (x 53.8 .. 66.2, |z| 22 .. 34, on the ground, inside armour's own |x| <= 83.4),
+and the truck's 3.26 m body passes about 0.56 m through mass_behind_tunnel, whose underside hangs 2.7 m over the
+whole approach lane from x 64.4 to the door at 90.4. Both predate the refit; no collision box moved in this letter.
+Holder: the miner model's geometry and rules/map.js, and closing it means moving or rescaling the building, which
+Daniel's pick rules out.
 
   1. DONE, live at 0.0.1715 already: the truck died 1/4 inside a tank because contact was a 3 m circle. The core
      carries the hull's rectangle now (§1.2), 1.8 m x 3.6 m half-extents in the hull's own frame.
