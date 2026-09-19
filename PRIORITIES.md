@@ -119,8 +119,11 @@ CANDLES: closed by measurement. The 16:42 report (candles move left then freeze 
 17354 to 307820 pixels between consecutive frames. One thing photographed for a HUD letter of its own: from the cab
 the price headline is drawn about 80 px tall across the middle of the screen. MEASURED 2026-09-19 and closed without
 a restyle: the number was right - 77 px of numeral - and "the middle" is the horizontal one. Vertically it stands in
-the top eighth of the view, above the horizon, over sky and the mempool facade, and the road, the truck, the
-drop-off marker and the terrain are all below it and unobscured. The road is clear, so nothing was restyled; the
+the top eighth of the view. CORRECTED on the same day: I first reported it as standing over sky, and out on the map
+it stands over the WORLD - the mempool facade and the battlefield reach the top of its column. What is true is the
+narrower claim: the driving surface, the truck and the drop-off marker sit well below it in every frame measured.
+Rising ground was never reached in those runs and is untested. Also measured, and the comparison the law asks for:
+the price drawn in the cab equals the core's own tape price to the dollar, so the client holds no private number. The road is clear, so nothing was restyled; the
 size is a fixed share of the short side, so that holds at every window size. Numbers in TASKBOOK.
 
 SHIPPED to the live signer nodes (2026-09-18 23:25): the round boundary no longer starves the page. The finality

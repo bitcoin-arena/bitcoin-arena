@@ -40746,3 +40746,44 @@ the page's chrome is measuring the chrome.
 
 Probes kept: packages/blwp-client/tools/measure-cab-headline.mjs (drives out of the bay into the cab) and
 measure-cab-headline-clean.mjs (hides the page chrome and captures the canvas alone).
+
+### CORRECTION and completion of the cab headline item (2026-09-19)
+
+Asked whether everything this item needed had been done, two things had not been, and one of them shows my own report
+was wrong. Both are below.
+
+1. THE NUMBER ON THE HUD AGAINST THE NUMBER IN THE CORE - the comparison this project's law actually asks for.
+   `MarketFeed.Price` is a live socket price the client holds, and the client also submits it into the core
+   (CoreDrivenTruck: `BlwpCore.SubmitSample(_feed.Price)`), so the feed is an INPUT and the core's tape is what the
+   world is built from. Whether the drawn number is the number the core is running on had never been checked.
+   Measured on the MacBook, reading chartView's CH_LAST/CH_UNIT at the instant of each shot:
+
+     core tape $80,975.60  ->  headline drew $80,976      (N0 rounds)
+     core tape $80,974.01  ->  headline drew $80,974
+
+   Exact to the dollar on both. The client is NOT holding a private price: what the cab shows is what the core is
+   running on. Probe: tools/measure-headline-vs-core.mjs.
+
+2. MY "THE ROAD IS CLEAR" REPORT WAS RIGHT IN ITS NUMBER AND WRONG IN ITS REASON, and the wrong part is committed in
+   fb8d493. I wrote that the headline "stands above the horizon, over the sky and the mempool facade". The facade half
+   is right; the sky half is false. Measured across every cab frame - the topmost NON-SKY row inside the headline's
+   own column (x 400-880), against a glyph band of y 27-111:
+
+     frames driven out onto the map   world reaches y = 1 and y = 36     - the headline is drawn OVER THE WORLD
+     frames sitting in the bay        ground reaches y = 173 to 199      - the headline is over open sky
+
+   So which it is depends on where the truck is standing, and out on the map - which is where the game is played -
+   the band behind the price is the mempool facade, the battlefield and its effects, not sky. What IS still true is
+   the narrow claim: the DRIVABLE SURFACE ahead, the truck, and the drop-off marker sit below y ~ 360 in those same
+   frames, so the surface being steered over is not covered.
+
+   WHAT IS THEREFORE ESTABLISHED: the headline covers world, and does not cover the driving surface in any frame
+   measured. WHAT IS NOT: the truck never reached rising ground in these runs - it sat at x -39, z -80, the bay lane,
+   through the whole horizon pass - so a steep climb, where the ground rises into the top of the view, is untested.
+   That is named here rather than asserted either way.
+
+   The size numbers from the first pass are unaffected and stand: 77 px of numeral, a 135 px drawn row,
+   round(min(w,h) * 0.13) with no shrink-to-fit, 9.6% and 16.9% of the canvas height, the same share at any size.
+
+No restyle either way: the decision "does this leave the road clear" now has the numbers under both readings of
+"road", and which reading governs is not mine to pick. Nothing in the HUD was changed.
