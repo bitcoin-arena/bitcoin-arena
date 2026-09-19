@@ -71,6 +71,24 @@ be theatre.
    man in cover is shot exactly as often as a man in the open, so the only visible change is where the men stand.
    The row goes green, the killing does not change, and the value arrives with §11.4.
 
+5. AFTER THE CODE (2026-09-19, core 13175b55). Occupancy moved and the dying did not, which is what was predicted:
+
+     ticks with a man on a place      1.0% -> 12.9%      man-ticks holding a claim   none -> 9.4%
+     men lost a side per 60 s, quiet  34.0 -> 33.6       with a nuke every 30 s      43.1 -> 43.2
+     fire-kills with a place in reach 38.9% -> 46.7%
+
+   The row wants >= 70% and this is 12.9%, so §0's "wrecks and craters are used" is NOT met and is not claimed.
+   The cause is measured: only 9.4% of men ever have a place within 12 m of their own line post, because wrecks and
+   craters are where the fighting WAS and the line stands elsewhere. §11.3's third kind of place - the candle lip,
+   one every 4 m along a plateau edge - is the piece that sits where the line is, and it was left out of this
+   letter by Daniel's own scope ("wrecks and craters"). Raising the 12 m reach instead would be moving a doctrine
+   number, which is not mine.
+
+   The letter's one real fault, found by measuring rather than reasoning: claims flickered at first - 3.2 s of life,
+   132 taken against 123 dropped in a minute - because a held place was measured for distance against a post that
+   drifts with its squad. §11.3's own sentence settles it ("it is his post while he holds the claim"): a held place
+   is 0 m from his post, and only the clamp and the living-tank rule can take it. After, 6.8 s and 80 against 61.
+
 PLAYTEST CHAIN 2026-09-19 12:55-13:10 (Daniel), nine items. Numbers.
 
 Item 2, the doji band. Daniel's shot hud-sideways-vs-upside-1255.png, measured on the Daily's own tape: the six
