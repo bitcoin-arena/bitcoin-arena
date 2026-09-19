@@ -235,9 +235,18 @@ genuinely is §8.1's 26 m and is untouched.
    already rejected elsewhere. It is not implemented yet: cover is already starving and slowing the crawl further
    would starve it more. REVISIT once the pinned share is inside §0's 70% ceiling.
 
-   IT COST §11.3's ROW, and that bar is not loosened: cover occupancy 72.9% -> 64.7% against 70, claims reached
-   17.5% -> 8.0%, crater claims reached 21.5% -> 0.0%. A pinned man is harder to shoot so more men live, and a
-   crawling man cannot reach the hole he claimed.
+   IT COST §11.3's ROW, and that bar is not loosened. CORRECTED 2026-09-20: this entry first read "occupancy
+   72.9% -> 64.7%, claims reached 17.5% -> 8.0%" and charged all of it to the pose fix. That was wrong, and 3e
+   below is the measurement that shows it. The 17.5% and 72.9% were taken at §11.4's CLOSE (7bc7c1f6), before
+   suppression existed; §11.5's crawl (2383c95b) had already carried reached to about 9% and occupancy to 70.9%
+   before the pose fix touched anything.
+
+     at §11.4's close (7bc7c1f6)      occupancy 72.9% suite metric, claims reached 17.5%
+     after §11.5's crawl (9e57dccc)   occupancy 70.9% tool metric, claims reached 8.9-9.3%
+     after the pose fix (f320932a)    occupancy 61.6% tool metric / 64.7% suite metric, reached 8.0%
+
+   So the crawl did most of it and the pose fix did the rest. Both are suppression; the split between the two is
+   in 3e, measured on one drive with sim.js swapped either side.
 
 3e. WHERE THE COVER ROW WENT, ATTRIBUTED (2026-09-20). The §11.3 occupancy row fell after the pose fix and the
    bar is not loosened. Measured on one drive, the same seeds both sides, by swapping sim.js to 9e57dccc and back:
