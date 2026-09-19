@@ -40176,3 +40176,49 @@ whole difference in the last five seconds, where a halted hull ranks the truck a
 shot or two a run goes to the truck. HEAD passes that fixture by 1.31 of 100 points, and its own comment records
 write-offs at 24.38 / 30.00 / 25.37 s where HEAD measures 16.58 / 17.90 / 15.20 s - eight seconds stale, older than
 this patch. It stays red until that window is re-measured against the army that exists.
+
+### A4a: the row's guarantee came from a leg the 20:30 re-ruling doubled (2026-09-19, measured)
+
+THE ROW, from the doctrine table (TANK_TACTICS.md:31): "role swap §2.6 (a leg is 6 to 10 s) and scoot §4.3 | in any
+10 s window at least one tank per side changes post". §2.6's body: `period = 360 + (h % 240)` - 360 to 600 ticks.
+A leg of AT MOST 600 ticks puts a leg boundary inside every 600-tick window, for every team: under those numbers the
+row is not a statistical claim at all, it is arithmetic.
+
+THE CORE runs the 2026-09-16 20:30 re-ruling instead, and TASKBOOK already records it in those words - "legs
+`720 + h % 480` (12-20 s, was 6-10); SCOOT_TICKS 1200 (20 s, was 10)". A leg of up to 1200 ticks and a scoot cool-down
+of 1200 ticks mean no team is obliged to change anything inside a 600-tick window. What is left holding the row up is
+the interleaving of six teams' phases, which is luck, not a rule.
+
+MEASURED, not guessed - seeds 1-12 x 3600 (144 windows, 24 more than the table's own 5 seeds):
+  windows with no post change on a side   1 of 144 = 0.69%   (5 seeds: 1 of 60)
+  windows by how many changes they held   none 1, 1-2 4, 3-6 36, 7+ 103
+  post changes by kind                    of slot (a scoot) 179, of line (a leg swap or a push) 1161
+Widening the sample from 5 seeds to 12 did not add a second failing window: it is the same one.
+
+THE WINDOW, named: seed 1, side 1, ticks 600-1200. Replayed tick by tick, what each of the six teams had to change
+with:
+  - three teams (3, 4, 5) held a WIDOW - one member dead. §3: a widow holds overwatch from the tick of the death,
+    `isBounding` false while the partner is dead. A widow's post does not alternate at all, by rule. Across the five
+    canonical seeds widows hold 55115 of 216000 team-ticks = 25.5%.
+  - the three intact teams had their role clocks moved inside the window and still crossed no boundary: team 0's
+    roleStart -1015 -> 917, team 2's 267 -> 1071, team 3's -349 -> 747. Two writers move it: `onRespawn` restarts it
+    at the respawn tick (§3), and `holdLegs` pushes it +1 for every tick a boundary is due while the team is not on
+    post (the swap waits for the bound to finish).
+  - no scoot was due: the six scoot words were 51-317, all of them before the window, against a 1200-tick cool-down.
+  - no push stepped: push was 0 on all six teams at both ends, so §4.10 changed no depth either.
+
+AND THE CADENCE IS SLOWER THAN THE RE-RULING SAYS. Legs measured end to end over seeds 1-5 (58 legs):
+  in spec for the 20:30 numbers (720-1200 ticks)   33 = 56.9%
+  min 6   median 1111 (18.5 s)   p90 2456 (40.9 s)   max 3021 (50.4 s)
+  over 20 s 24 of 58, over 40 s 6 of 58
+  role clock nudged +1 by holdLegs 3154 times; restarted by a respawn 126 times
+So the leg the core delivers is not 12-20 s either: the wait for the bound to finish is unbounded, and a team that is
+chronically off post postpones its swap for as long as it stays off. This is the same quantity H1 measures from the
+other side, and it is listed here, on A4a, not opened as a row of its own.
+
+LISTED, NOT LOOSENED. Every lever is somebody else's: §2.6's period and §4.3's cool-down are the 20:30 re-ruling,
+§3's widow and its respawn clock restart are H1's ground (Daniel's wait), and the bar itself is the row. Nothing here
+was retuned and no bar was moved. The dependency is the one TASKBOOK already names for the §0.1 600-tick row under
+this same cadence: THE ROW OR THE CADENCE. Either §2.6 goes back to a 6-10 s leg, which the 20:30 re-ruling moved on
+purpose, or the row is restated for the leg the doctrine now has - and the doctrine table's own "(a leg is 6 to 10 s)"
+and §2.6's `360 + (h % 240)` are stale against the core either way. I did not rewrite either: that is the B3 rule.

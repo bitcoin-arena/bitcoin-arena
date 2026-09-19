@@ -37,7 +37,8 @@ so on the steep flank a sample 40 m away is 70 m from the hull, past the 46 m re
 rule: the 27 m slot pitch is in x and A8 asserts exactly that; the reach and the depths are spec; or the 95% bar is
 read as flat-stretch only. Which one moves is Daniel's. Numbers in TASKBOOK. No deploy while A9 is red.
 
-ARMY, tonight, on the same letter: rows passing 24 -> 27 of 39.
+ARMY, tonight, on the same letter: rows passing 24 -> 28 of 39. A2 is done and in the tree (e2575f1); one red is
+listed with its cause and nothing it asserts was touched; nothing is deployed while A9 is red.
 - The table was measuring a line the core does not use. Every row now reads the core's own seam, hooked out of the
   copy: H1 27.14% -> 49.89% on that alone, A4b green, and the §0 wiggle row PRIORITIES carried as red at 32.6% was
   already green at 0.92%.
@@ -66,6 +67,16 @@ ARMY, tonight, on the same letter: rows passing 24 -> 27 of 39.
   either way, the army marginally FURTHER out - and one vector that looked deadlier (`fallout`) was measured and is
   one draw, not a trend. The fixture's own comment is eight seconds out of date and HEAD passes it by 1.31 of 100
   points; it stays red until that window is re-measured. Numbers in TASKBOOK.
+- A4a IS LISTED WITH ITS CAUSE, and the cause is a stale row, not a core fault. The row reads "role swap §2.6 (a leg
+  is 6 to 10 s) ... in any 10 s window at least one tank per side changes post", and under a leg of at most 10 s that
+  is arithmetic, not a claim: every team crosses a boundary inside every 10 s window. The core runs the 2026-09-16
+  20:30 re-ruling - legs 12-20 s, scoot cool-down 20 s - under which nothing obliges a team to change inside a
+  window, and the row is held up only by six teams' phases interleaving. Measured over 12 seeds, not 5: 1 of 144
+  windows, the same single window, seed 1 side 1 at t600-1200. In it three of six teams held a widow (no alternation
+  at all, §3), the other three had their role clocks restarted or postponed, no scoot was due and no push stepped.
+  Measured beside it: the delivered leg is not 12-20 s either - p90 40.9 s, max 50.4 s - because the swap's wait for
+  an unfinished bound is unbounded. Dependency, the same one the §0.1 600-tick row already carries: THE ROW OR THE
+  CADENCE. §2.6's body and the table's "(a leg is 6 to 10 s)" are stale against the core; I did not rewrite either.
 - O1 mean and B4 stay red with their cause listed, not fixed: an objective lane's +8 rest is STEPPED on the same
   five-second clock that §4.11 uses to move the objective, so a lane that just became the objective still sits at 0
   while the +8 moves on. The failing seeds move it twice as often (35 lane changes against 18). Ruled 2026-09-19:
