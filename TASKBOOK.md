@@ -40331,3 +40331,40 @@ dimensional link between this cluster and H1, measured, not argued.
 NOTHING WAS CHANGED AND NOTHING WAS LOOSENED: no cadence constant moved, no assertion moved, the gates are removed
 only inside the tool's temp copy and only when the flag is given. The ruling this asks for is the same shape as
 A4a's - the rows or the cadence - with the share above to price it, and A11a and B4 explicitly NOT covered by it.
+
+### A11a: all three failing windows are "no post ever got across the seam" (2026-09-19, one number, no hypothesis)
+
+A11a counts tank-ticks where a hull stands on the enemy's side of the seam at its own x. A hull's POST is across only
+when its depth is negative, and the forward line is `16 - push`, so only at push 24 - §4.10's own "push = 24 is 8 m
+across". Every other hull out there is there WITHOUT its post. Classified per tick from army.js's own branch word
+(`crossing` is the scoot in x, `walking`/`arriving` the bound, `backoff`/`heldAfterGiving` the give), seeds 1-5:
+
+  what put the hull past the seam        6270 tank-ticks
+    pushed post (the team reached 24)    5155 = 82.2%
+    bound overshoot                       722 = 11.5%
+    scoot in x                            244 =  3.9%
+    other (in band, no branch this tick)  148 =  2.4%
+    gave ground                             1 =  0.0%
+
+THE THREE FAILING WINDOWS, named, with what the side had to cross with:
+  seed 2 side 1: crossings 0, take steps 0, highest push on the side  8 m, team-ticks at the 24 m ceiling 0
+  seed 4 side 1: crossings 0, take steps 4, highest push on the side  8 m, team-ticks at the 24 m ceiling 0
+  seed 5 side 1: crossings 0, take steps 0, highest push on the side 16 m, team-ticks at the 24 m ceiling 0
+
+THIS ACCOUNTS FOR 3 OF THE 3: in every failing window no team of that side ever reached push 24, so no post lay
+across the seam at any tick. Bound-overshoot 0 of 3, scoot 0 of 3, give-ground 0 of 3. The three transient mechanisms
+are real - they are 17.8% of all crossings - but they produced nothing in these windows, and they cannot: a hull
+overshooting or scooting is over the seam for a few ticks at a post that is not.
+
+WHY IT IS NOT THE CADENCE, which is what the gates measurement already said (3 of 10 with the gates on, 3 of 10 with
+both off): reaching 24 from 0 needs THREE consecutive confirmed TAKE readings, and these sides did not read TAKE at
+all - two of the three took no take step in the whole minute. At 12 re-reads a team-minute they still would not have,
+because the verdict, not the rate, is what never came.
+
+THE SHAPE UNDERNEATH, recorded and NOT chased here: the failing windows are all one side. Side -1 crossed in 5 of 5
+seeds (374, 1613, 1529, 406, 2100 tank-ticks); side 1 crossed in 2 of 5 (38 and 210, both without reaching 24 -
+38 of them "in band" and 210 from a pushed post on seed 3). Over all re-reads the odds read ours 191, theirs 140,
+level 79. Whether that asymmetry is the chart's trend, the slot layout or the seam's own shape is NOT measured and
+is not guessed at here; it is the next number if this row is taken further.
+
+Nothing changed: no cadence constant, no gate, no assertion. Tool only (--a11awhy).

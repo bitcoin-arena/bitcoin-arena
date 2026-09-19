@@ -82,6 +82,13 @@ listed with its cause and nothing it asserts was touched; nothing is deployed wh
   teams are off post, which is H1's quantity. The C# has no push word to copy: there `pressure` is the market's trade
   flow and every tank re-aims at the line every frame. Same shape of ruling as A4a - the rows or the cadence - and
   A11a and B4 need their own causes either way. Numbers in TASKBOOK.
+- A11a's CAUSE IS NAMED, and it is not the cadence: in all three failing windows no team of that side ever reached
+  push 24, so no post lay across the seam at any tick - take steps 0, 4 and 0, highest push 8, 8 and 16 m. That
+  accounts for 3 of the 3. Overshooting a bound, scooting in x and giving ground are 17.8% of all crossings and
+  contributed none of these: they put a hull over the seam for a few ticks at a post that is not. Reaching 24 needs
+  three confirmed TAKE readings in a row and these sides read TAKE barely at all, which is why 12 re-reads a minute
+  would not have helped either. Recorded and not chased: the failing windows are all one side - side -1 crossed in
+  5 of 5 seeds, side 1 in 2 of 5. Numbers in TASKBOOK.
 - O1 mean and B4 stay red with their cause listed, not fixed: an objective lane's +8 rest is STEPPED on the same
   five-second clock that §4.11 uses to move the objective, so a lane that just became the objective still sits at 0
   while the +8 moves on. The failing seeds move it twice as often (35 lane changes against 18). Ruled 2026-09-19:
