@@ -220,6 +220,35 @@ genuinely is §8.1's 26 m and is untouched.
    17.5% -> 8.0%, crater claims reached 21.5% -> 0.0%. A pinned man is harder to shoot so more men live, and a
    crawling man cannot reach the hole he claimed.
 
+3e. WHERE THE COVER ROW WENT, ATTRIBUTED (2026-09-20). The §11.3 occupancy row fell after the pose fix and the
+   bar is not loosened. Measured on one drive, the same seeds both sides, by swapping sim.js to 9e57dccc and back:
+
+     occupancy (this tool's metric)   70.9%  ->  61.6%     a fall of 9.3 points, 8.4 below the 70 bar
+     living man-ticks                317444  -> 316959     unchanged
+     claim man-ticks, team PINNED     52599  ->  55857     reached 8.0%  ->  6.2%
+     claim man-ticks, team FREE       71711  ->  67983     reached 9.6%  ->  9.6%   IDENTICAL
+     reached man-ticks                11073  ->   9959
+
+   THE SPLIT DANIEL ASKED FOR, and one half of it is nil:
+
+     counting change (down men excluded)        0 of the 9.3 points. The metric is posture-blind - it counts any
+       living man within 0.5 m of a place - and the living man-tick count moved by 0.15%. Nothing was excluded
+       from the count by being down, and no man stopped being counted.
+     pinned men who cannot reach a hole         746 of the 1114 reached man-ticks lost, 67%. A pinned holder
+       crawls at 0.5 m/s against a walk of 2.788 and cannot cross what he was given.
+     the composition shifting toward pinned     368 of 1114, 33%. Free claim-ticks fell 71711 -> 67983 while
+       pinned rose 52599 -> 55857; the free RATE did not move at all, so this is men moving from the free bucket
+       into the pinned one, not free men getting worse.
+
+   So the whole 9.3 points is suppression, in two forms, and none of it is an artefact of counting. A FREE man
+   holding a claim behaves exactly as he did before this letter.
+
+   LISTED RED, with its cause and what it depends on: §11.3's "wrecks and craters are used" reads 64.7% on the
+   suite's own metric against a 70% bar. Cause: §11.5's crawl. It depends on the 0.01 m clause staying unbuilt -
+   capping the crawl on combined displacement would slow a diagonal crawl further and take more men off their
+   holes - and on nothing else in §11.5, whose pin share is inside its ceiling at 43.8% per team. Not loosened,
+   not retuned, and no new investigation opened: the share of the gap is named above and it is all of it.
+
 3d. THE PIN, PROFILED - which of threshold, duration or fire density is the overage (five seeds x 180 s).
 
    THE ARITHMETIC THE RULE IS BUILT FROM: a round is +60, decay is 1 a tick = 60 a second, the pin line is 120 and
