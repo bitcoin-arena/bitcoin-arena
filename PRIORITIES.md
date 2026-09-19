@@ -47,6 +47,10 @@ ARMY, tonight, on the same letter: rows passing 24 -> 27 of 39.
   new start; tactics fixture seeds re-picked the way that test re-picked them before.
 - Suites, each on its own: rules 48/48, vectors 8/8, tactics 17/17, transcript-replay 5/5, spawn 4/4, canonical 3/3,
   specified 3/3, candles 9/9, private-world 3/3, chart 4/4, poison 3/3, bundle 12/12 after rebuilding dist.
+- O1 mean and B4 stay red with their cause listed, not fixed: an objective lane's +8 rest is STEPPED on the same
+  five-second clock that §4.11 uses to move the objective, so a lane that just became the objective still sits at 0
+  while the +8 moves on. The failing seeds move it twice as often (35 lane changes against 18). Ruled 2026-09-19:
+  keep stepping; a rest taken at once would be a new rule. Numbers in TASKBOOK.
 - The push cluster, swept twelve seeds at one minute AND at five: no core bug. Every brake is the spec's - rule (a),
   the two-reading confirmation, and §4.10's widow drift, which is 29% of verdicts and had not been counted before.
   A13b PASSES on 11 of 12 seeds once the run is five minutes long; its one-minute zeros were a window too short for

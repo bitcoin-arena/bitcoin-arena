@@ -39989,3 +39989,10 @@ reads the recording. The one change that would close the row is a rule change - 
 taking its +8 rest at once instead of stepping to it - and that is Daniel's to rule, not mine to apply. O1's and B4's
 bars are untouched, and B4 inherits the same cadence: it asks a squad to follow a push change inside 10 s, and the
 pushes it must follow are these.
+
+RULED (Daniel 2026-09-19): the objective's +8 rest is STEPPED, not taken at once. A lane that becomes the objective
+climbs with PUSH_STEP on the confirmed re-read clock, rule (a) skipping half, exactly as §4.10 and §4.11 are written.
+A jump to +8 on the tick the objective lands would be a new rule, not a Core fix, and it is not applied. O1 mean and
+B4 keep their bars and stay listed red with this cause: the +8 is stepped on the same five-second clock that moves
+the objective, and the failing seeds move it twice as often (35 against 18 lane changes in five minutes). That is 21
+of the 21 seed-failures those two rows are missing.
