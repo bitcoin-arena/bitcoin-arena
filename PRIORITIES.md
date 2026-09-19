@@ -20,7 +20,7 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-THREE WAITS, all Daniel's, none of them mine to pick. Nothing else on this letter is blocked by them.
+FOUR WAITS, all Daniel's, none of them mine to pick. Nothing else on this letter is blocked by them.
   1. A9's coverage bar, red at 12.27% against 5%: is that bar flat-stretch only? The remainder is the seam's own
      climb - a sample 40 m away in x is 70 m from a hull that sits a depth below it. Pitch, reach and depths stay.
   2. §3's respawn entry: H1 falls under 50% on 2 of 12 seeds at five minutes (49.77%, 48.15%). A returning hull
@@ -29,6 +29,9 @@ THREE WAITS, all Daniel's, none of them mine to pick. Nothing else on this lette
      where the recording's army stood at 77.3 m and walked in.
   3. §11.1's two numbers for B3: the infantry line is a knot with a tail - too tight along the seam, too loose in
      depth. Which number is wrong is a rule question.
+  4. A4a's 10 s quiet-window bar against the 20:30 cadence: the bar was a guarantee under a 6-10 s leg, and the
+     re-ruling made legs 12-20 s with a 20 s scoot cool-down, so no rule obliges a change inside a window. The row
+     or the cadence. Numbers in TASKBOOK; §2.6 and the cadence stay as they are.
 
 OPEN, first, and the only thing waiting on Daniel: A9's coverage bar. The army is deployed and every short seam metre
 now has two or more guns within reach, so the remaining 12.27% is the SEAM'S OWN CLIMB - gaps of 23-24% where it rises
@@ -67,16 +70,8 @@ listed with its cause and nothing it asserts was touched; nothing is deployed wh
   either way, the army marginally FURTHER out - and one vector that looked deadlier (`fallout`) was measured and is
   one draw, not a trend. The fixture's own comment is eight seconds out of date and HEAD passes it by 1.31 of 100
   points; it stays red until that window is re-measured. Numbers in TASKBOOK.
-- A4a IS LISTED WITH ITS CAUSE, and the cause is a stale row, not a core fault. The row reads "role swap §2.6 (a leg
-  is 6 to 10 s) ... in any 10 s window at least one tank per side changes post", and under a leg of at most 10 s that
-  is arithmetic, not a claim: every team crosses a boundary inside every 10 s window. The core runs the 2026-09-16
-  20:30 re-ruling - legs 12-20 s, scoot cool-down 20 s - under which nothing obliges a team to change inside a
-  window, and the row is held up only by six teams' phases interleaving. Measured over 12 seeds, not 5: 1 of 144
-  windows, the same single window, seed 1 side 1 at t600-1200. In it three of six teams held a widow (no alternation
-  at all, §3), the other three had their role clocks restarted or postponed, no scoot was due and no push stepped.
-  Measured beside it: the delivered leg is not 12-20 s either - p90 40.9 s, max 50.4 s - because the swap's wait for
-  an unfinished bound is unbounded. Dependency, the same one the §0.1 600-tick row already carries: THE ROW OR THE
-  CADENCE. §2.6's body and the table's "(a leg is 6 to 10 s)" are stale against the core; I did not rewrite either.
+- A4a is listed as wait 4 above: the bar is stale against the 20:30 cadence, not a core fault. Measured at one minute
+  and at five, named to its windows, cause and dependency in TASKBOOK. Nothing retuned, §2.6 not rewritten.
 - O1 mean and B4 stay red with their cause listed, not fixed: an objective lane's +8 rest is STEPPED on the same
   five-second clock that §4.11 uses to move the objective, so a lane that just became the objective still sits at 0
   while the +8 moves on. The failing seeds move it twice as often (35 lane changes against 18). Ruled 2026-09-19:
