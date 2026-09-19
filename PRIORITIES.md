@@ -72,6 +72,16 @@ listed with its cause and nothing it asserts was touched; nothing is deployed wh
   points; it stays red until that window is re-measured. Numbers in TASKBOOK.
 - A4a is listed as wait 4 above: the bar is stale against the 20:30 cadence, not a core fault. Measured at one minute
   and at five, named to its windows, cause and dependency in TASKBOOK. Nothing retuned, §2.6 not rewritten.
+- THE PUSH CADENCE IS NOW PRICED, and it does not cover the whole cluster. §4.10 rules one re-read per team per 5 s
+  and no gates; the 20:30 re-ruling added two - no re-read while a tank is off post, and a step only when the reading
+  repeats - and the core delivers 3.55 steps per team-minute against §4.10's 12, 29.6% of the ruled rate. Measured by
+  taking the gates off in the tool's own temp copy, the core untouched: A13b and O1's lane row go GREEN on the
+  cadence alone, A11b goes 6 of 10 windows to 1, O1's mean push covers two thirds of its gap and stays red, and A11a
+  (3 of 10 either way) and B4 (which gets WORSE, 22% -> 29%) are not the cadence at all. Two of six fully, one
+  mostly, one partly, two not at all. Gate (a) is amplified by the doubled legs - it eats 43.1% of re-reads because
+  teams are off post, which is H1's quantity. The C# has no push word to copy: there `pressure` is the market's trade
+  flow and every tank re-aims at the line every frame. Same shape of ruling as A4a - the rows or the cadence - and
+  A11a and B4 need their own causes either way. Numbers in TASKBOOK.
 - O1 mean and B4 stay red with their cause listed, not fixed: an objective lane's +8 rest is STEPPED on the same
   five-second clock that §4.11 uses to move the objective, so a lane that just became the objective still sits at 0
   while the +8 moves on. The failing seeds move it twice as often (35 lane changes against 18). Ruled 2026-09-19:

@@ -40268,3 +40268,66 @@ a run, is a tail of the phase interleaving and not a drift.
 
 A4a is closed as LISTED on this evidence: bar unchanged, nothing retuned, §2.6 not rewritten, the cadence untouched.
 The dependency stands as before - the row or the cadence, Daniel's pick.
+
+### The push cadence, measured against §4.10 and against the recording (2026-09-19, no core change)
+
+THE ROW WHOSE ASSERTION IS THE PUSH RATE ITSELF IS A11b, NOT A11a. A11b counts 60 s windows in which no team of a
+side held a negative push - the push word going below zero is the assertion. A11a counts hulls physically on the far
+side of the seam (measure-war.mjs: `win.cross` counts tank-ticks past `seamOfCore` at the tank's own x), which
+follows from the push but is not it. A11b is the probe row used here.
+
+WHAT THE CODE HOLDS, printed from the code and not hypothesised (tactics.js `pressure`, seeds 1-5 x 3600):
+  the 5 s clock       `mod(tick + mod(mix(hash, 300 + w) >>> 1, 300), 300) !== 0 -> continue`  - 300 ticks per team,
+                      phase hashed per (seed, side, team). Due 720 over the run = 12 per team-minute.
+  gate (a) 20:30      `if (!teamOnPost(...)) continue;`  - the re-read is LOST, not deferred; the next chance is the
+                      next 300-tick boundary. On post at the due tick 410 of 720 = 56.9%.
+  gate (b) 20:30      `const confirmed = s[base + TAC_VERDICT + w] === verdict; if (!confirmed) continue;` - and the
+                      verdict word is written BEFORE this test but AFTER gate (a), so a skipped re-read leaves the
+                      last verdict standing from however long ago it was taken. Confirmed 213 of 410 = 52.0%.
+  delivered           steps 213 of 720 due = 29.6%, or 3.55 steps per team-minute against §4.10's 12.
+  verdicts read       take 137, give 37, drift 236. The GIVE path: 37 reads, 12 confirmed, 31 of the 37 already at a
+                      push <= 0; steps that landed below zero 11. The push word is below zero on 1.85% of team-ticks.
+
+§4.10 AS RULED HAS NEITHER GATE. "Re-read every 5 s (300 ticks) per team, on a tick hashed from (seed, side, team)",
+then own >= foe + 2 takes, foe >= own + 2 gives, otherwise one step toward 0. No on-post condition, no confirmation.
+Both gates are the 2026-09-16 20:30 re-ruling, and the six rows were written against the 12-a-minute cadence above
+them.
+
+THE C# RECORDING HAS NO PUSH WORD AT ALL. In Army.cs `pressure` is the market's signed trade flow, not a line depth:
+it scales speed (`7f + pressure * 2f`) and rate of fire (`Rand(1.4f, 3.2f) / (1f + max(0, pressure) * 0.45f)`), and
+every tank simply steers to `front - Dir * 9f` ("push up to the line") EVERY FRAME. So the recording's intent is a
+continuously adjusted line at 60 readings a second, with no step, no ceiling and no confirmation. Neither §4.10's
+12-a-minute nor the core's 3.55 is a C# leftover: the push word is a doctrine invention (§4.10 "RULED HERE"), and
+there is no C# fault to copy here.
+
+THE SHARE, measured by taking the gates off IN THE COPY THIS TOOL ALREADY PATCHES (--nogate-a / --nogate-b /
+--nogates; the core is untouched and no assertion was moved):
+  row                                   bar        both gates on   (a) off   (b) off   both off
+  A11a windows with no crossing         0 of 10    3               2         1         3
+  A11b windows with no giving           0 of 10    6               3         4         1
+  A13b sides' mean push differs >= 4 m  > 50%      41.91%          67.19%    59.44%    64.65%
+  O1 pushed >= 16 on an objective lane  >= 60%     58.10%          59.50%    61.78%    63.35%
+  O1 mean push, lanes minus the rest    >= 6 m     3.87 m          3.11 m    3.88 m    5.27 m
+  B4 push changes not followed in 10 s  0          9 of 41 (22%)   16 of 52  23 of 69  25 of 86 (29%)
+  steps per team-minute                 12 (§4.10) 3.55            6.32      6.53      12.0
+
+SO THE CADENCE ACCOUNTS FOR, OF THE SIX:
+  A13b                    ALL of it - green under any of the three, 41.91% -> 64.65%.
+  O1 pushed-on-a-lane     ALL of it - green with gate (b) off or both off, 58.10% -> 63.35%.
+  A11b                    MOST of it - 6 of 10 windows -> 1 of 10, still short of a zero bar.
+  O1 mean push            PART of it - 3.87 -> 5.27 m of a 6 m bar, about two thirds of the gap, still red.
+  A11a                    NONE of it - 3 of 10 with the gates on and 3 of 10 with both off. Its cause is elsewhere
+                          and is NOT the push rate; it is listed here as still unexplained.
+  B4                      NONE of it, and the sign is the other way: more push changes means more changes the squad
+                          did not follow, 22% -> 29%. The cadence is not B4's cause; the infantry's following is.
+So: 2 of the six fully, 1 mostly, 1 partly, 2 not at all.
+
+AND GATE (a) IS AMPLIFIED BY THE DOUBLED LEGS. Gate (a) costs 43.1% of all re-reads because a team is off post at the
+due tick that often, and what keeps teams off post is the unfinished bound - the same quantity filed under H1, where
+the delivered leg runs to p90 40.9 s against the re-ruling's own 12-20 s. The 20:30 re-ruling doubled the legs and
+added the on-post gate in the same breath; the longer the leg runs, the more re-reads the gate eats. That is the
+dimensional link between this cluster and H1, measured, not argued.
+
+NOTHING WAS CHANGED AND NOTHING WAS LOOSENED: no cadence constant moved, no assertion moved, the gates are removed
+only inside the tool's temp copy and only when the flag is given. The ruling this asks for is the same shape as
+A4a's - the rows or the cadence - with the share above to price it, and A11a and B4 explicitly NOT covered by it.
