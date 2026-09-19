@@ -117,7 +117,11 @@ with the node-side round-boundary fix live.
 CANDLES: closed by measurement. The 16:42 report (candles move left then freeze at round start) does not reproduce on
 0.0.1617 - from the cab the core's shift slides and wraps 0.03 -> 5.58 m across 5400 ticks, and the drawn band changes
 17354 to 307820 pixels between consecutive frames. One thing photographed for a HUD letter of its own: from the cab
-the price headline is drawn about 80 px tall across the middle of the screen.
+the price headline is drawn about 80 px tall across the middle of the screen. MEASURED 2026-09-19 and closed without
+a restyle: the number was right - 77 px of numeral - and "the middle" is the horizontal one. Vertically it stands in
+the top eighth of the view, above the horizon, over sky and the mempool facade, and the road, the truck, the
+drop-off marker and the terrain are all below it and unobscured. The road is clear, so nothing was restyled; the
+size is a fixed share of the short side, so that holds at every window size. Numbers in TASKBOOK.
 
 SHIPPED to the live signer nodes (2026-09-18 23:25): the round boundary no longer starves the page. The finality
 watch ran every entry's close work back to back on its own event loop - worst loop hold 26151 ms, none of it waiting

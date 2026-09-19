@@ -40710,3 +40710,39 @@ back, in metres of its own depth, not of absolute depths, and it is reported as 
 CORROBORATION, free and worth keeping: at t = 0 the core's mean armour depth is 23.0 m, which is exactly the mean of
 §2.5's two lines, (16 + 30) / 2. The hulls stand on their posts at spawn, measured here in a file that has nothing to
 do with that ruling - while the recording stands at 77.3 m and walks in, which is the spawn fault that ruling named.
+
+### The cab price headline, measured (2026-09-19, MacBook, Daily 0.0.1617)
+
+PRIORITIES carried this from the candle-scroll pass: "from the cab the price headline is drawn about 80 px tall
+across the middle of the screen". That ~80 was read off a photograph. Asked of the page instead, driven out of the
+bay into the cab on the MacBook's headless Chrome over the forwarded CDP port (HARD 19:05), Daily 0.0.1617.
+
+  canvas                              1280 x 800, min(w, h) = 800
+  what DriveHud asks (line 66)        _price.fontSize = round(min(w,h) * 0.13) = 104 px
+  what it draws (line 2648)           a row of fontSize * 1.3 = 135 px at HeadlineRowY(w,h,0), white, centred
+  measured numeral cap height         77 px (y 35-111)
+  cap height / fontSize               0.74, so the font was NOT shrunk - the gap was wide enough for it
+  the glyphs as a share of the view   77 px = 9.6% of the canvas height; the drawn row 135 px = 16.9%
+  the text's horizontal span          x 398-880, about 38% of the width, centred
+
+THE PHOTOGRAPH'S NUMBER WAS RIGHT AND ITS WORDING WAS THE OTHER AXIS: 77 px against "about 80 px", and "across the
+middle" is the HORIZONTAL middle. Vertically the headline sits in the top eighth of the view - y 35-111 of 800.
+
+AND THE ROAD IS CLEAR, which is the thing that matters and the reason this stops here. Photographed from the cab
+with the page's own chrome hidden: the price stands above the horizon, over the sky and the mempool facade. The
+driving surface, the truck, the drop-off marker and the terrain the driver is steering across are all below it and
+unobscured. Because the size is a fixed fraction of the short side, that proportion holds at every window size - at
+1920x1080 the row is 182 px, the same 16.9% - so this is not a finding about one canvas.
+
+So the item closes as MEASURED, NOT RESTYLED. Nothing about the headline was changed: no font rule, no layout, no
+assertion. Restyling a headline that is not covering the road would have been a change made to a photograph rather
+than to a fault.
+
+INSTRUMENT FAULT CAUGHT ON THE WAY, worth keeping for the next HUD reading: the first three frames of the same draw
+measured 39, 115 and 39 px for the same glyphs. The page's own dev banner - "play - <url> up / 1 player - waiting -
+free round" - is an HTML overlay sitting on top of the canvas, and it covered the tops of the digits. Every element
+that is not the canvas is now hidden before the shot (tools/measure-cab-headline-clean.mjs). A HUD measured through
+the page's chrome is measuring the chrome.
+
+Probes kept: packages/blwp-client/tools/measure-cab-headline.mjs (drives out of the bay into the cab) and
+measure-cab-headline-clean.mjs (hides the page chrome and captures the canvas alone).
