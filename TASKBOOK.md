@@ -41104,3 +41104,38 @@ there is no C# figure to copy and no mechanism to name against it. No rewrite, n
 no 2-D coupling. The core keeps its intended units.
 
 B3 STAYS RED ON BOTH HALVES AND IS NOT CLOSED GREEN. The army does not ship while it is red.
+
+### B3: the men ARE on the line the core writes; the x miss is the floor's reference frontage (2026-09-19)
+
+Asked to fix B3, the first question is whether the core is placing men wrongly. Measured, and it is not.
+
+  ARE THE MEN OFF THEIR POSTS? A rifleman's post is his squad's anchor plus a fixed offset within +-9 m
+  (army.js riflePost, SQUAD_OFFSET 18 m). Distance from each man to his OWN post, on failing against passing ticks:
+     mean |man - his post| in x     failing 0.2 / 6.6 / 10.0 / 13.0 / 34.8 m    passing 0.2 / 5.9 / 7.9 / 12.6 / 68.5
+     share of men more than 5 m off failing 0.0 / 33.3 / 51.4 / 70.0 / 100.0%   passing 0.0 / 34.5 / 53.8 / 68.6 / 100.0
+  THE TWO ARE THE SAME. Men on failing ticks are no further from their posts than men on passing ticks - 51.4%
+  against 53.8% more than 5 m off at the median. The line is not leaving its posts on the ticks that fail.
+
+  WHAT IS DIFFERENT IS WHICH POSTS EXIST. The posts' own x sd on failing ticks is 3.0 / 11.0 / 20.3 / 40.9 / 79.9
+  against an all-three-anchor sd of 6.5 / 32.6 / 46.8 / 55.6 / 66.7. Posts are anchors +-9 m, so the posts' sd can
+  only fall that far below the anchors' if the living men no longer come from all three squads:
+     squads with a living man        failing 1 / 2 / 3 / 3 / 3        passing 1 / 3 / 3 / 3 / 3
+     failures with a wiped squad     2695 = 48.0% of the failures, against 11.1% of the passing ticks
+     sd of the LIVING squads' anchors failing 0.0 / 11.2 / 25.1 / 55.2 / 80.0   passing 0.0 / 17.5 / 29.4 / 43.6 / 66.1
+  So the floor asks the survivors to span 0.6 x a frontage measured from THREE anchors, one of which may have no
+  living man on it. Of the 5615 failing side-ticks, 2107 = 37.5% would PASS if the floor used only the anchors of
+  squads that still have a living man.
+
+  THIS IS THE SAME DEFECT CLASS ALREADY RULED TWICE ON THIS ROW - a bar measuring something that is not the line
+  (the halt clock standing in for "on post"; the generator range standing in for a standard deviation). Here it is
+  a dead squad's anchor standing in for frontage the side still holds. It is 37.5% of the x miss. The other 62.5%
+  is genuinely tight men and the 60 m ceiling, as already listed.
+
+  AND THE Z HALF CANNOT BE FIXED IN THE CORE EITHER. Its failures are squads in motion - median zero halted men -
+  and the ruled population counts men in transit on purpose. Making the core spread walking men less, or halting
+  them more, would be moving the army to fit the test.
+
+SO B3 CANNOT BE MADE GREEN WITHOUT A RULING. The core places men where §11.1 says and the recording is twice as
+spread in depth. Every remaining lever is the row's: the floor's anchor set, or the in-transit tolerance. Neither is
+taken here - both were explicitly forbidden - and no band, floor, ceiling, population or doctrine number was moved.
+The measurement is the answer; the change is a decision.
