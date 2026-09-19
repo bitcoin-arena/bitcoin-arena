@@ -176,6 +176,15 @@ the tree and green in every core suite; nothing is on the Daily yet - one build,
      checks it must pass. LIVE at 0.0.1723 (08a117ac): driven from the cab on the MacBook, the truck crossed the
      chart, reached the miner and DELIVERED at tick 1793, and the forecourt in front of the building is bare - no
      candle body and no ribbon on it (daniel-screens/live-0.0.1723-miner-forecourt.png, -miner-close.png).
+     SUITES for this letter, each on its own run. Core: rules 49/49, tactics 19/19, candles 9/9, chart 4/4,
+     spawn+replay+canonical+specified 15/15, vectors+bundle+poison+private-world+cbrt 31/31, protocol known-core
+     2/2. Unity EditMode 254 of 258 (3 skipped, 1 red: the long-listed CombatFx rifle flash). Unity PlayMode 229 of
+     256 (13 skipped, 14 red): the eleven long-listed (ten reading Battlefield.Army, which does not build outside
+     the browser, and RoadsAreActuallyDrawn, which needs a graphics device), the two listed MushroomRestingTests on
+     the authored skirt offset, and GhostAcrossTheDoors' camera-distance row, which is green on its own re-run and
+     was green in the full run before it - a flake under the whole suite, listed as one. The one red this letter
+     made, VehicleTests.RoadsAreBuiltOnTheGroundWithMaterials, is fixed and green: the row walked the ribbon two
+     vertices at a time when a station is five across.
   7. DONE: no tank stands on the loading dock. The pair's centre is clamped to 77.4 m so the outer tank stands on
      the kerb at 83.4 m with its partner 12 m behind it. The 27 m slot pitch did not move.
   8. DONE: a liquidation now says what it cost across the middle of the screen - "$305,000 SHORT LIQUIDATED" - for

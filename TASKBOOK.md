@@ -85,6 +85,16 @@ Two test setups moved with the world, no assertion:
   89.7 / 43.5 / 88.7, all three written off inside 90 s. At x -80, two metres further west, nothing reaches the
   truck at all - that is the guns' edge, not a knob.
 
+PlayMode after the refit, measured twice in full: 229 of 256, 13 skipped, 14 red both times but not the same 14.
+Run 1 red on VehicleTests.RoadsAreBuiltOnTheGroundWithMaterials ("eine Kachel alle 58.5 m"): the row walked the mesh
+two vertices at a time, a station has been five across since the ribbon was laid on the chart, so it hopped sideways
+and counted the hops as length - inside the 2-7 m band by luck until the ribbon was cut back to the door. Fixed to
+walk the middle vertex of each station; green on a filtered re-run and in run 2. Run 2 red instead on
+GhostAcrossTheDoorsTests.HowManyOfTheTwentyFourDoorsThePlayersOwnCameraFrames ("the camera is 22 m from the truck"):
+green on its own re-run and green in run 1 - a flake under the whole suite. The other thirteen are the eleven
+long-listed (ten reading Battlefield.Army, one needing a graphics device) and the two listed MushroomRestingTests on
+the authored skirt offset, whose reported foot moves between runs (5.00, then 12.73 against the same 3.64 floor).
+
 Core hash after the refit: 2d48a05ade3a264ce5cbec21839249d88c204a60c10d982c11e5deea4b9a0013.
 
 SUPERSEDED by the pick above, kept because the measurement stands:
