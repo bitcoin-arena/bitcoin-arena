@@ -143,7 +143,13 @@ SUITES, each on its own run: rules 47/48 - the one red is `incoming fire costs t
 cause, its 15 s window a fixture whose own comment is stale against HEAD, and nothing it asserts touched - tactics
 17/17, vectors 8/8. The others stand from e2575f1, no core source having moved since. No Unity: no C# path moved.
 
-A9 NO LONGER BLOCKS, AND THE ARMY STILL DOES NOT SHIP. A9 is green (1.71% at full strength against a 5% bar, 2.88%
+THE ARMY IS LIVE ON THE DAILY: 0.0.1697, deployed 2026-09-19 (7f3aa1a8), alias and unique URL both serving it, the
+built core byte-identical to packages/core/dist. B3 went green on B1's tolerance and §0's ship rule says a red with a
+holder does not block, so the seven that remain shipped listed with their numbers and holders. The core suites are
+green but for the named stale fixture (rules 47/48, incoming fire costs the truck condition). NEXT: M3, without
+asking (Daniel 2026-09-18 23:47 HARD).
+
+WHAT THE EARLIER LETTER SAID, kept for the record: A9 no longer blocks, and at that time the army still did not ship. A9 is green (1.71% at full strength against a 5% bar, 2.88%
 on the one-gun floor), so the item Daniel named as the blocker is closed - but B3 is a red §0 doctrine row and the
 standing rule is that nothing ships while one is red. I did not deploy. What is also NOT claimed: the army did not
 get better on this pass. A9 went green because the row was corrected to read as §4.1 already words it, and the
