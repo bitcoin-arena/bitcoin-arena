@@ -178,16 +178,75 @@ genuinely is §8.1's 26 m and is untouched.
    from the back edge, not a crawl - and re-read the pinned share and rifle volume, since a slower effective crawl
    moves where men end up.
 
-   (b) THE BOUNDING RULE READS THE PIN INSTEAD OF THE CLOCK. §11.5: "the bounding rule of §11.2 still holds for a
-   pinned team's neighbour: it may halt when the pinned team's CLOCK says halt". The pin is OR-ed into `halted`
-   before the neighbour test reads it, so a pinned team blocks its neighbour from halting and forces it to rush.
-   The comment written on that line claims the opposite of what the line does. WOULD MEASURE AFTER A FIX: keep the
-   clock result in its own array, apply the pin only to the team's own halt, then count ticks on which a team
-   halts beside a pinned lower neighbour - structurally 0 today - and re-check §0's §11.2 bounding rows.
+   (b) RETRACTED 2026-09-20, AND IT WAS NEVER A HOLE. I read §11.5's "it may halt when the pinned team's CLOCK
+   says halt" as "the neighbour test must read the clock, not the pin", and called the code wrong. Daniel ruled the
+   other reading and it is the right one: the covering team is the one ON THE GROUND, so a pinned team must LOOK
+   HALTED to its neighbour even when its own timer would have it rushing. The clock sentence is permission to halt
+   during the covering phase, not an instruction to ignore the pin.
+
+   MEASURED rather than argued (tools/measure-pin-profile.mjs, five seeds x 180 s):
+
+     pinned team-ticks                                426193
+       seen as halted by the neighbour                426193  (100.0%)
+       NOT seen as halted                                  0  (0.0%)
+       ...of those, the clock would have had it RUSHING 368547 (86.5%)
+
+   The last line is the rule working: on 86.5% of pinned team-ticks the timer says rush and the pin holds the team
+   down anyway. No code changed. My diagnosis was the error, not the core.
 
    A third, latent and harmless today: `u.pinned` is written only inside the !armour branch of a reused scratch
    object, so for a tank it holds the previous man's value. The gait tests `u.armour` first so nothing reads it,
    but it is a stale field waiting for its first reader.
+
+3c. THE POSE WRITER READS THE PIN (2026-09-20, f320932a), and one clause of §0 is still open.
+
+   §0: "a pinned man is never STAND". He was, on four ticks in five, because the crawl is 0.5 m/s on EACH axis and
+   a diagonal crawl spends 0.00833 m in x and the same in z - 0.0167 m of |dx| + |dz| - over §11.4's 0.01 m probe.
+
+     written STAND while pinned    106402 of 133536 (79.7%)  ->  214 of 138119 (0.2%)
+
+   The 0.2% left is the decay boundary: a team falling under 120 mid-tick is written STAND by the writer while the
+   probe still counted it pinned.
+
+   OPEN REMAINDER, listed by Daniel's ruling and NOT changed this turn: §0's second clause, "never steps more than
+   0.01 m in a tick", still fails on 78.9% of pinned man-ticks. The cap is per axis, so a diagonal crawl travels
+   0.0167 m. RULED 2026-09-20: 0.01 m is COMBINED Euclidean displacement - a speed cap, not a per-axis clamp -
+   because per-axis lets a diagonal crawl move faster than an axis crawl, which is the 2-D coupling this core has
+   already rejected elsewhere. It is not implemented yet: cover is already starving and slowing the crawl further
+   would starve it more. REVISIT once the pinned share is inside §0's 70% ceiling.
+
+   IT COST §11.3's ROW, and that bar is not loosened: cover occupancy 72.9% -> 64.7% against 70, claims reached
+   17.5% -> 8.0%, crater claims reached 21.5% -> 0.0%. A pinned man is harder to shoot so more men live, and a
+   crawling man cannot reach the hole he claimed.
+
+3d. THE PIN, PROFILED - which of threshold, duration or fire density is the overage (five seeds x 180 s).
+
+   THE ARITHMETIC THE RULE IS BUILT FROM: a round is +60, decay is 1 a tick = 60 a second, the pin line is 120 and
+   the clamp is 600. So two rounds inside a second pin a team from cold; one round a second holds the word level
+   exactly; and from the clamp the word needs 8.0 s to fall under 120 and 10.0 s to clear.
+
+     team-ticks                    972000
+       under fire (word > 0)       534707  (55.0%)
+       pinned (word >= 120)        426193  (43.8%)
+     the word, once a second       mean 182, median 49, p90 575, max 600
+     rifle rounds                  3878 = 4.3 a second across both sides
+       per team per second         0.24        break-even is 1.00
+     pinned episodes ended         797
+       length in seconds           mean 7.9, median 3.0, p90 22.5, max 96.8
+     pinned episodes opened by a BLAST  305 (36.4%)   by rifle rounds  533 (63.6%)
+
+   THE ANSWER IS NONE OF THE THREE. Fire density is a QUARTER of break-even. The threshold is reached by two
+   rounds, which is the section's own intent. Duration is short in the median - 3.0 s - and only its tail is long,
+   because a blast puts the word at 600 and 8.0 s must then decay off it.
+
+   The overage is the ROW'S OWN READING. §0 counts a side as pinned when AT LEAST ONE of its NINE fire teams is
+   pinned. At a per-team rate of 43.8%, at-least-one-of-nine saturates: 1 - (1 - 0.438)^9 is 99.5% if the teams
+   were independent, and the core measures 96.0% / 95.6%. For the row to sit under its 70% ceiling the PER-TEAM
+   rate would have to fall to 12.5% or less, because 1 - (1 - 0.125)^9 = 0.70.
+
+   So a per-team pin rate that looks reasonable - 43.8%, inside any band one would write for a single team - is
+   read by §0 as 96%. That is a doctrine question about how the row counts, not a tuning question about +60, -1 or
+   120, and none of those three has been touched.
 
 4. IT MOVES §11.4's LISTED 2x REMAINDER THE WRONG WAY, as predicted from the open loop and now measured: 876907 of
    2505404 STAND man-ticks belong to a pinned team, so STAND falls to 1628497 while the down count rises to
