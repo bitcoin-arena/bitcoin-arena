@@ -5,6 +5,45 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+PLAYTEST CHAIN 2026-09-19 12:55-13:10 (Daniel), nine items. Numbers.
+
+Item 2, the doji band. Daniel's shot hud-sideways-vs-upside-1255.png, measured on the Daily's own tape: the six
+finished bodies were 2.47, 0.49, 0.24, 0.00, 0.25 and 0.68 bp of the open. Under the core's "3 bp" band all six are
+doji -> SIDEWAYS 0. Under §4.14's own worked example, "$2.25 at $75,000" = 0.3 bp, three are green -> UP 1.
+candleColour is idiv(imul(abs(open), 3), 100000) now. Core hash after it:
+d9812f7ca3bf36b1f0f71b81ca22c37e4fcc12f3cc6442ca89c3b75b69e81321. Vectors slalom and idle regenerated.
+  The bear-trend row could not check anything as written: driven straight into a bear trend the bears hold all three
+  objectives by tick 1200 and a side that holds everything defends (assaultClock's unheld === 0), while their first
+  clock is due at 1665. With the bulls given their trend first and the bears' imposed on that field: bulls 0 assault
+  starts after the flip, bears 1.
+  rules.test.js's parked-truck window: with §4.13's seeded tape the round opens engaged, first hit 0.20 / 0.45 /
+  2.17 s (was 9.53 / 10.98 / 11.08) and the write-off 30.62 / 14.70 / 16.32 s (was 24.38 / 30.00 / 25.37). Fifteen
+  seconds is past the write-off on seed 20268820; at ten all three are hit and alive, hp 46.2 / 41.4 / 39.3. Its
+  armour pin went 6.5 -> 7.0 m: 2.0 (body front) + 3.6 (hull half-length) + 1.275 = 6.875 m.
+  candles.test.js's ribbon row, tank-ticks plateau / slope: 0 / 7899, 907 / 5097, 2278 / 9573 on seeds 1 / 2 / 3
+  (flat tape 1825 / 23116, 1319 / 26450, 2858 / 21378). Seed 1 reaches 0.72 m and never tops a body in 60 s.
+
+Item 7, the loading dock. Post office at x -114.4 m, paving 31 m out to -83.4 m (PostOffice.ApronReach). Outer slot
+-81 m, pair member +-6 m -> outer tank -87 m: 3.6 m of concrete. Army travel clamp was FRONT_X - 4 = 88 m. Now:
+pair centre clamped to +-77.4 m (DOCK_X 83.4 m less PAIR_HALF), travel clamped to 83.4 m. Clamping each tank alone
+first: the pair ends 9 m apart inside the 12 m separation, both pushed ~1.5 m off post, and team 3 of seed 2 scooted
+off post at tick 1396. Crossings after the clamp 9 / 17 / 3 (14 / 9 / 13 before it); tank-ticks on the chart 6737 /
+7555 / 11194. Core hash after it: 22754f888015c357620df96a562729b3f87451e29e511c03a5b9beaac1efc058.
+
+Item 3, the DELIVERED card. The fit was measured on "BLOCK MINED WITHOUT YOU", 23 characters; the line drawn is
+"DELIVERED  7,225 sat to the miners", 34, and it grows with the fee. Shot delivered-text-clip-1305.jpg. Also: the em
+dash is not in the font the WebGL build ships (GlyphProbeTests' reasoning), and the decimals were the browser's
+culture ("load 0,83"). The arrival box grew one mid row for the lead line (§4.14's run-end screen).
+
+Item 4, the debug over the price. #blwp-players was top-centre at 14 px with three lines, one of them
+"play . https://tramadol-sent-commander-arrived.trycloudflare.com up" - 46 characters of URL across "$81,300".
+Bottom-left at 12 px now, above the pad row on a phone in landscape (23.5vh, the wallet's own keep-off), and the
+host is cut to its first label and 14 characters.
+
+Item 6, NOT DONE. The chart field is ruled to end at the miner face x 108.4 (spawn ruling B) and the miner model's
+dock plainly reaches west of it (miner-entrance-covered-1309.jpg). The model is streamed at runtime, so its western
+reach has to be read on the running page; that measurement is the first thing after this deploy.
+
 M1.a16 2026-09-07 playable hunt. Heat-zero recordings unchanged. Full-heat
 factors were 1.4 / 2.5 / 0.6 (tanks noticed at 81.6 m on an 85 m half-map).
 Now 0.3 / 0.5 / 0.3: notice 44.2 m, outrank 1.5x, shell x1.3. Parked at

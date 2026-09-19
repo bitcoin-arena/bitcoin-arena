@@ -143,6 +143,33 @@ SUITES, each on its own run: rules 47/48 - the one red is `incoming fire costs t
 cause, its 15 s window a fixture whose own comment is stale against HEAD, and nothing it asserts touched - tactics
 17/17, vectors 8/8. The others stand from e2575f1, no core source having moved since. No Unity: no C# path moved.
 
+DANIEL'S PLAYTEST CHAIN OF 2026-09-19 12:55-13:10, nine items in his order, no pause between them. The work is in
+the tree and green in every core suite; nothing is on the Daily yet - one build, one deploy at the end, as ruled.
+
+  1. DONE, live at 0.0.1715 already: the truck died 1/4 inside a tank because contact was a 3 m circle. The core
+     carries the hull's rectangle now (§1.2), 1.8 m x 3.6 m half-extents in the hull's own frame.
+  2. DONE in the core and in the client: the HUD read SIDEWAYS on a climbing chart because §4.14's prose says a doji
+     is "3 bp" while its own worked example is 0.3 bp. Band corrected; the header now names the side (BULLS +0.42%),
+     the assault banners are painted at last (they were built every frame and drawn nowhere), and a run's end screen
+     says BULLS LEADING. The round's own THE BULLS WIN is written and tested but not wired: the client is not sent
+     the round's attested open and close, which is the committee's RoundResult. LISTED, holder: the settlement path.
+  3. DONE: the DELIVERED card fitted its font to "BLOCK MINED WITHOUT YOU" and then drew a line half again as long.
+     Every line is fitted on the line that is drawn. Its em dash was drawing as a blank and its decimals came out
+     under the browser's culture; both fixed with the same test.
+  4. DONE: the node debug block sat top-centre, across the price. It is bottom-left and one size smaller now, and
+     the tunnel's 46-character URL is a node letter or a 14-character host. The price is untouched.
+  5. DONE: the road ribbon was laid ON the live candle layer, so it rode up onto every body it crossed. It lies on
+     the ground under the candles now - the chart covers the road, the road is still whole.
+  6. NOT DONE, and it is the one item that needs a world change: the chart field is ruled to end at the miner face
+     (x 108.4, spawn ruling B) and the miner MODEL's dock reaches further west than that face. Daniel's own sentence
+     allows the world to be made larger; how much larger is a measurement I do not have yet - the model is streamed,
+     so its reach is read on the running page. First measure after this deploy.
+  7. DONE: no tank stands on the loading dock. The pair's centre is clamped to 77.4 m so the outer tank stands on
+     the kerb at 83.4 m with its partner 12 m behind it. The 27 m slot pitch did not move.
+  8. DONE: a liquidation now says what it cost across the middle of the screen - "$305,000 SHORT LIQUIDATED" - for
+     exactly as long as the cloud stands.
+  9. DONE: the floating HIGH / LOW plaque is gone. The high and low candles keep their 4 px ticks.
+
 THE ARMY LETTER IS CLOSED AND LIVE ON THE DAILY: 0.0.1715 (2026-09-19, a881bb67). It carries Fable's c09f992
 rulings - a tank wreck is a crest to the hull-down search (tank wrecks only, never the truck's), a round is three
 minutes with the contract owning it, a bomb inside 16 m costs the truck condition with no draw - and §4.13's Rule 1,
