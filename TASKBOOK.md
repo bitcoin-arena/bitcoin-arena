@@ -117,7 +117,7 @@ be theatre.
    flash). PlayMode 229 of 256, 13 skipped, 14 red - the same fourteen, name for name, none new. The renderer still
    does not read the cover word, so a quiet Unity result is the expected one.
 
-§11.5 SUPPRESSION - WRITTEN, AND THE ROW IS OVER ITS CEILING (2026-09-20). Five seeds x 180 s, frozen tape, a
+§11.5 SUPPRESSION - WRITTEN, NOT CLOSED: THE ROW IS OVER ITS CEILING AND THE WRITE HAS TWO HOLES (2026-09-20). Five seeds x 180 s, frozen tape, a
 nuke every 30 s, `tools/measure-suppression.mjs`.
 
 THE WRITE. TAC_SUPP, one word per fire team, 18 appended after §11.3's cover words: TAC_WORDS 212 -> 230. No new
@@ -158,6 +158,36 @@ genuinely is §8.1's 26 m and is untouched.
 
    +60, -1 and 120 are §11.5's own numbers and are left exactly as written. The row stays LISTED as over its
    ceiling with this cause. Changing any of the three to paint it green would be tuning the rule to the row.
+
+3b. TWO CORE HOLES IN THIS WRITE, found by measuring it rather than trusting it (2026-09-20). Both are §11.5's
+   own sentences, both are open, and neither is coded.
+
+   (a) A PINNED MAN READS STAND ON FOUR TICKS IN FIVE. §0: "a pinned man is never STAND and never steps more than
+   0.01 m in a tick (a crawl)". The crawl is 0.5 m/s = 0.00833 m a tick and §11.4's probe is 0.01 m, so the write
+   claimed a pinned man is never STAND "by the number already in the core". That reasoning was wrong: x and z are
+   steered by SEPARATE controllers and the probe reads |dx| + |dz|, so a diagonal crawl spends the budget twice.
+   Measured, two seeds x 40 s:
+
+     pinned man-ticks                   133536
+       stepped more than 0.01 m         105381  (78.9%)
+       written STAND while pinned       106402  (79.7%)
+
+   Every suite is green through it because nothing asserts that row. WOULD MEASURE AFTER A FIX: cap the crawl on
+   the STEP rather than per axis (|dx| + |dz| <= 0.00833), then require 0 pinned man-ticks over 0.01 m and 0
+   written STAND, excluding respawn walk-ins - the 166.8 m worst step in the table above is a replacement entering
+   from the back edge, not a crawl - and re-read the pinned share and rifle volume, since a slower effective crawl
+   moves where men end up.
+
+   (b) THE BOUNDING RULE READS THE PIN INSTEAD OF THE CLOCK. §11.5: "the bounding rule of §11.2 still holds for a
+   pinned team's neighbour: it may halt when the pinned team's CLOCK says halt". The pin is OR-ed into `halted`
+   before the neighbour test reads it, so a pinned team blocks its neighbour from halting and forces it to rush.
+   The comment written on that line claims the opposite of what the line does. WOULD MEASURE AFTER A FIX: keep the
+   clock result in its own array, apply the pin only to the team's own halt, then count ticks on which a team
+   halts beside a pinned lower neighbour - structurally 0 today - and re-check §0's §11.2 bounding rows.
+
+   A third, latent and harmless today: `u.pinned` is written only inside the !armour branch of a reused scratch
+   object, so for a tank it holds the previous man's value. The gait tests `u.armour` first so nothing reads it,
+   but it is a stale field waiting for its first reader.
 
 4. IT MOVES §11.4's LISTED 2x REMAINDER THE WRONG WAY, as predicted from the open loop and now measured: 876907 of
    2505404 STAND man-ticks belong to a pinned team, so STAND falls to 1628497 while the down count rises to
