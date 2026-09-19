@@ -38,111 +38,63 @@ FIVE WAITS, all Daniel's, none of them mine to pick. Nothing else on this letter
      row or the rule. Diagnosed to the bottom - not layout, not the seam's climb, not the cadence, but attrition -
      and nothing is retuned: the assertion, the gates, the cadence and pressure()'s two dimensions all stay.
 
-OPEN, first, and the only thing waiting on Daniel: A9's coverage bar. The army is deployed and every short seam metre
-now has two or more guns within reach, so the remaining 12.27% is the SEAM'S OWN CLIMB - gaps of 23-24% where it rises
-0.57-0.73 m per metre of x against 3-4% where it rises 0.18-0.21. A tank stands a depth below the seam at its own x,
-so on the steep flank a sample 40 m away is 70 m from the hull, past the 46 m reach. Every lever is pinned by another
-rule: the 27 m slot pitch is in x and A8 asserts exactly that; the reach and the depths are spec; or the 95% bar is
-read as flat-stretch only. Which one moves is Daniel's. Numbers in TASKBOOK. No deploy while A9 is red.
+OPEN, and first of the five: A9's coverage bar. The army is deployed and every short seam metre now has two or more
+guns within reach, so the remainder is the SEAM'S OWN CLIMB - steep stretches where a sample 40 m away in x is past
+the 46 m reach from a hull standing a depth below it. Every lever is pinned by another rule: the slot pitch is in x
+and A8 asserts exactly that; the reach and the depths are spec; or the bar is read as flat-stretch only. Which one
+moves is Daniel's. Numbers in TASKBOOK. No deploy while A9 is red.
 
-ARMY, tonight, on the same letter: rows passing 24 -> 28 of 39. A2 is done and in the tree (e2575f1); one red is
-listed with its cause and nothing it asserts was touched; nothing is deployed while A9 is red.
-- The table was measuring a line the core does not use. Every row now reads the core's own seam, hooked out of the
-  copy: H1 27.14% -> 49.89% on that alone, A4b green, and the §0 wiggle row PRIORITIES carried as red at 32.6% was
-  already green at 0.92%.
-- Tanks now spawn ON their posts, the way riflemen already did (Daniel ruled 2026-09-19: the C# walk-in is a spawn
-  fault of the recording, not doctrine). H1 -> 60.00%, A4b -> 0.18%, H2 95.12%, settled tanks on post 46% -> 74%,
-  still-walking-in 38% -> 19%. The two pins that measured the walk-in retired with it; goldens regenerated from the
-  new start; tactics fixture seeds re-picked the way that test re-picked them before.
-- Suites, each on its own: rules 48/48, vectors 8/8, tactics 17/17, transcript-replay 5/5, spawn 4/4, canonical 3/3,
-  specified 3/3, candles 9/9, private-world 3/3, chart 4/4, poison 3/3, bundle 12/12 after rebuilding dist.
-- O4 IS GREEN, and it was a real hole: the page built the core's three markers every frame and drew none of them.
-  The draw that consumes the list ChartHud already builds is in, the names are §4.11's own - HIGH, LOW, OPEN, where
-  the client rendered the core's kind words - and the HUD reports the boxes it drew. objNames=HIGH+LOW+OPEN,
-  objUnplaced=0, O4's test 1 of 1 with its assertion untouched. Measured on a page built for it (0.0.1659), served
-  here and tunnelled to the MacBook; the Daily stays 0.0.1617 because A9 is red. The unblocked miss is six rows now,
-  not seven. The war table still prints O4 red on purpose: that probe cannot run a client test, and its row now names
-  the file that can, so a core run is never read as having answered it.
-- A2 IS GREEN AND IN THE TREE (Daniel ruled it in). The give-ground branch used the step's own length as its
-  deadband - about 4 cm - so a tank already inside its back-off point stepped a whole step, landed the other side of
-  it and reversed next tick; the walk-to-post branch eight lines below records fixing that same fault with
-  POST_DEPTH and this one was left on the C# leftover. With the post's band: A2 2.11% -> 0.42% against a 2% bar,
-  rows passing 27 -> 28 of 39, and the only line that differs in the whole table is A2's own.
-  Goldens regenerated on purpose, as the spawn-on-post change regenerated them: the vectors hash the whole state, so
-  6 of 8 moved with the army (practice and liquidation did not). The truck's own line was compared first.
-  ONE RED LISTED, NOT LOOSENED: `incoming fire costs the truck condition`, 2 of 3 seeds. Nothing it asserts moved and
-  the 15 s stands. The army is not deadlier - sampled over twelve seeds, write-offs 8 of 12 either way, hits 3.7
-  either way, the army marginally FURTHER out - and one vector that looked deadlier (`fallout`) was measured and is
-  one draw, not a trend. The fixture's own comment is eight seconds out of date and HEAD passes it by 1.31 of 100
-  points; it stays red until that window is re-measured. Numbers in TASKBOOK.
-- A4a is listed as wait 4 above: the bar is stale against the 20:30 cadence, not a core fault. Measured at one minute
-  and at five, named to its windows, cause and dependency in TASKBOOK. Nothing retuned, §2.6 not rewritten.
-- THE PUSH CADENCE IS NOW PRICED, and it does not cover the whole cluster. §4.10 rules one re-read per team per 5 s
-  and no gates; the 20:30 re-ruling added two - no re-read while a tank is off post, and a step only when the reading
-  repeats - and the core delivers 3.55 steps per team-minute against §4.10's 12, 29.6% of the ruled rate. Measured by
-  taking the gates off in the tool's own temp copy, the core untouched: A13b and O1's lane row go GREEN on the
-  cadence alone, A11b goes 6 of 10 windows to 1, O1's mean push covers two thirds of its gap and stays red, and A11a
-  (3 of 10 either way) and B4 (which gets WORSE, 22% -> 29%) are not the cadence at all. Two of six fully, one
-  mostly, one partly, two not at all. Gate (a) is amplified by the doubled legs - it eats 43.1% of re-reads because
-  teams are off post, which is H1's quantity. The C# has no push word to copy: there `pressure` is the market's trade
-  flow and every tank re-aims at the line every frame. Same shape of ruling as A4a - the rows or the cadence - and
-  A11a and B4 need their own causes either way. Numbers in TASKBOOK.
-- A11a IS DIAGNOSED END TO END and is now wait 5 below. No team of the failing sides ever got a post across the
-  seam, because none of them read TAKE; two were outnumbered at their own slots and the third was level and could
-  not climb, a take being followed by a drift that steps the push back toward its rest. The layout idea was measured
-  and is false: the seam at these slots is flat, none of the readings sits on a climb like A9's, and the distances
-  run the wrong way for it. What the poorer odds are is attrition - a thinner side, not a wider one. Every link
-  measured; tables in TASKBOOK. §4.10 stays as written.
-- B4's CAUSE IS NOW SPLIT, and the infantry is the smaller part of it: of the misses, most are the push moving again
-  inside the ten seconds the row allows - one of them coming back to where it started, so standing still was the
-  right answer - and one is a squad the row's own instrument could not see, because the reading is built only from
-  men standing still and that squad never stood. Only two are a squad that stood and did not follow. The follow is
-  bimodal: a squad either overshoots what it owes or does not move at all. No C# path matters here - the recording
-  steers every man to the frontline every frame and has no push for a squad to follow. Numbers in TASKBOOK.
-- CORRECTED: the push-cadence table gave B4's gates-on figure from the run before the give-ground band, while its
-  other columns came from after it. The consistent pair is in TASKBOOK; the conclusion is unchanged and stronger -
-  taking the gates off makes B4 worse, so the cadence is not its cause.
-- B4 IS DONE as a diagnosis and stays red by measurement, not by guess: the infantry's following is the smaller part
-  of it, most misses are the push altered or withdrawn inside the ten seconds the row allows, and one is a squad the
-  row's own instrument cannot see. No C# path bears on it. One piece is deferred by ruling, not left hanging -
-  whether men follow a take but not a give, which is a later measurement.
-- O1's MEAN PUSH IS HALF HELD BY A CEILING IN THE RULES. RIDGE's own objective lane is capped 8 m below what every
-  ordinary lane may reach, and it sits on that cap as often as the uncapped lanes sit on theirs, so one of the three
-  lanes the row averages over is held down by §4.11 itself - about half the live shortfall. The cap and the cadence
-  overlap and must not be added. The rest of the difference is given back at both ends: objective lanes sit below
-  their own rest, and non-objective teams sit above theirs, because §4.10 lets any winning team push toward its
-  ceiling whether or not it holds an objective. That last part is the row against the rule, A11a's shape again.
-  The stepping lag already ruled is real but small in the sample: some lanes lose the objective before ever reaching
-  the rest the row prices them at. No C# path bears on it - the recording has no objective and no push word at all.
-  Numbers in TASKBOOK. Nothing retuned: the cap, the ceiling and the bar all stand.
-- CORRECTED, as with B4: this row's live value is 4.00 m, not the 3.87 m carried from before the give-ground band, so
-  the live shortfall is 2.00 m. Checked bit-for-bit across seven runs on the current tree.
-- NEXT ON THE WORKING LIST: A11b's residual. Not started.
-- O1 mean stays red with its cause listed, not fixed: an objective lane's +8 rest is STEPPED on the same
-  five-second clock that §4.11 uses to move the objective, so a lane that just became the objective still sits at 0
-  while the +8 moves on. The failing seeds move it twice as often (35 lane changes against 18). Ruled 2026-09-19:
-  keep stepping; a rest taken at once would be a new rule. Numbers in TASKBOOK.
-- The push cluster, swept twelve seeds at one minute AND at five: no core bug. Every brake is the spec's - rule (a),
-  the two-reading confirmation, and §4.10's widow drift, which is 29% of verdicts and had not been counted before.
-  A13b PASSES on 11 of 12 seeds once the run is five minutes long; its one-minute zeros were a window too short for
-  two sides' means to part. A11a (33 of 120 windows), A11b (61 of 120, never passes) and both O1 rows (11 of 12 red,
-  with full samples of 45802 to 101522) stay listed, none loosened. Tables in TASKBOOK.
-- Four hypotheses died to measurement and were reverted with their numbers: seam-drift chasing, budget starvation, the
-  crest mismatch, and the on-post dead band. Three probes of mine were withdrawn the same way, each with the check
-  that caught it.
-- All twelve remaining reds are listed in TASKBOOK, one line of reason and what each depends on, none of them silent:
-  five hang on the push cadence (A11a, A11b, A13b, both O1), A9 is Daniel's ruling, O4 is a client test not written,
-  B2 and B4 are measured independent of B3, and three are single-window or seed-spread misses with no cause measured.
-- NEW, and now measured: H1 falls under its own 50% bar on 2 of 12 seeds at five minutes (49.77%, 48.15%), and the
-  cause is the WALK-IN SHARE, which attrition sets. By fifth of a run, on-post and walking-in move together
-  inversely - seed 1 goes 61.0% on post / 22% walking in to 43.4% / 44%, seed 8 to 40.5% / 48%, while seed 7 settles
-  at 30% walking in and ENDS HIGHER than it started (60.1%). Nothing in the hold rules moves; §3 enters a respawn at
-  the back edge, up to 70 m from its post. That lever is Daniel's, like A9's and B3's.
-- A SECOND QUESTION FOR DANIEL, beside A9: do the push bars still describe the army that holds its posts? A13b is 8
-  points short and O1 1.9 points, at a cadence the spec itself slowed on purpose. And because the widow brake ties the
-  push rate to attrition, judging these five wants a seed sweep rather than another probe of the same run.
-- NOT DEPLOYABLE, and A9 alone is reason enough: nothing ships while a doctrine row is red. The Daily stays 0.0.1617
-  with the node-side round-boundary fix live.
+ARMY, live: 28 of 39 rows pass, 11 red, and every one of the 11 is listed with a measured cause and a named
+dependency. Nothing is silent, nothing was retuned to make a row green, and nothing is deployed.
+
+WHAT WENT IN
+- A2 is fixed and in the tree (e2575f1): the give-ground branch used the step's own length as its deadband, so a hull
+  already inside its back-off point overshot and reversed. It now uses the post's band, as the walk-to-post branch
+  beside it always did. Goldens were regenerated on purpose after the truck's own line was compared vector by vector.
+- Earlier on this letter: the war table now reads the core's own seam instead of a line the core does not use; tanks
+  spawn ON their posts, the recording's walk-in being a spawn fault and not doctrine; and O4 is green - the page built
+  the core's three markers every frame and drew none of them, and now draws them under §4.11's own names.
+
+WHAT THE 11 REDS HANG ON
+- Daniel's five waits, above: A9, H1's respawn entry, B3's two numbers, A4a's quiet-window bar, A11a's crossing bar.
+- Ruled and staying red by that ruling: A13b and O1's lane row. Both go green if the two 20:30 gates come off, and
+  the gates stay on, so they are explained rather than fixable.
+- Diagnosed this pass and red by measurement: A11b's residual, O1's mean push, B4.
+- Closed as measured, not red: B2. Green on its own test and printed red on purpose by the core probe: O4.
+
+WHAT WAS MEASURED THIS PASS
+- The push cadence, priced against §4.10 as ruled: the core delivers well under a third of the re-read rate the
+  section states, because of two gates the 20:30 re-ruling added. Taking them off in the tool's own copy greens two
+  rows and moves three others part way - two of the six it does not touch at all.
+- A11a, to the bottom: no post ever got across the seam in the failing windows, because those sides never read TAKE,
+  because they had fewer hulls alive. Not the cadence, not the slot layout, not the seam's climb - the layout print
+  was run and is false.
+- B4: the infantry's following is the smaller part of its gap. Most misses are the push altered or withdrawn inside
+  the ten seconds the row allows, where standing still is the right answer.
+- O1's mean push: about half of it is a ceiling in the rules - RIDGE's own lane is capped 8 m below what every
+  ordinary lane may reach, and it sits on that cap as often as the others sit on theirs. The rest is given back at
+  both ends, lanes below their rest and non-objective teams above theirs.
+- Repeatedly, and worth keeping: a hypothesis that measured false was reverted with its numbers rather than argued
+  for, and probes that disagreed with the row they measured were withdrawn.
+
+CORRECTIONS I MADE TO MY OWN EARLIER NUMBERS
+- B4's gates-on figure and O1's mean push had both been quoted from runs taken BEFORE the give-ground band, while the
+  columns beside them came from after it. Both are corrected in TASKBOOK; neither conclusion changed.
+- A lag print produced an impossible negative time. The instrument was fixed and re-run; the number was not reported.
+
+CORE AGAINST THE RECORDING
+Army.cs has no push word, no objective and no objective rest: every goal depth there is a fixed offset from the
+frontline, re-checked this pass and not remembered. So §4.10's push and §4.11's objectives are doctrine, not C#
+leftovers - there is nothing to port, no distance used as a speed, and the per-frame steer stays out of the core.
+
+NEXT: A11b's residual. Not started.
+
+SUITES, each on its own run: rules 47/48 - the one red is `incoming fire costs the truck condition`, listed with its
+cause, its 15 s window a fixture whose own comment is stale against HEAD, and nothing it asserts touched - tactics
+17/17, vectors 8/8. The others stand from e2575f1, no core source having moved since. No Unity: no C# path moved.
+
+NOT DEPLOYABLE, and A9 alone is reason enough: nothing ships while a doctrine row is red. The Daily stays 0.0.1617
+with the node-side round-boundary fix live.
 
 CANDLES: closed by measurement. The 16:42 report (candles move left then freeze at round start) does not reproduce on
 0.0.1617 - from the cab the core's shift slides and wraps 0.03 -> 5.58 m across 5400 ticks, and the drawn band changes
