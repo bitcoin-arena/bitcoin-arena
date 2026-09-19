@@ -20,6 +20,52 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# LIVE LETTER  -  2026-09-19 19:47
+
+WHERE THE GAME IS: **btc-logistics-core.pages.dev at 0.0.1739** (deploy 9cac533f), alias and unique URL both
+serving it, the built core byte-identical to packages/core/dist, listed in known-cores and known-good-clients, and
+the signer nodes at /mnt/bitcoin/blwp-2of2/code running the same commit. btc-logistics-war untouched. No milestone
+freeze URL: no numbered milestone closed.
+
+WHAT WENT LIVE, all of it measured before and after (numbers in TASKBOOK):
+- **The world grew east.** The drawn miner stood on the battlefield from x 53.8 m, over nine chart slots, the road
+  and the army. Its origin is 169 m now and the map's half width 185 m, with the door at the building's own west
+  edge (108.3 m); the chart keeps its refitted pitch and the relief keeps its own 130 m, so the land the game is
+  played on did not move with the map. Nothing of the world stands under the building: 0 tank-ticks on its deck.
+- **The delivery line went with it**, 114 -> 168.6 m. It had stayed behind, so a run ended in open ground 53 m
+  short of the building; the cab is what found that, not a suite.
+- **Tanks path around craters.** A post inside a bowl and the AvoidWrecks push fought every tick and hulls worked
+  the lip for over a minute. Rim tank-ticks 44.7 / 45.7 / 52.4% -> 12.8 / 14.6 / 12.0%, longest stay 68.6 / 68.6 /
+  73.6 s -> 44.1 / 42.5 / 34.9 s.
+- **A nuke kills everything in its blast.** It had no lethality at all - 8 of 8, 6 of 6, 9 of 9 tanks inside 16 m
+  walked away. Now 0 walk away, armour and men, either side.
+- **No asphalt where a candle stands.** The deck stood 0.45 m over the ground and a ramp needs 1.80 m of its
+  2.59 m half to climb that, so 69% of every ramp the road crossed was buried. Road quads over a body are not
+  emitted, and the holes scroll with the chart.
+- **Spectate carries the war**: the assault banners were already there, the nuke's cost across the middle needed
+  the one line that was missing. Photographed: "$76 LONG LIQUIDATED" with BULLS ASSAULT beside it.
+- **Rounds live their three minutes again.** The keeper wrote 9000 while the core ends at 10800; a live round now
+  passes the old cut still live (tick 9035, last seen 10043) and delivers (state 1 at tick 7251).
+
+SUITES: core rules 50/50, tactics 20/20, candles+chart+spawn 28/28 with the rest green, vectors+bundle 20/20,
+goldens regenerated on purpose. Unity EditMode 254/258, 0 error CS. PlayMode 229/256. Every red held and named:
+the Editor's army rows (no core outside the browser), RoadsAreActuallyDrawn (no graphics device), the two
+MushroomRestingTests (authored skirt offset), GhostAcrossTheDoors (full-suite flake), CombatFx rifle flash
+(retired C# army). None loosened.
+
+ON TOP NEXT, not started: **§11.3 cover**, then §11.4 posture in the TAC_COVER high bits, §11.5 suppression, §4.4
+coax. M3's remainder stands behind it, its fixture pair needing a third re-pick.
+
+LISTED, each its own thing and none of them B:
+1. **91 files write `blockTicks: 9000`** against cores that end at 10800 - 21 client tests, the node suite, four
+   harness tools. Mechanical, one constant a file, and the reason 6 daemon-backed ghost-field rows are refused.
+2. **The candle bodies read as flat slabs from above** rather than a chart standing on the ground. Daniel's eye,
+   not a measurement.
+3. **The miner's coin stands beside the approach lane** at about x 159; a truck that drifts off the lane meets it.
+4. **The drawn miner is bigger than either engine's collision** (from 53.8 m; both engines agree box for box at
+   the facade). A tank can stand in a drawn cable; the truck's roof passes through mass_behind_tunnel by 0.56 m.
+
+
 THE FIVE WAITS ARE RULED (2026-09-19), on Daniel's delegation - *"lies die war tactics specs und beantworte dir
 die Fragen, am besten was einem dynamischen Krieg entspricht"* / *"Entscheide"*. Every one of the five went against
 the ROW, not against the rule, and no doctrine number moved: not the 27 m pitch, not the 46 m gun, not the
