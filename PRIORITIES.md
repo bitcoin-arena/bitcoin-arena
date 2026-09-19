@@ -173,7 +173,9 @@ the tree and green in every core suite; nothing is on the Daily yet - one build,
      keeping a second idea of where the world ends. The miner does not move, the map's edges do not move, and no
      WAR_TACTICS number moves - not the 27 m army pitch, not the 46 m gun, not the depths, legs or cool-down.
      `node packages/core/tools/measure-miner-door.mjs` prints the layout, the building part by part, and the four
-     checks it must pass.
+     checks it must pass. LIVE at 0.0.1723 (08a117ac): driven from the cab on the MacBook, the truck crossed the
+     chart, reached the miner and DELIVERED at tick 1793, and the forecourt in front of the building is bare - no
+     candle body and no ribbon on it (daniel-screens/live-0.0.1723-miner-forecourt.png, -miner-close.png).
   7. DONE: no tank stands on the loading dock. The pair's centre is clamped to 77.4 m so the outer tank stands on
      the kerb at 83.4 m with its partner 12 m behind it. The 27 m slot pitch did not move.
   8. DONE: a liquidation now says what it cost across the middle of the screen - "$305,000 SHORT LIQUIDATED" - for
