@@ -99,18 +99,26 @@ man-tick is structurally tiny while a man on his place is in contact.
 POSTURE IS INVISIBLE TO THE PLAYER TODAY and that is by ruling, not oversight: the renderer does not read
 TAC_COVER, and it is one of the three deploy stops rather than part of this item.
 
-§11.5 SUPPRESSION IS **IN THE CORE** (2026-09-20). TAC_SUPP, one word per fire team, 18 appended: TAC_WORDS
-212 -> 230, no new bit in TAC_COVER. Fire pins men: +60 a round, -1 a tick, pinned at 120; a pinned team does not
-rush, a pinned man crawls at 0.5 m/s and reloads at half rate, and a suppressing round takes the look-again draw
-he was already taking so the draw count does not move. Rifle volume fell 6967 -> 3920 rounds on five seeds.
+§11.5 SUPPRESSION IS **WRITTEN, NOT CLOSED** (2026-09-20, 2383c95b). TAC_SUPP, one word per fire team, 18
+appended: TAC_WORDS 212 -> 230, no new bit in TAC_COVER. Fire pins men: +60 a round, -1 a tick, pinned at 120; a
+pinned team does not rush, a pinned man crawls at 0.5 m/s and reloads at half rate, and a suppressing round takes
+the look-again draw he was already taking so the draw count does not move. Rifle volume fell 6967 -> 3920 rounds.
+
+TWO CORE HOLES ARE OPEN, measured, and they are why this item is not closed:
+1. **A pinned man reads STAND on four ticks in five.** §0 says never, and never a step past 0.01 m. The crawl is
+   0.00833 m a tick but x and z are steered by separate controllers while the probe reads |dx| + |dz|, so a
+   diagonal crawl spends the budget twice: 105381 of 133536 pinned man-ticks step past 0.01 m, 106402 are written
+   STAND. Every suite is green through it because nothing asserts that row.
+2. **The bounding rule reads the pin instead of the clock**, so a pinned team forces its neighbour to rush where
+   §11.5 says the neighbour may halt on the pinned team's clock.
 
 LISTED, OVER ITS CEILING, NOT RETUNED: §0 wants each side pinned on 10-70% of ticks and it reads 96.0% / 95.6%.
 The cause is §11.5's own arithmetic - decay is 60 a second and a round is +60, so one shooter landing a round a
 second holds a team pinned forever, and the half-rate doubles a RELOAD while a suppressing round rides the
 look-again clock. +60, -1 and 120 are left exactly as the section writes them. Numbers in TASKBOOK.
 
-ON TOP NOW: **§4.4 coax** (posture and suppression must both apply to it). M3's remainder stands behind it, its
-fixture pair needing a third re-pick.
+ON TOP NOW: **§11.5's two holes above**, then §4.4 coax (posture and suppression must both apply to it). M3's
+remainder stands behind them, its fixture pair needing a third re-pick.
 
 LISTED, each its own thing and none of them B:
 1. **91 files write `blockTicks: 9000`** against cores that end at 10800 - 21 client tests, the node suite, four
@@ -271,9 +279,10 @@ node ends a run at 9000 ticks and the page keeps driving to 10800, and every run
 9000 on. I had listed this as a fixture-only red on the grounds that "real contracts carry the core's number" -
 that was wrong, and the cab is what showed it.
 
-Fix, when B is deployed and not before: update /mnt/bitcoin/blwp-2of2/code to the deployed tree and restart
+Fix, when B is deployed and not before (DONE 2026-09-19, see the 9000-tick entry above: the daemons and the page
+hold one core at 0.0.1739): update /mnt/bitcoin/blwp-2of2/code to the deployed tree and restart
 blwp-daily-signer-nodes, so the daemons and the page hold one core. Updating them now would only swap one mismatch
-for another, since the alias still serves 0.0.1723. The fixtures that also write 9000 are a separate, smaller
+for another, since the alias still serves 0.0.1723 (TRUE WHEN WRITTEN; the alias serves 0.0.1739 now). The fixtures that also write 9000 are a separate, smaller
 tidy-up. NOT on this letter - it is not the door, the rims or the world's width - but it goes at the top of
 whatever follows, because a three-minute round that dies at two and a half is worse than any drawing bug.
 
@@ -283,13 +292,15 @@ on the grass rather than as a chart standing on the ground. The roads no longer 
 longer buried - that half is measured and done - but Daniel's "still mixed with terrain" may be this, and it is a
 look question I cannot settle by measuring. Listed for his eye rather than guessed at.
 
-DANIEL'S PLAYTEST CHAIN OF 2026-09-19 12:55-13:10 IS CLOSED. All nine items are done and LIVE on the Daily at
-0.0.1723 (08a117ac), alias and unique URL both serving it, the built core byte-identical to packages/core/dist,
+DANIEL'S PLAYTEST CHAIN OF 2026-09-19 12:55-13:10 IS CLOSED. All nine items are done and were LIVE on the Daily at
+0.0.1723 (08a117ac) WHEN THIS WAS WRITTEN - the Daily has since moved to 0.0.1739 and the LIVE LETTER at the top of
+this file is the only current statement of what is serving - alias and unique URL both serving it then, the built core byte-identical to packages/core/dist,
 2d48a05a listed in known-cores and known-good-clients, signer nodes restarted, btc-logistics-war untouched. Items 1
 to 9 below, in Daniel's order, each with what was measured.
 
-ON TOP NOW, not started: §11.3 cover, then §11.4 posture in the TAC_COVER high bits, then §11.5 suppression, then
-§4.4 coax - the letter the army close-out named. M3's remainder stands behind it with its own holders (the fixture
+ON TOP THEN (2026-09-19, SUPERSEDED - kept for the order it named, not as a current claim; §11.3 and §11.4 are
+closed and §11.5 is written with two open holes, see the top of this file): §11.3 cover, then §11.4 posture in the
+TAC_COVER high bits, then §11.5 suppression, then §4.4 coax - the letter the army close-out named. M3's remainder stands behind it with its own holders (the fixture
 pair needs a third re-pick: the seeded tape, the hull rectangle and now ruling B's refit each changed its world).
 
 THE TWO ENGINES WERE COMPARED AGAIN AT THIS DOOR, box for box, and they are identical: the core's map solids and
