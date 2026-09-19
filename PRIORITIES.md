@@ -148,9 +148,12 @@ length from the core (b0cecafb), the daemons at /mnt/bitcoin/blwp-2of2/code run 
 driven from the cab passed the old cut still live: tick 9035 (151 s) state 0, last seen tick 10043 (167 s) state 0.
 A separate live run delivered at the miner, state 1 at tick 7251. Updating the checkout alone was NOT enough - with
 the 10800 core the nodes refused their own rounds ("that round says a run is 9000 ticks and this core ends one at
-10800"), because the keeper's literal was the other half of it. Still listed, smaller: the harness tools
-(settle-crash-regtest, signer-node-lock-regtest, testnet4-gate) and the test fixtures write their own 9000 against
-their own cores. `node packages/blwp-client/tools/measure-live-round.mjs` is the check.
+10800"), because the keeper's literal was the other half of it. Still listed, and MEASURED so its size is known before anyone starts it: 91 files write `blockTicks: 9000` -
+21 client test files, the node's test suite, and the harness tools (settle-crash-regtest, signer-node-lock-regtest,
+testnet4-gate, measure-ghost-lag). Each names the current core, whose run is 10800, so each is a contract
+disagreeing with the core it names; that is what refuses the 6 daemon-backed rows in ghost-field.test.js. The fix
+is one constant per file, mechanical, but 91 files is not the "smaller tidy-up" it was called when it was thought
+to be a handful - it is its own letter, and it is not B. `node packages/blwp-client/tools/measure-live-round.mjs` is the check.
 
 SUPERSEDED, kept because the diagnosis is the lesson: THE 9000-TICK MISMATCH IS NOT A FIXTURE RED. IT STOPS LIVE RUNS (seen in the cab 2026-09-19 on build 0.0.1734,
 driving a free round off the Daily's own signer nodes). The page said, in these words:
