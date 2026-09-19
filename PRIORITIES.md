@@ -143,7 +143,16 @@ SUITES, each on its own run: rules 47/48 - the one red is `incoming fire costs t
 cause, its 15 s window a fixture whose own comment is stale against HEAD, and nothing it asserts touched - tactics
 17/17, vectors 8/8. The others stand from e2575f1, no core source having moved since. No Unity: no C# path moved.
 
-THE 9000-TICK MISMATCH IS NOT A FIXTURE RED. IT STOPS LIVE RUNS (seen in the cab 2026-09-19 on build 0.0.1734,
+THE 9000-TICK MISMATCH IS FIXED AND LIVE (2026-09-19, deploy 9cac533f at 0.0.1739). The keeper takes its run
+length from the core (b0cecafb), the daemons at /mnt/bitcoin/blwp-2of2/code run that same commit, and a live round
+driven from the cab passed the old cut still live: tick 9035 (151 s) state 0, last seen tick 10043 (167 s) state 0.
+A separate live run delivered at the miner, state 1 at tick 7251. Updating the checkout alone was NOT enough - with
+the 10800 core the nodes refused their own rounds ("that round says a run is 9000 ticks and this core ends one at
+10800"), because the keeper's literal was the other half of it. Still listed, smaller: the harness tools
+(settle-crash-regtest, signer-node-lock-regtest, testnet4-gate) and the test fixtures write their own 9000 against
+their own cores. `node packages/blwp-client/tools/measure-live-round.mjs` is the check.
+
+SUPERSEDED, kept because the diagnosis is the lesson: THE 9000-TICK MISMATCH IS NOT A FIXTURE RED. IT STOPS LIVE RUNS (seen in the cab 2026-09-19 on build 0.0.1734,
 driving a free round off the Daily's own signer nodes). The page said, in these words:
 
     RUN STOPPED - the node refuses this run's inputs at tick 8948: error that run
@@ -205,7 +214,14 @@ Daniel's pick rules out.
      the tunnel's 46-character URL is a node letter or a 14-character host. The price is untouched.
   5. DONE: the road ribbon was laid ON the live candle layer, so it rode up onto every body it crossed. It lies on
      the ground under the candles now - the chart covers the road, the road is still whole.
-  6. DONE, by Daniel's named pick: RULING B REFITTED, the world NOT enlarged. The ruling's "miner face x 108.4" is
+  6. DONE AND LIVE at 0.0.1739 (deploy 9cac533f, 2026-09-19): the world grew east instead - the miner's origin to
+     169 m, the map's half width to 185 m, the door at the drawn building's own west edge (108.3 m), the army's
+     east clamp at 88 m, the delivery line following the miner to 168.6 m, and the relief left exactly as it was
+     (RELIEF_HALF_X 130 m) so the land the game is played on did not move with the map. Measured live: Daily
+     version 0.0.1739, a run past the old 9000-tick cut still live at tick 10043, a delivery at the miner. What
+     follows is the earlier pick on this item, kept because its numbers stand.
+
+     SUPERSEDED: RULING B REFITTED, the world NOT enlarged. The ruling's "miner face x 108.4" is
      where the model's origin sits; the building stands on the ground from x 53.8 m and its tunnel begins at 90.4 m.
      The same 32 slots and the same west end are refitted to that door: pitch 5.75624 -> 5.18124 m, the last slot
      ending at 89.99983 m, and the road ribbon ends at the door too, reading the core's MINER_DOOR_X rather than
