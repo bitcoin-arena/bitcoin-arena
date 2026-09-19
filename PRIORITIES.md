@@ -47,11 +47,12 @@ ARMY, tonight, on the same letter: rows passing 24 -> 27 of 39.
   new start; tactics fixture seeds re-picked the way that test re-picked them before.
 - Suites, each on its own: rules 48/48, vectors 8/8, tactics 17/17, transcript-replay 5/5, spawn 4/4, canonical 3/3,
   specified 3/3, candles 9/9, private-world 3/3, chart 4/4, poison 3/3, bundle 12/12 after rebuilding dist.
-- O4 is measured, and the answer is no: the page BUILDS the core's three objective markers every frame and draws
-  none of them. ChartHud puts them in its frame with the holder's colour and nothing consumes that list outside a
-  test helper; live on the Daily the core had three markers on screen and the HUD's own line named a box for none.
-  The test now exists in packages/blwp-client and is red for that reason, not for a moved bar. What remains is one
-  draw call in the client - plus a naming gap: §4.11 says HIGH, LOW and OPEN, the client renders RIDGE, HOLLOW, GAP.
+- O4 IS GREEN, and it was a real hole: the page built the core's three markers every frame and drew none of them.
+  The draw that consumes the list ChartHud already builds is in, the names are §4.11's own - HIGH, LOW, OPEN, where
+  the client rendered the core's kind words - and the HUD reports the boxes it drew. objNames=HIGH+LOW+OPEN,
+  objUnplaced=0, O4's test 1 of 1 with its assertion untouched. Measured on a page built for it (0.0.1659), served
+  here and tunnelled to the MacBook; the Daily stays 0.0.1617 because A9 is red. The unblocked miss is six rows now,
+  not seven.
 - O1 mean and B4 stay red with their cause listed, not fixed: an objective lane's +8 rest is STEPPED on the same
   five-second clock that §4.11 uses to move the objective, so a lane that just became the objective still sits at 0
   while the +8 moves on. The failing seeds move it twice as often (35 lane changes against 18). Ruled 2026-09-19:
