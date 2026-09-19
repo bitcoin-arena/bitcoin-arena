@@ -39744,3 +39744,31 @@ ZERO for the whole run - no team reached the seam on that seed - against 19044 t
 24156 off it. An empty denominator, printed as a failure.
 
 So: every seed is the same bar-versus-cadence fight. The five rows stay listed, none loosened, and A9 is untouched.
+
+### Close-out of the push-cadence sub-item: what is written down and what is not (2026-09-19 06:3x)
+
+FINISHED, on this sub-item: the five rows are measured, swept across twelve seeds, and listed with causes. What is
+NOT finished, named here rather than left implied:
+
+- A2 (fidgets 2.11% against a 2% bar) and A4a (1 of 60 windows) have NO measured cause. They are listed as marginal
+  on the strength of other seed sets reading 0.89-1.10%, which is a comparison, not a cause.
+- B2's cause is unmeasured too. All that is measured is that it is INDEPENDENT of B3 (failing windows 60.6% out of
+  band against 83.1% for passing ones).
+- The sweep is twelve seeds of ONE minute each. A11a and A11b are counted in 60 s windows, so a five-minute run gives
+  each seed five windows instead of two and may read differently. Untested.
+- Only seed 12's O1 denominator was opened. The other eleven seeds' pushed-team-tick counts are unknown, so another
+  empty or near-empty denominator could be hiding behind a percentage.
+- measure-army.js (3 references) and measure-presence.js (1) still lay the core beside test/vectors/csharp-army.json.
+  They are TOOLS, nothing gates on them, and they now compare an army that holds its posts against a recording of one
+  that walked in. Stale, listed, not run.
+
+NO PHYSX OR RECORDING VALUE IS READ BY THIS PATH. `rules/tactics.js` imports only fixed.js, state.js and army.js, and
+every constant the push uses cites the spec, not the recording: FORWARD_LINE 16 m and OVERWATCH_LINE 30 m (§2.5),
+PUSH_STEP 8 m / PUSH_MIN -8 / PUSH_MAX 24 (§4.10), PUSH_TICKS 300 (§4.10, five seconds), PUSH_TAKE_LEAD 3 and
+PUSH_GIVE_LEAD 1 (§4.10), GUN_M 46 (§4.10), SCOOT_TICKS 1200 (§4.3), the leg 720-1200 ticks (§2.6). There is no
+`csharp` reference in the file at all, and the seam and ground reach it as callbacks from sim.js.
+
+SEED 12's O1a, 0 of 0: listing-only for now. The row's assert stays exactly as it is - it must not be weakened - but
+the PRINT should carry the sample size, so an empty denominator cannot read as a failure of the army. The tool
+already prints the denominators on one line; making the row itself say "0 of 0" rather than "0.00%" is a display
+change of one line, and it is named here as the next thing to do on this letter if Daniel wants it.
