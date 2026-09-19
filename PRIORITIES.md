@@ -146,8 +146,11 @@ cause, its 15 s window a fixture whose own comment is stale against HEAD, and no
 THE ARMY IS LIVE ON THE DAILY: 0.0.1697, deployed 2026-09-19 (7f3aa1a8), alias and unique URL both serving it, the
 built core byte-identical to packages/core/dist. B3 went green on B1's tolerance and §0's ship rule says a red with a
 holder does not block, so the seven that remain shipped listed with their numbers and holders. The core suites are
-green but for the named stale fixture (rules 47/48, incoming fire costs the truck condition). NEXT: M3, without
-asking (Daniel 2026-09-18 23:47 HARD).
+green but for the named stale fixture (rules 47/48, incoming fire costs the truck condition). M3 IS STARTED, and its
+first act found two stale pins that would have stopped a player entering a paying round on what had just been
+deployed: the core hash (53970c0) and the client scripts (40ce7b5), both listed with their generators and both live.
+Protocol 533/533, blwp-node green so far but for ONE unlisted red - first-mark.test.js, deterministic, measured NOT
+to be the A2 fix, and the only test in its file whose run has to deliver. Listed with its numbers in TASKBOOK.
 
 WHAT THE EARLIER LETTER SAID, kept for the record: A9 no longer blocks, and at that time the army still did not ship. A9 is green (1.71% at full strength against a 5% bar, 2.88%
 on the one-gun floor), so the item Daniel named as the blocker is closed - but B3 is a red §0 doctrine row and the

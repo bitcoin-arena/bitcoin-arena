@@ -41220,3 +41220,31 @@ measured cause with a listed next probe. The seven reds left all have holders an
   O4              green in its own client suite (blwp-client objective-markers 1/1), printed red here on purpose
     because this probe cannot run a client test.
 So no red on this table blocks the deploy.
+
+### M3's opening survey: the suites as they stand, and one unlisted red found (2026-09-19)
+
+Run as the first act of M3, chunked because the settlement suites are heavy integration runs (single tests of 27-40 s
+that talk to real daemons over localhost).
+
+  protocol   533 / 533 after the core listing, 4 chunks (139, 122, 123, 149). Before it, 532 of 533.
+  blwp-node  chunk 1 (files 1-20)   125 / 125 after the client pin listing; 122 / 125 before it
+             files 21-26            41 / 41
+             files 27-32            23 / 23
+             files 33-36            34 tests, 33 pass, 1 FAIL - first-mark.test.js
+  A first attempt at files 21-40 in one chunk was KILLED by its own 180 s timeout and printed four ✖ lines for tests
+  that were cut off mid-run. Those are not failures and were not reported as any: the run says "Interrupted while
+  running". The region is re-run in groups of four to six instead.
+
+THE ONE RED, measured rather than assumed:
+  `first-mark.test.js` - "a first mark in time decides nothing ...". Deterministic: fails on both of two runs, same
+  shape. The run comes back FAILED where the test expects DELIVERED, and the forfeit endpoint answers 409 rather than
+  200 because there is nothing to forfeit against a failed run.
+  IT IS NOT THE A2 GIVE-GROUND FIX. Measured by putting e2575f1^'s army.js back for one run: still 13 of 14, same
+  test. So the red predates that change and is not a consequence of the army work or of the deploy.
+  ITS SHAPE NAMES IT: of the 14 tests in the file, this is the ONLY one whose run has to deliver. All thirteen that
+  expect FORFEIT, ENTRY_VOID or a late start pass. So what has moved is not the first-mark logic the file is about -
+  it is that the scripted run's recorded inputs no longer complete a delivery in the core as it now stands. That is
+  the same class as the golden vectors, a fixture of recorded inputs whose outcome moved when the world deliberately
+  changed, except this one was never regenerated.
+  NOT FIXED HERE, and deliberately not tuned: regenerating the run is a fixture change and the cause is older than
+  this letter. Listed with its measurement.
