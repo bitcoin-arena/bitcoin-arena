@@ -41282,3 +41282,43 @@ means by not wrapping a long legitimate run in a short timeout.
 
 NOT FIXED HERE: regenerating that drive is a fixture change of the same class as the golden vectors, and which core
 change moved it is the next measurement - the army doctrine work is the obvious suspect and A2 is already excluded.
+
+### M3's opening survey, complete (2026-09-19)
+
+Every file run, the settlement region one file at a time under systemd-run with no outer timeout. NOT ONE run in the
+final pass was interrupted (the script records it per file: "interrupted 0" on all 66), so every figure below is a
+real result and none is a killed run misread as a failure.
+
+  protocol                533 / 533, four chunks
+  blwp-node files 1-20    125 / 125
+             21-26         41 / 41
+             27-32         23 / 23
+             33-36         34 tests, 33 pass, 1 fail   first-mark
+             39-44         44 tests, 43 pass, 1 fail   ghost-live
+             45-50         20 tests, 18 pass, 2 fail   hold-two-first
+             51-116       350 tests, 324 pass, 26 fail  nine files
+             37-38 (five-of-seven, forfeit) run separately, both red; their counts were clipped by the capture and
+             are not quoted here rather than guessed.
+
+THE THIRTEEN RED FILES, CLASSIFIED - and eleven of them are one root:
+  THE FIXTURE'S WINNER NO LONGER DELIVERS (score 367 -> FAILED score 0):
+    first-mark (1), hold-two-first (2), forfeit (1), five-of-seven (1: "no signer node settled the hold: 98000 at
+    the hold's expiry back to the player"), lock-settlement (14 of 15), objection-window (4 of 7),
+    one-signer-node-refused (1), outage (1), payout-second-signer-node (1 of 1), publication-finality (1),
+    walk-away-hold (1 of 1, "beside a winner").
+    Every one needs a round somebody won. The settlement code is not what fails: it does the right thing with a
+    round that has no winner.
+  ALREADY LISTED, holder known: second-closer (2 of 2) - needs a real lnd, named in the letter before this survey.
+  SEPARATE, and not of the delivery family, each its own question:
+    ghost-live (1)  "a load moved this drive 0.638 m, which is not enough to be the fault" - a driving quantity,
+                    deterministic, identical before and after A2.
+    server (1)      "the socket refuses a frame no protocol message could be" - frame validation, nothing to do
+                    with a round's outcome.
+
+SO M3's STARTING STATE IS: the protocol layer wholly green; the settlement layer's logic green except where it needs
+a winner; one drive fixture that stopped delivering and takes eleven files down with it; and two unrelated reds. That
+is one thing to fix, not thirteen.
+
+NEXT MEASUREMENT, named and not started: which core change stopped that drive delivering. A2 is already excluded by
+measurement. The armour doctrine work is the obvious suspect and the fixture's own comment shows the score moved with
+it once before (12 -> 367).
