@@ -20,13 +20,15 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-# LIVE LETTER  -  2026-09-20 16:11
+# LIVE LETTER  -  2026-09-20 16:21
 
-NOW: **world candles must cover the whole playable field, out to the miner entrance.** They currently stop a few metres short of the entrance. Daniel shot `daniel-screens/candles-stop-before-miner-1611.jpg`. Playtest, absolute priority. Stop item 2 (flat slabs from above). Open the photo. Measure on Beelink Chrome, not MacBook. Then resume item 2, then M3.
+NOW: **when the round timer hits 0, the game must end and return to the lobby by itself.** It used to. It no longer does. Write tests that fail until this is true (core + a real player path, not JS-only). Playtest, absolute priority. Beelink Chrome, not MacBook. Then 16:11 candles-to-miner, then 16:20 HUD labels, then item 2, then M3.
 
-This is extent, not the old buried-miner-model letter and not roads-on-candles (roads already under the chart).
+This is not the 18.9 "lobby too fast after the goal" letter. Result can still hold a few seconds. The round must not sit in the world after T_run.
 
-ALSO 16:20: **remove HIGH, LOW, and OPEN from the HUD chart.** They do not belong there. Overrides 13:10 / 09:17 (HIGH/LOW on the chart only). Do not restyle the headline. YOU and GATE stay. Same wash, Beelink Chrome.
+THEN 16:11: **world candles must cover the whole playable field, out to the miner entrance.** They currently stop a few metres short. Shot `daniel-screens/candles-stop-before-miner-1611.jpg`.
+
+THEN 16:20: **remove HIGH, LOW, and OPEN from the HUD chart.** They do not belong there. Overrides 13:10 / 09:17. Do not restyle the headline. YOU and GATE stay.
 
 # PREVIOUS  -  2026-09-20 16:05
 
