@@ -20,7 +20,7 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-# NOW  -  M3: the fee locks' claim hash and 22A node slots
+# NOW  -  M3: the result window (a contract field)
 
 M3: **a round can be played for real testnet sats** - the federation holds the money, the fee is taken and
 paid out, and the payout actually moves. W1-W7 are done.
@@ -33,8 +33,17 @@ stake. What was missing was the node half: the client refused to lock against su
 took entries anyway. `federationTakesNoBaseFee` is called on POST /entry before `round.enter`; an unknown rule
 is not a base fee. Proved by deleting the call site. Numbers in TASKBOOK.
 
-NEXT, in the list's own order: **the fee locks' claim hash and 22A node slots**, then the result window (a
-contract field). Guardians and `federationIsBonded` stay parked by ruling.
+DONE (2026-09-20): **a round may not seat more signer nodes than it has slots**, and the fee lock's claim hash
+was already right. §22A: "Not seven census slots when the round is 2-of-2." Measured: a 2-of-2 naming seven
+seats answered `pays true, signerNodes 7` - the lock sized for seven out of a committee of two.
+`sittingSeatsFitTheSlots` is called in `Round.open` before the contract is stored. An upper bound, not an
+equality: contracts here run 2/3/4/5/7 slots with the pools not always equal. The claim hash needed no change -
+`Hash(H(F))` is the kind tag and §23.1 step 5 names `H(F)` outright. Numbers in TASKBOOK.
+
+NEXT: **the result window (a contract field)**. Guardians and `federationIsBonded` stay parked by ruling.
+
+FOLLOW-ON, one line: the node refuses a *stake* into a base-fee federation but can still *open* such a round -
+move or duplicate that guard onto the round-open path.
 
 DONE (2026-09-20): **a hold invoice on testnet4 goes ACCEPTED -> HELD and settles or cancels from the core's
 word.** `tools/custody-testnet4.mjs` on the live pair: three 1000000 msat stakes held as 980000 msat invoices

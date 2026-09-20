@@ -5,6 +5,50 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+A ROUND MAY NOT SEAT MORE SIGNER NODES THAN IT HAS SLOTS (2026-09-20, M3 fee locks / 22A node slots)
+
+§22A pays the node fee to "the round's sitting seats - the seats the census seated for this round, its
+`nodes` - however many there are: two in a 2-of-2, seven in a 5-of-7", and warns in its own words: "Not seven
+census slots when the round is 2-of-2." §22A again: "A fee lock is sized for the same seats the settlement
+pays."
+
+MEASURED BEFORE, with `feeLockPays` on full contracts:
+
+    round                       slots   nodes   pays   seats sized   lockMsat
+    2-of-2, 2 seats (correct)   2/2     2      true   2            20000
+    2-of-2, SEVEN seats         2/2     7      true   7            20000      <- the fault
+    5-of-7, 7 seats (correct)   7/7     7      true   7            20000
+    5-of-7, TWO seats           7/7     2      true   2            20000
+
+`feeLockPays` reads `contract.nodes` and never looks at the slot counts, so the fee lock was sized for whoever
+the contract named and the settlement paid the same set. Seven shares out of a committee of two.
+
+AFTER: `sittingSeatsFitTheSlots` (protocol/src/contracts.js, beside `publicationRelaysAreValid`) is called in
+`Round.open` - the node's own open path - and throws before the contract is stored. The 2-of-2 naming seven
+seats is refused with "that round seats 7 signer nodes on 2/2 slots: 22A pays the seats the census seated, and
+a fee lock sized for more of them pays seats that never sat". The other three rows are unchanged.
+
+IT IS AN UPPER BOUND, NOT AN EQUALITY, and that was a measurement rather than a preference. Contracts in this
+tree run 2, 3, 4, 5 and 7 slots and the two pools are NOT always equal (settlementSlots 4 appears once), so an
+equality rule would have invented something the spec does not say and broken them. The spec's number is
+"however many there are"; a slot a census left unfilled is a round with fewer seats than slots and is
+legitimate. Only naming MORE is the fault 22A warns about, and only that is refused. The bound is the larger
+pool, because both pools draw on the same sitting seats.
+
+THE CLAIM HASH WAS ALREADY RIGHT and was not touched. The table's `payment_image  Hash(H(F))` is a KIND tag,
+not a double hash - it reads against `Point(stake_point)` on the stake row, and §23.1 step 5 says it outright:
+"whose payment_image is the entry's stake_point (resp. H(F))". `stake-lock.js:74` computes `sha256(F)` and
+requires `image.kind === 'hash'` with those bytes. F5 is implemented too: it refuses when H(F) equals the
+entry's stake commitment, "claiming the fee would publish P".
+
+SUITES: seats-fit-slots 7/7 (new), custody-daemon 9/9, no-base-fee 6/6, paying-round-needs-gateways 7/7,
+fee 16/16, lock-settlement 17/17 - the last two untouched by this change.
+
+round.test.js 0/12 and checkpoint.test.js 1/21 are RED AND WERE ALREADY RED: stashing this change back to HEAD
+gives the same counts, and the error is the stale `blockTicks: 9000` thrown at round.js:282 - the runLength
+check, which precedes this guard. They are two of the ninety fixtures already listed for their own sweep.
+
+
 THE FEDERATION'S FEE IS ZERO, AND THE NODE NOW REFUSES ONE THAT IS NOT (2026-09-20)
 
 THE RULE, QUOTED, so the next reader does not re-open the arithmetic. §22A "Node fee and developer donation":
