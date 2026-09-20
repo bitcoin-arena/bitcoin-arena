@@ -358,6 +358,37 @@ genuinely is §8.1's 26 m and is untouched.
    count is 0 of 7 connects. The exception is covered by the constructed test in tactics.test.js, which fails
    without the rule (rises 0,0,300,... and never a 60) and passes with it.
 
+3l. THE TWO UNEXPLAINED PLAYMODE REDS, RUN AND NAMED (2026-09-20). Neither is §11.5's, and both are written down
+   here so they do not travel to the next item as "unexplained".
+
+   ScoreTests.IdlingEarnsNothingEvenOnTheSeam - 4 tests in the class, 1 red.
+     the EARNING assert PASSES: a parked truck on the frontline earns nothing (peak == 0 within 0.001)
+     the failure is the line after it: Assert.IsFalse(_score.MakingProgress) - "Stillstand gilt als Fortschritt",
+       Expected False, But was True
+   NOT THIS LETTER. `MakingProgress` is set in RunScore.cs:198 as `gained = x - _bestX; gained > 0.0001f` - a
+   pure Unity x-position flag that reads no core word. The fixture pins `rb.position = spot` every frame while
+   the truck is core-driven whenever `BlwpCore.Available`, so the pin is fighting whatever the core puts there.
+   It also still fails on the REGENERATED BlwpLayout.cs, which rules out the 18-word mismatch: that was the
+   obvious suspect, since the 226/256 run at e30a4619 was taken before the layout was regenerated in that same
+   turn. DEPENDS ON: the core-driven truck's position path, not on pin, crawl or cover.
+
+   SpawnMarkParkedTests - 2 tests in the class, BOTH red in this filtered run (the full run at e30a4619 listed
+   only the first, so the second is either newly red or ran differently there; not chased).
+     AHeightOnlyRebuildStillCountsAsStandingInTheBay fails on ITS OWN GUARD, not on its rule:
+       "this test is worthless unless the height change alone exceeds the parked budget - 3-D moved 8.70 m
+        against a budget of 12.0 m", Expected greater than 12.0, But was 8.69954205
+       and its log line: ground lifted 8.70 m, 3-D to the mark 8.70 m, 2-D to the mark 0.00 m
+       The rule it exists to prove is still holding - 2-D is 0.00 m, the truck has not left its bay - but a
+       +40 m feeHeight now lifts the mark only 8.70 m, so the case no longer separates the two rules.
+     ATruckThatHasDrivenOffIsNotDraggedBack: a truck 80 m out moved 0.80 m on a rebuild, against 0.5 m.
+   NOT THIS LETTER. Both are terrain geometry - how far a feeHeight change lifts the ground and how a rebuild
+   re-seats a truck - which moved when the world grew east (ruling B changed MempoolTerrain's width, columns and
+   apron fractions). DEPENDS ON: the terrain rebuild path, not on pin, crawl or cover.
+
+   A TOOLING TRAP WORTH KEEPING: `-testFilter` given two comma-separated FULL test names matched ZERO tests and
+   reported `result="Passed"` with total=0. An empty run reads as a green run. Filter by CLASS name and check the
+   total before believing a filtered result.
+
 3f. THE TWO CLAUSES OF §11.5 THAT ARE ACTUALLY OPEN (2026-09-20, found by reading the section against the write
    at the close-out, not by measuring). Neither is coded.
 

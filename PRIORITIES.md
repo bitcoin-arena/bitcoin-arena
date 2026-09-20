@@ -149,6 +149,13 @@ ON TOP NOW: **§11.5's two open clauses** - a shell landing inside 8 m of a man 
 down, then §4.4 coax (posture and suppression must both apply to it). M3's remainder stands behind them, its
 fixture pair needing a third re-pick.
 
+LISTED, WAITING, AND NOT §11.5's - the two PlayMode reds that were unexplained, now run and named (numbers in
+TASKBOOK): **ScoreTests.IdlingEarnsNothingEvenOnTheSeam** fails on `MakingProgress`, a pure Unity x-position flag,
+while its earning assert passes - it depends on the core-driven truck's position path and still fails on the
+regenerated layout. **SpawnMarkParkedTests** fails on its own guard: a +40 m feeHeight now lifts the mark 8.70 m
+against a 12 m parked budget, so the case no longer separates the two rules, and a truck 80 m out moves 0.80 m on
+a rebuild against 0.5 m. Both are terrain-rebuild geometry from the world growing east, not pin, crawl or cover.
+
 LISTED, each its own thing and none of them B:
 1. **91 files write `blockTicks: 9000`** against cores that end at 10800 - 21 client tests, the node suite, four
    harness tools. Mechanical, one constant a file, and the reason 6 daemon-backed ghost-field rows are refused.
