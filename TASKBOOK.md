@@ -5,6 +5,71 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE FAKE FEDERATION IS ONE BLWP WOULD ACCEPT (2026-09-21). `test/lock-fixture.js:60` 1000n -> 0n.
+
+WHAT THE 1000 WAS STEERING, measured with `feeLockPays` on the fixture's own `contractFor` before anything
+was changed:
+
+  stake   nodes  feeLock  rule                          pays   why
+  100000    2     2000    base 1000 (the fixture)       false  locks hold 4000, inputs alone cost 2000
+  100000    2     2000    base 1500 (lock-settlement)   false  locks hold 4000, inputs alone cost 3000
+  100000    2     2000    base 0, disable_base_fees     TRUE   every one of 2 paid more than nothing
+ 1000000    2    20000    base 1000                     TRUE   <- the 1000 only bites on SMALL rounds
+   10000    2      200    base 0                        TRUE
+  100000    2     2000    base 0, ppm 1000000           false  fees take the whole fee
+
+So it steered exactly one branch - "the federation's per-input/output cost exceeds the 2% fee, mint nothing" -
+and only on small rounds. On a legal federation that branch is UNREACHABLE: with base 0 every round measured
+mints, down to 10 sat. The 1000 is not invented either: `protocol/test/lock-settlement.test.js:201` keeps it
+as REAL_RULE, "measured on fedimintd 0.12.0". It is that daemon's DEFAULT; §22A's `disable_base_fees` is an
+operator setting. The fixture was modelling a federation as it ships, which BLWP refuses until configured.
+
+THE FIX, without weakening the guard and without loosening one assertion:
+  - `lock-fixture.js` is legal AT REST: `{ ppm: 0n, baseMsat: 0n }`.
+  - `lock-settlement.test.js` applies fedimintd's measured default AT THE CLOSE (`closeRound`), by which time
+    every entry is in. Settlement arithmetic is still run against 1000 msat base; the door never sees an
+    illegal federation. That mid-test mutation is the one this suite already used at :349/:401/:508.
+  - `forfeit`, `outage`, `first-mark`, `one-signer-node-refused` now DEAL a fee lock: a secret, an outpoint,
+    the lock put on the port and handed to each signer node beside the stake lock. `lockAndPlay` in
+    lock-settlement defaults `feeLock` to true for the same reason.
+  - `one-signer-node-refused`'s handed-out `lockOn` hands BOTH locks: a stake is only seen when both are in,
+    and handing one left B with one receipt where the test asks for two.
+
+MEASURED, one suite per call, `timeout 180 node --test --test-timeout=120000`:
+
+  suite                        before    after
+  outage                        0 / 9     8 / 9
+  first-mark                    0 / 14   13 / 14
+  one-signer-node-refused       0 / 5     4 / 5
+  lock-settlement               0 / 15    1 / 15   (run in five chunks; see below)
+  forfeit                       0 / 2     0 / 2
+  TOTAL                         0 / 45   26 / 45
+
+  base-fee 409s left anywhere in those runs: 0 of 43.
+
+FEE-LOCK IS STILL TESTED, and now on a legal federation. The door tests print the refusal in the gate's own
+new words - "this round mints fee locks (every one of 2 signer nodes is paid more than nothing after the
+federation's fees): an entry that brings no fee lock is not taken" - at BOTH signer nodes, and the settlement
+that follows claims 2 fee locks, 40000 msat, and pays 2 signer nodes 36000 msat. The fee path runs end to end.
+
+EVERY ONE OF THE 19 REDS LEFT IS ONE CAUSE, AND IT IS NOT THIS LETTER'S: the fixture's WINNER no longer
+delivers. Measured straight off the core with no server, no federation and no fee lock - `seedWordForEntry`
+reads only roundRandomness, playerPubkey, worldSecret and joinTick, so nothing this letter touched can move it:
+
+  tick  1320 (what the fixture plays): x 122.5 z -23.4, outcome LIVE, score 5   (the fixture says score 34)
+  tick 10800 (the whole block):        x 145.9 z -80.2, outcome FAILED, score 2
+  furthest east ever reached: x 145.9 m -- THE DROP-OFF LINE IS AT 168.6 m. It is 22.7 m short.
+
+`window-fixture.js`'s steering program `wordsAt` cannot reach the delivery line since the world grew east.
+So: outage 1 (FAILED where DELIVERED), first-mark 1 (forfeit 409, not a qualifier), one-signer-node-refused 1
+(FAILED where DELIVERED), forfeit 2 (no qualifier to forfeit), lock-settlement 14 ("paid 0 qualifier(s)" in
+ten of them, and the three W6 reds are the settlement that never happens without one).
+IT DEPENDS ON: a steering program that delivers in the current world. That is a window-fixture repair under
+~23 suites, not a lock-fixture one.
+
+AND LOCK-SETTLEMENT NO LONGER FITS 180 s. Its entries are taken now, so its rounds actually play: 8 to 33 s a
+test, 15 tests. It was measured in five chunks by `--test-name-pattern`, each under the ruled timeout.
+
 THE BAY TELL (2026-09-21, build 0.0.1866, deployed; before = 0.0.1842). SAME PROBE, SAME WITNESS.
 
 WHY A BAY DECLARATION DREW NOTHING - instrumented, two causes, and the third candidate ruled out:

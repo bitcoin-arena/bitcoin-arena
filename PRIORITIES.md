@@ -33,11 +33,24 @@ so it could be measured at all, a setup that throws after `serve()` no longer le
 went from unbounded (killed at 5 min, 4 LISTEN sockets) to **0.383 s, exit 1, 0 sockets**. Commits
 `07d36965`, `e1fcad1e`. Per-suite counts and every remaining red with its cause in TASKBOOK.
 
-RULING NEEDED, and it blocks the next sweep: **`test/lock-fixture.js:60` gives the fake federation
-`baseMsat: 1000n`, and §22A's `disable_base_fees` guard now refuses every entry into such a round.** 43
-failing tests in 5 suites are that one 409 (outage 9/9, first-mark 14/14, one-signer-node-refused 5/5,
-lock-settlement 13/15, forfeit 2/2). The guard is right and the fixture describes a federation BLWP would
-refuse - but the 1000 was chosen to steer the FEE-LOCK gate, so zeroing it changes what those suites test.
+DONE (2026-09-21): **the fake federation is one BLWP would accept.** `lock-fixture.js` charged a 1000 msat
+base fee - fedimintd 0.12.0's measured default - so §22A's `disable_base_fees` guard refused every entry into
+a round on it: **43 tests in 5 suites, all that one 409, now 0**. The guard is untouched and no assertion was
+loosened. The fixture is legal at rest; `lock-settlement` applies fedimintd's default at the CLOSE, after
+every entry is in, so settlement arithmetic still runs against 1000 msat base; and four suites now deal a fee
+lock, which is the production shape.
+
+  outage 0/9 -> **8/9**, first-mark 0/14 -> **13/14**, one-signer-node-refused 0/5 -> **4/5**,
+  lock-settlement 0/15 -> **1/15**, forfeit 0/2 -> **0/2**.  TOTAL **0/45 -> 26/45**.
+
+FEE-LOCK is still tested and now on a legal federation: the door refuses an entry that brings none at both
+signer nodes, and the settlement claims 2 fee locks, 40000 msat, paying 2 signer nodes 36000 msat.
+
+THE 19 REDS LEFT ARE ONE CAUSE AND IT IS NOT THIS FIXTURE: **`window-fixture`'s WINNER no longer delivers.**
+Straight off the core, no server and no federation: the truck reaches **x 145.9 m** at its furthest and the
+**drop-off line is at 168.6 m** - 22.7 m short - so the run ends FAILED with score 2. `wordsAt`'s steering
+program has not followed the world east. It depends on a steering program that delivers; that is a
+window-fixture repair under ~23 suites. Numbers in TASKBOOK.
 
 DONE (2026-09-20): **the three threshold suites can sign again**, the same hole as `reconstruct` and not a
 new one. `settle-threshold` 0/2 -> **2/2**, `pool-threshold` 0/4 -> **4/4**, `handout-threshold` 0/2 -> **2/2**:
