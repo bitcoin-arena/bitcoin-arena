@@ -30,6 +30,8 @@ THEN 16:11: **world candles must cover the whole playable field, out to the mine
 
 THEN 16:20: **remove HIGH, LOW, and OPEN from the HUD chart.** They do not belong there. Overrides 13:10 / 09:17. Do not restyle the headline. YOU and GATE stay.
 
+THEN 16:22: **assaults are not perceptible.** Daniel cannot see them. Spec: banner `BULLS ASSAULT HIGH` + sound, tanks push on that candle lane, then `HIGH TAKEN` or `ASSAULT ON HIGH FAILS`. Same as 12:55 / 15:55. World names on the candles still. Not the small HUD chart labels.
+
 # PREVIOUS  -  2026-09-20 16:05
 
 DONE THIS LETTER: **the miner's corridor walls now stop the truck on Daily.** 41 solids went into the core's
