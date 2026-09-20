@@ -28,7 +28,10 @@ Fix: the truck must **not** clip through this construct from either side. The **
 
 ALSO 18:59: **the miner structure behind the finish line must have collision.** And **Mempool collision must be exactly the yellow marked line** on the facade. Shot `daniel-screens/mempool-yellow-line-1859.jpg`. Open it. Same wash. Do not move the yellow line. Do not put Mempool collision in front of or behind that line.
 
-WHERE IT STANDS (measured, nothing built or deployed yet; the coin change is in the working tree):
+WHERE IT STANDS: all three measured and fixed in the CORE. Core suites green - coin/mempool 6/6, rules 50/50,
+vectors 8/8, tactics+candles 33/33, bundle 12/12, spawn+canonical+round-ends 9/9. EditMode **293/297**, 3
+skipped, 1 red (the long-listed CombatFx rifle flash, on the retired Battlefield.Army). PlayMode running, then
+the WebGL build, then the Daily and Beelink Chrome. Nothing deployed yet.
 
 1. COIN - measured and now solid in the core. The two stacks stand at **x 173.6 .. 192.4, |z| 40.6 .. 59.4,
    y 0 .. 3.08** and carried **no box at all**. Four boxes added to `mapSolids` (plinth + tiers, each side),
@@ -38,30 +41,39 @@ WHERE IT STANDS (measured, nothing built or deployed yet; the coin change is in 
    Note for whoever drives it: the WEST approach at z 50 is blocked 10 m earlier by the miner facade
    (x 163..171, z 40..84.4), so "either side" here is the north face and the x 171..173.6 gap, not west.
 
-2. MINER BEHIND THE FINISH - measured, and there is nothing left unsolid THERE. With the coin boxed, the
-   count of drawn parts east of the gate that stand at truck height (y 0.36 .. 3.26) and carry no box is
-   **0**. Driven east from x 172 at z 0, 10, 20, 30, 36, 60 and 70 the truck stops every time at
-   **x 180.23**, which is the map edge box at HALF_X 185 (contact at x 183.5), not a building it passed
-   through. At z 44 and 52 it is squeezed out west: the facade ends at x 171 and the coin now starts at
-   173.6, and 2.6 m is narrower than the truck.
+2. MINER BEHIND THE FINISH - **done, measured**. With the coin boxed, the number of drawn parts east of the
+   gate standing at truck height (0.36 .. 3.26 m) with no box is **0**. Driven east from x 172 at z 0, 10, 20,
+   30, 36, 60 and 70 the truck stops every time at **x 180.23**, which is the map edge at HALF_X 185, not a
+   building it passed through.
 
-   So the mass a truck can still drive through is IN FRONT of the gate, not behind it: `mass_behind_tunnel`
-   at **x 119 .. 145**, hanging from y 2.7 m while the body is 3.26 m. That one is unsolid BY RULING
-   (2026-09-20, written into `map.js`): the gate is at x 169, past it, so a box there closes the only route
-   to the miner. Making it solid needs a new way in, which is a ruling, not a fix. **Asked, waiting.**
+   LATER ITEM, NOT THIS LETTER (ruled 2026-09-20 19:0x): **`mass_behind_tunnel` and the tunnel seam sides stay
+   unsolid.** They sit IN FRONT of the gate at x 119 .. 161, and boxing them closes the only road to DELIVERED,
+   so it needs a new way in rather than a box. The share: of 370 drawn miner parts with no box, **23 stand at
+   truck height**, and only **2 of those are in the entry corridor** - `tunnel_end_backglow` (x 143.6..144.6)
+   and `tunnel_floor` (x 145..169, y -0.5..0, which is the floor and should stay flat). The rest are the seam
+   sides at x 138..161, y 2..40, which a truck passes under.
 
-3. MEMPOOL - measured, and BLOCKED on one ruling. The numbers:
+3. MEMPOOL - **fixed, and it was a hole, not an offset.** The shell was pillars BETWEEN the bay mouths and a
+   lintel OVER them, so each of the 24 mouths stood open from the ground to 9.2 m. The truck spawns at
+   START_X -100.40, z 10.20, which is bay 13's own centre - so driving WEST it went straight out through the
+   back of the post office and across the whole map to **x -180.22**, the west map edge. It never touched the
+   building.
 
-     drawn `mass_front`        world x -114.40 .. -100.40   (its east face IS START_X, the spawn)
-     solid shell wall          world x -122.40 .. -114.40   (east face -114.40)
-     `platform_kerb_stripe`    world x -119.10 .. -118.26   (the only part named "stripe")
+   The mouths are closed on the shell's own plane, `MAP_BOXES` 82 -> 106. The face a truck now meets is the
+   wall's east face at POST_X **-114.40**, which is exactly where the yellow marks stand: every part drawn in
+   `bumper_guard_yellow` on this facade - the `port_guard_post_*`, one pair at each mouth - spans
+   **x -114.95 .. -113.94**. The line did not move and the box is neither in front of it nor behind it.
 
-   The truck drives into the building because the solid face at -114.40 stands **14 m behind the drawn
-   front** at -100.40. But "collision exactly on the yellow line" resolves two ways and both are unsafe to
-   guess: the kerb stripe at -118.68 moves the barrier 4.3 m FURTHER WEST (deeper into the drawn mass, the
-   opposite of the letter), and the drawn facade front at -100.40 moves it 14 m EAST onto START_X itself, so
-   every run would spawn inside the wall. The material `bumper_guard_yellow` is on the bay guard posts and
-   canopy lips, not on a floor line, so it does not settle it either. **Asked, waiting.**
+   Measured at five lanes (z 10.2, 3.4, -5, 30, -78.2): the nose stops at **-114.40** every time, against
+   -180.22 before. THE SPAWN DID NOT MOVE and did not need to - it stands 14.00 m east of that plane, and the
+   truck's own AABB along the nose is 6.35 m (BODY_FRONT 2.00, BODY_REAR -1.80, BODY_RADIUS 1.27). The bay is
+   still driveable: a run leaves eastward.
+
+   ONE EXISTING TEST'S SETUP MOVED, AND NOT ITS ASSERTIONS. `rules.test.js` "a hill costs the core what it
+   costs Unity" placed the truck at the recording's x -120 on bay 0's lane - which was open air when
+   `physx-hills.json` was recorded and is inside a wall now, so the truck could not move at all. The run-up
+   starts at the first metre east of the wall face; the comparison still samples core against the recording by
+   world x over -110 .. 110. 50/50.
 
 Then resume 16:22 assault share, then the parked playtest chain, then M3.
 
