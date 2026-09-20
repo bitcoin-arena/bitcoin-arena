@@ -20,7 +20,13 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-# LIVE LETTER  -  2026-09-20 16:05
+# LIVE LETTER  -  2026-09-20 16:11
+
+NOW: **world candles must cover the whole playable field, out to the miner entrance.** They currently stop a few metres short of the entrance. Daniel shot `daniel-screens/candles-stop-before-miner-1611.jpg`. Playtest, absolute priority. Stop item 2 (flat slabs from above). Open the photo. Measure on Beelink Chrome, not MacBook. Then resume item 2, then M3.
+
+This is extent, not the old buried-miner-model letter and not roads-on-candles (roads already under the chart).
+
+# PREVIOUS  -  2026-09-20 16:05
 
 DONE THIS LETTER: **the miner's corridor walls now stop the truck on Daily.** 41 solids went into the core's
 `mapSolids()` - never PhysX, no mesh collider copied, DeliveryGate's five slabs untouched. Boxes at the miner
@@ -304,10 +310,12 @@ two a tidy cause - terrain-rebuild geometry from the world growing east - and th
 TASKBOOK rather than quietly deleted. None is attributed beyond the run mode until the leak is isolated.
 
 LISTED, each its own thing and none of them B:
+0. **LIVE 16:11: world candles stop a few metres short of the miner entrance.** They must cover the whole playable
+   field, out to that entrance. Shot `daniel-screens/candles-stop-before-miner-1611.jpg`. Absolute priority. Then 2.
 1. **91 files write `blockTicks: 9000`** against cores that end at 10800 - 21 client tests, the node suite, four
    harness tools. Mechanical, one constant a file, and the reason 6 daemon-backed ghost-field rows are refused.
 2. **The candle bodies read as flat slabs from above** rather than a chart standing on the ground. Daniel's eye,
-   not a measurement.
+   not a measurement. Parked behind 16:11.
 3. **The miner's coin stands beside the approach lane** at about x 159; a truck that drifts off the lane meets it.
 4. ~~The drawn miner is bigger than either engine's collision.~~ **BOXED, except the ceiling the truck must pass
    under.** 41 boxes added to the core's `mapSolids()` (never PhysX, no mesh collider copied, DeliveryGate's five
