@@ -5,6 +5,55 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+WHAT SHARE OF A DECLARED ASSAULT DOES THE PLAYER GET (2026-09-20, Daily 0.0.1842, Beelink GPU Chrome,
+ANGLE/Vulkan RADV Renoir, 1280x800). FIVE RUNS. ONE NUMBER STANDS; THE OTHER'S WITNESS IS PROVED WRONG.
+
+NUMBER ONE - ARMOUR INSIDE THE CAMERA'S HORIZONTAL FIELD. Sound: it is computed from the tank positions the
+page's core already holds and ChaseCamera's own published constants (reach 9 m, rise 4.2 m, vFov 58 deg,
+hFov 83.1 deg at 1280x800, half-angle 41.6 deg), never from the HUD.
+
+  run   rounds   declarations   in view @banner   in view @+8 s   in the bay
+   3       4          14             3 of 14         7 of 13        6 of 14
+   5       4          10             3 of 10         3 of 10        7 of 10   <- the only valid run
+
+Runs 1-4 are VOID beyond their first round, and a picture is why: `inview-3-BEARS-LOW.png` is the BTC
+LOGISTICS WAR lobby splash, build 0.0.1842, "FREE - closes 1:42 - 0 joined". The probe clicked PLAY, slept
+14 s and never checked. The core buffer keeps stepping and keeps declaring assaults on the splash, so rounds
+2-4 were measured against a truck nobody was rendering and a HUD that CANNOT announce, because
+`ChartHud.OnGUI` returns at `_splash.Showing` before `AssaultWatch.Observe` runs. The probe now verifies
+`BLWP_UNITY_LOBBY.showing === false`, retries PLAY up to eight times and skips a round that never enters;
+run 5 reports "ON THE LOBBY: 0 of 10".
+
+NUMBER TWO - WAS THE PLAYER TOLD? NOT ANSWERED, AND THE METHOD IS DISCARDED. Every run read
+`window.BLWP_UNITY_ASSAULT.revision` and reported 10 of 10 / 13 of 13 / 14 of 14 never announced. A frame
+says otherwise. `inview-4-BULLS-LOW.png`, taken at the +8 s reading of round 4's driving declaration, carries
+the left-column log:
+
+    [23:50:12] BULLS FAIL ON LOW        [23:53:51] BULLS ASSAULT OPEN
+    [23:51:06] BULLS ASSAULT LOW        [23:54:21] BULLS FAIL ON OPEN
+    [23:51:36] BULLS FAIL ON LOW        [23:57:04] BULLS ASSAULT LOW   <- the measured declaration
+
+while the probe printed "by +8 s the HUD had said NOTHING (revision 8, was 8)". The HUD announced it and the
+bridge did not move. `AssaultShown` is only called from `ChartHud.cs:450` when `Watch.Revision` changes, and
+`Watch.Observe` sits behind four early returns there, so the published object and what DriveHud draws are not
+the same thing. NO COUNT OF ANNOUNCEMENTS IS REPORTED. To get one, read the log from the frame, or publish
+the log's own lines rather than a revision counter.
+
+WHAT THE FRAMES DO PROVE, and it is the letter's question:
+  - IN THE BAY (7 of 10 declarations in run 5) the screen is the cargo panel. `inview-4-BEARS-OPEN.png`:
+    "CHOOSE YOUR MEMPOOL CARGO", 21 on the ramp, TRUCK FULL 83%, AUTO / ROLL OUT - no banner, no log column,
+    no world. Whatever the HUD thinks, the player sees none of it.
+  - DRIVING, the banner is drawn INSIDE THE CHART PANEL, top right, overlapping the candles and the price
+    ladder: `inview-4-BULLS-LOW.png` shows "BULLS ASSAU|GATE" clipped across "LOW", "OPEN" and "HIGH" at
+    small type, against a moving chart. That is the perceptibility complaint, in a frame.
+  - On-lane armour that IS in the horizontal field sits at 80-176 m and 36.7-76.7 px of hull width on a
+    1280-wide frame; and the left third of the screen is HUD panels (BLOCK, CONDITION, PRACTICE, SIM, the
+    log), exactly where left-lane armour appears. "In the camera's field" and "visible" are not the same,
+    which is why the probe's count is called generous.
+
+NOT PROPOSED HERE: no camera change, no world marker, no bay-gate change. Number two is still missing and the
+letter's own rule is that both must exist first.
+
 THE SHARED WINDOW FIXTURE, AND WHAT IT WAS HIDING (2026-09-20, commits 07d36965, e1fcad1e)
 
 `test/window-fixture.js:106` said `blockTicks: 9000`; the core has ended a run at 10800 since c01cc655. Every

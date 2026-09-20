@@ -141,6 +141,13 @@ proposed until two numbers exist:
   X of Y declared assaults had their on-lane armour INSIDE the camera's horizontal field of view
   X of Y were declared while the BAY was open and so were never announced at all
 
+MEASURED 2026-09-20 on Daily 0.0.1842, Beelink GPU Chrome (ANGLE/Vulkan), four rounds, ten declarations:
+**3 of 10 had on-lane armour inside the camera's horizontal field**, and **7 of 10 were declared while the
+bay was open**. The second number - how many the player was actually told about - is NOT answered: the probe
+read `BLWP_UNITY_ASSAULT.revision` and a frame disproves it (the HUD's log carries the very declaration the
+bridge called silent). Four earlier runs are void beyond round 1, because the page was sitting on the lobby
+splash while they counted. Numbers, frames and the discarded method in TASKBOOK.
+
 The second exists because `ChartHud.OnGUI` returns at `loadout.IsOpen` before the watch observes, and the watch
 only sees transitions - so an assault declared while the player is choosing cargo gets no banner, no horn and
 no log line EVER. The core's first assault fires 20-40 s in, which is exactly when a player is in the bay.
