@@ -5,6 +5,50 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+TWO TESTNET4 GATEWAYS THAT CAN ACTUALLY RECEIVE (2026-09-20, M3 inbound liquidity, named pick A / (i))
+
+RULED: "inbound liquidity and >= 2 independent gateways" = the two live testnet4 LND nodes, same host fine, no
+fake labelled gateways; inbound on each FROM ANY PEER, including from each other. Public-network inbound is a
+later letter and nobody waits on a third party.
+
+WHAT WAS FOUND. lnd 0.21.3-beta, testnet4 bitcoind synced at block 153265.
+
+  /mnt/bitcoin/lnd-testnet4     beelink-testnet4    rpc 11009  p2p 19735   UP
+  /mnt/bitcoin/lnd-testnet4-b   beelink-testnet4-b  rpc 11010  p2p 19736   DOWN since 2026-09-16 14:26
+
+Node A: synced, 0 peers, 0 ACTIVE channels - and one channel `dce6199b...`, capacity 200000, local 0, remote
+196530, `active: false`. On-chain 529433 sat.
+
+THE DARK PEER WAS OUR OWN NODE B. A's channel names `025f17c2...`, and when B was started that is exactly the
+identity it reported. So the 196530 sat of inbound had been unusable for four days because the counterparty
+was a process on this same machine that nobody had restarted. No third party was ever involved.
+
+B started under `systemd-run --user --unit=blwp-lnd-tn4-b`, unlocked from its own `wallet.pass`: synced at
+153265, 3 peers, and the channel came back `active: true` on both sides at once.
+
+  after B came up     A  local 0       inbound 196530      B  local 196530  inbound 0
+                      -> A could receive, B could not. One gateway, not two.
+
+INBOUND FOR B WITHOUT WAITING ON A CONFIRMATION. Opening a second channel means waiting for testnet4 blocks;
+a real payment moves the same balance immediately and is the proof the letter asks for anyway. Two invoices,
+both real, both over `dce6199b...`:
+
+  B -> A  100000 sat   SUCCEEDED   preimage 7eb1b306942226866c8d9105de84dc4c34fcb5bb62e03d6233ea0f3d3b134da5
+  A -> B   20000 sat   SUCCEEDED   preimage 51f8782cec633ad292bfd2fa8233e824f3029e212384f4bdc57219a1d419ed05
+
+  after both          A  local 80000   inbound 116530  active, synced
+                      B  local 116530  inbound  80000  active, synced   (no limbo either side)
+
+So each gateway can now receive, and each has been paid for real rather than labelled. Full `getinfo`,
+`listchannels` and `pendingchannels` bodies from both nodes are in the run log.
+
+THE PREDICATE CAME AFTER THE PAYMENTS, not before. `protocol/src/gateways.js` counts the three facts that make
+a gateway usable - a distinct identity at its own rpc, synced with at least one ACTIVE channel, and
+remote_balance it can receive into. The host is deliberately not read: the ruling allows one machine. Its test
+is driven by the numbers above, including the state the pair was FOUND in (1 of 2 usable) and the dark-channel
+state (0 of 2), so the rule cannot drift away from the pair it was written against. 9/9.
+
+
 THE COIN, THE FINISH GATE AND THE MEMPOOL LINE (2026-09-20, Daniel's 18:56 and 18:59 letters)
 
 Three playtest reports in one wash, all of them "the truck goes through a thing that is drawn".

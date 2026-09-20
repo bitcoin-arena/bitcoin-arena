@@ -25,7 +25,13 @@ Top item first. Finish and deploy before starting the next.
 M3: **a round can be played for real testnet sats** - the federation holds the money, the fee is taken and
 paid out, and the payout actually moves. W1-W7 are done; the remainder is the unparked piece below.
 
-NEXT PIECE (unparked by the 2026-09-16 NOW item 1): **inbound liquidity and >= 2 independent gateways.**
+DONE (2026-09-20): **two live testnet4 LND gateways have inbound liquidity, measured and paid.**
+`beelink-testnet4` 0274e261... inbound **116530** sat, `beelink-testnet4-b` 025f17c2... inbound **80000** sat,
+both active and synced. A real invoice was paid each way over channel `dce6199b...` (B->A 100000,
+A->B 20000, both SUCCEEDED). The dark peer that had left A's 196530 sat unusable since 2026-09-16 was our own
+node B, not a third party. `protocol/src/gateways.js` was written AFTER the payments proved. Log in TASKBOOK.
+
+WAS (unparked by the 2026-09-16 NOW item 1): **inbound liquidity and >= 2 independent gateways.**
 RULED (Daniel 11:09): that means the two live testnet4 LND nodes with incoming liquidity, same host is fine -
 named pick A, no fake labelled gateways. Guardians and `federationIsBonded` stay parked (RULED 07:33 / 08:23).
 Everything else M3 needs is ruled; no blocker waits on Daniel.
