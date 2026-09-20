@@ -43,7 +43,14 @@ clips show the log going from 4 lines to 5 on that very tick - it was my baselin
 ticks before a round that was one second old. The lookup now falls back within the round. The same corrected
 rule was re-run over the OLD build's clips and left it at 4 of 12, so the before/after is like for like.
 
-SUITES on this build: EditMode 297 total, **293 passed, 1 failed, 3 skipped**, errorCS 0. The one red is the
+SUITES on this build: PlayMode 257 total, **228 passed, 15 failed, 14 skipped**; EditMode 297 total,
+**293 passed, 1 failed, 3 skipped**, errorCS 0. The fifteen PlayMode reds are the long-listed families and
+nothing else: ten read the retired `Battlefield.Army` (FeatureTests.DamageIsFeltInTheDriving, both
+ImportedModelTests, TruckHealthTests.CrashingIntoArmourWritesItOff, five VehicleTests,
+VisibilityTests.ArmiesAreActuallyDrawn), two MushroomResting skirt offsets, GhostAcrossTheDoors, and BOTH
+known flip-floppers in the same run - `VisibilityTests.RoadsAreActuallyDrawn` and
+`PostOfficeTests.TheGogglesAnimate`, which want a graphics device under `-nographics`. None is new and none
+touches ChartHud, DriveHud or LoadoutPanel. The one red is the
 long-listed `CombatFxTests.RifleFireProducesAFlashAndATracer` on the retired `Battlefield.Army`, not this
 letter. Every assault test passes: `AssaultLogSitsClearTests` x4, `AssaultsAreVisibleTests` x8,
 `ChartHudTests.TheAssaultColumnIsThereWhileTheCoreSaysSo`.

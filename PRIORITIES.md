@@ -151,8 +151,9 @@ before `DrawAssaultLog`, so a recorded line would not have been drawn either. Bo
   declared with the bay open, told       0 of 8         **8 of 8**
   armour in the camera's field, told     0 of 5         **4 of 4**
 
-Same probe, same witness - the log column read off the frame. EditMode 293/297 (1 long-listed red, 3 skipped),
-errorCS 0. Rows, causes and the one correction against my own baseline in TASKBOOK.
+Same probe, same witness - the log column read off the frame. EditMode 293/297 (1 long-listed red, 3
+skipped), PlayMode 228/257 (14 skipped, 15 red - the long-listed families, with both known flip-floppers red
+in the same run; none new, none on the HUD), errorCS 0. Rows, causes and the one correction against my own baseline in TASKBOOK.
 
 STILL OPEN BY RULING: driving still announces with nothing in view.
 
