@@ -33,6 +33,12 @@ at elapsed 10800 of 10800, lobby back by itself 5 s later** ("run ended FINISHED
 tick 10800"). Screens `tdrive-before-zero/outcome/lobby-back.png`. EditMode 292/296 (the one red long-listed),
 PlayMode 228/258 (16 red, 15 long-listed, the 16th deleted - see TASKBOOK), core `round-ends` 2/2.
 
+DEPLOYED AND RE-MEASURED ON THE DAILY: **0.0.1835** (`8337569e`), unique URL and alias both serving it. One
+round driven on the deployed page, GPU browser: **clock 0:00 and state 0 -> 3 MISSED both at elapsed 10800,
+lobby back by itself 5 s later**, and the assault log ran through all three wordings -
+`[17:55:25] BEARS ASSAULT HIGH`, `[17:55:49] BULLS TAKE LOW`, `[17:55:55] BEARS FAIL ON HIGH`. Screens
+`daily-before-zero/outcome/lobby-back.png`.
+
 ALSO DONE ON THE SAME BUILD: **assaults are perceptible** (16:22 / 16:26) - banner, a horn on the start, and
 the desktop-only clock log under the HUD. Measured in the same drive: `[17:29:17] BEARS ASSAULT OPEN`,
 `[17:29:47] BEARS FAIL ON OPEN`, `[17:31:32] BULLS ASSAULT HIGH`. The HORN is measured too, at the Web Audio
