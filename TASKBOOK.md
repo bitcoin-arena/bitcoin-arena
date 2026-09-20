@@ -5,6 +5,35 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+ImportedModelTests.SoldiersStandOnTheGroundAndAreAnimated - LISTED, NOT §11.4 WORK (ruled 2026-09-20).
+
+It is red, it stays red, and it is not loosened and not made green by changing what it asserts.
+
+  WHY IT IS RED: it dies on its FIRST assert - `Assert.IsNotNull(renderer?.soldierPrefab, "die Szene hat kein
+  Soldatenmodell zugewiesen")` - because the committed scene ships `soldierPrefab: {fileID: 0}`. It never reaches
+  its seating check at all.
+
+  WHY THE SCENE IS LIKE THAT, and why it stays: the PLAYER path is the streamer. `ModelStreamer.cs:166-168`
+  fetches `model/soldier` and calls `SetSoldierPrefab` at runtime. Wiring a prefab into the committed scene would
+  fight the streamer for ownership of the same field, and that is a different letter.
+
+  WHAT IT DOES NOT MEASURE: the 0.75 m sole-anchor sink this letter fixed. It could not have caught it and cannot
+  now confirm it. In EditMode and PlayMode `BlwpCore.Available` is false, the core is stubbed, every unit reads
+  dead and ArmyRenderer draws NO MEN AT ALL - so even past its first assert there would be nothing to seat. This
+  red was there before the lift fault and is unrelated to it.
+
+  WHAT IT DEPENDS ON: the editor getting the same prefab the player build uses. That is the whole fix, and it is
+  scene/streamer wiring, not the renderer.
+
+  The §11.4 goal was never an editor fixture that cannot draw anyone: it was downed prefab men sitting on the
+  ground in a BROWSER, and that is where it was measured - see the before/after above.
+
+WHAT ELSE COULD HAVE BEEN THE SINK, CHECKED RATHER THAN ASSUMED: `Bootstrap.cs:904` hands the SAME soldier prefab
+to `Fx.bodyPrefab`, so a corpse is sole-anchored too and a body drawn under the dirt would read to a player as the
+same fault. It is not: `CombatFx.cs:1426-1427` places a prefab body at `Ground(x, z) + 0f` and then rotates it
+flat about that same sole origin, subtracting no drop. Corpses were never sunk, and that neighbouring path is an
+independent confirmation of the shape of the fix - a sole-anchored body laid flat belongs at lift 0.
+
 §11.4 ON SCREEN: THE SINK IS GONE IN A BROWSER, NOT ONLY IN THE FIXTURE (2026-09-20).
 
 A green EditMode guard is not an on-screen check, so the letter was not closed on one. Two WebGL builds were made

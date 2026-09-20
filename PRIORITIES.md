@@ -20,7 +20,15 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-# LIVE LETTER  -  2026-09-20 07:10
+# LIVE LETTER  -  2026-09-20 07:40
+
+DONE THIS LETTER: **downed men sit on the ground in a browser.** Two WebGL builds differing only in
+`SoldierLift`, read over CDP on the MacBook on the prefab path: worst **-0.75 m -> 0.00 m**, standing men +0.12 m
+of walking bob either way. And **§11.3 occupancy 64.6% -> 91.7%** against a 70% bar that was not loosened.
+
+NEXT ITEM, NOT STARTED: **the combined cover deploy** - occupancy, posture and suppression shipped together with
+the goldens and the bundle regenerated in that one deploy. It is what the 8 golden and 8 bundle reds wait on, and
+it is what moves the Daily off 0.0.1739.
 
 WHERE THE GAME IS: **btc-logistics-core.pages.dev at 0.0.1739** (deploy 9cac533f), unchanged since 19:47 on the
 19th. The core in that build was byte-identical to packages/core/dist AS IT STOOD THEN - today's dist is many
@@ -138,6 +146,9 @@ WHY NOTHING IS LIVE, and none of these is test colour:
    `prefab yes` matters: the scene ships `soldierPrefab: {fileID: 0}` and `ModelStreamer` supplies the model at
    runtime, so the line also proves the measurement was taken on the path the fix touches and not on the box.
    Guarded by `SoldierLiftTests` in EditMode, proved red against the old formula first. Draw only.
+   `ImportedModelTests.SoldiersStandOnTheGroundAndAreAnimated` stays red and is NOT §11.4 work: it dies on its
+   first assert because the committed scene ships `soldierPrefab: {fileID: 0}`, the streamer fills that field at
+   runtime, and in the editor no men are drawn at all - so it never measured this sink. Listed, not loosened.
 2. **The renderer DOES read the core's posture word - this line was stale and is corrected.** `ArmyRenderer` reads
    `UnitPosture` and `UnitPinned` and lays a man down from them; proved live this morning at
    `[render] 27 of 62 men drawn DOWN from the core's posture word, prefab yes`, and as of the fix above he is laid
