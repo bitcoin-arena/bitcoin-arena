@@ -5,6 +5,63 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE FEDERATION'S FEE IS ZERO, AND THE NODE NOW REFUSES ONE THAT IS NOT (2026-09-20)
+
+THE RULE, QUOTED, so the next reader does not re-open the arithmetic. §22A "Node fee and developer donation":
+
+    gross_round_volume = Σ stake of every financially activated entry      (ENTRY_VOID and VOID excluded)
+    node_fee = 2.00% of gross_round_volume
+    1.00% -> GAME/VERIFY pool     (the round's sitting seats)
+    1.00% -> SETTLEMENT pool      (the round's sitting seats)
+
+  "The 2% stays. Fedimint's own base fees are 0: the federation runs with `disable_base_fees`. Lightning
+   `min_htlc` / routing is not a federation fee."
+  "Unearned shares are redistributed pro rata among the other eligible nodes in the same role pool, keeping
+   the total at 2%."
+  "Calculate in millisatoshis, floor each base share, and distribute the remaining msat in ascending
+   H(round_id ‖ node_pubkey) order."
+  §17: "Node fees and the player-selected donation are INCLUSIVE in the wallet commitment; the pool is the
+   sum of net stakes, and entitlement is weighted by net stake."
+
+WHO PAYS the player, inclusively, inside the wallet commitment - never on top. WHO RECEIVES the round's own
+sitting seats, 1% for game/verify and 1% for settlement, split by however many seats the census seated (1%/2
+in a 2-of-2, 1%/7 in a 5-of-7); a seat in both roles earns both. WHEN at settlement, out of the round's own
+volume. UNITS millisatoshis, floored, remainder by hash order.
+
+SO "THE FEDERATION'S FEES" HAS NO ARITHMETIC LEFT IN IT: the federation's own fee is ZERO by rule, and the
+only fee in the chapter is 22A's node fee, which is already implemented and green.
+
+    protocol/src/fee.js            16/16   gross volume, 2%, the 1%/1% split (the second pool taken as
+                                           `fee - first` so two floors cannot lose a msat), per-seat floor,
+                                           remainder in H(round_id ‖ node_pubkey) order, and a self-check
+                                           that throws unless paid + unallocated === fee
+    protocol/src/lock-settlement.js 17/17  pays those seats from the fee locks
+
+And it is already visible on the live pair: the testnet4 hold invoices were 980000 msat against a 1000000
+msat stake - the 2% withheld because it is inclusive and travels in a fee lock, not in the stake hold.
+
+WHAT WAS ACTUALLY MISSING was the other half of the zero: the CLIENT refuses to lock against a federation
+that charges a base fee (`page-lock.js`), and nothing on the NODE did. A signer node would have taken entries
+into a round whose stakes were being shaved on every input and output - money the operator did not earn,
+which is the operator-must-not-profit rule arriving from the other side.
+
+`federationTakesNoBaseFee` in `blwp-node/src/stake-lock-signer-node.js`, called on POST /entry where the node
+already reads the federation's fee rule, before `round.enter`:
+
+    baseMsat 0      accepted, "that federation charges no base fee"
+    baseMsat 1000   refused 409, naming the amount, disable_base_fees and the players' own pool
+    baseMsat 1      refused - there is no threshold in the rule
+    ppm 10000       accepted - a per-million rate is not a base fee, and min_htlc / routing never were
+    no rule known   accepted - the client's own "no fee rule known: no lock"; an unreadable port is not an
+                    accusation, the round simply mints no fee lock
+
+PROVED RED RATHER THAN ASSERTED: with the call deleted from server.js, "THE CALL SITE ITSELF" fails - it
+checks the import, the call, the 409, and that the call sits on the /entry path BEFORE `round.enter`.
+
+SUITES: no-base-fee 6/6, fee 16/16, lock-settlement 17/17, custody-daemon 9/9,
+paying-round-needs-gateways 7/7. No Unity, no WebGL, no deploy, no testnet4 fee-lock spend.
+
+
 A HOLD INVOICE ON TESTNET4 GOES ACCEPTED -> HELD, AND SETTLES OR CANCELS FROM THE CORE'S WORD (2026-09-20)
 
 `custody-lnd.mjs` proved these rules on an isolated regtest it spawns and MINES. `custody-testnet4.mjs` runs

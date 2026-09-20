@@ -20,14 +20,21 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-# NOW  -  M3: the federation's fees
+# NOW  -  M3: the fee locks' claim hash and 22A node slots
 
 M3: **a round can be played for real testnet sats** - the federation holds the money, the fee is taken and
 paid out, and the payout actually moves. W1-W7 are done.
 
-NOW: **the federation's fees.** The next unparked item of "M3 is done when". Behind it, in the list's own
-order: the fee locks' claim hash and 22A node slots, then the result window (a contract field). Guardians and
-`federationIsBonded` stay parked by ruling.
+DONE (2026-09-20): **the federation's fee is zero by rule, and the node now refuses a federation that charges
+a base fee.** §22A: "Fedimint's own base fees are 0: the federation runs with `disable_base_fees`." The 2% is
+22A's INCLUSIVE node fee to the round's sitting seats - already implemented and green (fee 16/16,
+lock-settlement 17/17), and already visible on the live pair as 980000 msat held against a 1000000 msat
+stake. What was missing was the node half: the client refused to lock against such a federation and the node
+took entries anyway. `federationTakesNoBaseFee` is called on POST /entry before `round.enter`; an unknown rule
+is not a base fee. Proved by deleting the call site. Numbers in TASKBOOK.
+
+NEXT, in the list's own order: **the fee locks' claim hash and 22A node slots**, then the result window (a
+contract field). Guardians and `federationIsBonded` stay parked by ruling.
 
 DONE (2026-09-20): **a hold invoice on testnet4 goes ACCEPTED -> HELD and settles or cancels from the core's
 word.** `tools/custody-testnet4.mjs` on the live pair: three 1000000 msat stakes held as 980000 msat invoices
