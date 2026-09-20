@@ -20,7 +20,7 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-# LIVE LETTER  -  2026-09-20 03:30
+# LIVE LETTER  -  2026-09-20 04:10
 
 WHERE THE GAME IS: **btc-logistics-core.pages.dev at 0.0.1739** (deploy 9cac533f), unchanged since 19:47 on the
 19th. The core in that build was byte-identical to packages/core/dist AS IT STOOD THEN - today's dist is many
@@ -30,47 +30,45 @@ URL: no numbered milestone closed.
 
 WHAT IS LIVE is the 19:47 letter and nothing since: the world grown east, the delivery line at 168.6 m, tanks
 pathing around craters, a nuke that kills everything in its blast, no asphalt where a candle stands, spectate
-carrying the war, and rounds living their three minutes again. Numbers for all of it in TASKBOOK.
+carrying the war, and rounds living their three minutes again.
 
 WHAT HAS LANDED ON THE BRANCH SINCE AND IS **NOT** LIVE (each named by its own commit):
-- **The HUD stopped lying about the trend** (236e0ab4). A candle is two samples and the war was grading the wick,
-  so a drawn body of $2.44 to $4.88 read RED on screen and DOJI to the war. chart.js and the core now share one
-  `trendCandle`. Proven on the MacBook against build 0.0.1755 through the real Binance feed: a falling chart reads
-  DOWN 3 with six red dots, a rising one UP 3 with six green.
-- **§11.3 cover is closed, and its row is currently RED** (cf0cb8b4). Men claim wrecks, craters and candle lips
-  and stay in them; the row reached 72.9%. §11.5's crawl has since knocked it to **64.6% against a 70% bar**. The
-  bar is not loosened.
-- **§11.4 posture is closed in the core** (7bc7c1f6). STAND / PRONE / COVER in the bits §11.3 reserved; the rifle
-  that fires at a man reads them; COVER rifle deaths 22.4 -> 5.7 per 100k man-ticks, the ruled quarter.
-- **§11.5 suppression is WRITTEN, NOT CLOSED** (2383c95b ... 33f967b1). Fire pins a rifleman: TAC_SUPP, 18 words,
-  +60 a round, -1 a tick, pinned at 120; a pinned team does not rush, a pinned man crawls at 0.5 m/s and reloads
-  at half rate. A bomb pins once per TEAM, not once per man (56 of 385 blasts had been charged twice; now none). A
-  shell that connects pins the teams within 8 m of where it lands - on a hull OR on the truck - through one
-  helper shared with the blast. The pose writer reads the pin, so STAND while pinned went 79.7% -> 0.2%.
+- **The HUD stopped lying about the trend** (236e0ab4). A candle is two samples and the war was grading the wick.
+  chart.js and the core share one `trendCandle`. Proven on the MacBook through the real Binance feed: a falling
+  chart reads DOWN 3 with six red dots, a rising one UP 3 with six green.
+- **§11.3 cover is closed, and its row is RED** (cf0cb8b4). The row reached 72.9%; §11.5's crawl has knocked it to
+  **64.6% against a 70% bar**. Not loosened. This is the player-facing hole on the letter.
+- **§11.4 posture is closed in the core** (7bc7c1f6). COVER rifle deaths 22.4 -> 5.7 per 100k man-ticks.
+- **§11.5 suppression is WRITTEN, NOT CLOSED** (2383c95b ... 12c6b6f0). Fire pins a rifleman; a bomb pins once per
+  TEAM (56 of 385 blasts had been charged twice, now none); a shell pins the teams within 8 m of where it lands,
+  on a hull OR on the truck, through one helper shared with the blast.
+- **AND THE PIN IS NOW DRAWN** (135995fb, build 0.0.1791). ArmyRenderer reads §11.4's posture and §11.5's pin and
+  lays a downed man on the ground - dropped, pitched the way he was facing, no bob, animator Speed 0. Rigidbody
+  stays kinematic, gravity off, no PhysX knock, nothing taken from Army.cs.
 
-§11.5's STATE. Four things were raised against it and TWO OF THEM WERE MY OWN MISREADINGS, not faults:
-- **The pin is INSIDE its ceiling.** §0's 70% is the share of TEAMS pinned, which is 43.8%. The 96.0% / 95.6%
-  once listed as an overage was "at least one of nine teams" - an OR read as a share - and is retracted.
-- **The neighbour already sees the pin.** 426193 of 426193 pinned team-ticks look halted to the neighbour, and on
-  86.5% of them the timer would have had the team rushing. Never a hole; the diagnosis was the error.
-- **The courier shell was a real hole and is fixed** (b46640b7). It collided with §0's fault list, which forbade
-  a man's suppression word differing between the truck parked and driven; RULED - §11.5 wins, a shell is an impact
-  at a point, and the fault-list line now excepts exactly that case and names §11.5 (33f967b1). Measured
-  parked-versus-driven: claim 0, posture 0, TAC_SUPP 0 differences over 142920 man-ticks.
-- **OPEN, PARKED:** the shell MISS half waits on §4.4's landing point; §0's "never a step past 0.01 m" fails on
-  78.9% of pinned man-ticks and is ruled combined Euclidean, not per-axis, held back because building it while
-  cover is down would take more men off their holes.
+HOW THE POSE WAS PROVED, and it was NOT a screenshot. ArmyRenderer's own comment records three picture
+comparisons that proved nothing - "the scene animates more than the army does, so a screenshot cannot isolate it.
+A count can." So the check is a count, in that file's idiom, read off the live page over CDP:
 
-WHY THE COVER ROW IS RED, attributed and not re-investigated: occupancy 70.9% -> 61.6% on one drive with sim.js
-swapped either side, living man-ticks unchanged at 317444 -> 316959. Of 1114 lost reached man-ticks, 746 (67%) are
-pinned men who cannot cross what they were given at 0.5 m/s against a walk of 2.788, and 368 (33%) are men
-crossing into the pinned bucket - the FREE rate did not move at all, 9.6% before and after. None of it is a
-counting artefact.
+    [render] drew 87 units from the core
+    [render] 8 of 69 men drawn DOWN from the core's posture word     (4 to 20 of 69, frame to frame)
 
-THE TWO PLAYMODE REDS THAT WERE UNEXPLAINED ARE NAMED (26d9b6ac) and neither is suppression's:
-ScoreTests.IdlingEarnsNothingEvenOnTheSeam fails on `MakingProgress`, a pure Unity x-position flag, while its
-earning assert passes; SpawnMarkParkedTests fails on its own guard, a +40 m feeHeight lifting the mark only 8.70 m
-against a 12 m budget. Both are terrain-rebuild and truck-position geometry from the world growing east.
+NOT claimed: a close-up of a body. The spectate camera starts behind the depot and flying it forward hit the cargo
+chooser. The pose is proved by the count and the code path, not by an eye on a man.
+
+SUITES ON THIS HEAD: PlayMode **228/256** (15 red, 13 skipped - two better than before), EditMode **254/258**
+(0 error CS, one long-listed CombatFx red). JS: rules 50/50, tactics 21/22, candles+chart+spawn 18/18, canonical
+22/22, vectors+bundle 2/20 with goldens deliberately stale.
+
+FOUR PLAYMODE TESTS FLIP BETWEEN RUN MODES, and an attribution I wrote last night was wrong (12c6b6f0):
+ScoreTests.Idling and SpawnMarkParkedTests fail FILTERED and are GREEN in the full run; RampReadyTests passes 3/3
+filtered and fails in the full run; GhostAcrossTheDoors is the long-listed full-suite flake. I had given the first
+two a tidy cause - terrain geometry from the world growing east - and they simply pass in the full suite. Same
+signature: PlayMode scene state leaking between tests. Corrected where it was written rather than deleted.
+
+THE VISIBILITY TESTS THAT EXERCISE ArmyRenderer ARE RED and were red before this change: ArmiesAreActuallyDrawn
+and RoadsAreActuallyDrawn. Nothing here is NEWLY red - but the test that would prove the army is drawn is not
+green, and has not been for some time.
 
 WHY NOTHING IS LIVE, and none of these is test colour:
 1. **Men in holes draw below the mesh.** Unity carves a crater bowl the core does not, so the men §11.3 correctly
