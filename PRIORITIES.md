@@ -28,6 +28,15 @@ Fix: the truck must **not** clip through this construct from either side. The **
 
 ALSO 18:59: **the miner structure behind the finish line must have collision.** And **Mempool collision must be exactly the yellow marked line** on the facade. Shot `daniel-screens/mempool-yellow-line-1859.jpg`. Open it. Same wash. Do not move the yellow line. Do not put Mempool collision in front of or behind that line.
 
+MEASURED ON THE DEPLOYED DAILY **0.0.1842** (c160a87e), Beelink GPU Chrome, ANGLE/Vulkan:
+
+    MEMPOOL   driven west from the spawn -> nose stops at **-114.39**; the wall face is -114.40 and the
+              yellow `port_guard_post_*` run -114.95 .. -113.94. Before: x -180.22, out of the back.
+    COIN      driven south into the north stack -> stops at **z 62.68**; the stack face is 59.4.
+    CENTRE    driven east from 20 m short of the gate -> **DELIVERED**.
+
+  Screens `solid2-1-mempool.png`, `solid2-2-coin.png`, `solid2-3-centre.png`.
+
 WHERE IT STANDS: all three measured and fixed in the CORE. Core suites green - coin/mempool 6/6, rules 50/50,
 vectors 8/8, tactics+candles 33/33, bundle 12/12, spawn+canonical+round-ends 9/9. EditMode **293/297**, 3
 skipped, 1 red (the long-listed CombatFx rifle flash, on the retired Battlefield.Army). PlayMode running, then
