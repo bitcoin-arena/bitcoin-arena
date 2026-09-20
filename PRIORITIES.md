@@ -603,9 +603,27 @@ PARKED mid-measurement (2026-09-18 12:02, Daniel HARD): ghost position still doe
   run. Measured in two browsers: both game sides now follow the joined round (net.where names it in BOTH tabs, where
   every run before said "it never left the first"), nothing publishes into the old run any more, and one tab drove
   409 ticks of the new one on the chain it had already proved.
-- Open: in that same round two, one tab's new session died on "Failed to fetch" - a call refused outright, not the
-  10 s chain timeout that 0.0.1604 fixed - so it published nothing and the other tab had nothing of it to draw
-  (others 0 at ticks 300 through 1500). Which request failed, and against which node, is the next measurement.
+- Open, AND THE OLD CAUSE HERE WAS WRONG - corrected 2026-09-20 by measurement on Daily 0.0.1812. This line used to
+  say the session "died on Failed to fetch, a call refused outright". It does not. Two reproductions, two real
+  browser tabs, cache cleared, Network on: **zero loadingFailed and zero "Failed to fetch" on either tab** across
+  1151/940 requests, 1001/811 of them to the signer doors. The only non-200s from a door are `POST /name` 409
+  (a join-time name conflict that retries to 201) and the ordinary 201s for `POST /round` and `POST /entry`.
+  THE MEASURED CAUSE IS A CLOCK, NOT A FETCH: tab B runs about 2000 ticks - 33 s - behind tab A (A reads B
+  `behind 1993 ticks`; B reads A at `behind -899`, pictures from its own future, `collapsed 19`, `silenced 1`,
+  overlay age climbing to 29564 ms). B keeps playing after the round has closed, so the node ANSWERS and refuses
+  its inputs - `the node refuses this run's inputs at tick 8576: error the round is closed, and it still refused
+  after resyncing` - the run ends VOID, B publishes nothing more and never returns to the lobby, while A is back
+  in the lobby at about t+300 s. That is why round two has one invisible truck. Deterministic: identical in both
+  runs, same tab stuck. The next work is the divergence and the return to the lobby, not which fetch failed.
+
+LATER ITEM, ITS OWN (found 2026-09-20 while setting up the ghosts reproduction, NOT part of it): **a query string
+on the Daily URL stops the page naming a signer node.** Measured in the same browser and build one minute apart -
+bare `https://btc-logistics-core.pages.dev/` gives `lobbyFrom=daily.json`, 2 round rows, `nodes 2` and 36 requests
+to the signer doors; `https://btc-logistics-core.pages.dev/?r=<timestamp>` gives `BLWP_LOBBY_VIEW` undefined, no
+rows, no nodes and **0** signer requests, with `[blwp] no session yet: the page has named no node`. The lobby still
+draws, so it looks like a lobby with nothing to join. Player-facing for any shared or parameterised link. It is
+also what made several probes this morning measure an empty lobby and read it as a regression. Not this item's to
+fix.
 
 DONE (2026-09-18 10:42, Daniel HARD playtest) on 0.0.1591, all four:
 - Hills: a ghost lies on the same four contact points as the local truck. Still no rigidbody and no collider.

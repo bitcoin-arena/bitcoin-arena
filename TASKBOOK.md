@@ -5,6 +5,45 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE GHOSTS BUG IS A CLOCK, NOT A FETCH (2026-09-20, two reproductions on Daily 0.0.1812).
+
+The parked line said one tab's round-two session "died on Failed to fetch - a call refused outright". Measured,
+that is false, and it is corrected in PRIORITIES rather than left standing.
+
+METHOD, after three probes that measured nothing and are worth naming so the next one does not repeat them:
+  - probe 1 polled `window.BLWP_LOBBY_VIEW`, which only exists while the lobby is up, so every sample read "?".
+  - probe 2 clicked PLAY blind: both tabs sat in the free world, 0 requests to either signer door, console at
+    tick ~45000 reporting 27434 ticks jumped. Nothing about a round could be concluded from it.
+  - probe 3 read `BLWP_UNITY_LOBBY.showing` at t+0, which still held TRUE from the page being replaced, and
+    clicked into a still-booting page. `rows=none` beside `showing=true` was the contradiction to catch.
+  - probes 1-3 also all used a cache-busting query string, which is its own fault - see the separate item.
+  The working shape: bare URL, `Network.clearBrowserCache`, settle 15 s, require `showing` AND at least one round
+  row on BOTH tabs before clicking, then VERIFY the join by counting requests to the trycloudflare doors before
+  believing anything.
+
+WHAT TWO CLEAN RUNS SHOW, two real browser tabs, cache cleared, Network on:
+
+  requests                     1151 (A) / 940 (B),  signer-door requests 1001 / 811
+  loadingFailed                0 / 0        "Failed to fetch"   0 / 0
+  non-200 from a signer door   POST /name 409 (join-time name conflict, retries to 201)
+                               POST /round 201, POST /entry 201 - nothing else
+
+  A reads B   own tick 10800, newest other picture 8807, BEHIND 1993 ticks
+  B reads A   own tick 9900,  newest other picture 10799, behind -899 - its own FUTURE
+              collapsed 19, then silenced 1, overlay age 1974 -> 11449 -> 20640 -> 29564 ms
+  B ends      [blwp] run ended VOID: the node refuses this run's inputs at tick 8576 (9708 in the first run):
+              error the round is closed - and it still refused after resyncing, so this client cannot publish
+  A returns to the lobby at about t+300 s. B never returns at all.
+
+So the node ANSWERS. Nothing is refused outright. A client that has fallen about 33 s behind keeps playing past
+the round's close, its inputs are refused for that reason, the run is VOIDed, it publishes nothing more and it is
+left on a dead screen while the other player is already back in the lobby choosing round two. That is the whole
+"round two has one invisible truck": there is no second truck publishing, because that client never left round
+one.
+
+Deterministic, not a flake: identical across both runs, the same tab stuck, the same shape - A back at the lobby
+at ~t+300 s, B never.
+
 THE LOBBY WAS NEVER BROKEN; MY VIEW OF IT WAS (2026-09-20, after the 0.0.1812 deploy).
 
 I reported a regression - "the lobby has no infographics" - and offered three fixes for it. There was no
