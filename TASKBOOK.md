@@ -5,6 +5,32 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+AND THE GATEWAYS SURVIVE A RESTART (2026-09-20, the same letter finished honestly)
+
+The first pass left node B running under `systemd-run`, which makes a TRANSIENT unit: `is-enabled` returns
+`transient` and nothing brings it back after a reboot. That is precisely the bug that had it down from
+2026-09-16 14:26, and because B is the counterparty on A's only channel, A's 196530 sat of inbound was
+unreachable the whole time. "Two gateways with inbound" would have been true until the next power cut.
+
+  `monitoring/lnd-testnet4-b.service`   enabled, same shape as `lnd-testnet.service`, After=bitcoind-testnet
+  `wallet-unlock-password-file`         added to B's lnd.conf; noseedbackup stays false, wallet.pass chmod 600
+
+Measured after the real unit started it, with no human touching a password:
+
+  beelink-testnet4-b  enabled/active  025f17c2...  synced true  block 153265  peers 1
+                      channel dce6199b...  active true  local 116530  remote (inbound) 80000
+  beelink-testnet4    enabled/active  0274e261...  synced true  peers 1
+                      channel dce6199b...  active true  local 80000   remote (inbound) 116530
+
+NODE A IS NOT DONE AND WAS NOT TOUCHED. Its wallet password is on no disk here - no pass file in its lnddir,
+no unlock in its unit, nothing in any script - so `wallet-unlock-password-file` cannot be set for it, and
+restarting it would leave it LOCKED with no way back. A locked gateway holds no inbound, so after a reboot A
+is still an outage. It needs the password; it is listed on PRIORITIES rather than guessed at.
+
+`protocol/tools/measure-gateways.mjs` asks both nodes `getinfo` and `listchannels` and feeds exactly those
+words to `gatewaysAreIndependent`. The suite's 19:5x numbers stay as a regression floor; this is the part that
+can see a stopped process. Run now: both enabled/active, 2 usable, YES.
+
 TWO TESTNET4 GATEWAYS THAT CAN ACTUALLY RECEIVE (2026-09-20, M3 inbound liquidity, named pick A / (i))
 
 RULED: "inbound liquidity and >= 2 independent gateways" = the two live testnet4 LND nodes, same host fine, no

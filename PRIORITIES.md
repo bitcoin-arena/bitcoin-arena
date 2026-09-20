@@ -31,6 +31,21 @@ both active and synced. A real invoice was paid each way over channel `dce6199b.
 A->B 20000, both SUCCEEDED). The dark peer that had left A's 196530 sat unusable since 2026-09-16 was our own
 node B, not a third party. `protocol/src/gateways.js` was written AFTER the payments proved. Log in TASKBOOK.
 
+SURVIVES A RESTART (2026-09-20): node B had been left as a *transient* `systemd-run` unit - the very bug that
+made it miss four days and left A's inbound unusable. It now has a real enabled unit
+(`monitoring/lnd-testnet4-b.service`, the same shape as `lnd-testnet.service`) and
+`wallet-unlock-password-file`, so it comes back and unlocks with no human. Measured after the unit restarted
+it: enabled/active, synced at 153265, channel `dce6199b...` active, inbound **80000** on B and **116530** on
+A. `protocol/tools/measure-gateways.mjs` reads both nodes live and feeds the real RPC to the predicate, so a
+dark gateway cannot hide behind a green suite.
+
+NEXT M3 PIECES, in order:
+  1. **Where `gatewaysAreIndependent` gets called.** The rule exists and is proven against the live pair, but
+     nothing calls it, so no round is gated on having gateways yet. The call site is a design choice.
+  2. **Hold invoices on testnet4.** Pay is proven both ways; ACCEPTED -> HELD -> settled is regtest-only.
+  3. **Node A cannot auto-unlock yet** - its wallet password is not on disk anywhere and A has never been
+     restarted since. A comes back LOCKED after a reboot, which holds no inbound. Needs the password.
+
 WAS (unparked by the 2026-09-16 NOW item 1): **inbound liquidity and >= 2 independent gateways.**
 RULED (Daniel 11:09): that means the two live testnet4 LND nodes with incoming liquidity, same host is fine -
 named pick A, no fake labelled gateways. Guardians and `federationIsBonded` stay parked (RULED 07:33 / 08:23).
