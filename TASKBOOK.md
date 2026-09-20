@@ -5,6 +5,42 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+HALF TWO OF §23.4: THE CLAIM KEY *IS* THRESHOLD-SIGNED, AND ITS PROOF IS HIDDEN THE SAME WAY (2026-09-20)
+
+Read before writing anything, as ruled. §23.4 asks for two things: reconstructing P from 5 of 7 shares (half
+one, now demonstrated 7/7) AND "the committee's threshold signature". §23.6 names the shape: "the claim key
+is a FROST (RFC 9591) BIP-340 key, which the federation checks like any other key."
+
+IT EXISTS. `blwp-node/src/forfeit.js` signs with real FROST:
+  - each seat holds `{ id, share }` and publishes hiding/binding nonce commitments;
+  - `signShare340({ id, share, groupPublicKey: claimPk, nonces, message, commitments, curve })` produces that
+    seat's BIP-340 signature share;
+  - the threshold is the round's own: `receiptsNeeded(contract.nodes.length)`, and a list shorter than that is
+    refused - "N commitments, and this round's key signs at M";
+  - a seat signs ONE list per message and keeps no second pair - "this signer node signed that forfeit over
+    another list, and keeps no second pair";
+  - a combined signature handed over by a peer is kept only if `schnorr.verify(signature, message,
+    claimPk.subarray(1))` passes against what THIS seat rebuilt - x-only BIP-340, the federation's own check.
+
+So neither half of §23.4 is missing code. What is missing is the same thing half one was missing: EVIDENCE.
+
+  settle-threshold    0/2     all three fail with "a stake dealt at the round's own threshold was refused:
+  pool-threshold      0/4     this node holds no such round" - the stale `blockTicks: 9000` again, one per
+  handout-threshold   0/2     fixture, exactly the chain reconstruct.test.js was stuck behind
+  forfeit             NOT MEASURED - no stale ticks in it; it exceeds 300 s here and was terminated twice.
+                      Cause unknown; not claimed as red and not claimed as green.
+
+THE GAP THAT IS NOT A FIXTURE, AND IT IS WORTH NAMING PLAINLY: the shares are DEALT. `server.js` says so in
+its own words - "THIS NODE'S OWN SHARE OF THE POOL, and nobody else's. `{ id, share }`, dealt today because a
+dealerless DKG is its own letter." A dealer that splits the key has held the whole key. FROST signing and
+five-of-seven reconstruction are both real; the key's ORIGIN is not yet trustless, and until a dealerless DKG
+lands, custody rests on whoever dealt.
+
+AND ON TESTNET4 IT IS STILL SINGLE-NODE: `custody-testnet4.mjs` and `custody-lnd.mjs` both inject
+`preimageFor`, so the live-pair run never exercised reconstruction or threshold signing. That is not a claim
+this letter makes.
+
+
 FIVE-OF-SEVEN RECONSTRUCTION IS DEMONSTRATED, NOT ASSUMED (2026-09-20, M3 §23.4 half one)
 
 §23.4: "Claiming a loser's stake lock requires the committee's threshold signature and reconstructing `P`,
