@@ -530,6 +530,35 @@ genuinely is §8.1's 26 m and is untouched.
       PlayMode scene-leak question and not suppression's. Depends on: someone isolating that leak. Unattributed
       beyond the run mode - an earlier note gave two of them a terrain-geometry cause and that was wrong.
 
+3q. THE POSE CLAUSE: GUARDED WHERE IT CAN BE, AND A CLOSED NO WHERE IT CANNOT (2026-09-20).
+
+   GUARDED, in the JS core suite where the rules live, each PROVED RED before it was kept:
+     the posture word §11.4 derives, for every living man every tick, including §0's "a pinned man is never
+       STAND" and "COVER means he is within 0.5 m of the place he claims"
+       RED PROOF: pose writer made to ignore the pin -> 14348 of 120563 man-ticks written STAND while pinned
+     the suppression word: +60 a round, no pin on one, pinned on two, decay exactly one a tick, clamp 600 and
+       480 ticks back under the line, and no leak to the next team or across the seam
+       RED PROOF: decay changed to two a tick -> "the decay is one a tick, not more"
+     the courier shell pinning the teams beside the cab (added earlier)
+       RED PROOF: rule removed -> rises 0,0,300,... and never a 60
+
+   NOT GUARDABLE IN UNITY, and the reason is structural rather than a gap in effort: the core is the JS bundle,
+   `BlwpCore.Available` is set by `BlwpInit` - an extern present only in a browser build - so in EditMode and
+   PlayMode the core is stubbed, its state is zeros, every unit reads dead and THE RENDERER DRAWS NO MEN AT ALL.
+   `_state` is private static with no setter.
+
+   TWO TESTS WERE WRITTEN FOR IT AND BOTH WERE WORTHLESS. The first asserted the renderer's down-count against the
+   core's and failed at once on "the core is not running". The second asserted that with no core word nothing may
+   be laid down - it PASSED, and went on passing when `down` was forced true for every third man, because there is
+   no man to draw. Only breaking the renderer on purpose exposed that; a green over an empty set is not a guard,
+   and the second one would have shipped as coverage.
+
+   RULED: NO TEST-ONLY STATE SEAM ON BlwpCore. It is production surface added for editor testability, and a seam
+   would either fake the men the editor does not have or open the core's API. The test stays Assert.Ignore with
+   its reason, in the SKIPPED count and never a green pass, and neither dead end is revived as coverage. The pose
+   is held by the renderer's own count over CDP from a running build - 4 to 20 of 69 men drawn down on 0.0.1791 -
+   and that is recorded as a hand measurement, not as a suite result.
+
 3f. THE TWO CLAUSES OF §11.5 THAT ARE ACTUALLY OPEN (2026-09-20, found by reading the section against the write
    at the close-out, not by measuring). Neither is coded.
 

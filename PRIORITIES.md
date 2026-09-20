@@ -20,7 +20,7 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-# LIVE LETTER  -  2026-09-20 05:20
+# LIVE LETTER  -  2026-09-20 05:40
 
 WHERE THE GAME IS: **btc-logistics-core.pages.dev at 0.0.1739** (deploy 9cac533f), unchanged since 19:47 on the
 19th. The core in that build was byte-identical to packages/core/dist AS IT STOOD THEN - today's dist is many
@@ -77,8 +77,12 @@ is stubbed, every unit reads dead and THE RENDERER DRAWS NO MEN AT ALL. Two atte
 worthless - the second passed, and went on passing when `down` was forced true for every third man, because there
 is no man to draw. The test now Assert.Ignores with that reason and lands in the SKIPPED count. The pose stays
 held by the renderer's own count over CDP from a running build, which is a hand measurement and is listed as one.
-DECISION OPEN: a test-only state seam on BlwpCore would make it assertable; that is production surface added for
-testability and has not been taken.
+RULED 2026-09-20, AND THE DECISION IS CLOSED: **no test-only state seam on BlwpCore.** It would be production
+surface added for editor testability, and the editor has no men because `Available` is a browser extern - so a
+seam would either fake that or punch a hole in the core's API. The pose stays unguardable in Unity, the test stays
+Assert.Ignore in the SKIPPED count with its reason, and neither of the two worthless versions is revived as
+coverage. The pose is held by the renderer's own count over CDP from a running build, listed as a hand
+measurement.
 
 FOUR PLAYMODE TESTS FLIP BETWEEN RUN MODES, and an attribution I wrote last night was wrong (12c6b6f0):
 ScoreTests.Idling and SpawnMarkParkedTests fail FILTERED and are GREEN in the full run; RampReadyTests passes 3/3
