@@ -22,10 +22,44 @@ Measured after the real unit started it, with no human touching a password:
   beelink-testnet4    enabled/active  0274e261...  synced true  peers 1
                       channel dce6199b...  active true  local 80000   remote (inbound) 116530
 
-NODE A IS NOT DONE AND WAS NOT TOUCHED. Its wallet password is on no disk here - no pass file in its lnddir,
-no unlock in its unit, nothing in any script - so `wallet-unlock-password-file` cannot be set for it, and
-restarting it would leave it LOCKED with no way back. A locked gateway holds no inbound, so after a reboot A
-is still an outage. It needs the password; it is listed on PRIORITIES rather than guessed at.
+NODE A'S SECRET WAS NOT ON THIS MACHINE, AND THE SEARCH IS THE MEASUREMENT. Every path checked, read-only,
+with A's process left running:
+
+  /mnt/bitcoin/lnd-testnet4/lnd.conf          read in full; `noseedbackup=false`, no unlock directive
+  /mnt/bitcoin/lnd-testnet4/ (top level)      data, letsencrypt, lnd.conf, logs, tls.cert, tls.key - NO pass file
+  lnd-testnet.service                         ExecStart only; no EnvironmentFile, no Environment, no unlock step
+  lnd-testnet.service.d/                      does not exist
+  find /mnt/bitcoin -maxdepth 3 *pass*|*pwd*  exactly one hit, and it was B's: lnd-testnet4-b/wallet.pass
+  monitoring/, packages/*/tools/              testnet4-gate.mjs, testnet4-preflight.mjs read A through
+                                              readonly.macaroon; neither unlocks it nor carries a password
+  user units with Environment/EnvironmentFile blwp-daily-signer-nodes.service only, and its env is regtest
+                                              (signer-nodes.env: 0 lines matching testnet4/tn4, 0 pass/unlock)
+  /home/daniel maxdepth 3 *wallet*pass*       nothing
+  ~/.openclaw/workspace/monitoring/           lnd_tn4b_confirm_watch.mjs, lnurl_pay.mjs - neither unlocks A
+  .gitignore                                  no secret/pass/env entries
+  ~/.bash_history                             two matching lines, both interactive `lncli ... create` - the
+                                              password was typed at a prompt and never written down
+  ~/.zsh_history                              absent
+
+A was NOT restarted and no password was guessed while that was true: a locked gateway holds no inbound, so a
+restart would have turned a working gateway into an outage with no way back.
+
+DANIEL THEN SUPPLIED IT (`~/lnd.txt`, outside the repo; the secret is not in git and is not printed here). Its
+`LND:` value was written to `/mnt/bitcoin/lnd-testnet4/wallet.pass`, chmod 600, 20 bytes, and
+`wallet-unlock-password-file` added to A's lnd.conf with a backup at lnd.conf.bak. A was then restarted under
+its existing enabled unit, and its own log settles it on a fresh PID 2777031 started 20:12:46:
+
+  [INF] LTND: Attempting automatic wallet unlock with password provided in file
+  [INF] BTWL: Opened wallet
+  [INF] BTWL: The wallet has been unlocked without a time limit
+
+AFTER BOTH RESTARTS, measured with the live probe:
+
+  beelink-testnet4    enabled/active  0274e261...  synced true  peers 3  1 channel (1 active)
+                      inbound 116530  outbound 80000
+  beelink-testnet4-b  enabled/active  025f17c2...  synced true  peers 3  1 channel (1 active)
+                      inbound  80000  outbound 116530
+  gatewaysAreIndependent: YES - 2 usable
 
 `protocol/tools/measure-gateways.mjs` asks both nodes `getinfo` and `listchannels` and feeds exactly those
 words to `gatewaysAreIndependent`. The suite's 19:5x numbers stay as a regression floor; this is the part that
