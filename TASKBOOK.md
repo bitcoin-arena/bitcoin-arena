@@ -48,7 +48,19 @@ THE PICTURES:
   daniel-screens/ring-11.png    road, VOID, old build - the line in its old place, which the road path still
       uses unchanged: RunStoppedBox only moves when `loadout.IsOpen`, and an EditMode test pins that.
 
-NOT RE-SHOT: a fresh ROAD void on this build. At 5x the tab delivers instead of falling behind, so the run ends
+THE ROAD, VERIFIED ON THIS BUILD AFTER ALL (daniel-screens/roadnow-18.png). A road VOID could not be provoked at
+a drawable frame rate - parking the truck ends MISSED, cutting the wire ends in a reconnect, and only 20x CPU
+throttle produces one, which draws about 1 fps and photographs nothing. But the question about the road was
+PLACEMENT and SIZE, not which word ends the run: `DrawRunStopped` takes the same path for every ending, and
+`RunStoppedLine` prepends "RUN STOPPED" to whatever the client gives it. The frame shows the row drawn in its
+old position on this build - "RUN STOPPED - the core said MI... at tick 10800" - so the taller box has not moved
+or broken the road case. Said plainly rather than left as an inference from code.
+
+  ALSO SEEN THERE, pre-existing and not this letter's doing: a run that ends MISSED also reads "RUN STOPPED".
+  That is true of the wording and has been since RunStoppedLine was written; it is accurate for a run that did
+  stop. Listed, not changed here.
+
+SUPERSEDED NOTE: a fresh ROAD void on this build. At 5x the tab delivers instead of falling behind, so the run ends
 FINISHED and not VOID. The road position is unchanged code (the panel is shut, so the `IsOpen` branch is not
 taken) and is held by OnTheRoadTheRowKeepsTheSpotTheScreenshotShows; the taller box can only show more of the
 same sentence. Listed as the one thing shown by test and code rather than by a new photograph.
