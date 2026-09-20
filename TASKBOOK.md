@@ -300,6 +300,35 @@ genuinely is §8.1's 26 m and is untouched.
    tanks at t=90 against the recording's 20); the shell clause pins those same teams again and the count returns.
    The red was listed with its cause and not tuned, and the next clause of the same section answered it.
 
+3j. THE COURIER SHELL PINS TOO (2026-09-20), and the first test I wrote for it was worthless.
+
+   §11.5 pins "a man" within 8 m of where a shell lands and never asks what it was aimed at. It names the truck
+   exactly once, to keep a SUPPRESSING ROUND off it - the opposite case - which is how the section says so when it
+   means it. The core's connect split into an onCourier branch and the rest, and the pin went only into the rest,
+   so men standing beside a truck under tank fire were completely unsuppressed.
+
+   NO DRIVE COULD SHOW IT. Every 180 s drive passes zero input, so `rolledOut` is false, `onCourier` is never true
+   and the branch never runs. The case had to be constructed.
+
+   THE FIRST CONSTRUCTED TEST PASSED WITHOUT THE RULE, which is worth more than the fix. Men stood beside the
+   truck in the middle of the line were also inside 8 m of other tanks taking shells and inside rifle range of the
+   enemy, so +60 arrived from somewhere else on every connect. Clearing the field - one firing tank, one distant
+   foe to give its gun a target it would pass over for the truck, four men of one team, everything else dead - it
+   STILL passed, because latching `rolledOut` also lets the gunships fly and a blast is +300. Only when the assert
+   was narrowed to exactly one round's worth did it fail, and the rises it printed said why:
+
+     rises seen: 0,0,300,0,0,0,0,0,0,300,-1,-1,-1,300,-1,0,0
+
+   Three bombs and a lot of decay; never a 60. With the rule in, the same test passes.
+
+   THE RULE IS NOW ONE FUNCTION. `pinTeamsWithin(s, x, z, reach, amount)` marks every team with a living man in
+   reach and adds the amount ONCE PER TEAM; the hull shell, the courier shell and the blast all go through it, so
+   they cannot drift apart. The blast's own test was `blastReach`, which is axis-reject then length2 against
+   BOMB_RADIUS - identical to the helper's, so unifying it changed no behaviour.
+
+   SUITES after: rules 50/50, tactics 21/22 (the §11.3 cover row at 64.6% against 70, cause unchanged),
+   candles+chart+spawn 18/18, canonical group 22/22, vectors+bundle 2/20 with goldens deliberately stale.
+
 3f. THE TWO CLAUSES OF §11.5 THAT ARE ACTUALLY OPEN (2026-09-20, found by reading the section against the write
    at the close-out, not by measuring). Neither is coded.
 
