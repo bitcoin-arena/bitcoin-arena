@@ -71,6 +71,12 @@ a SINGLE cause - a core fix.
    DO NOT SPLIT THEM AGAIN, the same way chart.js and the war share `trendCandle`.
 
      §11.3 occupancy   64.6%  ->  91.7%   against a 70% bar, not loosened   (2 seeds x 40 s)
+
+   AND WHAT THAT ROW IS NOT, said plainly: it counts a TICK in which ANY living man of a side stands within 0.5 m
+   of any place of his side. It is not the share of men in cover. Per man over the same run the numbers moved but
+   are far smaller - living ticks ON a hole 2.9% -> 6.4%, men who never once arrived 91.7% -> 84.7%, men who never
+   held a claim at all 29.2% -> 24.3%. The bar the spec sets is the tick-level one and it is met honestly; a
+   per-man bar would not be met, and nobody should read 91.7% as "91.7% of men are in cover".
      claims that ever reached 0.5 m of their place    7.5%  ->  15.1%
      failing ticks                                     400 of 4800, and every one holds a walker still closing
 
