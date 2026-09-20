@@ -141,12 +141,20 @@ proposed until two numbers exist:
   X of Y declared assaults had their on-lane armour INSIDE the camera's horizontal field of view
   X of Y were declared while the BAY was open and so were never announced at all
 
-MEASURED 2026-09-20 on Daily 0.0.1842, Beelink GPU Chrome (ANGLE/Vulkan), four rounds, ten declarations:
-**3 of 10 had on-lane armour inside the camera's horizontal field**, and **7 of 10 were declared while the
-bay was open**. The second number - how many the player was actually told about - is NOT answered: the probe
-read `BLWP_UNITY_ASSAULT.revision` and a frame disproves it (the HUD's log carries the very declaration the
-bridge called silent). Four earlier runs are void beyond round 1, because the page was sitting on the lobby
-splash while they counted. Numbers, frames and the discarded method in TASKBOOK.
+BOTH NUMBERS EXIST (2026-09-21, Daily 0.0.1842, Beelink GPU Chrome on ANGLE/Vulkan).
+
+  ONE - armour inside the camera's horizontal field: **3 of 10** (the run of 2026-09-20), **3 of 12** on the
+  repeat, 5 of 11 read at +8 s.
+  TWO - the player was told: **4 of 12**. The witness is the string the HUD draws - the log column clipped
+  out of the frame once a tick and read as pixels, never a bridge; `BLWP_UNITY_ASSAULT.revision` was measured
+  false and reported "no hud object" for a whole round here.
+
+  DRIVING: 4 of 4 told.  BAY: **0 of 8 told, with no log line on screen at all**.
+  AND OF THE 5 WHOSE ARMOUR WAS IN THE CAMERA'S FIELD: **0 were told.**
+
+THE TWO HALVES NEVER MEET: every assault the player heard about had no armour in view, and every assault with
+armour in view was one he was never told about. Per-declaration rows and the four corrections the witness
+needed are in TASKBOOK. No camera, marker or bay-gate work is proposed on this letter.
 
 The second exists because `ChartHud.OnGUI` returns at `loadout.IsOpen` before the watch observes, and the watch
 only sees transitions - so an assault declared while the player is choosing cargo gets no banner, no horn and

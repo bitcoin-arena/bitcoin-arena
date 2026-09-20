@@ -5,6 +5,55 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+NUMBER TWO: WAS THE PLAYER TOLD? (2026-09-21, Daily 0.0.1842, Beelink GPU Chrome ANGLE/Vulkan, 1280x800,
+four rounds, twelve declarations.) THE WITNESS IS THE STRING THE HUD DREW.
+
+No bridge is read. `AssaultShown`, `Watch.Revision` and `BLWP_UNITY_ASSAULT.revision` are not asked at all -
+that path was measured false, and this run shows it failing again: the probe logged "revision no hud object,
+was -1" for the whole of round 1. Instead the left log column (x 16..340, y 405..600) is clipped out of the
+frame ONCE A TICK by CDP - 541 clips - and read afterwards. `DriveHud` draws BULLS lines green and BEARS red;
+a clip reads, in as many words, "[00:09:28] BULLS ASSAULT LOW / [00:09:33] BULLS FAIL ON LOW".
+
+  rnd   t  side   lane  where     in view @+8s   log lines   TOLD   when
+    1  10  BEARS OPEN  BAY                1           0     no
+    1  25  BULLS LOW   BAY                2           0     no
+    1  97  BULLS LOW   driving            0           3    YES   +0s
+    2   9  BEARS OPEN  BAY                1           0     no
+    2  10  BULLS HIGH  BAY                0           0     no
+    2  68  BEARS LOW   driving            0           5    YES   -1s
+    2 109  BULLS HIGH  driving            0           6    YES   -2s
+    3   7  BEARS OPEN  BAY                0           0     no
+    3  13  BULLS HIGH  BAY                0           0     no
+    4   5  BEARS LOW   BAY                1           0     no
+    4  28  BULLS OPEN  BAY                1           0     no
+    4 134  BEARS OPEN  driving            0           6    YES   +0s
+
+  TOLD: 4 of 12.  DRIVING: 4 of 4 told.  BAY: 0 of 8 told, and 0 log lines on screen for any of them.
+  OF THE 5 WITH ARMOUR IN THE CAMERA'S FIELD: 0 TOLD.
+  IN VIEW this run: 3 of 12 at the banner, 5 of 11 at +8 s; 8 of 12 declared with the bay open; 0 on the lobby.
+
+THE TWO HALVES NEVER MEET. Every assault the player was told about had NO armour in the camera's horizontal
+field, and every assault whose armour was in the field was one he was never told about. That is the whole
+16:22 complaint in one table, and neither half is a camera problem on its own.
+
+THREE THINGS THE WITNESS HAD TO BE TAUGHT, each measured rather than assumed:
+  - `AssaultWatch.Keep` is 6. A full log stops growing and only shifts, so a LINE COUNT would have been false
+    too; the signature is per-line (colour class + text-pixel total), and a new line rewrites the sequence.
+  - A line's pixel total drifts up to ~9 % between ticks while the words are unchanged (anti-aliasing over
+    whatever the world does behind it). An exact compare called every tick a new line. The rule is therefore
+    a different number of lines, or two or more slots differing by over a quarter. Background contamination
+    measured at 8 matching pixels across 130 non-text rows.
+  - A real line carries 62 to 135 quantised units; the bay panel sliding in threw a single 16-unit blob that
+    scored two false YESes in the bay. A 40-unit floor removes it and sits well below the smallest real line.
+  - The HUD can draw BEFORE the probe reads: round 2's t+68 declaration was on screen at t+67. The baseline
+    is taken three ticks back and the search starts at -2 s. Without that, a true announcement read "no".
+
+EVERY ONE OF THOSE WAS A WRONG ANSWER FIRST. The uncorrected table said 5 of 12 told, including two in the
+bay where the clip shows road and the cargo panel and no log at all.
+
+The probe is `packages/core/tools/measure-assault-in-view.mjs` and the reader is `told.py`; both stay
+untracked by ruling, so the method is written out here in full rather than carried by the tree.
+
 WHAT SHARE OF A DECLARED ASSAULT DOES THE PLAYER GET (2026-09-20, Daily 0.0.1842, Beelink GPU Chrome,
 ANGLE/Vulkan RADV Renoir, 1280x800). FIVE RUNS. ONE NUMBER STANDS; THE OTHER'S WITNESS IS PROVED WRONG.
 
