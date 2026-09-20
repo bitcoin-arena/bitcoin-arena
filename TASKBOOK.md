@@ -269,6 +269,29 @@ genuinely is §8.1's 26 m and is untouched.
    So the crawl did most of it and the pose fix did the rest. Both are suppression; the split between the two is
    in 3e, measured on one drive with sim.js swapped either side.
 
+3e-bis. WHICH TOOL THE COVER ROW IS READ ON (2026-09-20). Two tools were printing occupancy figures 27 points
+   apart and TASKBOOK quoted both, so 92.0% was readable as a pass on a row that is failing.
+
+   THE ROW IS THE SUITE ASSERT, tactics.test.js §11.3: seeds 1 and 2, 900 ticks of warm-up, 2400 ticks, a
+   liquidation at t % 1800 === 300, and a tick counts when any living man of a side is within 0.5 m of any place
+   of his side, positions read AFTER his step.
+
+   MEASURED ON THAT ONE DRIVE, both tools together (`measure-cover-baseline.mjs --suite`):
+
+     the suite assert                                   64.7%
+     the baseline, assert's predicate (after the step)  64.7%     3105 of 4800
+     the baseline, its own predicate (before the step)  64.6%     3103 of 4800
+     places standing per tick                           87.6
+
+   THE TWO AGREE TO THE DECIMAL. The before-versus-after reading is worth 0.1 of a point and is not the gap. The
+   27 points is the DRIVE: the baseline's own run is 3 seeds x 120 s, where it reads 92.0% with 97.4 places a
+   tick, because over two minutes wrecks and craters accumulate and the men have time to walk to them, while the
+   assert's 40 s window is still the approach.
+
+   So 92.0% is longer-run occupancy and is NOT the row. The baseline now prints that on every default run, with
+   the --suite figure beside it. No core investigation opened: the share of the 5.3-point cover miss is already
+   attributed in 3e to suppression, and nothing here changes it.
+
 3e. WHERE THE COVER ROW WENT, ATTRIBUTED (2026-09-20). The §11.3 occupancy row fell after the pose fix and the
    bar is not loosened. Measured on one drive, the same seeds both sides, by swapping sim.js to 9e57dccc and back:
 
