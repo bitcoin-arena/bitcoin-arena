@@ -5,6 +5,57 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE RUN-STOPPED LINE IN THE BAY: FOUR CAUSES AND THREE BAD INSTRUMENTS (2026-09-20).
+
+A truck still choosing cargo when the block closes is the path that ends VOID, and it is the path where the
+player was told nothing. Measured at 1280x800 against the mempool panel's own band (PackageYard panelTop 0.10,
+panelBottom 0.51, so y 80..408):
+
+  before   RunStoppedBox y 325.9, height font*2.8 = 67 px   -> inside the panel band, and never drawn anyway
+  after    road (panel shut)  y 325.9, height from CalcHeight (>= font*4.4 = 106 px)
+           bay  (panel open)  y 422.4 = panel.yMax + font*0.6, height from CalcHeight
+
+FOUR CAUSES, all on the existing DrawRunStopped path - no new card, no second draw, no new ending API:
+  1. `OnGUI` returned early on the loading branch - `if (loading) { DrawWasted(); return; }` - so in the bay the
+     row was NEVER DRAWN. My first diagnosis was that the panel covered it; the rect arithmetic was true and
+     irrelevant. The call simply never happened.
+  2. The box sat inside the panel's band, so it needed somewhere to be once it was drawn.
+  3. The height was a guessed multiple of the font: font*2.8 cut at "error the round" and lost "is closed";
+     font*4.4 reached "cannot publish" and cut there. It is now `style.CalcHeight(line, width)` with the old
+     value as a floor - the copy is the client's and is not shortened to fit.
+  4. The reason reached the HUD on a 0.5 s poll into a window of 0.6 s, and the result hold was timed from
+     `BlwpNet.Ended`, which flips BEFORE the reason exists. So whether the player was told was a coin toss:
+     bay-04.png has the line, bayok-27.png and bayfull-29.png are the same state with nothing on screen. Fixed
+     by fetching the reason the moment the run ends and starting the hold when the reason is known, with a 2 s
+     guard so a reason that never comes can never strand anyone.
+
+I HAD REVERTED (4) EARLIER THE SAME DAY on the strength of a ROAD frame, where the window was 1.2 s and the poll
+happened to land. The bay is where it bites. Restored, with the measurement that earns it.
+
+THREE INSTRUMENTS THAT LIED, and they cost more than the code did:
+  - the probe never pressed ROLL OUT, so every capture for hours sat in the BAY by accident - which is also how
+    the bay case was found at all.
+  - it triggered on `BLWP_RUN_ENDED`, set by BLWP_RUN_OVER at onEnd, while C# reads `endingLine()` earlier: the
+    hold had already run before the probe saw a word. Replaced by a rolling ring of frames.
+  - 20x CPU throttle renders Unity at about 1 fps, so a 0.6 s window drew ZERO frames and produced two "absent"
+    pictures that meant nothing. At 5x the page draws and the answer is unambiguous.
+
+THE PICTURES:
+  daniel-screens/ring-28.png    bay, VOID, lobby still down, old build - nothing on screen.
+  daniel-screens/bayslow-36.png bay, VOID, lobby still down, this build - the WHOLE sentence, five lines:
+      "RUN STOPPED - the node refuses this run's inputs at tick 6925: error the round is closed - and it still
+       refused after resyncing, so this client cannot publish and nothing from here can be replayed"
+  daniel-screens/ring-11.png    road, VOID, old build - the line in its old place, which the road path still
+      uses unchanged: RunStoppedBox only moves when `loadout.IsOpen`, and an EditMode test pins that.
+
+NOT RE-SHOT: a fresh ROAD void on this build. At 5x the tab delivers instead of falling behind, so the run ends
+FINISHED and not VOID. The road position is unchanged code (the panel is shut, so the `IsOpen` branch is not
+taken) and is held by OnTheRoadTheRowKeepsTheSpotTheScreenshotShows; the taller box can only show more of the
+same sentence. Listed as the one thing shown by test and code rather than by a new photograph.
+
+SUITES: EditMode 272/276, 3 skipped, 1 red (the long-listed CombatFx rifle flash), 0 error CS.
+PlayMode 230/257, 14 skipped, 13 red - all long-listed, none new, no HUD or SplashScreen test among them.
+
 "THE VOID REASON IS INVISIBLE" WAS ALREADY DONE, AND THE PREMISE WAS MINE (2026-09-20).
 
 The item said a returned player is never told why a VOID run ended, and that `BlwpNetEnding()` carries the line

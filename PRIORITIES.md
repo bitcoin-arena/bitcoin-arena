@@ -41,8 +41,15 @@ NEXT PLAYTEST ITEMS, in the order the list already has and NOT started:
      was drawing it all along. What hid it from me was my probe never pressing ROLL OUT, so the truck stayed in
      the BAY where the cargo panel covers that region. Nothing committed for it. Numbers and the four probe
      faults are in TASKBOOK.
-     LISTED, small: the line is clipped mid-sentence on both builds - it loses "is closed" because
-     `RunStoppedBox` is `font * 2.8` tall.
+     **AND THE TWO REMAINDERS ARE NOW DONE** (the bay, and the clipping). A truck still choosing cargo when the
+     block closes is the VOID path, and there the row was never drawn at all - `OnGUI` returned on the loading
+     branch before `DrawRunStopped`. It is now drawn there, steps below the mempool panel (y 422 against the
+     panel's 80..408 band at 1280x800), and is sized by `CalcHeight` from the sentence instead of a guessed
+     multiple of the font, so nothing is clipped and the copy is not shortened. The reason is also fetched the
+     moment the run ends rather than on a 0.5 s poll into a 0.6 s window, and the hold starts when the reason is
+     known, with a 2 s guard so nobody is stranded. `daniel-screens/bayslow-36.png` is the whole sentence on
+     screen in the bay; `ring-28.png` is the same state before. Numbers, the four causes and the three bad
+     instruments are in TASKBOOK.
   2. **The clocks still drift**, about 10-13 s in round two (A reads B -399 to -631 ticks, B reads A +601 to
      +793) against the 33 s that used to strand a tab. Listed with that measured range; no investigation opened.
      Both pages report `this frame 333 ms` - two headless browsers on one MacBook - so part of it is the rig.
