@@ -5,6 +5,69 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE ROUND TIMER, AND THE CLOCK THAT LIED ABOUT IT (2026-09-20, Daniel's 16:21 letter)
+
+"When the round timer hits 0, the game must end and return to the lobby by itself. It used to. It no longer
+does." Two causes. The second one is what he was actually looking at.
+
+1. THE CLIENT'S GATE AND ITS CLOCK ASKED DIFFERENT QUESTIONS. In `SplashScreen.Update` the result-hold clock
+   was started from `RunHasEnded` - the core's word OR the client's - while the lobby gate was still handed
+   `BlwpNet.Ended` alone. A round the CORE ended with no session word started its five seconds and then never
+   took them. Both go through `ShouldReturnToLobby(core, runState, netEnded, ...)` now. PROVED RED first: put
+   the old wiring back and 3 of the 5 new tests fail - the timer-alone case, every-outcome-comes-back and the
+   hold - while the live-round guard and the client's-own-word case stay green.
+
+2. THE HUD CLOCK WAS NOT THE CORE'S CLOCK, AND THIS IS THE ONE ON SCREEN.
+
+     BlockClock.RunTicks      9000    hand-written in C#
+     gate.js BLOCK_TICKS     10800    changed in c01cc655, "a round is three minutes"
+
+   `Remaining = CoreSecondsLeft(elapsed)` counts `RunTicks - elapsed`, so the clock reached 0:00 at elapsed
+   9000 and the core does not call the run MISSED until 10800: 1800 ticks - thirty seconds - of every round
+   with a timer showing nothing left and a truck still driving. Nothing threw and nothing was red. It is the
+   SECOND time this clock has told him the same thing (2026-09-16 15:36, quoted in the file), and the first
+   fix was right in shape - make it the core's count - while the number it counted stayed a copy.
+
+   `BLOCK_TICKS` and `RUN_LIVE/DELIVERED/WRECKED/MISSED` are GENERATED into `Blwp.Layout` now, from gate.js,
+   the same way the word offsets are. `BlockClockIsTheCoresTests` pins the HUD length against the generated
+   one, 0:00 on the ending tick, and three minutes.
+
+   `RunEndsAtDeliveredTests.TheRunClockIsTheCoresOwnCount` had 9000 in five assertions and was GREEN while
+   describing a round that had not existed for days. It reads `Blwp.Layout.BLOCK_TICKS` now; every assertion
+   means what it meant, and only the duplicated number is gone. That is the shape of this whole entry: a
+   number two engines both need is not a number either of them may type.
+
+WHAT THE BROWSER SAID, AND WHY THE FIRST DRIVE SAID NOTHING
+
+  SwiftShader, 1280x800     23 ticks/s     round closed by the node at tick 4588, run VOID at 5004 of 10800
+  SwiftShader,  640x400     41 ticks/s     still short of the 60 a round keeps
+  ANGLE/Vulkan (RADV RENOIR) 61.4 ticks/s  the core reaches its own block end
+
+  The Beelink has an AMD Renoir the headless browser was not using. On SwiftShader the page walks at most
+  `MostTicksPerFrame` = 8 ticks a frame at ~3 fps, so the run always died VOID by the CLIENT's word - the
+  path that already worked - before the clock could reach zero. The first drive therefore proved nothing
+  about this fix, and said so rather than being written up as a pass.
+
+  On the GPU browser, one round joined and then left alone:
+
+    clock 0:06 at elapsed 10424      (tdrive-before-zero.png)
+    clock 0:00 at elapsed 10800      state 0 -> 3 MISSED at the same tick
+    lobby back by itself 5 s later   (tdrive-lobby-back.png)
+    page: "run ended FINISHED: the core said MISSED at tick 10800"
+
+A PLAYMODE TEST CANNOT CARRY THIS, AND I WROTE ONE BEFORE CHECKING. `BlwpCore.Available` is set by an extern
+that exists only in a browser build, so in EditMode and PlayMode there is no core at all and
+`TimerEndsTheRoundInThePlayerTests` failed on its first assertion - "the core did not come up". PRIORITIES
+already recorded exactly this. The test is deleted rather than loosened, and the `Play(bool)` visibility it
+needed is reverted. The browser is the only instrument for anything the core decides.
+
+SUITES: EditMode 292/296, 3 skipped, 1 red (the long-listed CombatFx rifle flash; it drives the retired
+`Battlefield.Army` and nothing in this change touches it). PlayMode 228/258, 14 skipped, 16 red - 15
+long-listed (ten on the retired Army, two MushroomResting skirt offsets, GhostAcrossTheDoors, PostOffice
+goggles, the RampReady flip-flop) and the 16th the impossible test above, now gone. Core: `round-ends` 2/2,
+chart + tactics 29/29.
+
+
 THE OTHER HALF OF ITEM 4: CAN A TANK STAND IN THE DRAWN CABLE? (2026-09-20, measured before changing anything)
 
 The item says two things: the truck's roof passes through the tunnel, and "a tank can stand in a drawn cable".

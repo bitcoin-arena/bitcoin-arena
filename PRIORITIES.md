@@ -22,7 +22,26 @@ Top item first. Finish and deploy before starting the next.
 
 # LIVE LETTER  -  2026-09-20 16:21
 
-NOW: **when the round timer hits 0, the game must end and return to the lobby by itself.** It used to. It no longer does. Write tests that fail until this is true (core + a real player path, not JS-only). Playtest, absolute priority. Beelink Chrome, not MacBook. Then 16:11 candles-to-miner, then 16:20 HUD labels, then item 2, then M3.
+DONE, MEASURED IN A REAL PLAYER: **the round timer ends the round and the lobby comes back by itself.**
+Two causes, both fixed. (1) The clock on screen was not the core's: `BlockClock.RunTicks` was a hand-typed
+9000 while `BLOCK_TICKS` had moved to 10800 (c01cc655), so the HUD read 0:00 thirty seconds before the core
+would say MISSED. It is generated into `Blwp.Layout` now, with `RUN_LIVE/DELIVERED/WRECKED/MISSED`. (2) The
+lobby gate was handed `BlwpNet.Ended` alone while the hold clock asked "core OR client", so a round the core
+ended with nothing on the wire held its five seconds and never took them; both go through
+`ShouldReturnToLobby` now. Beelink Chrome, one round left alone: **clock 0:00 and state 0 -> 3 (MISSED) both
+at elapsed 10800 of 10800, lobby back by itself 5 s later** ("run ended FINISHED: the core said MISSED at
+tick 10800"). Screens `tdrive-before-zero/outcome/lobby-back.png`. EditMode 292/296 (the one red long-listed),
+PlayMode 228/258 (16 red, 15 long-listed, the 16th deleted - see TASKBOOK), core `round-ends` 2/2.
+
+ALSO DONE ON THE SAME BUILD: **assaults are perceptible** (16:22 / 16:26) - banner, a horn on the start, and
+the desktop-only clock log under the HUD. Measured in the same drive: `[17:29:17] BEARS ASSAULT OPEN`,
+`[17:29:47] BEARS FAIL ON OPEN`, `[17:31:32] BULLS ASSAULT HIGH`.
+
+THE RIG CHANGED AND IT MATTERS: headless Chrome on SwiftShader runs this world at 23 ticks/s against the 60 a
+round keeps, so every timer drive died VOID before the clock reached zero. The Beelink's AMD Renoir GPU gives
+**61.4 ticks/s** through ANGLE/Vulkan. Timer work must use a GPU browser.
+
+WAS: **when the round timer hits 0, the game must end and return to the lobby by itself.** It used to. It no longer does. Write tests that fail until this is true (core + a real player path, not JS-only). Playtest, absolute priority. Beelink Chrome, not MacBook. Then 16:11 candles-to-miner, then 16:20 HUD labels, then item 2, then M3.
 
 This is not the 18.9 "lobby too fast after the goal" letter. Result can still hold a few seconds. The round must not sit in the world after T_run.
 
