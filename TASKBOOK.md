@@ -40,7 +40,28 @@ wrong where it says otherwise.
 
 4. THE SHARE, in the form asked for: the crater-bowl mismatch accounts for **0.00 m of the 0.74 m** that is
    missing - 0% of it. It is not most of the sink; it is none of it. 98.9% of men standing on a hole are DOWN, so
-   the prone drop accounts for essentially all of it. Per the named pick, measurement only: NOT FIXED.
+   the prone drop accounts for essentially all of it.
+
+5. THE FIX (ruled the same day, prefab path only). `ArmyRenderer.SoldierLift(down, hasPrefab, proneDrop)` is now
+   one pure function: sole-anchored prefab men get 0 whether they stand or lie, and the centre-anchored fallback
+   box keeps 0.9 standing and 0.9 - 0.75 = 0.15 down, exactly as before. The same fixture re-run, 2 seeds x 40 s:
+
+     place kind    n      core ground   Unity terrain   visible surface   drawn BEFORE   sunk   drawn AFTER   sunk
+     candle lip  19187       0.87          0.39             0.87             0.12       0.74      0.87       0.00
+     crater rim   1251      -0.02         -0.02            -0.02            -0.76       0.74     -0.02       0.00
+     wreck         112       0.55          0.55             0.55            -0.13       0.68      0.55       0.00
+
+   The probe MIRRORS the renderer's arithmetic rather than observing it, and that is why the guard matters:
+   Assets/Tests/EditMode/SoldierLiftTests.cs calls `SoldierLift` itself, needs no core, and therefore runs where
+   PostureDrawTests has to Assert.Ignore. PROVED RED BEFORE IT WAS KEPT - restoring the old
+   `(hasPrefab ? 0 : 0.9) - (down ? drop : 0)` fails ASoleAnchoredManIsDrawnOnTheGroundStandingOrDown and
+   NoManIsEverDrawnBelowTheGroundHeStandsOn while TheFallbackBoxKeepsTheNumbersItWasTunedFor still passes.
+
+   EditMode 257 of 261, 3 skipped, 1 red (the long-listed CombatFx rifle flash), 0 error CS - three tests more
+   than before, which are the three new guards. PlayMode 230 of 257, 14 skipped, 13 red - one FEWER than before,
+   PostOfficeTests.TheGogglesAnimate being green this run. ImportedModelTests.SoldiersStandOnTheGroundAndAreAnimated
+   is still red and still cannot see this fix: it stops on its FIRST assert because the scene carries
+   `soldierPrefab: {fileID: 0}`, and in the editor the core is stubbed and no men are drawn at all.
 
    This letter did not create the fault and did not deepen it. It made it more visible: man-ticks on a hole went
    2.9% -> 6.4%.

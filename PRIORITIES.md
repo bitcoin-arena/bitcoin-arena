@@ -121,18 +121,23 @@ and RoadsAreActuallyDrawn. Nothing here is NEWLY red - but the test that would p
 green, and has not been for some time.
 
 WHY NOTHING IS LIVE, and none of these is test colour:
-1. **Men in holes draw 0.75 m below the ground, and the crater bowl has NOTHING to do with it.** The cause written
-   here since the cover letters - "Unity carves a crater bowl the core does not" - is MEASURED FALSE and is
-   corrected: Unity carves no bowl of its own at all. `MempoolTerrain.HeightAt` returns `BlwpCore.TerrainAt`, and
-   the crater-reveal loop assigns that same `TerrainAt` again, so the drawn bowl and the core's bowl are one
-   number by construction. Measured at the three heights under men standing on a hole, the mesh equals the core's
-   terrain to the metre on every place kind. The sink is `ArmyRenderer`'s prone drop: a downed man's Y is
-   `Ground(x,z) - soldierProneDrop`, 0.75 m, subtracted from an origin that `WrapOnItsSole` already put at his
-   SOLES - so his feet go underground instead of his body going flat. 0.75 was right for the fallback BOX, whose
-   origin is its centre and whose standing lift is 0.9; with the real prefab Bootstrap assigns, the standing lift
-   is 0 and the same 0.75 is pure sink. This letter made it more visible, not worse in kind: man-ticks on a hole
-   went 2.9% -> 6.4%, and 98.9% of men on a hole are DOWN. **Measured, not fixed** - the fix is a renderer
-   geometry change and is Daniel's to call. This is the first blocker.
+1. **FIXED: downed men now sit on the ground instead of 0.75 m under it.** The cause carried here since the cover
+   letters - "Unity carves a crater bowl the core does not" - was MEASURED FALSE and is gone: Unity carves no bowl
+   at all. `MempoolTerrain.HeightAt` returns `BlwpCore.TerrainAt`, the crater-reveal loop assigns that same value,
+   and `CraterAt` never exposes `C_D`. The sink was `ArmyRenderer`'s prone drop applied to a SOLE-anchored prefab:
+   `WrapOnItsSole` puts the origin at a man's feet, so subtracting the box's 0.75 drove his feet underground. The
+   0.75 belongs to the fallback BOX, which is centre-anchored and stands at 0.9 - that path is untouched and still
+   lands at +0.15. Measured on the same fixture, 2 seeds x 40 s, 20550 man-ticks on a hole, 98.9% of them DOWN:
+
+     candle lip  n 19187   sunk 0.74 m -> 0.00 m
+     crater rim  n  1251   sunk 0.74 m -> 0.00 m
+     wreck       n   112   sunk 0.68 m -> 0.00 m
+
+   Guarded by `SoldierLiftTests` in EditMode, which needs no core and so can run where the pose test cannot - and
+   it was PROVED RED first: restore the old formula and two of its three tests fail while the box test still
+   passes, which is the right discrimination. Draw only; no combat, driving, scoring or PhysX, and `AvoidWrecks`
+   untouched.
+
 2. **The renderer does not read TAC_COVER.** Posture and suppression are written and acted on, but a man in cover
    looks exactly like a man in the open and a PINNED man crawling on his belly is drawn walking upright - he is
    only harder to kill and slower. The player gets the visual regression above and no visible benefit at all, so
