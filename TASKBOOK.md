@@ -459,6 +459,44 @@ genuinely is §8.1's 26 m and is untouched.
    The build itself: 0 error CS, wasm genuinely new at 03:47 because C# changed, and the core bundle copied into
    the template byte-identical (df68a870...) so the page ships the core that writes these words.
 
+3o. WHAT THE OCCUPANCY COUNTER HOLDS ON THE TICKS IT FAILS (2026-09-20). The story "pinned men crawl and cannot
+   reach their holes" had been printed twice without being broken down. Broken down, IT IS NOT THE STORY.
+
+   The counter, read from tactics.test.js rather than assumed: a tick counts when ANY living man of a side is
+   within 0.5 m of ANY place of his side. A failing tick is one where NOT ONE man on the field is on a place.
+
+     ticks with a man on a place    3102 of 4800   64.6%     bar 70%
+     ticks with NOBODY on a place   1698           35.4%     5.4 points under
+
+   EVERY LIVING MAN ON THOSE FAILING TICKS (110134 man-ticks):
+     on a place                            0   (0.0%)   - the check on the classification itself
+     CRAWLING in, claim held, team PINNED  8522   (7.7%)
+     walking in, claim held, NOT pinned   34680  (31.5%)
+     in the bowl he claimed, off the lip      0   (0.0%)
+     no claim at all                      66932  (60.8%)
+
+   A man-tick share does not convert into points on the row, because a tick fails only when EVERY man is off. What
+   converts is which failing ticks hold a man who could have been on a place:
+
+     hold at least one CRAWLER    1157 of 1698  (68.1%)   nearest such crawler 18.2 m from his place
+     hold at least one WALKER     1698 of 1698 (100.0%)   nearest such walker   8.9 m from his place
+     hold NEITHER                    0 of 1698   (0.0%)
+
+   SO: THE CRAWL ACCOUNTS FOR AT MOST 24.1 OF THE POINTS AND CANNOT CLOSE THE ROW, because 100% of the failing
+   ticks also hold an UNPINNED man with a claim who is only 8.9 m from it. Freeze every crawler on his place and
+   those ticks still fail on the walkers. The 5.4 points under the bar are not a crawl problem; the crawl made an
+   existing problem worse, which is a different sentence from the one this letter has been telling.
+
+   WHAT THE 8.9 m SAYS. A claim is eligible within 12 m of his POST and he takes the nearest to that post, so a
+   man 8.9 m from his place is about that far from his own post too. Men are not standing on their posts - the
+   same thing measured at §11.3's close, where a claim-holder stood a median 23.4 m from his line post against
+   7.3 m for a man without one. The men are permanently in transit, and cover measures whether anyone is standing
+   still in the right spot.
+
+   NOT PROPOSED, NOT CODED: nothing here is changed on a guess. The claim rule is §11.3's ("nearest eligible place
+   to his POST, not his position, so a man does not wander to cover"), and moving that is a doctrine change, not a
+   fix. The bar is untouched and the test asserts what it always asserted.
+
 3f. THE TWO CLAUSES OF §11.5 THAT ARE ACTUALLY OPEN (2026-09-20, found by reading the section against the write
    at the close-out, not by measuring). Neither is coded.
 
