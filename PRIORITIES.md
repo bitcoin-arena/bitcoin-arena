@@ -26,6 +26,8 @@ NOW: **world candles must cover the whole playable field, out to the miner entra
 
 This is extent, not the old buried-miner-model letter and not roads-on-candles (roads already under the chart).
 
+ALSO 16:20: **remove HIGH, LOW, and OPEN from the HUD chart.** They do not belong there. Overrides 13:10 / 09:17 (HIGH/LOW on the chart only). Do not restyle the headline. YOU and GATE stay. Same wash, Beelink Chrome.
+
 # PREVIOUS  -  2026-09-20 16:05
 
 DONE THIS LETTER: **the miner's corridor walls now stop the truck on Daily.** 41 solids went into the core's
