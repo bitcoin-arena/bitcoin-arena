@@ -389,6 +389,34 @@ genuinely is §8.1's 26 m and is untouched.
    reported `result="Passed"` with total=0. An empty run reads as a green run. Filter by CLASS name and check the
    total before believing a filtered result.
 
+3m. THE PIN IS NO LONGER INVISIBLE (2026-09-20). ArmyRenderer read neither TAC_COVER nor TAC_SUPP, so a man
+   crawling on his belly at 0.5 m/s was drawn walking upright and the whole of suppression was invisible.
+
+   WHAT CHANGED, all of it client-side and read-only: the layout generator now emits §11.4's posture constants and
+   §11.5's suppression constants to BlwpLayout.cs; BlwpCore gains `UnitPosture(i)` and `UnitPinned(i)`, which read
+   words and decide nothing; ArmyRenderer poses from `posture != STAND` - the man drops `soldierProneDrop` and
+   pitches `soldierPronePitch` along the way he was facing, does not bob, and his animator Speed goes to 0. The
+   Rigidbody stays kinematic with gravity off and there is no PhysX knock; nothing was taken from Army.cs.
+
+   NO CORE FILE CHANGED. `git status` shows packages/core/src and packages/core/test untouched this turn, so
+   cover occupancy and STAND-while-pinned cannot have moved - they are the same 64.6% and 0.2% as before, by
+   construction rather than by re-running them.
+
+   THE MEASUREMENT CORRECTED ITSELF TWICE, and that is the record worth keeping:
+     first tool: looked one tick after a cab hit and reported 8 of 8 men drawn UPRIGHT, reading as a renderer
+       fault. It was not. A shell is +60 and the pin line is 120 - §11.5's own "two rounds to pin from cold" -
+       so ONE cab hit never pins anybody. The tool was measuring a team under fire, not a pinned one.
+     second tool: waited for the word to cross 120 and found NO men at all, because two shells must land inside
+       60 ticks of each other and one tank reloads in 150-270. A SINGLE TANK CANNOT PIN A TEAM BY SHELLING THE
+       CAB. It takes a second shooter, or a word already part-way up.
+
+   So the dramatic case - a man pinned by a shell on the cab - is real but needs two shells inside a second. The
+   chain the renderer depends on is the general one and is already measured: of 138119 pinned man-ticks, 214
+   (0.2%) are written STAND, and that remainder is the decay boundary. Everything else the renderer draws down.
+
+   NOT SEEN ON SCREEN. This is compile-gated only - EditMode 254/258, 0 error CS, the one long-listed CombatFx
+   red. No WebGL build and no cab shot this turn, so the pose is written and unverified visually.
+
 3f. THE TWO CLAUSES OF §11.5 THAT ARE ACTUALLY OPEN (2026-09-20, found by reading the section against the write
    at the close-out, not by measuring). Neither is coded.
 

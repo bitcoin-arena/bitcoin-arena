@@ -152,6 +152,18 @@ ON TOP NOW: **§11.5's two open clauses** - a shell landing inside 8 m of a man 
 down, then §4.4 coax (posture and suppression must both apply to it). M3's remainder stands behind them, its
 fixture pair needing a third re-pick.
 
+§11.5's REMAINDER LIST, and it is not closed while any of these stands:
+1. **The shell MISS half** - §11.5's own sentence is "hit or miss". Hits are in. A miss has no landing point in
+   this core, so there is no share to quote and none is invented. BLOCKED ON §4.4, which owns the shell.
+2. **§0's "never a step past 0.01 m"** - 78.9% of pinned man-ticks step past it, because a diagonal crawl spends
+   0.00833 m on each axis. Ruled combined Euclidean, not per-axis. PARKED until cover is back over 70%, because
+   capping it slows a diagonal crawl and takes more men off their holes.
+3. **The §11.3 cover row at 64.6% against 70** - cause: pinned men crawl. Listed, not loosened.
+4. **Goldens stale** (vectors+bundle 2/20) until the deploy that ships occupancy, posture and suppression
+   together. Not a letter's task.
+5. **The pin is drawn but not SEEN.** ArmyRenderer now reads posture and the pin word and lays a downed man on
+   the ground; it is compile-gated (EditMode 254/258, 0 error CS) and has had no WebGL build and no cab shot.
+
 LISTED, WAITING, AND NOT §11.5's - the two PlayMode reds that were unexplained, now run and named (numbers in
 TASKBOOK): **ScoreTests.IdlingEarnsNothingEvenOnTheSeam** fails on `MakingProgress`, a pure Unity x-position flag,
 while its earning assert passes - it depends on the core-driven truck's position path and still fails on the
