@@ -26,6 +26,8 @@ NOW: **the gold coin construct blocks the finish.** Daniel cannot drive through 
 
 Fix: the truck must **not** clip through this construct from either side. The **finish line / DeliveryGate must stay fully driveable**. Do not grow the coin box over the gate. Do not leave the coin as air. Measure on Beelink Chrome: centre-line still DELIVERED; driving into the coin stack from front or back stops the truck.
 
+ALSO 18:59: **the miner structure behind the finish line must have collision.** And **Mempool collision must be exactly the yellow marked line** on the facade. Shot `daniel-screens/mempool-yellow-line-1859.jpg`. Open it. Same wash. Do not move the yellow line. Do not put Mempool collision in front of or behind that line.
+
 Then resume 16:22 assault share, then the parked playtest chain, then M3.
 
 # PREVIOUS  -  2026-09-20 16:22
