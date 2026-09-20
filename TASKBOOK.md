@@ -497,6 +497,39 @@ genuinely is §8.1's 26 m and is untouched.
    to his POST, not his position, so a man does not wander to cover"), and moving that is a doctrine change, not a
    fix. The bar is untouched and the test asserts what it always asserted.
 
+3p. §11.5 CLOSED ON ITS OWN CLAUSES, AND THE SIX REMAINDERS (2026-09-20). Each with why it is not being done now
+   and what it waits on, so none of them travels as "unfinished suppression".
+
+   DONE, and measured where it is recorded above: the TAC_SUPP word (18, TAC_WORDS 212 -> 230); the pin at 120;
+   the -1 decay; a pinned team that does not rush; the crawl at 0.5 m/s; the halved reload; the suppressing round
+   on the look-again draw, taking no extra draw; the bomb charged once per TEAM (56 of 385 double charges -> 0);
+   the shell pinning through one helper, on a hull and on the cab; and the pose the renderer draws from the
+   core's own word (4-20 of 69 men drawn down, live).
+
+   1. COVER OCCUPANCY 64.6% vs 70%. NOT a §11.5 clause and moved off this letter. Why not now: the cause is the
+      claim rule, and a post occupying while a man nine metres away does not is §11.3 doctrine that Core keeps.
+      Depends on: the claim-rule item, which is now the top of the list. Measured cause, not the crawl story -
+      1698 failing ticks, 100% holding an unpinned walker at 8.9 m, 68.1% a crawler at 18.2 m, crawl a ceiling
+      of 24.1 points, freezing crawlers still fails every tick, claim-holder median 23.4 m from post vs 7.3 m
+      without.
+   2. THE SHELL MISS HALF. Why not now: a miss has no landing point in this core - a gun connects or it does
+      not - so building one here would be inventing §4.4's rule. Depends on: §4.4, which owns the shell. No share
+      is quoted because the share depends entirely on the landing distribution that does not exist.
+   3. §0's 0.01 m CAP. Why not now: capping a diagonal crawl on combined displacement slows it further and takes
+      more men off their holes while cover is already under the bar. Depends on: cover back over 70%. Ruled
+      combined Euclidean, not per-axis. 78.9% of pinned man-ticks step past it today.
+   4. STALE GOLDENS (vectors+bundle 2/20). Why not now: §11.5 and §11.3 both moved behaviour, and regenerating
+      before the ship pins a core hash that is never served. Depends on: the deploy that carries occupancy,
+      posture and suppression together. Not a letter's task.
+   5. THE BODY CLOSE-UP. Why not now: the spectate camera starts behind the depot and flying it forward hit the
+      cargo chooser; the pose is proved by the renderer's own count and the code path, not by an eye on a man.
+      Depends on: an eye on the next playable build. Listed as unproved-by-picture rather than claimed.
+   6. FOUR RUN-MODE FLAKES, listed and NOT chased: ScoreTests.IdlingEarnsNothingEvenOnTheSeam and
+      SpawnMarkParkedTests (red filtered, green in the full run), RampReadyTests (green filtered 3/3, red in the
+      full run), GhostAcrossTheDoors (long-listed). Why not now: each flips with the run mode, which is a
+      PlayMode scene-leak question and not suppression's. Depends on: someone isolating that leak. Unattributed
+      beyond the run mode - an earlier note gave two of them a terrain-geometry cause and that was wrong.
+
 3f. THE TWO CLAUSES OF §11.5 THAT ARE ACTUALLY OPEN (2026-09-20, found by reading the section against the write
    at the close-out, not by measuring). Neither is coded.
 

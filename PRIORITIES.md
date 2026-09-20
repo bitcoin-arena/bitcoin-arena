@@ -146,24 +146,31 @@ THE PIN IS INSIDE ITS CEILING (ruled 2026-09-20): §0's 70% is the share of TEAM
 retracted. +60, -1 and 120 stand untouched; two rounds pinning a team and a median pin of three seconds are the
 section's intent. Numbers in TASKBOOK.
 
-ON TOP NOW: **§11.5's two open clauses** - a shell landing inside 8 m of a man adds 60 (unbuilt), and the bomb's
-300 lands per MAN where the section says per TEAM (sim.js, in the per-man loop). Then the cover row it knocked
-down, then §4.4 coax (posture and suppression must both apply to it). M3's remainder stands behind them, its
-fixture pair needing a third re-pick.
+§11.5's OWN CLAUSES ARE **DONE** (2026-09-20): the TAC_SUPP word, the pin at 120, the -1 decay, a pinned team
+that does not rush, the crawl at 0.5 m/s, the halved reload, the suppressing round on the look-again draw, the
+bomb charged once per TEAM, the shell pinning through one helper on a hull and on the cab, and the pose the
+renderer draws from the core's own word. Numbers for each in TASKBOOK.
 
-§11.5's REMAINDER LIST, and it is not closed while any of these stands:
+THE LETTER'S PLAYER-FACING HOLE, in plain words: **cover occupancy sits at 64.6% against a 70% bar.** Measured
+2026-09-20, the cause is NOT the crawl - every one of the 1698 failing ticks holds an UNPINNED man standing about
+nine metres from his hole, and freezing every crawler still fails every one of them.
+
+ON TOP NOW: **the §11.3 occupancy row** as its own item, with that cause - it is a claim-rule question, not
+unfinished §11.5 work. Then §4.4 coax (posture and suppression must both apply to it). M3's remainder stands
+behind them, its fixture pair needing a third re-pick.
+
+§11.5's REMAINDERS - none of them a §11.5 clause, all of them blocked elsewhere:
 1. **The shell MISS half** - §11.5's own sentence is "hit or miss". Hits are in. A miss has no landing point in
    this core, so there is no share to quote and none is invented. BLOCKED ON §4.4, which owns the shell.
 2. **§0's "never a step past 0.01 m"** - 78.9% of pinned man-ticks step past it, because a diagonal crawl spends
    0.00833 m on each axis. Ruled combined Euclidean, not per-axis. PARKED until cover is back over 70%, because
    capping it slows a diagonal crawl and takes more men off their holes.
-3. **The §11.3 cover row at 64.6% against 70, and the CAUSE IS NOT THE CRAWL** (measured 2026-09-20, numbers in
-   TASKBOOK). On 100% of the 1698 failing ticks there is an UNPINNED man holding a claim about **8.9 m** from his
-   hole; 68.1% also hold a crawler, 18.2 m out. Freeze every crawler on his place and every one of those ticks
-   still fails. Crawl is a ceiling of 24.1 points, not the cause. Men are not standing on their posts - a
-   claim-holder sits a median 23.4 m from his line post against 7.3 m for a man without one - so the row is
-   measuring a line permanently in transit. The claim rule stays as §11.3 writes it (from his POST, not his live
-   position, so a man does not wander to cover), the bar stays at 70, and the assert is untouched.
+3. **The §11.3 cover row at 64.6% against 70 - MOVED OFF THIS LETTER, it is the next item.** The cause is not
+   the crawl: 100% of the 1698 failing ticks hold an unpinned man about 8.9 m from his hole, 68.1% also hold a
+   crawler 18.2 m out, and freezing every crawler still fails every tick - crawl is a ceiling of 24.1 points. A
+   claim-holder sits a median 23.4 m from his line post against 7.3 m for a man without one, so the row measures
+   a line permanently in transit. It is a claim-rule question and the claim rule STAYS as §11.3 writes it: a post
+   occupies, a man nine metres away does not. Bar at 70, assert untouched, no occupancy investigation on §11.5.
 4. **Goldens stale** (vectors+bundle 2/20) until the deploy that ships occupancy, posture and suppression
    together. Not a letter's task.
 5. **The pin is drawn and COUNTED on a running build, not yet eyeballed.** ArmyRenderer reads posture and the
