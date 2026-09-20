@@ -5,6 +5,36 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE OTHER HALF OF ITEM 4: CAN A TANK STAND IN THE DRAWN CABLE? (2026-09-20, measured before changing anything)
+
+The item says two things: the truck's roof passes through the tunnel, and "a tank can stand in a drawn cable".
+The truck half is fixed and shown on Daily. The tank half needed its own measurement, because the fix for the
+truck does nothing for it:
+
+  `st.solids` is consumed in ONE place - `resolveSolids(v, st.solids, ...)` at sim.js:1412, where `v` is the
+  vehicle. `resolveArmour` pushes the TRUCK out of tanks, not tanks out of the map. Army units are pushed out of
+  CRATERS and off the MAP EDGE (army.js) and nothing else. So the 41 new boxes, `power_cable_0/1` among them,
+  cannot stop a tank: armour is not resolved against map solids at all.
+
+SO IS IT REACHABLE? `tools/measure-tank-in-miner.mjs`, 3 seeds x 60 s:
+
+  living tank-ticks                 217757
+  standing east of x 100            0   (0.000%)
+  inside a drawn miner part         0   (0.000%)
+
+Not one tank in 217757 tank-ticks gets within 8 m of the miner's westernmost drawn part, let alone into a cable.
+The army fights at the seam and the seam never reaches the miner's end of the map.
+
+RULED, and this is evidence rather than parking: nothing is missing from item 4. Making armour resolve against
+the map's 78 boxes would change tank movement over the WHOLE map - the post office, the edges, every lane - to
+close a case that happens 0 times in 217757 tank-ticks. That is its own item if it is ever wanted, with a
+whole-map cost, and it is not a hole in this one. The measurement is kept so nobody has to re-derive it.
+
+BOTH ENGINES, in numbers, one more time: C# `DeliveryGate.Slab()` builds 5 BoxColliders and still does; the core
+now carries 46 at the miner. The difference is deliberate and safe because NOTHING harvests those colliders -
+`WorldSolids.Gather` is called nowhere outside its own file, `BlwpCore` records "SetSolids IS GONE", and
+`CoreDrivenTruck` forces the Rigidbody kinematic while the core drives. PhysX has not become the simulator.
+
 THE CORRIDOR WALLS STOP THE TRUCK ON DAILY (2026-09-20). Driven in the PLAYER BUILD on Beelink Chrome, read
 from the page's own core (`unityInstance.Module.blwp.st.i32`), never PhysX.
 
