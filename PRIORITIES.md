@@ -20,7 +20,7 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-# LIVE LETTER  -  2026-09-20 01:20
+# LIVE LETTER  -  2026-09-20 03:30
 
 WHERE THE GAME IS: **btc-logistics-core.pages.dev at 0.0.1739** (deploy 9cac533f), unchanged since 19:47 on the
 19th. The core in that build was byte-identical to packages/core/dist AS IT STOOD THEN - today's dist is many
@@ -34,40 +34,43 @@ carrying the war, and rounds living their three minutes again. Numbers for all o
 
 WHAT HAS LANDED ON THE BRANCH SINCE AND IS **NOT** LIVE (each named by its own commit):
 - **The HUD stopped lying about the trend** (236e0ab4). A candle is two samples and the war was grading the wick,
-  so a drawn body of $2.44 to $4.88 read RED on screen and DOJI to the war - five red candles printed SIDEWAYS.
-  chart.js and the core now share one `trendCandle`. Proven on the MacBook against build 0.0.1755 through the real
-  Binance feed: a falling chart reads DOWN 3 with six red dots, a rising one UP 3 with six green.
-- **§11.3 cover is closed, but its row is currently RED** (cf0cb8b4). Men claim wrecks, craters and candle lips and
-  stay in them, and the row reached 72.9%. §11.5's crawl has since knocked it to **64.7% against a 70% bar** - see
-  below. The bar is not loosened.
+  so a drawn body of $2.44 to $4.88 read RED on screen and DOJI to the war. chart.js and the core now share one
+  `trendCandle`. Proven on the MacBook against build 0.0.1755 through the real Binance feed: a falling chart reads
+  DOWN 3 with six red dots, a rising one UP 3 with six green.
+- **§11.3 cover is closed, and its row is currently RED** (cf0cb8b4). Men claim wrecks, craters and candle lips
+  and stay in them; the row reached 72.9%. §11.5's crawl has since knocked it to **64.6% against a 70% bar**. The
+  bar is not loosened.
 - **§11.4 posture is closed in the core** (7bc7c1f6). STAND / PRONE / COVER in the bits §11.3 reserved; the rifle
-  that fires at a man reads them; COVER rifle deaths 22.4 -> 5.7 per 100k man-ticks, the ruled quarter; a bomb
-  reaches a COVER man only inside 8 m. §0's 2x clause stays listed at 0.35, not retuned.
-- **§11.5 suppression is WRITTEN, NOT CLOSED** (2383c95b, f320932a). Fire pins a rifleman: TAC_SUPP, 18 words,
+  that fires at a man reads them; COVER rifle deaths 22.4 -> 5.7 per 100k man-ticks, the ruled quarter.
+- **§11.5 suppression is WRITTEN, NOT CLOSED** (2383c95b ... 33f967b1). Fire pins a rifleman: TAC_SUPP, 18 words,
   +60 a round, -1 a tick, pinned at 120; a pinned team does not rush, a pinned man crawls at 0.5 m/s and reloads
-  at half rate, and a suppressing round rides the look-again draw so the draw count does not move. The pose writer
-  reads the pin, so a pinned man on a diagonal is down rather than standing: STAND while pinned 79.7% -> 0.2%.
+  at half rate. A bomb pins once per TEAM, not once per man (56 of 385 blasts had been charged twice; now none). A
+  shell that connects pins the teams within 8 m of where it lands - on a hull OR on the truck - through one
+  helper shared with the blast. The pose writer reads the pin, so STAND while pinned went 79.7% -> 0.2%.
 
-§11.5's STATE, and two of the four items on it turned out to be my own misreadings rather than faults:
-- **The pin is INSIDE its ceiling.** §0's 70% is the share of TEAMS pinned, which is 43.8%. The 96.0% / 95.6% once
-  listed as an overage was "at least one of nine teams" - an OR read as a share - and is retracted. +60, -1 and
-  120 stand untouched.
+§11.5's STATE. Four things were raised against it and TWO OF THEM WERE MY OWN MISREADINGS, not faults:
+- **The pin is INSIDE its ceiling.** §0's 70% is the share of TEAMS pinned, which is 43.8%. The 96.0% / 95.6%
+  once listed as an overage was "at least one of nine teams" - an OR read as a share - and is retracted.
 - **The neighbour already sees the pin.** 426193 of 426193 pinned team-ticks look halted to the neighbour, and on
-  86.5% of them the timer would have had the team rushing. That was never a hole; my diagnosis was the error.
-- **OPEN: the shell clause does not exist.** §11.5 says a shell landing inside 8 m of a man adds 60 to his team.
-  Nothing does it. The hit half is buildable now; the miss half needs a landing point that waits on §4.4.
-- **OPEN: a bomb adds 300 per MAN, not per TEAM** (sim.js, inside the per-man loop). A team with two men in one
-  blast takes 600 and is clamped there, so it stays pinned 8.0 s instead of 3.0 s. Bombs open 36.4% of all pinned
-  episodes, so this sits on a live path.
-- **LISTED, parked:** §0's "never a step past 0.01 m" fails on 78.9% of pinned man-ticks. 0.01 m is ruled to be
-  combined Euclidean displacement, not a per-axis clamp; building it now would slow a diagonal crawl further and
-  take more men off their holes while cover is already down.
+  86.5% of them the timer would have had the team rushing. Never a hole; the diagnosis was the error.
+- **The courier shell was a real hole and is fixed** (b46640b7). It collided with §0's fault list, which forbade
+  a man's suppression word differing between the truck parked and driven; RULED - §11.5 wins, a shell is an impact
+  at a point, and the fault-list line now excepts exactly that case and names §11.5 (33f967b1). Measured
+  parked-versus-driven: claim 0, posture 0, TAC_SUPP 0 differences over 142920 man-ticks.
+- **OPEN, PARKED:** the shell MISS half waits on §4.4's landing point; §0's "never a step past 0.01 m" fails on
+  78.9% of pinned man-ticks and is ruled combined Euclidean, not per-axis, held back because building it while
+  cover is down would take more men off their holes.
 
 WHY THE COVER ROW IS RED, attributed and not re-investigated: occupancy 70.9% -> 61.6% on one drive with sim.js
 swapped either side, living man-ticks unchanged at 317444 -> 316959. Of 1114 lost reached man-ticks, 746 (67%) are
 pinned men who cannot cross what they were given at 0.5 m/s against a walk of 2.788, and 368 (33%) are men
 crossing into the pinned bucket - the FREE rate did not move at all, 9.6% before and after. None of it is a
 counting artefact.
+
+THE TWO PLAYMODE REDS THAT WERE UNEXPLAINED ARE NAMED (26d9b6ac) and neither is suppression's:
+ScoreTests.IdlingEarnsNothingEvenOnTheSeam fails on `MakingProgress`, a pure Unity x-position flag, while its
+earning assert passes; SpawnMarkParkedTests fails on its own guard, a +40 m feeHeight lifting the mark only 8.70 m
+against a 12 m budget. Both are terrain-rebuild and truck-position geometry from the world growing east.
 
 WHY NOTHING IS LIVE, and none of these is test colour:
 1. **Men in holes draw below the mesh.** Unity carves a crater bowl the core does not, so the men §11.3 correctly
