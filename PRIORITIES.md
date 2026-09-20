@@ -44,9 +44,12 @@ LATER, NOT NOW: different-operator gateways (§23.6's own test; this step is the
 ruling), the Daily declaring both regtest gateways, guardians, `federationIsBonded`, `mass_behind_tunnel`.
 
 STANDING REDS (each named, none new this letter):
-  - `custody-daemon` **6 of 9 red**: `POST /entry` answers 400 where 201 is expected. NOT the gateway gate -
-    the round opens fine and the preflight is stubbed ready - and it reproduces identically at HEAD with this
-    letter's change stashed away. Cause not yet diagnosed; needs its own letter. The other three pass.
+  - ~~`custody-daemon` 6 of 9 red~~ **FIXED 2026-09-20, 9/9.** Diagnosed on the hold letter because it sat on
+    the hold path. The cause was the stale `blockTicks: 9000` a THIRD time: `Round.open` refuses a contract
+    that disagrees with the core it names, so `POST /round` was 400, there was no round, and every
+    `POST /entry` answered "no such round". The fixture reads `BLOCK_TICKS` now.
+  - **90 other test fixtures still carry `blockTicks: 9000`.** They do not fail today because they never reach
+    `Round.open`'s check. Its own letter, not this one: a sweep that makes fixtures read the core.
   - EditMode `CombatFxTests.RifleFireProducesAFlashAndATracer` - long-listed, drives the retired
     `Battlefield.Army`.
   - PlayMode 13 long-listed (ten on the retired `Battlefield.Army`, two MushroomResting skirt offsets,
