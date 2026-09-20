@@ -26,6 +26,19 @@ M3: **a round can be played for real testnet sats** - the federation holds the m
 paid out, and the payout actually moves. W1-W7 are done, and so is every item the inventory's "M3 is done
 when" named that Daniel has not parked.
 
+DONE (2026-09-20): **the shared window fixture reads the core's run length.** `test/window-fixture.js:106`
+said 9000, so every round the 23 suites under it built was 400 at `POST /round`. Passing tests across those
+23 go **2 -> 31**, wholly green suites **0 -> 8**, hanging suites **9 -> 2**. Separately, and measured first
+so it could be measured at all, a setup that throws after `serve()` no longer leaks its listener: forfeit
+went from unbounded (killed at 5 min, 4 LISTEN sockets) to **0.383 s, exit 1, 0 sockets**. Commits
+`07d36965`, `e1fcad1e`. Per-suite counts and every remaining red with its cause in TASKBOOK.
+
+RULING NEEDED, and it blocks the next sweep: **`test/lock-fixture.js:60` gives the fake federation
+`baseMsat: 1000n`, and §22A's `disable_base_fees` guard now refuses every entry into such a round.** 43
+failing tests in 5 suites are that one 409 (outage 9/9, first-mark 14/14, one-signer-node-refused 5/5,
+lock-settlement 13/15, forfeit 2/2). The guard is right and the fixture describes a federation BLWP would
+refuse - but the 1000 was chosen to steer the FEE-LOCK gate, so zeroing it changes what those suites test.
+
 DONE (2026-09-20): **the three threshold suites can sign again**, the same hole as `reconstruct` and not a
 new one. `settle-threshold` 0/2 -> **2/2**, `pool-threshold` 0/4 -> **4/4**, `handout-threshold` 0/2 -> **2/2**:
 their contracts named `blockTicks: 9000` while the core has ended a run at 10800 since c01cc655, so
@@ -87,20 +100,14 @@ STANDING REDS (each named, none new this letter):
     the hold path. The cause was the stale `blockTicks: 9000` a THIRD time: `Round.open` refuses a contract
     that disagrees with the core it names, so `POST /round` was 400, there was no round, and every
     `POST /entry` answered "no such round". The fixture reads `BLOCK_TICKS` now.
-  - **~85 other test fixtures still carry `blockTicks: 9000`**, and the claim that they "do not fail today
-    because they never reach `Round.open`'s check" was wrong: FOUR more suites were red for it and are fixed
-    (`reconstruct` 7/7, `settle-threshold` 2/2, `pool-threshold` 4/4, `handout-threshold` 2/2), and
-    `test/window-fixture.js:106` still says 9000, which is why **`forfeit.test.js` hangs** - see below.
-    The sweep is still its own letter, not this one.
-  - **`forfeit.test.js` does not time out, it never exits.** Measured under `--test-timeout=0`: both tests
-    fail in **91ms and 16ms** with `400 !== 201` on `POST /round` - "that round says a run is 9000 ticks and
-    this core ends one at 10800" - and then the runner sits forever holding **4 LISTEN sockets**, two signer
-    nodes per test. `const w = await lockRound()` is outside the try, so the `finally { await w.close() }`
-    never runs when the round is refused. Nothing is slow; the hang is a leaked server on a failed setup.
-  - EditMode `CombatFxTests.RifleFireProducesAFlashAndATracer` - long-listed, drives the retired
-    `Battlefield.Army`.
-  - PlayMode 13 long-listed (ten on the retired `Battlefield.Army`, two MushroomResting skirt offsets,
-    GhostAcrossTheDoors). Unity untouched since the playtest letter.
+  - **85 files, 93 occurrences still name `blockTicks: 9000`** - 53 blwp-node, 22 blwp-client, 10 protocol;
+    46 are blwp-node suites and `test/pool-fixture.js` is a second shared fixture. `test/window-fixture.js`
+    is done. Three suites keep a private copy and stay red for it: `two-titles.test.js:48`,
+    `payout-second-signer-node.test.js:143`, `second-closer.test.js:91`.
+  - **`forfeit.test.js` no longer hangs** (0.383 s, exit 1, 0 leftover listeners) but is 0/2, on ruling A.
+  - `close-at-end` 0/1: it hardcodes the run length in ms (`now - 200000n`), so its round is no longer over.
+  - `five-of-seven` needs more than 180 s now that seven signer nodes drive whole 10800-tick runs;
+    `signer-node-lock` passes one test and then stops producing output. Both unattributed, both in TASKBOOK.
 
 # DONE  -  2026-09-20 18:56 / 18:59  playtest: coin, finish gate, mempool line
 

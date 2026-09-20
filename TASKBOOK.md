@@ -5,6 +5,83 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE SHARED WINDOW FIXTURE, AND WHAT IT WAS HIDING (2026-09-20, commits 07d36965, e1fcad1e)
+
+`test/window-fixture.js:106` said `blockTicks: 9000`; the core has ended a run at 10800 since c01cc655. Every
+round the fixture built was 400 at `POST /round`, so all 23 suites importing it were red. It reads the core's
+`BLOCK_TICKS` now. Measured one suite per call, `timeout 180 node --test --test-timeout=120000`:
+
+  suite                             before     after      note
+  lobby-names                       0 / 1      1 / 1      green
+  rerun                             0 / 4      4 / 4      green
+  slash-filing                      0 / 3      3 / 3      green
+  signer-node-relay                 0 / 5      5 / 5      green
+  close-retry                       HUNG       3 / 3      green
+  core-registry                     2 / 3      3 / 3      green
+  lobby                             0 / 1      1 / 1      green
+  federation-named                  0 / 1      1 / 1      green
+  publication-finality              HUNG       6 / 7
+  objection-window                  0 / 7      3 / 7
+  two-titles                        0 / 2      1 / 2
+  close-at-end                      0 / 1      0 / 1
+  payout-second-signer-node         0 / 1      0 / 1
+  second-closer                     0 / 2      0 / 2
+  forfeit                           0 / 2      0 / 2
+  walk-away-hold                    HUNG       0 / 1
+  hold-two-first                    HUNG       0 / 2
+  one-signer-node-refused           HUNG       0 / 5
+  outage                            HUNG       0 / 9
+  first-mark                        HUNG       0 / 14
+  lock-settlement                   HUNG       0 / 15
+  five-of-seven                     HUNG       over 180 s, working (2382 lines of output)
+  signer-node-lock                  0 / 5      1 pass, then no output for 178 s
+
+  passing tests across the 23:   2  ->  31          wholly green suites:  0 -> 8
+  suites that hang:              9  ->  2
+
+THE HANG WAS ITS OWN FAULT, not the stale number. `forfeit.test.js` did all its work in 107 ms and then held
+four LISTEN sockets forever, because `lockRound()` calls `serve()` twice and only then does the `POST /round`
+that throws - inside the helper, before the caller has a `w` to close. Repaired first, on purpose, so the
+repair could be measured while a setup failure still existed: wall time unbounded -> 0.383 s, exit 143 -> 1,
+leftover listeners 4 -> 0, still 0/2 and still failing for the same reason.
+
+EVERY REMAINING RED, WITH ITS CAUSE:
+
+  A. THE ZERO-BASE-FEE GUARD MEETS A FIXTURE THAT CHARGES ONE - 43 failing tests, 5 suites, ONE ruling.
+     `test/lock-fixture.js:60` gives the fake federation `feeRule: { ppm: 0n, baseMsat: 1000n }`, and its own
+     comment says why that number was picked: "as the regtest guardians answered ... Under it a 100 sat round
+     mints no fee lock (Pick b's gate)". It was chosen to steer the FEE-LOCK gate. A later letter then added
+     `federationTakesNoBaseFee`, which refuses an entry into a round whose federation charges a base fee -
+     §22A, "the federation runs with `disable_base_fees`". So every entry into those rounds is now 409:
+       outage 9 of 9, first-mark 14 of 14, one-signer-node-refused 5 of 5, lock-settlement 13 of 15,
+       forfeit 2 of 2.
+     This is not a fixture typo and not a guard bug. The guard states the money law correctly; the fixture
+     describes a federation BLWP would refuse. Setting it to 0n changes the fee-lock gate those same suites
+     depend on, which changes what they test. RULING NEEDED - see PRIORITIES.
+
+  B. THREE SUITES KEEP THEIR OWN COPY OF 9000, so they are refused exactly as before:
+       two-titles.test.js:48 (`blockTicks = 9000` as a default parameter)  1 of 2 red
+       payout-second-signer-node.test.js:143                                1 of 1 red (400 at :210)
+       second-closer.test.js:91                                             2 of 2 red (404, "no such round")
+     They import window-fixture for helpers but build their contracts themselves.
+
+  C. `close-at-end.test.js:33` hardcodes the run length in milliseconds: `now - 200000n`, with the comment
+     "its end, ~180 s after entry close, has passed". 9000 ticks at 50/s is 180 s; 10800 is 216 s, so the
+     round is no longer over and its own `assert.ok(roundEndMs(over) < now ...)` is false. A derived offset
+     fixes it; the assertion stays.
+
+  D. Not yet attributed, and not guessed at here: `hold-two-first` 0/2 ("no stake moves: the operator would
+     keep 196000 msat"; the two-first-marks hold expires back to the player instead of settling),
+     `walk-away-hold` 0/1 ("no signer node settled the hold into the pool"), `objection-window` 4 of 7 (a lost
+     stake never settled after the window), `publication-finality` 1 of 7 (a deep-equal),
+     `lock-settlement` 2 of 15 that are not the 409, `five-of-seven` (over 180 s now that seven signer nodes
+     drive whole 10800-tick runs), `signer-node-lock` (one test passes, then no output).
+
+HOW MANY FIXTURES STILL NAME 9000: **85 files, 93 occurrences** - 53 in blwp-node, 22 in blwp-client, 10 in
+protocol. 46 of them are blwp-node suites, and `test/pool-fixture.js` is a second shared one. Three of those
+46 are proved red for it above (B); the rest are unmeasured, and the next sweep needs ruling A first because
+many of them also run on `lock-fixture`.
+
 THE THREE THRESHOLD SUITES, AND WHAT `forfeit.test.js` ACTUALLY DOES (2026-09-20, commit 712bad8c)
 
 THE FIXTURE FIX, measured in the foreground, `timeout 180 node --test --test-timeout=120000`, one suite per
