@@ -5,6 +5,50 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE THREE THRESHOLD SUITES, AND WHAT `forfeit.test.js` ACTUALLY DOES (2026-09-20, commit 712bad8c)
+
+THE FIXTURE FIX, measured in the foreground, `timeout 180 node --test --test-timeout=120000`, one suite per
+invocation:
+
+  suite                                 before      after
+  settle-threshold.test.js              0 / 2       2 / 2
+  pool-threshold.test.js                0 / 4       4 / 4
+  handout-threshold.test.js             0 / 2       2 / 2
+
+Each named `blockTicks: 9000` in its own `contractFor`. `Round.open` refuses a contract that disagrees with
+the core it names - "that round says a run is 9000 ticks and this core ends one at 10800" - so `POST /round`
+was 400, no round existed, and every test died with "this node holds no such round" before a stake was dealt.
+The fixtures import the core's `BLOCK_TICKS` now instead of repeating a copy of it.
+
+`settle-threshold` also named `objectionWindowMs: 0n`, which the result-window guard of the previous letter
+refuses on purpose (a zero window erases §13A's replay veto). It asks for **1ms** - the smallest legal window,
+since BLWP v4.6.1 states no floor - and that window has passed by the time the suite looks. No floor invented,
+no assertion loosened, no product code changed.
+
+`forfeit.test.js`: HUNG, NOT SLOW. It was Terminated at `timeout 180` and again at `timeout 300` (exit 143),
+which says nothing about why. Measured properly under `--test-timeout=0`, as a unit, with the process
+inspected while it sat:
+
+  test 1  the qualifier's lock is forfeited by both signer nodes ...   FAILED in    91.36 ms
+  test 2  a Delivered run below the round's min_score ...              FAILED in    15.94 ms
+  runner  still `active` 38 s later, and at 5 min, with no further output
+  handles 4 x LISTEN on 127.0.0.1 (34053, 36721, 38215, 41173) - two signer nodes per test
+
+Both failures are the same `AssertionError: 400 !== 201` at `forfeit.test.js:66`, the `POST /round` in
+`lockRound()`, carrying the core's own words: "that round says a run is 9000 ticks and this core ends one at
+10800: a contract disagreeing with the network it names is invalid, and a second clock is not a shorter
+round." The 9000 comes from the SHARED fixture, `test/window-fixture.js:106`, not from the suite.
+
+THE HANG IS A SECOND, SEPARATE FAULT and it is in the test, not the node: line 131 is
+`const w = await lockRound();` **outside** the `try`, so when `lockRound` throws after both `serve()` calls
+have already bound a port, the `finally { await w.close(); }` on line 176 never runs. Node then cannot exit
+while four servers listen. Any setup failure in that suite hangs the runner, not only this one. Total wall
+time is unbounded: killed by hand at 5 min, having done all of its work in 107 ms.
+
+Left as measured, by ruling - no deep investigation, and the fixture sweep that owns
+`window-fixture.js:106` is its own letter. Only that one process was killed
+(`systemctl --user stop forfeit-notimeout.service`); nothing else was touched.
+
 HALF TWO OF §23.4: THE CLAIM KEY *IS* THRESHOLD-SIGNED, AND ITS PROOF IS HIDDEN THE SAME WAY (2026-09-20)
 
 Read before writing anything, as ruled. §23.4 asks for two things: reconstructing P from 5 of 7 shares (half

@@ -26,6 +26,13 @@ M3: **a round can be played for real testnet sats** - the federation holds the m
 paid out, and the payout actually moves. W1-W7 are done, and so is every item the inventory's "M3 is done
 when" named that Daniel has not parked.
 
+DONE (2026-09-20): **the three threshold suites can sign again**, the same hole as `reconstruct` and not a
+new one. `settle-threshold` 0/2 -> **2/2**, `pool-threshold` 0/4 -> **4/4**, `handout-threshold` 0/2 -> **2/2**:
+their contracts named `blockTicks: 9000` while the core has ended a run at 10800 since c01cc655, so
+`Round.open` refused them and every test died before a stake was dealt. These suites are §23.4/§23.6's
+evidence that the round's own threshold is the key that signs, so a stale number was hiding the proof. Three
+test files, no assertion touched, no product code. Commit `712bad8c`.
+
 DONE (2026-09-20): **a round cannot name a zero result window.** The field - `objectionWindowMs`, the spec's
 `objection_window_W` - already existed and already drove the objection window, finality, §13C's no-quorum
 outcome and the result window itself (`verify.js:#unretrievedPastWindow`). Nothing bounded it, so a contract
@@ -80,8 +87,16 @@ STANDING REDS (each named, none new this letter):
     the hold path. The cause was the stale `blockTicks: 9000` a THIRD time: `Round.open` refuses a contract
     that disagrees with the core it names, so `POST /round` was 400, there was no round, and every
     `POST /entry` answered "no such round". The fixture reads `BLOCK_TICKS` now.
-  - **90 other test fixtures still carry `blockTicks: 9000`.** They do not fail today because they never reach
-    `Round.open`'s check. Its own letter, not this one: a sweep that makes fixtures read the core.
+  - **~85 other test fixtures still carry `blockTicks: 9000`**, and the claim that they "do not fail today
+    because they never reach `Round.open`'s check" was wrong: FOUR more suites were red for it and are fixed
+    (`reconstruct` 7/7, `settle-threshold` 2/2, `pool-threshold` 4/4, `handout-threshold` 2/2), and
+    `test/window-fixture.js:106` still says 9000, which is why **`forfeit.test.js` hangs** - see below.
+    The sweep is still its own letter, not this one.
+  - **`forfeit.test.js` does not time out, it never exits.** Measured under `--test-timeout=0`: both tests
+    fail in **91ms and 16ms** with `400 !== 201` on `POST /round` - "that round says a run is 9000 ticks and
+    this core ends one at 10800" - and then the runner sits forever holding **4 LISTEN sockets**, two signer
+    nodes per test. `const w = await lockRound()` is outside the try, so the `finally { await w.close() }`
+    never runs when the round is refused. Nothing is slow; the hang is a leaked server on a failed setup.
   - EditMode `CombatFxTests.RifleFireProducesAFlashAndATracer` - long-listed, drives the retired
     `Battlefield.Army`.
   - PlayMode 13 long-listed (ten on the retired `Battlefield.Army`, two MushroomResting skirt offsets,
