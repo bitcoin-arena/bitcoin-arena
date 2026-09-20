@@ -5,6 +5,57 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+FIVE-OF-SEVEN RECONSTRUCTION IS DEMONSTRATED, NOT ASSUMED (2026-09-20, M3 §23.4 half one)
+
+§23.4: "Claiming a loser's stake lock requires the committee's threshold signature and reconstructing `P`,
+which requires 5 of the 7 shares, which the mechanical rule releases only against a FINAL result - and
+finality requires 5-of-7 game/verify signatures plus an objection window that anyone in the world may use to
+disprove the result by replay (§13A)." (§23.5 is "No pool wallet" - a different rule, kept distinct.)
+
+RECONSTRUCTION WAS NEVER MISSING, and that was the first thing measured. `server.js:323` wires
+`preimageFor: preimageFor || fromTheCommittee`, and `fromTheCommittee` reads the round's `settlementSlots`,
+derives `roundThreshold(...)`, calls `preimages.open({ roundId, entryId, needed })` and returns null with a
+logged reason if the threshold is not met. Its own comment: "An operator may still inject one - the regtest
+tool does - but the DEFAULT is the committee, because a default that settles alone is the custody this letter
+exists to end."
+
+WHAT WAS MISSING WAS THE PROOF. `reconstruct.test.js` - seven tests that speak §23.4's own sentences - was
+0/7, and both of its causes were stale fixture values rather than anything about custody:
+
+  blockTicks: 9000          `Round.open` refuses a contract disagreeing with the core (10800 since c01cc655),
+                            so every test died with "this node holds no such round" before a share was dealt
+  objectionWindowMs: 0n     a zero window was legal when this fixture was written; it is refused now, because
+                            it erases §13A's replay veto. The spec sets NO FLOOR, so the smallest legal
+                            window is 1ms - which has passed by the time these tests ask. Nothing asserted in
+                            the suite is about the window's length.
+
+  before  reconstruct 0/7        after  reconstruct 7/7
+
+AND WHAT THE SEVEN NOW SAY, once a round can open:
+
+  one node alone opens nothing, four refuse by name, five reconstruct
+  a stranger asking for a share is refused, and a signer node gets an envelope only it can open
+  a delivered run never gives up its preimage, and neither does one that is not final
+  a hold settles on a preimage five signer nodes opened, and on nothing less
+  with four signer nodes reachable the loser's stake stays in flight
+  a player who committed to one secret and dealt another opens nothing
+  a signer node that never replayed the run hands over nothing
+
+That is §23.4's half one, demonstrated: the threshold is real, four is not enough, a non-final result releases
+nothing, and a hold settles only on a preimage five seats opened.
+
+NOT LOOSENED: no assertion changed, only the two fixture values the current rules reject. The suite takes
+about 10 s per test because it stands up seven daemons and deals real shares.
+
+SUITES: reconstruct 0/7 -> 7/7; shares 15/15, frost 8/8, dkg 3/3, result-window 7/7, seats-fit-slots 7/7,
+custody-daemon 9/9 all unchanged.
+
+STILL SINGLE-NODE ON TESTNET4, AND SAYING SO: `custody-testnet4.mjs` and `custody-lnd.mjs` both INJECT
+`preimageFor`, so the live-pair measurement never exercised reconstruction. Half two of §23.4 - whether the
+claim key is actually FROST-signed by the committee (§23.6's BIP-340 key) - is measured next and is not
+claimed here.
+
+
 A ROUND CANNOT NAME A ZERO RESULT WINDOW (2026-09-20, M3 the result window)
 
 THE FIELD ALREADY EXISTED AND WAS ALREADY USED, which is the first thing measured and the reason this letter
