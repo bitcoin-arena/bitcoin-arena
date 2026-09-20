@@ -28,6 +28,10 @@ lane x -27.0 m, truck at x -100.4 facing east so the lane is 73.4 m ahead; **0 b
 declaration, 2 by +8 s, 2 at the end**, push 16 s, ended TAKEN. Screens `push2-01-declared.png` (banner up,
 log on the left edge), `push2-02-pushing.png`.
 
+SUITES on this build: EditMode **293/297** (3 skipped, 1 red - the long-listed CombatFx rifle flash),
+PlayMode **229/257** (14 skipped, 14 red - the fourteen long-listed, none new; RampReadyTests is green this
+run, and the impossible PlayMode timer test of the previous letter is gone). errorCS 0 in both.
+
 STILL OPEN, AND IT IS CAMERA/READABILITY RATHER THAN THE CORE: in that frame the tanks that took the lane are
 on screen but at the far LEFT edge, small, behind explosion sprites, while the camera looks east down the road.
 The banner names LOW/HIGH/OPEN and nothing in the world says where that is. Listed, not investigated - no
