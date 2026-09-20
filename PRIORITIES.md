@@ -20,10 +20,14 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-# NOW  -  M3: hold invoices on testnet4
+# NOW  -  M3: the federation's fees
 
 M3: **a round can be played for real testnet sats** - the federation holds the money, the fee is taken and
 paid out, and the payout actually moves. W1-W7 are done.
+
+NOW: **the federation's fees.** The next unparked item of "M3 is done when". Behind it, in the list's own
+order: the fee locks' claim hash and 22A node slots, then the result window (a contract field). Guardians and
+`federationIsBonded` stay parked by ruling.
 
 DONE (2026-09-20): **a hold invoice on testnet4 goes ACCEPTED -> HELD and settles or cancels from the core's
 word.** `tools/custody-testnet4.mjs` on the live pair: three 1000000 msat stakes held as 980000 msat invoices
