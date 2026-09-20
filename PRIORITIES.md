@@ -20,50 +20,37 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-# NOW  -  M3
+# NOW  -  M3: hold invoices on testnet4
 
 M3: **a round can be played for real testnet sats** - the federation holds the money, the fee is taken and
-paid out, and the payout actually moves. W1-W7 are done; the remainder is the unparked piece below.
+paid out, and the payout actually moves. W1-W7 are done.
 
-DONE (2026-09-20): **two live testnet4 LND gateways have inbound liquidity, measured and paid.**
-`beelink-testnet4` 0274e261... inbound **116530** sat, `beelink-testnet4-b` 025f17c2... inbound **80000** sat,
-both active and synced. A real invoice was paid each way over channel `dce6199b...` (B->A 100000,
-A->B 20000, both SUCCEEDED). The dark peer that had left A's 196530 sat unusable since 2026-09-16 was our own
-node B, not a third party. `protocol/src/gateways.js` was written AFTER the payments proved. Log in TASKBOOK.
+NOW: **hold invoices on testnet4.** A round still cannot lock sats. Pay is proven both ways on the live pair;
+ACCEPTED -> HELD -> settled/canceled is regtest-only. The outcome that settles or cancels comes from the core
+(DELIVERED / PLAYER_LOST / VOID), never from a browser API, and the operator must not profit from a technical
+failure. Numbers and the regtest history in TASKBOOK.
 
-BOTH SURVIVE A RESTART AND UNLOCK THEMSELVES (2026-09-20). Node B had been left as a *transient* `systemd-run` unit - the very bug that
-made it miss four days and left A's inbound unusable. It now has a real enabled unit
-(`monitoring/lnd-testnet4-b.service`, the same shape as `lnd-testnet.service`) and
-`wallet-unlock-password-file`, so it comes back and unlocks with no human. Measured after the unit restarted
-it: enabled/active, synced at 153265, channel `dce6199b...` active, inbound **80000** on B and **116530** on
-A. `protocol/tools/measure-gateways.mjs` reads both nodes live and feeds the real RPC to the predicate, so a
-dark gateway cannot hide behind a green suite. After restarting **A** as well: A inbound **116530**, B inbound
-**80000**, channel `dce6199b...` active on both, both units enabled/active, probe **2 usable, YES**.
+DONE (2026-09-20), in order:
+  1. **Two live testnet4 LND gateways hold inbound, paid each way.** A `0274e261...` inbound 116530,
+     B `025f17c2...` inbound 80000, channel `dce6199b...` active both sides.
+  2. **Both gateways survive a restart and unlock themselves** - real enabled units and
+     `wallet-unlock-password-file` on each; no password in git.
+  3. **A paying round will not open without two independent gateways.** The gate is `lightningPreflight`
+     (`blwp-node/src/preflight.js`), the one call `server.js` makes on the paying-round open path before
+     `round.open`. Shown no gateways it refuses: absence is not an escape hatch. Proved by deleting the call
+     site - 5 of 7 red.
 
-NEXT M3 PIECES, in order:
-  1. ~~Where `gatewaysAreIndependent` gets called~~ **DONE 2026-09-20: a paying round now refuses to open
-     without two independent gateways.** The call site is `lightningPreflight` in
-     `blwp-node/src/preflight.js`, which is the ONE gate `server.js` consults on the paying-round open path -
-     `POST /round`, under `if (contract.stakeMsat > 0n && custody.reaches)`, before `round.open(contract)`,
-     before any invoice and before the round is advertised payable. The browser decides nothing.
-     Shown no gateways it REFUSES: absence is not an escape hatch. A round that asks no stake is untouched
-     (M3.3-19). Proved red by deleting the call: 5 of 7 fail, including the guard written for it.
+LATER, NOT NOW: different-operator gateways (§23.6's own test; this step is the operator's own two nodes by
+ruling), the Daily declaring both regtest gateways, guardians, `federationIsBonded`, `mass_behind_tunnel`.
 
-     NOTE FOR THE REGTEST DAILY: `lndPreflightRegtest` now takes `gateways: [{ lnddir, rpc }]` and fails
-     closed on one. The Daily declares only `lnd-committee`; `lnd-alice` exists beside it, so the paying
-     regtest round needs both declared or it will be refused. The Daily runs from
-     `/mnt/bitcoin/blwp-2of2/code`, not this worktree, so nothing changed under it.
-  2. **Hold invoices on testnet4.** Pay is proven both ways; ACCEPTED -> HELD -> settled is regtest-only.
-  3. ~~Node A cannot auto-unlock~~ **DONE 2026-09-20**: Daniel supplied the password (`~/lnd.txt`, outside the
-     repo). A now has `wallet-unlock-password-file` and was restarted under its existing enabled unit: its own
-     log says "Attempting automatic wallet unlock with password provided in file" -> "Opened wallet" -> "The
-     wallet has been unlocked without a time limit", on a fresh PID. Both gateways now come back and unlock
-     with no human.
-
-WAS (unparked by the 2026-09-16 NOW item 1): **inbound liquidity and >= 2 independent gateways.**
-RULED (Daniel 11:09): that means the two live testnet4 LND nodes with incoming liquidity, same host is fine -
-named pick A, no fake labelled gateways. Guardians and `federationIsBonded` stay parked (RULED 07:33 / 08:23).
-Everything else M3 needs is ruled; no blocker waits on Daniel.
+STANDING REDS (each named, none new this letter):
+  - `custody-daemon` **6 of 9 red**: `POST /entry` answers 400 where 201 is expected. NOT the gateway gate -
+    the round opens fine and the preflight is stubbed ready - and it reproduces identically at HEAD with this
+    letter's change stashed away. Cause not yet diagnosed; needs its own letter. The other three pass.
+  - EditMode `CombatFxTests.RifleFireProducesAFlashAndATracer` - long-listed, drives the retired
+    `Battlefield.Army`.
+  - PlayMode 13 long-listed (ten on the retired `Battlefield.Army`, two MushroomResting skirt offsets,
+    GhostAcrossTheDoors). Unity untouched since the playtest letter.
 
 # DONE  -  2026-09-20 18:56 / 18:59  playtest: coin, finish gate, mempool line
 

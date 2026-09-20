@@ -41,8 +41,22 @@ including "THE CALL SITE ITSELF: delete it and this goes red" - written so a gre
 unused predicate, which is the exact fault this letter found. Restored: 7/7.
 
 SUITES: paying-round-needs-gateways 7/7, protocol/gateways 9/9, lnd-settings + gateways together 13/13.
-custody-daemon is 3 of 9 both with and WITHOUT this change - stashed to HEAD's preflight and re-run to check -
-so those six are pre-existing and not this letter's; they are listed on PRIORITIES' standing red list.
+
+THE SIX custody-daemon REDS ARE NOT THIS LETTER'S, and that was checked rather than assumed: the suite is
+3 of 9 with this change AND with `preflight.js` stashed back to HEAD, the same six either way. The symptom is
+`POST /entry` answering 400 where the test expects 201 - the ROUND opens fine (these tests stub the preflight
+ready), so it is not the gateway gate. The failing six are:
+
+  a joined player is quoted the hold invoice their own entry names
+  a daemon with no Lightning still signer nodes, and says why it quotes nothing
+  closing a round on the daemon reaches the money path, and moves no stake
+  the committee agreeing on a round nobody finished still moves no stake
+  a daemon asks Lightning about an act it died in the middle of, on start
+  closing a round makes the daemon sign what it owes, and serve that signature
+
+The cause is NOT diagnosed and is not guessed at here: the entry fixtures and the /entry validation need a
+letter of their own. DEPENDENCY: nothing in M3's gateway or hold-invoice work waits on it, but the hold-invoice
+letter will touch the same daemon, so it is worth clearing before that rather than during it.
 
 
 AND THE GATEWAYS SURVIVE A RESTART (2026-09-20, the same letter finished honestly)
