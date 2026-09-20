@@ -20,7 +20,7 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-# LIVE LETTER  -  2026-09-20 04:10
+# LIVE LETTER  -  2026-09-20 04:40
 
 WHERE THE GAME IS: **btc-logistics-core.pages.dev at 0.0.1739** (deploy 9cac533f), unchanged since 19:47 on the
 19th. The core in that build was byte-identical to packages/core/dist AS IT STOOD THEN - today's dist is many
@@ -36,13 +36,17 @@ WHAT HAS LANDED ON THE BRANCH SINCE AND IS **NOT** LIVE (each named by its own c
 - **The HUD stopped lying about the trend** (236e0ab4). A candle is two samples and the war was grading the wick.
   chart.js and the core share one `trendCandle`. Proven on the MacBook through the real Binance feed: a falling
   chart reads DOWN 3 with six red dots, a rising one UP 3 with six green.
-- **§11.3 cover is closed, and its row is RED** (cf0cb8b4). The row reached 72.9%; §11.5's crawl has knocked it to
-  **64.6% against a 70% bar**. Not loosened. This is the player-facing hole on the letter - and measured on
-  2026-09-20 the crawl is NOT its cause: every failing tick holds an unpinned walker ~9 m from his hole.
+- **§11.3 cover is closed, and its row is RED** (cf0cb8b4). The row reached 72.9% and now reads **64.6% against a
+  70% bar**. Not loosened. Measured 2026-09-20, the crawl is NOT its cause: all 1698 failing ticks hold an
+  UNPINNED man about 9 m from his hole, freezing every crawler still fails every one of them, and crawl is a
+  ceiling of 24.1 points. It is a claim-rule question and is now the NEXT ITEM, not unfinished suppression.
 - **§11.4 posture is closed in the core** (7bc7c1f6). COVER rifle deaths 22.4 -> 5.7 per 100k man-ticks.
-- **§11.5 suppression is WRITTEN, NOT CLOSED** (2383c95b ... 12c6b6f0). Fire pins a rifleman; a bomb pins once per
-  TEAM (56 of 385 blasts had been charged twice, now none); a shell pins the teams within 8 m of where it lands,
-  on a hull OR on the truck, through one helper shared with the blast.
+- **§11.5's OWN CLAUSES ARE DONE** (2383c95b ... 89d9d316): the TAC_SUPP word, the pin at 120, the -1 decay, a
+  pinned team that does not rush, the crawl at 0.5 m/s, the halved reload, the suppressing round on the look-again
+  draw, the bomb charged once per TEAM (56 of 385 double charges -> 0), the shell pinning through one helper on a
+  hull and on the cab, and the pose the renderer draws from the core's word. Six remainders stand, none of them a
+  §11.5 clause: occupancy (next item), the shell MISS half (§4.4's landing point), the 0.01 m cap (until cover is
+  over 70%), stale goldens (the combined deploy), the body close-up, and four run-mode flakes.
 - **AND THE PIN IS NOW DRAWN** (135995fb, build 0.0.1791). ArmyRenderer reads §11.4's posture and §11.5's pin and
   lays a downed man on the ground - dropped, pitched the way he was facing, no bob, animator Speed 0. Rigidbody
   stays kinematic, gravity off, no PhysX knock, nothing taken from Army.cs.
@@ -60,6 +64,9 @@ chooser. The pose is proved by the count and the code path, not by an eye on a m
 SUITES ON THIS HEAD: PlayMode **228/256** (15 red, 13 skipped - two better than before), EditMode **254/258**
 (0 error CS, one long-listed CombatFx red). JS: rules 50/50, tactics 21/22, candles+chart+spawn 18/18, canonical
 22/22, vectors+bundle 2/20 with goldens deliberately stale.
+
+NOTHING IN §11.4 OR §11.5 IS GUARDED BY A TEST. No suite asserts the posture word, the pin or the pose - they are
+held up by tools run by hand. That is exactly how the 18-word BlwpLayout.cs mismatch survived three letters.
 
 FOUR PLAYMODE TESTS FLIP BETWEEN RUN MODES, and an attribution I wrote last night was wrong (12c6b6f0):
 ScoreTests.Idling and SpawnMarkParkedTests fail FILTERED and are GREEN in the full run; RampReadyTests passes 3/3
