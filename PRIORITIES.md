@@ -20,12 +20,28 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-# LIVE LETTER  -  2026-09-20 08:30
+# LIVE LETTER  -  2026-09-20 11:05
 
-DONE THIS LETTER: **the combined cover deploy SHIPPED.** Occupancy, posture and suppression are live together,
-goldens and the bundle regenerated in the same deploy, and the Daily is off 0.0.1739.
+DONE THIS LETTER: **a player who falls behind gets back to the lobby, and the next round shows both trucks.**
+Measured twice on Daily 0.0.1815 with two real browser tabs: both return (t+225/t+235, then t+275/t+290, and not
+always the same tab first), **0 runs VOID**, PLAY again joins round two on both, and each tab draws the other -
+`others 1`, 173 and 165 pictures, overlay age 12-632 ms against 29564 ms before. Before this, one tab never
+returned at all. Earlier in the same letter: the combined cover deploy shipped, goldens and bundle regenerated,
+the Daily off 0.0.1739.
 
-NEXT ITEM: the remaining playtest chain, then M3.
+  EditMode 266/270, 3 skipped, 1 red (the long-listed CombatFx rifle flash), 0 error CS.
+  PlayMode 230/257, 14 skipped, 13 red - all long-listed, NONE new, and no lobby or SplashScreen test among them.
+
+NEXT PLAYTEST ITEMS, in the order the list already has and NOT started:
+  1. **The VOID reason is invisible.** A returned player is never told why the run ended. `BlwpNetEnding()`
+     already carries the line - "the node refuses this run's inputs ... the round is closed" - and nothing draws
+     it, so the player waits out the 5 s result hold against a locked truck with no card and lands in the lobby
+     with no explanation. Exposed by this fix, belongs to this item.
+  2. **The clocks still drift**, about 10-13 s in round two (A reads B -399 to -631 ticks, B reads A +601 to
+     +793) against the 33 s that used to strand a tab. Listed with that measured range; no investigation opened.
+     Both pages report `this frame 333 ms` - two headless browsers on one MacBook - so part of it is the rig.
+  3. **The `?r=` query-string lobby hole**, already filed as its own later item below.
+Then M3.
 
 WHERE THE GAME IS: **btc-logistics-core.pages.dev at 0.0.1812** (deploy d71764e0), shipped 2026-09-20 08:26.
 The core it serves is byte-identical to packages/core/dist - `eb6ac50e9fb62974` on the unique deploy URL, on the
