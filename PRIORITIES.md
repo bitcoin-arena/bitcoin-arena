@@ -28,6 +28,41 @@ Fix: the truck must **not** clip through this construct from either side. The **
 
 ALSO 18:59: **the miner structure behind the finish line must have collision.** And **Mempool collision must be exactly the yellow marked line** on the facade. Shot `daniel-screens/mempool-yellow-line-1859.jpg`. Open it. Same wash. Do not move the yellow line. Do not put Mempool collision in front of or behind that line.
 
+WHERE IT STANDS (measured, nothing built or deployed yet; the coin change is in the working tree):
+
+1. COIN - measured and now solid in the core. The two stacks stand at **x 173.6 .. 192.4, |z| 40.6 .. 59.4,
+   y 0 .. 3.08** and carried **no box at all**. Four boxes added to `mapSolids` (plinth + tiers, each side),
+   `MAP_BOXES` 78 -> 82. They begin at x 173.6, PAST the gate at MINER_X 169, and at |z| 40.6, 0.6 m OUTSIDE
+   the 40 m mouth - so nothing grows over the gate. Driving south into a stack now **stops at z 62.68**
+   against its 59.4 face; it used to pass through. The centre line still ends RUN_DELIVERED.
+   Note for whoever drives it: the WEST approach at z 50 is blocked 10 m earlier by the miner facade
+   (x 163..171, z 40..84.4), so "either side" here is the north face and the x 171..173.6 gap, not west.
+
+2. MINER BEHIND THE FINISH - measured, and there is nothing left unsolid THERE. With the coin boxed, the
+   count of drawn parts east of the gate that stand at truck height (y 0.36 .. 3.26) and carry no box is
+   **0**. Driven east from x 172 at z 0, 10, 20, 30, 36, 60 and 70 the truck stops every time at
+   **x 180.23**, which is the map edge box at HALF_X 185 (contact at x 183.5), not a building it passed
+   through. At z 44 and 52 it is squeezed out west: the facade ends at x 171 and the coin now starts at
+   173.6, and 2.6 m is narrower than the truck.
+
+   So the mass a truck can still drive through is IN FRONT of the gate, not behind it: `mass_behind_tunnel`
+   at **x 119 .. 145**, hanging from y 2.7 m while the body is 3.26 m. That one is unsolid BY RULING
+   (2026-09-20, written into `map.js`): the gate is at x 169, past it, so a box there closes the only route
+   to the miner. Making it solid needs a new way in, which is a ruling, not a fix. **Asked, waiting.**
+
+3. MEMPOOL - measured, and BLOCKED on one ruling. The numbers:
+
+     drawn `mass_front`        world x -114.40 .. -100.40   (its east face IS START_X, the spawn)
+     solid shell wall          world x -122.40 .. -114.40   (east face -114.40)
+     `platform_kerb_stripe`    world x -119.10 .. -118.26   (the only part named "stripe")
+
+   The truck drives into the building because the solid face at -114.40 stands **14 m behind the drawn
+   front** at -100.40. But "collision exactly on the yellow line" resolves two ways and both are unsafe to
+   guess: the kerb stripe at -118.68 moves the barrier 4.3 m FURTHER WEST (deeper into the drawn mass, the
+   opposite of the letter), and the drawn facade front at -100.40 moves it 14 m EAST onto START_X itself, so
+   every run would spawn inside the wall. The material `bumper_guard_yellow` is on the bay guard posts and
+   canopy lips, not on a floor line, so it does not settle it either. **Asked, waiting.**
+
 Then resume 16:22 assault share, then the parked playtest chain, then M3.
 
 # PREVIOUS  -  2026-09-20 16:22
