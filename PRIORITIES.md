@@ -20,71 +20,26 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-# LIVE LETTER  -  2026-09-20 18:56
+# NOW  -  M3
 
-NOW: **the gold coin construct blocks the finish.** Daniel cannot drive through to DELIVERED. Shots `daniel-screens/miner-coin-blocks-finish-1856.jpg` and `miner-coin-close-1856.jpg`. Playtest, absolute priority. Open both photos.
+M3: **a round can be played for real testnet sats** - the federation holds the money, the fee is taken and
+paid out, and the payout actually moves. W1-W7 are done; the remainder is the unparked piece below.
 
-Fix: the truck must **not** clip through this construct from either side. The **finish line / DeliveryGate must stay fully driveable**. Do not grow the coin box over the gate. Do not leave the coin as air. Measure on Beelink Chrome: centre-line still DELIVERED; driving into the coin stack from front or back stops the truck.
+NEXT PIECE (unparked by the 2026-09-16 NOW item 1): **inbound liquidity and >= 2 independent gateways.**
+RULED (Daniel 11:09): that means the two live testnet4 LND nodes with incoming liquidity, same host is fine -
+named pick A, no fake labelled gateways. Guardians and `federationIsBonded` stay parked (RULED 07:33 / 08:23).
+Everything else M3 needs is ruled; no blocker waits on Daniel.
 
-ALSO 18:59: **the miner structure behind the finish line must have collision.** And **Mempool collision must be exactly the yellow marked line** on the facade. Shot `daniel-screens/mempool-yellow-line-1859.jpg`. Open it. Same wash. Do not move the yellow line. Do not put Mempool collision in front of or behind that line.
+# DONE  -  2026-09-20 18:56 / 18:59  playtest: coin, finish gate, mempool line
 
-MEASURED ON THE DEPLOYED DAILY **0.0.1842** (c160a87e), Beelink GPU Chrome, ANGLE/Vulkan:
+Daily **0.0.1842**: mempool nose stops at **-114.39** on the yellow line, coin stop **z 62.68**, centre line
+still **DELIVERED**. Measurement log in TASKBOOK.md.
 
-    MEMPOOL   driven west from the spawn -> nose stops at **-114.39**; the wall face is -114.40 and the
-              yellow `port_guard_post_*` run -114.95 .. -113.94. Before: x -180.22, out of the back.
-    COIN      driven south into the north stack -> stops at **z 62.68**; the stack face is 59.4.
-    CENTRE    driven east from 20 m short of the gate -> **DELIVERED**.
-
-  Screens `solid2-1-mempool.png`, `solid2-2-coin.png`, `solid2-3-centre.png`.
-
-WHERE IT STANDS: all three measured and fixed in the CORE. Core suites green - coin/mempool 6/6, rules 50/50,
-vectors 8/8, tactics+candles 33/33, bundle 12/12, spawn+canonical+round-ends 9/9. EditMode **293/297**, 3
-skipped, 1 red (the long-listed CombatFx rifle flash, on the retired Battlefield.Army). PlayMode running, then
-the WebGL build, then the Daily and Beelink Chrome. Nothing deployed yet.
-
-1. COIN - measured and now solid in the core. The two stacks stand at **x 173.6 .. 192.4, |z| 40.6 .. 59.4,
-   y 0 .. 3.08** and carried **no box at all**. Four boxes added to `mapSolids` (plinth + tiers, each side),
-   `MAP_BOXES` 78 -> 82. They begin at x 173.6, PAST the gate at MINER_X 169, and at |z| 40.6, 0.6 m OUTSIDE
-   the 40 m mouth - so nothing grows over the gate. Driving south into a stack now **stops at z 62.68**
-   against its 59.4 face; it used to pass through. The centre line still ends RUN_DELIVERED.
-   Note for whoever drives it: the WEST approach at z 50 is blocked 10 m earlier by the miner facade
-   (x 163..171, z 40..84.4), so "either side" here is the north face and the x 171..173.6 gap, not west.
-
-2. MINER BEHIND THE FINISH - **done, measured**. With the coin boxed, the number of drawn parts east of the
-   gate standing at truck height (0.36 .. 3.26 m) with no box is **0**. Driven east from x 172 at z 0, 10, 20,
-   30, 36, 60 and 70 the truck stops every time at **x 180.23**, which is the map edge at HALF_X 185, not a
-   building it passed through.
-
-   LATER ITEM, NOT THIS LETTER (ruled 2026-09-20 19:0x): **`mass_behind_tunnel` and the tunnel seam sides stay
-   unsolid.** They sit IN FRONT of the gate at x 119 .. 161, and boxing them closes the only road to DELIVERED,
-   so it needs a new way in rather than a box. The share: of 370 drawn miner parts with no box, **23 stand at
-   truck height**, and only **2 of those are in the entry corridor** - `tunnel_end_backglow` (x 143.6..144.6)
-   and `tunnel_floor` (x 145..169, y -0.5..0, which is the floor and should stay flat). The rest are the seam
-   sides at x 138..161, y 2..40, which a truck passes under.
-
-3. MEMPOOL - **fixed, and it was a hole, not an offset.** The shell was pillars BETWEEN the bay mouths and a
-   lintel OVER them, so each of the 24 mouths stood open from the ground to 9.2 m. The truck spawns at
-   START_X -100.40, z 10.20, which is bay 13's own centre - so driving WEST it went straight out through the
-   back of the post office and across the whole map to **x -180.22**, the west map edge. It never touched the
-   building.
-
-   The mouths are closed on the shell's own plane, `MAP_BOXES` 82 -> 106. The face a truck now meets is the
-   wall's east face at POST_X **-114.40**, which is exactly where the yellow marks stand: every part drawn in
-   `bumper_guard_yellow` on this facade - the `port_guard_post_*`, one pair at each mouth - spans
-   **x -114.95 .. -113.94**. The line did not move and the box is neither in front of it nor behind it.
-
-   Measured at five lanes (z 10.2, 3.4, -5, 30, -78.2): the nose stops at **-114.40** every time, against
-   -180.22 before. THE SPAWN DID NOT MOVE and did not need to - it stands 14.00 m east of that plane, and the
-   truck's own AABB along the nose is 6.35 m (BODY_FRONT 2.00, BODY_REAR -1.80, BODY_RADIUS 1.27). The bay is
-   still driveable: a run leaves eastward.
-
-   ONE EXISTING TEST'S SETUP MOVED, AND NOT ITS ASSERTIONS. `rules.test.js` "a hill costs the core what it
-   costs Unity" placed the truck at the recording's x -120 on bay 0's lane - which was open air when
-   `physx-hills.json` was recorded and is inside a wall now, so the truck could not move at all. The run-up
-   starts at the first metre east of the wall face; the comparison still samples core against the recording by
-   world x over -110 .. 110. 50/50.
-
-Then resume 16:22 assault share, then the parked playtest chain, then M3.
+PARKED, NOT THIS LETTER: **`mass_behind_tunnel` and the tunnel seam sides stay unsolid.** They sit in front of
+the gate at x 119 .. 161, and boxing them closes the only road to DELIVERED - it needs a new way in, not a box.
+The share: of 370 drawn miner parts with no box, **23 stand at truck height** and only **2 are in the entry
+corridor** (`tunnel_end_backglow`, and `tunnel_floor` which should stay flat); the rest are seam sides at
+y 2 .. 40 that a truck passes under.
 
 # PREVIOUS  -  2026-09-20 16:22
 

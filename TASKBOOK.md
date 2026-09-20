@@ -5,6 +5,67 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE COIN, THE FINISH GATE AND THE MEMPOOL LINE (2026-09-20, Daniel's 18:56 and 18:59 letters)
+
+Three playtest reports in one wash, all of them "the truck goes through a thing that is drawn".
+
+1. THE GOLD COIN STACKS AT THE MINER carried no solid box at all. Measured off the .glb through DeliveryGate's
+   own turn and (1, 0.45, 1) height scale:
+
+     coin_stack_plinth_l/r   x 173.6 .. 192.4   y 0.02 .. 0.65   |z| 40.6 .. 59.4
+     coin_stack_*_0 .. _3    x 176.0 .. 190.0   y 0.07 .. 3.08   |z| 43.0 .. 57.0
+
+   Four boxes in `mapSolids`. They begin at x 173.6, PAST the gate at MINER_X 169, and at |z| 40.6, which is
+   0.6 m OUTSIDE the 40 m mouth - so nothing grew over the finish.
+
+   TWO OF THE FIRST TESTS PASSED FOR THE WRONG REASON and were rewritten rather than kept: one placed the truck
+   at x 206, outside HALF_X 185, where it is clamped and drives 370 m the other way; the other placed it west
+   at z 50, where the miner's own facade (x 163..171, z 40..84.4) stops it 10 m early. The reachable faces are
+   north of one stack and south of the other; x 171..173.6 is a 2.6 m gap the truck does not fit through.
+
+2. THE MINER BEHIND THE FINISH was already covered once the coin was boxed: drawn parts east of the gate at
+   truck height (0.36 .. 3.26 m) with no box = 0. Driven east from x 172 at z 0, 10, 20, 30, 36, 60 and 70 the
+   truck stops every time at x 180.23, which is the map edge at HALF_X 185.
+
+3. THE MEMPOOL WAS A HOLE, NOT AN OFFSET. The shell was pillars BETWEEN the 24 bay mouths and a lintel OVER
+   them, so every mouth stood open from the ground to MOUTH_HIGH 9.2 m. The truck spawns at START_X -100.40,
+   z 10.20 - bay 13's own centre - so driving WEST it went through the mouth, out of the back of the post
+   office and across the whole map to x -180.22, the west map edge. It never touched the building.
+
+   The mouths are closed on the shell's own plane (shellX, half(WALL_DEPTH), postLow .. lintel).
+   MAP_BOXES 78 -> 82 -> 106.
+
+     before   west from the spawn ends at x -180.22   (nose -183.50)
+     after    west from the spawn ends at x -111.13   (nose -114.40)
+
+   THAT FACE IS THE YELLOW MARK. Every part drawn in `bumper_guard_yellow` on this facade - the
+   `port_guard_post_*`, one pair at each mouth - spans x -114.95 .. -113.94, and the wall's east face is
+   POST_X -114.40, inside it. The line was not moved. THE SPAWN DID NOT MOVE EITHER and did not need to: it is
+   14.00 m east of the plane and the truck's AABB along the nose is 6.35 m (BODY_FRONT 2.00, BODY_REAR -1.80,
+   BODY_RADIUS 1.27).
+
+ONE EXISTING TEST'S SETUP MOVED AND ITS ASSERTIONS DID NOT. `rules.test.js` "a hill costs the core what it
+costs Unity" placed the truck at the recording's x -120 on bay 0's lane. That was open air when
+`physx-hills.json` was recorded and is inside a wall now, so the truck could not move and the test's own
+no-op guard fired. The run-up starts east of the wall face; the comparison still samples core against the
+recording by world x over -110 .. 110. 50/50.
+
+ON THE DEPLOYED DAILY 0.0.1842 (c160a87e), Beelink GPU Chrome, reading the page's own core:
+
+  mempool   west from the spawn -> nose -114.39   (wall face -114.40, yellow marks -114.95 .. -113.94)
+  coin      south into the north stack -> z 62.68 (the stack's face is 59.4)
+  centre    east from 20 m short of the gate -> DELIVERED at x 168.69
+
+THE FIRST RUN OF THAT PROBE PROVED NOTHING: the centre line was driven first, which DELIVERS, which ends the
+round - and a finished run locks the truck, so the two drives after it reported "ended" at exactly the
+coordinates they were placed at, having never moved. The delivery goes last, and the probe now says so.
+
+SUITES: core 6/6 coin+mempool, rules 50/50, vectors 8/8, tactics+candles 33/33, bundle 12/12,
+spawn+canonical+round-ends 9/9. EditMode 293/297 (3 skipped, 1 red: the long-listed CombatFx rifle flash).
+PlayMode 230/257 (14 skipped, 13 red, all long-listed, none new; PostOfficeTests.TheGogglesAnimate green in
+this run).
+
+
 CAN A PLAYER SEE THE TANKS PUSH? (2026-09-20, the second half of the 16:22 letter)
 
 Ruling first: the log moved off the road. It had been drawn in the headline gap under the block clock, which
