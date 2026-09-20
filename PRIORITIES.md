@@ -37,7 +37,8 @@ WHAT HAS LANDED ON THE BRANCH SINCE AND IS **NOT** LIVE (each named by its own c
   chart.js and the core share one `trendCandle`. Proven on the MacBook through the real Binance feed: a falling
   chart reads DOWN 3 with six red dots, a rising one UP 3 with six green.
 - **§11.3 cover is closed, and its row is RED** (cf0cb8b4). The row reached 72.9%; §11.5's crawl has knocked it to
-  **64.6% against a 70% bar**. Not loosened. This is the player-facing hole on the letter.
+  **64.6% against a 70% bar**. Not loosened. This is the player-facing hole on the letter - and measured on
+  2026-09-20 the crawl is NOT its cause: every failing tick holds an unpinned walker ~9 m from his hole.
 - **§11.4 posture is closed in the core** (7bc7c1f6). COVER rifle deaths 22.4 -> 5.7 per 100k man-ticks.
 - **§11.5 suppression is WRITTEN, NOT CLOSED** (2383c95b ... 12c6b6f0). Fire pins a rifleman; a bomb pins once per
   TEAM (56 of 385 blasts had been charged twice, now none); a shell pins the teams within 8 m of where it lands,
@@ -156,7 +157,13 @@ fixture pair needing a third re-pick.
 2. **§0's "never a step past 0.01 m"** - 78.9% of pinned man-ticks step past it, because a diagonal crawl spends
    0.00833 m on each axis. Ruled combined Euclidean, not per-axis. PARKED until cover is back over 70%, because
    capping it slows a diagonal crawl and takes more men off their holes.
-3. **The §11.3 cover row at 64.6% against 70** - cause: pinned men crawl. Listed, not loosened.
+3. **The §11.3 cover row at 64.6% against 70, and the CAUSE IS NOT THE CRAWL** (measured 2026-09-20, numbers in
+   TASKBOOK). On 100% of the 1698 failing ticks there is an UNPINNED man holding a claim about **8.9 m** from his
+   hole; 68.1% also hold a crawler, 18.2 m out. Freeze every crawler on his place and every one of those ticks
+   still fails. Crawl is a ceiling of 24.1 points, not the cause. Men are not standing on their posts - a
+   claim-holder sits a median 23.4 m from his line post against 7.3 m for a man without one - so the row is
+   measuring a line permanently in transit. The claim rule stays as §11.3 writes it (from his POST, not his live
+   position, so a man does not wander to cover), the bar stays at 70, and the assert is untouched.
 4. **Goldens stale** (vectors+bundle 2/20) until the deploy that ships occupancy, posture and suppression
    together. Not a letter's task.
 5. **The pin is drawn and COUNTED on a running build, not yet eyeballed.** ArmyRenderer reads posture and the
