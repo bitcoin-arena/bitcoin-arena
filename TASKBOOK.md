@@ -5,6 +5,33 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE ASSAULT HORN ACTUALLY SOUNDS (2026-09-20, the 16:22 half nobody can see)
+
+The banner and the desktop log are on screen and were measured there. A sound cannot be screenshotted, and
+Unity's own audio bookkeeping is out of reach: the framework declares `var WEBAudio = {...}` inside its own
+closure, so it is on neither `Module` nor `window`, and asking the page for it answers "no Unity WEBAudio
+module" - which says nothing either way. That answer was nearly written up as "audio is missing"; it was not.
+
+Measured at the Web Audio API instead. `probe-assault-horn.mjs` wraps `AudioBufferSourceNode.start` before
+Unity loads and records the moment and the buffer's DURATION. `DriveHud.AssaultHorn` builds a 0.55 s clip in
+code, and nothing else in this build is that long - over a whole run, of 1070 buffers started:
+
+  1.100s x616   0.200s x244   2.000s x136   0.160s x52   0.000s x10   1.000s x8   0.550s x4
+
+Four 0.55 s buffers, two chimes, and both pairs inside 1.5 s of a banner:
+
+  t+40s  chime 1  "BEARS ASSAULT LOW"    window [0.55, 0.55, 2, 2, 0.2, 0.2, 1.1, 1.1, 1.1, 1.1]
+  t+54s  chime 2  "BULLS ASSAULT HIGH"   window contains 0.55, 0.55 among 40 battle sounds
+
+(Every length arrives in pairs because the hook sees each start twice; the ratio is what matters, and it is
+exactly two horn buffers per chime and none anywhere else.)
+
+THE FIRST VERSION OF THIS PROBE REPORTED "NO HORN" TWICE AND WAS WRONG. It compared a horn count taken at the
+poll that noticed the chime with one taken a second later - but the horn is started in the same frame the
+chime is counted, so it was already in the first number. A window either side of the banner, and a census of
+every length, answers the question the count could not.
+
+
 THE ROUND TIMER, AND THE CLOCK THAT LIED ABOUT IT (2026-09-20, Daniel's 16:21 letter)
 
 "When the round timer hits 0, the game must end and return to the lobby by itself. It used to. It no longer

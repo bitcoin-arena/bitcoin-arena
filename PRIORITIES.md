@@ -35,7 +35,9 @@ PlayMode 228/258 (16 red, 15 long-listed, the 16th deleted - see TASKBOOK), core
 
 ALSO DONE ON THE SAME BUILD: **assaults are perceptible** (16:22 / 16:26) - banner, a horn on the start, and
 the desktop-only clock log under the HUD. Measured in the same drive: `[17:29:17] BEARS ASSAULT OPEN`,
-`[17:29:47] BEARS FAIL ON OPEN`, `[17:31:32] BULLS ASSAULT HIGH`.
+`[17:29:47] BEARS FAIL ON OPEN`, `[17:31:32] BULLS ASSAULT HIGH`. The HORN is measured too, at the Web Audio
+API: of 1070 buffers started in a run, exactly **four** are the horn's 0.55 s and both pairs fall within
+1.5 s of a banner - no other sound in the build is that length.
 
 THE RIG CHANGED AND IT MATTERS: headless Chrome on SwiftShader runs this world at 23 ticks/s against the 60 a
 round keeps, so every timer drive died VOID before the clock reached zero. The Beelink's AMD Renoir GPU gives
