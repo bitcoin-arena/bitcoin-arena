@@ -5,6 +5,38 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+CAN A PLAYER SEE THE TANKS PUSH? (2026-09-20, the second half of the 16:22 letter)
+
+Ruling first: the log moved off the road. It had been drawn in the headline gap under the block clock, which
+cleared the price as asked and then sat centred over the road - photographed on Daily 0.0.1835. Daniel:
+"Left column. Under SIM, left-aligned, small font, same six assault lines, colour still by side. Not the right
+column - that edge already carries WANTED and the touch buttons, and the road has to stay clear." Done, and
+`AssaultLogSitsClearTests` now pins the LEFT column, the SIM edge, and an xMax short of 0.42 w. That is a
+change of what is asserted, not a loosening: the old position was itself the fault.
+
+THE PUSH, WATCHED LIVE ON THE DAILY (0.0.1836, GPU Chrome, ANGLE/Vulkan). No new page API: the probe reads the
+buffer the page's core already holds - O_TACTICS 2246 / TAC_OBJ 61 / TAC_ASSAULT 76 for the lane and the
+phase, O_UNITS 26 with ARMOUR_MASK 3 for the tanks - the same way the other probes read i32[19] and i32[23].
+
+  round 1   BEARS on OPEN, lane x -54.0 m, truck at x -100.4 heading 90 deg (the lane 46.4 m AHEAD)
+            the push was already ending as the round was joined - 1 s long, not a measurement, discarded
+  round 2   BEARS on LOW, lane x -27.0 m, truck at x -100.4 heading 90 deg (the lane 73.4 m AHEAD)
+            on the lane:  0 tanks at the declaration -> 2 by +8 s -> 2 at the end, peak 2
+            the push ran 16 s and ended TAKEN; the side's other 9 tanks sat at mean depth 13.4 m
+
+So the armour DOES move on the named lane in a real player, and the movement is the convergence rather than a
+march: nothing is on the lane when the assault is declared, and two of eleven tanks are on it eight seconds
+later and hold it to the end. The first probe reported "9.3 m advanced" off the 1 s push; that is 33 km/h for a
+tank and was discarded rather than published - a one-second window is noise, and the probe now requires six.
+
+WHAT IS LEFT IS CAMERA AND READABILITY, NOT THE CORE, AND IT IS NOT OPENED HERE.
+`push2-02-pushing.png` is the frame eight seconds in: the tanks that took the lane are ON SCREEN but at the
+far LEFT edge, small, behind explosion sprites and the "NO SCORE OUT HERE" row, while the camera looks east
+down the road at a drop-off 276 m away. The banner names the objective - LOW, HIGH, OPEN - and nothing in the
+world says which part of the field that is. A player is told an assault is happening and is not shown where.
+That is a renderer/camera question and the core is not at fault: putting simulation back into C#/PhysX would
+not move a tank one metre. Listed, not investigated.
+
 THE ASSAULT HORN ACTUALLY SOUNDS (2026-09-20, the 16:22 half nobody can see)
 
 The banner and the desktop log are on screen and were measured there. A sound cannot be screenshotted, and

@@ -20,7 +20,20 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-# LIVE LETTER  -  2026-09-20 16:21
+# LIVE LETTER  -  2026-09-20 16:22
+
+DONE: **the assault log sits on the left HUD stack under SIM, off the road**, and **the tanks are shown to push
+the named lane in a real player**. Daily **0.0.1836**. Watched live on GPU Chrome: BEARS declared on LOW,
+lane x -27.0 m, truck at x -100.4 facing east so the lane is 73.4 m ahead; **0 bear tanks on that lane at the
+declaration, 2 by +8 s, 2 at the end**, push 16 s, ended TAKEN. Screens `push2-01-declared.png` (banner up,
+log on the left edge), `push2-02-pushing.png`.
+
+STILL OPEN, AND IT IS CAMERA/READABILITY RATHER THAN THE CORE: in that frame the tanks that took the lane are
+on screen but at the far LEFT edge, small, behind explosion sprites, while the camera looks east down the road.
+The banner names LOW/HIGH/OPEN and nothing in the world says where that is. Listed, not investigated - no
+simulation goes back into C#/PhysX over it.
+
+# PREVIOUS LETTER  -  2026-09-20 16:21
 
 DONE, MEASURED IN A REAL PLAYER: **the round timer ends the round and the lobby comes back by itself.**
 Two causes, both fixed. (1) The clock on screen was not the core's: `BlockClock.RunTicks` was a hand-typed
