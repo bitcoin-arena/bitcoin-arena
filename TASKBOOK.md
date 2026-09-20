@@ -5,6 +5,50 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+§11.4 ON SCREEN: THE SINK IS GONE IN A BROWSER, NOT ONLY IN THE FIXTURE (2026-09-20).
+
+A green EditMode guard is not an on-screen check, so the letter was not closed on one. Two WebGL builds were made
+from the same tree, differing only in `SoldierLift`, and both were read over CDP on the MacBook against the live
+feed. The renderer reads the value back OFF THE TRANSFORM (`t.position.y - Ground(at.x, at.z)`) rather than
+restating the arithmetic, and logs it beside the count that was already there:
+
+  BEFORE  [render] downed men sit -0.73 m over the ground, worst -0.75 m; standing men 0.12 m; prefab yes
+  AFTER   [render] downed men sit  0.02 m over the ground, worst  0.00 m; standing men 0.13 m; prefab yes
+
+  `worst` is a MINIMUM over every downed man on the field, so 0.00 is the stronger statement a per-kind mean would
+  not give: no man is under the ground anywhere - candle lip, crater rim or wreck - which are the same three kinds
+  the fixture measured at 0.74 / 0.74 / 0.68 m.
+
+  Standing men sit +0.12 m and that is not an error: a walking man BOBS (|sin(tick x 0.08 + i)| x 0.16, mean about
+  0.10) and is seated on the highest ground his feet cover. A downed man does not bob - by design, the bob is a
+  walking cue - which is why his number falls to ~0.00 rather than ~0.12.
+
+  `prefab yes` is in the line on purpose. The scene ships `soldierPrefab: {fileID: 0}`; `Bootstrap.cs:879` copies
+  its own unset field, and the only other writer is `ModelStreamer.cs:166-168`, which fetches `model/soldier` and
+  calls `SetSoldierPrefab`. So a build STARTS on the centre-anchored box path and switches to the sole-anchored
+  prefab path once the model streams in. Without that flag the same reading could have been taken on the box, at
+  its legitimate +0.15, and proved nothing. This was checked BEFORE the build, not after.
+
+TWO THINGS THAT COST A RUN EACH, both environment and neither code:
+
+  1. `BuildWebGL.DefaultOutput` is the hard-coded macOS path `/Users/daniel/code/btc-logistics-war/unity-proto/
+     build/webgl`. On Beelink the Addressables step tried to create `/Users` at the filesystem root and died with
+     `UnauthorizedAccessException: Permission denied` after 19 s. The entry point takes `-buildOutput <dir>`;
+     pass it. Nothing in the project is wrong - the invocation was.
+  2. Chrome on the Mac cannot open `http://192.168.1.65:8137/` and fails with `net::ERR_ADDRESS_UNREACHABLE`,
+     while `curl` on the SAME Mac gets 200 from the same URL. That is macOS local-network privacy applying to the
+     browser and not to the shell. The way through is a reverse tunnel - `ssh -R 8137:127.0.0.1:8137
+     macbook-playtest` - so the page is `127.0.0.1` to Chrome, which is exempt. Serving a local build to the
+     playtest Mac should use that shape rather than a LAN address.
+
+SUITES ON THIS HEAD. EditMode 257 of 261, 3 skipped, 1 red (the long-listed CombatFx rifle flash), 0 error CS.
+PlayMode 228 of 257, 14 skipped, 15 red - two more than the previous run, and both are the flip-floppers already
+named in this file: PostOfficeTests.TheGogglesAnimate and RampReadyTests.TheRealTransactionsReplaceTheStandIns.
+The other thirteen are the long-listed set. ImportedModelTests.SoldiersStandOnTheGroundAndAreAnimated is still red
+and STILL cannot see this fix: it stops on its first assert because the scene carries `soldierPrefab: {fileID: 0}`,
+and in the editor the core is stubbed so no men are drawn at all. That is the one §11.4 item left open, and it is
+scene wiring, not the renderer.
+
 THE SUNK MEN ARE THE PRONE DROP, NOT THE CRATER BOWL (2026-09-20, measured before any code change).
 
 The named first blocker was "Unity carves a crater bowl the core does not, so men correctly standing in holes draw

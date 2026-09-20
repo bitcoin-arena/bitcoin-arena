@@ -121,27 +121,29 @@ and RoadsAreActuallyDrawn. Nothing here is NEWLY red - but the test that would p
 green, and has not been for some time.
 
 WHY NOTHING IS LIVE, and none of these is test colour:
-1. **FIXED: downed men now sit on the ground instead of 0.75 m under it.** The cause carried here since the cover
-   letters - "Unity carves a crater bowl the core does not" - was MEASURED FALSE and is gone: Unity carves no bowl
-   at all. `MempoolTerrain.HeightAt` returns `BlwpCore.TerrainAt`, the crater-reveal loop assigns that same value,
-   and `CraterAt` never exposes `C_D`. The sink was `ArmyRenderer`'s prone drop applied to a SOLE-anchored prefab:
-   `WrapOnItsSole` puts the origin at a man's feet, so subtracting the box's 0.75 drove his feet underground. The
-   0.75 belongs to the fallback BOX, which is centre-anchored and stands at 0.9 - that path is untouched and still
-   lands at +0.15. Measured on the same fixture, 2 seeds x 40 s, 20550 man-ticks on a hole, 98.9% of them DOWN:
+1. **CLOSED ON SCREEN: downed men sit on the ground, measured in a browser, not inferred.** The cause carried
+   here since the cover letters - "Unity carves a crater bowl the core does not" - was measured FALSE and is gone:
+   Unity carves no bowl. `MempoolTerrain.HeightAt` returns `BlwpCore.TerrainAt`, the crater-reveal loop assigns
+   that same value, and `CraterAt` never exposes `C_D`. The sink was `ArmyRenderer` subtracting the fallback BOX's
+   0.75 prone drop from a SOLE-anchored prefab, whose standing lift is 0 - so a downed man's feet were driven
+   underground. Two WebGL builds, same live feed, read off the transform over CDP on the MacBook:
 
-     candle lip  n 19187   sunk 0.74 m -> 0.00 m
-     crater rim  n  1251   sunk 0.74 m -> 0.00 m
-     wreck       n   112   sunk 0.68 m -> 0.00 m
+     BEFORE   downed men -0.73 m over the ground, worst -0.75 m, standing +0.12 m, prefab yes
+     AFTER    downed men +0.02 m over the ground, worst  0.00 m, standing +0.13 m, prefab yes
 
-   Guarded by `SoldierLiftTests` in EditMode, which needs no core and so can run where the pose test cannot - and
-   it was PROVED RED first: restore the old formula and two of its three tests fail while the box test still
-   passes, which is the right discrimination. Draw only; no combat, driving, scoring or PhysX, and `AvoidWrecks`
-   untouched.
-
-2. **The renderer does not read TAC_COVER.** Posture and suppression are written and acted on, but a man in cover
-   looks exactly like a man in the open and a PINNED man crawling on his belly is drawn walking upright - he is
-   only harder to kill and slower. The player gets the visual regression above and no visible benefit at all, so
-   §11.5 is not separately playable either: on screen today it changes nothing a player could see.
+   `worst` is a minimum over every downed man on the field, so 0.00 says NO man is under the ground anywhere -
+   candle lip, crater rim or wreck alike, which is the same three kinds the fixture measured at 0.74/0.74/0.68 m
+   and now reads 0.00. Standing men sit +0.12 m because a walking man BOBS (|sin| x 0.16, mean about 0.10) and
+   stands on the highest ground his feet cover; a downed man does not bob, which is why his number is ~0.00.
+   `prefab yes` matters: the scene ships `soldierPrefab: {fileID: 0}` and `ModelStreamer` supplies the model at
+   runtime, so the line also proves the measurement was taken on the path the fix touches and not on the box.
+   Guarded by `SoldierLiftTests` in EditMode, proved red against the old formula first. Draw only.
+2. **The renderer DOES read the core's posture word - this line was stale and is corrected.** `ArmyRenderer` reads
+   `UnitPosture` and `UnitPinned` and lays a man down from them; proved live this morning at
+   `[render] 27 of 62 men drawn DOWN from the core's posture word, prefab yes`, and as of the fix above he is laid
+   ON the ground. What is still true is narrower: the pose does not distinguish COVER from PRONE, which is
+   deliberate - the core draws that distinction for the RIFLE's threshold, not for how a body lies - and there is
+   no cover-specific visual beyond the pose. §11.5's pin is visible through the same pose.
 3. **The signer nodes would refuse the round.** Goldens are deliberately stale (vectors+bundle 2/20) and the core
    hash is unpinned. RULED: the regeneration belongs to the DEPLOY that ships the whole cover block together -
    occupancy, posture and suppression - and is neither a letter's task nor a letter of its own.
