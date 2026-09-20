@@ -20,7 +20,7 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-# LIVE LETTER  -  2026-09-20 04:40
+# LIVE LETTER  -  2026-09-20 05:20
 
 WHERE THE GAME IS: **btc-logistics-core.pages.dev at 0.0.1739** (deploy 9cac533f), unchanged since 19:47 on the
 19th. The core in that build was byte-identical to packages/core/dist AS IT STOOD THEN - today's dist is many
@@ -65,8 +65,20 @@ SUITES ON THIS HEAD: PlayMode **228/256** (15 red, 13 skipped - two better than 
 (0 error CS, one long-listed CombatFx red). JS: rules 50/50, tactics 21/22, candles+chart+spawn 18/18, canonical
 22/22, vectors+bundle 2/20 with goldens deliberately stale.
 
-NOTHING IN §11.4 OR §11.5 IS GUARDED BY A TEST. No suite asserts the posture word, the pin or the pose - they are
-held up by tools run by hand. That is exactly how the 18-word BlwpLayout.cs mismatch survived three letters.
+THE WORD AND THE PIN ARE NOW GUARDED; THE POSE CANNOT BE (4e7ac586, 6e0bc016). Until this morning nothing
+asserted any of the three and they were held up by tools run by hand - which is how the 18-word BlwpLayout.cs
+mismatch survived three letters. Two guards are in the JS core suite where the rules live, and each was PROVED
+RED before it was kept: make the pose writer ignore the pin and 14348 of 120563 man-ticks are written STAND while
+pinned; change the decay to two a tick and "the decay is one a tick, not more" fires.
+
+THE POSE IS A DIFFERENT MATTER AND IT IS NOT GUARDED. A Unity test cannot reach it: the core is the JS bundle,
+`BlwpCore.Available` is set by an extern that exists only in a browser build, so in EditMode and PlayMode the core
+is stubbed, every unit reads dead and THE RENDERER DRAWS NO MEN AT ALL. Two attempts were written and both were
+worthless - the second passed, and went on passing when `down` was forced true for every third man, because there
+is no man to draw. The test now Assert.Ignores with that reason and lands in the SKIPPED count. The pose stays
+held by the renderer's own count over CDP from a running build, which is a hand measurement and is listed as one.
+DECISION OPEN: a test-only state seam on BlwpCore would make it assertable; that is production surface added for
+testability and has not been taken.
 
 FOUR PLAYMODE TESTS FLIP BETWEEN RUN MODES, and an attribution I wrote last night was wrong (12c6b6f0):
 ScoreTests.Idling and SpawnMarkParkedTests fail FILTERED and are GREEN in the full run; RampReadyTests passes 3/3
