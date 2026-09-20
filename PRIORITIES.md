@@ -20,30 +20,36 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-# NOW  -  M3: the result window (a contract field)
+# NOW  -  M3: what is left
 
 M3: **a round can be played for real testnet sats** - the federation holds the money, the fee is taken and
-paid out, and the payout actually moves. W1-W7 are done.
+paid out, and the payout actually moves. W1-W7 are done, and so is every item the inventory's "M3 is done
+when" named that Daniel has not parked.
 
-DONE (2026-09-20): **the federation's fee is zero by rule, and the node now refuses a federation that charges
-a base fee.** §22A: "Fedimint's own base fees are 0: the federation runs with `disable_base_fees`." The 2% is
-22A's INCLUSIVE node fee to the round's sitting seats - already implemented and green (fee 16/16,
-lock-settlement 17/17), and already visible on the live pair as 980000 msat held against a 1000000 msat
-stake. What was missing was the node half: the client refused to lock against such a federation and the node
-took entries anyway. `federationTakesNoBaseFee` is called on POST /entry before `round.enter`; an unknown rule
-is not a base fee. Proved by deleting the call site. Numbers in TASKBOOK.
+DONE (2026-09-20): **a round cannot name a zero result window.** The field - `objectionWindowMs`, the spec's
+`objection_window_W` - already existed and already drove the objection window, finality, §13C's no-quorum
+outcome and the result window itself (`verify.js:#unretrievedPastWindow`). Nothing bounded it, so a contract
+could name 0: finality instant, §13A's replay veto unusable, and a seat that had not retrieved the transcript
+voiding the entry at once. `roundWindowsAreValid` now refuses a non-positive or absent window.
+NO FLOOR IS INVENTED: §13A's "reference: 10 minutes" is a reference, and any positive window still opens.
+Counts in TASKBOOK.
 
-DONE (2026-09-20): **a round may not seat more signer nodes than it has slots**, and the fee lock's claim hash
-was already right. §22A: "Not seven census slots when the round is 2-of-2." Measured: a 2-of-2 naming seven
-seats answered `pays true, signerNodes 7` - the lock sized for seven out of a committee of two.
-`sittingSeatsFitTheSlots` is called in `Round.open` before the contract is stored. An upper bound, not an
-equality: contracts here run 2/3/4/5/7 slots with the pools not always equal. The claim hash needed no change -
-`Hash(H(F))` is the kind tag and §23.1 step 5 names `H(F)` outright. Numbers in TASKBOOK.
+WHAT IS LEFT FOR M3, none of it started, in no ruled order yet:
+  - the testnet4 **fee-lock spend** - the 2% actually moving to the sitting seats on testnet4 (fenced by
+    ruling; the hold path is proven, the fee lock has never been minted there)
+  - **FROST / §23.5** five-of-seven reconstruction - `preimageFor` is handed in, not reconstructed, so this is
+    still single-node custody and does not pretend otherwise
+  - a **playable client slice** - nothing of M3 reaches a player yet
+  - PARKED BY RULING: guardians and `federationIsBonded`
 
-NEXT: **the result window (a contract field)**. Guardians and `federationIsBonded` stay parked by ruling.
+FOLLOW-ONS, one line each:
+  - the node refuses a *stake* into a base-fee federation but can still *open* such a round - move or
+    duplicate that guard onto the round-open path
+  - **ninety test fixtures still carry `blockTicks: 9000`** - `round` 0/12, `checkpoint` 1/21 and
+    `objection-window` 0/7 are red for exactly that (the last through `test/window-fixture.js:106`). A sweep
+    that makes fixtures read the core's own `BLOCK_TICKS`.
 
-FOLLOW-ON, one line: the node refuses a *stake* into a base-fee federation but can still *open* such a round -
-move or duplicate that guard onto the round-open path.
+
 
 DONE (2026-09-20): **a hold invoice on testnet4 goes ACCEPTED -> HELD and settles or cancels from the core's
 word.** `tools/custody-testnet4.mjs` on the live pair: three 1000000 msat stakes held as 980000 msat invoices
