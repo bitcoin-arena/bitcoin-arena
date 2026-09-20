@@ -5,6 +5,48 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+"THE VOID REASON IS INVISIBLE" WAS ALREADY DONE, AND THE PREMISE WAS MINE (2026-09-20).
+
+The item said a returned player is never told why a VOID run ended, and that `BlwpNetEnding()` carries the line
+while nothing draws it. Both halves are false, and the second one was my own inference from an unmeasured
+premise - the same mistake as the lobby "regression" earlier the same day.
+
+WHAT THE PICTURES SHOW. A VOID was forced on purpose by starving one tab (20x CPU throttle) until its round
+closed under it, on both builds, same doors, same sequence:
+
+  daniel-screens/before-26.png   build 0.0.1815, BEFORE any change of mine, run ended, lobby still down:
+      "RUN STOPPED - the node refuses this run's inputs at tick 9406: error the round"
+  daniel-screens/ring-11.png     build 0.0.1818, after a change I later reverted, the same frame:
+      "RUN STOPPED - the node refuses this run's inputs at tick 7957: error the round"
+
+Large amber, centred under the block headline, readable at a glance, visible for at least 1.2 s before the lobby
+takes the screen - IDENTICAL on both builds. `DriveHud.DrawRunStopped` has been drawing it all along, fed by
+`NetSession.Ending` from `BlwpNet.Ending()`. Nothing needed fixing.
+
+WHY I COULD NOT SEE IT, and it took five captures to find out: my probe never pressed ROLL OUT. It clicked AUTO
+to load and held the throttle, so the run never started and the truck sat in the BAY for every capture - and in
+the bay the LIVE MEMPOOL cargo panel covers exactly the region `RunStoppedBox` occupies, because that box hangs
+off `BlockTimerBox` at the top left. A player is on the road, where that region is clear. Load, ROLL OUT, drive
+clear, THEN starve the tab.
+
+FOUR PROBE FAULTS IN A ROW, written down so the next one does not repeat them:
+  1. polled `BLWP_LOBBY_VIEW`, which only exists while the lobby is up - every sample read "?".
+  2. read `BLWP_UNITY_LOBBY.showing` at t+0, which still held TRUE from the page being replaced.
+  3. triggered on `BLWP_RUN_ENDED`, which `BLWP_RUN_OVER` sets at `onEnd` - by then the hold has already run,
+     because C# reads `endingLine()` earlier. Fixed by a rolling ring of frames instead of a trigger.
+  4. stopped on ANY ending, so a run that merely FINISHED was taken as the before-frame for a VOID.
+
+WHAT I CHANGED AND THEN REVERTED. Believing the row absent, I made `NetSession` fetch the reason the moment the
+run ends instead of on its 0.5 s poll, and made the result hold start when the reason is known rather than when
+`BlwpNet.Ended` flips, with a 2 s guard so a missing reason could never strand anyone. Both are defensible
+readings of the code and NEITHER changed what the player sees: before-26 and ring-11 are the same picture. Per
+the ruling - if the line is already readable, commit nothing extra - the change is reverted and the Daily rebuilt
+from the tree, so what is served is what is committed.
+
+LISTED, SMALL, NOT FIXED HERE: the line is CLIPPED mid-sentence on both builds. It ends at "error the round" and
+loses "is closed", because `RunStoppedBox` is `font * 2.8` tall and the third line is cut. Placement on the
+existing path, worth a line of its own rather than being smuggled into a closed item.
+
 THE VOID FIX, MEASURED LIVE (2026-09-20, Daily 0.0.1815, two real browser tabs, cache cleared, Network on).
 
   number                        before (0.0.1812)      after (0.0.1815)

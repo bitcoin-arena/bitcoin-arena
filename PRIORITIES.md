@@ -33,10 +33,16 @@ the Daily off 0.0.1739.
   PlayMode 230/257, 14 skipped, 13 red - all long-listed, NONE new, and no lobby or SplashScreen test among them.
 
 NEXT PLAYTEST ITEMS, in the order the list already has and NOT started:
-  1. **The VOID reason is invisible.** A returned player is never told why the run ended. `BlwpNetEnding()`
-     already carries the line - "the node refuses this run's inputs ... the round is closed" - and nothing draws
-     it, so the player waits out the 5 s result hold against a locked truck with no card and lands in the lobby
-     with no explanation. Exposed by this fix, belongs to this item.
+  1. ~~The VOID reason is invisible.~~ **ALREADY DONE - the premise was wrong and it was mine.** Measured with a
+     VOID forced on purpose (one tab starved 20x until its round closed under it), on the road, on both builds:
+     `daniel-screens/before-26.png` (0.0.1815, before any change) and `daniel-screens/ring-11.png` both show
+     **"RUN STOPPED - the node refuses this run's inputs at tick NNNN: error the round"** in large amber under
+     the block headline, readable at a glance, up for at least 1.2 s before the lobby. `DriveHud.DrawRunStopped`
+     was drawing it all along. What hid it from me was my probe never pressing ROLL OUT, so the truck stayed in
+     the BAY where the cargo panel covers that region. Nothing committed for it. Numbers and the four probe
+     faults are in TASKBOOK.
+     LISTED, small: the line is clipped mid-sentence on both builds - it loses "is closed" because
+     `RunStoppedBox` is `font * 2.8` tall.
   2. **The clocks still drift**, about 10-13 s in round two (A reads B -399 to -631 ticks, B reads A +601 to
      +793) against the 33 s that used to strand a tab. Listed with that measured range; no investigation opened.
      Both pages report `this frame 333 ms` - two headless browsers on one MacBook - so part of it is the rig.
