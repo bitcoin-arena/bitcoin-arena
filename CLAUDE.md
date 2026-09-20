@@ -1,16 +1,18 @@
-# HARD (Daniel 2026-09-18 19:05)
+# HARD (Daniel 2026-09-19 22:34)
 
-Live Chrome playtests run on Daniel's MacBook Pro, not Beelink.
+Automatically test. Do not refuse Unity, PlayMode, node tests, or two-tab Chrome.
 
-SSH: `daniel@192.168.1.226` (Host `macbook-playtest`).
-Browser: Playwright `chrome-headless-shell`
-`/Users/daniel/Library/Caches/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell`
-No SwiftShader on the Mac. No Google Chrome.app. No user profile. No focus steal.
-Launcher: `/Users/daniel/.blwp-playtest/start.sh`
-From Beelink: `monitoring/blwp_mac_playtest.sh start|stop|status|tunnel`
-CDP 9341 / 9342. `caffeinate -i` only while tests run.
+Empty Unity batchmode lied (desktop pads: mouse in batch = 0 because the game view has no focus). That is **not** a reason to skip Unity. Measure in a real player: **Beelink Chrome only** (Daniel 2026-09-20 15:12). Do not use the MacBook. PlayMode with a focused game view.
 
-If the MacBook is unreachable, run the playtest locally on Beelink.
+JS-only is not enough for world bugs (collision, craters, miner, candles vs roads, HUD SIDEWAYS).
+
+Every fix: measure, then call it done. Do not wait for Daniel to playtest.
+
+English. Then Go.
+
+# HARD (Daniel 2026-09-20 15:12)
+
+Live Chrome playtests run on the **Beelink only**. Do **not** use the MacBook.
 
 English. Then Go.
 

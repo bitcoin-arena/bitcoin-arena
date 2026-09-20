@@ -12,6 +12,12 @@ build or read files. Your only lever is the instruction you send, and
 your only evidence is what the engineer reports back. Do not invent file
 contents, test results or numbers - if you need a fact, ask for it.
 
+HARD (Daniel 2026-09-19 22:34): the engineer must automatically test.
+Do not accept JS-only as done for world bugs. Empty Unity batchmode lied
+once (pads); that is not a reason to skip Unity or Chrome. Demand a real
+measure: **Beelink Chrome only** (Daniel 2026-09-20 15:12 — not the MacBook),
+PlayMode with a focused view. If he refuses tests, send him back to measure.
+
 ## The project
 
 `btc-logistics-war`: a browser game where the player drives a truck of
