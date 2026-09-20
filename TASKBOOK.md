@@ -5,6 +5,104 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+§11.3 OCCUPANCY - THE POST THE CLAIM PASS MEASURED FROM WAS NOT THE POST THE STEP WALKS TO (2026-09-20).
+
+The row stood at 64.6% against a 70% bar that was not loosened. Daniel's accepted sequence was: cite the printed
+failing-tick split, measure the 12 m reach per man, measure a claim from take to end, and only then - if they name
+a SINGLE cause - a core fix.
+
+1. THE SHARE, already printed and not re-litigated: of the 1698 failing ticks, 100% hold an UNPINNED man with a
+   claim about 8.9 m from his hole, and freezing every crawler clears none of them. Crawl is a ceiling of 24.1
+   points and is not the cause.
+
+2. THE 12 m REACH FROM HIS POST, unpinned men on failing ticks, 2 seeds x 40 s, 89240 man-ticks
+   (`tools/measure-reach-and-claims.mjs`):
+
+     NO place within 12 m of his post          8800  ( 9.9%)
+     a place in reach, and he HOLDS a claim   31866  (35.7%)
+     a place in reach, he holds NOTHING       48574  (54.4%)
+     nearest place to his POST                mean 7.5 m, median 7.4 m
+
+   So reach is NOT the binding constraint: nine men in ten have a place inside 12 m of their post. The refusal
+   splits three ways, and the third is the one that matters:
+
+     outside his clamp [seam - 40, seam + 8]  16222  (33.4%)
+     inside 3 m of a living tank                239  ( 0.5%)
+     ELIGIBLE and still not claimed           32113  (66.1%)
+
+3. A CLAIM FROM TAKE TO END, every man over the run (144 men):
+
+     men who never held a claim at all          42  (29.2%)
+     men who NEVER once arrived on a hole      132  (91.7%)
+     claims taken, per man that took any       mean 1.6, overwritten under him 0.0
+     share of a man's living ticks holding one 38.4%,  ON a hole 2.9%
+
+   One column in that print was badly chosen and is reported as such, not as a finding: "could he cross it this
+   tick" is 0 for everyone by construction, because a gait of 0.046 m a tick can never cover a remaining distance
+   in one tick. It measures the tick length, not the man.
+
+4. THREE CANDIDATE CAUSES MEASURED AND CLOSED before the real one was named:
+     - a PHANTOM wreck (the core calls a hull a wreck on U_STATE alone, the row's place list also wants HP <= 0):
+       30 of 14756 wreck claims, 0.2%. Of 115200 hull-ticks, 22298 were state 0 and NOT ONE had HP left. Closed.
+     - the place MOVING under him (a candle lip's world x is CL_X less the scroll): 0.0000 m a tick for all three
+       kinds, and the gap to it CLOSES at 0.024 to 0.035 m a tick. He walks in. Closed.
+     - the walk being too slow: no. The gap closes; he simply never gets there in time.
+
+5. THE CAUSE, and it is one thing. §11.3 measures eligibility "from his POST, not his feet" - the ruling Daniel
+   kept - but the claim pass and the step did not mean the same post. The pass took the man's OWN squad anchor at
+   a bare RIFLE_STANDOFF; the step walks him to his FIRE TEAM's anchor (§9.2) at his own scattered stand-off less
+   §12.1's push. Measured, 2 seeds x 40 s, 318644 man-ticks:
+
+     man -> the point the claim pass called his post   median 46.3 m, mean 47.3 m, p90 79.7
+     man-ticks ever within 2 m of it                   783  (0.2%)
+     men who ever came within 2 m of it once           6 of 144
+     POST -> the place, while he holds one             mean 25.6 m   (the rule admits 12)
+     man -> the place, while he holds one              mean 39.7 m, median 38.9
+
+   So "within 12 m of his post" drew its circle round a point no man stands on, and handed him a hole a median
+   38.9 m from his feet - a 14 to 28 s walk. A claim lives 12.8 s. It ends: the man died 60.2%, the place stopped
+   existing 27.8%, a living tank came inside 3 m of it 12.0%, overwritten 0.0%. Nobody arrives, and that is the
+   row.
+
+6. THE FIX, in the right units and taking no draw: `rifleStandoff(index, infPush)` is now ONE function in
+   army.js, called by the walk and by the claim pass, and the pass reads the fire team's anchor and `pushNear`
+   exactly as the step does. Nothing about §11.3's rule changed - eligibility is still measured from his post,
+   and a held claim is still not re-measured for distance. The post simply became the post he is walking to.
+   DO NOT SPLIT THEM AGAIN, the same way chart.js and the war share `trendCandle`.
+
+     §11.3 occupancy   64.6%  ->  91.7%   against a 70% bar, not loosened   (2 seeds x 40 s)
+     claims that ever reached 0.5 m of their place    7.5%  ->  15.1%
+     failing ticks                                     400 of 4800, and every one holds a walker still closing
+
+7. WHAT THE FIX MOVED, and neither number was tuned:
+   - §4.12's assault witness 8 -> 10. Every clause of §4.12 still passed on the run that moved it; only the count
+     did. Re-measured per seed: bulls 0/0/0/2/2, bears 2/1/2/0/1. More men reach cover, more men live, survivors
+     hold objectives, and an assault clock reads the holder. The comment beside the assert carries the cause.
+   - rules.test "replacements keep both armies in contact" went RED, and it is LISTED, NOT FIXED AND NOT TUNED.
+
+THE CONTACT RED, measured rather than argued (seed 20260901, the test's own scenario):
+
+     HEAD                                  5 bull tanks v 11 bear at t=90   (floor is 4 a side: passes)
+     with this fix                         3 v 12                           (fails)
+     the same fight with the trend neutral 6 v 12                           (would pass)
+
+   The test flattens the tape - `st.tape.fill(st.tape[0])` - to get a symmetric fight, because "comparing a fight
+   offset by twenty-seven metres against a symmetric one is not a comparison". But it steps with no market tick,
+   so `readMarket` never runs, and MK_TREND keeps the value `init` gave it from the SEEDED tape: DOWN, strength 2,
+   unchanged for all 90 s. The bears are favoured for the whole run - a 30-60 s assault clock against 45-90, +1
+   lane weight, a ceiling raised by 8 x strength. The bull side was already collapsing at HEAD, 12 tanks to 5;
+   this fix makes the men better at using cover, which amplifies the side already favoured, and 5 becomes 3.
+   Calling `readMarket` once after the fill makes the trend 0 and the fight 6 v 12. THAT IS NOT DONE HERE: it
+   changes a test so my change passes, and it is Daniel's ruling to make, not mine. The assert is untouched.
+
+SUITES ON THIS HEAD. JS, each on its own run: tactics 24/24, rules 49/50 (the contact red above),
+candles+cbrt+chart+poison 22/22, spawn+private-world+specified 10/10, transcript-replay 5/5,
+canonical+vectors 3/11 and bundle 4/12 - and those last two are IDENTICAL AT HEAD, verified by reverting the two
+source files and re-running: 8 golden reds and 8 bundle reds, pre-existing, awaiting the combined cover deploy
+that regenerates them by instruction. The bundle was rebuilt in this commit because the core source changed and a
+new name is exported; that cleared the two bundle reds my change HAD caused (the exported-name check and the
+load-heats-the-run check) and left the eight that were already there.
+
 §11.3 COVER - THE MEASUREMENT BEFORE THE WORK (2026-09-19, on the tree deployed at 0.0.1739).
 
 WHAT THE OLD ARMY DOES ABOUT COVER: nothing, and that is a statement, not a run. §11.3 is a declared GAP ("GAP,

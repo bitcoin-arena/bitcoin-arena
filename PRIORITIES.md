@@ -20,7 +20,7 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-# LIVE LETTER  -  2026-09-20 06:00
+# LIVE LETTER  -  2026-09-20 07:10
 
 WHERE THE GAME IS: **btc-logistics-core.pages.dev at 0.0.1739** (deploy 9cac533f), unchanged since 19:47 on the
 19th. The core in that build was byte-identical to packages/core/dist AS IT STOOD THEN - today's dist is many
@@ -36,10 +36,15 @@ WHAT HAS LANDED ON THE BRANCH SINCE AND IS **NOT** LIVE (each named by its own c
 - **The HUD stopped lying about the trend** (236e0ab4). A candle is two samples and the war was grading the wick.
   chart.js and the core share one `trendCandle`. Proven on the MacBook through the real Binance feed: a falling
   chart reads DOWN 3 with six red dots, a rising one UP 3 with six green.
-- **§11.3 cover is closed, and its row is RED** (cf0cb8b4). The row reached 72.9% and now reads **64.6% against a
-  70% bar**. Not loosened. Measured 2026-09-20, the crawl is NOT its cause: all 1698 failing ticks hold an
-  UNPINNED man about 9 m from his hole, freezing every crawler still fails every one of them, and crawl is a
-  ceiling of 24.1 points. It is a claim-rule question and is now the NEXT ITEM, not unfinished suppression.
+- **§11.3's OCCUPANCY ROW IS GREEN: 64.6% -> 91.7%** against a 70% bar that was NOT loosened. The cause was one
+  thing and it was not the crawl: the claim pass and the step did not mean the same POST. The pass measured "within
+  12 m of his post" from his OWN squad anchor at a bare RIFLE_STANDOFF, while the step walks him to his FIRE TEAM's
+  anchor (§9.2) at his own scattered stand-off less §12.1's push. The two points stood a median 46.3 m apart and a
+  man was within 2 m of the pass's point on 0.2% of man-ticks - 6 of 144 men ever reached it once - so the holes it
+  called eligible sat a median 38.9 m from his feet, a 14-28 s walk against a claim that lives 12.8 s. 91.7% of men
+  never once arrived; claims ended with the man dead 60.2% and the place gone 27.8%. `rifleStandoff` is now ONE
+  function shared by the walk and the claim pass. §11.3's rule is untouched - still measured from his post, a held
+  claim still not re-measured - the post merely became the one he is walking to. No draw either way.
 - **§11.4 posture is closed in the core** (7bc7c1f6). COVER rifle deaths 22.4 -> 5.7 per 100k man-ticks.
 - **§11.5's OWN CLAUSES ARE DONE** (2383c95b ... 89d9d316): the TAC_SUPP word, the pin at 120, the -1 decay, a
   pinned team that does not rush, the crawl at 0.5 m/s, the halved reload, the suppressing round on the look-again
@@ -61,11 +66,29 @@ A count can." So the check is a count, in that file's idiom, read off the live p
 NOT claimed: a close-up of a body. The spectate camera starts behind the depot and flying it forward hit the cargo
 chooser. The pose is proved by the count and the code path, not by an eye on a man.
 
-SUITES ON THIS HEAD, all measured after the guards went in: PlayMode **257 total, 229 passed, 14 failed, 14
-skipped** - one test and one skip more than before, the extra skip being the pose test that cannot run in the
-editor. EditMode **258 total, 254 passed, 1 failed, 3 skipped**, 0 error CS, the one red the long-listed CombatFx
-rifle flash. JS: rules 50/50, **tactics 23/24** (two new guards in), candles+chart+spawn 18/18, canonical 22/22,
-vectors+bundle 2/20 with goldens deliberately stale. The single JS red is the §11.3 occupancy row.
+SUITES ON THIS HEAD, each JS suite on its own run: **tactics 24/24**, **rules 49/50**, candles+cbrt+chart+poison
+22/22, spawn+private-world+specified 10/10, transcript-replay 5/5, canonical+vectors 3/11, bundle 4/12. PlayMode
+**257 total, 229 passed, 14 failed, 14 skipped**; EditMode **258 total, 254 passed, 1 failed, 3 skipped**, 0 error
+CS, the one red the long-listed CombatFx rifle flash. Unity is untouched by this change - the core there is the JS
+bundle and the editor stubs it - and both counts match the previous letter exactly; the PlayMode set differs only
+by the two known flip-floppers trading places, RoadsAreActuallyDrawn green this run and PostOfficeTests.TheGoggles-
+Animate red.
+
+THE GOLDEN AND BUNDLE REDS ARE PRE-EXISTING, and that was verified rather than assumed: reverting the two source
+files to HEAD and re-running gives the SAME 8 golden reds and the SAME 8 bundle reds. They await the combined
+cover deploy that regenerates them by instruction. The bundle WAS rebuilt in this commit, because core source
+changed and a new name is exported - that cleared the two bundle reds this change had caused and left the eight
+that were already there.
+
+THE ONE NEW RED IS `replacements keep both armies in contact`, AND IT IS LISTED, NOT TUNED. Measured on the test's
+own seed: HEAD gives 5 bull tanks against 11 bear at t=90 and passes a floor of 4; this change gives 3 against 12
+and fails. The cause is not the claim pass. The test flattens the tape to get a symmetric fight, but it steps with
+no market tick, so `readMarket` never runs and MK_TREND keeps what `init` read off the SEEDED tape - DOWN, strength
+2 - for all 90 s. The bears are favoured the whole run: a 30-60 s assault clock against 45-90, +1 lane weight, a
+ceiling raised by 8 x strength. The bull side was already collapsing at HEAD, 12 tanks to 5; better use of cover
+amplifies the side already favoured and 5 becomes 3. Reading the trend off the flat tape once makes it 0 and the
+fight 6 v 12, which would pass - **that is not done here.** It changes a test so my own change passes, and it is
+Daniel's ruling to make. The assert is untouched. **I wait on that one.**
 
 THE FOURTEEN PLAYMODE REDS, none unexplained: nine read the retired Battlefield.Army; RoadsAreActuallyDrawn wants
 a graphics device; two MushroomResting sit on the authored skirt offset; SoldiersStandOnTheGroundAndAreAnimated is
