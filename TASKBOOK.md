@@ -329,6 +329,35 @@ genuinely is §8.1's 26 m and is untouched.
    SUITES after: rules 50/50, tactics 21/22 (the §11.3 cover row at 64.6% against 70, cause unchanged),
    candles+chart+spawn 18/18, canonical group 22/22, vectors+bundle 2/20 with goldens deliberately stale.
 
+3k. §0's TRUCK LINE AMENDED, AND THE PROPERTY MEASURED (2026-09-20).
+
+   The courier pin collided with §0's fault list: "a man's claim, posture or suppression word differs between the
+   truck parked and the truck driven through the line, seed equal". RULED: §11.5 wins. A shell is an impact at a
+   point and a connect on the cab is that point, the same as a connect on a hull; the truck still has no
+   suppression word of its own, posture still never reads it, and a suppressing round is still never fired at it.
+   The line now excepts exactly that case and names §11.5, so the two sentences cannot drift apart again.
+
+   MEASURED, tools/measure-parked-vs-driven.mjs, two runs of one seed stepped in lockstep, one with no input and
+   one driven forward:
+
+     ticks compared before the two wars parted   1985     parting at t = 298, 381, 756, 347, 203
+     man-ticks compared                        142920
+       CLAIM differed                               0   (0.00%)
+       POSTURE differed                             0   (0.00%)
+     team-ticks compared                        35730
+       TAC_SUPP differed on any team                0   (0.00%)
+
+   THE GUARD IS THE WHOLE POINT OF THAT TABLE. A driven truck RUNS MEN OVER (§8.2), and from the first tick where
+   the two runs hold different men alive, everything downstream differs for that reason and not for a coupling.
+   Read WITHOUT the guard the same probe reports 30.8% of claims and 30.6% of postures differing and 55.2% of
+   team-ticks differing on TAC_SUPP - a table that looks like catastrophe and means nothing. The first version of
+   this tool printed exactly that.
+
+   WHAT THIS PROBE DOES NOT COVER, said plainly: the exception itself. The truck is still near the bay for the few
+   hundred ticks before the wars part, so no man is ever within 8 m of it when a shell connects, and the excepted
+   count is 0 of 7 connects. The exception is covered by the constructed test in tactics.test.js, which fails
+   without the rule (rises 0,0,300,... and never a 60) and passes with it.
+
 3f. THE TWO CLAUSES OF §11.5 THAT ARE ACTUALLY OPEN (2026-09-20, found by reading the section against the write
    at the close-out, not by measuring). Neither is coded.
 
