@@ -20,21 +20,19 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-# LIVE LETTER  -  2026-09-20 07:40
+# LIVE LETTER  -  2026-09-20 08:30
 
-DONE THIS LETTER: **downed men sit on the ground in a browser.** Two WebGL builds differing only in
-`SoldierLift`, read over CDP on the MacBook on the prefab path: worst **-0.75 m -> 0.00 m**, standing men +0.12 m
-of walking bob either way. And **§11.3 occupancy 64.6% -> 91.7%** against a 70% bar that was not loosened.
+DONE THIS LETTER: **the combined cover deploy SHIPPED.** Occupancy, posture and suppression are live together,
+goldens and the bundle regenerated in the same deploy, and the Daily is off 0.0.1739.
 
-NEXT ITEM, NOT STARTED: **the combined cover deploy** - occupancy, posture and suppression shipped together with
-the goldens and the bundle regenerated in that one deploy. It is what the 8 golden and 8 bundle reds wait on, and
-it is what moves the Daily off 0.0.1739.
+NEXT ITEM: the remaining playtest chain, then M3.
 
-WHERE THE GAME IS: **btc-logistics-core.pages.dev at 0.0.1739** (deploy 9cac533f), unchanged since 19:47 on the
-19th. The core in that build was byte-identical to packages/core/dist AS IT STOOD THEN - today's dist is many
-commits ahead and is NOT what is serving - and it is listed in known-cores and known-good-clients, with the signer
-nodes at /mnt/bitcoin/blwp-2of2/code running that same commit. btc-logistics-war untouched. No milestone freeze
-URL: no numbered milestone closed.
+WHERE THE GAME IS: **btc-logistics-core.pages.dev at 0.0.1812** (deploy d71764e0), shipped 2026-09-20 08:26.
+The core it serves is byte-identical to packages/core/dist - `eb6ac50e9fb62974` on the unique deploy URL, on the
+alias and in dist - and its source hash `3fd9cda50f076d3a43fab5bcce349f7350a8f3afd982f3a4eee59c56dc4aa560` is
+listed in known-cores (31 listed). All three money scripts are pinned from the bytes that ship. The signer nodes
+at /mnt/bitcoin/blwp-2of2/code run that same commit and report 4 rounds, 4 open. btc-logistics-war untouched. No
+milestone freeze URL: no numbered milestone closed.
 
 WHAT IS LIVE is the 19:47 letter and nothing since: the world grown east, the delivery line at 168.6 m, tanks
 pathing around craters, a nuke that kills everything in its blast, no asphalt where a candle stands, spectate

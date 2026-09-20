@@ -5,6 +5,90 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE LOBBY WAS NEVER BROKEN; MY VIEW OF IT WAS (2026-09-20, after the 0.0.1812 deploy).
+
+I reported a regression - "the lobby has no infographics" - and offered three fixes for it. There was no
+regression, and the report was wrong. What happened:
+
+  - The headless Chrome on the MacBook had been parked on the Daily since BEFORE the deploy, and `shot.mjs` never
+    cleared the cache. `Network.setCacheDisabled` in a later probe only covers requests made after it is set.
+  - That view could not reach the signer doors, so the lobby came up with NO ROUNDS: no identity line, no FREE
+    row, no PAID row - only the how-to text and PLAY/SPECTATE. A lobby with nothing to join still looks like a
+    lobby, and I read the empty one as the whole one.
+  - One `Network.clearBrowserCache` on the SAME build and the same URL produced the whole lobby: daily.json 200,
+    both trycloudflare doors 200, four `round?id=...` 200, the four how-to panels drawn, the identity line, and
+    FREE / PAID rows. Daniel's phone had been showing that all along.
+
+THE LESSON, and it is a probe lesson, not a product one: clear the browser cache before screenshotting a page to
+judge a deploy by. A stale Unity build plus unreachable nodes is indistinguishable from a regression at a glance.
+
+WHAT IS NOW GUARDED (Assets/Tests/EditMode/LobbyShowsUpTests.cs, 4 tests, EditMode 261/265):
+  - `TheLiveDailyPayloadComesUpAsAWholeLobby` - the fixture is `window.BLWP_LOBBY_VIEW()` read off the LIVE Daily
+    at 0.0.1812 over CDP, ids and hostnames as they came. It asserts the lobby comes up whole: from daily.json,
+    the identity and its fingerprint, exactly one FREE and one PAID row, both 2-of-2 agreed and joinable with
+    entry time left, no refused and no silent node - and that PLAY picks the FREE round.
+  - `ALobbyThatReachedNoSignerNodeIsEmptyAndSaysSo` - the shape I misread. It still parses as a lobby, because the
+    player must get a screen, but rows are empty, nodes is 0, the silent nodes are NAMED, PickDefault is -1 and
+    `UnansweredLine` is not empty. The two states are now pinned apart.
+  - `ARoundOneSignerNodeShortIsNeverWhatPlayJoins` - a 1-of-2 round with more time left is still never joined.
+  - `TheLobbyKeepsItsHowToArt` - the how-to sheet is in Resources.
+
+HONEST LIMIT OF THOSE TESTS: they are parse-level and run on a fixture. They pin the healthy lobby's shape and
+separate it from the empty one, so a future screenshot showing no rounds can be diagnosed instead of guessed at.
+They CANNOT tell that the live Daily's signer nodes are down - only a cleared-cache load against the live page
+does that, which is what should have been done before calling it a regression.
+
+THE COMBINED COVER DEPLOY (2026-09-20 08:26). Daily 0.0.1739 -> 0.0.1812, deploy d71764e0.
+
+WHAT THE 8 GOLDEN AND 8 BUNDLE REDS ACTUALLY WERE, and I had it wrong before measuring it. I reported the bundle
+reds as a possible bundle/module divergence and a deploy blocker. They were not. `bundle.test.js`'s last assert is
+`assert.equal(bundled.hash(b), entry.final)` - the RECORDED GOLDEN - and all eight died there (line 43), never on
+line 41's "bundle and modules parted at tick N". Stepped side by side over all eight vectors, 3600 ticks each:
+
+  bundle vs modules   IDENTICAL EVERY TICK on all eight
+  modules vs golden   differs on all eight
+
+One cause - a stale recording - reported twice under two names. vectors+bundle 3/20 -> 23/23.
+
+WHAT ELSE THE SHIP TURNED UP, which the letter would have deployed broken:
+  - `bundle-fresh.test.js` held FOUR stale rows: blwp-client.js and blwp-curve.js, each in dist AND in the WebGL
+    template. The page would have served money scripts that are not the build of this tree. Both rebuilt, copied
+    to the template, all three now fresh. A stale blwp-client.js was pinned for a moment on the way and the pin
+    was REVERTED rather than left listed - the registry keeps every hash it is given.
+  - `BlwpLayout.cs` was checked against a fresh gen-unity-layout run: byte-identical. The 18-word trap did not
+    repeat.
+
+WHAT SHIPPED, all three verified equal in dist, in the built page, and on the served URL:
+  blwp-core.js    eb6ac50e9fb62974542698b2524fab1d0ddcd041ba13906a2180e06bfef6dd25
+  blwp-client.js  eb31500fb5f10f2b732a405a31605afb320a72934ec21c7387de0f03df167889
+  blwp-curve.js   c7d28f3bc222a0fe9d06c3e1c21f707a6a88ab6577dde486c11fd7a5916cf752
+  core source     3fd9cda50f076d3a43fab5bcce349f7350a8f3afd982f3a4eee59c56dc4aa560  (known-cores, 31 listed)
+
+THE SIGNER NODES WERE THE REAL GATE, and deploy-core.sh refused until they were right - "daily.json does not name
+live signerNodes". The whole Daily stack was dead. Brought up in order: bitcoind (regtest, height 73450), the two
+lnds, the 2-of-2 signer nodes on the shipping commit df66c6d1 (same core hash recomputed there), then the two
+quick tunnels, whose public names change on every start. The keeper picked up the new names, restarted the signer
+nodes under them and rewrote daily.json - then HELD the deploy, because it publishes only with its own token and
+there is no /mnt/bitcoin/blwp-2of2/cloudflare.env. Deployed by hand instead. Both doors answered 200 with 4
+rounds, 4 open. The persistent page at /mnt/bitcoin/blwp-2of2/page was moved 0.0.1739 -> 0.0.1812 first, with the
+old one kept at page.before-1812, so a keeper redeploy after a reboot carries the new build and not the old.
+
+MEASURED AFTER, ON THE MACBOOK over CDP, unique deploy URL first because the alias lags:
+  [render] drew 92 units from the core
+  [render] 31 of 62 men drawn DOWN from the core's posture word
+  and the `[render] downed men sit ...` line is ABSENT - which is the gating working: it is compiled out of a
+  release build. Screenshot: daniel-screens/ship-1812-daily.png, lobby up on the live chain at block #967802.
+
+SUITES. JS all green, each on its own run: rules 50/50, tactics 24/24, candles+cbrt+chart+poison 22/22,
+spawn+private-world+specified+transcript-replay 15/15, canonical+vectors 11/11, bundle 12/12 - 134/134.
+Protocol 531/533. The two protocol reds are `game config hash matches the committed id` and `regtest and testnet4
+network ids match the committed ids`, and they are PRE-EXISTING, not this ship: every constant `encodeGameConfig`
+hashes was compared against 2588dd2e and none moved, and the test fails identically in a worktree at that commit.
+They are a committed genesis id that an earlier letter left behind; changing it changes the NETWORK id, so it is
+not something to regenerate in passing. Listed.
+EditMode 257/261, 3 skipped, 1 red (the listed CombatFx rifle flash), 0 error CS.
+PlayMode 230/257, 14 skipped, 13 red, all long-listed.
+
 ImportedModelTests.SoldiersStandOnTheGroundAndAreAnimated - LISTED, NOT §11.4 WORK (ruled 2026-09-20).
 
 It is red, it stays red, and it is not loosened and not made green by changing what it asserts.
