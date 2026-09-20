@@ -220,6 +220,53 @@ genuinely is §8.1's 26 m and is untouched.
    fewer men in holes. That is the wrong way round, and it is the argument for the renderer work being the next
    player-facing thing after this block closes - it is listed as a deploy stop, not as part of any letter.
 
+3h. THE BOMB'S 300 LANDS ONCE PER TEAM (2026-09-20). §11.5: "A bomb blast adds 300 to every TEAM with a living
+   man inside 16 m of it." The call sat inside the kill loop, so every man of a team in the circle added his own
+   300 and a team with two men there was slammed to the 600 clamp.
+
+   The scan now runs BEFORE anything is removed - it is the blast, not the kill, so it lands on the survivors too
+   - marks each team with a living man inside 16 m, and adds 300 once per marked team.
+
+   MEASURED, five seeds x 180 s, the same drive either side of the change:
+
+     ticks a team's word rose by 300 or more      385  ->  374
+       of those, charged 600 or more (twice)       56  ->    0        14.5% of blasts were double-charged
+       largest single-tick rise                   601  ->  361        361 is one blast plus one rifle round
+     pinned share of teams                      43.8%  -> 42.9%
+     a pinned episode, mean                       7.9s ->  7.6s       max 96.8s -> 81.3s
+     pinned episodes opened by a blast           36.4% -> 32.4%
+     rifle rounds                                3878  ->  3991
+
+   THE MOVEMENT IS SMALLER THAN THE ARITHMETIC SUGGESTED, and the instrumentation says why rather than my guessing
+   at it: only 56 of 385 blast events - one in seven - ever had two men of one team in the circle, so six blasts
+   in seven were already charged correctly. The 8.0 s versus 3.0 s figure quoted when this was raised is the worst
+   case for those one-in-seven, not the average, and the p90 of the word barely moves (575 -> 576) because rifle
+   rounds top it up regardless of how the blast was counted.
+
+   AND PLAYMODE CAUGHT A REAL ONE THAT HAD BEEN SITTING THERE SINCE §11.5 LANDED. Running PlayMode for the first
+   time since the state grew showed BlwpBridgeTests.TheLayoutMatchesTheJavaScriptItWasGeneratedFrom red:
+
+     BlwpLayout.cs   TACTICS_WORDS 212, WORDS 2458        the C# constants, generated
+     the core        TACTICS_WORDS 230, WORDS 2476        after §11.5 appended TAC_SUPP
+
+   The generated C# layout was never regenerated when §11.5 added its 18 words at 2383c95b, so the Unity client
+   has been sizing the core's state EIGHTEEN WORDS SHORT since then. That is not a test colour question - it is
+   the client and the core disagreeing about the shape of the state they share, which is the same class as the
+   core-byte red that once stopped the Daily opening a round. Regenerated with tools/gen-unity-layout.js; it is a
+   generated constants file, not a golden, and regenerating it is not the golden regeneration that waits on the
+   deploy.
+
+   THE LESSON, written down because it cost two commits: a core layout change must regenerate BlwpLayout.cs in the
+   same commit. "No C# changed" was true of hand-written C# and false of generated C#, and I used it to justify
+   not running PlayMode for three letters.
+
+   A NEW RED, LISTED WITH ITS CAUSE AND NOT TUNED AWAY: rules.test.js "replacements keep both armies in contact
+   for the whole round" now fails - at t=90 the core fields 13 tanks against the recording's 20. It passed at
+   50/50 immediately before this change and fails immediately after, confirmed by swapping sim.js either side, so
+   the cause is this fix and nothing else. The mechanism is the intended one running the other way: less
+   suppression means men are pinned less, fire at full rate more often, and kill armour faster. The rule is the
+   section's own and is not reverted to make the row green; the red is listed here against §11.5.
+
 3f. THE TWO CLAUSES OF §11.5 THAT ARE ACTUALLY OPEN (2026-09-20, found by reading the section against the write
    at the close-out, not by measuring). Neither is coded.
 
