@@ -267,6 +267,39 @@ genuinely is §8.1's 26 m and is untouched.
    suppression means men are pinned less, fire at full rate more often, and kill armour faster. The rule is the
    section's own and is not reverted to make the row green; the red is listed here against §11.5.
 
+3i. THE SHELL CLAUSE, SIZED THEN BUILT (2026-09-20). §11.5: "A shell that lands - hit or miss - inside 8 m of a
+   man adds 60 to his team's word too; a tank's fire pins infantry, which is what infantry hides from."
+
+   C# VERSUS CORE, BEFORE ANY CODE. `Army.cs:631` DOES carry an impact point - `connects ? at : at + Rand(-5, 5)
+   on each axis` - but it exists so the tracer does not lie and is handed to the `Fired` action, a RENDER hook. It
+   touches no infantry, and that engine has no suppression at all. So there is nothing to port. Two traps if the
+   line were copied anyway: the miss scatter is a per-axis Rand, which is the 2-D coupling this core has rejected
+   elsewhere, and taking it would pull two draws the core does not take, shifting the stream.
+   Core before this change: a gun connects or it does not, a connect takes HP off the hull, and nothing about a
+   shell reaches a man.
+
+   THE SHARE, five seeds x 180 s (tools/measure-shell-pin.mjs), reading a connect as an armour hull whose HP fell
+   on a tick with no blast:
+
+     shells that connected                      966
+     ...landing within 8 m of a living man      306  (31.7%)     mean 1.5 men in reach
+     TEAM-hits it would produce (+60 each)      444
+       on a team already pinned, no effect      184  (41.4%)
+       carrying a team OVER the pin line         19  ( 4.3%)
+       not reaching the line even so            241  (54.3%)
+
+   THIS ACCOUNTS FOR ABOUT 2% OF THE PINNING THAT IS MISSING: 19 new crossings of the pin line against 820 pinned
+   episodes on the same drive. Small, and built anyway because it is the section's rule and not an optimisation.
+
+   AFTER, same drive: under fire 55.0% -> 56.9%, pinned share of teams 42.9% -> 43.6%, a pinned episode mean
+   7.6s -> 7.8s, largest single-tick rise 361 -> 441 (a blast's 300, a rifle round's 60 and a shell's 60). Once
+   per TEAM with a living man in reach, as the bomb is - not once per man. No new word, no draw.
+
+   AND IT CLEARED THE RED THE BOMB FIX OPENED. rules.test.js "replacements keep both armies in contact" went back
+   to 50/50: the bomb correction cut double-pinning, men fired at full rate more often and armour died faster (13
+   tanks at t=90 against the recording's 20); the shell clause pins those same teams again and the count returns.
+   The red was listed with its cause and not tuned, and the next clause of the same section answered it.
+
 3f. THE TWO CLAUSES OF §11.5 THAT ARE ACTUALLY OPEN (2026-09-20, found by reading the section against the write
    at the close-out, not by measuring). Neither is coded.
 
