@@ -20,9 +20,21 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-# LIVE LETTER  -  2026-09-20 11:05
+# LIVE LETTER  -  2026-09-20 16:05
 
-DONE THIS LETTER: **a player who falls behind gets back to the lobby, and the next round shows both trucks.**
+DONE THIS LETTER: **the miner's corridor walls now stop the truck on Daily.** 41 solids went into the core's
+`mapSolids()` - never PhysX, no mesh collider copied, DeliveryGate's five slabs untouched. Boxes at the miner
+5 -> 46, spanning x 163..194 -> 108.4..194; corridor parts below 4 m with no box **46 -> 2**. Driven in the
+player build on Beelink Chrome: a truck at z 20.6 now **stops at x 141.52**, its front face on tunnel_grid_v_2's
+west wall at 144.80 m, where it used to pass 1.22 m through; a truck on the centre line still runs to the gate
+and **DELIVERED at tick 599**. Seven parts stay open by ruling so that route exists at all, the 0.56 m roof clip
+stays as Unity's `(1, 0.45, 1)` height scale, and the miner was not raised. Daily **0.0.1824** (fa989a7e), core
+`2806cfd0e97480a8` identical in dist, on the unique URL and on the alias.
+
+NEXT PLAYTEST ITEM, NOT STARTED: **the candle bodies read as flat slabs from above** rather than a chart standing
+on the ground - listed item 2, Daniel's eye and not yet a measurement.
+
+EARLIER THIS LETTER: **a player who falls behind gets back to the lobby, and the next round shows both trucks.**
 Measured twice on Daily 0.0.1815 with two real browser tabs: both return (t+225/t+235, then t+275/t+290, and not
 always the same tab first), **0 runs VOID**, PLAY again joins round two on both, and each tab draws the other -
 `others 1`, 173 and 165 pictures, overlay age 12-632 ms against 29564 ms before. Before this, one tab never

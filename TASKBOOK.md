@@ -5,6 +5,34 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE CORRIDOR WALLS STOP THE TRUCK ON DAILY (2026-09-20). Driven in the PLAYER BUILD on Beelink Chrome, read
+from the page's own core (`unityInstance.Module.blwp.st.i32`), never PhysX.
+
+  drive                                   result
+  teleport x 100 z 0, throttle held       100.4 -> 125.1 -> 169.13, and the page said
+                                          "the core said DELIVERED at tick 599" - the gate at 169 still delivers,
+                                          so mass_behind_tunnel, tunnel_end_backglow, tunnel_grid_h_0/_h_1,
+                                          tunnel_grid_v_5/6/7 and btc_medallion_tunnel_end are still passable and
+                                          the ceiling still clears.
+  teleport x 138 z 20.6, throttle held    STOPPED at x 141.52, z 20.60, and stayed there 6 s with 0.00 m of
+                                          movement. Front circle 141.52 + 2.0 + 1.275 = 144.80 m, which is
+                                          EXACTLY the west face of tunnel_grid_v_2 (x 144.8 .. 146.0). That same
+                                          part read 1.22 m INSIDE the truck before the boxes.
+
+  daniel-screens/miner-drive-stop.png is the stop; miner-drive-end.png is the delivering run.
+
+TWO INSTRUMENT FAULTS ON THE WAY, written down so the next drive does not repeat them:
+  1. `blwp.teleport` does not exist on the state's object - the core module is `window.BLWP` and the state is
+     `Module.blwp.st`. With the call failing silently the truck drove out of its bay along z 78.2 and stopped at
+     x 159.73 against the FACADE side box at x 163. A real stop, but not the corridor, and it proved nothing
+     about the 41 new boxes.
+  2. The build must be driven before it is deployed, not after: this ran against a local server on Beelink at
+     127.0.0.1:8140 with daily.json copied in, so the Daily was only moved once the drive had confirmed it.
+
+DEPLOYED: Daily 0.0.1824 (fa989a7e). The core it serves is byte-identical to packages/core/dist -
+2806cfd0e97480a8 on the unique URL, on the alias and in dist. btc-logistics-war untouched. Not a milestone
+freeze; no -mN URL.
+
 STEP 3 - THE MINER CORRIDOR HAS BOXES NOW, EXCEPT THE CEILING THE TRUCK MUST PASS UNDER (2026-09-20, ruled).
 
 41 boxes added to `mapSolids()`. None in PhysX, nothing copied from a mesh collider, and DeliveryGate's five
