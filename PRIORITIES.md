@@ -297,8 +297,14 @@ LISTED, each its own thing and none of them B:
 2. **The candle bodies read as flat slabs from above** rather than a chart standing on the ground. Daniel's eye,
    not a measurement.
 3. **The miner's coin stands beside the approach lane** at about x 159; a truck that drifts off the lane meets it.
-4. **The drawn miner is bigger than either engine's collision** (from 53.8 m; both engines agree box for box at
-   the facade). A tank can stand in a drawn cable; the truck's roof passes through mass_behind_tunnel by 0.56 m.
+4. ~~The drawn miner is bigger than either engine's collision.~~ **BOXED, except the ceiling the truck must pass
+   under.** 41 boxes added to the core's `mapSolids()` (never PhysX, no mesh collider copied, DeliveryGate's five
+   slabs untouched): solid boxes 5 -> 46, spanning x 163..194 -> x 108.4..194; drawn parts with no box 452 -> 374;
+   corridor parts below 4 m with no box **46 -> 2**. All five approaches still reach the gate at x 169 and none
+   stick. RULED OPEN, because a box on any of them closes the only route: `mass_behind_tunnel` (its 0.56 m roof
+   clip is Unity's `(1, 0.45, 1)` height scale, not a missing slab - raising the miner is a later item),
+   `tunnel_end_backglow`, `tunnel_grid_h_0/_h_1`, `tunnel_grid_v_5/6/7` and `btc_medallion_tunnel_end`. Nothing
+   solid stands within 6 m of the centre line at truck height. Numbers in TASKBOOK.
 
 
 THE FIVE WAITS ARE RULED (2026-09-19), on Daniel's delegation - *"lies die war tactics specs und beantworte dir

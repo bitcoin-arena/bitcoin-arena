@@ -5,6 +5,58 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+STEP 3 - THE MINER CORRIDOR HAS BOXES NOW, EXCEPT THE CEILING THE TRUCK MUST PASS UNDER (2026-09-20, ruled).
+
+41 boxes added to `mapSolids()`. None in PhysX, nothing copied from a mesh collider, and DeliveryGate's five
+Slab() calls are untouched - the engine-for-engine agreement at the facade stands exactly as it was.
+
+  number                                   before      after
+  solid boxes at the miner                 5           46
+  they span                                x 163..194  x 108.4..194
+  drawn parts with NO box                  452         374
+  corridor parts below 4 m with no box     46          2
+
+The two left are deliberate: `tunnel_end_backglow` (spans the lane) and `tunnel_floor` (a floor, not a wall).
+
+THE FIVE APPROACHES, re-driven in the core, never PhysX. All still reach x 180+, past the gate at 169; none
+stick under a new box.
+
+  part                     before   after
+  tunnel_grid_v_2          1.22 m   0.00 m      pushed out by its new box
+  tunnel_grid_v_10         0.82 m   0.00 m      pushed out by its new box
+  mass_behind_tunnel       1.27 m   1.27 m      PASSABLE BY RULING
+  tunnel_end_backglow      1.27 m   1.27 m      ruled open, see below
+  tunnel_grid_h_0          1.27 m   1.27 m      ruled open
+  tunnel_grid_v_5/6/7      1.27 m   1.27 m      ruled open
+  btc_medallion_tunnel_end 1.27 m   1.27 m      ruled open
+
+WHAT COULD NOT BE BOXED, AND WHY IT IS A RULING RATHER THAN AN OVERSIGHT. The instruction named four parts to
+box besides the mass. Measured, THREE of them span the driving lane at truck height, and the gate is at x 169
+beyond all of them:
+
+  mass_behind_tunnel        y 2.7 .. 11.7 across the whole approach; truck body 3.26 m -> the 0.56 m roof clip
+  tunnel_end_backglow       a 0.5 m plane across |z| <= 32.5, y 0.47 .. 9.47
+  tunnel_grid_h_0 and _h_1  bars across |z| <= 33 at y 1.12 and 3.55
+  btc_medallion_tunnel_end  |z| <= 6.5, y 2.05 .. 7.90
+  tunnel_grid_v_5/6/7       the three centre bars of the grille
+
+A box on any one of them closes the only route to the miner as surely as the mass would. So the rule applied is:
+NOTHING SOLID WITHIN 6 m OF THE CENTRE LINE AT TRUCK HEIGHT. The off-lane grille bars `tunnel_grid_v_0..4` and
+`_8..12` ARE boxed, which is why v_2 and v_10 now read 0.00 m.
+
+THE 0.56 m ROOF CLIP IS UNITY'S HEIGHT SCALE, NOT A MISSING SLAB (ruled, Daniel 2026-09-20). mass_behind_tunnel's
+underside sits at y 2.7 m and the truck's body is 3.26 m tall; the ceiling is low because DeliveryGate applies
+(1, 0.45, 1) to the model. Raising the miner is a LATER item if the clip is to go; it is not this letter, and
+minerHeightScale was not touched. The whole of this is written into map.js beside the boxes so it is not a
+silent hole.
+
+SUITES. JS 134/134 with goldens and the bundle regenerated for the intentional core change: canonical+vectors
+11/11, bundle 12/12, rules 50/50, tactics 24/24, candles+cbrt+chart+poison+spawn+private-world+specified+replay
+37/37. `BlwpLayout.cs` checked against a fresh gen-unity-layout run and already current.
+EditMode 273/277, 3 skipped, 1 red (the long-listed CombatFx rifle flash), 0 error CS.
+PlayMode 229/257, 14 skipped, 14 red - all long-listed, none new; the fourteenth is RampReadyTests, the
+documented full-run flip-flopper.
+
 THE DRAWN MINER AGAINST THE SOLID ONE (2026-09-20). Steps 1 and 2, measurement only.
 
 BOTH ENGINES CARRY THE SAME FIVE BOXES, checked on both sides rather than taken from the note: the core's
