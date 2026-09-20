@@ -5,6 +5,62 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+A HOLD INVOICE ON TESTNET4 GOES ACCEPTED -> HELD, AND SETTLES OR CANCELS FROM THE CORE'S WORD (2026-09-20)
+
+`custody-lnd.mjs` proved these rules on an isolated regtest it spawns and MINES. `custody-testnet4.mjs` runs
+the SAME `Custody` - same four operations, same outcome mapping - against the two gateways that exist, and
+mines nothing, because nobody mines testnet4. A is the custodian and issues the hold; B is the player's wallet
+and pays. The outcome word is handed to `custody.settleHeldInvoices`; the script never decides it.
+
+    channel before        A local 84900000 msat, B local 111630000 msat
+    three holds           1000000 msat stake each -> invoices of 980000 msat
+                          (the hold is the NET stake: the stake less 22A's 2%)
+    B pays all three      lnd says ACCEPTED x3, this node says HELD x3, 980000 msat paid each
+
+    winner   DELIVERED  -> CANCEL   -> CANCELLED
+    loser    FORFEIT    -> SETTLE   -> SETTLED
+    voided   VOID       -> NOTHING  -> EXPIRED
+
+    after the acts        A local 85880000 msat  (+980000, exactly one forfeited net stake)
+                          B local 109240000 msat
+    channel afterwards    A 85880 sat + B 110650 sat = 196530 sat, 0 pending HTLCs - the whole usable
+                          capacity, nothing kept and nothing lost
+
+THE VOID ROW IS AN ABSENCE AND WAS MEASURED AS ONE. Of the 12 lncli calls the port actually made - recorded
+from the real invocations, because `lndPort` keeps no log of its own - the void hash appears in ZERO settle or
+cancel. lnd still says ACCEPTED, and its HTLC expires at height 153354 against a tip of 153271: 83 blocks
+away. THE REFUND ITSELF IS A LATER PASS, by ruling - on regtest the tool mined to force it, and on testnet4
+that is real hours.
+
+AND THEN THE TOOL CLEANS UP, WHICH IS NOT THE PROTOCOL PATH AND SAYS SO IN THE OUTPUT. A paid hold left until
+its CLTV is one lnd force-closes the channel to resolve - and that channel is the gateways' only inbound. So
+the third hold is cancelled AFTER the numbers are taken, labelled housekeeping, and nothing in the VOID row is
+read from it.
+
+A SETTLE IS REFUSED BEFORE LND IS ASKED, TWICE, and both were proved with money actually in flight:
+
+    no preimage      -> HELD, 0 settleinvoice calls, "this node has no preimage for that stake"
+    wrong preimage   -> HELD, 0 settleinvoice calls, "that preimage is not the one this hold was made for"
+
+A LONE FORFEIT IS REFUSED FOR A DIFFERENT AND CORRECT REASON, found on the way: "the operator would keep
+980000 msat: a pool of 980000 against 0 handed out". So each guard needed a winner beside it for the pool to
+reach. That refusal is the operator-must-not-profit rule firing on its own, unprompted.
+
+FOUR THINGS WENT WRONG IN THIS TOOL BEFORE THE NUMBERS WERE RIGHT, and none of them were in the rules:
+  - it waited for the GROSS stake to arrive and reported "the payments never arrived" while all three sat
+    ACCEPTED. The hold is for the net stake; the wait now reads the invoice's own amount.
+  - the entries handed to the settlement named only their stake, not their fee and donation, and were refused.
+  - `preimageFor` was handed the settlement entry, whose key is `pubkey`, not `playerPubkey`.
+  - fixed preimages collided with the invoices earlier runs had left: "this endpoint already had an invoice
+    for that hash and it is CANCELED, not a hold still in flight". Every run now mints its own.
+
+STILL SINGLE-NODE CUSTODY, NOT §23.5. One endpoint issues and settles, and `preimageFor` is handed in rather
+than reconstructed from five of seven shares. FROST closes that gap; this does not.
+
+The mismatched-invoice refusal (`invoiceMatchesEntry`) is covered by `lnd-port.test.js` and was not re-proved
+against the live pair. Gateways after all of it: 2 usable, YES - A inbound 110650, B inbound 85880.
+
+
 A PAYING ROUND NOW REFUSES TO OPEN WITHOUT TWO INDEPENDENT GATEWAYS (2026-09-20, M3)
 
 §23.6: "deposits and withdrawals through any of at least two gateways ... No gateway holds a round's money or

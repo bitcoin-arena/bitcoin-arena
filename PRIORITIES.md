@@ -25,10 +25,16 @@ Top item first. Finish and deploy before starting the next.
 M3: **a round can be played for real testnet sats** - the federation holds the money, the fee is taken and
 paid out, and the payout actually moves. W1-W7 are done.
 
-NOW: **hold invoices on testnet4.** A round still cannot lock sats. Pay is proven both ways on the live pair;
-ACCEPTED -> HELD -> settled/canceled is regtest-only. The outcome that settles or cancels comes from the core
-(DELIVERED / PLAYER_LOST / VOID), never from a browser API, and the operator must not profit from a technical
-failure. Numbers and the regtest history in TASKBOOK.
+DONE (2026-09-20): **a hold invoice on testnet4 goes ACCEPTED -> HELD and settles or cancels from the core's
+word.** `tools/custody-testnet4.mjs` on the live pair: three 1000000 msat stakes held as 980000 msat invoices
+(the net stake, less 22A's 2%), lnd ACCEPTED x3 and this node HELD x3; then DELIVERED -> CANCELLED,
+FORFEIT -> SETTLED, VOID -> EXPIRED with its hash in **0 of 12** settle/cancel calls. A ended **+980000 msat**,
+exactly one forfeited net stake, and the channel still totals its whole 196530 sat with no pending HTLCs.
+A settle is refused before lnd is asked with no preimage and with the wrong one. The VOID refund itself waits
+on its timelock - 83 blocks - and is a later pass by ruling. Numbers in TASKBOOK.
+
+STILL OPEN ON M3: single-node custody, not §23.5 - one endpoint issues and settles and `preimageFor` is handed
+in rather than reconstructed from five of seven shares. FROST closes that; it is not this letter.
 
 DONE (2026-09-20), in order:
   1. **Two live testnet4 LND gateways hold inbound, paid each way.** A `0274e261...` inbound 116530,
