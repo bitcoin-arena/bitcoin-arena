@@ -161,8 +161,12 @@ fixture pair needing a third re-pick.
 3. **The §11.3 cover row at 64.6% against 70** - cause: pinned men crawl. Listed, not loosened.
 4. **Goldens stale** (vectors+bundle 2/20) until the deploy that ships occupancy, posture and suppression
    together. Not a letter's task.
-5. **The pin is drawn but not SEEN.** ArmyRenderer now reads posture and the pin word and lays a downed man on
-   the ground; it is compile-gated (EditMode 254/258, 0 error CS) and has had no WebGL build and no cab shot.
+5. **The pin is drawn and COUNTED on a running build, not yet eyeballed.** ArmyRenderer reads posture and the
+   pin word and lays a downed man on the ground. Verified on build 0.0.1791 served to the MacBook, by the
+   renderer's own count over CDP: "8 of 69 men drawn DOWN from the core's posture word", moving 4-20 of 69 frame
+   to frame as teams pin and unpin. A screenshot was deliberately NOT the evidence - the file's own comment
+   records three picture comparisons that proved nothing - and no close-up of a body has been captured, because
+   the spectate camera starts behind the depot. That last step is what is left of this remainder.
 
 LISTED, WAITING, AND NOT §11.5's - the two PlayMode reds that were unexplained, now run and named (numbers in
 TASKBOOK): **ScoreTests.IdlingEarnsNothingEvenOnTheSeam** fails on `MakingProgress`, a pure Unity x-position flag,

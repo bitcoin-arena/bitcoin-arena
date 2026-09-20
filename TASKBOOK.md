@@ -417,6 +417,32 @@ genuinely is §8.1's 26 m and is untouched.
    NOT SEEN ON SCREEN. This is compile-gated only - EditMode 254/258, 0 error CS, the one long-listed CombatFx
    red. No WebGL build and no cab shot this turn, so the pose is written and unverified visually.
 
+3n. THE DRAWN PIN, VERIFIED ON A RUNNING BUILD (2026-09-20, build 0.0.1791 on the MacBook).
+
+   A SCREENSHOT WAS NOT THE EVIDENCE, and ArmyRenderer.cs says why in its own comment: three picture comparisons
+   failed to prove anything, "the scene animates more than the army does, so a screenshot cannot isolate it. A
+   count can." So the verification is a count, in the same idiom as the `drew N units from the core` line beside
+   it, reset per frame like bull and bear, deciding nothing.
+
+   FROM THE LIVE PAGE, captured over CDP from the WebGL build served to the Mac:
+
+     [render] drew 87 units from the core
+     [render] 8 of 69 men drawn DOWN from the core's posture word
+     [render] 4 of 69 men drawn DOWN from the core's posture word
+     [render] 20 of 69 men drawn DOWN from the core's posture word
+
+   The renderer is posing from UnitPosture, in the shipped build, and the number moves frame to frame as teams
+   pin and unpin - 6% to 29% of the men on the field at a time. The drop, the pitch along the way he was facing,
+   the killed bob and animator Speed 0 all sit inside that same `down` branch.
+
+   WHAT I DID NOT GET: a close-up picture of a man lying down. The spectate camera starts behind the depot where
+   men are a few pixels across, and my attempt to fly it forward hit the cargo chooser instead of a camera pad
+   (daniel-screens/pin-pose-line.png shows the load UI). So the pose is proved by the count and by the code path,
+   not by an eye on a body. Listed as such rather than claimed.
+
+   The build itself: 0 error CS, wasm genuinely new at 03:47 because C# changed, and the core bundle copied into
+   the template byte-identical (df68a870...) so the page ships the core that writes these words.
+
 3f. THE TWO CLAUSES OF §11.5 THAT ARE ACTUALLY OPEN (2026-09-20, found by reading the section against the write
    at the close-out, not by measuring). Neither is coded.
 
