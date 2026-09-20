@@ -168,12 +168,12 @@ fixture pair needing a third re-pick.
    records three picture comparisons that proved nothing - and no close-up of a body has been captured, because
    the spectate camera starts behind the depot. That last step is what is left of this remainder.
 
-LISTED, WAITING, AND NOT §11.5's - the two PlayMode reds that were unexplained, now run and named (numbers in
-TASKBOOK): **ScoreTests.IdlingEarnsNothingEvenOnTheSeam** fails on `MakingProgress`, a pure Unity x-position flag,
-while its earning assert passes - it depends on the core-driven truck's position path and still fails on the
-regenerated layout. **SpawnMarkParkedTests** fails on its own guard: a +40 m feeHeight now lifts the mark 8.70 m
-against a 12 m parked budget, so the case no longer separates the two rules, and a truck 80 m out moves 0.80 m on
-a rebuild against 0.5 m. Both are terrain-rebuild geometry from the world growing east, not pin, crawl or cover.
+LISTED, NOT §11.5's - FOUR PLAYMODE TESTS THAT FLIP BETWEEN RUN MODES. `ScoreTests.IdlingEarnsNothingEvenOnTheSeam`
+and `SpawnMarkParkedTests.AHeightOnly...` fail FILTERED and are GREEN in the full run; `RampReadyTests.TheReal
+Transactions...` is green filtered (3/3) and red in the full run; `GhostAcrossTheDoors` is the long-listed
+full-suite flake. Same signature: PlayMode scene state leaking between tests. An earlier note here gave the first
+two a tidy cause - terrain-rebuild geometry from the world growing east - and that was WRONG; it is corrected in
+TASKBOOK rather than quietly deleted. None is attributed beyond the run mode until the leak is isolated.
 
 LISTED, each its own thing and none of them B:
 1. **91 files write `blockTicks: 9000`** against cores that end at 10800 - 21 client tests, the node suite, four

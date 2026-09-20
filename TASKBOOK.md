@@ -361,6 +361,22 @@ genuinely is §8.1's 26 m and is untouched.
 3l. THE TWO UNEXPLAINED PLAYMODE REDS, RUN AND NAMED (2026-09-20). Neither is §11.5's, and both are written down
    here so they do not travel to the next item as "unexplained".
 
+   CORRECTED 2026-09-20, LATER THE SAME NIGHT: the attribution below is WRONG and is kept so the correction is
+   visible. Both of these tests are GREEN in the full PlayMode run at 228/256. They failed when run FILTERED and
+   pass in the full suite - the opposite way round from RampReadyTests, which passes filtered (3/3) and failed in
+   the full run. Three tests now flip between the two ways of running, which is the signature the long-listed
+   GhostAcrossTheDoors already carries: PlayMode scene state leaking between tests. They are INTERMITTENT, not
+   consequences of the world growing east, and giving them a tidy cause was the error - it read as settled when
+   it was a guess that happened to sound plausible.
+
+   THE FULL-RUN / FILTERED FLAKES, as they stand:
+     ScoreTests.IdlingEarnsNothingEvenOnTheSeam        red filtered, GREEN in the full run
+     SpawnMarkParkedTests.AHeightOnly...               red filtered, GREEN in the full run
+     RampReadyTests.TheRealTransactionsReplace...      GREEN filtered (3/3), red in the full run
+     GhostAcrossTheDoorsTests...                       long-listed as a full-suite flake already
+   None of them is §11.5's, and none is attributed to a cause beyond the run mode until someone isolates the
+   leak. That is the honest state, and it is less satisfying than what this entry said before.
+
    ScoreTests.IdlingEarnsNothingEvenOnTheSeam - 4 tests in the class, 1 red.
      the EARNING assert PASSES: a parked truck on the frontline earns nothing (peak == 0 within 0.001)
      the failure is the line after it: Assert.IsFalse(_score.MakingProgress) - "Stillstand gilt als Fortschritt",
