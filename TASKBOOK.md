@@ -92,8 +92,16 @@ THE CONTACT RED, measured rather than argued (seed 20260901, the test's own scen
    unchanged for all 90 s. The bears are favoured for the whole run - a 30-60 s assault clock against 45-90, +1
    lane weight, a ceiling raised by 8 x strength. The bull side was already collapsing at HEAD, 12 tanks to 5;
    this fix makes the men better at using cover, which amplifies the side already favoured, and 5 becomes 3.
-   Calling `readMarket` once after the fill makes the trend 0 and the fight 6 v 12. THAT IS NOT DONE HERE: it
-   changes a test so my change passes, and it is Daniel's ruling to make, not mine. The assert is untouched.
+   RULED AND DONE (Daniel, 2026-09-20): fix the SETUP only. `tactics.readMarket(st.i32, O_TACTICS, st.tape)` now
+   runs once after the fill, so both sides see the same flat market. The floor of 4 is untouched, nothing the test
+   asserts is changed, and the only line added is the one that makes the fixture's own stated premise true.
+
+     with the trend frozen as init read it   3 bull tanks v 12 bear at t=90   RED
+     with the trend read off the flat tape   6 bull tanks v 12 bear at t=90   GREEN,  rules 50/50
+
+   The general lesson, which is not confined to this fixture: flattening the tape does NOT neutralise §4.14.
+   `init` reads MK_TREND off the seeded tape, and a fixture that never ticks the market never revises it. Any
+   test that wants a symmetric fight has to read the trend off the tape it actually runs on.
 
 SUITES ON THIS HEAD. JS, each on its own run: tactics 24/24, rules 49/50 (the contact red above),
 candles+cbrt+chart+poison 22/22, spawn+private-world+specified 10/10, transcript-replay 5/5,

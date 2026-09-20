@@ -66,7 +66,7 @@ A count can." So the check is a count, in that file's idiom, read off the live p
 NOT claimed: a close-up of a body. The spectate camera starts behind the depot and flying it forward hit the cargo
 chooser. The pose is proved by the count and the code path, not by an eye on a man.
 
-SUITES ON THIS HEAD, each JS suite on its own run: **tactics 24/24**, **rules 49/50**, candles+cbrt+chart+poison
+SUITES ON THIS HEAD, each JS suite on its own run: **tactics 24/24**, **rules 50/50**, candles+cbrt+chart+poison
 22/22, spawn+private-world+specified 10/10, transcript-replay 5/5, canonical+vectors 3/11, bundle 4/12. PlayMode
 **257 total, 229 passed, 14 failed, 14 skipped**; EditMode **258 total, 254 passed, 1 failed, 3 skipped**, 0 error
 CS, the one red the long-listed CombatFx rifle flash. Unity is untouched by this change - the core there is the JS
@@ -80,15 +80,11 @@ cover deploy that regenerates them by instruction. The bundle WAS rebuilt in thi
 changed and a new name is exported - that cleared the two bundle reds this change had caused and left the eight
 that were already there.
 
-THE ONE NEW RED IS `replacements keep both armies in contact`, AND IT IS LISTED, NOT TUNED. Measured on the test's
-own seed: HEAD gives 5 bull tanks against 11 bear at t=90 and passes a floor of 4; this change gives 3 against 12
-and fails. The cause is not the claim pass. The test flattens the tape to get a symmetric fight, but it steps with
-no market tick, so `readMarket` never runs and MK_TREND keeps what `init` read off the SEEDED tape - DOWN, strength
-2 - for all 90 s. The bears are favoured the whole run: a 30-60 s assault clock against 45-90, +1 lane weight, a
-ceiling raised by 8 x strength. The bull side was already collapsing at HEAD, 12 tanks to 5; better use of cover
-amplifies the side already favoured and 5 becomes 3. Reading the trend off the flat tape once makes it 0 and the
-fight 6 v 12, which would pass - **that is not done here.** It changes a test so my own change passes, and it is
-Daniel's ruling to make. The assert is untouched. **I wait on that one.**
+`replacements keep both armies in contact` WENT RED AND IS NOW GREEN, by a SETUP fix and nothing else. The fixture
+flattens the tape for a symmetric fight but never ticks the market, so MK_TREND kept what `init` read off the
+SEEDED tape - DOWN, strength 2 - for all 90 s, and the bears stayed favoured the whole run. It now reads the trend
+off its own flat tape once: **3 v 12 red, 6 v 12 green, rules 50/50.** The floor of 4 stands and nothing it asserts
+was changed. Numbers and the general lesson are in TASKBOOK.
 
 THE FOURTEEN PLAYMODE REDS, none unexplained: nine read the retired Battlefield.Army; RoadsAreActuallyDrawn wants
 a graphics device; two MushroomResting sit on the authored skirt offset; SoldiersStandOnTheGroundAndAreAnimated is
@@ -216,14 +212,14 @@ behind them, its fixture pair needing a third re-pick.
 1. **The shell MISS half** - §11.5's own sentence is "hit or miss". Hits are in. A miss has no landing point in
    this core, so there is no share to quote and none is invented. BLOCKED ON §4.4, which owns the shell.
 2. **§0's "never a step past 0.01 m"** - 78.9% of pinned man-ticks step past it, because a diagonal crawl spends
-   0.00833 m on each axis. Ruled combined Euclidean, not per-axis. PARKED until cover is back over 70%, because
-   capping it slows a diagonal crawl and takes more men off their holes.
-3. **The §11.3 cover row at 64.6% against 70 - MOVED OFF THIS LETTER, it is the next item.** The cause is not
-   the crawl: 100% of the 1698 failing ticks hold an unpinned man about 8.9 m from his hole, 68.1% also hold a
-   crawler 18.2 m out, and freezing every crawler still fails every tick - crawl is a ceiling of 24.1 points. A
-   claim-holder sits a median 23.4 m from his line post against 7.3 m for a man without one, so the row measures
-   a line permanently in transit. It is a claim-rule question and the claim rule STAYS as §11.3 writes it: a post
-   occupies, a man nine metres away does not. Bar at 70, assert untouched, no occupancy investigation on §11.5.
+   0.00833 m on each axis. Ruled combined Euclidean, not per-axis. It was PARKED until cover came back over 70%,
+   because capping it slows a diagonal crawl and takes men off their holes. **Cover is now 91.7%, so the parking
+   condition is met and this is UNPARKED** - not started here, and it is the one core remainder that is now free
+   to run.
+3. **The §11.3 cover row - CLOSED at 91.7% against 70.** The cause was never the crawl and never the claim rule:
+   the claim pass and the step did not mean the same POST. Both now read the fire team's anchor and the same
+   `rifleStandoff`. Bar at 70, assert untouched. 4400 of 4800 ticks now hold a man on a place, and every one of
+   the 400 that do not holds a walker still closing on his hole.
 4. **Goldens stale** (vectors+bundle 2/20) until the deploy that ships occupancy, posture and suppression
    together. Not a letter's task.
 5. **The pin is drawn and COUNTED on a running build, not yet eyeballed.** ArmyRenderer reads posture and the
