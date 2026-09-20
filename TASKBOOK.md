@@ -5,6 +5,58 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE DRAWN MINER AGAINST THE SOLID ONE (2026-09-20). Steps 1 and 2, measurement only.
+
+BOTH ENGINES CARRY THE SAME FIVE BOXES, checked on both sides rather than taken from the note: the core's
+`mapSolids()` (rules/map.js) and C#'s `DeliveryGate.Slab()` build two facade sides, the lintel over the mouth and
+two tunnel walls, at the same local centres and sizes under the same 180-degree turn and (1, 0.45, 1) scale. So
+there is ONE solid world and every number below is drawn-versus-solid, not engine-versus-engine. Nothing was
+copied from the C# and no 2-D coupling was reintroduced.
+
+STEP 1 - THE INVENTORY (`tools/measure-miner-solids.mjs`), 904 drawn parts against those 5 boxes:
+
+  the solid boxes stand at   x 163.0 .. 194.0 m
+  the drawn building runs    from the door at x 108.4 m out past x 215 m
+  452 parts have NO solid box at all
+  161 more OVERHANG the box they touch
+  of the 452, 46 stand in the entry corridor below 4 m - a truck's height
+
+  So the known `mass_behind_tunnel` row is not one bad box. The corridor the player drives down is unsolid:
+  `power_cable_0/1` begin exactly at the door (x 108.4, y 0.1 .. 9.4) with no box - the drawn cable a tank stands
+  in - and the whole tunnel lining, `tunnel_rib_l/r_0..8` from x 148 to 168, `tunnel_jamb_l/r`, the grids and the
+  medallions, is drawn and not solid, while the five real boxes sit at 163 .. 194, largely BEHIND the facade
+  rather than lining the run-in. `measure-miner-door.mjs` already prints the same thing from the other end: "the
+  door is where the tunnel begins - door 108.31 m, tunnel floor from 145.00 m".
+
+STEP 2 - WHAT THE PLAYER MEETS (`tools/measure-miner-drive.mjs`), driven in the core, never PhysX. The truck's
+Rigidbody is kinematic and its velocity is permanently zero, so Unity has nothing to say about where it is; the
+truck here is the core's own shape - two circles of 1.27 m at +2.0 and -1.8 m along the nose, body 0.36 .. 3.26 m
+over the ground.
+
+  drive           reached      drawn parts entered
+  centre          180.2 m      5
+  drift left      180.4 m      5
+  drift right     180.4 m      5
+  offset z +20    180.2 m      4
+  offset z -20    180.2 m      4
+
+  Every drive passes 1.27 m - the FULL body radius, so through the middle and not a graze - through
+  `mass_behind_tunnel` at x 117, then `tunnel_end_backglow`, `tunnel_grid_v_*`, `tunnel_grid_h_0` and
+  `btc_medallion_tunnel_end` around x 141 .. 144. It happens at z +-20 as much as on the centre line, so this is
+  the corridor itself and not a drift-off edge case.
+
+A CORRECTION TO THE INSTRUMENT, so the next run does not repeat it: a straight full-throttle run from the spawn
+reaches only x 68.8 m against a door at 108.31 m - the approach never happens and nothing about the miner gets
+measured. Driving the truck out of the bay and across the map belongs to the delivery letter; for this geometry
+question the truck is placed on the lane 12 m short of the door with the core's own `teleport` and driven in.
+
+THE FORK STEP 3 RUNS INTO, and it is not a missing box that can simply be added. `mass_behind_tunnel` hangs from
+y 2.7 m over the whole approach and the truck's body is 3.26 m tall - that is exactly the 0.56 m of roof
+PRIORITIES already records. The delivery gate is at x 169, PAST the mass at x 119 .. 145, so the truck must go
+under it to deliver at all. Give that part a solid box and the only route to the miner closes; leave it drawn and
+unsolid and the roof keeps passing through it. The core cannot raise the art, and the height scale that lowered
+the ceiling is Unity's (1, 0.45, 1). So the smallest change is a ruling, not an edit.
+
 THE RUN-STOPPED LINE IN THE BAY: FOUR CAUSES AND THREE BAD INSTRUMENTS (2026-09-20).
 
 A truck still choosing cargo when the block closes is the path that ends VOID, and it is the path where the
