@@ -615,6 +615,14 @@ PARKED mid-measurement (2026-09-18 12:02, Daniel HARD): ghost position still doe
   after resyncing` - the run ends VOID, B publishes nothing more and never returns to the lobby, while A is back
   in the lobby at about t+300 s. That is why round two has one invisible truck. Deterministic: identical in both
   runs, same tab stuck. The next work is the divergence and the return to the lobby, not which fetch failed.
+- **FIXED and measured live on 0.0.1815** (1352f7f6): a run that ends VOID now gives the screen back.
+  `SplashScreen.RunHasEnded` starts the return-to-lobby clock when EITHER the core names an outcome or the client
+  ends the run, instead of only the first. Two tabs, cache cleared: both return to the lobby (t+225/t+235, then
+  t+275/t+290 - and not always the same tab first), **0 runs VOID**, PLAY again joins round two on both with
+  `POST /round 201` and `POST /entry 201` on both doors, and in round two each tab draws the other - `others 1`,
+  173 and 165 pictures, overlay age 12-632 ms against 29564 ms before. Settlement untouched; VOID is not an
+  escape hatch. LISTED, not closed: the clocks still drift about 10-13 s (was 33 s), and both pages report
+  `this frame 333 ms` - two headless browsers on one MacBook - so part of that is the rig.
 
 LATER ITEM, ITS OWN (found 2026-09-20 while setting up the ghosts reproduction, NOT part of it): **a query string
 on the Daily URL stops the page naming a signer node.** Measured in the same browser and build one minute apart -

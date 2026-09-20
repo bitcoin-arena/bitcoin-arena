@@ -5,6 +5,38 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE VOID FIX, MEASURED LIVE (2026-09-20, Daily 0.0.1815, two real browser tabs, cache cleared, Network on).
+
+  number                        before (0.0.1812)      after (0.0.1815)
+  tab A back at the lobby       ~t+300 s               t+225 s / t+290 s
+  tab B back at the lobby       NEVER                  t+235 s / t+275 s
+  runs ending VOID              1 every run            0
+  round two joined              never reached          BOTH tabs, POST /round 201 + POST /entry 201 on both doors
+  round two, each sees the other -                     others 1 on both; A drew 173 pictures, B drew 165
+  overlay age in round two      29564 ms and climbing  12-632 ms (A), 13-617 ms (B)
+  loadingFailed                 0                      0
+
+Two runs after the fix, and the tab that comes back first is not fixed: A then B in one, B then A in the other.
+Nothing voided in either. Round two now publishes from both sides - `others 1` with pictures accumulating on each
+tab - which is the number the parked item named as 0 at ticks 300 through 1500.
+
+STILL THERE, SMALLER, AND NOT THIS FIX'S TO CLOSE: the clocks still drift. In round two A reads B at -399 to -631
+ticks and B reads A at +601 to +793 - about 10 to 13 s, against the 33 s that used to strand a tab. The drift is
+what put a client past its round's close in the first place; the fix stops it STRANDING anyone, it does not stop
+it happening. Both pages report `this frame 333 ms` - two headless browsers and two WebGL cores on one MacBook,
+about 3 fps each - so a share of it is the measuring rig, not the protocol. Left listed rather than guessed at.
+
+THE FIX ITSELF: SplashScreen started the return-to-lobby clock only from the CORE's word, or from a page with no
+core at all. A VOID is neither - the core is present and silent at RunState 0 - so `_endedAt` was reset every
+frame, `sinceOutcome` stayed 0, `BackToLobby` could never come true, and the tab sat with its truck locked.
+
+  RunHasEnded(coreAvailable, runState, netEnded) => (coreAvailable && runState != 0) || netEnded
+
+Settlement is untouched and VOID is not an escape hatch: the run is already over and already VOID by the time
+this is asked; it only decides when the screen comes back. The 5 s result hold stays a separate rule and is
+asserted separately. Guarded by VoidReturnsToLobbyTests (5 tests) and PROVED RED first - the old rule fails
+exactly AVoidRunEndsEvenThoughTheCoreNeverNamedAnOutcome and leaves the other four green.
+
 THE GHOSTS BUG IS A CLOCK, NOT A FETCH (2026-09-20, two reproductions on Daily 0.0.1812).
 
 The parked line said one tab's round-two session "died on Failed to fetch - a call refused outright". Measured,
