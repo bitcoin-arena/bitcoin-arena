@@ -20,7 +20,15 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-# LIVE LETTER  -  2026-09-20 16:22
+# LIVE LETTER  -  2026-09-20 18:56
+
+NOW: **the gold coin construct blocks the finish.** Daniel cannot drive through to DELIVERED. Shots `daniel-screens/miner-coin-blocks-finish-1856.jpg` and `miner-coin-close-1856.jpg`. Playtest, absolute priority. Open both photos.
+
+Fix: the truck must **not** clip through this construct from either side. The **finish line / DeliveryGate must stay fully driveable**. Do not grow the coin box over the gate. Do not leave the coin as air. Measure on Beelink Chrome: centre-line still DELIVERED; driving into the coin stack from front or back stops the truck.
+
+Then resume 16:22 assault share, then the parked playtest chain, then M3.
+
+# PREVIOUS  -  2026-09-20 16:22
 
 DONE: **the assault log sits on the left HUD stack under SIM, off the road**, and **the tanks are shown to push
 the named lane in a real player**. Daily **0.0.1836**. Watched live on GPU Chrome: BEARS declared on LOW,
@@ -32,10 +40,28 @@ SUITES on this build: EditMode **293/297** (3 skipped, 1 red - the long-listed C
 PlayMode **229/257** (14 skipped, 14 red - the fourteen long-listed, none new; RampReadyTests is green this
 run, and the impossible PlayMode timer test of the previous letter is gone). errorCS 0 in both.
 
-STILL OPEN, AND IT IS CAMERA/READABILITY RATHER THAN THE CORE: in that frame the tanks that took the lane are
-on screen but at the far LEFT edge, small, behind explosion sprites, while the camera looks east down the road.
-The banner names LOW/HIGH/OPEN and nothing in the world says where that is. Listed, not investigated - no
-simulation goes back into C#/PhysX over it.
+NOT CLOSED. NOW MEASURING, and this is the live item: **what share of a declared assault does the player
+actually get?** In the one frame to hand the tanks that took the lane are on screen but at the far LEFT edge,
+small, behind explosion sprites, while the camera looks east down the road; and the banner names LOW/HIGH/OPEN
+while nothing in the world says where that is. One frame is not a fraction, so no camera or marker work is
+proposed until two numbers exist:
+
+  X of Y declared assaults had their on-lane armour INSIDE the camera's horizontal field of view
+  X of Y were declared while the BAY was open and so were never announced at all
+
+The second exists because `ChartHud.OnGUI` returns at `loadout.IsOpen` before the watch observes, and the watch
+only sees transitions - so an assault declared while the player is choosing cargo gets no banner, no horn and
+no log line EVER. The core's first assault fires 20-40 s in, which is exactly when a player is in the bay.
+
+`tools/measure-assault-in-view.mjs` counts both over four GPU-Chrome rounds, waiting 45 s in the bay on purpose
+so that window is sampled. It reads the lane, the truck pose and the tank positions from the core the page
+already holds and uses ChaseCamera's own published numbers - distance 9/4.5, height 4.2/1.8, lookAhead 6,
+fov 58 to 78 at 20 m/s - which standing still is reach 9 m, rise 4.2 m, vFov 58 deg, **hFov 83.1 deg** at
+1280x800. Occlusion and the vertical field are not modelled, so "in view" is deliberately GENEROUS.
+
+No camera is touched, no world marker is added, the bay gate is unchanged, and the two-assaults-one-banner case
+stays listed. No simulation goes back into C#/PhysX over any of it: the tanks are already where the core puts
+them, and C# only draws them.
 
 # PREVIOUS LETTER  -  2026-09-20 16:21
 
