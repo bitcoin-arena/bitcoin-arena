@@ -41,7 +41,10 @@ API: of 1070 buffers started in a run, exactly **four** are the horn's 0.55 s an
 
 THE RIG CHANGED AND IT MATTERS: headless Chrome on SwiftShader runs this world at 23 ticks/s against the 60 a
 round keeps, so every timer drive died VOID before the clock reached zero. The Beelink's AMD Renoir GPU gives
-**61.4 ticks/s** through ANGLE/Vulkan. Timer work must use a GPU browser.
+**61.4 ticks/s** through ANGLE/Vulkan. Anything that measures what the CORE decides - a round timer, an
+assault clock, a delivery, a tick count - starts its browser with
+`packages/blwp-client/tools/gpu-chrome.sh <port>`, which names the renderer it got and fails loudly if it
+fell back to software. The other `tools/` browsers stay on SwiftShader; they take screenshots.
 
 WAS: **when the round timer hits 0, the game must end and return to the lobby by itself.** It used to. It no longer does. Write tests that fail until this is true (core + a real player path, not JS-only). Playtest, absolute priority. Beelink Chrome, not MacBook. Then 16:11 candles-to-miner, then 16:20 HUD labels, then item 2, then M3.
 
