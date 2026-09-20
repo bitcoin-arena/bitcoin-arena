@@ -30,7 +30,7 @@ THEN 16:11: **world candles must cover the whole playable field, out to the mine
 
 THEN 16:20: **remove HIGH, LOW, and OPEN from the HUD chart.** They do not belong there. Overrides 13:10 / 09:17. Do not restyle the headline. YOU and GATE stay.
 
-THEN 16:22: **assaults are not perceptible.** Daniel cannot see them. Spec: banner `BULLS ASSAULT HIGH` + sound, tanks push on that candle lane, then `HIGH TAKEN` or `ASSAULT ON HIGH FAILS`. Same as 12:55 / 15:55. World names on the candles still. Not the small HUD chart labels.
+THEN 16:22 / 16:26: **assaults are not perceptible, and the logic must actually run.** Daniel sees no banners. Add a **small desktop-only debug log under the HUD** with clock times, e.g. `[13:00:00] Bulls attack high` / `[13:00:43] Bulls attack high failed`. Not on phone. Do not overlap the $ price. Do not restyle the headline. Prove the core assault clock fires, tanks push that lane, and the log lines match. Banners still required. Same as 12:55 / 15:55.
 
 # PREVIOUS  -  2026-09-20 16:05
 
