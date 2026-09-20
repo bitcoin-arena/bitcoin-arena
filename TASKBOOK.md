@@ -5,6 +5,52 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE SUNK MEN ARE THE PRONE DROP, NOT THE CRATER BOWL (2026-09-20, measured before any code change).
+
+The named first blocker was "Unity carves a crater bowl the core does not, so men correctly standing in holes draw
+below the mesh". Measured, that cause is FALSE in both halves, and the entry above dated with the cover letters is
+wrong where it says otherwise.
+
+1. UNITY CARVES NO BOWL. `MempoolTerrain.HeightAt` (MempoolTerrain.cs:302) returns `Blwp.BlwpCore.TerrainAt`
+   whenever there is a core, and `terrainAt` in the core already has `craterCut` subtracted (sim.js:745). The
+   crater-reveal loop (MempoolTerrain.cs:386-393) then assigns `h = BlwpCore.TerrainAt(wx, wz)` - the value it
+   already held. It is a no-op, and the mesh is the core's terrain everywhere, not only inside a revealed crater.
+   `BlwpCore.CraterAt` never exposes C_D at all, so Unity cannot know a bowl depth even if it wanted one.
+
+2. THE THREE HEIGHTS, under men standing on a hole, 2 seeds x 40 s, 20550 man-ticks (`scratchpad/heights.mjs`):
+
+     place kind    n       core ground   Unity terrain   visible surface   man drawn Y   sunk below visible
+     candle lip  19187        0.87           0.39             0.87            0.12            0.74 m
+     crater rim   1251       -0.02          -0.02            -0.02           -0.76            0.74 m
+     wreck         112        0.55           0.55             0.55           -0.13            0.68 m
+
+   Unity terrain equals core ground exactly except under a candle lip, where the 0.48 m difference is the candle
+   ribbon - and the candles are drawn by their own mesh standing up to `surfaceAt`, so the VISIBLE surface there
+   is the core ground too. The sink is the same 0.74 m on all three kinds, including the 93.4% of on-hole men who
+   are nowhere near a crater.
+
+3. THE CAUSE. ArmyRenderer.cs:929-940: `lift = soldierPrefab != null ? 0f : 0.9f`, then `if (down) lift -=
+   soldierProneDrop` (0.75, ArmyRenderer.cs:53). ArmyRenderer.cs:265 wraps the prefab with `WrapOnItsSole`, so the
+   transform origin is the man's SOLES, and Bootstrap.cs:879 assigns that prefab in a real build. A standing man
+   is therefore at ground + 0, and a DOWN man at ground - 0.75: his feet are driven underground instead of his
+   body being laid flat. The 0.75 was tuned for the fallback BOX, whose origin is its centre and whose standing
+   lift is 0.9 - there the same subtraction lands at +0.15, which is about right. The scene itself has
+   `soldierPrefab: {fileID: 0}`, which is also why ImportedModelTests.SoldiersStandOnTheGroundAndAreAnimated fails
+   on its FIRST assert ("die Szene hat kein Soldatenmodell zugewiesen") and never reaches its sink check.
+
+4. THE SHARE, in the form asked for: the crater-bowl mismatch accounts for **0.00 m of the 0.74 m** that is
+   missing - 0% of it. It is not most of the sink; it is none of it. 98.9% of men standing on a hole are DOWN, so
+   the prone drop accounts for essentially all of it. Per the named pick, measurement only: NOT FIXED.
+
+   This letter did not create the fault and did not deepen it. It made it more visible: man-ticks on a hole went
+   2.9% -> 6.4%.
+
+NOTE ON WHY UNITY CANNOT MEASURE THIS ITSELF: in EditMode and PlayMode `BlwpCore.Available` is false, the core is
+stubbed, `HasSurface` is false and the terrain falls back to the mempool relief while ArmyRenderer draws no men at
+all - the same reason the pose test is Assert.Ignore. The three heights above are computed from the core plus the
+renderer's own arithmetic, with every term read out of the files and cited by line. They are not sampled from a
+running editor, and that is stated rather than glossed.
+
 §11.3 OCCUPANCY - THE POST THE CLAIM PASS MEASURED FROM WAS NOT THE POST THE STEP WALKS TO (2026-09-20).
 
 The row stood at 64.6% against a 70% bar that was not loosened. Daniel's accepted sequence was: cite the printed
