@@ -5,6 +5,62 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+A ROUND CANNOT NAME A ZERO RESULT WINDOW (2026-09-20, M3 the result window)
+
+THE FIELD ALREADY EXISTED AND WAS ALREADY USED, which is the first thing measured and the reason this letter
+is a bound rather than a feature.
+
+  key            `objectionWindowMs` (the spec's `objection_window_W`)
+  units          milliseconds, u64 on the wire - contracts.js:67 writes it, :217 reads it
+  who writes it  the round's creator, in the Round Contract
+  opens          at the round's close (`closed_ms`); for the objection window, when the result is
+                 PROVISIONALLY_FINAL
+  closes         `closed_ms + objectionWindowMs`
+
+  §13A  "After a result is PROVISIONALLY_FINAL, the window W (reference: 10 minutes, contract-defined) runs."
+  §13   "The result window equals the objection window - same duration, a field on the contract. A seat that
+         cannot retrieve the transcript in that window treats the entry as VOID."
+
+Already implemented against it: the objection window itself (`protocol/src/objection.js`), finality timing
+(`finality.js`, `server.js:1042/1059`), §13C's no-quorum outcome (`payout.js:noQuorumOutcome`, a `no_quorum`
+table read by `finality.js` and `forfeit.js`), and the result window itself - `verify.js:#unretrievedPastWindow`
+is the spec sentence nearly verbatim: inside the window it answers null and the seat waits, past it the
+no-quorum rule decides and the reason records "could not retrieve the transcript within the result window".
+
+WHAT WAS MISSING WAS ANY BOUND. `roundWindowsAreValid` checked committee time, start time and entry close and
+never mentioned the field, so a contract could name 0. That is not a short window, it is none:
+
+  - finality is instant, so §13A's replay veto - which the spec calls "the cheapest defence in the whole
+    design" - could never be exercised by anyone;
+  - `verify.js`'s own test is `now >= closed_ms + objectionWindowMs`, true the moment the round closes, so a
+    seat that had not yet retrieved the transcript would void the entry immediately.
+
+NO FLOOR IS SPECIFIED, AND NONE WAS INVENTED. §13A gives "reference: 10 minutes, contract-defined" - a
+reference, not a minimum - and no sentence in BLWP v4.6.1 states a floor or a ceiling for W. So the check
+refuses only what the spec's own words rule out: a duration that is not positive. Measured:
+
+  600000ms -> opens      1ms -> opens      0ms -> REFUSED      -5ms -> REFUSED      absent -> REFUSED
+
+Any positive window opens, 10 minutes or otherwise, because the field is contract-defined. A missing or
+non-bigint field is refused rather than defaulted, since defaulting would fix the number the spec declines to.
+
+PROVED RED: with the `roundWindowsAreValid` call deleted from `Round.open`, "THE CALL SITE ITSELF" fails
+(6 pass, 1 fail). Restored, 7/7.
+
+SUITES, per suite, before -> after:
+
+  result-window        (new)  -> 7/7          objection            9/9  -> 9/9
+  result               6/6    -> 6/6          protocol             32/32 -> 32/32
+  stake-lock           4/4    -> 4/4          seats-fit-slots      7/7  -> 7/7
+  no-base-fee          6/6    -> 6/6          custody-daemon       9/9  -> 9/9
+  paying-round-needs-gateways 7/7 -> 7/7      fee                  16/16 -> 16/16
+  lock-settlement      17/17  -> 17/17
+
+STILL RED AND UNTOUCHED, all the stale `blockTicks: 9000`: round 0/12, checkpoint 1/21, and objection-window
+0/7 - the last through `test/window-fixture.js:106`, which is why its failures read "this node holds no such
+round" (404): the round never opens. Three more of the ninety already listed for their own sweep.
+
+
 A ROUND MAY NOT SEAT MORE SIGNER NODES THAN IT HAS SLOTS (2026-09-20, M3 fee locks / 22A node slots)
 
 §22A pays the node fee to "the round's sitting seats - the seats the census seated for this round, its
