@@ -20,7 +20,7 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-# LIVE LETTER  -  2026-09-20 05:40
+# LIVE LETTER  -  2026-09-20 06:00
 
 WHERE THE GAME IS: **btc-logistics-core.pages.dev at 0.0.1739** (deploy 9cac533f), unchanged since 19:47 on the
 19th. The core in that build was byte-identical to packages/core/dist AS IT STOOD THEN - today's dist is many
@@ -61,9 +61,16 @@ A count can." So the check is a count, in that file's idiom, read off the live p
 NOT claimed: a close-up of a body. The spectate camera starts behind the depot and flying it forward hit the cargo
 chooser. The pose is proved by the count and the code path, not by an eye on a man.
 
-SUITES ON THIS HEAD: PlayMode **228/256** (15 red, 13 skipped - two better than before), EditMode **254/258**
-(0 error CS, one long-listed CombatFx red). JS: rules 50/50, tactics 21/22, candles+chart+spawn 18/18, canonical
-22/22, vectors+bundle 2/20 with goldens deliberately stale.
+SUITES ON THIS HEAD, all measured after the guards went in: PlayMode **257 total, 229 passed, 14 failed, 14
+skipped** - one test and one skip more than before, the extra skip being the pose test that cannot run in the
+editor. EditMode **258 total, 254 passed, 1 failed, 3 skipped**, 0 error CS, the one red the long-listed CombatFx
+rifle flash. JS: rules 50/50, **tactics 23/24** (two new guards in), candles+chart+spawn 18/18, canonical 22/22,
+vectors+bundle 2/20 with goldens deliberately stale. The single JS red is the §11.3 occupancy row.
+
+THE FOURTEEN PLAYMODE REDS, none unexplained: nine read the retired Battlefield.Army; RoadsAreActuallyDrawn wants
+a graphics device; two MushroomResting sit on the authored skirt offset; SoldiersStandOnTheGroundAndAreAnimated is
+Unity carving a bowl the core does not; GhostAcrossTheDoors is the run-mode flake. RampReadyTests was red in the
+previous full run and is green in this one, which is what a flip-flop looks like.
 
 THE WORD AND THE PIN ARE NOW GUARDED; THE POSE CANNOT BE (4e7ac586, 6e0bc016). Until this morning nothing
 asserted any of the three and they were held up by tools run by hand - which is how the 18-word BlwpLayout.cs
