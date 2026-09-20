@@ -141,7 +141,22 @@ proposed until two numbers exist:
   X of Y declared assaults had their on-lane armour INSIDE the camera's horizontal field of view
   X of Y were declared while the BAY was open and so were never announced at all
 
-BOTH NUMBERS EXIST (2026-09-21, Daily 0.0.1842, Beelink GPU Chrome on ANGLE/Vulkan).
+FIXED AND LIVE (2026-09-21, Daily **0.0.1866**): **the player is told about an assault while he is in the
+cargo bay.** `Watch.Observe` sat behind `ChartHud`'s bay return, so the declaration was never recorded at all
+- and the watch only reacts to transitions, so it was gone for good; and `DriveHud`'s bay branch returned
+before `DrawAssaultLog`, so a recorded line would not have been drawn either. Both are HUD only.
+
+                                        0.0.1842      0.0.1866
+  told                                   4 of 12       **12 of 12**
+  declared with the bay open, told       0 of 8         **8 of 8**
+  armour in the camera's field, told     0 of 5         **4 of 4**
+
+Same probe, same witness - the log column read off the frame. EditMode 293/297 (1 long-listed red, 3 skipped),
+errorCS 0. Rows, causes and the one correction against my own baseline in TASKBOOK.
+
+STILL OPEN BY RULING: driving still announces with nothing in view.
+
+THE MEASUREMENT THIS CAME FROM (2026-09-21, Daily 0.0.1842, Beelink GPU Chrome on ANGLE/Vulkan).
 
   ONE - armour inside the camera's horizontal field: **3 of 10** (the run of 2026-09-20), **3 of 12** on the
   repeat, 5 of 11 read at +8 s.

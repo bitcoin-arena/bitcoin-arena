@@ -5,6 +5,52 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE BAY TELL (2026-09-21, build 0.0.1866, deployed; before = 0.0.1842). SAME PROBE, SAME WITNESS.
+
+WHY A BAY DECLARATION DREW NOTHING - instrumented, two causes, and the third candidate ruled out:
+  1. `ChartHud.cs` - `Watch.Observe` has exactly ONE call site and `if (loadout.IsOpen) return;` sat above it.
+     The watch reacts only to a TRANSITION, so by the time the bay closed the phase had moved and the
+     declaration was gone for good. Proof in the clips of run 6: round 1 held two bay declarations, one BEARS
+     and one BULLS, and exactly ONE green line appeared at rollout - the BEARS line never existed.
+  2. `DriveHud.cs` - the `if (loading)` branch returned before `DrawAssaultLog`. Even a recorded line would
+     not have been drawn. The same file already carries this bug and its fix for `DrawRunStopped`: "the line
+     was not covered, it was never drawn."
+  3. NOT the missing HUD object. `revision no hud object` is the bridge, which nothing player-facing reads.
+  The `t=35` blip that looked like two bay lines was mask noise; the clip is road and panel edge, no text.
+
+THE FIX, HUD/RENDERER ONLY, NO SIMULATION IN C#:
+  - the watch observes before the bay return (the chart itself still does not draw there);
+  - the bay branch draws the log;
+  - `AssaultLogBox` steps below the cargo panel and stops above the capacity bar. That bar was computed
+    inline, so `LoadoutPanel.BottomBarRect` now derives it once and `Bar()` uses it - the rule `PanelRect`
+    was written for. At 1280x800 the panel ends at 408 and the bar starts at 570: 162 px, five lines. The log
+    drops OLDEST first, so the line the player has not read survives.
+
+MEASURED, four rounds each, Beelink GPU Chrome on ANGLE/Vulkan, witness = the drawn log column:
+
+                                        0.0.1842      0.0.1866
+  told                                   4 of 12       12 of 12
+  declared with the bay open, told       0 of 8         8 of 8
+  armour in the camera's field, told     0 of 5         4 of 4
+  armour in the camera's field           5 of 12        4 of 12
+  on the lobby (not counted)             0 of 12        0 of 12
+
+The bay clip says it in as many words: `[00:45:16] BEARS ASSAULT OPEN` in red, below the cargo panel, with
+TRUCK FULL 83% still on screen underneath.
+
+ONE CORRECTION AGAINST MYSELF: the first pass scored round 2's t+1 declaration "no". It was not a miss - the
+clips show the log going from 4 lines to 5 on that very tick - it was my baseline, which had no frame three
+ticks before a round that was one second old. The lookup now falls back within the round. The same corrected
+rule was re-run over the OLD build's clips and left it at 4 of 12, so the before/after is like for like.
+
+SUITES on this build: EditMode 297 total, **293 passed, 1 failed, 3 skipped**, errorCS 0. The one red is the
+long-listed `CombatFxTests.RifleFireProducesAFlashAndATracer` on the retired `Battlefield.Army`, not this
+letter. Every assault test passes: `AssaultLogSitsClearTests` x4, `AssaultsAreVisibleTests` x8,
+`ChartHudTests.TheAssaultColumnIsThereWhileTheCoreSaysSo`.
+
+STILL OPEN, NOT THIS LETTER BY RULING: driving still announces with nothing in view - of the 12, four were
+declared on the road and three of those had 0 on-lane armour in the camera's field when they were announced.
+
 NUMBER TWO: WAS THE PLAYER TOLD? (2026-09-21, Daily 0.0.1842, Beelink GPU Chrome ANGLE/Vulkan, 1280x800,
 four rounds, twelve declarations.) THE WITNESS IS THE STRING THE HUD DREW.
 
