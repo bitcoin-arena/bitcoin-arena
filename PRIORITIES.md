@@ -41,8 +41,18 @@ dark gateway cannot hide behind a green suite. After restarting **A** as well: A
 **80000**, channel `dce6199b...` active on both, both units enabled/active, probe **2 usable, YES**.
 
 NEXT M3 PIECES, in order:
-  1. **Where `gatewaysAreIndependent` gets called.** The rule exists and is proven against the live pair, but
-     nothing calls it, so no round is gated on having gateways yet. The call site is a design choice.
+  1. ~~Where `gatewaysAreIndependent` gets called~~ **DONE 2026-09-20: a paying round now refuses to open
+     without two independent gateways.** The call site is `lightningPreflight` in
+     `blwp-node/src/preflight.js`, which is the ONE gate `server.js` consults on the paying-round open path -
+     `POST /round`, under `if (contract.stakeMsat > 0n && custody.reaches)`, before `round.open(contract)`,
+     before any invoice and before the round is advertised payable. The browser decides nothing.
+     Shown no gateways it REFUSES: absence is not an escape hatch. A round that asks no stake is untouched
+     (M3.3-19). Proved red by deleting the call: 5 of 7 fail, including the guard written for it.
+
+     NOTE FOR THE REGTEST DAILY: `lndPreflightRegtest` now takes `gateways: [{ lnddir, rpc }]` and fails
+     closed on one. The Daily declares only `lnd-committee`; `lnd-alice` exists beside it, so the paying
+     regtest round needs both declared or it will be refused. The Daily runs from
+     `/mnt/bitcoin/blwp-2of2/code`, not this worktree, so nothing changed under it.
   2. **Hold invoices on testnet4.** Pay is proven both ways; ACCEPTED -> HELD -> settled is regtest-only.
   3. ~~Node A cannot auto-unlock~~ **DONE 2026-09-20**: Daniel supplied the password (`~/lnd.txt`, outside the
      repo). A now has `wallet-unlock-password-file` and was restarted under its existing enabled unit: its own

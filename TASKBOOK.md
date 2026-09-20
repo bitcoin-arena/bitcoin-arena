@@ -5,6 +5,46 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+A PAYING ROUND NOW REFUSES TO OPEN WITHOUT TWO INDEPENDENT GATEWAYS (2026-09-20, M3)
+
+§23.6: "deposits and withdrawals through any of at least two gateways ... No gateway holds a round's money or
+is needed by it", and §22: a gateway may refuse a deposit, never keep one. `gatewaysAreIndependent` was
+written and proven against the live pair in the previous letter and then CALLED BY NOTHING, so a paying round
+would have opened with no gateways at all.
+
+THE CALL SITE. `lightningPreflight` (`blwp-node/src/preflight.js`) is the one gate the server consults on the
+paying-round open path: `server.js` POST /round, inside `if (contract.stakeMsat > 0n && custody.reaches)`,
+before `round.open(contract)` - so before any invoice exists and before the round is advertised as payable.
+There is no second open path: `preflight` appears in server.js only there (and in its own option comment),
+and a node that holds stakes with no preflight already answered 503. The browser is not asked.
+
+Everything above that line in `lightningPreflight` asks ONE node about itself - synced, an active channel,
+inbound >= needed, addholdinvoice. That is what let a single endpoint through.
+
+FAIL CLOSED. `gateways` absent, not an array, or unreadable is a REFUSAL, not a pass: "this node was shown no
+gateways, so it cannot open a paying round". A round that asks no stake still returns early and needs neither
+Lightning nor a gateway (M3.3-19), which is the earlier letter's rule and is guarded here too.
+
+WHAT "INDEPENDENT" MEANS HERE IS NARROWER THAN THE LAW'S, and it is written into the code rather than blurred:
+§23.6 wants "different operators"; this M3 step (RULED 2026-09-20, named pick A) is the operator's own two
+testnet4 nodes with the same host allowed, so the predicate counts distinct identities at distinct rpc
+addresses that are synced and hold inbound, and does not read the host. Different-operator gateways are a
+later letter.
+
+`askGateways` / `askGatewaysRegtest` gather each node with its own `readonly.macaroon` - the same read-only
+key the preflight already used, so the gate still cannot move a satoshi. A node that will not answer is
+reported as unsynced with no channels rather than dropped, so a stopped gateway counts as one that cannot
+receive instead of vanishing.
+
+PROVED RED RATHER THAN ASSERTED. With the call site deleted from `lightningPreflight`, 5 of the 7 tests fail,
+including "THE CALL SITE ITSELF: delete it and this goes red" - written so a green suite cannot hide an
+unused predicate, which is the exact fault this letter found. Restored: 7/7.
+
+SUITES: paying-round-needs-gateways 7/7, protocol/gateways 9/9, lnd-settings + gateways together 13/13.
+custody-daemon is 3 of 9 both with and WITHOUT this change - stashed to HEAD's preflight and re-run to check -
+so those six are pre-existing and not this letter's; they are listed on PRIORITIES' standing red list.
+
+
 AND THE GATEWAYS SURVIVE A RESTART (2026-09-20, the same letter finished honestly)
 
 The first pass left node B running under `systemd-run`, which makes a TRANSIENT unit: `is-enabled` returns
