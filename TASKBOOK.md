@@ -45786,3 +45786,55 @@ constant that is bundled into the page's money script, and the shipped bundle wa
 Nothing is broken live, because the live signer nodes are pinned at `595f0df3`, which also carries the old
 id - page and nodes agree. The break appears the moment the live pin moves to HEAD. So the rebuild and a
 deploy must happen together with that pin move, and not before.
+
+## Guardian pay, guardian slash, and leaving with notice - close-out check (2026-09-21, 961adcef)
+
+Spec-only: `FEDERATION.md` +15, `multiplayer_p2p.md` +78, no `.js`, no `.mjs`, no `.cs` in
+`47cc55f3..961adcef`. Checked against the four ruled points, in the text, on this checkout.
+
+POINT 1 - THE GUARDIAN SHARE OF THE 2%, THREE EQUAL POTS. §22A now reads:
+
+    node_fee = 2.00% of gross_round_volume
+    2/3 %   -> GAME/VERIFY pool     (the round's sitting seats)
+    2/3 %   -> SETTLEMENT pool      (the round's sitting seats)
+    2/3 %   -> GUARDIAN pool        (the seated guardians of the federation
+                                     the Round Contract names, §23A) v4.6.4
+
+The 2% total is unchanged. The guardian pool is divided evenly among the guardians SEATED at the round's
+FINAL, paid as one payout contract per guardian in the round's settlement transaction to the
+`payout_pubkey` of his census advertisement; a gone guardian's share goes pro rata to the seated ones. In
+a 7-guardian federation that is `(2/3)% / 7 ~= 0.0952%` of gross volume for the role; in a 2-of-2,
+`(2/3)% / 2`.
+
+POINT 2 - THE SLASH, 75/25, WITH THE WITNESSES OUT.
+
+    75%  evenly to every active census node at the slashing transaction's height: bonded and
+         eligible (§5A.3), minus the slashed node, and minus every guardian of the federation concerned
+    25%  to the donation set of §22A - the developers - by share_bps
+
+Paid as outputs of the slashing transaction itself (§5A.3B), one per recipient, remainders in ascending
+`H(txid || node_pubkey)`, so every observer computes the same list from chain state at that height. The
+reason the witnesses are excluded is written with it: the abandonment proof is signed by `2f + 1`
+guardians of that very federation, and people who attest an absence must not earn from attesting it.
+
+POINT 3 - LEAVING WITH NOTICE KEEPS THE BOND. The departure row now ends "his seat is gone with no offence
+and **his bond is untouched**: he stays a bonded census node, keeps sitting as a seat, and may be drawn as
+a guardian again". Only the abandonment row slashes - and it still catches "a departure that stops serving
+before its `leave_after`", so the notice is a promise, not a formality.
+
+POINT 4 - §5A.3 UNCHANGED. Proven by byte comparison across the commit, not by reading:
+
+    diff <(git show 47cc55f3:multiplayer_p2p.md | sed -n '775,778p') <(sed -n '795,798p' multiplayer_p2p.md)
+    -> IDENTICAL
+
+    "Slashed bonds are distributed: half to the affected players of that round,
+     half burned or to the remaining honest committee members of the round, as
+     fixed by the Round Contract."
+
+A round committee has a known victim set and a guardian federation does not; the 75/25 rule is the
+guardian-bond rule only and does not reach §5A.3.
+
+SUITES. Spec-only, so none are owed. The two reds on the branch were re-confirmed and both belong to
+other letters: bundle-fresh 1/2 (`blwp-client.js` still carries the pre-re-pin network id; depends on the
+live pin moving to HEAD) and ghost-live 10/11 (a loaded run draws identical to an unloaded one; depends on
+the core). No PlayMode or EditMode run is owed - no C# exists in this range.

@@ -83,6 +83,17 @@ when" named that Daniel has not parked.
                                              (THRESHOLD_LN), not as a §23 stake lock, and every number
                                              on this board today is REGTEST, not testnet sats.
 
+DONE (2026-09-21, `961adcef`): **guardians are paid, a slashed guardian bond skips its witnesses, and
+leaving with notice keeps the bond.** The 2% splits three equal ways now - game/verify seats, settlement
+seats, and the seated guardians of the federation the Round Contract names - so the people carrying the
+reserve and the liability stop earning nothing. A slashed guardian bond goes 75% evenly to the active
+census nodes at the slashing height, minus the slashed node and minus every guardian of that federation,
+and 25% to the donation set: the `2f + 1` who sign an absence must not earn from signing it. A guardian
+who gives `departure_notice` and serves it out keeps his bond and stays a census node; only leaving
+without that window - or stopping before it - is a slash. §5A.3 is untouched and still sends half a
+round's slash to that round's affected players, because a round has a victim set and a federation does
+not. Spec only. Checks in TASKBOOK.md.
+
 DONE (2026-09-21, `47cc55f3`): **a federation that holds balances across rounds has a life.** Spec v4.6.4
 §23A: founding and who the guardians are, nominal size and what an outage does, several federations and
 which one a player is in, how guardians and seats and clients talk, what a departing guardian's bond does,
