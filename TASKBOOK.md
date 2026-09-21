@@ -45924,3 +45924,52 @@ property is untouched: the whole signed body is still on the chain, still needs 
 still binds to the bond it rides in. The alternative - drop the body and lean on the 32-byte `advertId`
 the bond already carries in its OP_RETURN - would make the census depend on somebody serving the body off
 chain, which is the thing 5A.2 exists to avoid.
+
+## The census bond is standard now: 266 bytes in one item became four of at most 80 (2026-09-21)
+
+Measured on the live regtest node, which runs the same standardness policy as testnet4 and mainnet - no
+`acceptnonstdtxn` in `/mnt/bitcoin/blwp-2of2/btc/bitcoin.conf` and none on its command line.
+
+BEFORE (d14fbec7's construction):
+
+    prevout scriptPubKey type : witness_v1_taproot        <- P2TR, not P2WSH
+    witness item 0:   64 bytes                            signature
+    witness item 1:  266 bytes   <- over 80               the signed advertisement
+    witness item 2:   35 bytes                            script
+    witness item 3:   33 bytes                            control block
+    vsize 313 vB, weight 1251 WU, 1 in / 4 out, 1 commitment
+    testmempoolaccept allowed=false   reject-reason: bad-witness-nonstandard
+
+That settles the P2WSH question the ruling raised: the spend is TAPROOT, and Bitcoin Core applies its
+80-byte limit to a tapscript witness stack item exactly as it does to a P2WSH one. The 266-byte body was
+the whole of the refusal.
+
+AFTER (the body in pieces, one `OP_DROP` each, signature still its own item):
+
+    witness item 0:   64 bytes                            signature
+    witness item 1:   80 bytes                            body 1/4
+    witness item 2:   80 bytes                            body 2/4
+    witness item 3:   80 bytes                            body 3/4
+    witness item 4:   26 bytes                            body 4/4
+    witness item 5:   38 bytes                            script (three more OP_DROPs)
+    witness item 6:   33 bytes                            control block
+    items 7, largest 80
+    vsize 314 vB, weight 1255 WU
+    testmempoolaccept allowed=true    reject-reason: (none)
+    census can still read the advertisement back: yes, endpoint ws://127.0.0.1:18080
+
+One vbyte more, and the refusal is gone. NOT ONE ADVERTISEMENT FIELD WAS CUT - the body is the same 266
+bytes it was, and the signature was never packed in with it.
+
+The reader joins consecutive items (`witnessRunsOf`), singles first so every bond posted before this
+resolves unchanged and at the same cost, and a run is believed only when its `advertId` equals a 32-byte
+commitment in the transaction's own outputs - so joining bytes that were never one body cannot invent an
+advertisement.
+
+SUITES: protocol census-scan + census-resolve + census-minimum + census-root + census-template 51/51;
+protocol tx + chain + bond-recognition + bond-script + bond-spend 47/47; protocol advert-witness 3/3 (new);
+blwp-node census-chainview + census-derive + census-realblocks + bond-key + bond-spend 45/45.
+
+STILL OPEN, AND IT IS NOT POLICY: the bond cannot be broadcast on testnet4 because that wallet is
+encrypted - `sendtoaddress` answers error -13, "Please enter the wallet passphrase with walletpassphrase
+first" (wallet `testnet`, 682182 sat, chain at 153367, not in IBD). Standardness is settled; funding is not.
