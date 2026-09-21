@@ -46241,3 +46241,34 @@ blwp-client page-stake + session-pay + backpressure 38/38.
 STILL TRUE AND NAMED: nothing calls federation-slash.js but its own test. The clocks, the cap and the
 liquidation split are law that goes red when changed, not a running system - no node path opens a claim
 window, publishes a spent-note list or builds the escrow output.
+
+## Federation clocks / network id: the close (2026-09-21, `399cf37c`)
+
+Closed. The board carries a plain sentence; the numbers live here.
+
+    network id, testnet4    e9171215... -> 9715f0c6...
+    network id, regtest     06ad7746... -> 66f5caba...
+    genesis config hash     unchanged - these are genesis PARAMETERS, not the game config
+    published vectors       byte-identical; regenerating them changed nothing
+    donation sets           re-signed by the same two authority keys; no recipient, share or endpoint moved
+
+    clocks              mainnet        testnet       regtest
+    abandon_blocks         288 (48 h)     12 (2 h)      10
+    departure_notice       432 (72 h)     18 (3 h)      10
+    founding_window        432 (72 h)     18 (3 h)      10
+    drain_blocks          4032 (28 d)    144 (24 h)    100
+    claim_blocks           216 (36 h)      9 (1.5 h)    10
+    federation_nominal      10 (7 of 10)   2 (2 of 2)    4 (3 of 4)
+
+    guardian leaves, succession started at his departure   156 blocks   26 h
+    guardian vanishes, serial                              174 blocks   29 h
+    the drain alone                                        144 blocks   24 h
+
+SUITES AT THE CLOSE: protocol genesis + federation-slash 15/15, and slash-distribution + protocol +
+advert-witness + census-resolve + donation 84/84; blwp-node custody + round + donation-set-door +
+bond-key + advert 72/72; blwp-client page-stake + session-pay + backpressure 38/38. PlayMode and EditMode
+not run and not owed - no C# or Unity asset in this item.
+
+THE TWO REMAINDERS ARE NOW THEIR OWN BOARD ITEMS, not parked inside this one: a node path for
+`federation-slash.js`, and the two structural burns in `slash.js` - whose recipient is RULED as the
+federation pool, 75/25, never burned.
