@@ -22,6 +22,11 @@ Top item first. Finish and deploy before starting the next.
 
 # NOW  -  M3: what is left
 
+HARD (Daniel 2026-09-21 20:01): **no backup, play is still allowed.** A **large warning** stays until the
+player backs up. The lobby has a **direct Backup CTA button**, not only a line in settings. Do not refuse
+PLAY. Do not gate a free or paid round on backup. The earlier board line that refused Deposit and paid
+join until every seed word was typed back is **overridden**. THIS IS THE LIVE ITEM for the page.
+
 DONE (2026-09-21, closed out at `7d119eac`) - HARD (Daniel 2026-09-21 13:25, clarified 13:33 / 13:54):
 **winnings are always sent. There is no Collect.**
 Paying the stake stays a normal hold invoice — any wallet can pay it, **without NWC**. The page shows
