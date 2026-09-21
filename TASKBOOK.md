@@ -5,6 +5,57 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE SPLIT: THE BROWSER NEVER OPENS A SESSION, SO THERE IS NOTHING TO POST AN ENTRY FOR (2026-09-21).
+
+Passive after the join - `Runtime.evaluate` went silent for 8+ minutes twice, so the page is asked nothing
+once `join()` is called. Console, exceptions and network are collected off the CDP socket instead.
+
+  paid round 63f5f07be7010c8e, 100 sat, joinable=true
+  lobby withdraw before join: {"available":false,"msat":"0","elsewhere":false}
+  join() -> true
+
+  network in the 60 s after join: 54 events
+    /entry 0   /invoice 0   /stake 0   /handout 0   POSTs to a seat 0
+    /identity 4   /round? 4   /rounds 2
+  console events after join: 98      exceptions after join: 0
+
+THE BUCKET IS "REFUSED BEFORE ENTRY", AND THE PAGE NAMES IT ITSELF. In the 1.2 s after the join the scene
+comes up and says, in order:
+
+    +0.1s [blwp] practice on (from scene)
+    +0.2s [blwp] core is driving
+    +0.3s [blwp] no session yet: THE PAGE HAS NAMED NO NODE
+
+So PLAY starts the scene - the loading screen does not come again, which is what it was built to do - but no
+SESSION is opened, because the page named no node to open one with. With no session there is no entry to
+post, no invoice to ask for and no stake to watch, which is exactly the four zeros above. The run that starts
+is PRACTICE.
+
+WHAT IT IS NOT, measured rather than assumed:
+  - NOT the seats being silent: /identity and /round answered 200 four times each in the same window.
+  - NOT "entry attempted and rejected": zero POSTs reached a seat at all.
+  - NOT the withdraw gate. `withdraw.available:false` was read before the join and is real, but NOTHING in
+    98 console events names withdraw, wallet, Lightning, invoice or NWC. It is not implicated by any log.
+  - NOT a crash: zero exceptions.
+
+SHARE OF THE MISSING PATH. All four steps - entry posted, invoice fetched, stake paid, input to the core -
+sit behind one gate. It is not four independent holes: it is 1 cause and 4 consequences. The client HAS the
+code for the money doors (`/entry` and `/invoice` in `blwp-client/src/client.js`, `/stake` and `/handout` in
+`join.js`), so this is not unwritten downstream work; the flow never reaches it.
+
+STILL OPEN, and deliberately not chased this turn: WHY the page names no node when the lobby itself read its
+nodes from daily.json and listed the round from them. `BLWP_LOBBY_ACT.join` (index.html:1511) rewrites the
+address to the round's own link plus `&play=1` and hands off to the round-link path; whether the node is lost
+in that rewrite is the next thing to measure, not to patch.
+
+SEEN ALONGSIDE, not chased: the build initialises PhysX as its physics backend
+(`[Physics::Module] Name: PhysX`, SDK 4.1.2, single-threaded) while `[blwp] core is driving` - and one real
+error, `Can't add component because class 'SphereCollider' doesn't exist!`, at +0.1s. Neither is this
+letter's question and neither is evidence that simulation left the core.
+
+HARNESS: closing the last tab EXITS Chrome - the first run of this probe died on ECONNREFUSED 9351 with no
+browser left. The probe opens its new tab before closing the old ones now.
+
 WHERE THE PLAYER STOPS ON A PAID ROUND (2026-09-21, first contact with the playable client slice).
 
 Live Daily, GPU Chrome on the Beelink, build 0.0.1866, against the regtest 2-of-2 pair. Read-only: nothing

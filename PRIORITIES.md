@@ -89,6 +89,11 @@ open line that is neither fenced nor parked.
     then the client fetches that round's metadata from both seats - identity 8, round 7, rounds 4,
     donation-set 4, donation-rotations 4 - and **stops. POST /entry 0, GET /invoice 0, GET /stake 0.** The
     money path is never entered from the browser. Numbers in TASKBOOK.
+    SPLIT MEASURED 2026-09-21: it is **one cause, four consequences**, and the page names it - after PLAY the
+    scene comes up and logs **"[blwp] no session yet: the page has named no node"**, so there is no session to
+    post an entry for. Not the seats (identity/round answered 200 x4 each), not the withdraw gate (nothing in
+    98 console events names withdraw, wallet, Lightning or invoice), not a crash (0 exceptions). The client
+    already has the money doors in `client.js` and `join.js`; the flow never reaches them.
   - PARKED BY RULING: guardians and `federationIsBonded`
 
 FOLLOW-ONS, one line each:
