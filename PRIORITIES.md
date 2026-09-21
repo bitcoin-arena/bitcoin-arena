@@ -139,9 +139,19 @@ when" named that Daniel has not parked.
   OF THAT ONE SENTENCE, TWO THIRDS ARE NOW MEASURED AND THE FIRST IS NOT:
   - the fee is taken and paid out            DONE 2026-09-21, its own hold at entry
   - the payout actually moves                DONE 2026-09-21, rounds ee903c10 and 23d96fdf
-  - THE FEDERATION HOLDS THE MONEY           NOT DONE - the stake is held by the committee's own lnd
-                                             (THRESHOLD_LN), not as a §23 stake lock, and every number
-                                             on this board today is REGTEST, not testnet sats.
+  - THE FEDERATION HOLDS THE MONEY           HALF DONE, and the half that moved is the first clause.
+                                             A stake now goes into a real Fedimint federation as a §23
+                                             STAKE LOCK and comes out again: federation 423e010e, 4
+                                             guardians of 3, seven bonded signer nodes, 980000 msat
+                                             locked, forfeited on the committee's own claim key,
+                                             redeemed by the player's seed alone and withdrawn, with
+                                             `reachesLightning` null on all seven - so the committee's
+                                             lnd held nothing and `createHeld` was never reachable
+                                             (`be7c00f3`, three consecutive runs).
+                                             STILL NOT DONE: every number is REGTEST, not testnet sats,
+                                             and `CUSTODY` still carries THRESHOLD_LN, which the Daily
+                                             still runs on. The enum is the next slice and is not
+                                             started.
 
 DONE (2026-09-21, `961adcef`): **guardians are paid, a slashed guardian bond skips its witnesses, and
 leaving with notice keeps the bond.** The 2% splits three equal ways now - game/verify seats, settlement
