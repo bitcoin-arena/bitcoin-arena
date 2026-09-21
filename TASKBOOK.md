@@ -46336,3 +46336,37 @@ rather than matching - which fails 1 of 10; bound, 10 of 10.
     no seed at all         unverified; digestOf(undefined) null, digestOf(8 bytes) null
 
 SUITE: blwp-client backup-gate 10/10.
+
+## The seed is 24 real BIP-39 words now (2026-09-21)
+
+TAKEN, NOT TYPED. The list is bitcoin/bips `bip-0039/english.txt`, copied out of Trezor's
+`python-mnemonic` at /usr/local/lib/python3.10/dist-packages/mnemonic/wordlist/english.txt and checked
+against a second independent copy - @scure/bip39's `english.js` via ethereum-cryptography. The two agree
+word for word:
+
+    sha256 of the newline-separated list   2f5eed53a4727b4bf8880d8f3f199efc90e58503646d9ff8eff3a2ed3b24dbda
+    2048 words, "abandon" first, "zoo" last, no duplicates
+
+`bip39-wordlist.js` is generated from that file and the test recomputes the digest from the words
+themselves on every run, so a hand edit shows up as a red rather than as a wallet that will not restore.
+
+THE ENCODING IS BIP-39's, NOT OURS. The seed stays the 32 bytes `tabSeed` already mints - nothing was
+re-minted. 256 bits of entropy plus an 8-bit checksum, 11 bits a word, is 24 words.
+
+MEASURED:
+
+    BIP-39's own published 256-bit vectors, both ways     4 of 4
+      0000...0000 -> "abandon x23 art"
+      7f7f...7f7f -> "legal winner thank year ... worth title"
+      8080...8080 -> "letter advice cage absurd ... acoustic bless"
+      ffff...ffff -> "zoo x23 vote"
+    200 arbitrary seeds -> 24 words -> the same 32 bytes  200 of 200
+    last word changed (the checksum's own word)           refused, no bytes handed back
+    a word outside the list                               refused, names word 5
+    twelve words where 24 are wanted                      refused
+    a 16-byte seed                                        refused rather than padded
+
+The checksum is why the last word matters: without it a mistyped word gives a different VALID seed and
+the player restores an empty wallet with no error anywhere.
+
+SUITES: blwp-client bip39 6/6, backup-gate 10/10 (unchanged by this).
