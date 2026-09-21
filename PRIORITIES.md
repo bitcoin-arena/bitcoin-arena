@@ -142,6 +142,20 @@ carried 80. The flag is `--cltv_expiry_delta`. Live proof on the Daily: a paid h
 **cltv 144**. Commits `48f8861f`, `b94cbb97`. It narrows the gap and does not close it: 144 blocks on the
 rate that window measured is 742 s against the 1015 s a FINAL result needs, so the ruling still stands.
 
+DELIVERED 2026-09-21, the first one: **a paid run reached the gate.** The blocker was not the driving and
+not the core - the run opens behind the lobby splash and then behind the loadout yard, which holds
+`truck.controlsLocked` until a load is confirmed. Clicked the way a player clicks (PAID row, PLAY, AUTO,
+ROLL OUT) and then driven on the bearing to the mouth, the core said **DELIVERED at tick 4972** of 10800,
+x 168.6 with |z| 2.1; 80 checkpoints at each seat; both seats signed **DELIVERED score 72**. Nothing was
+added to the core or to C#: the probe clicks and types, and reads the pose out of the page's own state.
+AND THE SETTLE ACTED, on a qualifier, for the first time: `CANCEL -> HELD ... waits for its objection
+window`. CANCEL is right - §23.2 hands a delivered player their own stake back, and the winnings come from
+the losers' pool, which in a ONE-PLAYER round is empty. **A single-player round cannot move a sat between
+parties even when it is won.**
+BUT THE CLOCK STILL BEATS IT: that entry's objection window closes in 574 s and its HTLC expires in 82
+blocks = 410 s at the measured 0.200 blocks/s, with the contract's own cltv 144 now in force. 410 < 574.
+Commit `fa2a7861`. Numbers in TASKBOOK.
+
 WHY NO PAID RUN HAS EVER DELIVERED, measured 2026-09-21 and not guessed: **the run begins with the loadout
 yard open and the truck's controls locked.** `LoadoutPanel.Open()` sets `truck.controlsLocked = true`, and
 `CoreDrivenTruck` feeds the core `Throttle() => Q(Locked ? 0f : ...)`, so every input is 0 until a load is

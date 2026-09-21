@@ -5,6 +5,48 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE FIRST PAID RUN THAT REACHED THE GATE, AND WHAT THE MONEY DID (2026-09-21, commit `fa2a7861`).
+
+WHY NONE EVER HAD. Not the driving. A paid run opens behind the lobby splash and then behind the loadout
+yard, and `LoadoutPanel.Open()` holds `truck.controlsLocked` until a load is confirmed, so
+`CoreDrivenTruck` feeds the core `Throttle() => Q(Locked ? 0f : ...)`. Measured with the splash still up:
+W and D held on a focused canvas for **4297 ticks moved the truck 0 m** - x fixed at -100.4, vx and vz 0.
+`-autoplay` is a command line argument and a WebGL page cannot be given one, so the probe clicks what a
+player clicks: the PAID row, PLAY, AUTO, ROLL OUT.
+
+TWO CONVENTIONS, BOTH MEASURED AND BOTH WRONG WHEN ASSUMED:
+
+  holding D moved z -71.4 -> -73.8                  so D turns toward -z
+  travelling 0 deg at heading 16384                 so the heading's zero is a quarter turn off +x
+
+Steering on z alone orbited between z -46 and -24 for 1700 ticks and never closed on the gate. Steering on
+the bearing to the mouth: x -100.4 -> **168.6 with |z| 2.1 at tick 4972** of 10800.
+
+WHAT THE CORE AND THE SEATS SAID: `FINISHED: the core said DELIVERED at tick 4972`; 80 checkpoints at each
+seat; both seats signed **DELIVERED score 72** (minScore 1), 2 results each; round closed at 1789976211345.
+
+AND WHAT THE SETTLE DID - it acted, on a qualifier, for the first time:
+
+  [custody] 474836b1bb549e63 CANCEL -> HELD: in flight, in nobody's balance, until every condition is met
+  [custody] 474836b1bb549e63 waits for its objection window, which closes at 1789976816667
+
+CANCEL, not SETTLE, is right: §23.2 gives a delivered player their own stake back, and `payout.js` says so
+in as many words - "A delivered player never has their stake settled, whatever the table's pot arithmetic
+says". The winnings would come from the losers' pool, and this round had one player, so the pool is empty.
+**A single-player round cannot move a sat between parties even when it is won.**
+
+THE RACE, MEASURED ON THAT ENTRY:
+
+  the objection window closes in    574 s
+  the HTLC expires in               82 blocks = 410 s at the measured 0.200 blocks/s
+  the hold's own cltv               144, the contract's number, in force (commits 48f8861f, b94cbb97)
+
+410 < 574. The stake reaches its HTLC timeout about 164 s before its own DELIVERED result can become FINAL.
+
+THE SHARE: this is the whole of it. 19 holds in each store before this run, 19 EXPIRED, 0 SETTLED,
+0 CANCELED, outcomes 10 FORFEIT / 2 FAILED / 7 with no result row / **0 DELIVERED**. With a delivery in
+hand the refusal changes from "a pool of 98000 against 0 handed out" to a clock the hold cannot outlive.
+
 A PAID ENTRY MARKS INSIDE ITS WINDOW, LIVE ON THE DAILY (2026-09-21, commits `66add34d`, `0432b7d2`,
 `4b1f6fb6`, `4dc771b5`).
 
