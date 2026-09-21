@@ -5,6 +5,61 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+WHAT THE PAID JOIN WAS WAITING ON: A MODAL DIALOG (2026-09-21). Page-only deploy, stamp still 0.0.1866.
+
+The join was neither completing nor refusing, and it was not sitting on an await. It was sitting on
+`window.prompt`. Between the two awaits in the paid branch, `index.html` asks the player for a donation:
+
+    const donation = pays && donationSet
+      ? BLWPCLIENT.chooseDonation({ ..., ask: (m, d) => window.prompt(m, d), confirm: (m) => window.confirm(m), ... })
+
+`window.prompt` is SYNCHRONOUS: it stops the renderer's script thread until the player answers. That is the
+whole story, and it explains every symptom at once - no entry, no invoice, no refusal, no stage (stage is
+only written in the federation-lock branch, and this round reports `locks=false`), and `Runtime.evaluate`
+going silent after every join for 8+ minutes.
+
+MADE TO SPEAK FIRST, then proved by event rather than by reading:
+
+    [blwp] join: pays=true locks=false round=064e528cc1b57268
+    [blwp] join step -> fetchDonationSet      +1.0s
+    [blwp] join step <- fetchDonationSet      +1.5s
+    !! DIALOG prompt: Recipients: 66.67% to http://127.0.0.1:18777/lnurlp/blwp-test-a,
+                                  33.33% to http://127.0.0.1:18777/lnurlp/blwp-test-b
+    !! dismissed
+
+`Page.javascriptDialogOpening` is a CDP event, so it names the dialog without asking the page anything.
+
+AND WITH THE DIALOG ANSWERED, THE MONEY PATH RUNS. Dismissing it - which is what a player pressing Cancel
+does, donating nothing - let the join finish in four seconds:
+
+    [blwp] join step -> fetchSettlementSignerNodes   +1.5s
+    [blwp] join step <- fetchSettlementSignerNodes   +2.9s
+    [blwp] stake dealt to 2 settlement signer node(s), 2 accepted the handout   +3.1s
+    [blwp] joining round 064e528c... from https://sensitivity-...trycloudflare.com   +3.1s
+    [blwp] session opening against the chain   +3.4s
+    [blwp] world seed 0x6c8037da from 2 node(s) agreeing on the round randomness   +3.9s
+    [blwp] the chain was read afresh to open this session   +4.4s
+
+  doors in the 60 s after join      before the dismissal        after
+    POST /entry                            0                      4
+    GET  /invoice                          0                      2
+    GET  /stake                            0                    127
+    POST /handout                          0                      4
+    POSTs to a seat                        0                      7
+    /identity                              4                    378
+    /round?                                8                    380
+  network events after join               ~54                   1550
+  console events after join                99                    902
+  exceptions                                0                      0
+
+SO THE BROWSER CAN POST AN ENTRY AND CAN ASK FOR A HOLD INVOICE. It has been able to all along; a modal
+nobody answered stood in front of it.
+
+NOT FIXED HERE, AND IT IS A RULING NOT A REPAIR: the donation prompt is a real consent step - it is the
+player agreeing to give a share of a stake away - so moving it, deferring it or defaulting it changes what
+the player is asked and when. That is not mine to decide. What is now known is that it blocks the whole money
+path while it waits, and that it blocks any headless or automated client absolutely.
+
 EVERY JOIN REFUSAL SPEAKS NOW - AND NONE OF THEM FIRES (2026-09-21, deployed, alias serving it).
 
 STEP 1 OF THE LETTER WAS NOT IMPLEMENTED, BECAUSE THE MEASUREMENT CONTRADICTS ITS PREMISE. The page does not

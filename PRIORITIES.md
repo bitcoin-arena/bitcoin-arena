@@ -105,6 +105,12 @@ open line that is neither fenced nor parked.
     refusal now speaks, and **none of them fires**: 99 console events, 0 exceptions, 0 "join refused" lines,
     and still no entry or invoice. In 90 s the paid join neither completes nor refuses. Next: say `join.stage`
     out loud - it is what separates "waiting on the player" from "stuck".
+    ANSWERED 2026-09-21: **it was neither - it was a modal.** `window.prompt` in the donation choice sits
+    between the two awaits of the paid branch and stops the renderer's script thread until a player answers.
+    Proved by `Page.javascriptDialogOpening`, not by reading. **Dismiss it and the money path runs**: entry
+    posted 4, invoice fetched 2, handout 4, stake polled 127, 7 POSTs to seats, session opened, world seed
+    agreed by 2 nodes - all within 4.4 s. Moving or defaulting that prompt is a RULING: it is the player
+    consenting to give away part of a stake.
   - PARKED BY RULING: guardians and `federationIsBonded`
 
 FOLLOW-ONS, one line each:
