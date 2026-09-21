@@ -22,7 +22,8 @@ Top item first. Finish and deploy before starting the next.
 
 # NOW  -  M3: what is left
 
-HARD (Daniel 2026-09-21 13:25, clarified 13:33 / 13:54): **winnings are always sent. There is no Collect.**
+DONE (2026-09-21, closed out at `7d119eac`) - HARD (Daniel 2026-09-21 13:25, clarified 13:33 / 13:54):
+**winnings are always sent. There is no Collect.**
 Paying the stake stays a normal hold invoice — any wallet can pay it, **without NWC**. The page shows
 the bolt11. **Payout also works without NWC** (Daniel 13:54: "ohne NWC geht nix" is about *Auszahlen*).
 If NWC is connected, `make_invoice` as now. If not, a Lightning address on the tab (once, not Collect);
@@ -39,8 +40,6 @@ stake came back whole, the loser's went into the pool, and the node LNURL-paid t
 alice 996110 -> 996306 sat, one 98000 msat payment. Three faults were found and fixed getting there - the
 money moving 12 s after the close, the address living only in a tab, and an HTLC sized from a chain pace
 sampled once at launch that had since gone seven times faster. Measurements in TASKBOOK.md.
-
-THIS IS THE LIVE ITEM. Stop whatever else is open.
 
 CONFIRMED AGAIN (round 23d96fdf on `595f0df3`): closing the letter out turned up two more faults and both
 are fixed - one player's open objection window held up every OTHER player's fee, which is the coupling
@@ -70,6 +69,23 @@ by itself. Measurements in TASKBOOK.md.
 M3: **a round can be played for real testnet sats** - the federation holds the money, the fee is taken and
 paid out, and the payout actually moves. W1-W7 are done, and so is every item the inventory's "M3 is done
 when" named that Daniel has not parked.
+
+  OF THAT ONE SENTENCE, TWO THIRDS ARE NOW MEASURED AND THE FIRST IS NOT:
+  - the fee is taken and paid out            DONE 2026-09-21, its own hold at entry
+  - the payout actually moves                DONE 2026-09-21, rounds ee903c10 and 23d96fdf
+  - THE FEDERATION HOLDS THE MONEY           NOT DONE - the stake is held by the committee's own lnd
+                                             (THRESHOLD_LN), not as a §23 stake lock, and every number
+                                             on this board today is REGTEST, not testnet sats.
+
+NEXT M3 ITEM, ON TOP AND NOT STARTED: **the Daily plays for real testnet4 sats.** Everything measured in
+the winnings letter is regtest; M3's own sentence says testnet. The pieces are already here - the gate
+already refuses a paying round that cannot name two independent gateways (§23.6), the preflight already
+only knows testnet4, and `lightningFromEnv` already takes `BLWP_LND_GATEWAYS` - so this is standing the
+Daily up against testnet4 and measuring, not new custody. WHAT TO MEASURE: two gateways that can actually
+receive on testnet4; a stake paid from a wallet that is not ours; the HTLC's cltv against testnet's real
+pace rather than regtest's; and one round through DELIVERED to a winning that leaves. The stake-lock
+custody itself (FEDERATION.md, FROST bit-matched against frost-secp256k1-tr) is the larger item below and
+still needs a decision to open.
 
 DONE (2026-09-21): **the fixture family that has been "listed with cause" for a fortnight is cleared.** Four
 suites named a run length the core stopped using at c01cc655, so `Round.open` refused their contracts and
@@ -161,16 +177,15 @@ Measured live on round `1aa67fb5` (one truck DELIVERED at tick 2563, one missed)
 sat, the committee 1000000 -> 999902**. A second press is answered already-paid, and the other seat, asked
 with a fresh invoice, pays nothing. Commits `01ac3a9b`, `83564dd3`; the whole path in TASKBOOK.
 
-NEXT M3 ITEM, ON TOP: **the fee is taken and paid out** - the last of M3's own sentence still owed. The 2%
-is diagnosed and not spent, and the diagnosis stands where it is written above: `netStakeMsat` takes the
-fee off before the invoice, so it is never invoiced, and THRESHOLD_LN has no object that can carry it.
-Nothing here is started.
+DONE (2026-09-21): **the fee is taken and paid out.** It has its own hold invoice at entry, keyed on the
+entry's own `feePreimage`, and settles to the committee that served the round whatever the run came to -
+measured on every paid round today, 2000 + 2000 msat into the committee's channel per round.
 
-  LISTED, NOT PARKED - three things this letter left standing, none of them blocking the fee:
-  - the page does not ask a connected NWC wallet to mint the invoice, so a wallet-less tab still pastes one
+  LISTED, NOT PARKED - one thing that letter left standing and this one did not move:
   - the seats agree over HTTP before paying a winning: sound for 2 of 2 sharing one Lightning node, and not
-    a threshold agreement
-  - the 2% fee is exactly where this board already has it, and this close-out did not move it
+    a threshold agreement. (Since `595f0df3` a seat is also refused at a one-flight guard before it reads
+    the row, so only one seat ever reaches the player's endpoint - that is pay-once on one node, still not
+    a threshold.)
 
 DONE (2026-09-21): **a playable client slice** - a paid round is joined, paid, driven, settled and
 collected from the browser. What follows is the record of how it got there, letter by letter.
