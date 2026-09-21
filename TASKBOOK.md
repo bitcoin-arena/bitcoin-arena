@@ -5,6 +5,40 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE HOLD INVOICE IS SERVED AND THE PAGE DROPS IT ON THE FLOOR (2026-09-21).
+
+WHAT THE SEAT SERVED, read off the wire with `Network.getResponseBody` rather than inferred:
+
+    {"entry":"32eb870fac9a6b4f...","paymentHash":"19af20236fc01b36...",
+     "amountMsat":"98000","state":"HELD","request":"lnbcrt980n1p4tpf..."}
+
+  amountMsat 98000  = the net stake: 100000 less §22A's 2%. The same rule the testnet4 hold followed.
+  state HELD        = the seat is holding it, waiting to be paid
+  request lnbcrt980n... = a real bolt11, 98 sat
+
+WHERE IT ENDS UP IN THE PAGE:
+
+    {"bodyHasLnbc":false,"elements":[],"globals":[],
+     "depositEl":{"hidden":true,"text":""},"stageEl":"no #stage"}
+
+  the bolt11 appears NOWHERE in the visible text, in NO element, and in NO window global.
+  `#blwp-deposit` - the box the federation-lock path fills through `onDeposit` - exists but is hidden and
+  empty, because this round is THRESHOLD_LN and nothing on that path renders what `/invoice` returned.
+
+SO THE PLAYER IS NEVER SHOWN THE INVOICE THEY MUST PAY. That closes the walk with a cause rather than a
+symptom: the seats accept the entry (201 x2), serve a HELD invoice for 98000 msat, and the page never puts
+it in front of anybody - so it is never paid, so `/stake` answers 409 sixty times, so no run starts.
+
+  lobby YES | PLAY YES | entry accepted YES | invoice served YES | invoice SHOWN **NO** | paid NO | driving NO
+
+AND THE DONATION PROMPT'S FULL TEXT, for the ruling that is still open:
+  "Donation to the developers, in percent of your 100 s..." with
+  "Recipients: 66.67% to http://127.0.0.1:18777/lnurlp/blwp-test-a, 33.33% to .../blwp-test-b"
+Two things about it are worth the ruling: it blocks the whole money path while it waits, and its recipients
+on the Daily are 127.0.0.1 lnurlp addresses - a local test payee, not anything a player could pay.
+
+NOT WRITTEN THIS TURN: surfacing the invoice is money UI, and it was not asked for.
+
 THE SEATS ACCEPT THE BROWSER'S ENTRY, AND THE HOLD INVOICE IS SERVED (2026-09-21).
 
 A request counted is not a stake taken, so this reads what the SEATS ANSWERED, with the donation modal

@@ -115,6 +115,11 @@ open line that is neither fenced nor parked.
     `/invoice` 200, and `/stake` 409 x60 - the stake is simply not paid. joinState reaches "joined" and all
     four globals are objects. **The remaining gap is payment, not plumbing**: nothing pays the bolt11, and
     `BLWP_DEPOSIT` is null, so where the served invoice is put for the player is the next question.
+    ANSWERED 2026-09-21: **nowhere.** The seat serves `{"amountMsat":"98000","state":"HELD","request":
+    "lnbcrt980n..."}` - the net stake, held - and the bolt11 appears in no element, no visible text and no
+    global; `#blwp-deposit` is hidden and empty because that box belongs to the federation-lock path. **The
+    player is never shown the invoice they must pay**, so it is never paid, so `/stake` stays 409 and no run
+    starts. Surfacing it is money UI and was not written.
   - PARKED BY RULING: guardians and `federationIsBonded`
 
 FOLLOW-ONS, one line each:
