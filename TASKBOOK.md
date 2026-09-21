@@ -5,6 +5,37 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE START WINDOW NOW OPENS AT THE TICK THE PLAYER HAD REACHED WHEN THE STAKE WAS HELD (2026-09-21).
+
+This replaces the version committed earlier in this letter, which converted `stake_seen.seen_ms` with
+`ticksForMs` against `startTimeMs` - a wall-derived "round tick" that the measurement showed is not a
+protocol quantity at all. The origin is now in the ONE clock the protocol uses: the player's own run ticks,
+the same stream the batches and the marks are numbered in.
+
+  new table `stake_seen_tick (entry_id, tick, seen_ms)` - the house idiom, "a table of its own so a store
+  written before it existed gains it", beside `stake_seen` and `hold_expiry`.
+
+  `putStakeSeen` writes it in the same breath, once: the highest tick this node has ALREADY RECEIVED from
+  that player, read off the last stored batch. Not a number the client asserts - a player cannot name a late
+  origin to buy itself an unbounded window - and pinned by the same replay as every other tick.
+
+  `startWindowOrigin` returns that tick; an entry with no such row keeps `joinTick`, word for word, which is
+  what a free round and an entry that never played get.
+
+  a player who has sent nothing when the hold appears gets 0, which is where its run starts anyway.
+
+  protocol/test/first-mark.test.js    5 / 5
+  protocol/test/stopped.test.js       2 / 2
+  blwp-node/test/first-mark.test.js  14 / 14
+
+AND ONE SUITE IS RED FOR A REASON THAT IS NOT THIS: `stake-committed.test.js` fails 3 of 3 in 112 ms, 19 ms
+and 16 ms and then hangs. Measured cause, read off a single-test run: `400 !== 201` at `POST /round` - the
+stale `blockTicks: 9000` that suite carries, one of the ~46 listed in this book since the fixture sweep. It
+was red before this letter and is red for the same reason after it; nothing here touched it.
+
+STILL NOT MEASURED LIVE. The Daily runs `/mnt/bitcoin/blwp-2of2/code` pinned at df66c6d1, so no paid entry
+has yet been judged against this origin. 900, §13B, close and payout are untouched.
+
 CORRECTION: THERE ARE NOT TWO CLOCKS. THE MARK AND joinTick ARE THE SAME CLOCK (2026-09-21).
 
 Read out of the seat's own store, for the paid entry 6742d644:
