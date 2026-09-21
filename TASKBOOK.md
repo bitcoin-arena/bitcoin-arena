@@ -46911,3 +46911,45 @@ this suite does not exercise; `stake-lock-signer-node.js` and the suite's fixtur
 handoff itself lives in `tools/w5b.mjs`, which no test imports.
 
 LISTED: signer-node-lock - 4 failing tests and a file that does not terminate. Cause not yet read.
+
+## signer-node-lock: four reds, one assertion, and the open handle that hid it (2026-09-21)
+
+The file never exits, so node never prints its summary and the failure text never appeared. `--test-reporter=tap`
+prints each failure inline as it happens, which is what got these out from under the hang; one test name
+per run, `--test-timeout=120000` under `timeout 180`, never past the cap.
+
+ALL FOUR CARRY THE SAME ASSERTION, word for word, and all four raise it in the same shared fixture -
+`joinedWithLock`, `lock-fixture.js:143`, on the `/entry` door:
+
+    this round mints fee locks (every one of 2 signer nodes is paid more than nothing after the
+    federation's fees): an entry that brings no fee lock is not taken - its stake would not be
+    counted, and it would block the round's settlement
+
+    409 !== 201      expected 201, actual 409      AssertionError, strictEqual
+
+      signer-node-lock.test.js:32   the player's own lock is verified ... /stake answers held
+      signer-node-lock.test.js:52   a lock that is not the entry's is refused by name
+      signer-node-lock.test.js:78   a second entry naming a lock already committed for another
+      signer-node-lock.test.js:101  where a player's verified lock is, by its refund key (W5a)
+
+It is ONE cause, not four. The fixture builds its entry with `feePreimage: new Uint8Array(32)` and
+`feeLockOutpoint: { txid: new Uint8Array(32), outIdx: 0n }` - a zeroed fee lock, i.e. none - and then
+asserts `/entry` answers 201. The node refuses it 409 by §23.1 pick a.
+
+WHICH SIDE IT SITS ON. It is the SAME RULE that stopped the seven-node round, and it is NOT from this
+handoff. The node's rule is untouched; the fixture predates this letter; the handoff lives in
+`tools/w5b.mjs`, which no test imports; and the only source change in the range is one refusal string in
+`guardiansBonded`. So: a pre-existing lock-rule case, of the same shape as the call w5b was missing - the
+fixture has to hand a fee lock the way `client.js:609` and now w5b do. Not a settlement-path red.
+
+WHAT KEEPS THE FILE ALIVE: the daemon `joinedWithLock` serves at `lock-fixture.js:114`. Its own try/catch
+closes that daemon only around the `/round` post (lines 118-122) - the fixture's comment says exactly why
+it exists: "a refused contract left this signer node open and the test file never exited". The `/entry`
+assert at line 143 is OUTSIDE that guard, so when it throws the daemon stays listening; and the tests'
+own `finally { await s.close(); }` cannot help, because `s` is never assigned when the fixture throws. Not
+a fifth test: the file has 5 tests, 4 fail and 1 passes.
+
+UNCOMMITTED, DELIBERATELY: `packages/blwp-node/tools/w5b.mjs` carries 29 added lines from the forfeit
+enquiry - the per-node `kept` detail (node id, whether the signature matches, `madeMs`), the "each node
+asked for the forfeit" round of direct `/forfeit` calls, and the five-seconds-later re-look. Measurement
+prints only; no rule and no settle logic. Left out of this docs commit.
