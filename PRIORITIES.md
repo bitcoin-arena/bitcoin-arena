@@ -84,7 +84,11 @@ WHAT IS LEFT FOR M3 (the fee-lock line has been MEASURED but not spent; the rest
 NEXT M3 ITEM, NOT STARTED: **a playable client slice** - nothing of M3 reaches a player yet. It is the first
 open line that is neither fenced nor parked.
   - ~~FROST / §23.5 on testnet4~~ **DONE 2026-09-21**: a live settle on a reconstructed preimage, 2-of-2.
-  - a **playable client slice** - nothing of M3 reaches a player yet
+  - a **playable client slice** - nothing of M3 reaches a player yet.
+    MEASURED 2026-09-21 against the live Daily: the lobby lists the 100 sat round and `join()` returns true,
+    then the client fetches that round's metadata from both seats - identity 8, round 7, rounds 4,
+    donation-set 4, donation-rotations 4 - and **stops. POST /entry 0, GET /invoice 0, GET /stake 0.** The
+    money path is never entered from the browser. Numbers in TASKBOOK.
   - PARKED BY RULING: guardians and `federationIsBonded`
 
 FOLLOW-ONS, one line each:

@@ -5,6 +5,53 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+WHERE THE PLAYER STOPS ON A PAID ROUND (2026-09-21, first contact with the playable client slice).
+
+Live Daily, GPU Chrome on the Beelink, build 0.0.1866, against the regtest 2-of-2 pair. Read-only: nothing
+was paid, nothing deployed, no new UI invented. The probe drives the lobby's OWN join call - the one PLAY
+makes - and then watches the network instead of asking the page anything.
+
+THE WALK:
+
+  lobby listed            YES   2 rows: "stake 100 sat - a Lightning payment ... 2 of 2 signer nodes agree",
+                                and a free round. joinable true, 0 joined, both seats answering.
+  PLAY / join()           YES   `BLWP_LOBBY_ACT.join(<paid id>)` returned true
+  entry accepted          NO    -- POST /entry was never sent
+  invoice shown           NO    -- GET /invoice?entry= was never sent
+  stake paid              NO
+  driving input to core   NO    -- never reached
+
+WHAT THE CLIENT DOES INSTEAD, counted over 80 network events in the 45 s after the join:
+
+  GET /identity            8
+  GET /round               7
+  GET /rounds              4
+  GET /donation-set        4
+  GET /donation-rotations  4
+  POST to a seat           0      (the one POST in the capture is cdp.cloud.unity3d.com, Unity's telemetry)
+  /entry, /invoice, /stake, /handout:  0 of each
+
+So the client joins a paid round in its own lobby, fetches that round's metadata from both seats, and stops.
+It never asks a seat to take an entry and never asks for a hold invoice. THE MONEY PATH IS NEVER ENTERED
+FROM THE BROWSER - the doors the custody tool drove (POST /entry, GET /invoice?entry=, GET /stake?entry=)
+are untouched by the client.
+
+TWO THINGS FOUND ALONGSIDE, both measured:
+
+  1. The Daily's PAID rounds are opened `custody: "THRESHOLD_LN"`, stakeMsat 100000 - from daily.log:
+     {"opened":"a8530b96...","stakeMsat":"100000","custody":"THRESHOLD_LN"}. That is the same custody whose
+     fee-lock door `server.js:2039` skips, so the regtest Daily does not take the 2% either. It does not
+     change the testnet4 finding; it widens it.
+  2. After the join the page STOPS ANSWERING `Runtime.evaluate` - two runs, 8+ minutes each, no reply. The
+     join's own `{state, why, stage}` therefore could not be read from the page, which is why the network was
+     collected passively instead. Whether that is the renderer or Unity's loop is NOT isolated here; the
+     network answers the letter's question without it. The first round joined this way, 0d55d9036f3e8b47,
+     closed with 0 joined.
+
+HARNESS NOTE: the browser had nine stale tabs from earlier probes and the first no longer answered
+`Runtime.enable` at all - a wedged renderer that looks exactly like a hung probe. The probe now opens a fresh
+tab and closes the old ones. Probe kept in the session scratchpad, not the tree.
+
 THE 2% WAS NEVER INVOICED ON TESTNET4, AND THRESHOLD_LN HAS NO OBJECT TO CARRY IT (2026-09-21).
 
 MEASURED, NO WRITES. The fence stays up: nothing was minted, claimed or spent for this.
