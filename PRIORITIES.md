@@ -22,9 +22,12 @@ Top item first. Finish and deploy before starting the next.
 
 # NOW  -  M3: what is left
 
-ON TOP: **there is no THRESHOLD_LN - only federation and guardians.** The publication slice is DONE. A
-paying FEDERATION round now OPENS AND SETTLES on seven signer nodes with no `createHeld` on the path.
-The enum is still NOT flipped - that is the next slice, and it was ordered after this measurement.
+ON TOP, WAITING ON THE FLEET PIN: **there is no THRESHOLD_LN - only federation and guardians.** A paying
+FEDERATION round OPENS AND SETTLES on seven signer nodes with no `createHeld` on the path, re-measured
+unchanged. The enum is deliberately NOT flipped: the `/round` refusal was written, measured at 10 reds
+that are all the hold-invoice stack, and reverted, because refusing a paying THRESHOLD_LN round and
+retiring `custody.js` are ONE act - and that goes last, after the fleet pin moves off `595f0df3`. The
+byte mapping is guarded meanwhile. Nothing here is blocked on a decision; it is blocked on the pin.
 
   THE MISSING CALL WAS THE FEE LOCK (`2eacf112`). Every node held `ticks 0` - no transcript, so the
   empty tally, not a split vote. The play socket refused every input batch with "stake not seen: this
