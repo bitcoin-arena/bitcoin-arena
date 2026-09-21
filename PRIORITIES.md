@@ -207,6 +207,10 @@ open line that is neither fenced nor parked.
     the RUN tick at HELD - the highest tick the node had received when Lightning showed the hold, which is
     node-observed and replay-pinned, needing no new field and no client assertion. The committed origin move
     converts `seen_ms` with `ticksForMs` and is therefore **wrong and must be replaced**.
+    **REPLACED 2026-09-21**: `stake_seen_tick` records that tick as `putStakeSeen` runs and
+    `startWindowOrigin` returns it, so the origin is now in the player's own run clock - the stream the
+    batches and marks already use. An entry with no such row keeps `joinTick` word for word. Suites: protocol
+    first-mark 5/5, stopped 2/2, node first-mark 14/14. Not live: the Daily is still pinned at df66c6d1.
   - PARKED BY RULING: guardians and `federationIsBonded`
 
 FOLLOW-ONS, one line each:
