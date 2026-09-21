@@ -122,6 +122,19 @@ against §5A.3's "every remainder in this document has a recipient". RULED (Dani
 recipient is the federation pool, 75% to the nodes and 25% to the developers, never burned - the same
 rule as the round slash remainder. Not taken here.
 
+§24B (Daniel 2026-09-21, spec `1add4655`): **a wallet with no backup cannot put money in.** The gate is
+built, measured and on the daily URL: the seed is 24 real BIP-39 words the player can restore anywhere,
+Settings holds exactly the name, the donation as six fixed choices, and the seed with Backup, and until
+every word has been typed back once in order the lobby says there is no backup and both Deposit and a
+paid join are refused. A free round never asks. Withdraw is never gated - taking your own money out does
+not need a backup. Seen on screen with a fresh wallet, not only in a suite.
+
+  NOT SEEN, three facts, each with its own cause and none of them the live pin: a listed PAID round to
+  refuse needs a federation, and FEDERATION is the only custody, so a local launcher opens free rounds
+  only; and the free round does not join on that path - the gate is not what stops it, the page falls
+  into practice with "no session yet: the page has named no node", which is the playable-client letter's
+  symptom, not this one's. Numbers and screenshots in TASKBOOK.md.
+
 HARD (Daniel 2026-09-21 17:08): **there is no THRESHOLD_LN. Only federation and guardians.** Spec
 changed (`c7b74585`). A round naming any other custody is invalid. Guardians are no longer parked:
 testnet on the 2-of-2 that runs, seated by its two bonded operators. The federation holds the money.
