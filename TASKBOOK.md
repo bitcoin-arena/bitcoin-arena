@@ -46543,3 +46543,36 @@ THE REST OF THE LETTER, measured at HEAD: one load-bearing line of law -
 116 THRESHOLD_LN fixture sites across 96 test files and 14 tool call-sites, plus ~1400 lines of
 hold-invoice machinery (`custody.js` 863, `lnd-port.js` 174, `lnd-settings.js` 94, `preflight.js` 283)
 that exists only for it. The spec already says it is withdrawn.
+
+## Step 1's blocker, with numbers: a 4-guardian federation cannot be bonded by a 2-node harness (2026-09-21)
+
+The federation stands up. `FEDERATION_READY`, and the node's own port reads it:
+
+    federation_id  423e010e320b0200d3a72e3fa0a6798263a43f768b50e22aee1d128ade12e563
+    guardians      4        threshold  3
+    keys           03222650..., 02ca5f41..., 032b495e..., 0218aa3d...
+    gateway        http://127.0.0.1:30170, joined, pegged in, vetted
+    invite         fed11qgqpw9thwvaz7te3xgmjuvpwxqhrzw3nxqcnyvf0qqqjqs37...
+
+And the bond can now name a guardian (`d353ba08`). What it cannot do is reach the count:
+
+    federationIsBonded wants   threshold = 3 DISTINCT bonded census nodes, each advertising a
+                               guardian key of that federation (`nodesTaken` is a Set, one key per node)
+    the harness has            2 census nodes - it is the Daily's 2-of-2
+    2 < 3                      so the gate cannot be satisfied, however the adverts are filled
+
+The guardian count is not a knob: `federation-hold-probe.sh` line 146 is `for g in 0 1 2 3`, hard-coded
+four, threshold three - the rehearsal's shape, not the one the 17:08 HARD names.
+
+THE HARD NAMES THE OTHER SHAPE: "testnet on the 2-of-2 that runs, seated by its two bonded operators",
+and §27A.6's testnet row agrees - `federation_nominal` 2, 2 of 2. A two-guardian federation has
+threshold 2, which two distinct bonded census nodes CAN satisfy.
+
+So step 1 is one parameter away, and it is a fork rather than a detail:
+  (a) make the probe's guardian count a parameter and stand a 2-guardian, threshold-2 federation - the
+      shape the HARD and the spec both name, and the smaller change; it edits rehearsal infrastructure;
+  (b) run a 3-signer-node harness instead, so three distinct census nodes exist for the 4/3 federation.
+
+Everything else for step 1 is in place: the advert, the plumbing (`signerNode: { stakeLocks }` is already
+spread into serve's options and `w5b.mjs` already opens a paying federation round through it), and a live
+federation with a vetted gateway.
