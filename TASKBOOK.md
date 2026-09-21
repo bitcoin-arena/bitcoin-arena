@@ -45998,3 +45998,36 @@ At testnet4's measured 723.3 s a block, six confirmations is about 72 minutes pe
 
 SUITES: protocol advert-witness + tx + chain + census-scan + census-resolve 60/60; blwp-node
 census-realblocks + census-chainview + bond-key + roster 46/46.
+
+## Has a census bond confirmed on testnet4? No - and the blocker is the wallet, not the chain (2026-09-21)
+
+Asked of bitcoind and of the code, not of a hypothesis.
+
+    listtransactions: 2 entries, both "receive" (156 and 104 confirmations) - the faucet deposits
+    "send" transactions, ever:      0
+    our mempool:                    16 entries, none of them ours
+    testnet4 height:                153371
+
+So there is no bond txid to print. It is not in a block, not in the mempool, and was never broadcast,
+because it was never funded. The wallet says why itself:
+
+    getwalletinfo -> "walletname": "testnet", "unlocked_until": 0, "private_keys_enabled": true
+    sendtoaddress -> error code: -13
+                     "Error: Please enter the wallet passphrase with walletpassphrase first."
+
+`unlocked_until: 0` is the node's own word for locked, right now.
+
+WHAT IS NOT THE BLOCKER, each measured rather than assumed:
+  - policy: the bond is `allowed=true` on `testmempoolaccept` under the same standardness rules testnet4
+    runs (measured at `5e5ef0e7`: seven witness items, largest 80 bytes, vsize 314)
+  - relay or a foreign miner: nothing has been offered to them
+  - the six-block gate: never entered. The code holds `rt.minable = false` for testnet4 and `bury(6)`
+    would wait for height 153377, but there is no bond to bury, so foreign confirms stand at 0 of 6.
+
+The order is: unlock -> fund (50000 sat bond + fee, from 682182) -> broadcast -> six foreign confirms
+(~72 min at 723.3 s a block) -> census sees it live. Everything after the unlock is built and measured.
+
+SUITES ON THIS PATH: protocol advert-witness + census-scan + census-resolve + tx + chain 60/60;
+blwp-node census-realblocks + census-chainview + bond-key + roster 46/46. The two listed reds are
+unchanged and belong to other letters: bundle-fresh 1/2, ghost-live 10/11. No Unity, no C# - this item
+has touched neither, so no PlayMode or EditMode run is owed.
