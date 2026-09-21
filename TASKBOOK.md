@@ -47133,3 +47133,38 @@ rounds through `run-2of2.mjs:63` today. So the refusal travels with that slice, 
 
 What the enum needs meanwhile is already true and now guarded: byte 0 decodes THRESHOLD_LN, byte 1
 decodes FEDERATION, and `custody-byte.test.js` fails if either moves.
+
+## The two structural burns in slash.js are gone: the remainder has a recipient (2026-09-22)
+
+RULED ALREADY (Daniel 2026-09-21), so this is the work and not a question: "the recipient is the
+federation pool, 75% to the nodes and 25% to the developers, never burned - the same rule as the round
+slash remainder." §5A.3: "every remainder in this document has a recipient."
+
+`slashDistribution` had three places that destroyed value, all inside one helper:
+
+    a half with NOBODY AT ALL to pay          burned the whole amount
+    the share of a member excluded as slashed  burned that share
+    the leftover satoshis with nobody to take  burned the remainder
+
+All three now add to `toPool`, and the function returns the pool's own split beside it - 75% nodes, 25%
+developers, the same numbers `federation-slash.js` already applies to a slashed guardian bond. `burned`
+is KEPT in the return and asserted `0n` everywhere rather than deleted: a field that quietly disappeared
+would let a burn come back unnoticed.
+
+SAFE TO CHANGE, checked first: `slashDistribution` has NO production callers - only its own test file.
+
+    slash-distribution.test.js   BEFORE 4 pass / 4 fail   AFTER 8 pass / 0 fail
+
+The four reds were one cause - the accounting helper summed `shares + burned`, and three assertions
+pinned the burn itself. They are updated to the ruled behaviour, with the pool's split asserted exactly:
+
+    nobody to pay at all      toPool 100000  ->  nodes 75000, developers 25000
+    no affected players       toPool  50000  ->  nodes 37500, developers 12500
+    one excluded member       toPool  25000
+    an excluded leftover      toPool     75   (50 with no players to pay, 25 the excluded share)
+    the clean case            toPool      0, burned 0
+
+Nothing was loosened: every `burned` assertion still stands, now at 0n, and `total()` still proves the
+bond is neither created nor lost.
+
+    protocol suite   292 pass / 0 fail  and  283 pass / 0 fail   (575, unchanged before and after)
