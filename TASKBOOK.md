@@ -46272,3 +46272,43 @@ not run and not owed - no C# or Unity asset in this item.
 THE TWO REMAINDERS ARE NOW THEIR OWN BOARD ITEMS, not parked inside this one: a node path for
 `federation-slash.js`, and the two structural burns in `slash.js` - whose recipient is RULED as the
 federation pool, 75/25, never burned.
+
+## §24B's gate, built and measured; the phrase it checks against is not there yet (2026-09-21)
+
+Measured first, three turns running, and the answer did not change: §24B landed at `1add4655` as SPEC
+ONLY - `FEDERATION.md` +4, `multiplayer_p2p.md` +88, no code, no C#. In the page and in every src tree:
+
+    "seed phrase" 0   "no backup" 0   "blwp-settings" 0   "blwp-balance" 0   "blwp-verify" 0
+    backupVerified / verifySeed / seedPhrase / phraseVerified: 0 files
+    §24B on PRIORITIES.md: 0
+
+So there was no gate to keep. `packages/blwp-client/src/backup-gate.js` is it, as pure functions the page
+will call: `verifyPhrase`, `verifyAndRecord`, `isVerified`, `mayDeposit`, `mayPayStake`,
+`mayStartFreeRound`, `mayJoin`, `backupLine`.
+
+MEASURED, backup-gate 8/8:
+
+    no verification yet   mayDeposit false, mayPayStake false, lobby line = "There is no backup..."
+    free round            mayJoin({paying:false}) TRUE, mayJoin({paying:true}) false
+    after one full verify mayDeposit TRUE, mayPayStake TRUE, lobby line empty
+    one wrong word        refused, names word 9, flag NOT set, deposit still shut
+    three of twelve       refused - "that is 3 words and the phrase is 12"; §23A.8's short check stays out
+    order                 a swapped pair is refused; capitals and stray spacing are not
+    hostile storage       treated as UNVERIFIED, never as verified
+
+And the three ways it could rot, each proven to go red by putting it back:
+
+    deposit ungated                     4 pass, 4 fail
+    verify accepting a prefix           7 pass, 1 fail
+    a wrong word recording the flag     6 pass, 2 fail
+    restored                            8 pass, 0 fail
+
+WHERE THE FLAG LIVES, and why it is not a hole: the player's own browser. Clearing it only makes him type
+the words again; forging it unlocks his OWN deposit against his OWN warning. This gate protects the
+player from losing his money, not the operator from the player, so there is nothing for a node to check.
+
+STILL A HOLE ON THIS LETTER, and it is why the gate is not wired to the page yet: THERE IS NO SEED
+PHRASE. The seed is 32 random bytes from `tabSeed` in sessionStorage; there is no BIP39 wordlist and no
+seed-to-words mapping anywhere in the tree (`display-name.js`'s two 64-word lists name a player, they do
+not encode a seed). §23A.8 says twelve or twenty-four words. Writing that from memory is how a player
+copies down words that will not restore his wallet, so it is named rather than guessed.
