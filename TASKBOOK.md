@@ -5,6 +5,39 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+CORRECTION: THE PAGE DOES SHOW WHAT TO PAY. IT IS NOT SHOWN AS A BOLT11 (2026-09-21).
+
+The entry before this one said the served invoice was "shown to nobody". That was measured only by hunting
+for an `lnbc` string, and it was the wrong instrument: a hold round is not paid by copying a bolt11, it is
+paid through a connected wallet. Asked properly, the wallet panel is up and populated:
+
+  wallet    shown true, display block
+  owed      "100 sat round: 2 sat fee and 0 sat donation out of it, 98 sat staked
+             · the wallet is asked 98 sat · HELD"
+  pay       "Pay the stake", shown, NOT disabled
+  nwc       empty field, shown - where a wallet connection string goes
+  spent     "nothing paid this session"
+
+So the player IS told the amount, the fee, the donation, the net stake and that the seat is HELD, and there
+is a live button. The bolt11 itself is deliberately not printed on this path - §22A's breakdown and a Pay
+button are, and `#blwp-deposit` stays empty because that box belongs to the federation-lock deposit.
+
+WHAT IS ACTUALLY MISSING FOR A PAID STAKE: a connected wallet. The probe has no NWC connection, so nothing
+pays, and `/stake` keeps answering 409 - 62 times in this run. That is not a hole in the page; it is the one
+step a headless client cannot perform.
+
+AND ONE REAL DEFECT THE PANEL NAMES ITSELF, which the bolt11 hunt would never have found:
+
+  why   "no entry id to ask about: setRound was never called and none was given"
+
+The wallet panel's own error line is set even though the owed line resolved - so `askWhatIsOwed` failed at
+least once before the entry existed, and the line it left behind is still on screen beside a correct
+breakdown. Recorded, not chased: it is a stale error string, not the reason the stake is unpaid.
+
+THE WALK, CORRECTED:
+  lobby YES | PLAY YES | entry accepted YES (201 x2) | invoice served YES (HELD, 98000 msat)
+  | what to pay SHOWN YES, with a live Pay button | wallet connected NO | paid NO | driving NO
+
 THE HOLD INVOICE IS SERVED AND THE PAGE DROPS IT ON THE FLOOR (2026-09-21).
 
 WHAT THE SEAT SERVED, read off the wire with `Network.getResponseBody` rather than inferred:

@@ -118,8 +118,12 @@ open line that is neither fenced nor parked.
     ANSWERED 2026-09-21: **nowhere.** The seat serves `{"amountMsat":"98000","state":"HELD","request":
     "lnbcrt980n..."}` - the net stake, held - and the bolt11 appears in no element, no visible text and no
     global; `#blwp-deposit` is hidden and empty because that box belongs to the federation-lock path. **The
-    player is never shown the invoice they must pay**, so it is never paid, so `/stake` stays 409 and no run
-    starts. Surfacing it is money UI and was not written.
+    player is never shown the invoice they must pay** - CORRECTED 2026-09-21, that was the wrong instrument:
+    a hold round is paid through a wallet, not by copying a bolt11. The wallet panel IS up and says
+    "100 sat round: 2 sat fee and 0 sat donation out of it, 98 sat staked · the wallet is asked 98 sat · HELD"
+    with a live **"Pay the stake"** button and an empty NWC field. **What is missing is a connected wallet**,
+    which is the one step a headless probe cannot do. Also noted: the panel carries a stale error line,
+    "no entry id to ask about: setRound was never called and none was given".
   - PARKED BY RULING: guardians and `federationIsBonded`
 
 FOLLOW-ONS, one line each:
