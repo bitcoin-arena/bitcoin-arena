@@ -26,6 +26,16 @@ M3: **a round can be played for real testnet sats** - the federation holds the m
 paid out, and the payout actually moves. W1-W7 are done, and so is every item the inventory's "M3 is done
 when" named that Daniel has not parked.
 
+DONE (2026-09-21): **the fixture family that has been "listed with cause" for a fortnight is cleared.** Four
+suites named a run length the core stopped using at c01cc655, so `Round.open` refused their contracts and
+every daemon-backed test in them died before a hold was made or a mark offered: **void-expiry 1/3 -> 3/3,
+equivocation 0/8 -> 14/14, ghost-field 16-and-unfinished -> 22/22, close-order (which never finished rather
+than failing)**. `five-of-seven 0/5 -> 21/21` had a different cause and it was the gate working: its
+federation became a legal one earlier in this letter, which turned the fee-lock door on, and its entries
+still brought a zeroed fee preimage - they carry the 2% locked to H(F) now. No assertion was touched.
+void-expiry is this letter's own subject, and two of its three tests were dark while that behaviour was
+being measured live. Commits `337f1eef`, `d5251e78`, `595c9da2`.
+
 DONE (2026-09-21): **§13B's start window - a paid entry's first mark now lands inside it, on both seats.**
 The origin is the tick the player had reached when the stake was seen HELD, and for a real paid entry that
 is **0**: at HELD the node has received nothing, because play begins once the hold is seen (§23.1 step 5).
