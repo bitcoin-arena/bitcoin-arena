@@ -46448,3 +46448,32 @@ which is the playable-client letter's symptom and is recorded there, not here.
 
 So §24B's gate is shown for Deposit and for the free round, and the paid-join refusal waits on a bond that
 names a guardian.
+
+## The backup gate is withdrawn: a warning, not a refusal (2026-09-21, 20:01 ruling)
+
+PLAY is always allowed, free or paid, and so is putting money in. The earlier gate is overridden, so the
+refusals are gone from the code rather than left exported and unused - `mayDeposit`, `mayPayStake`,
+`mayJoin` and `mayStartFreeRound` are deleted, the page's `askGate` with them, and the bundle stopped
+exporting them. The tests that asserted the gate went too: a test holding down a withdrawn rule is a rule
+somebody wires back up by accident. backup-gate is 8 tests now, not 10.
+
+MEASURED ON SCREEN, fresh profile, `blwp.backup.verified` null:
+
+    warning shown   true
+    box             1280 x 62 px, 17px bold, 2px #ff9d2e border on #3a2000
+    text            "This wallet has no backup. Lose this browser and the money in it is gone -
+                     write your 24 words down now."
+    button          "Back up now"
+    the CTA         opens Settings with the 24 words already on screen
+    nothing refused after PLAY: money-why "", flag still null, warning still up while playing
+
+AND BACKUP CLEARS IT:
+
+    all 24 typed back -> "Backed up. Keep those 24 words somewhere safe."
+    warning displayed -> false
+    flag              -> b23b7851ecfd419c...  (the digest of that seed, still bound)
+
+NOT MEASURED: PLAY clicked on a LISTED row. The local lobby did not populate on the last pass
+(`BLWP_UNITY_LOBBY.showing` undefined, row null), which is the "page has named no node" path recorded on
+the playable-client letter. What is measured is that nothing in this letter refuses it: money-why stayed
+empty and the flag stayed null, and the refusals no longer exist in the source.
