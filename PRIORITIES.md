@@ -98,11 +98,39 @@ WHAT IS LEFT FOR M3 (the fee-lock line has been MEASURED but not spent; the rest
     **DIAGNOSED, NOT SPENT** - the spend stays fenced; what is finished is knowing exactly why it cannot
     happen on this custody. Checked from both ends: no invoice AND no payment of 20000 msat on either node.
 
-NEXT M3 ITEM, ON TOP (2026-09-21): **a played stake must settle.** A paid entry now joins, pays, plays its
-whole run and marks inside its window - and when the run ends the hold is still `ACCEPTED` at the committee
-lnd and `HELD` in both stores, 98000 msat in flight in nobody's balance. Measured on two finished runs
-(`b067061102fb`, `c7e8066eac26`): run FINISHED, 171 and 179 checkpoints at both seats, round not closed,
-`results` 0. This is the close and payout path, NOT §13B - that letter is done and does not grow into this.
+NEXT M3 ITEM, ON TOP (2026-09-21): **a played stake must settle, and the hold cannot outlive the round.**
+
+CORRECTION, MEASURED: the line here first said the hold was `ACCEPTED`/`HELD` with the round not closed.
+That was a snapshot taken before the close ran. Read again afterwards, both seats agree: **both rounds ARE
+closed, results ARE written - 2 per seat, outcome FAILED - and both holds ended EXPIRED**, the row saying
+so in its own words, *"its HTLC expired at height 92721 and this node's chain is at 92728: the hold went
+back to its player"*.
+
+WHERE IT STOPS, and it is not the close. `settleTheStakes` ran (241 ms, 254 ms) and reached
+`settleHeldInvoices`; the shipped rule, run over the real entry, refuses by name:
+**"the operator would keep 98000 msat: a pool of 98000 against 0 handed out"**. That is `payout.js`
+protecting the player: a round nobody delivered has a pool and nobody to hand it to, so no stake moves and
+every hold expires home (§23.2's default). `close_holds`, `lock_settlements`, `lock_settlement_moves` and
+`payouts` are all EMPTY for these two rounds on both seats, because the refusal comes before a row is made.
+
+THE SHARE, counted not guessed: **19 holds in each store, 19 EXPIRED, 0 SETTLED, 0 CANCELED.** Of the 19,
+outcomes are 10 FORFEIT, 2 FAILED and 7 with no result row - **0 DELIVERED**. No paid run has ever reached
+the gate, so the settle path has never had a lawful reason to move money. A second class sits beside the
+no-qualifier one: 7 entries carry a `close_holds` FORFEIT stuck at `signed_ms` NULL after 67-95 attempts,
+*"no quorum at 0 of 2, and the player signed two chains: 13B forfeits the entry"* - the §13B mis-charge the
+start-window letter fixed, so those should not recur.
+
+AND THE BLOCKER UNDER ALL OF IT, which no delivery would get past. §13A makes FINAL the objection window's
+word, and this round's contract names **objectionWindowMs 600000**. So a stake may not settle until
+**open -> close (414.9 s) + 600 s = about 1015 s**. The hold measured from its own creation to its HTLC
+expiry is **83 blocks in 427 s**. **427 s < 1015 s**: the stake is guaranteed to time out home about 588 s
+before its result can become FINAL. Even at the `STAKE_EXPIRY_BLOCKS` 144 the node asks for, the same window
+gives 742 s - still short. This is §23's "a hold it issues may never be seen settled" on a different clock.
+Two candidates for a ruling, and NOT retuning `STAKE_EXPIRY_BLOCKS` to fit: the Daily's block rate (it mined
+83 blocks in 427 s, and a rehearsal at that rate is not rehearsing Bitcoin), or a node-side refusal to open a
+paying round whose hold cannot outlive the round on the chain it observes.
+
+This is the close and payout path, NOT §13B - that letter is done and does not grow into this.
 
 NEXT M3 ITEM, NOT STARTED: **a playable client slice** - nothing of M3 reaches a player yet. It is the first
 open line that is neither fenced nor parked.
