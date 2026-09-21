@@ -46108,3 +46108,33 @@ presenting its own unused notes, and the escrow output under the arbitration k-o
 computes the split a liquidation would pay; nothing yet opens a window, publishes a list, accepts a claim
 or builds that output. No node path pays anything on a halt today because no node path implements a
 halt at all - §23A is law with one module under it, not a running system.
+
+## The halt remainder, settled: split, never burned (2026-09-21, HEAD 5578d27f is the law)
+
+I flipped this twice and the ruling settled it: **do not invent a burn of player money.** The law is
+5578d27f's - a halt pays every unspent note at face value first, and only the UNCLAIMED remainder is
+split 75/25. The burn I wrote at 796cf8d5 was the invention; my 5578d27f revert was right and stands.
+
+What my revert left behind was a broken sentence, because it collided with cd73dc1b's late-claim text:
+
+    then the remainder is
+    goes 75% to the nodes and 25% to the developers as above
+
+Repaired, and the late-claim tail is now written where it belongs: a note shown late is still paid from
+what is left until two weeks after the halt - the player who was offline for a weekend is not the one the
+deadline is for - and only the remainder after THAT is split. "No player's money is ever burned: what is
+unclaimed after two weeks is paid out, not destroyed."
+
+AND THE CLOCKS ARE CODE NOW, not a table to remember. `MAINNET_CLOCKS`, `liquidationSchedule`,
+`remainderMaySplit`:
+
+    abandon_blocks     288    48 h
+    departure_notice   432    72 h
+    founding_window    432    72 h
+    drain_blocks      2016    14 d   - the drain AND the late-claim tail
+    claim_blocks       216    36 h   - the arbitration claim window
+
+The trap this holds shut: the claim window closing is NOT when the nodes get paid. Proven by making the
+remainder splittable at `claim_blocks` instead of `drain_blocks` - 8 pass, 1 fail; restored, 9 pass.
+
+SUITES: protocol federation-slash 9/9.
