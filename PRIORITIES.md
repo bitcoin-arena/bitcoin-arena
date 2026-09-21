@@ -124,6 +124,12 @@ open line that is neither fenced nor parked.
     with a live **"Pay the stake"** button and an empty NWC field. **What is missing is a connected wallet**,
     which is the one step a headless probe cannot do. Also noted: the panel carries a stale error line,
     "no entry id to ask about: setRound was never called and none was given".
+    RULED AND DONE 2026-09-21 (page-only, stamp 0.0.1866): the overlay is skipped where every recipient is
+    loopback - **0 dialogs**, PLAY goes straight through - and the stale line is cleared (`why` is ""). The
+    seats answer `/entry` 201 x2 and `/invoice` 200 HELD at 98000 msat. The page's Pay button was clicked and
+    answered **"this tab has no wallet connected"**: the hook is fine, there is no NWC wallet on this host.
+    With `lnd-alice` standing in for the player's wallet, **the bolt11 was paid and `/stake` answered 200 in
+    ~5 s - the stake is seen by both seats.** Settlement is not measured yet; this letter stays open.
   - PARKED BY RULING: guardians and `federationIsBonded`
 
 FOLLOW-ONS, one line each:

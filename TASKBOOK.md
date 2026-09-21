@@ -5,6 +5,52 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE DONATION OVERLAY IS GONE AND THE BROWSER'S STAKE IS PAID AND SEEN (2026-09-21, page-only, stamp 0.0.1866).
+
+THE RULING, IMPLEMENTED: a donation nobody can pay must not stand in front of the stake. Where every
+recipient is loopback, the overlay is not shown and the round joins straight through. Donations are NOT
+removed from the protocol - the round still names its set, the client still carries it, and a REACHABLE set
+still asks. Only the ASKING is skipped, and only when the answer could not be paid:
+
+    onlyLoopback = /https?:\/\/(127\.0\.0\.1|localhost|\[::1\])/ AND no non-loopback http(s) in the line
+
+  proved on four lines before shipping:  all-loopback -> skip;  mixed -> ASK;  real -> ASK;  empty -> ASK
+
+AND THE STALE ERROR IS CLEARED: `askWhatIsOwed` now empties `walletWhy` when the quote arrives, so the panel
+cannot show "no entry id to ask about: setRound was never called and none was given" beside a correct
+breakdown. Measured after: `why` is "".
+
+THE WALK, AFTER THE SKIP:
+
+  javascript dialogs                0      (the overlay is not on screen and captures no clicks)
+  console                           [blwp] donation not asked: every recipient is loopback, which no wallet
+                                    can reach - Recipients: 66.67% to http://127.0.0.1:18777/lnurlp/...
+  the seats answered                {"/handout":{"201":2},"/entry":{"201":2},"/invoice":{"200":1},
+                                     "/stake":{"409":60}}
+  wallet panel                      owed "100 sat round: 2 sat fee and 0 sat donation out of it, 98 sat
+                                    staked · the wallet is asked 98 sat · HELD"
+                                    pay "Pay the stake", shown, NOT disabled;  why ""  (was the stale line)
+
+CAN THE PROBE PAY THROUGH THE PAGE? NO, AND THE PAGE SAYS WHY. The button is ordinary DOM and was clicked
+once; the page answered **"this tab has no wallet connected"**, `spent` stayed "nothing paid this session",
+and `/stake` stayed 409. The hook is not missing - the WALLET is. This path pays through NWC and there is no
+NWC wallet on this host; 127.0.0.1:18777 is the Daily launcher's own fake lnurlp donation recipient
+("BLWP local test donation recipient"), not a wallet.
+
+SO THE PLAYER'S WALLET WAS STOOD IN FOR, AND THE STAKE WENT THROUGH. The Daily's holds are on a real regtest
+lnd (BLWP_LND_RPC 127.0.0.1:30410, dir lnd-committee), and `lnd-alice` sits beside it, synced, one active
+channel. Alice paid the bolt11 the seat served:
+
+    paying from alice: lnbcrt980n1p4tp20tpp5jnx6zdmuy...
+    /stake answered 200 after ~5 s - THE STAKE IS SEEN
+    /stake answers across the run: {"200":2,"409":60}
+
+THE WALK NOW: lobby YES | PLAY YES | entry 201 x2 | invoice HELD 98000 msat | what to pay SHOWN | stake PAID
+and SEEN by both seats | settled NOT YET MEASURED.
+
+WHAT THIS DOES NOT CLAIM: the page's own Pay button is still unexercised - alice is outside the browser, and
+she is standing in for a wallet the player would connect. The letter is not finished until a stake SETTLES.
+
 CORRECTION: THE PAGE DOES SHOW WHAT TO PAY. IT IS NOT SHOWN AS A BOLT11 (2026-09-21).
 
 The entry before this one said the served invoice was "shown to nobody". That was measured only by hunting
