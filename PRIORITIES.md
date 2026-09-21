@@ -148,6 +148,12 @@ open line that is neither fenced nor parked.
     the close path are innocent. The deadline is 900 ticks from `joinTick 0`, but a paid join must fetch the
     donation set and seats, deal a handout, post an entry, ask for an invoice, **wait for a human to pay it**,
     open a session and settle the world - about 87 s here.
+    THE THREE TICKS, 2026-09-21: both seats see the stake HELD at **tick 4094**, the first mark attempt is at
+    **tick 5100**, the deadline today is **tick 900**. Moving the origin to stake-seen-HELD and keeping 900
+    gives a window of 4094..4994 - **still 106 ticks (1.8 s) short**, because the browser spends 1006 ticks
+    after HELD opening the session, agreeing the world seed and letting the world settle. The ruling removes
+    4200 of the 4306 ticks but does not on its own land the mark, so no code was changed: that 106 is a
+    decision, not a silent repair.
   - PARKED BY RULING: guardians and `federationIsBonded`
 
 FOLLOW-ONS, one line each:

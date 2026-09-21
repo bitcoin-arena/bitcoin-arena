@@ -5,6 +5,41 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE THREE TICKS, MEASURED BEFORE ANY CHANGE - AND THE RULED ORIGIN IS 106 TICKS SHORT (2026-09-21).
+
+One paid join, the five-field `mark()` print still in place. The round's own clock: startTimeMs
+1789964298000, blockTicks 10800 over 180 s, so 60 ticks a second.
+
+  stake HELD, seat A      1789964365623   ->  tick 4057   (67.6 s into the round)
+  stake HELD, seat B      1789964366229   ->  tick 4094   (68.2 s in)
+  BOTH seats HELD at                          tick 4094
+  first mark attempt                          tick 5100   (85.0 s in)
+  current deadline        joinTick 0 + 900 =  tick  900   -> the mark is 4200 ticks late (70.0 s)
+
+  gap from HELD to the first mark attempt:    1006 ticks  (16.8 s)
+
+WITH THE ORIGIN MOVED TO STAKE-SEEN-HELD, AS RULED, AND 900 KEPT:
+
+  window                  tick 4094 .. 4994
+  first mark              tick 5100
+  STILL SHORT BY          106 ticks (1.8 s)
+
+So the ruling is right and necessary - it removes 4200 ticks of the 4306 - but on this run it does not on its
+own let the first mark land. The remaining 1006-tick gap is what the browser spends AFTER both seats report
+the stake HELD: opening the session against the chain, agreeing the world seed with both nodes, and letting
+the world settle before it will sign anything.
+
+NO CODE WAS CHANGED. Step 5 of the letter says that if the first mark still misses 900 ticks after the new
+origin, print the new gap and stop - do not widen 900, do not loosen a test, do not guess a second clock.
+That number is 106 ticks, and it is knowable BEFORE the change rather than after, so the change was not
+written: shipping an origin move that still forfeits would be a silent partial repair, and no deploy was
+allowed this turn to measure it live anyway.
+
+WHERE THE ORIGIN LIVES, for whoever makes the change: `firstMarkOutcome({ joinTick, deadlineTicks,
+firstMark })` in `protocol/src/first-mark.js:44`, `lastTick = joinTick + deadlineTicks` at :47, called from
+`blwp-node/src/round.js:651` and `:1802`, both passing `joined.joinTick` - the entry contract's own field,
+which the browser sets to 0.
+
 THE FIRST MARK IS 72 SECONDS LATE, AND EVERY MARK AFTER IT IS ANOTHER FIRST (2026-09-21).
 
 `mark()`'s five fields, wrapped live from the inspector - no deploy, no source change, the values the client
