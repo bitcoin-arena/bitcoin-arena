@@ -205,11 +205,13 @@ LATER ITEM, NOT THIS LETTER: **give the federation's money law a node path.** No
 or builds the escrow output under the arbitration keys. The clocks, the cap and the liquidation split are
 law that goes red when changed, not a running system.
 
-LATER ITEM, NOT THIS LETTER, AND THE RULE IS ALREADY CALLED: **the two structural burns in `slash.js`.**
-It still burns when there is nobody at all to pay and when an excluded member's share is taken off,
-against §5A.3's "every remainder in this document has a recipient". RULED (Daniel 2026-09-21): the
-recipient is the federation pool, 75% to the nodes and 25% to the developers, never burned - the same
-rule as the round slash remainder. Not taken here.
+DONE (2026-09-22, `09dbabfe`): **the two structural burns in `slash.js` are gone.** It burned when there
+was nobody at all to pay, when an excluded member's share was taken off, and on the leftover satoshis -
+against §5A.3's "every remainder in this document has a recipient". All three now go to the federation
+pool on the ruled split, 75% nodes / 25% developers, the same rule `federation-slash.js` applies to a
+guardian bond. `burned` is kept in the return and asserted `0n` everywhere rather than deleted, so a burn
+cannot come back unnoticed; `slashDistribution` has no production callers, so the blast radius was its
+own suite. slash-distribution 4 pass/4 fail -> 8 pass/0 fail; protocol 292/0 and 283/0, unchanged.
 
 §24B (Daniel 2026-09-21, spec `1add4655`, gate overridden 20:01): **a wallet with no backup is warned,
 never refused.** The seed is 24 real BIP-39 words the player can restore anywhere; Settings holds exactly
