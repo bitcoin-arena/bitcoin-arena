@@ -3,6 +3,45 @@
 Measurements, comments, done tests, letter notes.
 Not the status board. Status lives in PRIORITIES.md.
 
+Date convention: when a number is measured, write it here with the commit.
+
+INBOUND RE-MEASURED, AND A 980000 MSAT HOLD FITS 108 TIMES OVER (2026-09-21).
+
+A correction of the DONE line of 2026-09-20, not a new item: that line's figures no longer described the
+channel, because settles since have moved money A-ward.
+
+  channel dce6199b, capacity 200000 sat, ACTIVE at both gateways, 0 pending HTLCs, 0 unsettled, commit_fee 2810
+
+                          2026-09-20 (the DONE line)   2026-09-21 (now)     moved
+  A 0274e261 inbound              116530 sat               108690 sat      -7840
+  B 025f17c2 inbound               80000 sat                87840 sat      +7840
+
+THE 7840 IS ACCOUNTED FOR, NOT ASSUMED. A's invoice list: 39 invoices, 9 SETTLED, and the settled amounts are
+`{980000: 8, 100000000: 1}` - EIGHT settled holds of 980000 msat, which is 7840000 msat exactly, plus the one
+100000 sat invoice that bought the inbound in the first place. Two of those eight are this session's live
+reconstruction runs; the other six are earlier custody runs. 30 are CANCELED, which is the qualifier's hold
+handed back each time.
+
+WHAT A HOLD OF 980000 MSAT MEETS ON A. The hold is the NET stake - the 1000000 msat stake less §22A's 2% -
+and that is the number that has to be receivable, not the gross. (The Daily advertises a 100 sat PAID round,
+a different and smaller number; this is sized for 980000 msat because that is what a real settle has moved.)
+
+  A's inbound                     108690000 msat     the hold is 0.90% of it
+  B's side, less its 2000 reserve 106690000 msat     108 such holds fit
+  max_pending_amt_msat             198000000 msat    202 x the hold; 101 x the two the tool takes at once
+  min_htlc_msat                            1 msat    the hold is far above the floor
+  max_accepted_htlcs                     483         with 0 in flight
+  channel reserve                 2000 sat a side    both sides hold it comfortably
+
+NO GAP, AND NO CHANGE INVENTED. Every limit clears the hold by two orders of magnitude, so the accept probe
+was not run - the instruction was to stop at the measurement if the numbers say it would succeed. The
+prediction put on the record before measuring - "A's inbound is about 108690 sat, so a 980 sat hold is
+roughly 1% and I expect no gap" - is what landed, to the sat.
+
+WHAT WOULD BITE FIRST, which local_balance alone would not have shown: B's side funds the HTLC, so the
+binding number is B's local balance less B's channel reserve - 106690 sat - not A's inbound as such. At 980
+sat a hold that is 108 holds of room; the channel would refuse the 109th.
+
 A TESTNET4 HOLD SETTLED ON A PREIMAGE THE SEATS REBUILT (2026-09-21).
 
   shares asked of the peer   1   (GET http://127.0.0.1:46649/share)

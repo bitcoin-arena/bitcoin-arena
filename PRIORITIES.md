@@ -97,6 +97,10 @@ in rather than reconstructed from five of seven shares. FROST closes that; it is
 DONE (2026-09-20), in order:
   1. **Two live testnet4 LND gateways hold inbound, paid each way.** A `0274e261...` inbound 116530,
      B `025f17c2...` inbound 80000, channel `dce6199b...` active both sides.
+     RE-MEASURED 2026-09-21, because settles since moved money A-ward: **A inbound 116530 -> 108690 sat,
+     B 80000 -> 87840**, the 7840 accounted for by eight settled 980000 msat holds on A. Still active, 0
+     pending HTLCs. **A 980000 msat hold - the net stake - fits 108 times over**: 0.90% of A's inbound,
+     against a 2000 sat reserve, max_pending 198000000 msat, min_htlc 1. No gap, so nothing was changed.
   2. **Both gateways survive a restart and unlock themselves** - real enabled units and
      `wallet-unlock-password-file` on each; no password in git.
   3. **A paying round will not open without two independent gateways.** The gate is `lightningPreflight`
