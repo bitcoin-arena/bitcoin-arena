@@ -127,12 +127,20 @@ against §5A.3's "every remainder in this document has a recipient". RULED (Dani
 recipient is the federation pool, 75% to the nodes and 25% to the developers, never burned - the same
 rule as the round slash remainder. Not taken here.
 
-§24B (Daniel 2026-09-21, spec `1add4655`): **a wallet with no backup cannot put money in.** The gate is
-built, measured and on the daily URL: the seed is 24 real BIP-39 words the player can restore anywhere,
-Settings holds exactly the name, the donation as six fixed choices, and the seed with Backup, and until
-every word has been typed back once in order the lobby says there is no backup and both Deposit and a
-paid join are refused. A free round never asks. Withdraw is never gated - taking your own money out does
-not need a backup. Seen on screen with a fresh wallet, not only in a suite.
+§24B (Daniel 2026-09-21, spec `1add4655`, gate overridden 20:01): **a wallet with no backup is warned,
+never refused.** The seed is 24 real BIP-39 words the player can restore anywhere; Settings holds exactly
+the name, the donation as six fixed choices, and the seed with Backup. Until every word has been typed
+back once in order, the lobby carries a large warning with its own Backup button - measured on screen at
+1280 x 62 px, "This wallet has no backup. Lose this browser and the money in it is gone" - and typing the
+words back clears it. NOTHING IS REFUSED: the earlier `mayDeposit` / `mayPayStake` / `mayJoin` refusals
+are deleted from the source and are `undefined` in the bundle the daily URL serves. On the daily URL now
+(`2749da47`). Numbers in TASKBOOK.md.
+
+  STILL TO SEE: PLAY on a LISTED row with no backup. The daily lobby lists nothing because the page is at
+  network id `66f5caba` and the live signer nodes are pinned at `595f0df3`, id `b07c4a09` - two different
+  networks, and the pin is not this letter's to move. The local harness at HEAD is where that row can be
+  clicked. And a PAID row cannot be shown anywhere yet: the launcher's bond advertises `guardianOf: []`,
+  so `federationIsBonded` counts zero of the threshold - the guardians/federation letter, not this one.
 
   NOT SEEN, and each with its own cause, none of them the live pin. A listed PAID round to refuse needs a
   federation whose guardians are bonded: the toolchain is on this machine, but `regtest-bond.mjs` posts
