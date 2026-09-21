@@ -103,11 +103,13 @@ half burned, nothing to the successor's - and a slash is never restitution: it d
 and does not unfreeze a halt. Every parameter it introduces is pinned for all three networks. Spec only:
 two .md files, no code and no C#. Section list and the checks in TASKBOOK.md.
 
-HARD (Daniel 2026-09-21 17:01, "Löse das"): **the Daily plays for real testnet4 sats. No hybrid.**
-The launcher waits for six real testnet4 confirmations. Do not `rt.mine(6)` to bury bonds on a chain
-the operator mines — that lets the operator grind the beacon of a round holding real money. Stake for
-this measurement is **17701 sat** so both the hold and the 2% fee clear the 354 sat dust (TASKBOOK).
-100 sat stays refused on testnet4. THIS IS THE LIVE ITEM.
+HARD (Daniel 2026-09-21 17:08): **there is no THRESHOLD_LN. Only federation and guardians.** Spec
+changed (`c7b74585`). A round naming any other custody is invalid. Guardians are no longer parked:
+testnet on the 2-of-2 that runs, seated by its two bonded operators. The federation holds the money.
+No hold invoices. No committee lnd as the stake. THIS IS THE LIVE ITEM.
+
+The 17:01 chain rule still holds under that: six real testnet4 confirmations, no `rt.mine(6)`, no
+hybrid beacon the operator can grind.
 
 
 DONE (2026-09-21): **the fixture family that has been "listed with cause" for a fortnight is cleared.** Four
