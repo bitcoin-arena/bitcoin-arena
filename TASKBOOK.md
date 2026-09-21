@@ -47038,3 +47038,42 @@ THE COST THE PLAN DID NOT PRICE: for the 8, "update the door expectation" is exa
 there is no expectation to update - the round is their SUBJECT, not their assertion, and most of them are
 exercising the hold-invoice stack that the agreed sequence retires LAST, because the Daily still runs on
 it at pin 595f0df3. Refusing at the door removes their subject rather than changing an assertion.
+
+## The door refusal was built, measured and reverted: it IS the hold-stack retirement (2026-09-22)
+
+Written, not guessed at. The check went in at the `/round` door, ahead of the FEDERATION-only branch,
+refusing a contract that names THRESHOLD_LN by name and leaving the byte alone. Decode proved unmoved
+while it was in:
+
+    CUSTODY          ["THRESHOLD_LN","FEDERATION"]
+    byte 0 decodes   THRESHOLD_LN         byte 1 decodes   FEDERATION
+    custodyByte      THRESHOLD_LN -> 0    FEDERATION -> 1
+
+Then it was measured against the node suites, and the result is the reason it is not in the tree:
+
+    files 1-20    1 red
+    files 21-36   9 distinct reds, 113 tests    (green again after the revert: 113 pass, 0 fail)
+
+Narrowing the refusal to rounds that TAKE A STAKE changed nothing - the same nine - because the three
+shared fixtures (`window-fixture.js:146`, `pool-fixture.js:57`, `winnings-fixture.js:19`) build PAYING
+THRESHOLD_LN rounds with a zero `federationId`. Their own comment says what they are: "NO FEDERATION IS
+NAMED, SO THE ROUND IS NOT A FEDERATION ROUND (W7): THRESHOLD_LN, the hold invoices these rounds run."
+
+And the reds say it plainly - they are the hold stack itself:
+
+    a joined player is quoted the hold invoice their own entry names
+    a daemon with no Lightning still signer nodes, and says why it quotes nothing
+    closing a round on the daemon reaches the money path, and moves no stake
+    the committee agreeing on a round nobody finished still moves no stake
+
+THE CONFLICT, MEASURED RATHER THAN ARGUED: refusing a paying THRESHOLD_LN round at the door and retiring
+the hold-invoice stack are THE SAME ACT. There is no seam between them. Migrating those fixtures to
+FEDERATION does not preserve the tests either - a stake lock is not a hold invoice, so the suites whose
+subject is `createHeld`, `/invoice` and `seenPaid` lose their subject rather than change an assertion.
+
+That collides with the standing order "retire the hold-invoice stack; custody.js LAST, because Daily
+still runs on it until the fleet pin moves" - and the Daily does still run it, at pin 595f0df3, through
+`run-2of2.mjs:63`.
+
+REVERTED. `server.js` is untouched in the tree and files 21-36 are 113 pass / 0 fail again. Nothing was
+loosened and no fixture was migrated to make a red go away.
