@@ -45646,3 +45646,24 @@ WHAT WOULD SETTLE IT, when it is somebody's letter: re-pin GENESIS_CONFIG_HASH a
 `computeGenesisConfigHash()`, then measure that the Daily still opens a paying round, that a bond rebuilt
 from the published body and genesis alone still verifies (94d9b1c5's test), and that a contract signed
 before the re-pin is refused by name rather than silently accepted.
+
+## The same round again, on the two fixes found closing the letter (2026-09-21, round 23d96fdf)
+
+Re-measured on `595f0df3` after the per-entry fee gate and the one-flight guard, because both changed the
+money path and a node-side change is not done until it has run live.
+
+    13:57:44   addr[3B552880->win@127.0.0.1:18778] on disk, round still open, nothing owed
+    core       DELIVERED at tick 2709
+    14:00:08   port 9351: 1 tab, 0 on the game | port 9352: 1 tab, 0 on the game
+    14:02:10   closed; window 600000 ms
+    +599s      fees HELD, stakes HELD, winnings none
+    +619s      fees SETTLED (both), winner's stake CANCELLED, loser's SETTLED, winnings PAID/98000
+    alice      996106 -> 996302 sat   (+98 own stake back, +98 the pool's share)
+    committee  1000224 -> 1000228     (98 out, the loser's 98 in, 2000 + 2000 msat of fee)
+    lnd        one payment, 14:12:22
+
+AND ONE LINE FEWER IN THE ENDPOINT'S LOG, which is the one-flight guard showing itself. On ee903c10 the
+endpoint was asked for a pay request TWICE, once per seat, and answered one callback. Here it was asked
+ONCE: the second seat is refused at the guard before it reads the row, so it never reaches the address at
+all. The money was already pay-once - this is the same answer reached without asking a stranger's server
+twice for an invoice nobody will pay.

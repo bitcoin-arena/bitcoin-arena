@@ -42,6 +42,13 @@ sampled once at launch that had since gone seven times faster. Measurements in T
 
 THIS IS THE LIVE ITEM. Stop whatever else is open.
 
+CONFIRMED AGAIN (round 23d96fdf on `595f0df3`): closing the letter out turned up two more faults and both
+are fixed - one player's open objection window held up every OTHER player's fee, which is the coupling
+§23.5 gave the fee its own lock to prevent; and a player with a wallet AND an address had two paths into
+`payWinnings` that could interleave across the peers check and both pay (measured: "the pool went out 2
+times to one entry"). Re-measured live afterwards: nothing at +599 s, everything at +619 s, alice
+996106 -> 996302, one payment.
+
 LISTED, NOT TAKEN - **the network id does not commit to the rules being played.** `encodeGameConfig()`
 hashes BLOCK_TICKS; the ids were pinned at 94d9b1c5 and c01cc655 moved the run length afterwards, so
 protocol/genesis.test.js has two reds and the Daily holds stakes under an id that describes a game with a
