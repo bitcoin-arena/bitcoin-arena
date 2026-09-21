@@ -46477,3 +46477,37 @@ NOT MEASURED: PLAY clicked on a LISTED row. The local lobby did not populate on 
 (`BLWP_UNITY_LOBBY.showing` undefined, row null), which is the "page has named no node" path recorded on
 the playable-client letter. What is measured is that nothing in this letter refuses it: money-why stayed
 empty and the flag stayed null, and the refusals no longer exist in the source.
+
+## PLAY on a listed row with no backup (2026-09-21, local harness at HEAD)
+
+The local page served through the REAL fill-template path - the raw copy I served earlier carried
+`{{{ LOADER_FILENAME }}}` and Unity never booted, which is why the lobby was empty then; filled, it boots.
+
+    listed row        {"id":"1b68fd25...","joinable":true,"agree":2,"needed":2,"rect":[253,209,420,30]}
+    flag              null
+    warning before    shown, 1280 x 62 px, "This wallet has no backup. Lose this browser and the m...",
+                      button "Back up now"
+    real mouse click on the row, then PLAY:
+    playEnabled       true
+    core              RUNNING - "[blwp] the page is slower than the core: ... 965 ticks jumped to stay in
+                      the round's own time" - so PLAY started and the game is stepping
+    money-why         ""            <- nothing refused
+    warning after     shown, 1280 x 62, CTA present
+    flag after        null          <- playing did not set it, and nothing asked for it
+
+So all three of the things this letter had left: PLAY starts, the warning and its Backup button stay up
+through it, and nothing in that click path refuses for a missing backup. The refusals cannot refuse -
+they are deleted from the source and `undefined` in the bundle.
+
+NOT the same thing, and still the playable-client letter's: the SESSION does not attach. "[blwp] no
+session yet: the page has named no node", so `BLWP_ROUND` stays false while the core drives. Measured
+here only to show it is not the backup warning doing it.
+
+DAILY URL, reported separately as asked: the alias serves the new page (CTA present, `mayDeposit` and
+`mayJoin` undefined in the served bundle, `2749da47`). Its lobby lists nothing, and the cause is the
+network-id split - page `66f5caba`, live signer nodes pinned at `595f0df3` with `b07c4a09`. A finding,
+not a pin to move.
+
+SUITES AT HEAD: blwp-client 38/38 (backup-gate, bip39, bundle, bundle-fresh, page-stake, session-pay);
+protocol 73/73; blwp-node 74/74; core 142/142. No C# changed - `git diff --name-only HEAD -- "*.cs"` is
+empty - so PlayMode and EditMode are not owed and no Unity build was started.
