@@ -46953,3 +46953,52 @@ UNCOMMITTED, DELIBERATELY: `packages/blwp-node/tools/w5b.mjs` carries 29 added l
 enquiry - the per-node `kept` detail (node id, whether the signature matches, `madeMs`), the "each node
 asked for the forfeit" round of direct `/forfeit` calls, and the five-seconds-later re-look. Measurement
 prints only; no rule and no settle logic. Left out of this docs commit.
+
+## The fixture now hands the fee lock, and signer-node-lock is 5/5 (2026-09-22)
+
+Confirmed first, as ordered: all four failures were ONE assertion, raised in `joinedWithLock` at
+`lock-fixture.js:143` on the `/entry` door. The node's rule is at `server.js:2139` - an entry whose
+`feeLockOutpoint.txid` or `feePreimage` is all zero is refused when the round mints fee locks - and the
+client has always satisfied it: `join.js:837/841` put F and the outpoint in the entry, `client.js:609`
+hands the lock itself right after the stake lock. The fixture did neither.
+
+WHAT CHANGED, in the fixture only:
+  - the entry carries a real `feePreimage` and a real `feeLockOutpoint` instead of 32 zero bytes each;
+  - the matching fee lock is put in the fake federation and handed to `/fee-lock`, the way the client
+    hands it - `paymentImage` H(F), `amountMsat` the entry's fee, the round's claim key, the player's
+    refund key;
+  - only for a FEDERATION round, which is the client's own condition (`if (this.stakeLock.feeLock)`).
+    Without that guard the non-federation test broke: "that round names no federation, so its fee is not
+    a lock" - a red I made and then removed;
+  - `port.asked` is zeroed when the fixture returns. That counter measures how often the NODE asks the
+    federation, and the test that reads it wants the two asks the STAKE lock's handover costs. The
+    fixture used to ask nothing, so 2 was already that meaning; handing a fee lock adds two of the
+    fixture's own. Zeroing keeps the expectation at 2 - THE EXPECTED VALUE IS NOT TOUCHED.
+
+Nothing in the node changed. No status was loosened, no settle added, `createHeld` never called.
+
+    signer-node-lock.test.js     BEFORE 1 pass / 4 fail, file never exited (124 at the cap)
+                                 AFTER  5 pass / 0 fail, exit 0 - the hang went with the throw
+
+    the player's own lock is verified ... /stake answers held        409 -> 201
+    a lock that is not the entry's is refused by name                409 -> 201
+    a second entry naming a lock already committed for another       409 -> 201
+    where a player's verified lock is, by its refund key (W5a)       409 -> 201
+    a round that names no federation takes no lock                   201 -> 201 (unchanged)
+
+THE HANG IS GONE BECAUSE THE THROW IS GONE: the daemon served at `lock-fixture.js:114` is closed by the
+fixture's try/catch only around the `/round` post, so the `/entry` assert outside it left the daemon
+listening and node never exited. With the assert passing there is nothing to leak.
+
+EVERY OTHER SUITE THAT USES THIS FIXTURE, each run ALONE under the cap:
+    lock-client 1/0   forfeit 2/0   first-mark 15/0   one-signer-node-refused 5/0   outage 9/0
+    lock-settlement 15/0
+
+`lock-settlement` IS TIMING-FLAKY, and it is not this change: three runs gave 14/15 on one test, 14/15 on
+a DIFFERENT test ("SUBMITTING" where "ACCEPTED" was wanted - a state still in flight), then 15/15. A
+different test each time is flakiness, not a regression. My first reading of it was a bad comparison -
+four files together with the new fixture against one file alone with the old one, two variables at once.
+
+`five-of-seven` is not re-run here: it needs 470 s and the cap is 180 s.
+
+`one-signer-node-refused` passing 5/0 alone confirms the earlier call: contention, not a product red.
