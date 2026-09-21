@@ -63,8 +63,12 @@ RED, LISTED WITH CAUSE, NOT CHASED AND NOT CAUSED HERE: `equivocation` 0/8 and `
 same fixture family as the window-fixture red - equivocation dies in `Round.open` on "that round says a run
 is 9000 ticks and this core ends one at 10800", five-of-seven on the fee-lock door with 409 !== 201, both
 before any mark is sent. Measured against the commit before the §13B change and they fail identically.
-`blwp-client/ghost-field` is slow enough that it does not finish inside `timeout 180`; its shipped-files
-test - the one a deploy rests on - passes.
+`blwp-client/ghost-field` is the same family again: `test/ghost-field.test.js:60` builds its round contract
+with `blockTicks: 9000`, so every test that stands up a real daemon dies in `Round.open` - 16 passed and 6
+failed in the one run that got far enough, and all 6 are the daemon-backed subscribe/ghost tests. Its
+shipped-files test - the one a deploy rests on - passes on this tree. The file does not finish inside
+`timeout 180`, so the count above is from a run that was killed before node printed the causes; the cause
+is read from the fixture, not guessed.
 
 THE START WINDOW NOW OPENS AT THE TICK THE PLAYER HAD REACHED WHEN THE STAKE WAS HELD (2026-09-21).
 
