@@ -42,9 +42,20 @@ The enum is still NOT flipped - that is the next slice, and it was ordered after
 
   Ports 18571..18577 and 18787. The Daily's 18080, 18081 and 18777 untouched.
 
-  LISTED RED, NOT LOOSENED: `signer-node-lock.test.js` exits 124 at the 180 s cap, like five-of-seven
-  (21/0 in 470 s). Also listed: objection-window (red before this letter), ghost-live, replay-solids,
-  two-titles. The one-signer refusal passes alone - contention, not a product red.
+  THE FOUR FIGURES ARE ACCOUNTED FOR (`c326ad8f`): the forfeit's non-keeper is a different node each run
+  (B, then A and C, then F) because `forfeitOf` stops at the first node that answers; asked directly
+  after the window six of seven give a signature and the seventh answers "signed that forfeit over
+  another list, and keeps no second share" - a FROST signing-set answer, not late, refused or released.
+  The 9820 msat is the gateway's send fee, quoted before payment (979968 - 9820 = 970148 = what lnd
+  received, `remainingBalanceMsat` 0). A browser player already hands the fee lock at `client.js:609`,
+  inside join and before any input batch - the shipped client was right and only w5b was missing it.
+
+  LISTED RED, CORRECTED: `signer-node-lock.test.js` is NOT the five-of-seven wall-time class as I said.
+  It has FOUR tests failing in 35-163 ms plus a file that never terminates, so the detail never prints
+  under the cap. Not from the fee-lock handoff: the only source change in `1e9628cd..HEAD` is one
+  refusal string in `guardiansBonded`, which this suite does not exercise. Cause not yet read.
+  Also listed: objection-window (red before this letter), ghost-live, replay-solids, two-titles. The
+  one-signer refusal passes alone - contention, not a product red.
 
   FIXED IN PASSING (`1e9628cd`): **the page served could enter no paying round.** Two of its three money
   scripts, `blwp-client.js` and `blwp-core.js`, had fallen off `known-good-clients.json` when I rebuilt
