@@ -5,6 +5,39 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE FIRST-MARK WINDOW NOW STARTS AT THE STAKE BEING HELD (2026-09-21).
+
+`firstMarkOutcome` took `joinTick` as the origin - which a paying browser sets to 0 - so the 900 ticks were
+spent while the player waited to pay. It takes an `originTick` now, and `round.js` supplies it from
+`stake_seen.seen_ms`, the row the node already writes the first time Lightning shows the hold, converted with
+`ticksForMs` against the round's own `startTimeMs`. Nothing else moved: 900 is unchanged, the clocks are
+unchanged, §13B and the close path are untouched.
+
+CALLERS THAT NAME NO ORIGIN KEEP THE OLD BEHAVIOUR, WORDING INCLUDED - a free round has no stake to wait for,
+so its join tick IS when it can drive, and it has no `stake_seen` row.
+
+APPLIED TO THE TWO RUNS ALREADY MEASURED, through the real function:
+
+  run          origin        deadline     first mark    verdict
+  today        join 0        tick  900    5220          FORFEIT   (this is the bug)
+  run A        stake held 4703  tick 5603 5220          none - INSIDE the window
+  run B        stake held 4094  tick 4994 5100          FORFEIT, late by 106 ticks (1.8 s)
+  free round   join 0        tick  900     120          none - unchanged
+
+So the origin move lands run A and still misses run B by 106 ticks - the exact shortfall predicted from the
+measurement two letters ago. Per the letter: the new late-by is printed and nothing is widened to chase it.
+
+  protocol/test/first-mark.test.js   5 / 5
+  protocol/test/stopped.test.js      2 / 2
+  blwp-node/test/first-mark.test.js 14 / 14
+
+NOT MEASURED LIVE, AND THIS IS THE REASON. The Daily's signer nodes do NOT run this worktree: the service
+`blwp-daily-signer-nodes` has `WorkingDirectory=/mnt/bitcoin/blwp-2of2/code`, a separate checkout pinned at
+commit `df66c6d1` on a detached HEAD. Restarting the service reloaded that old code, which is why the live
+run still printed "join 0 + 900". Making this live means moving that checkout from df66c6d1 to this branch -
+every commit of this session at once, not just the origin - which is a deploy with a blast radius nobody has
+ruled on. So the change is committed and the live measurement waits.
+
 THE TWO CLOCKS, MEASURED - AND THEY ARE ONLY 329 OF THE 4320 LATE TICKS (2026-09-21).
 
 One paid run. Instrument only: nothing compared, converted or changed. Round start 1789965214000, deadline

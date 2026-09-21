@@ -165,6 +165,12 @@ open line that is neither fenced nor parked.
     core runs 53.2 ticks/s against the round's assumed 60 and starts 1000 round ticks early. **Reconciling the
     clocks alone would leave the mark 3991 ticks late - it would still FORFEIT and the stake would still
     VOID.**
+    FIXED 2026-09-21 (not yet live): the window's origin is now the tick the stake was seen HELD, read from
+    `stake_seen.seen_ms` - 900 unchanged, clocks unchanged, §13B untouched. Against the measured runs: HELD
+    4703 + 900 = 5603 admits the mark at 5220 (**inside**), HELD 4094 + 900 = 4994 still misses 5100 by
+    **106 ticks**. Suites: protocol first-mark 5/5, stopped 2/2, node first-mark 14/14. **The Daily runs
+    `/mnt/bitcoin/blwp-2of2/code` pinned at df66c6d1, not this worktree**, so making it live is a separate
+    decision.
   - PARKED BY RULING: guardians and `federationIsBonded`
 
 FOLLOW-ONS, one line each:
