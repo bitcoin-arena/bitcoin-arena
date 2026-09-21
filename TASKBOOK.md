@@ -45838,3 +45838,46 @@ SUITES. Spec-only, so none are owed. The two reds on the branch were re-confirme
 other letters: bundle-fresh 1/2 (`blwp-client.js` still carries the pre-re-pin network id; depends on the
 live pin moving to HEAD) and ghost-live 10/11 (a loaded run draws identical to an unloaded one; depends on
 the core). No PlayMode or EditMode run is owed - no C# exists in this range.
+
+## Gate 4 on testnet4: the bond cannot be relayed, and the wallet is locked (2026-09-21, 5ce1934b)
+
+Ruled: the Daily plays for real testnet4 sats, no hybrid, the launcher waits for six real confirmations
+instead of `rt.mine(6)`, stake 17701 sat. Two blockers were measured before a sat moved, and neither is
+the mining change.
+
+BLOCKER A - THE BOND TRANSACTION IS NON-STANDARD, BY DESIGN, AND SO CANNOT REACH A TESTNET4 BLOCK.
+
+§5A.2 requires the signed advertisement to travel in the bond spend's witness, and `regtest-bond.mjs`
+puts it there as a tapscript witness stack item:
+
+    witnesses: [scriptPathWitness({ stack: [schnorr.sign(sighash, carrierSecret), body], ... })]
+
+Measured, with no wallet and nothing spent:
+
+    signed advertisement body, as it goes in the witness stack: 266 bytes
+    Bitcoin Core tapscript policy limit per stack item:          80 bytes
+    -> NON-STANDARD by 186 bytes
+
+That is exactly what the helper's own comment records - "consensus allows and mempool policy does not
+('bad-witness-nonstandard'), so `generateblock` is what measures consensus without asking the mempool".
+On regtest `generateblock` puts the transaction straight into a block. testnet4 has no such door: the
+transaction has to relay, our node runs standard policy (no `acceptnonstdtxn` in `/mnt/bitcoin/tn4/
+bitcoin.conf`), and the blocks are mined by other people at 635 Ph/s who will never see a transaction
+their own mempools rejected.
+
+So there is no census bond on testnet4 with the bond format as specified, and with no census there is no
+beacon and no round. This is a §5A.2 question - where the advertisement body travels - not a launcher one.
+
+BLOCKER B - THE tn4 WALLET IS ENCRYPTED.
+
+    bitcoin-cli -datadir=/mnt/bitcoin/tn4 sendtoaddress ...
+    -> error code -13: "Please enter the wallet passphrase with walletpassphrase first."
+
+Wallet `testnet`, trusted balance 682182 sat, chain testnet4 at 153367, not in IBD. Nothing can be funded
+or posted without that passphrase. I did not go looking for it.
+
+WHAT IS MERELY WORK, ONCE A AND B ARE ANSWERED:
+  - `fund(spk, '1.0')` funds each bond with 1 BTC and `bondSats` defaults to 50000000 (0.5 BTC). We hold
+    682182 sat. The protocol minimum is `bondMinSats` 50000 sat, so both numbers come down.
+  - `fund()` calls `mine(1)` to confirm and the census path calls `rt.mine(6)` to bury. Both become waits:
+    at the measured 723.3 s a block, six confirmations is about 72 minutes per launcher start.
