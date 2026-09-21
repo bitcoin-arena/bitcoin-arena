@@ -67,7 +67,7 @@ voiding the entry at once. `roundWindowsAreValid` now refuses a non-positive or 
 NO FLOOR IS INVENTED: §13A's "reference: 10 minutes" is a reference, and any positive window still opens.
 Counts in TASKBOOK.
 
-WHAT IS LEFT FOR M3, none of it started, in no ruled order yet:
+WHAT IS LEFT FOR M3 (the fee-lock line has been MEASURED but not spent; the rest is unstarted):
   - the testnet4 **fee-lock spend** - the 2% actually moving to the sitting seats on testnet4 (fenced by
     ruling; the hold path is proven, the fee lock has never been minted there).
     MEASURED 2026-09-21, no writes: **the 2% was never invoiced.** `netStakeMsat` takes the fee off before
