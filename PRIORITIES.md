@@ -205,13 +205,18 @@ LATER ITEM, NOT THIS LETTER: **give the federation's money law a node path.** No
 or builds the escrow output under the arbitration keys. The clocks, the cap and the liquidation split are
 law that goes red when changed, not a running system.
 
-DONE (2026-09-22, `09dbabfe`): **the two structural burns in `slash.js` are gone.** It burned when there
-was nobody at all to pay, when an excluded member's share was taken off, and on the leftover satoshis -
-against §5A.3's "every remainder in this document has a recipient". All three now go to the federation
-pool on the ruled split, 75% nodes / 25% developers, the same rule `federation-slash.js` applies to a
-guardian bond. `burned` is kept in the return and asserted `0n` everywhere rather than deleted, so a burn
-cannot come back unnoticed; `slashDistribution` has no production callers, so the blast radius was its
-own suite. slash-distribution 4 pass/4 fail -> 8 pass/0 fail; protocol 292/0 and 283/0, unchanged.
+DONE (2026-09-22, `09dbabfe` then the fix below): **a slashed bond's second half goes to the census minus
+the round's seats, and nothing is burned.** The first commit closed the LEFTOVER paths only - nobody to
+pay, an excluded share, the odd satoshi - and left the main recipient as the withdrawn rule: it paid
+`honestCommittee`, which §5A.3 is the set that SUBTRACTS ("minus the round's own seats (the witnesses)").
+Measured on a clean 100000 sat bond, before: seats 25000 each and the census nothing. After: **players
+50000, seats 0, nodes 37500, developers 12500.** Uneven 100001 -> developers 12501, total exact; 206 ->
+77 over three as 25/26/26, leftovers handed out in the round's own order. An empty eligible set THROWS
+and names its 37500 sat rather than inventing a recipient; a node slashed at that height inside the
+census is refused, not dropped, because `deriveCensus` already filters spent bonds. One shared
+`splitNodesDevelopers` now serves both `slash.js` and `federation-slash.js`. Suites: slash-distribution
+8/0 -> 9/0 (rewritten to the spec numbers, not loosened), federation-slash 12/0, protocol 292/0 and
+296/0, blwp-node files 1-20 125/0.
 
 §24B (Daniel 2026-09-21, spec `1add4655`, gate overridden 20:01): **a wallet with no backup is warned,
 never refused.** The seed is 24 real BIP-39 words the player can restore anywhere; Settings holds exactly

@@ -47168,3 +47168,59 @@ Nothing was loosened: every `burned` assertion still stands, now at 0n, and `tot
 bond is neither created nor lost.
 
     protocol suite   292 pass / 0 fail  and  283 pass / 0 fail   (575, unchanged before and after)
+
+## The second half of a slashed bond goes to the census minus the seats (2026-09-22)
+
+§5A.3, spec line 811: "half to the affected players of that round; the other half 75% evenly to the
+active census nodes at the slashing height MINUS THE ROUND'S OWN SEATS (the witnesses) and 25% to the
+donation set of §22A - the developers."
+
+`slashDistribution` paid that half to `honestCommittee` - the round's own seats - which is the exact set
+the sentence subtracts. The burn work before this fixed where the LEFTOVERS went and left the main
+recipient as the withdrawn rule.
+
+    BEFORE, clean 100000 sat bond   toPlayers 50000 | seats 25000 each | census 0 | developers 0
+    AFTER                           toPlayers 50000 | seats 0 | nodes 37500 | developers 12500
+
+STEP 1, THE PRECONDITION, CHECKED RATHER THAN ASSUMED: a slash SPENDS the bond output, and
+`deriveCensus` filters spent bonds (`census.js:224`, `.filter((e) => !e.spent)`). So the active census at
+the slashing height already omits a node slashed at that height, and no second exclusion is added. A
+caller that hands one in anyway is REFUSED by name - "a node slashed at this height is still inside the
+active census ... this is not silently dropped" - because a census counting a spent bond is wrong and
+quietly patching it would hide that.
+
+STEP 3, THE THREE CLOSING MEASUREMENTS:
+
+    clean 100000    toPlayers 50000, seats 0/0, toNodes 37500, developers 12500, each other 12500,
+                    burned 0, total 100000
+    uneven 100001   toPlayers 50000, toNodes 37500, developers 12501, each other 12500, total 100001
+                    - the odd satoshi lands on the donation set because toNodes floors first
+    uneven 206      toNodes 77 over three nodes -> 25, 26, 26; the two leftovers are handed out in
+                    ascending H(roundId || pubkey), never dropped; total 206
+    empty eligible  THROWS and names the sats: "37500 sat of a slashed bond have no recipient: the
+                    active census at the slashing height is empty once the round's 2 seat(s) are taken
+                    out, and §5A.3 names nobody else - not the seats, not a burn, not the donation set"
+
+The sum guard now covers all three destinations: `paid + toDevelopers + toPool !== bondSats` throws.
+
+STEP 4, ONE SPLIT FOR BOTH PATHS: `splitNodesDevelopers` in `constants.js`, floor the nodes and give the
+rest to the developers so the two always add back exactly. `slash.js` and `federation-slash.js` both call
+it; the arithmetic is no longer written twice.
+
+STEP 5, COMMENTS THAT NAMED A RECIPIENT THE CODE DOES NOT PAY: the file header and the doc block of
+`slash.js`, its excluded-shares line ("the excluded shares are burned instead"), the quotations in
+`constants.js` and `contracts.js`, and `federation-slash.js`'s "burns the rest" - which was false against
+its own line 72, where the code splits and returns `burned: 0n`. A grep for "half burned" or "remaining
+honest committee" in `protocol/src` now returns only the one line that says what the rule is NOT.
+
+STEP 6, SUITES, BEFORE AND AFTER:
+
+    slash-distribution.test.js   8 pass / 0 fail (old rule)  ->  9 pass / 0 fail (spec numbers)
+    federation-slash.test.js     12 pass / 0 fail            ->  12 pass / 0 fail
+    protocol, chunk 1 of 2       292 pass / 0 fail           ->  292 pass / 0 fail
+    protocol, chunk 2 of 2       283 pass / 0 fail           ->  296 pass / 0 fail (the rewritten suite)
+    blwp-node, files 1-20        125 pass / 0 fail           ->  125 pass / 0 fail
+
+Nothing was loosened. The suite was rewritten because its premise - that the committee is paid - is the
+withdrawn rule; every assertion in it is stricter than before, including the sum, the seats at zero, the
+leftover order, and `burned` at 0n in four shapes.
