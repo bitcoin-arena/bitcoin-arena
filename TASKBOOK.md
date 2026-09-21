@@ -46830,3 +46830,35 @@ reachable. CUSTODY is still not flipped.
 MY OWN MEASUREMENT WAS WRONG ONCE AND IS FIXED: I grouped signed results by `resultId`, which hashes the
 signing node in, so seven nodes agreeing on one run showed as seven different runs. `runId` is that hash
 with the node zeroed and is what the tally compares. The count per run is being re-measured with it.
+
+## The count, measured by runId: 7 of 7 on one run, 5 needed (2026-09-21)
+
+Re-run with the corrected grouping. Every one of the seven nodes holds seven signed results and they are
+all the SAME run:
+
+    A..G   results 7   signed ["1e139051 x7"]   void false   ticks 1550
+
+    signed one run   7 of 7          needed 5      met, with two to spare
+    winner forfeit   ok true, 34400 ms after close, verifies true,
+                     claimPk is the round's, kept by 6 of 7 signer nodes
+    loser forfeit    refused: "that run is FAILED with score 4 and this round's minimum is 1:
+                     not a qualifier, so its stake lock is not forfeited"
+
+The locks, before and after:
+
+    winner  73e76ee8ded6:0   locked 980000 msat   held -> NONE   credited 979968 msat
+                             (32 msat federation fee)
+    loser   70fb59f4acfe:0   locked 980000 msat   held -> NONE at its expiry, never forfeited
+    withdraw  Success, 970148 msat out, lnd SETTLED, lnd received 970148 msat
+
+The outcome is the simulation's: the winner's run DELIVERED and qualified, the loser's FAILED with score
+4 under a minimum of 1, and nothing in the client or the test decided either. `reachesLightning` stayed
+null on all seven throughout.
+
+## blwp-node, the package finished file by file under the 180 s cap (2026-09-21)
+
+    signer-node-committee 6/0   signer-node-relay 5/0   slash-filing 3/0
+    stake-committed 3/0         stake-lock-port 3/0
+
+NOT MEASURED: `signer-node-lock.test.js` exits 124 at 180 s - like five-of-seven it wants more wall time
+than the cap allows, and the cap is a HARD. Listed, not loosened, and not run over the cap again.
