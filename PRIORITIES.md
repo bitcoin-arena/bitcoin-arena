@@ -46,6 +46,27 @@ lock, which is the production shape.
 FEE-LOCK is still tested and now on a legal federation: the door refuses an entry that brings none at both
 signer nodes, and the settlement claims 2 fee locks, 40000 msat, paying 2 signer nodes 36000 msat.
 
+LIVE - AND IT BELONGS TO THIS LETTER, NOT THE NEXT M3 ITEM: **nothing proves a VOID unwinds the FEE lock.**
+The ruling has three limbs and only two are measured. "A finished round with no qualifier still pays the
+seats" is green, and "the loser's stake returns" is green - but "a VOID round claims nothing, stakes AND fee
+locks unwind, the operator must not profit from failure" has no test behind it. Until this letter the
+fixture's entries brought no fee lock, so no VOID case could ever have covered one: across the tree
+`feeOutpoint` appears in four suites and only `lock-settlement` asserts a fee lock's fate, only for rounds
+that SETTLED. The suites that do exercise ENTRY_VOID assert it must NOT happen. So the one limb that protects
+against the operator profiting from a technical failure is the one with no evidence.
+
+DONE (2026-09-21): **a round with a loser and no qualifier pays no stake and still pays the seats.** §22A's
+2% is seat compensation for a round that actually ran - not a qualifier's prize and not operator profit -
+ruled by Daniel and then read off the settler rather than assumed: ACCEPTED with two submissions, **2000 msat
+to each of the two sitting seats** (2% of 200000 gross), **neither player key paid**, **both stake locks
+still held** so they expire back, and **both fee locks claimed** so the 2% came from them. A VOID round still
+claims nothing. The test was split rather than retuned and now pins more than it did.
+**The five suites under this fixture are 45/45** (lock-settlement 15/15, outage 9/9, first-mark 14/14,
+one-signer-node-refused 5/5, forfeit 2/2). Measurements in TASKBOOK.
+Listed, not chased: `first-mark` "late start at close (2)" is an intermittent catch-up race - B is taken down
+and brought back late, then finality is read on a clock, so it can read PROVISIONALLY_FINAL where FINAL is
+asked; red once in three runs. Not the money path.
+
 DONE (2026-09-21): **the fixture's winner delivers again, and the fee is taken and paid out.** `wordsAt` drove
 0.7 throttle with the wheel sawing and the brake held 40 ticks in 700; it reached x 145.9 m while the gate is
 at 168.6 m - and the truck spawns at z 71.4 m with the mouth only 34 m wide, so the miss was the mouth, not
