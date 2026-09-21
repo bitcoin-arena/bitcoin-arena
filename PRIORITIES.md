@@ -24,9 +24,11 @@ Top item first. Finish and deploy before starting the next.
 
 HARD (Daniel 2026-09-21 13:25, clarified 13:33 / 13:54): **winnings are always sent. There is no Collect.**
 Paying the stake stays a normal hold invoice — any wallet can pay it, **without NWC**. The page shows
-the bolt11. NWC is optional auto-pay on the way in, and the return path for winnings. Do not refuse a
-paid join because NWC is missing. Measure: a delivered truck, nobody presses Collect, the winner's
-balance rises by the pool share; a second path does not pay twice.
+the bolt11. **Payout also works without NWC** (Daniel 13:54: "ohne NWC geht nix" is about *Auszahlen*).
+If NWC is connected, `make_invoice` as now. If not, a Lightning address on the tab (once, not Collect);
+the node LNURL-pays that address the owed msat. Do not refuse a paid join because NWC is missing.
+Measure: hold invoice paid from any wallet, no NWC, DELIVERED, winner balance rises; a second path
+does not pay twice.
 
 THIS IS THE LIVE ITEM. Stop whatever else is open.
 
