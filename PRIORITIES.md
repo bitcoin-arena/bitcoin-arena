@@ -50,6 +50,17 @@ The enum is still NOT flipped - that is the next slice, and it was ordered after
   received, `remainingBalanceMsat` 0). A browser player already hands the fee lock at `client.js:609`,
   inside join and before any input batch - the shipped client was right and only w5b was missing it.
 
+  THE DOOR REFUSAL IS MEASURED AND DEFERRED (`5942e96d`, `387ca0ea`): a `/round` door refusing a new
+  THRESHOLD_LN round was written and run - 1 red in files 1-20, 9 in files 21-36, all of them the
+  hold-invoice stack, because the three shared fixtures build PAYING THRESHOLD_LN rounds. Refusing at the
+  door and retiring that stack are ONE act with no seam, and the standing order puts `custody.js` last,
+  after the fleet pin moves off 595f0df3 - the Daily still opens such rounds through `run-2of2.mjs:63`.
+  Reverted; 113 pass / 0 fail again. The enum is left as §23.6 asks and is now GUARDED: byte 0 decodes
+  THRESHOLD_LN, byte 1 FEDERATION, and `custody-byte.test.js` (3/0) fails if either moves - proven red at
+  1 pass / 2 fail with the entry deleted. Re-measured after all of it: the seven-node settle unchanged -
+  7 of 7 signed one run, winner 980000 msat held -> none with 979968 credited, loser returned at expiry,
+  withdraw Success 970148, lnd SETTLED, `reachesLightning` null on all seven.
+
   FIXED (`ba3d089f`): **a joined lock now brings the fee lock the node already requires.** The four
   `signer-node-lock` reds were one fixture hole, not four node bugs: `joinedWithLock` built its entry
   with a zeroed `feePreimage` and `feeLockOutpoint`, and the node refuses that when the round mints fee

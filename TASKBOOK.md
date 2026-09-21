@@ -47098,3 +47098,38 @@ The array was restored byte-identical afterwards; `constants.js` is unchanged in
 This asserts only that the two bytes keep meaning what they have always meant. It does NOT say a new
 round may carry THRESHOLD_LN - refusing that is the door's job, and the measurement above shows that door
 cannot land before the hold-invoice stack is retired.
+
+## The seven-node settle re-measured unchanged (2026-09-22)
+
+Third attempt, clean. The first did not reproduce and the reason was measured, not guessed: every fee
+lock refused with "that fee lock expires at 2892, before 2763 + 144: a loser could refund before
+settlement" - the 144-block margin eaten while the probe itself mined during setup, so `stakeSeen` never
+landed and the transcript was `ticks 0` again. The second attempt was void: I started it before the first
+had released port 18571. Transient, and the third run says so.
+
+    committee            signerNodes 7, receiptsNeeded 5
+    reachesLightning     [null x 7]  - createHeld unreachable throughout
+    claim key            attested 7, needed 5, key 0282b857c23d1f97
+    fee locks            committed 7 of 7 for BOTH players
+    signed results       6a36e162 x7 on every one of the seven - 7 of 7 on one run, threshold 5
+    winner forfeit       ok, 35701 ms after close, verifies true, claimPk is the round's
+    loser forfeit        refused: FAILED with score 192 under a minimum of 1, not a qualifier
+    winner lock          1262fa11fc2b:0  980000 msat  held -> NONE, 979968 credited (32 msat fee)
+    loser lock           30221d1dab5d:0  980000 msat  -> none at expiry, never forfeited
+    withdraw             Success, 970148 msat out, remaining 0, lnd SETTLED, lnd received 970148
+
+Every figure matches the earlier run. The federation still holds the money, Lightning is still only at
+the edge, and nothing on this path can reach `createHeld`.
+
+## Where this letter stops, and why the door refusal is not in it
+
+Done and measured: the inventory, the board copy, the custody-byte guard, and this re-measure.
+
+NOT DONE, and deliberately: a `/round` door that refuses a new THRESHOLD_LN round. It was written and
+measured (`5942e96d`) and it is the hold-invoice stack's retirement - 10 distinct reds across the node
+suites, all of them the hold stack, and no seam between the two acts. The standing order is that
+`custody.js` goes LAST, after the fleet pin moves off 595f0df3, and the Daily still opens THRESHOLD_LN
+rounds through `run-2of2.mjs:63` today. So the refusal travels with that slice, not this one.
+
+What the enum needs meanwhile is already true and now guarded: byte 0 decodes THRESHOLD_LN, byte 1
+decodes FEDERATION, and `custody-byte.test.js` fails if either moves.
