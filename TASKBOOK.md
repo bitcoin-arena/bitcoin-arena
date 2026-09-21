@@ -46624,3 +46624,42 @@ built, and only the list was behind.
     after   blwp-client.js 90 pinned, blwp-core.js 29, the other three untouched ("already listed")
     client-hash.test.js  3 pass 0 fail (was 0 pass 3 fail)
     blwp-node chunk 1/121 files  125 pass 0 fail (was 122 pass 3 fail)
+
+## A third bonded operator opens a paying FEDERATION round (2026-09-21)
+
+The blocker was arithmetic, so the fix is an operator, not a flag. `round-2of2.mjs` takes `portC` and
+stands a third signer node - same store, same identity, same bond, same daemon - and `guardianOf` can now
+be nested, one guardian per node, because §23.6 counts DISTINCT nodes and "a node vouches for one
+guardian". One list repeated three times would say each operator runs the whole federation.
+
+Measured against the federation that is actually running here (`tools/federation-round-3.mjs`, the same
+money stack w5b uses, but stood up ON THE CHAIN so `POST /round` runs the gate at all):
+
+    federation            423e010e320b0200  guardians 4  threshold 3   (read through the node's own port)
+    guardianOf, per node  A -> 03222650bf082e7b   B -> 02ca5f410e3bf70a   C -> 032b495e389e6b21
+
+    TWO NODES (NODES=2)   REFUSED by 18581, by name:
+                          "this signer node assigns no round on an unbonded federation (§23.6): 2 of that
+                           federation's 4 guardians are bonded census nodes, and its threshold is 3:
+                           a creator could hold it alone"
+
+    THREE NODES           OPENED
+                          round ac661297954109e5  custody FEDERATION  stakeMsat 1000000
+                          nodes 3  gameVerifySlots 3  settlementSlots 3
+
+Both halves ran the same code against the same federation; only the operator count differs. That is the
+gate running, not a silence read as a pass.
+
+Two things the harness had to be told, both measured rather than guessed:
+  - the probe's chain answers to -rpcuser/-rpcpassword and has the federation's own wallet loaded, so
+    every call names `blwp` (cli `-rpcwallet`, http `/wallet/blwp`); without it the bonds could not be paid
+    for, "Multiple wallets are loaded";
+  - port 18777 is the LIVE DAILY's recipients door (pid 1330222, cwd /mnt/bitcoin/blwp-2of2/code, the
+    systemd unit's Main PID). The harness binds 18787 instead. It was not killed.
+
+Slots follow the node count: `assignSignerNodes` checks the census's assigned set against `contract.nodes`
+exactly, both ways, so three bonded nodes with two slots would seat two of three and the contract could
+not know which.
+
+STILL OPEN on this item: the round OPENS; it has not yet been driven to SETTLE with a stake locked, and
+`createHeld` has not yet been shown absent along a settled path. CUSTODY is untouched.
