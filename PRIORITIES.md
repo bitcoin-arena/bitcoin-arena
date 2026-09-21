@@ -103,15 +103,12 @@ half burned, nothing to the successor's - and a slash is never restitution: it d
 and does not unfreeze a halt. Every parameter it introduces is pinned for all three networks. Spec only:
 two .md files, no code and no C#. Section list and the checks in TASKBOOK.md.
 
-NEXT M3 ITEM, ON TOP AND BLOCKED ON A RULING: **the Daily plays for real testnet4 sats.** Three gates are
-measured and pass - the pair answers and `gatewaysAreIndependent` is 2 of 2, node A issues and cancels a
-real `lntb` hold invoice, and the network id now commits to the rules. The fourth is blocked, and not on
-plumbing: the launcher's ROUND chain is regtest by construction (`rt.mine(6)` buries the bonds to census
-depth), so a testnet4 Daily is reachable today only as a hybrid whose rounds are seeded on a chain the
-operator mines - the operator could grind the beacon of a round holding real money. THE RULING NEEDED: is
-that hybrid acceptable for one measurement, or does this letter first teach the launcher to wait for six
-real confirmations instead of mining them? And the stake size: at 100 sat both HTLCs are dust (limit
-354 sat), the hold clears at 362 sat and hold-and-fee only at 17701 sat. Numbers in TASKBOOK.md.
+HARD (Daniel 2026-09-21 17:01, "Löse das"): **the Daily plays for real testnet4 sats. No hybrid.**
+The launcher waits for six real testnet4 confirmations. Do not `rt.mine(6)` to bury bonds on a chain
+the operator mines — that lets the operator grind the beacon of a round holding real money. Stake for
+this measurement is **17701 sat** so both the hold and the 2% fee clear the 354 sat dust (TASKBOOK).
+100 sat stays refused on testnet4. THIS IS THE LIVE ITEM.
+
 
 DONE (2026-09-21): **the fixture family that has been "listed with cause" for a fortnight is cleared.** Four
 suites named a run length the core stopped using at c01cc655, so `Round.open` refused their contracts and
