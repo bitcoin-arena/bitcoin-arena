@@ -5,6 +5,45 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+CORRECTION: THERE ARE NOT TWO CLOCKS. THE MARK AND joinTick ARE THE SAME CLOCK (2026-09-21).
+
+Read out of the seat's own store, for the paid entry 6742d644:
+
+    batches 602, covering ticks 0 .. 10799      (the whole 10800-tick block)
+    first batch: seq 0, firstTick 0, previousHash GENESIS
+    the first mark's tick, 5220 -> INSIDE the submitted inputs
+    the busiest entry in the store: 2048 batches, its first firstTick also 0
+
+So the player's transcript is numbered from 0 for the entry, the marks are numbered in that same stream -
+`replay.js` matches marks to replayed inputs BY TICK, and runs do settle, which they could not if the two
+were different clocks - and `joinTick 0` is therefore CORRECT. It is tick 0 of the player's own run.
+
+WHAT I GOT WRONG, AND IT RAN FOR SEVERAL LETTERS. I compared the mark's tick against a ROUND tick I derived
+myself from wall time (`(now - startTimeMs) * 60/1000`). Nothing in the protocol computes that number. From
+that bad comparison came "the mark carries core tick 5220 while the round is at 4891", the "2257-tick offset
+spread", "no node can convert", "the carrier cannot be a bare tick", and the shares 88/7.6/4.4. The
+subtraction on both sides of §13B was always in one clock; the mismatch was mine.
+
+WHAT IS ACTUALLY TRUE, and it is simpler: the player played 5220 ticks OF ITS OWN RUN before planting a first
+mark, and the rule asks for one inside 900. The run starts at tick 0 when the session opens, and the entry
+then waits about 87 s for the stake to be paid while its own run is already counting. By the time the client
+will sign anything, 5220 of its ticks are gone.
+
+SO THE ORIGINAL RULING NEEDS NO NEW CLOCK, NO NEW FIELD AND NO CLIENT ASSERTION. The origin should be the RUN
+tick at which the stake was seen HELD, and the node can have that without trusting anybody: it is the highest
+tick the node has already received from that player when Lightning shows the hold - node-observed, and pinned
+by the same replay that pins every other tick. `stake_seen` is already written at that moment; what it does
+not record is the tick, and that is a one-column question rather than a protocol one.
+
+Nothing was built on this turn. The origin move committed earlier reads `stake_seen.seen_ms` and converts it
+with `ticksForMs` against `startTimeMs` - that conversion is the same wall-derived number this entry says is
+not a protocol quantity, so IT IS WRONG AND MUST BE REPLACED by the received-tick origin. 900, §13B, close,
+payout and the Daily pin are untouched.
+
+  protocol/test/first-mark.test.js    5 / 5
+  protocol/test/stopped.test.js       2 / 2
+  blwp-node/test/first-mark.test.js  14 / 14
+
 A CLIENT-REPORTED ORIGIN WOULD HAND THE START DEADLINE TO THE PLAYER (2026-09-21).
 
 (b) says the client reports its own core tick at HELD and the node uses it as the origin. Before building a

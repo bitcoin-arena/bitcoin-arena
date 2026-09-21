@@ -198,6 +198,15 @@ open line that is neither fenced nor parked.
     That would empty §15's late-start rule and let the player decide it. The shape that closes it: **the
     origin is only accepted if the player's transcript covers that tick**, so the same replay that pins a
     mark pins the origin. Not written.
+    **CORRECTED 2026-09-21: there are not two clocks.** The paid entry's store holds 602 batches covering
+    ticks 0..10799 and the first mark at 5220 is INSIDE them, so marks, batches and `joinTick 0` are one
+    clock - the player's own run. The "round tick" I compared against was a number I derived from wall time
+    that the protocol never computes, and the 2257-tick spread, the conversion argument and the 88/7.6/4.4
+    shares all came from that. What is true: **the player ran 5220 of its own ticks before its first mark,
+    because the run starts when the session opens and then waits ~87 s for the stake.** The origin should be
+    the RUN tick at HELD - the highest tick the node had received when Lightning showed the hold, which is
+    node-observed and replay-pinned, needing no new field and no client assertion. The committed origin move
+    converts `seen_ms` with `ticksForMs` and is therefore **wrong and must be replaced**.
   - PARKED BY RULING: guardians and `federationIsBonded`
 
 FOLLOW-ONS, one line each:
