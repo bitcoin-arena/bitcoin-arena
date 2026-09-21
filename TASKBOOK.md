@@ -5,6 +5,40 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE TWO CLOCKS, MEASURED - AND THEY ARE ONLY 329 OF THE 4320 LATE TICKS (2026-09-21).
+
+One paid run. Instrument only: nothing compared, converted or changed. Round start 1789965214000, deadline
+`joinTick 0 + 900 = tick 900`.
+
+  event                          round tick   core tick   wall s
+  core starts driving                 -1000               -16.7    (the page drives BEFORE the round starts)
+  joining round                        -867               -14.4
+  stake HELD at sensitivity-           4637                77.3
+  stake HELD at flight-costa           4703                78.4
+  first mark() attempt                 4891        5220    81.5
+
+  the node compared:  mark tick 5220  vs  joinTick 0 + 900 = 900   ->  LATE BY 4320 TICKS
+  the refusal:        "the first mark at tick 5220 is after the start deadline (join 0 + 900 = 900)"
+
+THE CLOCKS DO DIFFER, and here is by how much: at the first mark the round is at tick 4891 while the mark
+carries 5220 - a difference of 329 ticks (5.5 s). The core ran 5220 ticks in the 98.2 s since it started
+driving, which is 53.2 ticks a second where the round's own arithmetic assumes 60. It also started 1000
+round ticks before the round did, because the page drives practice while the lobby is up.
+
+THE SHARES OF THE 4320 LATE TICKS, WHICH IS WHAT WAS ASKED:
+
+  before the stake was HELD (the invoice wait, and the round running through it)   3803 ticks   88.0%
+  clock mismatch (core tick 5220 vs round tick 4891)                                329 ticks    7.6%
+  post-HELD slice (HELD at 4703 -> first mark at 4891)                              188 ticks    4.4%
+
+SO THE TWO CLOCKS ARE NOT THE REMAINING HOLE. They are 7.6% of it. Nearly nine tenths of the lateness is the
+round's clock running while the player waits to pay an invoice - which is the term the origin move addressed
+and which is currently ruled out. Reconciling the clocks perfectly would take the mark from 4320 late to
+3991 late: it would still FORFEIT, and the 98 sat stake would still VOID.
+
+That is the measurement, not an argument for any particular fix. `first-mark.js`, §13B and the close path are
+untouched, no origin was moved, no comparison was changed, and nothing was deployed.
+
 THE SLICES - AND THE SESSION IS ALREADY OPEN LONG BEFORE THE STAKE IS PAID (2026-09-21).
 
 One paid run, every milestone read from the page's OWN logs (no prints added, no behaviour changed). Round

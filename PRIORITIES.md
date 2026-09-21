@@ -160,6 +160,11 @@ open line that is neither fenced nor parked.
     **the tick in the mark is the page's own core tick, not the round's** - 5280 written while the round was
     at 6475, the core having started at 10.1 s and running about 54/s, not 60 - so the node compares a core
     tick against a deadline in round ticks. Two clocks, one comparison.
+    SHARES MEASURED 2026-09-21: of the **4320 late ticks**, the invoice wait and the round running through it
+    are **3803 (88.0%)**, the clock mismatch is **329 (7.6%)** and the post-HELD slice is **188 (4.4%)**. The
+    core runs 53.2 ticks/s against the round's assumed 60 and starts 1000 round ticks early. **Reconciling the
+    clocks alone would leave the mark 3991 ticks late - it would still FORFEIT and the stake would still
+    VOID.**
   - PARKED BY RULING: guardians and `federationIsBonded`
 
 FOLLOW-ONS, one line each:
