@@ -46031,3 +46031,41 @@ SUITES ON THIS PATH: protocol advert-witness + census-scan + census-resolve + tx
 blwp-node census-realblocks + census-chainview + bond-key + roster 46/46. The two listed reds are
 unchanged and belong to other letters: bundle-fresh 1/2, ghost-live 10/11. No Unity, no C# - this item
 has touched neither, so no PlayMode or EditMode run is owed.
+
+## The halt case: note holders first, nobody else at all (2026-09-21, spec v4.6.5)
+
+§23A.3 already carried the cap as `(f + 1) x the smallest seated bond` and §23A.5 already paid unspent
+notes at face value first, with the halt proof already falling back to whoever is left plus the observable
+halt. One thing was still wrong and it is the money rule: the remainder after the claim window went
+**75% to the census nodes and 25% to the developers**. On a halt it now goes nowhere - it is burned.
+
+    running federation, bond slashed   75% census nodes / 25% developers    (unchanged)
+    HALTED federation, liquidation     notes at face value, then BURNED
+                                       census nodes 0%, developers 0%
+
+The operator must not profit from a technical freeze. Burning is the only recipient that cannot be gamed:
+paying the remaining guardians would pay the witnesses of the very abandonment, and paying the census
+would make a freeze worth something to somebody who runs the network.
+
+AND THE RULE IS NOW CODE, not only a paragraph: `packages/protocol/src/federation-slash.js` -
+`exposureCap`, `reserveFits`, `slashSplit`, `abandonmentProofNeeds`. Each of the three ways this gets got
+wrong turns the suite red, proven by breaking the module and running it:
+
+    cap summed over all ten bonds again      -> 4 pass, 3 fail
+    halt paying 75/25 to nodes and devs      -> 6 pass, 1 fail
+    halt proof demanding 2f + 1 again        -> 6 pass, 1 fail
+    restored                                 -> 7 pass, 0 fail
+
+CAP, MEASURED. Ten guardians at 7 of 10 (`f = 3`), nine bonds of 1 000 000 sat and one of 400 000:
+
+    sum of all ten bonds (the wrong rule)    9 400 000 sat
+    (f + 1) x smallest  (the rule)           1 600 000 sat
+    the sum is 5.875x the cover that exists if the cheapest four walk out
+
+    testnet 2 of 2, f = 0                    cap = one bond = 50 000 sat
+                                             one leaver halts it, his one bond pays every note
+
+A reserve of 9 000 000 sat - which the summing rule would have allowed - is refused, and so is one msat
+over 1 600 000.
+
+SUITES: protocol federation-slash 7/7 (new), with genesis + advert-witness + census-resolve 28/28.
