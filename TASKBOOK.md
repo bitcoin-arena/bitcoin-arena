@@ -45515,3 +45515,50 @@ AND THREE TACTICS ROWS ARE RED, LISTED, NOT REWRITTEN - this is a rule question 
   trend at open is defensible. Whether the rows should model the trend term or the seeded tape should open without
   one is the row-or-rule call, and it is written down rather than taken.
 NOT DEPLOYED: three doctrine rows are red, so nothing ships on this.
+
+## The pool left twelve seconds after the close, and only into an open tab (2026-09-21, round ec9bd34e)
+
+The 13:54 ruling's own measurement, run on the Daily against `4e9d7244`, and it passed:
+
+    both seats     paid the stake and the fee from alice, NO NWC string anywhere in the run
+    winner         named win@127.0.0.1:18778 in the page, once
+    core           DELIVERED at tick 2240
+    alice           996016 -> 996114 sat          (+98 sat, the pool's share)
+    committee      1000216 -> 1000122 sat          (-98 out, +2000 +2000 msat of fee in)
+    endpoint log   payRequest asked (x2, one per seat), callback asked for 98000 msat -> lnbcrt980n1p4tzgjf...
+
+Two things in that run were wrong, and neither shows in the totals.
+
+WHEN IT MOVED. The `[money]` print for this round:
+
+    [money] ec9bd34e +12125ms after close, window 600000ms
+      | 613218ca FAILED    agreed=y live=PROVISIONALLY_FINAL settle=not-final hold=HELD
+      | c2ab63f3 DELIVERED agreed=y live=PROVISIONALLY_FINAL settle=not-final hold=HELD
+
+At +12125 ms both fee holds were SETTLED to the committee and the winner was written down as owed
+98000 msat - which the page then collected. The stakes were right to wait ("waits for its objection
+window, which closes at 1789994144399", 588 s away) and both were still HELD, in flight and in
+nobody's balance. So the 98 sat left the committee's own channel against money that had not arrived,
+on a result still PROVISIONALLY_FINAL. §13A: FINAL is the window's word.
+
+WHY IT MOVED AT ALL. The address lived in the tab's sessionStorage and travelled at payout time. The
+probe's Chrome happened to still be up - I looked for it on the wrong debug ports (9222/9333; the
+probes use 9351/9352) and wrongly read that as "no tab". Had it been down, FINAL would have arrived
+ten minutes later with 98000 msat owed and nobody to post it. "Winnings are always sent" cannot mean
+"sent if the player is still sitting there".
+
+FIXED IN 56bec67a: a fee settles only once every entry of the round is final; the pool is owed only
+once this node's own acts on the round are done, every stake that had an act having had it. And the
+address goes to the door the moment it is named, signed by the session key, kept as a standing
+instruction (202 NAMED while nothing is owed), with the settle LNURL-paying it itself.
+
+FOUR REDS CLEARED WITH IT, all of them the fee hold's arrival at entry, none of them cosmetic:
+  close-order x2   JSON.stringify of a BigInt threw inside an assertion's MESSAGE, so neither test
+                   ever looked at the answer it was written to check. The settle's answer now leaves
+                   `settleTheStakes` as decimal strings.
+  second-closer x2 compared a port's whole settle log with one stake preimage and saw the fee's too
+                   (sha256 of 32 zero bytes). Fee releases are separated and asserted on, not filtered.
+  void-expiry x2   the fake port kept ONE amount for the whole port, so an entry's second invoice
+                   overwrote the first: "not paid and held: 2000 of 98000 msat" on a good stake.
+  close-at-end     built a round "over" 200 s back when the span is 2*1400 + 10800 ticks = 226.6 s,
+                   so the round the test is named after was never built.

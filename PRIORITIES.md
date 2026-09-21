@@ -32,6 +32,15 @@ does not pay twice.
 
 THIS IS THE LIVE ITEM. Stop whatever else is open.
 
+MEASURED (2026-09-21, round ec9bd34e, `4e9d7244`): stake and fee paid from alice with **no NWC string**,
+DELIVERED at tick 2240, the address named once - alice 996016 -> 996114 sat, the committee -98 +4, the
+endpoint asked for exactly 98000 msat. The ruling's own measurement passes. Two faults it did not show,
+fixed in `56bec67a`: the fees and the pool moved **12 s after the close** on a 600 s window, with both
+stakes still HELD - money out of the operator's channel on a PROVISIONALLY_FINAL result (§13A); and the
+address lived only in the tab, so a player who closed it would never have been paid. Nothing settles now
+until the round is final, and the address is lodged the moment it is named so the node sends the winning
+by itself. Measurements in TASKBOOK.md.
+
 M3: **a round can be played for real testnet sats** - the federation holds the money, the fee is taken and
 paid out, and the payout actually moves. W1-W7 are done, and so is every item the inventory's "M3 is done
 when" named that Daniel has not parked.
