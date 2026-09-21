@@ -141,6 +141,13 @@ open line that is neither fenced nor parked.
     marking before the stake is paid - is **ruled out by the stores**: `refused_first_marks` has 0 rows at
     both seats, so no mark was refused for an unseen stake. Next: log `mark()`'s own answer/refused/
     unreached/live, which nothing prints today.
+    NAMED 2026-09-21 by wrapping `mark()` live (no deploy, no source change): **the first mark is 72 seconds
+    late.** Mark 1 at tick 5220 is refused - *"after the start deadline (join 0 + 900 = 900): a late start is
+    the player's own act"* - so the head never leaves NO_PREVIOUS and all **76** marks that follow are also
+    first marks, each refused under §13B. unreached [] throughout, so nothing was a network failure. §13B and
+    the close path are innocent. The deadline is 900 ticks from `joinTick 0`, but a paid join must fetch the
+    donation set and seats, deal a handout, post an entry, ask for an invoice, **wait for a human to pay it**,
+    open a session and settle the world - about 87 s here.
   - PARKED BY RULING: guardians and `federationIsBonded`
 
 FOLLOW-ONS, one line each:

@@ -5,6 +5,40 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE FIRST MARK IS 72 SECONDS LATE, AND EVERY MARK AFTER IT IS ANOTHER FIRST (2026-09-21).
+
+`mark()`'s five fields, wrapped live from the inspector - no deploy, no source change, the values the client
+already computes and throws away. One paid join of the same shape, 76 marks caught:
+
+  1: tick 5220  prev ZERO  live false  unreached []  head ZERO(unchanged)
+     "FORFEIT: the first mark at tick 5220 is after the start deadline (join 0 + 900 = 900):
+      a late start is the player's own act, not a refund"
+  2: tick 5340  prev ZERO  live false  unreached []  head ZERO(unchanged)
+     "FORFEIT: the player signed another first mark for this entry (§13B)"
+  3..76: ticks 5520, 5640, 5760, 5880, 6120, 6180, 6240, 6300 ... every one the same §13B refusal
+
+THE DISEASE IS MARK 1, NOT THE DOUBLE. The very first mark is refused as a LATE START: the deadline is tick
+900 - `joinTick 0 + 900` - and the client's first mark lands at tick 5220. That is 4320 ticks late, 72
+seconds at 60 ticks a second. Because nothing is ever stored, `this.head` never leaves NO_PREVIOUS, so every
+one of the remaining 75 marks is ALSO a first mark, and §13B refuses each in turn. "Two first marks" was an
+undercount: this entry carried seventy-six.
+
+  refused by BOTH seats every time; unreached [] throughout - nothing was a network failure
+  live false on all 76; receipt no on all 76; head ZERO(unchanged) on all 76
+
+SO §13B AND THE CLOSE PATH ARE INNOCENT, exactly as ruled. They are refusing correctly, and the VOID they
+produced is the right answer to what they were shown. The fault is upstream: the browser cannot reach its
+first mark inside the start deadline.
+
+WHY 5220 TICKS: the entry declares `joinTick 0`, and the deadline runs from it - 900 ticks, 15 seconds. But
+between the entry being made and the first mark the browser must fetch the donation set, fetch the settlement
+seats, deal and post the handout, post the entry, ask for the invoice, WAIT FOR THE STAKE TO BE PAID, open
+the session and let the world settle. Measured on this run, that is about 87 seconds. A paid join cannot fit
+in 15 ticks of deadline while it waits on a human paying an invoice.
+
+NO FIX WRITTEN, by ruling. The numbers are here and the cause is named; what to do about a deadline that
+starts before the stake is paid is not a repair to make quietly.
+
 THE TWO FIRST MARKS, DECODED (2026-09-21). Entry 6742d6440029e43f, paymentHash 94cda137, round 69dd6355.
 
 Read out of both seats' stores (`first_mark_pairs`), not inferred:
