@@ -5,6 +5,37 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+A CLIENT-REPORTED ORIGIN WOULD HAND THE START DEADLINE TO THE PLAYER (2026-09-21).
+
+(b) says the client reports its own core tick at HELD and the node uses it as the origin. Before building a
+door for that number, one property of it was checked, and it is the deciding one.
+
+A MARK'S TICK IS NOT FREE - IT IS PINNED BY REPLAY. `replay.js:155` builds
+`want = new Map(marks.map((m) => [m.tick, hex(m.stateHash)]))` and then walks the player's own inputs,
+comparing `a.stateHash(st)` at each tick and recording `divergedAt` (`:173`, `:194`). A player cannot put an
+arbitrary tick in a mark: the state at that tick has to be the state the core produces from the inputs the
+player also signed.
+
+A BARE REPORTED ORIGIN HAS NO SUCH BINDING. Nothing would pin it to anything - not to a state, not to an
+input chain, not to a hash the player is already committed to. And the player's interest is to report a LATE
+one: origin + 900 is their window, so a dishonest client reports its core tick as far forward as it likes and
+is never late. That empties §15, whose whole purpose is that a player cannot wait, watch the world, and then
+start with information others did not have. The rule that currently says "a late start is the player's own
+act" would become unenforceable, and it would be the player who decided it.
+
+THE SHAPE THAT CLOSES IT, named and not written: the reported origin is only accepted if the player's own
+transcript COVERS it - the tick must appear in the inputs and marks the node replays, so the same machinery
+that pins a mark's tick pins the origin. A number the player asserts is worthless; a number the player must
+later prove is not.
+
+So (b) is still the right origin and still needs a carrier, but the carrier cannot be a plain "here is my
+tick" door. Nothing was built on this turn: no door, no node-side default, no conversion, and §15's
+late-start rule is left exactly as it is rather than quietly defanged.
+
+  protocol/test/first-mark.test.js    5 / 5
+  protocol/test/stopped.test.js       2 / 2
+  blwp-node/test/first-mark.test.js  14 / 14
+
 (b) IS RIGHT AND NEEDS A NEW CARRIER: NEITHER THE ENTRY NOR THE CHECKPOINT HAS ROOM (2026-09-21).
 
 Step 1 said to measure the field before writing, and preferring the existing `joinTick` is closed by three

@@ -192,6 +192,12 @@ open line that is neither fenced nor parked.
     already fixes the run's LAST tick (`:461-466`). The checkpoint cannot either: `CHECKPOINT_BYTES` is a
     fixed 1+2+32+32+4+32+32+32. So (b) needs a third number sent after HELD - a new door or a version bump -
     and per the letter no node-side default or conversion was invented.
+    AND THE CARRIER CANNOT BE A BARE REPORTED TICK: a mark's tick is pinned by replay (`replay.js:155`
+    compares each mark's stateHash against the node's own re-simulation), but a reported origin would be
+    pinned by nothing - and the player's interest is to report it LATE, since origin+900 is their own window.
+    That would empty §15's late-start rule and let the player decide it. The shape that closes it: **the
+    origin is only accepted if the player's transcript covers that tick**, so the same replay that pins a
+    mark pins the origin. Not written.
   - PARKED BY RULING: guardians and `federationIsBonded`
 
 FOLLOW-ONS, one line each:
