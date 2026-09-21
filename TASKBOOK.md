@@ -5,6 +5,47 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+NO SERVER-SIDE CONVERSION IS POSSIBLE: THE CORE-TO-ROUND OFFSET SWINGS 2257 TICKS (2026-09-21).
+
+If the node could convert the mark's core tick into a round tick, the clocks would reconcile without touching
+the protocol. It cannot. The same four traces, each pairing a core tick with the round tick at that instant:
+
+  run       core tick   round tick   core - round
+  origin         5100         4223          +877
+  slices         5280         6475         -1195
+  clocks         5220         4891          +329
+  held           5220         4158         +1062
+
+  spread: -1195 to +1062, a range of 2257 ticks
+
+The offset is not a constant to subtract: the page's core starts when the PAGE loads and the round rotates
+every three minutes, so the same core tick means a different round tick on every run. A node that guessed a
+conversion would be inventing the number the whole letter exists to stop being invented.
+
+AND THE PROTOCOL ALREADY SAYS WHICH CLOCK IT WANTS. `firstMarkOutcome` refuses a mark before the join tick:
+
+    if (!Number.isInteger(firstMark.tick) || firstMark.tick < joinTick)
+      throw new Error(`a first mark is at a tick at or after the join tick ${joinTick}`);
+
+so `joinTick` and the mark's tick are the SAME clock - the player's core clock - and `joinTick + 900` was
+always meant to be a window in the player's own ticks. What breaks it is that the client never fills it in:
+`blwp-client/src/join.js:761` declares `entryFor(round, { ..., joinTick = 0, ... })` and the page passes
+none, so every paid entry says it joined at core tick 0 while its core is already past 4000.
+
+SO THE DECISION IS NOW WELL POSED, and it is one of two, both of which put the anchor where the mark's clock
+is - in the client:
+
+  (a) the client fills `joinTick` with its core tick at join, restoring the design the validation already
+      assumes. The window then opens at join, which is before the money, so on its own it still forfeits a
+      paid entry - it fixes the clock but not the origin.
+  (b) the client reports its core tick at the moment it sees the stake HELD, and the node uses that as
+      `originTick`. That is the ruling already made - the window opens at HELD - expressed in the clock the
+      marks are actually numbered in, and it is the only one of the two that satisfies both.
+
+Neither is written. Both change what a client must send, which is a protocol decision about the entry or the
+checkpoint, not a node-side patch. 900 untouched, §13B untouched, close and payout untouched, the origin move
+as committed, and the Daily still on its pinned checkout.
+
 THE MARK CANNOT BE JUDGED IN THE ROUND CLOCK, AND THE SUITES SAID SO (2026-09-21).
 
 FIRST, A CORRECTION I OWE. The ruling rested on "the mark already carries a round tick (4223 / 6475 / 4891 /

@@ -181,6 +181,12 @@ open line that is neither fenced nor parked.
     arrival is local, so two seats would reach different verdicts on one transcript. Reverted, 14/14 again.
     **Reconciling the clocks belongs in what the mark carries** - a protocol decision about the checkpoint,
     not a node patch.
+    AND NO CONVERSION CAN RESCUE IT: core-minus-round across the four traces is +877, -1195, +329, +1062 - a
+    **2257-tick spread**, because the page's core starts when the PAGE loads. The protocol already names the
+    clock it wants: `firstMarkOutcome` refuses `firstMark.tick < joinTick`, so joinTick is a CORE tick - and
+    `blwp-client/src/join.js:761` defaults it to **0**, which every paid entry then carries. The decision is
+    (a) the client fills joinTick with its core tick at join - fixes the clock, not the origin - or **(b) the
+    client reports its core tick at HELD and the node uses that as the origin**, which satisfies both.
   - PARKED BY RULING: guardians and `federationIsBonded`
 
 FOLLOW-ONS, one line each:
