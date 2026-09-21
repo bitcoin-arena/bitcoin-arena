@@ -46786,3 +46786,47 @@ for the run after the close, not the agreement over them.
 
 That is the next thing to open, and it is one layer below this letter's question: the §23.6 gate, the
 claim key and the stake lock are all measured working at seven nodes. CUSTODY is still untouched.
+
+## The missing call was the fee lock, and the seven-node paying round now settles (2026-09-21)
+
+The instrumented run answered it without a second hypothesis. Before the fix, every node held:
+
+    results 0   runs []   void false   TICKS 0
+
+No transcript at all - so nothing could be signed, and "0 of 5 agree on any one run" was not a split
+vote but an empty tally. The play socket said why, to every input batch of both players:
+
+    "error stake not seen: this node reaches no Lightning, so it cannot see this stake held,
+     and play waits for that (23.1)"
+
+on a FEDERATION round, with the stake lock already verified. The rest of that verification message is
+the cause: "stake lock verified: contract ... holds 980000 msat - COUNTED ONCE ITS FEE LOCK IS VERIFIED
+(this round mints fee locks)". §23.1 step 5 / pick a: in a round that mints fee locks the stake is kept
+and verified but NOT SEEN until the fee lock is too, so `putStakeSeen` never ran, `custody.seenPaid` fell
+through to the Lightning branch, and play waited forever.
+
+THE MISSING CALL WAS IN THE HARNESS, NOT THE NODE. `lockStake` already mints the fee lock and returns it;
+`handLock` already takes `door: 'fee-lock'`. w5b simply never handed it over. One call added - no settle
+invented in the client, no test loosened, the node's rule untouched.
+
+AFTER, the same seven-node round end to end:
+
+    claim key      attested 7, needed 5, key 024c0356e763dfcb
+    transcript     ticks 1762 on all seven (was 0)
+    signed results present on every node after the window (was 0 everywhere)
+    winner forfeit ok true, 40043 ms after close, claimPkIsTheRounds true, VERIFIES true
+                   (the "0 of 5" now appears only on the FIRST ask, before the window closes)
+    loser forfeit  refused, and rightly: "that run is FAILED with score 84 and this round's minimum
+                   is 1: not a qualifier, so its stake lock is not forfeited"
+    one signer node's signature alone -> REJECTED by the guardians, "The forfeit signature is invalid"
+    redeem by seed accepted true, txid 467a07f7, lock held -> none, credited 979968 msat,
+                   federation fee 32 msat
+    withdraw       Success, 970148 msat out, lnd SETTLED, lnd received 970148 msat
+
+So a paying FEDERATION round opens AND settles on seven signer nodes, the money leaves through Lightning
+at the edge only, and `reachesLightning` is null on all seven throughout - `createHeld` was never
+reachable. CUSTODY is still not flipped.
+
+MY OWN MEASUREMENT WAS WRONG ONCE AND IS FIXED: I grouped signed results by `resultId`, which hashes the
+signing node in, so seven nodes agreeing on one run showed as seven different runs. `runId` is that hash
+with the node zeroed and is what the tally compares. The count per run is being re-measured with it.
