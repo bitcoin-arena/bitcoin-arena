@@ -55,6 +55,20 @@ THE OPTIONS, WITH NUMBERS, NONE IMPLEMENTED:
   (c) THE WRITTEN REASON, which is this entry: on THRESHOLD_LN the 2% cannot be taken live, because the fee is
       deducted before the invoice and no fee-lock object exists on this custody path.
 
+BOTH DIRECTIONS, NOT JUST INVOICES. The first pass only read invoices, which would have missed a fee paid as
+an outgoing payment rather than requested as one. Closed:
+
+  A's payments   1   {20000000: 1}              = A buying inbound from B, matching B's single invoice
+  B's payments   9   {100000000: 1, 980000: 8}  = the inbound purchase, and the eight holds B paid
+  payments of 20000 msat, either node:  NONE
+
+B's eight 980000 msat payments match A's eight 980000 msat settled invoices exactly, which confirms the
+7840000 msat delta from the other end of the channel independently.
+
+AND THE 2% FIGURE IS THE CODE'S, NOT AN ASSUMPTION. `entryFeeMsat(1000000n) = 20000`; also 100000 -> 2000 and
+200000 -> 4000. The tool's `donationMsat` is 0n, so the whole of the 20000 msat gap is the fee and nothing
+else comes out of the stake.
+
 WHAT THIS DOES NOT SAY. It does not say the fee path is broken - it is green in test and the arithmetic is
 proved there. It says the LIVE custody has nowhere to put it, which is a different sentence, and it is the
 remaining one of M3's three clauses: the federation hold and the payout on a rebuilt key both have live

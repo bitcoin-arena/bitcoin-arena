@@ -78,6 +78,11 @@ WHAT IS LEFT FOR M3, none of it started, in no ruled order yet:
     that can carry the 2%.** The two ways out are a Fedimint federation on testnet4 (needs guardians, which
     are PARKED) or the fee as its own Lightning hold (only 1 of the 2 seats has a Lightning node, and it
     changes §22A's shape - a ruling). Numbers in TASKBOOK.
+    **DIAGNOSED, NOT SPENT** - the spend stays fenced; what is finished is knowing exactly why it cannot
+    happen on this custody. Checked from both ends: no invoice AND no payment of 20000 msat on either node.
+
+NEXT M3 ITEM, NOT STARTED: **a playable client slice** - nothing of M3 reaches a player yet. It is the first
+open line that is neither fenced nor parked.
   - ~~FROST / §23.5 on testnet4~~ **DONE 2026-09-21**: a live settle on a reconstructed preimage, 2-of-2.
   - a **playable client slice** - nothing of M3 reaches a player yet
   - PARKED BY RULING: guardians and `federationIsBonded`
