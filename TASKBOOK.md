@@ -5,6 +5,43 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+(b) IS RIGHT AND NEEDS A NEW CARRIER: NEITHER THE ENTRY NOR THE CHECKPOINT HAS ROOM (2026-09-21).
+
+Step 1 said to measure the field before writing, and preferring the existing `joinTick` is closed by three
+measurements, not by preference:
+
+  1. JOINTICK IS INSIDE THE ENTRY'S HASH. `contracts.js:318` writes `w.u32(e.joinTick)` into
+     `encodeEntryContract`, and `entryId = taggedHash(TAG.entryContract, encodeEntryContract(e))`
+     (`contracts.js:393`). The entry is built, signed and POSTED before the stake is paid - the hold invoice
+     is derived from it - so a value known only at HELD cannot go in it. Changing joinTick changes the entry
+     id, and with it the handout and the invoice the player already paid.
+
+  2. JOINTICK IS ALREADY LOAD-BEARING FOR THE RUN'S END. `contracts.js:461-466`: "THE LAST TICK A RUN MAY
+     CARRY, for an entry that joined at `joinTick` ... whose ticks reach `joinTick + BLOCK_TICKS`". Moving it
+     to mean HELD would move the last tick of the run as well - a second rule changed silently.
+
+  3. THE CHECKPOINT HAS NO SPARE FIELD. `CHECKPOINT_BYTES = 1 + 2 + 32 + 32 + 4 + 32 + 32 + 32`, a fixed
+     record, and `SIGNED_CHECKPOINT_BYTES = CHECKPOINT_BYTES + SIGNATURE_BYTES`. Adding a tick changes every
+     checkpoint's size and its `PROTOCOL_VERSION`.
+
+So both carriers the ruling named - "on the entry or checkpoint" - are unavailable as they stand. (b) is
+still the right answer: the origin must be the player's OWN core tick at HELD, because the mark is numbered
+in that clock and no conversion exists (offset spread 2257 ticks). What it needs is a THIRD number the client
+sends after the stake is held - a new door, or a checkpoint version bump - and the letter's own instruction
+is "until that field is present, do not invent a node-side default or a conversion". So none was invented.
+
+WHAT IS ALREADY IN PLACE, and unchanged by this: the origin moves to HELD in `round.js` (from
+`stake_seen.seen_ms`, committed), `firstMarkOutcome` takes an `originTick`, free rounds keep the old
+behaviour word for word, and §13B still VOIDs two first marks. What is NOT in place is the origin being
+expressed in the player's clock, which is exactly the carrier this entry is about.
+
+  protocol/test/first-mark.test.js    5 / 5
+  protocol/test/stopped.test.js       2 / 2
+  blwp-node/test/first-mark.test.js  14 / 14
+
+900 untouched, §13B text untouched, close and payout untouched, the Daily still pinned at df66c6d1. No Unity
+was touched; if the field lands on the checkpoint the WebGL page becomes its sender and the pin still holds.
+
 NO SERVER-SIDE CONVERSION IS POSSIBLE: THE CORE-TO-ROUND OFFSET SWINGS 2257 TICKS (2026-09-21).
 
 If the node could convert the mark's core tick into a round tick, the clocks would reconcile without touching

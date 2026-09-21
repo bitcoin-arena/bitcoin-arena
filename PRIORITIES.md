@@ -187,6 +187,11 @@ open line that is neither fenced nor parked.
     `blwp-client/src/join.js:761` defaults it to **0**, which every paid entry then carries. The decision is
     (a) the client fills joinTick with its core tick at join - fixes the clock, not the origin - or **(b) the
     client reports its core tick at HELD and the node uses that as the origin**, which satisfies both.
+    (b) RULED, AND MEASURED TO NEED A NEW CARRIER 2026-09-21: `joinTick` cannot hold it - it is inside the
+    entry's hash (`contracts.js:318`/`:393`, and the invoice is derived from that id, before payment) and it
+    already fixes the run's LAST tick (`:461-466`). The checkpoint cannot either: `CHECKPOINT_BYTES` is a
+    fixed 1+2+32+32+4+32+32+32. So (b) needs a third number sent after HELD - a new door or a version bump -
+    and per the letter no node-side default or conversion was invented.
   - PARKED BY RULING: guardians and `federationIsBonded`
 
 FOLLOW-ONS, one line each:
