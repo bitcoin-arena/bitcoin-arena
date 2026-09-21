@@ -46862,3 +46862,52 @@ null on all seven throughout.
 
 NOT MEASURED: `signer-node-lock.test.js` exits 124 at 180 s - like five-of-seven it wants more wall time
 than the cap allows, and the cap is a HARD. Listed, not loosened, and not run over the cap again.
+
+## The four figures from the settle, accounted for (2026-09-21)
+
+**1. Which node did not keep the forfeit.** It is not the same node twice, and that is the answer. Asked
+in its own right AFTER the window, every node gives one:
+
+    A 200 gave a signature   B 200   C 200   D 200   E 200   G 200
+    F 409 "gave no share: this signer node signed that forfeit over another list, and keeps no second"
+
+`forfeitOf` walks the node list in order and RETURNS AT THE FIRST node that answers, so the nodes past it
+are never asked and never build a row - which is what "kept 6 of 7" and "kept 5 of 7" were measuring.
+Across three runs the non-keeper moved: B (`684f23a1036f9507`), then A and C
+(`58fa71eb9289b0fc`, `a353e0ae60b4b646`), then F. None of them is late, refused or released: F's 409 is a
+FROST signing-set answer - the forfeit is aggregated over one list of signer nodes, and a node that
+already signed over another list keeps no second share. Threshold 5 was met in every run, and the round
+settled in every run.
+
+**2. The 9820 msat between credit and withdraw.** It is the gateway's own send fee, already measured and
+printed by the run as `sendFeesMsat: 9820`, and it is quoted BEFORE the payment: `withdrawableMsat` came
+back 970148, which is 979968 - 9820, and the invoice was made for exactly that. `lndReceivedMsat` 970148
+equals `amountOutMsat` 970148, so routing cost nothing on top, and `remainingBalanceMsat` is 0 - nothing
+stayed on the node. Not a channel reserve, not routing, not stranded.
+
+    979968 credited - 9820 gateway send fee = 970148 out = 970148 lnd received, 0 left behind
+
+**3. Does a browser player hand the fee lock?** YES, and it always did: `client.js:609` hands it inside
+the join path, right after the stake lock and before any input batch, with the same
+`handLock(..., door: 'fee-lock')` the harness now uses. The shipped client was correct; w5b was the only
+path missing the call. The fix brought the harness INTO LINE with the client, not the other way round,
+and the node's rule was never touched.
+
+**4. signer-node-lock.test.js - I WAS WRONG, it is not the five-of-seven class.** Run alone under the cap
+it has FOUR FAILING TESTS, and they fail fast (35-163 ms), not slowly:
+
+    the player's own lock is verified ... /stake answers held
+    a lock that is not the entry's is refused by name, and the stake stays unseen
+    one lock stakes one signer node: a second entry naming a lock already committed ... is refused
+    a signer node says where a player's verified lock is by its refund key (W5a)
+    (and one passes: a round that names no federation takes no lock)
+
+The FILE also never terminates - it is still interrupted at 175 s - so node never prints the failure
+detail, and the assertion text is unreachable without running past the cap, which I did not do.
+
+It is NOT from the fee-lock handoff. The only source change in the whole range `1e9628cd..HEAD` is one
+refusal-message string inside `guardiansBonded` ("signer nodes no round" -> "assigns no round"), a path
+this suite does not exercise; `stake-lock-signer-node.js` and the suite's fixtures are untouched, and the
+handoff itself lives in `tools/w5b.mjs`, which no test imports.
+
+LISTED: signer-node-lock - 4 failing tests and a file that does not terminate. Cause not yet read.
