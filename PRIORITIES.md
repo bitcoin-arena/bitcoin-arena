@@ -111,6 +111,10 @@ open line that is neither fenced nor parked.
     posted 4, invoice fetched 2, handout 4, stake polled 127, 7 POSTs to seats, session opened, world seed
     agreed by 2 nodes - all within 4.4 s. Moving or defaulting that prompt is a RULING: it is the player
     consenting to give away part of a stake.
+    AND WITH IT ANSWERED, THE SEATS TAKE THE ENTRY: `/handout` 201 at both, **`/entry` 201 at both**,
+    `/invoice` 200, and `/stake` 409 x60 - the stake is simply not paid. joinState reaches "joined" and all
+    four globals are objects. **The remaining gap is payment, not plumbing**: nothing pays the bolt11, and
+    `BLWP_DEPOSIT` is null, so where the served invoice is put for the player is the next question.
   - PARKED BY RULING: guardians and `federationIsBonded`
 
 FOLLOW-ONS, one line each:

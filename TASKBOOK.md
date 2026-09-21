@@ -5,6 +5,40 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE SEATS ACCEPT THE BROWSER'S ENTRY, AND THE HOLD INVOICE IS SERVED (2026-09-21).
+
+A request counted is not a stake taken, so this reads what the SEATS ANSWERED, with the donation modal
+dismissed (Cancel: donate nothing).
+
+  what the seats answered: {"/handout":{"201":2},"/entry":{"201":2},"/stake":{"409":60},"/invoice":{"200":1}}
+
+  POST /handout   201 at BOTH seats   - the stake's shares are published
+  POST /entry     201 at BOTH seats   - THE ENTRY IS ACCEPTED, by both signer nodes
+  GET  /invoice   200                 - a hold invoice is served
+  GET  /stake     409 x60             - and refused, over and over: the stake has not been seen
+
+  the page after the join:
+    joinState "joined", joinWhy "", joinStage ""
+    BLWP_ENTRY object, BLWP_CHAIN object, BLWP_ADVERT object, BLWP_ROUND object   <- all four now DEFINED
+    BLWP_DEPOSIT null, donation {bps 0, 0 msat, kept false}, runEnded null
+
+THE FOUR STRINGS ARE NO LONGER UNDEFINED. Every one of them is an object, `nodeUrl` therefore resolves, and
+the gate that said "the page has named no node" is satisfied - once the modal is answered.
+
+THE WALK, AS IT NOW STANDS:
+  lobby listed            YES
+  PLAY / join()           YES, and joinState reaches "joined"
+  entry accepted          YES - 201 at both seats
+  invoice served          YES - 200, once
+  stake paid              NO  - /stake answers 409 sixty times; nothing pays the bolt11
+  driving input to core   NO  - the session opened, but the run waits on the stake
+
+SO THE REMAINING GAP IS PAYMENT, NOT PLUMBING. The browser reaches the seats, is accepted by them, and is
+served a hold invoice. What no part of this path does is pay it: a player would need a Lightning wallet, and
+`BLWP_DEPOSIT` is null, so the bolt11 is not surfaced the way the federation-lock path surfaces its deposit.
+WHERE THE SERVED INVOICE IS PUT FOR THE PLAYER TO PAY IS THE NEXT QUESTION - not answered here, and not
+guessed at.
+
 WHAT THE PAID JOIN WAS WAITING ON: A MODAL DIALOG (2026-09-21). Page-only deploy, stamp still 0.0.1866.
 
 The join was neither completing nor refusing, and it was not sitting on an await. It was sitting on
