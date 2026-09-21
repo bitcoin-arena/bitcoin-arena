@@ -69,7 +69,15 @@ Counts in TASKBOOK.
 
 WHAT IS LEFT FOR M3, none of it started, in no ruled order yet:
   - the testnet4 **fee-lock spend** - the 2% actually moving to the sitting seats on testnet4 (fenced by
-    ruling; the hold path is proven, the fee lock has never been minted there)
+    ruling; the hold path is proven, the fee lock has never been minted there).
+    MEASURED 2026-09-21, no writes: **the 2% was never invoiced.** `netStakeMsat` takes the fee off before
+    the invoice is written, so the only invoice that existed was the net 980000 of a 1000000 msat stake, and
+    **160000 msat of fees went uninvoiced across eight live settles**. `server.js:2039` gates the whole
+    fee-lock door on `custody === 'FEDERATION'` and a non-zero federationId; the live round is THRESHOLD_LN
+    with a zeroed one, so no fee lock is required, minted, verified or claimed. **THRESHOLD_LN has no object
+    that can carry the 2%.** The two ways out are a Fedimint federation on testnet4 (needs guardians, which
+    are PARKED) or the fee as its own Lightning hold (only 1 of the 2 seats has a Lightning node, and it
+    changes §22A's shape - a ruling). Numbers in TASKBOOK.
   - ~~FROST / §23.5 on testnet4~~ **DONE 2026-09-21**: a live settle on a reconstructed preimage, 2-of-2.
   - a **playable client slice** - nothing of M3 reaches a player yet
   - PARKED BY RULING: guardians and `federationIsBonded`

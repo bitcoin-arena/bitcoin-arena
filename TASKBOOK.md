@@ -5,6 +5,61 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE 2% WAS NEVER INVOICED ON TESTNET4, AND THRESHOLD_LN HAS NO OBJECT TO CARRY IT (2026-09-21).
+
+MEASURED, NO WRITES. The fence stays up: nothing was minted, claimed or spent for this.
+
+WHERE THE 20000 MSAT WENT: nowhere. It was never asked for.
+
+  the stake                     1000000 msat
+  §22A's 2%                       20000 msat
+  the hold A actually issued     980000 msat      = netStakeMsat = stake - fee - donation
+
+`netStakeMsat` (protocol/payout.js) subtracts the fee BEFORE the invoice is written, so the only invoice that
+ever existed was for the net. The 20000 msat never left the payer's balance, and no seat was paid it.
+
+  A's invoices    39 total, 30 CANCELED, 9 SETTLED
+                  requested amounts  {980000: 36, 100000000: 1, 1000: 2}
+                  settled amounts    {980000: 8, 100000000: 1}
+                  invoices for 20000 msat:  NONE
+  B's invoices    1 total, SETTLED, 20000000 msat - that is 20000 SAT, the inbound purchase, not the 2%.
+                  (20000000 msat and 20000 msat differ by a factor of a thousand; the fee is the small one.)
+
+  the channel     A local 87840 sat, B local 108690 sat, unchanged by this letter - no writes were made
+  historical      8 settles x 980000 = 7840000 msat moved A-ward, which is the whole observed delta.
+                  Had the fee been taken it would have been 8 x 1000000 = 8000000 msat.
+                  THE DIFFERENCE, 160000 MSAT, IS THE FEE THAT WAS NEVER INVOICED ACROSS EIGHT LIVE SETTLES.
+
+WHY IT CANNOT BE TAKEN ON THIS CUSTODY. `server.js:2039` guards the whole fee-lock door with
+
+    if (rc.custody === 'FEDERATION' && rc.federationId.some((x) => x !== 0))
+
+and the live round names `custody: 'THRESHOLD_LN'` with `federationId: new Uint8Array(32)`. BOTH halves are
+false, so the door is skipped: no fee lock is required of an entry, none is minted, none is verified and none
+is claimed. The entry contract still carries a `feeLockOutpoint` field, but under THRESHOLD_LN nothing reads
+it. There is no object on this custody that could hold the 2%, and the fee is already gone from the only
+invoice that exists.
+
+THE OPTIONS, WITH NUMBERS, NONE IMPLEMENTED:
+
+  (a) A FEDIMINT FEDERATION ON TESTNET4. This is the shape the tests already prove: at a 1000000 msat stake
+      with two seats and a zero base fee, `feeLockPays` mints a 20000 msat lock and pays both seats - measured
+      in lock-settlement as "fee locks 2, 40000 msat, paid 2 signer nodes 36000 msat". It needs a non-zero
+      federationId, a reachable stake-lock port, and guardians - and GUARDIANS ARE PARKED BY RULING. It also
+      meets the measured fedimintd default of 1000 msat base, which §22A's own guard refuses.
+  (b) THE FEE OVER LIGHTNING, AS ITS OWN HOLD. The size is not the problem: 20000 msat is far above the
+      channel's min_htlc of 1 msat, and the usable 106690000 msat would take thousands of them. The problem
+      is WHO. A seat is a BLWP signer-node pubkey, not a Lightning node; of the two seats in the live round,
+      exactly ONE has a Lightning port at all, so only 1 of 2 could be paid today. And a fee invoice is not
+      §22A's fee lock - changing the shape of how the 2% is carried is a ruling, not a repair.
+  (c) THE WRITTEN REASON, which is this entry: on THRESHOLD_LN the 2% cannot be taken live, because the fee is
+      deducted before the invoice and no fee-lock object exists on this custody path.
+
+WHAT THIS DOES NOT SAY. It does not say the fee path is broken - it is green in test and the arithmetic is
+proved there. It says the LIVE custody has nowhere to put it, which is a different sentence, and it is the
+remaining one of M3's three clauses: the federation hold and the payout on a rebuilt key both have live
+evidence, and this does not.
+
 INBOUND RE-MEASURED, AND A 980000 MSAT HOLD FITS 108 TIMES OVER (2026-09-21).
 
 A correction of the DONE line of 2026-09-20, not a new item: that line's figures no longer described the
