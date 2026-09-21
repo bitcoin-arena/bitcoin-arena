@@ -46748,12 +46748,20 @@ re-run with the refusal text; it also crashed afterwards on `fromHex(undefined)`
 Ports: seven nodes on 18571..18577, recipients on 18787. The live Daily's 18080, 18081 and 18777 are not
 touched.
 
-## five-of-seven is slow, not stuck (2026-09-21)
+## five-of-seven and forfeit were never looping - both are green (2026-09-21)
 
-It was cut off by `timeout 180`, not hung: 8 of its ~22 tests passed in 175 s when it had the machine to
-itself, and 4 in the same time while the seven-node round was searching world secrets beside it. Each test
-stands seven daemons and waits out real expiries. Nothing is loosened; it needs a longer budget than 180 s
-and the number is still being measured.
+I reported these as "looping on 4 of 5 signer nodes signed this table". That was wrong, and the line I
+read as a loop is the suite's own progress output. Timed, each alone, nothing loosened:
+
+    five-of-seven.test.js   21 pass  0 fail   470 s
+    forfeit.test.js          2 pass  0 fail    16 s
+
+`timeout 180` was the whole problem: five-of-seven stands seven daemons per test and waits out real
+expiries, so it needs about eight minutes, and running it chunked beside other files made it look stuck.
+It also halves in throughput under CPU contention - 8 tests in 175 s alone, 4 in the same time while the
+seven-node round was searching world secrets beside it, so these do not share a machine with a probe.
+
+DEPENDENCY: none. They wait on nothing; they want wall time.
 
 ## Why the seven-node round does not settle: no signed result is ever published (2026-09-21)
 
