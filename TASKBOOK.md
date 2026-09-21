@@ -45973,3 +45973,28 @@ blwp-node census-chainview + census-derive + census-realblocks + bond-key + bond
 STILL OPEN, AND IT IS NOT POLICY: the bond cannot be broadcast on testnet4 because that wallet is
 encrypted - `sendtoaddress` answers error -13, "Please enter the wallet passphrase with walletpassphrase
 first" (wallet `testnet`, 682182 sat, chain at 153367, not in IBD). Standardness is settled; funding is not.
+
+## rt.mine(6) becomes rt.bury(6): mine our own chain, wait for anybody else's (2026-09-21)
+
+The round's beacon is the first block after `committee_time`, so an operator who can make blocks on the
+round's own chain can make the beacon he wants. On a free regtest round that is nobody's money; on a round
+holding real sats it is the whole game. `regtest-bond.mjs` grew `bury(n)`:
+
+    minable = network === 'regtest'
+    bury(6)  -> mine(6) on regtest, as before
+             -> waitForHeight(height() + 6) on any other chain, saying so every two minutes
+    fund()   -> mine(1) on regtest; waitConfirmed(txid) elsewhere
+
+Both waits BLOCK, like everything else in that file - a launcher standing a round up has nothing to do
+until its bonds are buried, and making them async would turn every caller inside out.
+
+Measured on the live regtest, so the Daily pays nothing for the change:
+
+    minable: true
+    bury(6): 104163 -> 104169 (+6) in 1467 ms
+    bond after it: 7 items, largest 80 bytes, testmempoolaccept allowed=true
+
+At testnet4's measured 723.3 s a block, six confirmations is about 72 minutes per launcher start.
+
+SUITES: protocol advert-witness + tx + chain + census-scan + census-resolve 60/60; blwp-node
+census-realblocks + census-chainview + bond-key + roster 46/46.

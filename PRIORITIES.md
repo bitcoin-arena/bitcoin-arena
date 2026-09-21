@@ -111,6 +111,22 @@ No hold invoices. No committee lnd as the stake. THIS IS THE LIVE ITEM.
 The 17:01 chain rule still holds under that: six real testnet4 confirmations, no `rt.mine(6)`, no
 hybrid beacon the operator can grind.
 
+  DONE (`5e5ef0e7`): **the census bond is standard.** It never was: the spend is `witness_v1_taproot` and
+  it carried the whole 266-byte signed advertisement in one witness item, which a node refuses
+  `bad-witness-nonstandard` - Bitcoin Core holds a tapscript stack item to 80 bytes as it does a P2WSH
+  one. No field cut could reach it either, since the signature alone is 64 of the 80. The same body now
+  rides in four items of at most 80 with an `OP_DROP` each, the signature keeps its own, and on the live
+  node `testmempoolaccept` went `allowed=false` to **`allowed=true`** for one extra vbyte (313 -> 314).
+  Nothing was cut and the census still reads the advertisement back.
+
+  DONE: **`rt.mine(6)` is gone.** `rt.bury(6)` mines on regtest exactly as before (measured: six blocks,
+  1467 ms, bond still `allowed=true`) and WAITS for somebody else's six on any other chain - about 72
+  minutes at testnet4's measured 723.3 s a block. The funding confirmation waits the same way.
+
+  BLOCKED, AND NOT BY POLICY: the bond cannot be broadcast on testnet4 because that wallet is encrypted -
+  `sendtoaddress` answers error -13, "Please enter the wallet passphrase with walletpassphrase first"
+  (wallet `testnet`, 682182 sat, chain 153367, not in IBD). Standardness is settled; funding is not.
+
 
 DONE (2026-09-21): **the fixture family that has been "listed with cause" for a fortnight is cleared.** Four
 suites named a run length the core stopped using at c01cc655, so `Round.open` refused their contracts and
