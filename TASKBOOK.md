@@ -45881,3 +45881,46 @@ WHAT IS MERELY WORK, ONCE A AND B ARE ANSWERED:
     682182 sat. The protocol minimum is `bondMinSats` 50000 sat, so both numbers come down.
   - `fund()` calls `mine(1)` to confirm and the census path calls `rt.mine(6)` to bury. Both become waits:
     at the measured 723.3 s a block, six confirmations is about 72 minutes per launcher start.
+
+## The advertisement witness, field by field, and why no field cut reaches 80 (2026-09-21)
+
+`node packages/protocol/tools/advert-layout.mjs` - measured by encoding the prefix 1..n and diffing, not
+by reading the struct:
+
+    field                             bytes  running  on-chain?
+    type (u8)                            1        1   needed
+    protocol version (u16)               2        3   needed
+    nodePubkey (32)                     32       35   needed    5A.1: who the bond gives standing to
+    operatorId (str)                     6       41   no        5A.13: self-declared, never proof
+    protocolVersions (vec u16)           4       45   no        negotiation, not consensus
+    roles (vec u8)                       5       50   needed    opt-in: drawn only for what it declared
+    endpoint (str)                      22       72   needed    25.1: fixed for the life of the bond
+    region (str)                         9       81   no        description
+    capacityClass (u8)                   1       82   no        description
+    softwareHash (32)                   32      114   no        description; nothing on chain checks it
+    settlementCapabilities (u32)         4      118   no        description
+    lightningCapabilities (u32)          4      122   no        description
+    bondTxid (32)                       32      154   needed    5A.1 MANDATORY
+    bondVout (u32)                       4      158   needed    5A.1 MANDATORY
+    bondScriptTemplateVersion (u16)      2      160   needed    5A.1 MANDATORY
+    payoutPubkey (32)                   32      192   needed    22A: where this node is paid
+    guardianOf (vec)                     2      194   needed    23.6 P3
+    timestamp (u64)                      8      202   needed    ordering and freshness
+
+    body                                202
+      needed on chain                   142
+      description                        60
+    + BIP-340 signature                  64
+    = one witness stack item            266      policy refuses over 80
+
+SO THE ANSWER TO "WHAT CAN LEAVE" IS: 60 of the 266 bytes are description - operatorId, protocolVersions,
+region, capacityClass, softwareHash and the two capability words - and dropping every one of them lands at
+206, which is still two and a half times the limit. **The signature alone is 64 of the 80.** No cut to the
+advertisement's fields can make one stack item standard, and that is arithmetic, not judgement.
+
+WHAT ACTUALLY CUTS IT. The limit is per STACK ITEM, not per witness, so the body travels as several items
+of at most 80 bytes with one `OP_DROP` each in the carrier script - 266 bytes is four items. §5A.2's
+property is untouched: the whole signed body is still on the chain, still needs nobody to serve it, and
+still binds to the bond it rides in. The alternative - drop the body and lean on the 32-byte `advertId`
+the bond already carries in its OP_RETURN - would make the census depend on somebody serving the body off
+chain, which is the thing 5A.2 exists to avoid.
