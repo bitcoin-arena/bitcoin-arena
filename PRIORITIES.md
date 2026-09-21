@@ -22,27 +22,29 @@ Top item first. Finish and deploy before starting the next.
 
 # NOW  -  M3: what is left
 
-ON TOP, STARTED: **there is no THRESHOLD_LN - only federation and guardians.** The enum is NOT flipped.
-Step 1's round now OPENS on seven signer nodes, deals a claim key and LOCKS both stakes; it does not yet
-settle, and the reason is one layer below this letter.
+ON TOP: **there is no THRESHOLD_LN - only federation and guardians.** The publication slice is DONE. A
+paying FEDERATION round now OPENS AND SETTLES on seven signer nodes with no `createHeld` on the path.
+The enum is still NOT flipped - that is the next slice, and it was ordered after this measurement.
 
-  RULED AND FOLLOWED (Daniel, this letter): the fork is the 5-of-7 already in the protocol, not a new
-  3-slot threshold. `receiptsNeeded(3)` is NOT added; committee sizes stay 2 and 7.
+  THE MISSING CALL WAS THE FEE LOCK (`2eacf112`). Every node held `ticks 0` - no transcript, so the
+  empty tally, not a split vote. The play socket refused every input batch with "stake not seen: this
+  node reaches no Lightning", on a round whose stake lock it had verified, because §23.1 step 5 keeps a
+  stake verified but NOT SEEN until its fee lock is verified too. `lockStake` already mints one and
+  `handLock` already takes `door: 'fee-lock'`; the harness never handed it over. One call, in the
+  harness - the node's rule untouched, no settle invented.
 
-  MEASURED AT SEVEN (`9609ce56`, `1ff5c6d5`): committee 7, `receiptsNeeded` 5; claim key attested 6 of 5
-  needed; both stakes locked at 980000 msat; entries 201 x 7; close "closed" x 7; `reachesLightning` null
-  on all seven, so `createHeld` cannot be called. §23.6 is satisfied by THREE operators advertising a
-  guardian of `423e010e` while the other four guard nothing - two operators still refuse by name.
+  MEASURED END TO END (`be7c00f3`): claim key attested 6-7 of 5 needed; transcript 1550 ticks on all
+  seven; **7 of 7 signed one run (`1e139051`), threshold 5, met**; winner forfeit ok 34.4 s after close,
+  verifies true, kept by 6 of 7; loser refused as FAILED score 4 under a minimum of 1. Locks: winner
+  980000 msat held -> none, 979968 credited (32 msat federation fee); loser 980000 msat held -> none at
+  expiry, never forfeited; withdraw Success 970148 msat, lnd SETTLED. `reachesLightning` null on all
+  seven throughout. A single signer node's signature alone is rejected by the guardians.
 
-  OPEN, ONE LAYER DOWN: no signed result is ever published, so "0 of 5 agree on any one run", no forfeit,
-  both entries VOID (§13C) and the locks return at expiry. `verdict.js` tallies signed results and the
-  count is ZERO - not a disagreement. That is the next thread.
+  Ports 18571..18577 and 18787. The Daily's 18080, 18081 and 18777 untouched.
 
-  Seven nodes bind 18571..18577, recipients 18787. The Daily's 18080, 18081 and 18777 are untouched.
-
-  FIVE-OF-SEVEN AND FORFEIT ARE GREEN (`a2f6a28b`): 21 pass / 0 fail in 470 s, and 2 pass / 0 fail in
-  16 s. I had reported them as looping; the "4 of 5 signer nodes signed this table" line is the suite's
-  own progress output, and `timeout 180` was the whole problem. Nothing loosened.
+  LISTED RED, NOT LOOSENED: `signer-node-lock.test.js` exits 124 at the 180 s cap, like five-of-seven
+  (21/0 in 470 s). Also listed: objection-window (red before this letter), ghost-live, replay-solids,
+  two-titles. The one-signer refusal passes alone - contention, not a product red.
 
   FIXED IN PASSING (`1e9628cd`): **the page served could enter no paying round.** Two of its three money
   scripts, `blwp-client.js` and `blwp-core.js`, had fallen off `known-good-clients.json` when I rebuilt
