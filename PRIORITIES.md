@@ -22,13 +22,12 @@ Top item first. Finish and deploy before starting the next.
 
 # NOW  -  M3: what is left
 
-HARD (Daniel 2026-09-21 13:25): **winnings are always sent. There is no Collect.** The player does not
-paste an invoice and does not press a button. After FINAL and the objection window, the pool share
-leaves on its own to the Lightning wallet that paid the stake (NWC `make_invoice` for the owed msat,
-signed by the session key, `POST /winnings` — the node pays once, same door as today). A paid join
-without a wallet that can mint an invoice is refused before the stake is taken. Measure: a delivered
-truck, nobody presses Collect, the winner's balance rises by the pool share; a second path does not
-pay twice.
+HARD (Daniel 2026-09-21 13:25, clarified 13:33): **winnings are always sent. There is no Collect.**
+Paying the stake stays a normal hold invoice — any wallet can pay `GET /invoice`. That is not NWC-only.
+NWC is only the return path: after FINAL, `make_invoice` for the owed msat, session-key signed,
+`POST /winnings`, the node pays once. Do not refuse a paid join because NWC is missing. Measure: a
+delivered truck, nobody presses Collect, the winner's balance rises by the pool share; a second path
+does not pay twice.
 
 THIS IS THE LIVE ITEM. Stop whatever else is open.
 
