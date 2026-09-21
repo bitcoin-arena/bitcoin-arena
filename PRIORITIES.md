@@ -105,14 +105,17 @@ NEXT M3 ITEM, ON TOP (2026-09-21): **a played stake must settle, and the hold ca
 hold went **CANCELLED** - "handed back to its owner", §23.2, the committee deciding rather than a clock
 running out. The other was **FAILED 0** and its stake is the pool, and the pool never formed:
 `lncli settleinvoice refused: invoice already canceled`, **payouts 0, payout_signatures 0**.
-NOT THE ON-CHAIN EXPIRY: the HTLC's height 93895 was mined 51 s AFTER that entry's window closed. **lnd
-cancels a held HTLC about 17 blocks early** (height 93878 against a CLTV of 93895), so the usable budget is
-~127 blocks, not the 144 the contract names - 713 s at the measured rate against the 780 s a round needs.
-Whatever is ruled, the door-side sum must use the EFFECTIVE budget.
-AND A LOOSE END: both seats still hold that entry at `SETTLE_REQUESTED` while lnd says CANCELED, because
-`custody.reconcile()` runs only at startup and `settleHeldInvoices` refuses to touch a mid-act state. A
-settle lnd refuses on a live node leaves an intent nothing clears. Naming it, not fixing it - it is the
-settle path and it wants a ruling.
+NOT THE ON-CHAIN EXPIRY, and read off the invoice's own HTLC record: accepted at height 93748, expiry
+93895, **resolved at height 93878 - lnd gave up 17 blocks early, having held it for 130 of its 147**; the
+expiry block was not mined until two and a half minutes later. Measured from acceptance: **730 s of usable
+hold against 830 s of round. Short by 100 s.** Whatever is ruled, the door-side sum must use the EFFECTIVE
+budget - 144 less lnd's own margin - and count it from acceptance, not from the round opening.
+FIXED 2026-09-21 (`d2f03c8f`): a settle Lightning refuses is written down instead of leaving the row
+mid-act. The throw came straight out of the loop, so the row stayed `SETTLE_REQUESTED` on both seats - where
+`settleHeldInvoices` will not touch it and `custody.reconcile()` only runs on start - **and the winner's
+stake, next in the same round, was never acted on at all**. Nothing new is decided: the party that knows is
+asked the same question `reconcile` asks, and a port that cannot answer leaves the row alone. custody 23/23
+(2 new). The stuck row cleared to CANCELLED at both seats when the Daily moved onto it.
 
 CORRECTION, MEASURED: the line here first said the hold was `ACCEPTED`/`HELD` with the round not closed.
 That was a snapshot taken before the close ran. Read again afterwards, both seats agree: **both rounds ARE

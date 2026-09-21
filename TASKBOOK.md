@@ -20,12 +20,29 @@ The loser's stake is the pool, and it did not get there:
 
   [verify] lncli settleinvoice refused: invoice already canceled
 
-WHY, AND IT IS NOT THE ON-CHAIN EXPIRY. The HTLC's stated expiry was height 93895, mined at 08:03:29 - 51 s
-AFTER the loser's objection window closed at 08:02:38, and the settle was requested at 08:02:39. The chain
-had not reached the expiry. **lnd cancelled the held HTLC 17 blocks early**: at 08:02:37 the height was
-93878 against a CLTV of 93895. So the usable budget is not the 144 blocks the contract names, it is 144
-less lnd's own safety margin - about 127 here, which at 0.178 blocks/s is 713 s against the 780 s a round
-needs. Short by 67 s. Any door-side check has to use the EFFECTIVE budget, not the nominal one.
+WHY, READ OFF THE INVOICE'S OWN HTLC RECORD rather than inferred:
+
+  accept_height    93748
+  expiry_height    93895          (the 144 blocks this node now asks for, plus 3 of route)
+  resolve_time     1789977656     = 08:00:56, and the chain was at height 93878 then
+  state            CANCELED
+
+**lnd gave up 17 blocks before the expiry it was asked for, having held the HTLC for 130 of its 147.** The
+chain never reached 93895 - that block was mined at 08:03:29, two and a half minutes later. There is no
+`IRPC: Canceled invoice` line for this hash either, so it was not this node asking; the winner's hash
+(410ed05a) has one, which is §23.2 handing that stake back, and the preimage this node offered for the
+loser hashes to the loser's own payment hash, so it was the right preimage on the right invoice.
+
+The whole race, measured from the moment Lightning accepted the HTLC:
+
+  accepted                        07:48:46 (height 93748)
+  round closed                    07:52:22
+  lnd gave up                     08:00:56 (height 93878) - 730 s of usable hold
+  the objection window closed     08:02:38 - 830 s after acceptance
+
+**730 s of hold against 830 s of round. Short by 100 s.** So the budget a door-side check must use is not
+the 144 blocks the contract names: it is 144 less lnd's own safety margin, measured at 17 blocks here, and
+it is counted from acceptance, not from the round opening.
 
   payouts 0, payout_signatures 0    - no payout table formed, so no sat moved between the two players
 
