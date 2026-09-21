@@ -46205,3 +46205,39 @@ one - whether that matters is a ruling, not a number.
 SUITES: protocol federation-slash + slash-distribution + protocol + genesis + advert-witness 58/58;
 blwp-node custody + round + server + winnings-door 61/61; blwp-client page-stake + session-pay +
 backpressure 38/38.
+
+## The network id did not commit to the federation clocks (2026-09-21)
+
+Asked of the code, closing out the clocks letter: does anything CALL the clocks, and does the network's
+own identity cover them?
+
+    callers of federation-slash.js outside its own test   0
+    federation parameters in encodeGenesisParameters      0 of 6
+
+`encodeGenesisParameters` hashed eight fields - chain, the two slot/threshold pairs, censusMinNodes,
+censusConfirmations, bondMaturity - and §27A.6 lists six more that it did not: `federation_nominal`,
+`abandon_blocks`, `departure_notice`, `founding_window`, `drain_blocks`, `claim_blocks`. That block is
+committed in `network_id`, so the id did not commit to them.
+
+What that meant concretely: two networks could share a `network_id` while one drains a federation in 24 h
+and the other in 28 d, and a contract naming that id would not say how long its holder's money can be
+frozen or how long he has to claim it. Same class as the BLOCK_TICKS gap fixed earlier today at
+`9a78ecf1`, on the other half of the genesis.
+
+Fixed: the six are hashed, `testnetShape` carries them, and `genesisFor` gives testnet 2/12/18/18/144/9
+and regtest 4/10/10/10/100/10 - they differ per network and used to share one shape. Both ids moved:
+
+    testnet4   e9171215... -> 9715f0c6...
+    regtest    06ad7746... -> 66f5caba...
+
+The blast radius was the same one and was handled the same way: both test donation sets carry the network
+id in their signed bodies, so they were re-signed by the same two authority keys. No recipient, share or
+endpoint moved, and the published vectors are byte-identical - regenerating them changed nothing.
+
+SUITES: protocol genesis + federation-slash 15/15, slash-distribution + protocol + advert-witness +
+census-resolve + donation 84/84; blwp-node custody + round + donation-set-door + bond-key + advert 72/72;
+blwp-client page-stake + session-pay + backpressure 38/38.
+
+STILL TRUE AND NAMED: nothing calls federation-slash.js but its own test. The clocks, the cap and the
+liquidation split are law that goes red when changed, not a running system - no node path opens a claim
+window, publishes a spent-note list or builds the escrow output.
