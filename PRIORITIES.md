@@ -121,11 +121,23 @@ WHAT MADE IT POSSIBLE: the HTLC is sized from the chain's measured pace (0.755 s
 1130 blocks where 144 would have bought about 100 s), capped at what a payer will actually pay - lnd
 refused 2044 blocks outright, "cltv limit 2016 should be greater than 2047" - and a round whose hold still
 cannot reach FINAL is refused at the door. Commits `280dbf86`, `ee2b39dc`, `8b86847b`.
-**THE HOLE THAT REMAINS, and it is not the window rule: the winner was not paid.** The pool - the loser's
-98 sat - sits in the committee's own Lightning balance, `payouts` holds no row, and on THRESHOLD_LN custody
-there is no leg that carries it to the player. That is the same shape as the 2% fee's, which this board
-already records as diagnosed and not spent: **THRESHOLD_LN has no object that can carry money OUT.** A
-stake settles; a payout does not yet move.
+**AND THE WINNER WAS PAID, 2026-09-21** (round `0baee7d8`, the same shape: one DELIVERED at tick 2504, one
+missed). What the settle now does is write one `winnings` row per qualifier - the table row less that
+player's own net stake - and two doors carry it: `GET /winnings?entry=` says what is owed, `POST` takes a
+BOLT11 **signed by the entry's session key** and pays it once. Live:
+
+    the pool owes this entry     98000 msat
+    alice before                 996236 / 1000098
+    POST /winnings               200 PAID 98000, already=false
+    alice after                  996334 / 1000000
+
+**The player's own Lightning is up 98 sat and the committee's is down the same 98. The operator keeps
+nothing.** The invoice was signed in the tab; the session key never left the page. Commits `6f97dab8`,
+`a7f0dac3`, `e940d9c0`.
+THE SAME MEASUREMENT FOUND A HOLE IN THE LEG IT WAS PROVING, now closed: seat a wrote PAID/98000 while seat
+b was still OWED/98000, and the seats share one Lightning node - a player asking the second seat with a
+DIFFERENT invoice would be paid the pool twice out of the operator's channel. The seats are asked before
+the money leaves, and a seat that cannot reach its peers pays nothing.
 
 2026-09-21, THE FIRST HOLD RESOLVED BY A DECISION - and still no payout. A two-player paid round
 (`b35f6e48607102f5`), both stakes 98000 msat held: the driven player was **DELIVERED score 174** and their
