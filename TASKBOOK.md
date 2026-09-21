@@ -46597,3 +46597,30 @@ either, so "the 2-of-2 federation that runs today" needs its own check before it
 Everything else for step 1 is in place: the advert, the plumbing (`signerNode: { stakeLocks }` is already
 spread into serve's options and `w5b.mjs` already opens a paying federation round through it), and a live
 federation with a vetted gateway.
+
+## The page a player is served had fallen off its own known-good list (2026-09-21)
+
+Found by running blwp-node's suite after the guardianOf commit, not by looking for it. Three reds in
+`client-hash.test.js`, and they are not the listed `blwp-curve.js` one - that one now matches. The tool,
+run over HTTP against the served template, said:
+
+    blwp-client.js  MISMATCH  de9e2822945fcf5863ad2356139331988b7360424574d2ed0e3971358f7d34da
+    blwp-curve.js   match     c7d28f3bc222a0fe9d06c3e1c21f707a6a88ab6577dde486c11fd7a5916cf752
+    blwp-core.js    MISMATCH  37e77ce20ec8d0951b684ffb48fd1e7d0c1aa76383d0c2d6d2f4a9fa461da9e6
+
+§24 F2: "a client whose hash is not on the known-good list cannot enter a paying round". Two of the three
+money scripts the page serves were not on it, so the page the daily URL serves could not have entered one.
+
+MINE, and from a letter I called closed. `known-good-clients.json` was last written at `df66c6d1` - the
+commit the live checkout is pinned at. `dist/blwp-client.js` has moved twice since, both mine (`af1aaf7f`
+the BURN withdrawal and the backup gate, `c2437401` the §24B lobby warning), and `dist/blwp-core.js` at
+`fea4a2f6`. I regenerated the bundles and did not re-pin them.
+
+Not a hand-edit: `packages/blwp-client/tools/known-clients.js` writes the list, appends rather than
+replaces, and the template was already byte-identical to every dist - so the page ships what the source
+built, and only the list was behind.
+
+    before  blwp-client.js 89 pinned, blwp-core.js 28, curve 2, lock client 8, lock wasm 8
+    after   blwp-client.js 90 pinned, blwp-core.js 29, the other three untouched ("already listed")
+    client-hash.test.js  3 pass 0 fail (was 0 pass 3 fail)
+    blwp-node chunk 1/121 files  125 pass 0 fail (was 122 pass 3 fail)
