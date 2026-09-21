@@ -49,6 +49,11 @@ refusals are deleted from the source and read `undefined` in the bundle the dail
 blwp-client 38/38, protocol 73/73, blwp-node 74/74, core 142/142; PlayMode and EditMode not run and not
 owed, no C# moved. Detail in TASKBOOK.md.
 
+  FIXED IN PASSING (`1e9628cd`): **the page served could enter no paying round.** Two of its three money
+  scripts, `blwp-client.js` and `blwp-core.js`, had fallen off `known-good-clients.json` when I rebuilt
+  the bundles in the last two letters - §24 F2 refuses a client that is not on the list. Re-pinned with
+  the generator (appends, drops nothing): 89 -> 90 and 28 -> 29. client-hash 3 pass, was 0 pass 3 fail.
+
   LATER ITEM, NOT THIS LETTER: **the daily lobby lists nothing.** The page is at network id `66f5caba`
   and the live signer nodes are pinned at `595f0df3`, id `b07c4a09` - two different networks, so no round
   is joinable there. The wallet surface on the daily URL is fine; the lobby is not. Moving the pin is a
