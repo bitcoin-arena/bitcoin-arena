@@ -5,6 +5,68 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE FIXTURE'S WINNER DELIVERS AGAIN (2026-09-21). window-fixture.js `wordsAt`.
+
+MEASURED BEFORE CHANGING ANYTHING, straight off the core, no server and no federation:
+  the old program `[45875, ((t*977)%30000)-15000, (t%700)<40 ? 65536 : 0, 0, 0]` - 0.7 throttle, a steering
+  wheel sawing +-15000, the brake held 40 ticks in every 700 -
+    tick 1320 (what the suites play): x 122.5, z -23.4, LIVE, score 5
+    tick 10800 (the whole block):     x 145.9, z -80.2, FAILED, score 2   furthest east ever: x 145.9 m
+
+WHAT THE RULE ACTUALLY IS: `arrived = x >= GATE_X && |z| <= HALF_MOUTH`, GATE_X 168.6 m, HALF_MOUTH 34 m
+(`rules/gate.js:19,20,44`). AND THE TRUCK SPAWNS AT z 71.4 m. So the miss was never three metres of x - it
+was the mouth. Two more programs, measured:
+    full throttle, no steering        furthest x  42.2 m   FAILED at tick 664 (wrecks early)
+    fixture throttle, no steering     furthest x 165.6 m   FAILED at 10800
+
+THE DRIVER NOW AIMS AT THE GATE THE CORE PUBLISHES, in the core's own units. Heading is a fraction of a turn
+in Q16.16 (0.25 = +x, measured off the spawn pose), so the desired heading is `atan2(GATE_X + LEAD - x, -z)`
+and the steering word is the wrapped error times a gain. `LEAD` is 20 m PAST the gate, because a truck that
+turns toward a point it is already on steers into the doorframe; 20 m was the shortest lead measured that
+still arrives. Nothing is hand-tuned to a tick count: the day the world moves again, this follows it.
+
+The tape is built closed-loop in the WINNER's world and handed out as fixed words, which is what the protocol
+needs - every signer node replays the same bytes. Measured on it:
+    winner, 1320 ticks: DELIVERED at tick 1018, score 5, z -0.4 (the middle of the mouth)
+    loser,  1000 ticks: still running, x 159.8, z -54.0 - outside the mouth, as a loser should be
+
+COUNTS, one suite per call, `timeout 180 node --test --test-timeout=120000`:
+
+  suite                        before   after
+  outage                        8 / 9    9 / 9    green
+  first-mark                   13 / 14  14 / 14   green
+  one-signer-node-refused       4 / 5    5 / 5    green
+  forfeit                       0 / 2    2 / 2    green
+  lock-settlement               1 / 15  14 / 15   (five chunks by name; 8 to 33 s a test)
+  TOTAL                        26 / 45  44 / 45
+  publication-finality          6 / 7    7 / 7    green, not asked for - it plays the same driver
+
+AND THE MONEY LINE THIS WAS ALL FOR, printed by the fee-lock door test:
+  "claimed 1 loser lock(s), 980000 msat; paid 1 qualifier(s) 978000 msat; fee locks 2, 40000 msat,
+   paid 2 signer node(s) 36000 msat"
+The 2% is taken and paid to the sitting seats, with a qualifier paid out of the loser's stake. That is M3's
+own sentence, green for the first time.
+
+NO ASSERTION WAS LOOSENED. One constant moved and it is a measurement, not a choice: forfeit's message test
+said "DELIVERED with score 34"; the run now scores 5. The file's own history records that number as 12, then
+367, then 34 - it is the driver of its day. The test still pins DELIVERED, the exact score, and the minimum.
+
+THE ONE RED LEFT, with its cause and what it depends on: `lock-settlement` "a round with a loser and no
+qualifier claims nothing" expects state NONE and 0 submissions; it now gets ACCEPTED. Nothing to do with the
+driver - it is the legal federation from the last letter. That round MINTS fee locks now, so the entries
+bring them, and the settlement claims them and pays the sitting seats even though `minScore: 1000000` means
+nobody qualifies. The stake side is still right: the loser's lock is not claimed and expires back.
+IT DEPENDS ON A RULING: is §22A's 2% taken when nobody qualifies? The seats did the work either way, which
+argues yes - but that rewrites this test's premise, so it is not rewritten here.
+
+ALSO SEEN, AND NOT MINE: `first-mark` "late start at close (2): signer node B down, then caught up late" was
+red on the first run (finality PROVISIONALLY_FINAL where FINAL is asked) and green on the second with nothing
+changed in between. An intermittent in a test about a node catching up late; recorded, not chased.
+
+NO REGRESSION: the eight suites that were wholly green under this fixture still are - rerun 4/4,
+slash-filing 3/3, signer-node-relay 5/5, close-retry 3/3, core-registry 3/3, lobby 1/1, lobby-names 1/1,
+federation-named 1/1.
+
 THE FAKE FEDERATION IS ONE BLWP WOULD ACCEPT (2026-09-21). `test/lock-fixture.js:60` 1000n -> 0n.
 
 WHAT THE 1000 WAS STEERING, measured with `feeLockPays` on the fixture's own `contractFor` before anything

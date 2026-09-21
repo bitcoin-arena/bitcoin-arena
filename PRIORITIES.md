@@ -46,11 +46,23 @@ lock, which is the production shape.
 FEE-LOCK is still tested and now on a legal federation: the door refuses an entry that brings none at both
 signer nodes, and the settlement claims 2 fee locks, 40000 msat, paying 2 signer nodes 36000 msat.
 
-THE 19 REDS LEFT ARE ONE CAUSE AND IT IS NOT THIS FIXTURE: **`window-fixture`'s WINNER no longer delivers.**
-Straight off the core, no server and no federation: the truck reaches **x 145.9 m** at its furthest and the
-**drop-off line is at 168.6 m** - 22.7 m short - so the run ends FAILED with score 2. `wordsAt`'s steering
-program has not followed the world east. It depends on a steering program that delivers; that is a
-window-fixture repair under ~23 suites. Numbers in TASKBOOK.
+DONE (2026-09-21): **the fixture's winner delivers again, and the fee is taken and paid out.** `wordsAt` drove
+0.7 throttle with the wheel sawing and the brake held 40 ticks in 700; it reached x 145.9 m while the gate is
+at 168.6 m - and the truck spawns at z 71.4 m with the mouth only 34 m wide, so the miss was the mouth, not
+three metres. The driver now aims at the core's own `GATE_X` in the core's own units and the tape is built
+closed-loop, so it follows the world if it moves again. **Winner DELIVERED at tick 1018 of its 1320.**
+
+  outage 8/9 -> **9/9**, first-mark 13/14 -> **14/14**, one-signer-node-refused 4/5 -> **5/5**,
+  forfeit 0/2 -> **2/2**, lock-settlement 1/15 -> **14/15**.  TOTAL **26/45 -> 44/45**.
+  publication-finality 6/7 -> **7/7** as well. The eight suites already green under this fixture still are.
+
+M3's own sentence is green for the first time: *claimed 1 loser lock 980000 msat; paid 1 qualifier 978000
+msat; fee locks 2, 40000 msat, paid 2 signer nodes 36000 msat.*
+
+ONE RED LEFT, AND IT NEEDS A RULING, not a fix: "a round with a loser and no qualifier claims nothing" now
+settles ACCEPTED instead of NONE - because the legal federation mints fee locks, so the seats are paid their
+2% even though nobody qualified. The stake side is still right (the loser's lock expires back). **Is §22A's
+2% taken when nobody qualifies?** The test's premise is not rewritten until that is answered.
 
 DONE (2026-09-20): **the three threshold suites can sign again**, the same hole as `reconstruct` and not a
 new one. `settle-threshold` 0/2 -> **2/2**, `pool-threshold` 0/4 -> **4/4**, `handout-threshold` 0/2 -> **2/2**:
