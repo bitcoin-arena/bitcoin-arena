@@ -100,6 +100,11 @@ open line that is neither fenced nor parked.
     reads: `BLWP_ADVERT`, `BLWP_CHAIN`, `BLWP_ROUND` are **undefined before and after**, so
     `blwpDiscovery()` throws "the page carried no chain providers" - on its SILENT branch, because the
     console.error only fires when BLWP_CHAIN is already defined - and `nodeUrl` stays empty.
+    NARROWED 2026-09-21 (deployed, page only, stamp still 0.0.1866): the parser is NOT the fault -
+    `joinFromQuery` run against the live query returns the round contract, refused=[]. Every silent join
+    refusal now speaks, and **none of them fires**: 99 console events, 0 exceptions, 0 "join refused" lines,
+    and still no entry or invoice. In 90 s the paid join neither completes nor refuses. Next: say `join.stage`
+    out loud - it is what separates "waiting on the player" from "stuck".
   - PARKED BY RULING: guardians and `federationIsBonded`
 
 FOLLOW-ONS, one line each:

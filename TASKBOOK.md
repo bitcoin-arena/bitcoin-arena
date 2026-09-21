@@ -5,6 +5,44 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+EVERY JOIN REFUSAL SPEAKS NOW - AND NONE OF THEM FIRES (2026-09-21, deployed, alias serving it).
+
+STEP 1 OF THE LETTER WAS NOT IMPLEMENTED, BECAUSE THE MEASUREMENT CONTRADICTS ITS PREMISE. The page does not
+fail to parse the join query: `index.html:1554` already calls `joinTheRoundIfOneWasNamed()` after the
+rewrite, which calls `BLWPCLIENT.joinFromQuery(location.search)`. That parser was run in node against the
+LIVE query and it works:
+
+    joinQuery  -> round c956470d8b7a6862, nodes [sensitivity-...,flight-...], advert 18da61edc168fe17a408
+    joinFromQuery -> ok, round contract from https://sensitivity-...trycloudflare.com, refused=[]
+
+So a second parser writing the globals would have duplicated a working one and hidden the real cause. Not
+written.
+
+WHAT WAS WRITTEN, which is step 2. The globals are set LAST (index.html:849-856, "BLWP_CHAIN AND BLWP_ADVERT
+ARE SET LAST, beside BLWP_ENTRY"), and the paid branch above them has five refusal points. Only two spoke;
+three set `window.BLWP_JOIN_REFUSED` and returned in silence, and so did the handback at the end of
+`join()`. All of them now `console.error('[blwp] join refused: ' + ...)`, the way the two loud ones already
+did. Shipped by copying the template over the built index.html - the documented way an edit reaches a deploy
+without a rebuild - so the build stamp is still 0.0.1866 and only the page changed.
+
+THE RESULT, and it is not what the change was aimed at:
+
+  paid round 442680ed99607d3b, 100 sat, joinable, join() -> true
+  console events after join: 99      exceptions: 0      "join refused" lines: 0
+  /entry 0   /invoice 0   /stake 0   /handout 0   POSTs to a seat 0
+  /identity 4   /round? 8
+  the gate line, unchanged: +1.3s [blwp] no session yet: the page has named no node
+
+NO REFUSAL FIRES. In 90 seconds the paid join neither completes nor refuses. That rules out all five refusal
+points and the handback - they are now loud and silent means not taken. What is left is that the flow is
+AWAITING something, or that it set `join.stage` (which suppresses the 30 s JOIN_ANSWER_S timeout by design:
+`if (join.stage) return;` - a stake lock or an invoice "names its step and waits on the player"). No invoice
+was ever fetched, so if a stage was named it was named without one.
+
+THAT IS THE NEXT MEASUREMENT: read `join.stage` - the one value that distinguishes "waiting on the player"
+from "stuck". It cannot be read with `Runtime.evaluate`, which goes silent after the join, so it has to be
+said out loud like the refusals were. Not done this turn.
+
 THE NODE IS ON THE URL; THE SESSION OPENER NEVER READS IT (2026-09-21). Four strings, one PLAY click.
 
   (a) WHAT THE LOBBY HELD WHEN JOIN WAS CLICKED
