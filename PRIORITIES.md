@@ -110,6 +110,23 @@ WHAT IS LEFT FOR M3 (the fee-lock line has been MEASURED but not spent; the rest
 
 NEXT M3 ITEM, ON TOP (2026-09-21): **a played stake must settle, and the hold cannot outlive the round.**
 
+SETTLED 2026-09-21, LIVE ON THE DAILY - the first stake ever moved by the committee's decision. A two-player
+paid round (`262dbc1a`), one driven to **DELIVERED at tick 2360**, one left to miss, both stakes ACCEPTED at
+**cltv 1130**. The close closed; nothing moved then; §13A's 600 s window ran; and then both seats, agreeing
+word for word: **the loser's stake SETTLED, the winner's CANCELLED**, every hold out of HELD, **0 pending
+HTLCs**. The money followed: the committee's channel **1000000 -> 1000098 sat**, alice down the same 98.
+The node prints one `[money]` line per settle pass now, so a stake that does not move says why on the pass
+it did not move on.
+WHAT MADE IT POSSIBLE: the HTLC is sized from the chain's measured pace (0.755 s a block on the Daily, so
+1130 blocks where 144 would have bought about 100 s), capped at what a payer will actually pay - lnd
+refused 2044 blocks outright, "cltv limit 2016 should be greater than 2047" - and a round whose hold still
+cannot reach FINAL is refused at the door. Commits `280dbf86`, `ee2b39dc`, `8b86847b`.
+**THE HOLE THAT REMAINS, and it is not the window rule: the winner was not paid.** The pool - the loser's
+98 sat - sits in the committee's own Lightning balance, `payouts` holds no row, and on THRESHOLD_LN custody
+there is no leg that carries it to the player. That is the same shape as the 2% fee's, which this board
+already records as diagnosed and not spent: **THRESHOLD_LN has no object that can carry money OUT.** A
+stake settles; a payout does not yet move.
+
 2026-09-21, THE FIRST HOLD RESOLVED BY A DECISION - and still no payout. A two-player paid round
 (`b35f6e48607102f5`), both stakes 98000 msat held: the driven player was **DELIVERED score 174** and their
 hold went **CANCELLED** - "handed back to its owner", §23.2, the committee deciding rather than a clock
