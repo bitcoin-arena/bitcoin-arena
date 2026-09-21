@@ -129,11 +129,13 @@ every word has been typed back once in order the lobby says there is no backup a
 paid join are refused. A free round never asks. Withdraw is never gated - taking your own money out does
 not need a backup. Seen on screen with a fresh wallet, not only in a suite.
 
-  NOT SEEN, three facts, each with its own cause and none of them the live pin: a listed PAID round to
-  refuse needs a federation, and FEDERATION is the only custody, so a local launcher opens free rounds
-  only; and the free round does not join on that path - the gate is not what stops it, the page falls
-  into practice with "no session yet: the page has named no node", which is the playable-client letter's
-  symptom, not this one's. Numbers and screenshots in TASKBOOK.md.
+  NOT SEEN, and each with its own cause, none of them the live pin. A listed PAID round to refuse needs a
+  federation whose guardians are bonded: the toolchain is on this machine, but `regtest-bond.mjs` posts
+  `guardianOf: []`, so `federationIsBonded` counts zero of the threshold and the node refuses the round
+  by name - teaching the launcher to advertise its guardian keys is the guardians/federation letter, not
+  this one. And the free round does not join on that path, where the gate is measurably NOT what stops it
+  (money-why empty, flag null): the page falls into practice with "no session yet: the page has named no
+  node", which belongs to the playable-client letter. Numbers and screenshots in TASKBOOK.md.
 
 HARD (Daniel 2026-09-21 17:08): **there is no THRESHOLD_LN. Only federation and guardians.** Spec
 changed (`c7b74585`). A round naming any other custody is invalid. Guardians are no longer parked:

@@ -46408,3 +46408,43 @@ NOT SEEN, with the measured reason for each:
 
 So the pin is not the only thing between these three and being seen: one needs a federation and two need
 that join path. Both are named rather than worked around.
+
+## The paid-join half of §24B cannot be shown yet: the bond advertises no guardian (2026-09-21)
+
+Ruled: stand the smallest local federation that can list ONE paid round, or stop and name the exact
+missing piece. Measured both halves rather than assumed.
+
+THE TOOLCHAIN IS HERE, and my earlier "fedimintd is not on this machine" was wrong - that search was
+depth-limited:
+
+    fedimintd 0.12.0   /home/daniel/.cache/tmpx-7d8656ae7b00ead0/dat/nix/store/x3y5nl...-fedimintd-0.12.0/bin
+    fedimint-cli, gatewayd, gateway-cli, and a built blwp-stake-lock
+                       /tmp/claude-1000/-tmp-btc-phase0/6c484a6e-.../scratchpad/fedimint/
+
+So a federation could be stood up. It still would not list a paid round, and this is the piece:
+
+    regtest-bond.mjs, postBond():   guardianOf: []
+
+and the node refuses on exactly that (`server.js` guardiansBonded -> `federationIsBonded`):
+
+    for (const e of census) {
+      if (!e || !e.advert || !Array.isArray(e.advert.guardianOf)) continue;
+      if (typeof e.bondSats !== 'bigint' || e.bondSats < bondMinSats) continue;
+      ...
+    }
+
+"At least the federation's threshold of its guardian keys must be advertised under guardian_of[] by
+distinct census nodes bonded at or above the round's bond_min." With `guardianOf: []` on both bonds, the
+count is zero of two and the round is refused by name - correctly.
+
+Making the launcher advertise `guardianOf` means it must learn the federation's guardian broadcast keys
+before it posts its bonds, and carry them in each signer node's advertisement. That is the guardians and
+federation wiring - the live item's own letter - and it is not started inside this one.
+
+WHAT THIS DOES NOT BLOCK, and was measured last turn on this same harness: the free round does not ask
+for the phrase. `blwp-money-why` stayed empty and `blwp.backup.verified` stayed null when the free row was
+clicked - the gate is not what stops that join. It stops for "no session yet: the page has named no node",
+which is the playable-client letter's symptom and is recorded there, not here.
+
+So §24B's gate is shown for Deposit and for the free round, and the paid-join refusal waits on a bond that
+names a guardian.
