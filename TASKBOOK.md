@@ -5,6 +5,49 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE SLICES - AND THE SESSION IS ALREADY OPEN LONG BEFORE THE STAKE IS PAID (2026-09-21).
+
+One paid run, every milestone read from the page's OWN logs (no prints added, no behaviour changed). Round
+startTimeMs 1789964758000, 60 ticks a second, deadline today tick 900:
+
+  round tick   wall s   milestone
+     597        10.0    [blwp] practice on (from scene)
+     604        10.1    [blwp] core is driving
+     609        10.2    [blwp] no session yet: the page has named no node
+     712        11.9    [blwp] joining round a15a7763...
+     735        12.2    [blwp] session opening against the chain
+     754        12.6    [blwp] world seed 0x1ca357da from 2 node(s) agreeing on the round randomness
+     773        12.9    [blwp] the chain was read afresh to open this session
+    6117       102.0    stake HELD at seat sensitivity-
+    6175       102.9    stake HELD at seat flight-costa
+    6475       107.9    first mark() attempt
+
+EACH SLICE, AS ASKED - and the answer to "may it run during the invoice wait" is that IT ALREADY DOES:
+
+  joining round -> session opening        23 ticks (0.4 s)   before HELD, at 12 s
+  session opening -> world seed agreed    19 ticks (0.3 s)   before HELD
+  world seed -> chain read afresh         19 ticks (0.3 s)   before HELD
+  session open -> stake HELD            5402 ticks (90.0 s)  THE INVOICE WAIT ITSELF
+  HELD (both) -> first mark() attempt    300 ticks (5.0 s)   the only slice after HELD
+
+So session-open, seed agreement and the chain read are NOT part of the post-HELD gap: they cost 61 ticks
+(1.0 s) in total and they happen at 12 s, during the wait, with no outcome computed in the browser and
+nothing that changes replay - the seed is agreed by both nodes and the chain is read, exactly as they are
+today. There is no work left to move: it has already moved.
+
+AND THE 1006 FROM THE PREVIOUS RUN IS NOT REPRODUCED. Post-HELD is 300 ticks here, not 1006. The two runs
+differ, so the gap is not a fixed cost.
+
+THE THING THAT MATTERS MORE, MEASURED HERE BY ACCIDENT: THE MARK'S TICK IS NOT THE ROUND'S TICK. The first
+mark() attempt happened at wall 107.9 s - round tick 6475 - but the tick the client PUT IN the mark is 5280.
+They differ by ~1195 ticks. The page's core starts driving at wall 10.1 s (practice, before any round) and
+numbers from there, and it does not run at exactly 60 a second in a browser: 5280 ticks over the 97.8 s since
+it started is about 54/s. The node compares that number against a deadline expressed in the ROUND's ticks
+(`joinTick + 900`). Two clocks, one comparison.
+
+NOT CHASED AND NOT PATCHED. `first-mark.js`, §13B and the close path are untouched, and no origin was moved.
+Which slice moves - or whether the comparison itself is the fault - is the next decision, from these numbers.
+
 THE THREE TICKS, MEASURED BEFORE ANY CHANGE - AND THE RULED ORIGIN IS 106 TICKS SHORT (2026-09-21).
 
 One paid join, the five-field `mark()` print still in place. The round's own clock: startTimeMs
