@@ -45562,3 +45562,62 @@ FOUR REDS CLEARED WITH IT, all of them the fee hold's arrival at entry, none of 
                    overwrote the first: "not paid and held: 2000 of 98000 msat" on a good stake.
   close-at-end     built a round "over" 200 s back when the span is 2*1400 + 10800 ticks = 226.6 s,
                    so the round the test is named after was never built.
+
+## The winning left on its own, with no tab anywhere (2026-09-21, round ee903c10)
+
+The 13:54 ruling, measured end to end against `fe9dc9e8` - and this time with nothing of the player's
+running when the money moved.
+
+    both seats     paid the stake and the fee from alice, NO NWC string in the run
+    winner         typed win@127.0.0.1:18778 once, while still driving
+    13:29:25       addr[5C2F84A2->win@127.0.0.1:18778] ON DISK, round still open, nothing owed yet
+    core           DELIVERED at tick 2062
+    13:32:17       port 9351: 1 tab, 0 on the game | port 9352: 1 tab, 0 on the game
+    13:34:32       the round closed; window 600000 ms
+    +8258ms        5c2f84a2 DELIVERED ... settle=not-final hold=HELD | 647cb073 FAILED ... hold=HELD
+    +598s          fees HELD, stakes HELD, winnings none
+    +618s          fees SETTLED, winner's stake CANCELLED, loser's SETTLED, winnings PAID/98000
+    alice          996110 -> 996306 sat  (+98 her own stake back, +98 the pool's share)
+    committee      1000220 -> 1000224    (98 out, the loser's 98 in, +2000 +2000 msat of fee)
+    endpoint       payRequest asked (x2), callback asked for 98000 msat -> lnbcrt980n1p4tzdxv...
+    lnd            exactly one 98000 msat payment for this round, at 13:44:44
+
+Against round ec9bd34e two hours earlier: that one paid at +12 s on a 600 s window, with both stakes
+still in flight, and only because a tab happened to be open. This one waited the window out and the node
+sent it itself.
+
+BETWEEN THE TWO, ONE MORE ROUND WAS LOST AND IT IS WHY THE PACE IS READ AT HOLD TIME. Round 6deead16 held
+the window correctly and then EXPIRED inside it: "this node's chain is at 98471, past its HTLC's expiry",
+fees CANCELLED, stakes EXPIRED, 200 sat straight back to alice, and a truck that DELIVERED at tick 4522
+paid nothing. The launcher had timed 200 blocks at start and got 5.660 s a block; the same chain was doing
+0.770 s (100 blocks in 77 s) by the time the round was played. The HTLC bought about a thousand seconds and
+lasted about a hundred and forty. Sized from three windows at hold time and taking the fastest, ee903c10's
+invoices asked cltv_expiry 1976 blocks - about 44 minutes at the 1.333 s a block measured while it ran,
+for a round that needs about seventeen.
+
+## What the blockTicks sweep uncovered, and one row still red (2026-09-21)
+
+Thirty-nine paying fixtures named a run length the core stopped using, so those suites never reached the
+daemon. With the length taken from the core:
+  round.test.js       a guard read the words "this M3 step (" in a preflight.js COMMENT as a core being
+                      stepped. It strips comments now.
+  canonical.test.js   seven peer keys plus the node's own is eight signer nodes on 7/7 slots, which §22A
+                      refuses by name. Six and the node is seven.
+  payout-second-...   kept a private winner/loser pair and an OPEN LOOP tape - fixed throttle, a sine of a
+                      steer - that reached the gate by luck. At 10800 ticks the luck ran out and the table
+                      answered NOTHING_OWED, exactly as that file's own comment warned. It uses
+                      window-fixture.js's closed-loop tape now, which steers AT the gate every tick.
+  server.test.js      MAX_FRAME_BYTES had grown 2621509 -> 3146053 (65535 * 8 of it a new per-tick field)
+                      and the pin was never moved with it.
+  void-expiry, unpaid-expiry   a fake port that kept ONE amount for the whole port, so an entry's second
+                      invoice - the node fee's, since §23.5 - overwrote the stake's: "2000 of 98000 msat".
+
+LISTED, NOT REWRITTEN - ghost-live.test.js "the load is what moves the picture, and by how much":
+
+    at tick 899 the loaded run is drawn 0.000 m from the same inputs unloaded
+      | loaded x -50.28 z -8.44 | empty x -50.28 z -8.44
+
+The two pictures are byte-identical, not merely close, on a run where one carries BED [[0, 17314, 42]] and
+the other carries nothing. A load that changes the drawn truck by nothing at all is either a load that is
+not applied or a test driving a truck that cannot show it - and which of those it is needs the core, not
+this file. It is written down rather than tuned.
