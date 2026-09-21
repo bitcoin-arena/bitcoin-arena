@@ -46173,3 +46173,35 @@ a contract - `hand()` burns when there is nobody at all to pay, and an excluded 
 rather than spread over the rest (spreading it would pay the honest MORE the more colleagues were
 slashed). The spec's new sentence is absolute - "every remainder in this document has a recipient" - so
 these two need a recipient naming, and that is a rule call, not a default to flip.
+
+## The federation clocks, all three networks, and what a testnet day actually buys (2026-09-21)
+
+The spec pins three networks at §27A.6; `federation-slash.js` carried only mainnet, so the code could not
+have run a testnet federation at all. All three are in it now, and `clocksFor` refuses a network nobody
+pinned rather than guessing one.
+
+    parameter           mainnet            testnet            regtest
+    abandon_blocks          288 (48 h)          12 (2 h)           10
+    departure_notice        432 (72 h)          18 (3 h)           10
+    founding_window         432 (72 h)          18 (3 h)           10
+    drain_blocks           4032 (28 d)         144 (24 h)         100
+    claim_blocks            216 (36 h)           9 (1.5 h)         10
+
+Testnet is 24x / 24x / 24x / 28x / 24x of mainnet - "about a twentieth", and the test holds it between
+20x and 28x so a clock cannot drift out of the family unnoticed.
+
+AND THE ONE-DAY CYCLE, MEASURED RATHER THAN ASSUMED. At ten minutes a block, which is what pinning 12
+blocks to 2 h assumes:
+
+    abandonment + founding + drain, one after the other   174 blocks   29 h
+    with the founding started at the departure (§23A.5)   156 blocks   26 h
+    the drain by itself                                   144 blocks   24 h
+
+So the DRAIN is the day; the cycle around it is not. A guardian who simply vanishes costs 29 h from his
+last session to the successor's CLOSED, and 26 h if he gave notice and the succession started at his
+departure. Naming it here because the letter was described as a one-day cycle and it is a 26-to-29-hour
+one - whether that matters is a ruling, not a number.
+
+SUITES: protocol federation-slash + slash-distribution + protocol + genesis + advert-witness 58/58;
+blwp-node custody + round + server + winnings-door 61/61; blwp-client page-stake + session-pay +
+backpressure 38/38.
