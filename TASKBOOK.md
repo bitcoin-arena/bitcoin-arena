@@ -5,6 +5,47 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE MARK CANNOT BE JUDGED IN THE ROUND CLOCK, AND THE SUITES SAID SO (2026-09-21).
+
+FIRST, A CORRECTION I OWE. The ruling rested on "the mark already carries a round tick (4223 / 6475 / 4891 /
+4158)". It does not. Those four numbers were MINE - a column I computed from the wall time of the attempt and
+labelled "mark (round)". `encodeCheckpoint` writes exactly one tick, and it is the player's CORE tick:
+
+    w.u8(TYPE_CHECKPOINT); w.u16(PROTOCOL_VERSION); w.bytes32(roundId); w.bytes32(entryId);
+    w.u32(tick); w.bytes32(stateHash); w.bytes32(inputChainHash); w.bytes32(previousHash);
+
+WHAT WAS TRIED. The only round-clock stamp the node has for a mark is WHEN IT ARRIVED, taken the same way the
+HELD origin is - wall ms against the round's `startTimeMs`. Implemented, and against the four traces it is
+exactly what was wanted:
+
+  run       HELD   mark(round)  deadline  post-HELD  outcome
+  origin    4094   4223         4994      129        no forfeit
+  slices    6175   6475         7075      300        no forfeit
+  clocks    4703   4891         5603      188        no forfeit
+  held      4102   4158         5002       56        no forfeit
+
+  (the mixed compare it replaced forfeited two of the four: origin late by 106, held late by 218)
+
+AND IT WAS REVERTED, BECAUSE THE SUITES REFUSED IT: `blwp-node/test/first-mark.test.js` went 14/14 -> 4/14,
+"A recorded no late start: not the case the test names". The suites are right and the reason matters more
+than the ten reds. ARRIVAL IS LOCAL. Two seats receive the same mark at different moments, so they would
+reach different verdicts from the same transcript - identical inputs, different results - and whether a
+player "started late" would depend on the network instead of on the player. That is the one rule this whole
+project is built on, and no start-deadline convenience is worth spending it.
+
+WHERE THAT LEAVES IT. The origin move stands and is committed: the window opens when the stake is HELD, and
+free rounds are untouched. The other side of the subtraction still reads the mark's core tick, because that
+is the only tick the mark carries. Reconciling the two clocks has to happen in WHAT THE MARK CARRIES - the
+client anchoring its tick to the round, or the origin being expressed in the player's own clock - and that is
+a protocol decision about the checkpoint, not a node-side patch.
+
+  protocol/test/first-mark.test.js    5 / 5
+  protocol/test/stopped.test.js       2 / 2
+  blwp-node/test/first-mark.test.js  14 / 14   (14 -> 4 under the arrival compare, 14 again after reverting)
+
+§13B is untouched and still VOIDs two first marks on one entry; 900 is untouched; the close and payout paths
+are untouched; the Daily still runs its pinned checkout.
+
 CORRECTION: POST-HELD IS 56 TO 300 TICKS, NOT 1006 - I MIXED THE TWO CLOCKS (2026-09-21).
 
 Four measured runs, the gap from the stake being HELD at both seats to the first mark() attempt, with BOTH

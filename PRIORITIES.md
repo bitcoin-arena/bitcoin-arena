@@ -175,6 +175,12 @@ open line that is neither fenced nor parked.
     inside 900 in 4 of 4**. My earlier "1006" compared a round-tick HELD against a core-tick mark, which is
     the mismatch itself; the same error inflated the 88/7.6 split. **The window width is not in question; the
     two clocks are** - the 106-tick miss is a round-tick origin (4094) judged against a core-tick mark (5100).
+    TRIED AND REVERTED 2026-09-21: **the mark carries no round tick** - `encodeCheckpoint` writes one tick and
+    it is the core's; the "mark (round)" numbers were my own derivation from wall time. Judging by ARRIVAL
+    instead passed all four traces but took `first-mark.test.js` from 14/14 to 4/14, and the suites are right:
+    arrival is local, so two seats would reach different verdicts on one transcript. Reverted, 14/14 again.
+    **Reconciling the clocks belongs in what the mark carries** - a protocol decision about the checkpoint,
+    not a node patch.
   - PARKED BY RULING: guardians and `federationIsBonded`
 
 FOLLOW-ONS, one line each:
