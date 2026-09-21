@@ -5,6 +5,35 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+A VOID CLAIMS NOTHING, AND NOW THERE IS A TEST (2026-09-21, commit c05a8002).
+
+THE CASE, chosen rather than invented: `one-signer-node-refused` test (1), §13C - "B is up and refuses the
+on-time first mark, both HOLD until the result window, then both record VOID, the lock held". It is the
+smallest existing VOID path that carries a fee lock since this letter, and it is a failure on the OPERATOR's
+side, which is exactly the sentence being defended. The suites that only assert ENTRY_VOID must NOT happen
+were not used, and no new VOID reason was invented.
+
+MEASURED ON IT BEFORE ASSERTING ANYTHING:
+
+  VOID MONEY: {"stakeLockHeld":true,"feeLockHeld":true,"settlements":0,"payouts":[]}
+
+  stake lock   held, unclaimed  -> expires back to the player   (already asserted before this letter)
+  fee lock     held, unclaimed  -> expires back to the player   (asserted now)
+  settlements  0                -> nothing was ever submitted   (asserted now)
+  payouts      []               -> seats 0, operator 0          (asserted now)
+
+So the settlement code already unwinds correctly and NOT ONE LINE OF IT CHANGED. The test was the whole
+change, which is what the measurement said it should be. It could not have been written earlier: until the
+fixture's entries carried a fee lock there was no fee lock on a VOID to have an opinion about, and across the
+tree `feeOutpoint` appeared in four suites with only `lock-settlement` asserting a fee lock's fate, only for
+rounds that SETTLED (537/543/561, untouched here).
+
+The assertion is not vacuous: `port.locks.has` is false for an outpoint the port never held, so `feeHeld`
+passing proves the lock was really minted and really left alone.
+
+COUNTS: `one-signer-node-refused` 5/5 before and 5/5 after - this is added coverage, not a fixed red.
+The 2% no-qualifier path is untouched, and so are lock-settlement's settled-round claims.
+
 RULING (Daniel 2026-09-21): §22A'S 2% IS SEAT COMPENSATION FOR A ROUND THAT ACTUALLY RAN.
 
 It is not a qualifier's prize and it is not operator profit. In the spec's own shape:

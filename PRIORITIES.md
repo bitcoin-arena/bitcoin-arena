@@ -46,14 +46,13 @@ lock, which is the production shape.
 FEE-LOCK is still tested and now on a legal federation: the door refuses an entry that brings none at both
 signer nodes, and the settlement claims 2 fee locks, 40000 msat, paying 2 signer nodes 36000 msat.
 
-LIVE - AND IT BELONGS TO THIS LETTER, NOT THE NEXT M3 ITEM: **nothing proves a VOID unwinds the FEE lock.**
-The ruling has three limbs and only two are measured. "A finished round with no qualifier still pays the
-seats" is green, and "the loser's stake returns" is green - but "a VOID round claims nothing, stakes AND fee
-locks unwind, the operator must not profit from failure" has no test behind it. Until this letter the
-fixture's entries brought no fee lock, so no VOID case could ever have covered one: across the tree
-`feeOutpoint` appears in four suites and only `lock-settlement` asserts a fee lock's fate, only for rounds
-that SETTLED. The suites that do exercise ENTRY_VOID assert it must NOT happen. So the one limb that protects
-against the operator profiting from a technical failure is the one with no evidence.
+DONE (2026-09-21): **a VOID unwinds the fee lock as well as the stake.** The third limb of the §22A ruling
+now has evidence: on §13C's VOID - B refuses the on-time first mark, no quorum forms, both signer nodes
+record VOID after the result window - **both locks are left unclaimed, no settlement is submitted and nobody
+is paid**. The player gets stake and fee back by expiry; the seats take nothing, because there was no round
+to compensate; the operator takes nothing from its own failure. The settler already did this and not a line
+of it changed - the evidence was missing, and it could not have been written until this letter put fee locks
+on the fixture's entries. `one-signer-node-refused` 5/5.
 
 DONE (2026-09-21): **a round with a loser and no qualifier pays no stake and still pays the seats.** §22A's
 2% is seat compensation for a round that actually ran - not a qualifier's prize and not operator profit -
