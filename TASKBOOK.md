@@ -46511,3 +46511,35 @@ not a pin to move.
 SUITES AT HEAD: blwp-client 38/38 (backup-gate, bip39, bundle, bundle-fresh, page-stake, session-pay);
 protocol 73/73; blwp-node 74/74; core 142/142. No C# changed - `git diff --name-only HEAD -- "*.cs"` is
 empty - so PlayMode and EditMode are not owed and no Unity build was started.
+
+## The bond can name the federation it guards, and the gate accepts it (2026-09-21)
+
+First cut of the no-THRESHOLD_LN letter: a paying FEDERATION round could not be ASSIGNED, and the reason
+was one field. `POST /round` refuses a stake-taking FEDERATION round unless `federationIsBonded` finds the
+federation's threshold of guardian keys advertised under `guardian_of[]` by distinct bonded census nodes
+(§23.6 P3). `regtest-bond.mjs` hard-coded `guardianOf: []`, so no harness could ever satisfy it.
+
+Measured on the local regtest, same rule both times, 4 guardians and threshold 3:
+
+    BEFORE  guardianOf per bond  [0,0]
+            federationIsBonded   false - "0 of that federation's 4 guardians are bonded census nodes,
+                                 and its threshold is 3"
+    AFTER   guardianOf per bond  [1,1,1]
+            federationIsBonded   true - ACCEPTED
+
+`postBond` takes `guardianOf` now and `standUpRound` passes it through; both default to empty, so every
+existing caller posts exactly the bond it posted before.
+
+THIS ACCOUNTS FOR X OF THE Y. The federation round path is NOT a green field - `page-lock.js` 922 lines,
+`settlement.js` 363, `lock-settlement.js` 254, `federation.js` 63, and `w5b.mjs` is already a whole
+harness for a paying federation round: "the Daily's own 2-of-2 round naming the federation... two players
+lock their stakes the way the page does... the winner's forfeit... the redeem... the withdraw over the
+listed gateway". What was missing between that and an openable round was the advert, and that is now
+fixed. What remains for step 1 is running it: a federation up, and the round actually opened and settled
+with no `createHeld` on the path.
+
+THE REST OF THE LETTER, measured at HEAD: one load-bearing line of law -
+`packages/protocol/src/constants.js:518`, `CUSTODY = ['THRESHOLD_LN', 'FEDERATION']` - and the cascade,
+116 THRESHOLD_LN fixture sites across 96 test files and 14 tool call-sites, plus ~1400 lines of
+hold-invoice machinery (`custody.js` 863, `lnd-port.js` 174, `lnd-settings.js` 94, `preflight.js` 283)
+that exists only for it. The spec already says it is withdrawn.
