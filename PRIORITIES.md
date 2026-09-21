@@ -22,10 +22,29 @@ Top item first. Finish and deploy before starting the next.
 
 # NOW  -  M3: what is left
 
-HARD (Daniel 2026-09-21 20:01): **no backup, play is still allowed.** A **large warning** stays until the
-player backs up. The lobby has a **direct Backup CTA button**, not only a line in settings. Do not refuse
-PLAY. Do not gate a free or paid round on backup. The earlier board line that refused Deposit and paid
-join until every seed word was typed back is **overridden**. THIS IS THE LIVE ITEM for the page.
+NEXT M3 ITEM, ON TOP AND NOT STARTED: **there is no THRESHOLD_LN - only federation and guardians.** The
+standing HARD below (17:08) is now the top open item for M3. Nothing of it is started this turn.
+
+DONE (2026-09-21, `aa88fa23`) - HARD (Daniel 2026-09-21 20:01): **no backup, play is still allowed.**
+Measured on screen, not only in a suite: the lobby carries a large warning, 1280 x 62 px, with its own
+"Back up now" button; PLAY on a listed round is never refused for a missing backup and the game starts;
+the warning and its button stay up through play; and typing the 24 words back clears it. The earlier
+refusals are deleted from the source and read `undefined` in the bundle the daily URL serves. Suites:
+blwp-client 38/38, protocol 73/73, blwp-node 74/74, core 142/142; PlayMode and EditMode not run and not
+owed, no C# moved. Detail in TASKBOOK.md.
+
+  LATER ITEM, NOT THIS LETTER: **the daily lobby lists nothing.** The page is at network id `66f5caba`
+  and the live signer nodes are pinned at `595f0df3`, id `b07c4a09` - two different networks, so no round
+  is joinable there. The wallet surface on the daily URL is fine; the lobby is not. Moving the pin is a
+  fleet decision, not a page fix.
+
+  LATER ITEM, NOT THIS LETTER: **a paid row needs a bond that names a guardian.** `regtest-bond.mjs`
+  posts `guardianOf: []`, so `federationIsBonded` counts zero of the federation's threshold and the node
+  refuses a paying round by name - correctly. Belongs with the guardians/federation work below.
+
+  LATER ITEM, ON THE PLAYABLE-CLIENT LETTER: **the session does not attach.** "[blwp] no session yet: the
+  page has named no node" - the core drives but `BLWP_ROUND` stays false. Measured here only to show the
+  backup warning is not what stops it.
 
 DONE (2026-09-21, closed out at `7d119eac`) - HARD (Daniel 2026-09-21 13:25, clarified 13:33 / 13:54):
 **winnings are always sent. There is no Collect.**
