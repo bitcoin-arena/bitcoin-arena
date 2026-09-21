@@ -47002,3 +47002,39 @@ four files together with the new fixture against one file alone with the old one
 `five-of-seven` is not re-run here: it needs 470 s and the cap is 180 s.
 
 `one-signer-node-refused` passing 5/0 alone confirms the earlier call: contention, not a product red.
+
+## Inventory before the THRESHOLD_LN refusal, three piles (2026-09-22)
+
+Counted first, nothing changed. `CUSTODY = ['THRESHOLD_LN', 'FEDERATION']` and the wire byte is the array
+index (`custody: CUSTODY[r.u8()]`), so index 0 stays THRESHOLD_LN and index 1 stays FEDERATION. No map,
+no reserved slot, no renumber.
+
+PILE 1 - DEAD LABELS (comments only, nothing branches):
+    packages/protocol/src/contracts.js:589      a comment
+    packages/protocol/src/constants.js:495      a doc comment
+    packages/blwp-node/src/server.js:1793       a comment
+    packages/blwp-node/tools/run-2of2.mjs:54    a comment
+    packages/blwp-node/tools/round-2of2.mjs:132 a comment
+  NO NODE SOURCE LOGIC BRANCHES ON THRESHOLD_LN. The only load-bearing line in src is the enum itself.
+
+PILE 2 - DECODE-ONLY HISTORY: the enum entry at `constants.js:518`, index 0. Kept, by §23.6: "the value
+stays defined only so that their records still decode".
+
+PILE 3 - LIVE, OPENS A NEW ROUND:
+    10 tools construct `custody: 'THRESHOLD_LN'` contracts, one of them the Daily's own launcher
+      (`run-2of2.mjs:63`, `paid = { stakeMsat, custody: 'THRESHOLD_LN' }`)
+    68 test files carry the literal, 71 occurrences
+    29 of those POST an encoded contract to `/round` - the only ones a door refusal can reach
+    of those 29:  8 stop at the door (a clean expectation flip)
+                 21 go on to /entry, /invoice, /first-mark or /play
+
+WHERE THE REFUSAL GOES, and it is not where the letter guessed: `custodyFieldsAreValid` is only reached
+when `contract.custody === 'FEDERATION' && stakeMsat > 0n` (`server.js:1793`), so a THRESHOLD_LN contract
+NEVER ARRIVES THERE. Refusing inside it would never fire. It has to be its own unconditional check at the
+`/round` door, before that FEDERATION-only branch. `custodyFieldsAreValid` has exactly two live callers,
+that door and the client's `lockStake` - the codec does not call it, so decode stays untouched either way.
+
+THE COST THE PLAN DID NOT PRICE: for the 8, "update the door expectation" is exactly right. For the 21
+there is no expectation to update - the round is their SUBJECT, not their assertion, and most of them are
+exercising the hold-invoice stack that the agreed sequence retires LAST, because the Daily still runs on
+it at pin 595f0df3. Refusing at the door removes their subject rather than changing an assertion.
