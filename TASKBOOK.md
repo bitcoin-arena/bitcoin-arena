@@ -41,7 +41,19 @@ THE RACE, MEASURED ON THAT ENTRY:
   the HTLC expires in               82 blocks = 410 s at the measured 0.200 blocks/s
   the hold's own cltv               144, the contract's number, in force (commits 48f8861f, b94cbb97)
 
-410 < 574. The stake reaches its HTLC timeout about 164 s before its own DELIVERED result can become FINAL.
+410 < 574 - and that is what happened. MEASURED, both seats, same words:
+
+  hold EXPIRED at 1789976725783 (a) / 1789976725837 (b)
+    "its HTLC expired at height 93713 and this node's chain is at 93722: the hold went back to its player"
+  the objection window closed at 1789976816667
+  margin: the stake timed out **90 s BEFORE its own DELIVERED result could become FINAL**
+  `close_holds`: 0 rows at both seats - the CANCEL was decided and never got to act
+  the lnd invoice ended CANCELED
+
+So a run that was DELIVERED at tick 4972, signed DELIVERED score 72 by 2 of 2 seats, still ends with the
+player's sats returned by an HTLC timeout rather than by the committee. The money law holds - the operator
+keeps nothing, the player is whole - but no settlement has ever been reached on the Daily, and this is the
+clock that stops it.
 
 THE SHARE: this is the whole of it. 19 holds in each store before this run, 19 EXPIRED, 0 SETTLED,
 0 CANCELED, outcomes 10 FORFEIT / 2 FAILED / 7 with no result row / **0 DELIVERED**. With a delivery in
