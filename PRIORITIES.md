@@ -129,7 +129,12 @@ open line that is neither fenced nor parked.
     seats answer `/entry` 201 x2 and `/invoice` 200 HELD at 98000 msat. The page's Pay button was clicked and
     answered **"this tab has no wallet connected"**: the hook is fine, there is no NWC wallet on this host.
     With `lnd-alice` standing in for the player's wallet, **the bolt11 was paid and `/stake` answered 200 in
-    ~5 s - the stake is seen by both seats.** Settlement is not measured yet; this letter stays open.
+    ~5 s - the stake is seen by both seats.**
+    AND IT WAS JUDGED AND HANDED BACK: committee lnd went ACCEPTED (98000 msat) -> **CANCELED** in 15 s, and
+    the seats said why on that entry by name - *"the player signed two first marks for this entry, one of
+    them late (§13B) - VOID once the result window passes"*. A VOID returns the stake, which is the money law
+    working. **A stake has still not SETTLED, so this letter stays open**, and the next thread is named:
+    why does one entry carry two first marks?
   - PARKED BY RULING: guardians and `federationIsBonded`
 
 FOLLOW-ONS, one line each:

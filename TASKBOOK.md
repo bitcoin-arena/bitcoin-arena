@@ -5,6 +5,38 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE PAID STAKE WAS HELD, JUDGED AND HANDED BACK: VOID BY §13B, TWO FIRST MARKS (2026-09-21).
+
+The browser's own entry, paid from `lnd-alice` standing in for the player's wallet, followed all the way
+through on the regtest Daily:
+
+  entry            6742d6440029e43f5bc5018296c15906832b411fa7d75bbf5d394272b530b382
+  paymentHash      94cda1377c279b07a43e4340aa1a8b081c6edd15ed7d90673231ae391fd...
+  amount           98000 msat  (the net stake: 100 sat less §22A's 2%)
+
+  05:52  alice pays the bolt11 the seat served
+  05:52  /stake answers 200 within ~5 s - both seats see the stake
+  05:59:03  committee lnd: invoice ACCEPTED, amt_paid 98000   (alice's payment IN_FLIGHT - a real hold)
+  05:59:18  committee lnd: invoice CANCELED                    - the stake goes back to the player
+
+AND THE SEATS SAID WHY, on that entry by name:
+
+  [close] 6742d6440029e43f HOLDING (attempt 1): no quorum yet: the player signed two first marks for this
+          entry - one of them late (§13B) - VOID only once the result window passes
+
+So the round did not forfeit the stake and did not pay it out: it VOIDED, and a VOID hands the stake back.
+That is the money law working - the operator takes nothing from a case it cannot decide - and it is the same
+limb the suites pin (`one-signer-node-refused` test 1: both locks unclaimed, seats paid nothing).
+
+A STAKE HAS NOT SETTLED YET, SO THIS LETTER IS NOT DONE. What is now proved end to end from a browser:
+lobby, PLAY with no overlay, entry accepted by both seats, a hold invoice served, the stake PAID and SEEN,
+the round closed, a verdict reached on the player's own entry, and the hold resolved by that verdict.
+What is missing for "settles" is a run that reaches a decidable outcome instead of VOID.
+
+THE NEXT THREAD, NAMED AND NOT CHASED: **why does one entry carry two first marks, one of them late?**
+§13B's no-quorum rule is doing its job; what produced two marks for one player is the question. It would void
+a real player's round exactly as it voided this one.
+
 THE DONATION OVERLAY IS GONE AND THE BROWSER'S STAKE IS PAID AND SEEN (2026-09-21, page-only, stamp 0.0.1866).
 
 THE RULING, IMPLEMENTED: a donation nobody can pay must not stand in front of the stake. Where every
