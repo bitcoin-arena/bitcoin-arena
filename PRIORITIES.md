@@ -22,32 +22,24 @@ Top item first. Finish and deploy before starting the next.
 
 # NOW  -  M3: what is left
 
-ON TOP, STARTED AND BLOCKED ON A RULING: **there is no THRESHOLD_LN - only federation and guardians.**
-The standing HARD below (17:08) is the top open item for M3. Step 1 (one paying FEDERATION round on the
-local harness, no `createHeld` on the path) is built as far as it goes and stops on arithmetic, so the
-enum is NOT flipped - that was the ordered sequence and it holds.
+ON TOP, STARTED, ONE RULING NEEDED: **there is no THRESHOLD_LN - only federation and guardians.** Step 1
+(a paying FEDERATION round on the local harness, no `createHeld`) now OPENS and does not yet SETTLE. The
+enum is NOT flipped - the ordered sequence said measure the round first, and it holds.
 
-  What is done: a bond can name the federation it guards (`d353ba08`), and a real four-guardian
-  federation stands up here, gateway joined, pegged in and vetted - id `423e010e`, `{"guardians":4,
-  "threshold":3}` read from its own port.
+  DONE, measured (`218537cb`, `f2759068`): the harness takes a third signer node (`portC`) with its own
+  store, identity, bond and daemon, and `guardianOf` nests one guardian per node. Against the federation
+  running here - `423e010e`, guardians 4, threshold 3 - the same code, same federation, one operator
+  apart: TWO nodes REFUSED, "2 of that federation's 4 guardians are bonded census nodes, and its
+  threshold is 3: a creator could hold it alone"; THREE nodes OPENED, round `ac661297`, custody
+  FEDERATION, stakeMsat 1000000. And no hold invoice is on the path: every daemon reports
+  `reachesLightning` null, and `createHeld` sits behind custody's `reaches`, so it cannot be called.
 
-  What blocks it, in numbers (`3f60ec76`, detail in TASKBOOK.md): §23.6 wants the federation's threshold
-  in **distinct** bonded census nodes, one guardian key each - "Every guardian / node must have its own
-  bond or it may not take part". Regtest's federation is 3 of 4 (§27A.6 line 4128), so it wants 3 nodes.
-  `round-2of2.mjs` has 2. And the federation cannot be shrunk to fit: fedimintd 0.12.0 refuses outright,
-  "Federation size must be 1 or at least 4", so there is no 3-of-3 and no 2-of-2 to fall back on.
-
-  The one remaining regtest path is a **third signer node**, and only `round-2of2.mjs` and
-  `round-rehearsal-lnd.mjs` exist. That is a letter of its own, not a detail of this one, so it is not
-  taken unruled.
-
-DONE (2026-09-21, `aa88fa23`) - HARD (Daniel 2026-09-21 20:01): **no backup, play is still allowed.**
-Measured on screen, not only in a suite: the lobby carries a large warning, 1280 x 62 px, with its own
-"Back up now" button; PLAY on a listed round is never refused for a missing backup and the game starts;
-the warning and its button stay up through play; and typing the 24 words back clears it. The earlier
-refusals are deleted from the source and read `undefined` in the bundle the daily URL serves. Suites:
-blwp-client 38/38, protocol 73/73, blwp-node 74/74, core 142/142; PlayMode and EditMode not run and not
-owed, no C# moved. Detail in TASKBOOK.md.
+  THE RULING NEEDED - a committee threshold, which is money law: the round opens and never settles,
+  because `dkg.deal` asks `receiptsNeeded(nodes)` and only 2 (2-of-2) and 7 (5-of-7) have an answer.
+  `receiptsNeeded(3)` refuses, so no claim key is ever dealt (measured: 409 on all three for 240 s). §23.6
+  wants three distinct bonded census nodes, fedimintd will not build a federation smaller than 3-of-4, and
+  the committee sizes written down are 2 and 7. Either define a 3-signer-node threshold, or stand SEVEN
+  nodes and use 5-of-7 with three of them advertising guardian keys. I did not invent the number.
 
   FIXED IN PASSING (`1e9628cd`): **the page served could enter no paying round.** Two of its three money
   scripts, `blwp-client.js` and `blwp-core.js`, had fallen off `known-good-clients.json` when I rebuilt
