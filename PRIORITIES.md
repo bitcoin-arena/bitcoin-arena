@@ -108,137 +108,27 @@ WHAT IS LEFT FOR M3 (the fee-lock line has been MEASURED but not spent; the rest
     **DIAGNOSED, NOT SPENT** - the spend stays fenced; what is finished is knowing exactly why it cannot
     happen on this custody. Checked from both ends: no invoice AND no payment of 20000 msat on either node.
 
-NEXT M3 ITEM, ON TOP (2026-09-21): **a played stake must settle, and the hold cannot outlive the round.**
+DONE (2026-09-21): **a player collects their winnings from the page, and the operator keeps nothing.** A
+paid round now runs the whole way: the stake is held long enough to reach FINAL, the loser's stake settles
+into the pool, the winner's own is cancelled back, and the winner presses Collect in the page - an invoice
+signed in the tab by the session key the run was played with, paid once by the node's own owed figure.
+Measured live on round `1aa67fb5` (one truck DELIVERED at tick 2563, one missed): **alice 996040 -> 996138
+sat, the committee 1000000 -> 999902**. A second press is answered already-paid, and the other seat, asked
+with a fresh invoice, pays nothing. Commits `01ac3a9b`, `83564dd3`; the whole path in TASKBOOK.
 
-SETTLED 2026-09-21, LIVE ON THE DAILY - the first stake ever moved by the committee's decision. A two-player
-paid round (`262dbc1a`), one driven to **DELIVERED at tick 2360**, one left to miss, both stakes ACCEPTED at
-**cltv 1130**. The close closed; nothing moved then; §13A's 600 s window ran; and then both seats, agreeing
-word for word: **the loser's stake SETTLED, the winner's CANCELLED**, every hold out of HELD, **0 pending
-HTLCs**. The money followed: the committee's channel **1000000 -> 1000098 sat**, alice down the same 98.
-The node prints one `[money]` line per settle pass now, so a stake that does not move says why on the pass
-it did not move on.
-WHAT MADE IT POSSIBLE: the HTLC is sized from the chain's measured pace (0.755 s a block on the Daily, so
-1130 blocks where 144 would have bought about 100 s), capped at what a payer will actually pay - lnd
-refused 2044 blocks outright, "cltv limit 2016 should be greater than 2047" - and a round whose hold still
-cannot reach FINAL is refused at the door. Commits `280dbf86`, `ee2b39dc`, `8b86847b`.
-**AND THE WINNER WAS PAID, 2026-09-21** (round `0baee7d8`, the same shape: one DELIVERED at tick 2504, one
-missed). What the settle now does is write one `winnings` row per qualifier - the table row less that
-player's own net stake - and two doors carry it: `GET /winnings?entry=` says what is owed, `POST` takes a
-BOLT11 **signed by the entry's session key** and pays it once. Live:
+NEXT M3 ITEM, ON TOP: **the fee is taken and paid out** - the last of M3's own sentence still owed. The 2%
+is diagnosed and not spent, and the diagnosis stands where it is written above: `netStakeMsat` takes the
+fee off before the invoice, so it is never invoiced, and THRESHOLD_LN has no object that can carry it.
+Nothing here is started.
 
-    the pool owes this entry     98000 msat
-    alice before                 996236 / 1000098
-    POST /winnings               200 PAID 98000, already=false
-    alice after                  996334 / 1000000
+  LISTED, NOT PARKED - three things this letter left standing, none of them blocking the fee:
+  - the page does not ask a connected NWC wallet to mint the invoice, so a wallet-less tab still pastes one
+  - the seats agree over HTTP before paying a winning: sound for 2 of 2 sharing one Lightning node, and not
+    a threshold agreement
+  - the 2% fee is exactly where this board already has it, and this close-out did not move it
 
-**The player's own Lightning is up 98 sat and the committee's is down the same 98. The operator keeps
-nothing.** The invoice was signed in the tab; the session key never left the page. Commits `6f97dab8`,
-`a7f0dac3`, `e940d9c0`.
-AND FROM THE PAGE, 2026-09-21 (round `1aa67fb5`, winner DELIVERED at tick 2563, loser ran its whole block).
-No door was posted to by hand: the panel offered the control and it was pressed.
-
-    the page said       "You won 98 sat: paste an invoice for exactly 98000 msat to collect it"
-    alice before         996040        committee before   1000000
-    pressed              PAID in ~2 s, "paid over Lightning"
-    alice after          996138        committee after     999902
-    the page now says   "You won 98 sat, and it has been paid to your wallet"
-    pressed again        PAID, already - alice still 996138
-    the OTHER seat       200 already, paidMsat 0 - alice still 996138
-
-Commit `01ac3a9b`, deployed.
-THE SAME MEASUREMENT FOUND A HOLE IN THE LEG IT WAS PROVING, now closed: seat a wrote PAID/98000 while seat
-b was still OWED/98000, and the seats share one Lightning node - a player asking the second seat with a
-DIFFERENT invoice would be paid the pool twice out of the operator's channel. The seats are asked before
-the money leaves, and a seat that cannot reach its peers pays nothing.
-
-2026-09-21, THE FIRST HOLD RESOLVED BY A DECISION - and still no payout. A two-player paid round
-(`b35f6e48607102f5`), both stakes 98000 msat held: the driven player was **DELIVERED score 174** and their
-hold went **CANCELLED** - "handed back to its owner", §23.2, the committee deciding rather than a clock
-running out. The other was **FAILED 0** and its stake is the pool, and the pool never formed:
-`lncli settleinvoice refused: invoice already canceled`, **payouts 0, payout_signatures 0**.
-NOT THE ON-CHAIN EXPIRY, and read off the invoice's own HTLC record: accepted at height 93748, expiry
-93895, **resolved at height 93878 - lnd gave up 17 blocks early, having held it for 130 of its 147**; the
-expiry block was not mined until two and a half minutes later. Measured from acceptance: **730 s of usable
-hold against 830 s of round. Short by 100 s.** Whatever is ruled, the door-side sum must use the EFFECTIVE
-budget - 144 less lnd's own margin - and count it from acceptance, not from the round opening.
-FIXED 2026-09-21 (`d2f03c8f`): a settle Lightning refuses is written down instead of leaving the row
-mid-act. The throw came straight out of the loop, so the row stayed `SETTLE_REQUESTED` on both seats - where
-`settleHeldInvoices` will not touch it and `custody.reconcile()` only runs on start - **and the winner's
-stake, next in the same round, was never acted on at all**. Nothing new is decided: the party that knows is
-asked the same question `reconcile` asks, and a port that cannot answer leaves the row alone. custody 23/23
-(2 new). The stuck row cleared to CANCELLED at both seats when the Daily moved onto it.
-
-CORRECTION, MEASURED: the line here first said the hold was `ACCEPTED`/`HELD` with the round not closed.
-That was a snapshot taken before the close ran. Read again afterwards, both seats agree: **both rounds ARE
-closed, results ARE written - 2 per seat, outcome FAILED - and both holds ended EXPIRED**, the row saying
-so in its own words, *"its HTLC expired at height 92721 and this node's chain is at 92728: the hold went
-back to its player"*.
-
-WHERE IT STOPS, and it is not the close. `settleTheStakes` ran (241 ms, 254 ms) and reached
-`settleHeldInvoices`; the shipped rule, run over the real entry, refuses by name:
-**"the operator would keep 98000 msat: a pool of 98000 against 0 handed out"**. That is `payout.js`
-protecting the player: a round nobody delivered has a pool and nobody to hand it to, so no stake moves and
-every hold expires home (§23.2's default). `close_holds`, `lock_settlements`, `lock_settlement_moves` and
-`payouts` are all EMPTY for these two rounds on both seats, because the refusal comes before a row is made.
-
-THE SHARE, counted not guessed: **19 holds in each store, 19 EXPIRED, 0 SETTLED, 0 CANCELED.** Of the 19,
-outcomes are 10 FORFEIT, 2 FAILED and 7 with no result row - **0 DELIVERED**. No paid run has ever reached
-the gate, so the settle path has never had a lawful reason to move money. A second class sits beside the
-no-qualifier one: 7 entries carry a `close_holds` FORFEIT stuck at `signed_ms` NULL after 67-95 attempts,
-*"no quorum at 0 of 2, and the player signed two chains: 13B forfeits the entry"* - the §13B mis-charge the
-start-window letter fixed, so those should not recur.
-
-AND THE BLOCKER UNDER ALL OF IT, which no delivery would get past. §13A makes FINAL the objection window's
-word, and this round's contract names **objectionWindowMs 600000**. So a stake may not settle until
-**open -> close (414.9 s) + 600 s = about 1015 s**. The hold measured from its own creation to its HTLC
-expiry is **83 blocks in 427 s**. **427 s < 1015 s**: the stake is guaranteed to time out home about 588 s
-before its result can become FINAL. Even at the `STAKE_EXPIRY_BLOCKS` 144 the node asks for, the same window
-gives 742 s - still short. This is §23's "a hold it issues may never be seen settled" on a different clock.
-Two candidates for a ruling, and NOT retuning `STAKE_EXPIRY_BLOCKS` to fit: the Daily's block rate (it mined
-83 blocks in 427 s, and a rehearsal at that rate is not rehearsing Bitcoin), or a node-side refusal to open a
-paying round whose hold cannot outlive the round on the chain it observes.
-
-This is the close and payout path, NOT §13B - that letter is done and does not grow into this.
-
-DONE 2026-09-21 on this item, and proven live: **the stake's HTLC now lives the blocks the contract names.**
-Every hold a player paid carried lnd's default **cltv_expiry 80** while `contracts.js` refuses any round
-contract not naming `STAKE_EXPIRY_BLOCKS` (144) and `stake-lock.js` refuses any stake lock expiring before
-height + 144 - the same stake protected two different ways by the two custodies. The node now asks for it.
-It took two commits: the first asked with `--cltv_expiry`, which **lncli accepts without complaint and
-ignores** - measured twice on one hash, 80 against 144 - so the suite was green while three live holds still
-carried 80. The flag is `--cltv_expiry_delta`. Live proof on the Daily: a paid hold, ACCEPTED, 98000 msat,
-**cltv 144**. Commits `48f8861f`, `b94cbb97`. It narrows the gap and does not close it: 144 blocks on the
-rate that window measured is 742 s against the 1015 s a FINAL result needs, so the ruling still stands.
-
-DELIVERED 2026-09-21, the first one: **a paid run reached the gate.** The blocker was not the driving and
-not the core - the run opens behind the lobby splash and then behind the loadout yard, which holds
-`truck.controlsLocked` until a load is confirmed. Clicked the way a player clicks (PAID row, PLAY, AUTO,
-ROLL OUT) and then driven on the bearing to the mouth, the core said **DELIVERED at tick 4972** of 10800,
-x 168.6 with |z| 2.1; 80 checkpoints at each seat; both seats signed **DELIVERED score 72**. Nothing was
-added to the core or to C#: the probe clicks and types, and reads the pose out of the page's own state.
-AND THE SETTLE ACTED, on a qualifier, for the first time: `CANCEL -> HELD ... waits for its objection
-window`. CANCEL is right - §23.2 hands a delivered player their own stake back, and the winnings come from
-the losers' pool, which in a ONE-PLAYER round is empty. **A single-player round cannot move a sat between
-parties even when it is won.**
-AND THE CLOCK BEAT IT, measured to the end: the hold **EXPIRED at both seats** - *"its HTLC expired at
-height 93713 and this node's chain is at 93722: the hold went back to its player"* - **90 s before** its own
-DELIVERED result could become FINAL, with `close_holds` holding 0 rows at both seats because the CANCEL was
-decided and never got to act. The lnd invoice ended CANCELED. **A DELIVERED run, signed 2 of 2, still ends
-with the sats returned by a timeout rather than by the committee.** The money law holds - the operator keeps
-nothing - but no settlement has ever been reached on the Daily. Commits `fa2a7861`, `faf9d7c0`. Numbers in
-TASKBOOK.
-
-WHY NO PAID RUN HAS EVER DELIVERED, measured 2026-09-21 and not guessed: **the run begins with the loadout
-yard open and the truck's controls locked.** `LoadoutPanel.Open()` sets `truck.controlsLocked = true`, and
-`CoreDrivenTruck` feeds the core `Throttle() => Q(Locked ? 0f : ...)`, so every input is 0 until a load is
-confirmed. Driven live with W and D held on a focused canvas for **4297 ticks**: x stayed at **-100.4 m**,
-z at -51.0, **vx and vz 0**, gate at 168.6 m. `LoadoutPanel.Confirm()` needs `bay.IsLoaded`, and the only
-automatic path (`AutoPlay`) is gated on a `-autoplay` COMMAND LINE argument that a WebGL page cannot be
-given. So a delivering paid run needs the yard driven - load the bay, roll out - before the keys mean
-anything. That is the next step on this item, and it is input, not simulation.
-
-NEXT M3 ITEM, NOT STARTED: **a playable client slice** - nothing of M3 reaches a player yet. It is the first
-open line that is neither fenced nor parked.
+DONE (2026-09-21): **a playable client slice** - a paid round is joined, paid, driven, settled and
+collected from the browser. What follows is the record of how it got there, letter by letter.
   - ~~FROST / §23.5 on testnet4~~ **DONE 2026-09-21**: a live settle on a reconstructed preimage, 2-of-2.
   - a **playable client slice** - nothing of M3 reaches a player yet.
     MEASURED 2026-09-21 against the live Daily: the lobby lists the 100 sat round and `join()` returns true,

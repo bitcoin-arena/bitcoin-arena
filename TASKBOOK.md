@@ -5,6 +5,39 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+A PLAYER COLLECTS THEIR WINNINGS FROM THE PAGE (2026-09-21, commits `01ac3a9b`, `83564dd3`).
+
+The last leg of the money. Before it, a settled round left the pool in the committee's own channel and a
+player had no way to ask for it: the node knew 98000 msat was owed and nothing carried it, because the
+`payouts` path spends an on-chain pool THRESHOLD_LN has none of.
+
+WHAT THE PAGE DOES NOW. The panel asks `GET /winnings?entry=` every 5 s. Once the objection window has
+passed and the node has worked the money out it says so in sats and offers the field and the button;
+pressing it signs the invoice IN THE TAB with the session key the run was played with and posts it to
+`POST /winnings?entry=`. The key never leaves the page. A player who won nothing is shown nothing to press.
+
+THE ROUND, `1aa67fb5`, two browsers so neither renderer is throttled - one truck driven to DELIVERED at
+tick 2563 (42 checkpoints), one rolled out and left to miss its whole block (178 checkpoints):
+
+  the page said      "You won 98 sat: paste an invoice for exactly 98000 msat to collect it"
+  alice before        996040 sat          committee before   1000000 sat
+  pressed             PAID in ~2 s, "paid over Lightning", owed 98000 msat
+  alice after         996138 sat          committee after     999902 sat
+  the page now says  "You won 98 sat, and it has been paid to your wallet"
+
+PAID ONCE, MEASURED THREE WAYS: a second press is answered `already` and alice stays at 996138; the OTHER
+seat, asked with a fresh invoice for the same winning, answers 200 `already` with paidMsat 0 and alice
+stays at 996138; and the seats' own rows read PAID at the seat that paid and OWED at the one that did not,
+which is why they ask each other before the money leaves.
+
+ONE ATTEMPT DISCARDED AND WHY: on round `77ffad5d` both Chromes died mid-run, leaving both entries with 0
+checkpoints and no qualifier. That round was abandoned rather than reused; the box was at 22 of 36 GB with
+the browser profiles this session had accumulated.
+
+SUITES: winnings-door 5/5, custody 27/27, ghost-field 22/22, second-closer 2/2, custody-daemon 9/9,
+first-mark 15/15, hold-window 12/12, preflight 13/13, close-order 3/3, lnd-settings 10/10, lnd-port 6/6.
+No assertion loosened.
+
 THE FIRST ROUND WITH A POOL, AND WHY NO SAT STILL MOVED (2026-09-21, round `b35f6e48607102f5`).
 
 Two players, two browsers so neither renderer is throttled, both on the same paid round, both stakes 98000
