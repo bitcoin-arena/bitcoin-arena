@@ -132,6 +132,25 @@ paying round whose hold cannot outlive the round on the chain it observes.
 
 This is the close and payout path, NOT §13B - that letter is done and does not grow into this.
 
+DONE 2026-09-21 on this item, and proven live: **the stake's HTLC now lives the blocks the contract names.**
+Every hold a player paid carried lnd's default **cltv_expiry 80** while `contracts.js` refuses any round
+contract not naming `STAKE_EXPIRY_BLOCKS` (144) and `stake-lock.js` refuses any stake lock expiring before
+height + 144 - the same stake protected two different ways by the two custodies. The node now asks for it.
+It took two commits: the first asked with `--cltv_expiry`, which **lncli accepts without complaint and
+ignores** - measured twice on one hash, 80 against 144 - so the suite was green while three live holds still
+carried 80. The flag is `--cltv_expiry_delta`. Live proof on the Daily: a paid hold, ACCEPTED, 98000 msat,
+**cltv 144**. Commits `48f8861f`, `b94cbb97`. It narrows the gap and does not close it: 144 blocks on the
+rate that window measured is 742 s against the 1015 s a FINAL result needs, so the ruling still stands.
+
+WHY NO PAID RUN HAS EVER DELIVERED, measured 2026-09-21 and not guessed: **the run begins with the loadout
+yard open and the truck's controls locked.** `LoadoutPanel.Open()` sets `truck.controlsLocked = true`, and
+`CoreDrivenTruck` feeds the core `Throttle() => Q(Locked ? 0f : ...)`, so every input is 0 until a load is
+confirmed. Driven live with W and D held on a focused canvas for **4297 ticks**: x stayed at **-100.4 m**,
+z at -51.0, **vx and vz 0**, gate at 168.6 m. `LoadoutPanel.Confirm()` needs `bay.IsLoaded`, and the only
+automatic path (`AutoPlay`) is gated on a `-autoplay` COMMAND LINE argument that a WebGL page cannot be
+given. So a delivering paid run needs the yard driven - load the bay, roll out - before the keys mean
+anything. That is the next step on this item, and it is input, not simulation.
+
 NEXT M3 ITEM, NOT STARTED: **a playable client slice** - nothing of M3 reaches a player yet. It is the first
 open line that is neither fenced nor parked.
   - ~~FROST / §23.5 on testnet4~~ **DONE 2026-09-21**: a live settle on a reconstructed preimage, 2-of-2.
