@@ -46708,3 +46708,49 @@ slots ... opens and can never settle, because its claim key is never dealt."
 Also fixed on the way, both found by running it: `postRound` posted to A and B only, so the third daemon
 answered "404 this node holds no such round" and was never in the round it was assigned to; and the
 daemon variable `c` shadowed `postRound`'s contract parameter, which posted to `127.0.0.1:undefined`.
+
+## Seven signer nodes: the claim key is dealt, the stakes lock, the round does not settle (2026-09-21)
+
+Ruled: the fork is the 5-of-7 already in the protocol, not a new 3-slot threshold. `receiptsNeeded(3)` is
+NOT added. The harness takes any number of signer nodes now (`extraPorts` beside `portC`), and §23.6's
+count is kept separate from the committee's: THREE operators advertise a guardian key, the other four are
+bonded census nodes that guard nothing - which is what most operators are.
+
+    federation 423e010e  guardians 4  federationThreshold 3   signerNodes 7
+    A -> 03222650bf082e7b   B -> 02ca5f410e3bf70a   C -> 032b495e389e6b21
+    D..G -> guards nothing
+    committee: signerNodes 7, receiptsNeeded 5          <- the number that was missing at 3
+    reachesLightning [null x 7]                          <- createHeld unreachable, all seven
+
+    claim key   ok true, attested 5, needed 5, key 02d582f89a6e5c6f
+                (at three nodes this was 409 on all three for 240 s)
+
+    entries     201 x 7 for both players
+    stake locks winner  outpoint 7f47e27f...:0  amountMsat 980000  expiration 1984
+                loser   outpoint eb50d4d1...:0  amountMsat 980000  expiration 2017
+    close       "closed" x 7
+
+So the ruling is confirmed where it mattered: at seven, `dkg.deal` asks `receiptsNeeded(7)`, gets 5, deals
+a key, and the stake locks. No 409-for-240s anywhere.
+
+IT DOES NOT SETTLE, and the cause is not the threshold:
+
+    winner  locks 409 x 7, committed 0      <- the lock was handed to the nodes and refused
+    loser   locks 201 x 7, committed 7
+    winner forfeit  "this signer node verified no stake lock for that entry, so it forfeits nothing"
+    loser forfeit   "that entry is VOID (§13C)" - correct for a loser
+
+The winner's lock is refused by every node while the loser's is accepted by every node, on the same run,
+same round, same `needed`. That is the open thread. The harness printed only the status, so it is being
+re-run with the refusal text; it also crashed afterwards on `fromHex(undefined)` because it read
+`forfeit.contractId` without checking `forfeit.ok`, which is now a named error instead.
+
+Ports: seven nodes on 18571..18577, recipients on 18787. The live Daily's 18080, 18081 and 18777 are not
+touched.
+
+## five-of-seven is slow, not stuck (2026-09-21)
+
+It was cut off by `timeout 180`, not hung: 8 of its ~22 tests passed in 175 s when it had the machine to
+itself, and 4 in the same time while the seven-node round was searching world secrets beside it. Each test
+stands seven daemons and waits out real expiries. Nothing is loosened; it needs a longer budget than 180 s
+and the number is still being measured.
