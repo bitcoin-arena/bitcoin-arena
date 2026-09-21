@@ -57,6 +57,14 @@ signed under the old one - a rule call, with what to measure in TASKBOOK.md.
 LISTED - ghost-live "the load is what moves the picture": a loaded run is drawn byte-identical to the same
 inputs unloaded (x -50.28 z -8.44 both), which needs the core, not the test.
 
+LISTED, RULED NOT THIS LETTER (Daniel 2026-09-21) - **bundle-fresh stays red on `blwp-curve.js`.** Measured:
+the whole difference between the committed copies and a fresh build is the bundler writing the directory
+it was run from into its own comments (`// src/page-curve.js` against `// packages/blwp-client/src/...`),
+**zero code lines differ** with the comments stripped. It is not a money-path hole. Committing two
+generated files to green a comment is the wrong fix, and rewriting the bundler to emit repo-relative paths
+is a later item. `blwp-client.js` - which WAS genuinely stale - and `blwp-core.js` are fresh in dist and
+in the template.
+
 MEASURED (2026-09-21, round ec9bd34e, `4e9d7244`): stake and fee paid from alice with **no NWC string**,
 DELIVERED at tick 2240, the address named once - alice 996016 -> 996114 sat, the committee -98 +4, the
 endpoint asked for exactly 98000 msat. The ruling's own measurement passes. Two faults it did not show,

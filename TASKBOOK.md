@@ -45667,3 +45667,26 @@ endpoint was asked for a pay request TWICE, once per seat, and answered one call
 ONCE: the second seat is refused at the guard before it reads the row, so it never reaches the address at
 all. The money was already pay-once - this is the same answer reached without asking a stranger's server
 twice for an invoice nobody will pay.
+
+## bundle-fresh on blwp-curve.js: the bundler writes its own cwd into the bundle (2026-09-21, ruled listed)
+
+    packages/blwp-client/dist/blwp-curve.js                        2492e155b859
+    unity-proto/.../BtcLogistics/blwp-curve.js                     2492e155b859
+    a fresh build of the same source                               c7d28f3bc222
+
+    every differing line that is not a path comment:   (none)
+    code lines differing with `// ` lines stripped:    0
+
+The two shipped copies agree with each other and differ from a fresh build only in lines like
+`// src/page-curve.js` against `// packages/blwp-client/src/page-curve.js`: the bundler records the
+directory it was invoked from, and the committed copies were built from inside `packages/blwp-client`
+while the test builds from the repo root. It is also why those two files show as modified in `git status`
+after anything rebuilds them.
+
+RULED (Daniel 2026-09-21): leave it red and listed. It is not a money-path hole and it does not belong in
+the winnings letter. Do not commit the two generated files to green a comment - they are on the
+do-not-commit list - and do not rewrite the bundler on this letter; repo-relative paths are a later item.
+
+The other two scripts a page serves that decide money ARE the build of this source: `blwp-client.js` was
+genuinely stale (missing `lightningAddressEndpoint`), was rebuilt into dist and the template, and is
+deployed - btc-logistics-core serves 2cd63d767dd3. `blwp-core.js` was already fresh.
