@@ -46568,10 +46568,31 @@ THE HARD NAMES THE OTHER SHAPE: "testnet on the 2-of-2 that runs, seated by its 
 and §27A.6's testnet row agrees - `federation_nominal` 2, 2 of 2. A two-guardian federation has
 threshold 2, which two distinct bonded census nodes CAN satisfy.
 
-So step 1 is one parameter away, and it is a fork rather than a detail:
-  (a) make the probe's guardian count a parameter and stand a 2-guardian, threshold-2 federation - the
-      shape the HARD and the spec both name, and the smaller change; it edits rehearsal infrastructure;
-  (b) run a 3-signer-node harness instead, so three distinct census nodes exist for the 4/3 federation.
+CORRECTION, measured after the above: the two-guardian option is not available, and the fork is not the
+one I named.
+
+    fedimintd 0.12.0 binary, literal string   "Federation size must be 1 or at least 4"
+    so a federation is 1 (single custody, the thing §23.6 exists to forbid) or >= 4. There is no 2, and
+    no 3. The probe's own header said so already: "0.12.0 refuses 2 ... and 1 would be single custody".
+
+    §27A.6 line 4128, the regtest column         4 guardians, 3 of 4, federation_min 3
+    the live federation's own port agrees        {"guardians":4,"threshold":3}
+
+    §23.6 line 2747 wants that threshold in      DISTINCT bonded census nodes, one guardian key each,
+                                                 "Every guardian / node must have its own bond or it may
+                                                 not take part" (Daniel 2026-09-15)
+    the local harness (round-2of2.mjs) has       2 census nodes
+    3 > 2
+
+So neither escape works. The federation cannot be made smaller - fedimint refuses. One operator cannot
+seat two guardians - the spec forbids it in as many words, and federation.js's `nodesTaken` is that
+sentence. The only regtest path left is a THIRD signer node, and the only round harnesses that exist are
+round-2of2.mjs and round-rehearsal-lnd.mjs. Writing a three-node one is a letter, not a detail, so I am
+not taking it unruled.
+
+(Testnet is not blocked the same way: §27A.6's testnet column is 2 of 2, and the Daily HAS two bonded
+operators, so the arithmetic closes there - but fedimint 0.12.0 will not build a two-guardian federation
+either, so "the 2-of-2 federation that runs today" needs its own check before it can be leaned on.)
 
 Everything else for step 1 is in place: the advert, the plumbing (`signerNode: { stakeLocks }` is already
 spread into serve's options and `w5b.mjs` already opens a paying federation round through it), and a live
