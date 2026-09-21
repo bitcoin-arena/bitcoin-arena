@@ -59,6 +59,11 @@ The enum is still NOT flipped - that is the next slice, and it was ordered after
   Every other suite on that fixture, each alone under the cap: lock-client 1/0, forfeit 2/0, first-mark
   15/0, one-signer-node-refused 5/0, outage 9/0, lock-settlement 15/0.
 
+  LISTED, LATENT: the fixture hands a fee lock whenever custody is FEDERATION, where the client first
+  asks `feeLockPays`. They agree on this round - it does mint, which is why the node refused until the
+  lock was handed - so a later fixture round whose fee pays no signer node would hand one the client
+  would not mint. Cause known, not a blocker, not this letter.
+
   LISTED, TIMING-FLAKY: `lock-settlement` failed two DIFFERENT tests on two runs ("SUBMITTING" where
   "ACCEPTED" was wanted) and then passed 15/15 - flaky, not a regression. Also listed: objection-window
   (red before this letter), ghost-live, replay-solids, two-titles. `one-signer-node-refused` passes 5/0
