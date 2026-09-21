@@ -33,61 +33,20 @@ so it could be measured at all, a setup that throws after `serve()` no longer le
 went from unbounded (killed at 5 min, 4 LISTEN sockets) to **0.383 s, exit 1, 0 sockets**. Commits
 `07d36965`, `e1fcad1e`. Per-suite counts and every remaining red with its cause in TASKBOOK.
 
-DONE (2026-09-21): **the fake federation is one BLWP would accept.** `lock-fixture.js` charged a 1000 msat
-base fee - fedimintd 0.12.0's measured default - so §22A's `disable_base_fees` guard refused every entry into
-a round on it: **43 tests in 5 suites, all that one 409, now 0**. The guard is untouched and no assertion was
-loosened. The fixture is legal at rest; `lock-settlement` applies fedimintd's default at the CLOSE, after
-every entry is in, so settlement arithmetic still runs against 1000 msat base; and four suites now deal a fee
-lock, which is the production shape.
+NEXT, AND NOTHING IS STARTED ON IT: **a testnet4 hold settles on a preimage the signer nodes reconstruct,
+not one handed to them.** Reconstruction is already the daemon's default (`server.js:323`) and is proved
+in-process, but the live testnet4 tool injects the preimage, so no real sat has ever moved on a key that was
+rebuilt from shares. That is the last "single-node custody" caveat on M3's own sentence, and it does not need
+the fee-lock fence lifted.
 
-  outage 0/9 -> **8/9**, first-mark 0/14 -> **13/14**, one-signer-node-refused 0/5 -> **4/5**,
-  lock-settlement 0/15 -> **1/15**, forfeit 0/2 -> **0/2**.  TOTAL **0/45 -> 26/45**.
-
-FEE-LOCK is still tested and now on a legal federation: the door refuses an entry that brings none at both
-signer nodes, and the settlement claims 2 fee locks, 40000 msat, paying 2 signer nodes 36000 msat.
-
-DONE (2026-09-21): **a VOID unwinds the fee lock as well as the stake.** The third limb of the §22A ruling
-now has evidence: on §13C's VOID - B refuses the on-time first mark, no quorum forms, both signer nodes
-record VOID after the result window - **both locks are left unclaimed, no settlement is submitted and nobody
-is paid**. The player gets stake and fee back by expiry; the seats take nothing, because there was no round
-to compensate; the operator takes nothing from its own failure. The settler already did this and not a line
-of it changed - the evidence was missing, and it could not have been written until this letter put fee locks
-on the fixture's entries. `one-signer-node-refused` 5/5.
-
-DONE (2026-09-21): **a round with a loser and no qualifier pays no stake and still pays the seats.** §22A's
-2% is seat compensation for a round that actually ran - not a qualifier's prize and not operator profit -
-ruled by Daniel and then read off the settler rather than assumed: ACCEPTED with two submissions, **2000 msat
-to each of the two sitting seats** (2% of 200000 gross), **neither player key paid**, **both stake locks
-still held** so they expire back, and **both fee locks claimed** so the 2% came from them. A VOID round still
-claims nothing. The test was split rather than retuned and now pins more than it did.
-**The five suites under this fixture are 45/45** (lock-settlement 15/15, outage 9/9, first-mark 14/14,
-one-signer-node-refused 5/5, forfeit 2/2). Measurements in TASKBOOK.
-Listed, not chased: `first-mark` "late start at close (2)" is an intermittent catch-up race - B is taken down
-and brought back late, then finality is read on a clock, so it can read PROVISIONALLY_FINAL where FINAL is
-asked; red once in three runs. Not the money path.
-
-DONE (2026-09-21): **the fixture's winner delivers again, and the fee is taken and paid out.** `wordsAt` drove
-0.7 throttle with the wheel sawing and the brake held 40 ticks in 700; it reached x 145.9 m while the gate is
-at 168.6 m - and the truck spawns at z 71.4 m with the mouth only 34 m wide, so the miss was the mouth, not
-three metres. The driver now aims at the core's own `GATE_X` in the core's own units and the tape is built
-closed-loop, so it follows the world if it moves again. **Winner DELIVERED at tick 1018 of its 1320.**
-
-  outage 8/9 -> **9/9**, first-mark 13/14 -> **14/14**, one-signer-node-refused 4/5 -> **5/5**,
-  forfeit 0/2 -> **2/2**, lock-settlement 1/15 -> **14/15**.  TOTAL **26/45 -> 44/45**.
-  publication-finality 6/7 -> **7/7** as well. The eight suites already green under this fixture still are.
-
-M3's own sentence is green for the first time: *claimed 1 loser lock 980000 msat; paid 1 qualifier 978000
-msat; fee locks 2, 40000 msat, paid 2 signer nodes 36000 msat.*
-
-RULED, NOT REPAIRED (Daniel 2026-09-21): **§22A's 2% is seat compensation for a round that actually ran** -
-not a qualifier's prize, not operator profit. A VOID round still claims nothing. A finished round with a
-loser and no qualifier pays no stake, returns both locks to their players, and still settles its fee locks to
-the seats: **2000 msat to each of the two sitting seats, 2% of 200000 gross**, neither player paid, both
-stake locks held. The test was split rather than retuned and now pins more than it did.
-**All five suites under this fixture are green: 44/45 -> 45/45** (lock-settlement 15/15, outage 9/9,
-first-mark 14/14, one-signer-node-refused 5/5, forfeit 2/2).
-Listed, not chased: `first-mark` "late start at close (2)" is an intermittent catch-up race - B is taken down
-and brought back late, then finality is read on a clock; red once in three runs, not a money path.
+DONE (2026-09-21): **the node's money path is green end to end in test - the fee is taken, the seats are paid,
+and failure pays nobody.** Four things, one letter. The fake federation is now one BLWP would accept, so
+§22A's `disable_base_fees` guard stops refusing every entry; the fixture's truck aims at the core's own gate
+and delivers again; a finished round with no qualifier still pays its seats the 2% while both stakes go back;
+and a VOID claims nothing at all - stake and fee lock both unwind, seats zero, operator zero. The guard was
+never weakened and no assertion was loosened to fit. The five suites under this fixture are **45/45**.
+Commits `53d0ac9a`, `50e4d1a9`, `0f3dde39`, `c05a8002`. Every number, table and measurement in TASKBOOK.
+Listed, not chased: `first-mark` "late start at close (2)" is an intermittent catch-up race, not a money path.
 
 DONE (2026-09-20): **the three threshold suites can sign again**, the same hole as `reconstruct` and not a
 new one. `settle-threshold` 0/2 -> **2/2**, `pool-threshold` 0/4 -> **4/4**, `handout-threshold` 0/2 -> **2/2**:
@@ -107,8 +66,9 @@ Counts in TASKBOOK.
 WHAT IS LEFT FOR M3, none of it started, in no ruled order yet:
   - the testnet4 **fee-lock spend** - the 2% actually moving to the sitting seats on testnet4 (fenced by
     ruling; the hold path is proven, the fee lock has never been minted there)
-  - **FROST / §23.5** five-of-seven reconstruction - `preimageFor` is handed in, not reconstructed, so this is
-    still single-node custody and does not pretend otherwise
+  - **FROST / §23.5 on testnet4** - reconstruction IS the daemon's default (`server.js:323`, and the
+    `reconstruct` suite is 7/7); what has never happened is a LIVE settle on a reconstructed preimage,
+    because `tools/custody-testnet4.mjs` injects one. That is the next item above.
   - a **playable client slice** - nothing of M3 reaches a player yet
   - PARKED BY RULING: guardians and `federationIsBonded`
 
