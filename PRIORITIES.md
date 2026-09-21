@@ -171,6 +171,10 @@ open line that is neither fenced nor parked.
     **106 ticks**. Suites: protocol first-mark 5/5, stopped 2/2, node first-mark 14/14. **The Daily runs
     `/mnt/bitcoin/blwp-2of2/code` pinned at df66c6d1, not this worktree**, so making it live is a separate
     decision.
+    CORRECTED 2026-09-21: post-HELD measured in the ROUND's clock on four runs is **56, 129, 188, 300 ticks -
+    inside 900 in 4 of 4**. My earlier "1006" compared a round-tick HELD against a core-tick mark, which is
+    the mismatch itself; the same error inflated the 88/7.6 split. **The window width is not in question; the
+    two clocks are** - the 106-tick miss is a round-tick origin (4094) judged against a core-tick mark (5100).
   - PARKED BY RULING: guardians and `federationIsBonded`
 
 FOLLOW-ONS, one line each:

@@ -5,6 +5,36 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+CORRECTION: POST-HELD IS 56 TO 300 TICKS, NOT 1006 - I MIXED THE TWO CLOCKS (2026-09-21).
+
+Four measured runs, the gap from the stake being HELD at both seats to the first mark() attempt, with BOTH
+sides in the round's own clock:
+
+  run           HELD tick   mark (round)   mark (core)   post-HELD   vs 900
+  origin             4094           4223          5100         129   INSIDE
+  slices             6175           6475          5280         300   INSIDE
+  clocks             4703           4891          5220         188   INSIDE
+  held               4102           4158          5220          56   INSIDE
+
+  n = 4   min 56   median 188   max 300   -   INSIDE 900 in 4 of 4
+
+MY EARLIER 1006 WAS WRONG. It compared HELD as a ROUND tick against the mark's CORE tick (5100), which are
+two different clocks - the very mismatch this letter had already measured. In the round's own clock that run
+is 129 ticks, not 1006. The same error inflated "the invoice wait is 88% and the clocks are 7.6%": that split
+was computed against `joinTick 0`, where the round clock genuinely dominates.
+
+WHAT THAT MEANS FOR THE 106. With the origin at HELD, the window is 900 round ticks and every measured run
+puts its first mark 56-300 round ticks after HELD - all comfortably inside. The 106-tick miss on run B is
+NOT the player being slow: it is the node comparing a ROUND-tick origin (4094) against a CORE-tick mark
+(5100). The origin move fixed the 88%; what is left is exactly and only the clock mismatch, which is now the
+whole residual rather than 7.6% of it.
+
+So the letter's next decision has a different shape than it looked an hour ago: the window width is not in
+question - 900 admits every run measured - and the two clocks are.
+
+Nothing was changed on this measurement: 900 untouched, the origin as committed, §13B and the close path
+untouched, no deploy, and the Daily still runs its pinned checkout.
+
 THE FIRST-MARK WINDOW NOW STARTS AT THE STAKE BEING HELD (2026-09-21).
 
 `firstMarkOutcome` took `joinTick` as the origin - which a paying browser sets to 0 - so the 900 ticks were
