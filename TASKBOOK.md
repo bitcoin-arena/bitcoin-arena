@@ -45690,3 +45690,46 @@ do-not-commit list - and do not rewrite the bundler on this letter; repo-relativ
 The other two scripts a page serves that decide money ARE the build of this source: `blwp-client.js` was
 genuinely stale (missing `lightningAddressEndpoint`), was rebuilt into dist and the template, and is
 deployed - btc-logistics-core serves 2cd63d767dd3. `blwp-core.js` was already fresh.
+
+## testnet4 gates 1-3 for the Daily, measured (2026-09-21)
+
+GATE 1 - THE PAIR. Nothing was broken. The x509 refusal I reported last turn was my own fault: I called
+`lncli` with its DEFAULT `--rpcserver=127.0.0.1:10009`, which on this machine is the **mainnet** lnd, while
+handing it a testnet4 lnddir's cert - hence "certificate signed by unknown authority ... beelink". The
+testnet4 pair listens on 11009 and 11010 (their own lnd.conf), and both had been up 20 h:
+
+    lnd-testnet4    0274e26122c7b8fc...  rpc 127.0.0.1:11009  synced true  1 active  inbound 108690 sat
+    lnd-testnet4-b  025f17c256326004...  rpc 127.0.0.1:11010  synced true  1 active  inbound  87840 sat
+    channel dce6199b9632c363...  (the 2026-09-20 baseline pair and channel)
+    gatewaysAreIndependent -> ok=true usable=2
+
+And the hold path is proven on the real node, not assumed: node A issued
+`lntb173469800p1p4tzs2r...` for 17346980 msat at cltv_expiry_delta 80 and cancelled it back clean.
+
+GATE 2 - THE NETWORK ID. Measured, differed, re-pinned at `9a78ecf1`. See that commit.
+
+GATE 3 - WHAT THE CHANNEL WILL CARRY.
+
+    min_htlc_msat            1        both ends, both directions
+    dust_limit_sat         354        both ends
+    chan_reserve_sat      2000        both ends
+    queryroutes B -> A      98 sat -> 1 hop, total_fees_msat 0
+                             2 sat -> 1 hop, total_fees_msat 0
+                           100 sat -> 1 hop, total_fees_msat 0
+    testnet4 pace          723.3 s a block over the last 144 -> stakeExpiryBlocks=144 is 28.9 h of real lock
+
+So a 100 sat stake ROUTES: min_htlc is 1 msat and a direct channel charges no fee. It does not CLEAR DUST -
+at 100 sat the stake hold is 98000 msat and the fee hold 2000 msat, both far under 354 sat, so both HTLCs
+are trimmed: they live only in the commitment's fee and cannot be claimed on-chain if the channel
+force-closes. Computed against the real `entryFeeMsat` / `netStakeMsat`:
+
+    smallest stake whose HOLD clears 354 sat dust          362 sat
+    smallest stake whose HOLD AND FEE both clear           17701 sat   (fee 354020 msat)
+
+17701 sat x 2 players fits the channel both ways (B local 108690, A inbound 108690).
+
+GATE 4 - BLOCKED, AND NOT ON PLUMBING. The Daily launcher's ROUND CHAIN is regtest by construction, not by
+configuration: `round-2of2.mjs` calls `rt.mine(6)` to bury the bonds to census depth, and `run-2of2.mjs`
+writes `chain: "regtest at ..."` into daily.json. Its own header says why - "testnet4 cannot be mined on
+demand, and every round waits on its beacon block". `BLWP_LND_*` is independent, so the MONEY can be
+testnet4 today. What cannot be had by configuration is a round whose BEACON and CENSUS are testnet4.
