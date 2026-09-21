@@ -47077,3 +47077,24 @@ still runs on it until the fleet pin moves" - and the Daily does still run it, a
 
 REVERTED. `server.js` is untouched in the tree and files 21-36 are 113 pass / 0 fail again. Nothing was
 loosened and no fixture was migrated to make a red go away.
+
+## The custody byte is now pinned by a test, so the entry cannot be deleted quietly (2026-09-22)
+
+Nothing anywhere asserted the custody byte mapping - `grep custodyByte|CUSTODY[` across both test packages
+returned zero. That is the hole that would let the withdrawn label be tidied out of the array and
+silently renumber FEDERATION from byte 1 to byte 0. `packages/protocol/test/custody-byte.test.js` closes
+it, 3 pass / 0 fail:
+
+    FACTS (the custody byte)          {"at0":"THRESHOLD_LN","at1":"FEDERATION","threshold":0,"federation":1}
+    FACTS (a regtest-history record)  {"custody":"THRESHOLD_LN"}
+    FACTS (a federation record)       {"custody":"FEDERATION"}
+
+PROVEN RED, not assumed: with `CUSTODY = ['FEDERATION']` the file goes 1 pass / 2 fail. The one that still
+passes is the federation record - byte 0 would encode and decode as FEDERATION quite happily - which is
+exactly how a renumber hides itself, and why the history record is the assertion that matters.
+
+The array was restored byte-identical afterwards; `constants.js` is unchanged in the tree.
+
+This asserts only that the two bytes keep meaning what they have always meant. It does NOT say a new
+round may carry THRESHOLD_LN - refusing that is the door's job, and the measurement above shows that door
+cannot land before the hold-invoice stack is retired.
