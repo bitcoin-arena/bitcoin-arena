@@ -45733,3 +45733,56 @@ configuration: `round-2of2.mjs` calls `rt.mine(6)` to bury the bonds to census d
 writes `chain: "regtest at ..."` into daily.json. Its own header says why - "testnet4 cannot be mined on
 demand, and every round waits on its beacon block". `BLWP_LND_*` is independent, so the MONEY can be
 testnet4 today. What cannot be had by configuration is a round whose BEACON and CENSUS are testnet4.
+
+## Federation lifecycle chapter, close-out check (2026-09-21, 47cc55f3)
+
+Spec-only: `FEDERATION.md` +31, `multiplayer_p2p.md` +392, no code and no C#. Checked against the six
+things its own subject claims, section by section, on this checkout:
+
+    23A.1  Size, and what an outage does
+    23A.2  Who the guardians are: founding
+    23A.3  Several federations, and which one a player is in
+    23A.4  How guardians, seats and clients talk
+    23A.5  A guardian leaves, and what his bond then does
+    23A.6  Succession: back to nominal size
+    23A.7  How a player finds his federation
+    23A.8  The player seed: twelve or twenty-four words
+
+The abandonment ruling is written as ruled: abandonment is "recorded ABANDONED with the proof; **slashed**
+through §5A.3B; the federation's reserve counts him gone at once", and "What the bond is *not*:
+restitution. A slash does not refill a reserve and does not unfreeze a halt (§24A.3's second property,
+unchanged)." Half of a slashed guardian bond goes to the guardians who served through CLOSED pro rata by
+seat-time, half is burned, and nothing goes to the successor's guardians - so a slash is never a reason to
+want a succession.
+
+Every parameter it introduces is pinned for all three networks in the constants table:
+
+    federation_nominal                                    10 (7 of 10) | 2 (2 of 2) | 4 (3 of 4)
+    federation_min                                        7  | 2 | 3
+    abandon_blocks / departure_notice / founding_window / drain_blocks
+                                                          1008 / 2016 / 2016 / 26280
+                                                          144 / 144 / 144 / 1008
+                                                          10 / 10 / 10 / 100
+
+SUITES AT THIS HEAD (node --test, timeout 180, --test-timeout=120000, chunked):
+
+    protocol  genesis + lnurl-pay + hold-window                    21/21
+    node      custody + winnings-door + custody-daemon             53/53
+    node      ghost-live                                           10/11   red, listed
+    client    bundle-fresh                                          1/2    red, listed
+
+    PlayMode / EditMode: not run and not owed - this letter changed two .md files and no C# exists in
+    535dc1a5..47cc55f3.
+
+THE BUNDLE RED IS MINE, NOT THIS LETTER'S, AND IT IS NEW. Re-pinning the network ids at `9a78ecf1` moved a
+constant that is bundled into the page's money script, and the shipped bundle was never rebuilt:
+
+    blwp-client.js  shipped 2cd63d767dd3  fresh bcd3be5110bd  STALE
+    blwp-curve.js   shipped c7d28f3bc222  fresh c7d28f3bc222  FRESH   (the cwd-comment red is GONE)
+    blwp-core.js    shipped 37e77ce20ec8  fresh 37e77ce20ec8  FRESH
+    old regtest id b07c4a09 in the shipped bundle: 1
+    new regtest id 06ad7746 in the shipped bundle: 0
+
+Nothing is broken live, because the live signer nodes are pinned at `595f0df3`, which also carries the old
+id - page and nodes agree. The break appears the moment the live pin moves to HEAD. So the rebuild and a
+deploy must happen together with that pin move, and not before.

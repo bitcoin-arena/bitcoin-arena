@@ -48,22 +48,20 @@ are fixed - one player's open objection window held up every OTHER player's fee,
 times to one entry"). Re-measured live afterwards: nothing at +599 s, everything at +619 s, alice
 996106 -> 996302, one payment.
 
-LISTED, NOT TAKEN - **the network id does not commit to the rules being played.** `encodeGameConfig()`
-hashes BLOCK_TICKS; the ids were pinned at 94d9b1c5 and c01cc655 moved the run length afterwards, so
-protocol/genesis.test.js has two reds and the Daily holds stakes under an id that describes a game with a
-different round length. Re-pinning changes the network's identity and invalidates everything already
-signed under the old one - a rule call, with what to measure in TASKBOOK.md.
+DONE (2026-09-21, `9a78ecf1`): **the network id commits to the rules being played.** It did not: the ids
+were pinned before c01cc655 moved the run length, and `encodeGameConfig()` hashes it. Re-pinned to the id
+of the rules actually played - the rules were not changed to match an old pin - and both test donation
+sets re-signed under it by the same two authority keys. protocol/genesis 3/3.
 
 LISTED - ghost-live "the load is what moves the picture": a loaded run is drawn byte-identical to the same
 inputs unloaded (x -50.28 z -8.44 both), which needs the core, not the test.
 
-LISTED, RULED NOT THIS LETTER (Daniel 2026-09-21) - **bundle-fresh stays red on `blwp-curve.js`.** Measured:
-the whole difference between the committed copies and a fresh build is the bundler writing the directory
-it was run from into its own comments (`// src/page-curve.js` against `// packages/blwp-client/src/...`),
-**zero code lines differ** with the comments stripped. It is not a money-path hole. Committing two
-generated files to green a comment is the wrong fix, and rewriting the bundler to emit repo-relative paths
-is a later item. `blwp-client.js` - which WAS genuinely stale - and `blwp-core.js` are fresh in dist and
-in the template.
+LISTED - **bundle-fresh is red on `blwp-client.js`, and it is the re-pin's tail.** The curve red is gone:
+`blwp-curve.js` and `blwp-core.js` both measure FRESH now. `blwp-client.js` does not - re-pinning the
+network ids moved a constant that is bundled into the page's money script, and the shipped bundle still
+carries the old regtest id `b07c4a09` instead of `06ad7746`. Nothing is broken live: the signer nodes are
+pinned at `595f0df3`, which carries the old id too, so page and nodes agree. DEPENDS ON: the live pin
+moving to HEAD - the bundle rebuild and the page deploy must go with that move, in one step, never before.
 
 MEASURED (2026-09-21, round ec9bd34e, `4e9d7244`): stake and fee paid from alice with **no NWC string**,
 DELIVERED at tick 2240, the address named once - alice 996016 -> 996114 sat, the committee -98 +4, the
@@ -85,15 +83,24 @@ when" named that Daniel has not parked.
                                              (THRESHOLD_LN), not as a §23 stake lock, and every number
                                              on this board today is REGTEST, not testnet sats.
 
-NEXT M3 ITEM, ON TOP AND NOT STARTED: **the Daily plays for real testnet4 sats.** Everything measured in
-the winnings letter is regtest; M3's own sentence says testnet. The pieces are already here - the gate
-already refuses a paying round that cannot name two independent gateways (§23.6), the preflight already
-only knows testnet4, and `lightningFromEnv` already takes `BLWP_LND_GATEWAYS` - so this is standing the
-Daily up against testnet4 and measuring, not new custody. WHAT TO MEASURE: two gateways that can actually
-receive on testnet4; a stake paid from a wallet that is not ours; the HTLC's cltv against testnet's real
-pace rather than regtest's; and one round through DELIVERED to a winning that leaves. The stake-lock
-custody itself (FEDERATION.md, FROST bit-matched against frost-secp256k1-tr) is the larger item below and
-still needs a decision to open.
+DONE (2026-09-21, `47cc55f3`): **a federation that holds balances across rounds has a life.** Spec v4.6.4
+§23A: founding and who the guardians are, nominal size and what an outage does, several federations and
+which one a player is in, how guardians and seats and clients talk, what a departing guardian's bond does,
+succession back to nominal size, how a player finds his federation, and the twelve or twenty-four seed
+words. Abandonment costs the whole bond through §5A.3B - half to the guardians who served through CLOSED,
+half burned, nothing to the successor's - and a slash is never restitution: it does not refill a reserve
+and does not unfreeze a halt. Every parameter it introduces is pinned for all three networks. Spec only:
+two .md files, no code and no C#. Section list and the checks in TASKBOOK.md.
+
+NEXT M3 ITEM, ON TOP AND BLOCKED ON A RULING: **the Daily plays for real testnet4 sats.** Three gates are
+measured and pass - the pair answers and `gatewaysAreIndependent` is 2 of 2, node A issues and cancels a
+real `lntb` hold invoice, and the network id now commits to the rules. The fourth is blocked, and not on
+plumbing: the launcher's ROUND chain is regtest by construction (`rt.mine(6)` buries the bonds to census
+depth), so a testnet4 Daily is reachable today only as a hybrid whose rounds are seeded on a chain the
+operator mines - the operator could grind the beacon of a round holding real money. THE RULING NEEDED: is
+that hybrid acceptable for one measurement, or does this letter first teach the launcher to wait for six
+real confirmations instead of mining them? And the stake size: at 100 sat both HTLCs are dust (limit
+354 sat), the hold clears at 362 sat and hold-and-fee only at 17701 sat. Numbers in TASKBOOK.md.
 
 DONE (2026-09-21): **the fixture family that has been "listed with cause" for a fortnight is cleared.** Four
 suites named a run length the core stopped using at c01cc655, so `Round.open` refused their contracts and
