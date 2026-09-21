@@ -26,6 +26,23 @@ M3: **a round can be played for real testnet sats** - the federation holds the m
 paid out, and the payout actually moves. W1-W7 are done, and so is every item the inventory's "M3 is done
 when" named that Daniel has not parked.
 
+DONE (2026-09-21): **§13B's start window - a paid entry's first mark now lands inside it, on both seats.**
+The origin is the tick the player had reached when the stake was seen HELD, and for a real paid entry that
+is **0**: at HELD the node has received nothing, because play begins once the hold is seen (§23.1 step 5).
+That is the protocol fact, not a bug, and 900 was never widened. What actually made every paid run late was
+the client feeding a behind peer **one batch per round trip** - 65 ms a trip, 6 ticks a batch, 92 ticks/s
+against a player making 60 - so a seat 2280 ticks behind needed 71 s and the first mark went out at 5940.
+The feed sends a window now: the same 100-batch backlog goes **101 round trips -> 5**. Live on the Daily,
+both seats: **first checkpoint at tick 60 of a window ending at 900, 171 checkpoints stored at each seat,
+0 start forfeits, 0 fork pairs, 0 marks timed out.** And a first mark this signer node refused and never
+carried is no longer half of §13B's fork proof - 80 honest retries had been answered "the player signed
+another first mark", the clause that forecloses an outage refund. Two blockers the Daily's pin exposed went
+with it: §23.6's two-gateway gate that no launcher could satisfy, and a known-good core list generated at
+the old pin that made the page refuse the operator's own round. Commits `66add34d`, `0432b7d2`, `4b1f6fb6`,
+`4dc771b5`. Every number in TASKBOOK.
+LISTED, NOT A DEFECT: the late-seat case was re-created on two real daemons, not on the Daily - the live
+runs after the fix were all warm, so the 101 -> 5 is a test measurement and tick 60 is the live one.
+
 DONE (2026-09-20): **the shared window fixture reads the core's run length.** `test/window-fixture.js:106`
 said 9000, so every round the 23 suites under it built was 400 at `POST /round`. Passing tests across those
 23 go **2 -> 31**, wholly green suites **0 -> 8**, hanging suites **9 -> 2**. Separately, and measured first
@@ -80,6 +97,12 @@ WHAT IS LEFT FOR M3 (the fee-lock line has been MEASURED but not spent; the rest
     changes §22A's shape - a ruling). Numbers in TASKBOOK.
     **DIAGNOSED, NOT SPENT** - the spend stays fenced; what is finished is knowing exactly why it cannot
     happen on this custody. Checked from both ends: no invoice AND no payment of 20000 msat on either node.
+
+NEXT M3 ITEM, ON TOP (2026-09-21): **a played stake must settle.** A paid entry now joins, pays, plays its
+whole run and marks inside its window - and when the run ends the hold is still `ACCEPTED` at the committee
+lnd and `HELD` in both stores, 98000 msat in flight in nobody's balance. Measured on two finished runs
+(`b067061102fb`, `c7e8066eac26`): run FINISHED, 171 and 179 checkpoints at both seats, round not closed,
+`results` 0. This is the close and payout path, NOT §13B - that letter is done and does not grow into this.
 
 NEXT M3 ITEM, NOT STARTED: **a playable client slice** - nothing of M3 reaches a player yet. It is the first
 open line that is neither fenced nor parked.
