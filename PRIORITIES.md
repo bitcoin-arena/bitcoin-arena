@@ -94,6 +94,12 @@ open line that is neither fenced nor parked.
     post an entry for. Not the seats (identity/round answered 200 x4 each), not the withdraw gate (nothing in
     98 console events names withdraw, wallet, Lightning or invoice), not a crash (0 exceptions). The client
     already has the money doors in `client.js` and `join.js`; the flow never reaches them.
+    CAUSE NAMED 2026-09-21: **the rewrite does NOT drop the node.** The address after PLAY carries both seats,
+    the bond, the advert and the round id, plus `&play=1` - confirmed by the snapshot and by
+    `navigatedWithinDocument`. What never happens is the page turning that query into the globals the opener
+    reads: `BLWP_ADVERT`, `BLWP_CHAIN`, `BLWP_ROUND` are **undefined before and after**, so
+    `blwpDiscovery()` throws "the page carried no chain providers" - on its SILENT branch, because the
+    console.error only fires when BLWP_CHAIN is already defined - and `nodeUrl` stays empty.
   - PARKED BY RULING: guardians and `federationIsBonded`
 
 FOLLOW-ONS, one line each:

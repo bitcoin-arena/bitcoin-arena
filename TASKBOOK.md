@@ -5,6 +5,38 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE NODE IS ON THE URL; THE SESSION OPENER NEVER READS IT (2026-09-21). Four strings, one PLAY click.
+
+  (a) WHAT THE LOBBY HELD WHEN JOIN WAS CLICKED
+      lobbyNodes 2, and the round's own join link carries both seats, the bond, the advert and the round id:
+      ?node=https%3A%2F%2Fsensitivity-ensures-emotions-casa.trycloudflare.com%2Chttps%3A%2F%2Fflight-costa-
+      nails-watched.trycloudflare.com&bond=...%2Fbond&advert=18da61ed...&round=c37f1d013ae27251...
+
+  (b) THE URL AFTER THE REWRITE - the same link plus `&play=1`, confirmed twice: the snapshot taken in the
+      same expression as the join, and `Page.navigatedWithinDocument` at +0.8s. THE NODE IS NOT DROPPED.
+
+  (c) WHAT THE SESSION PATH READS ON ARRIVAL - `blwpDiscovery()` (blwp.jslib:751) reads BLWP_ADVERT,
+      BLWP_CHAIN and BLWP_ROUND. Measured, before AND after the rewrite:
+          advert undefined   chain undefined   round undefined   entry undefined
+
+  (d) THE EMPTY VALUE THE GATE TESTS - `nodeUrl` in NetSession.cs:59. It is filled from
+      `BlwpNet.NodeUrl()` -> `BlwpNetNodeUrl` (blwp.jslib:810), which returns 'the chain' only if
+      `blwpDiscovery()` succeeds. With BLWP_CHAIN undefined it throws "the page carried no chain providers",
+      and that throw is the SILENT branch - the console.error only runs `if (typeof BLWP_CHAIN !== 'undefined')`.
+      So the string comes back '', nodeUrl stays '', and the gate says "the page has named no node".
+
+THE ANSWER: THE JOIN REWRITE DOES NOT DROP THE NODE. The query string is on the address, whole, with both
+hosts. What never happens is the page turning that query into the globals the session opener reads. And the
+failure is silent by construction, which is why 98 console events and 0 exceptions named nothing.
+
+  seat doors in the 30 s after the join: /entry 0  /invoice 0  /stake 0  /handout 0  /identity 2  /round 18
+
+The 18 /round polls say the round-link path IS talking to the seats; the globals still never became defined
+in that window, and the gate line at +0.3s never changed.
+
+NOT CHASED, BY RULING: no default node, no daily.json hard-coded into the session opener, no PhysX,
+SphereCollider or withdraw. No fix this turn - the cause is named, not repaired.
+
 THE SPLIT: THE BROWSER NEVER OPENS A SESSION, SO THERE IS NOTHING TO POST AN ENTRY FOR (2026-09-21).
 
 Passive after the join - `Runtime.evaluate` went silent for 8+ minutes twice, so the page is asked nothing
