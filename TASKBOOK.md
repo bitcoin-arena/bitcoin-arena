@@ -45621,3 +45621,28 @@ The two pictures are byte-identical, not merely close, on a run where one carrie
 the other carries nothing. A load that changes the drawn truck by nothing at all is either a load that is
 not applied or a test driving a truck that cannot show it - and which of those it is needs the core, not
 this file. It is written down rather than tuned.
+
+## The network id no longer commits to the rules being played (2026-09-21, listed - a rule call)
+
+Found closing out the winnings letter, running the whole board rather than only the suites I had touched:
+
+    protocol/genesis.test.js  game config hash matches the committed id
+      computed b0f1c33846f1383f2146a73411075ddbecc702e14fec1a3168c56f59080f2978
+      pinned   04580b8f154d9330f27b151a7832e938b739ba5583c7ef5a7281f67650bb1341
+    protocol/genesis.test.js  regtest and testnet4 network ids match the committed ids
+
+`encodeGameConfig()` writes BLOCK_TICKS into the bytes the genesis config hash is taken over, and the
+network id is taken over that. The ids in genesis-ids.js were pinned at 94d9b1c5; c01cc655 - "a round is
+three minutes, and the constant is the default a contract overrides" - moved BLOCK_TICKS from 9000 to
+10800 afterwards, and nothing re-pinned them. So every node agrees, every round opens, and the Daily has
+been holding real stakes under an id that does NOT describe the rules those rounds are played by.
+
+It is the same root cause as the blockTicks fixture family and it is NOT this letter's to take. Re-pinning
+changes the network's identity: every contract, bond and donation set already signed under the old id
+stops matching, and whether regtest and testnet4 take that now or carry the drift until M4's external
+review is a rule question. Listed, not rewritten.
+
+WHAT WOULD SETTLE IT, when it is somebody's letter: re-pin GENESIS_CONFIG_HASH and both NETWORK_IDs from
+`computeGenesisConfigHash()`, then measure that the Daily still opens a paying round, that a bond rebuilt
+from the published body and genesis alone still verifies (94d9b1c5's test), and that a contract signed
+before the re-pin is refused by name rather than silently accepted.

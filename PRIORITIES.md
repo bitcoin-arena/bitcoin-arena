@@ -42,6 +42,15 @@ sampled once at launch that had since gone seven times faster. Measurements in T
 
 THIS IS THE LIVE ITEM. Stop whatever else is open.
 
+LISTED, NOT TAKEN - **the network id does not commit to the rules being played.** `encodeGameConfig()`
+hashes BLOCK_TICKS; the ids were pinned at 94d9b1c5 and c01cc655 moved the run length afterwards, so
+protocol/genesis.test.js has two reds and the Daily holds stakes under an id that describes a game with a
+different round length. Re-pinning changes the network's identity and invalidates everything already
+signed under the old one - a rule call, with what to measure in TASKBOOK.md.
+
+LISTED - ghost-live "the load is what moves the picture": a loaded run is drawn byte-identical to the same
+inputs unloaded (x -50.28 z -8.44 both), which needs the core, not the test.
+
 MEASURED (2026-09-21, round ec9bd34e, `4e9d7244`): stake and fee paid from alice with **no NWC string**,
 DELIVERED at tick 2240, the address named once - alice 996016 -> 996114 sat, the committee -98 +4, the
 endpoint asked for exactly 98000 msat. The ruling's own measurement passes. Two faults it did not show,
