@@ -46754,3 +46754,27 @@ It was cut off by `timeout 180`, not hung: 8 of its ~22 tests passed in 175 s wh
 itself, and 4 in the same time while the seven-node round was searching world secrets beside it. Each test
 stands seven daemons and waits out real expiries. Nothing is loosened; it needs a longer budget than 180 s
 and the number is still being measured.
+
+## Why the seven-node round does not settle: no signed result is ever published (2026-09-21)
+
+The second run cleared the winner's lock - both players got "201 stake lock verified ... holds 980000
+msat" from all seven, so the earlier 409 was timing, not structure. It still does not settle, and the
+refusal names the place:
+
+    winner forfeit   409 "no forfeit before the result is final with its objection window closed:
+                          0 of 5 agree on any one run"
+    then both entries end VOID (§13C): "nothing is forfeited - nobody acts, and the lock returns to
+                          the player at its expiry"
+
+`verdict.js` counts SIGNED RESULTS: it verifies each signer node's signature over `resultId(result)` and
+tallies by `runId`. `agreed` is the best run's count, and it is ZERO - not "four of five disagreed", but
+no signed result collected at all. So the step that fails is the signer nodes publishing a signed result
+for the run after the close, not the agreement over them.
+
+    claim key   ok, attested 6 of 5 needed, key 023995b3db26e7a3
+    locks       winner bce9464d:0, loser 9fd46561:0, both 980000 msat, expiration 2145
+    entries     201 x 7      close "closed" x 7
+    agreed      0 of 5
+
+That is the next thing to open, and it is one layer below this letter's question: the §23.6 gate, the
+claim key and the stake lock are all measured working at seven nodes. CUSTODY is still untouched.
