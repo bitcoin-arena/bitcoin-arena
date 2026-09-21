@@ -103,6 +103,20 @@ half burned, nothing to the successor's - and a slash is never restitution: it d
 and does not unfreeze a halt. Every parameter it introduces is pinned for all three networks. Spec only:
 two .md files, no code and no C#. Section list and the checks in TASKBOOK.md.
 
+DONE (2026-09-21, `78c8307b`): **the federation clocks are in the code for all three networks.** The spec
+pinned three and `federation-slash.js` carried only mainnet, so nothing could have run a testnet
+federation from it. mainnet 288/432/432/4032/216, testnet 12/18/18/144/9, regtest 10/10/10/100/10, and
+`clocksFor` refuses a network nobody pinned rather than guessing one. Testnet is 24-28x faster, held
+between 20x and 28x so a clock cannot drift out of the family unnoticed. MEASURED, and it is a ruling not
+a number: a guardian leaving costs **26 h** (156 blocks) with the succession started at his departure and
+29 h (174) if it is not - the 144-block DRAIN is the day, the cycle around it is not. Numbers in
+TASKBOOK.md.
+
+STILL OPEN on the never-burn letter, named and not coded: `slash.js` burns in two STRUCTURAL cases -
+nobody at all to pay, and an excluded member's share - against §5A.3's absolute "every remainder in this
+document has a recipient". Spreading the excluded share would pay the honest more the more colleagues
+were slashed, so naming a recipient is a rule call.
+
 HARD (Daniel 2026-09-21 17:08): **there is no THRESHOLD_LN. Only federation and guardians.** Spec
 changed (`c7b74585`). A round naming any other custody is invalid. Guardians are no longer parked:
 testnet on the 2-of-2 that runs, seated by its two bonded operators. The federation holds the money.
