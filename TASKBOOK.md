@@ -46138,3 +46138,38 @@ The trap this holds shut: the claim window closing is NOT when the nodes get pai
 remainder splittable at `claim_blocks` instead of `drain_blocks` - 8 pass, 1 fail; restored, 9 pass.
 
 SUITES: protocol federation-slash 9/9.
+
+## BURN cannot be minted any more, and the drain tail is four weeks (2026-09-21)
+
+The spec withdrew `slashRemainder: BURN`; the tree still defaulted to it everywhere, and a default that
+contradicts the money law gets copied.
+
+BEFORE                                                    AFTER
+    SLASH_REMAINDERS = ['BURN', 'COMMITTEE']              ['SPLIT']
+    slashRemainder: 'BURN' in tools                 15    0
+    slashRemainder: 'BURN' in test fixtures         97    0
+    contract-chosen burn branch in slash.js          1    0
+    slashRemainderByte('BURN')                  byte 0    refused: "BURN is not one of SPLIT"
+    slashRemainderByte('SPLIT')                      -    byte 0
+
+The one `slashRemainder: 'BURN'` left in the tree is the test that asserts the encoder REFUSES it.
+
+`SPLIT` takes byte 0, which `BURN` used to hold, so a contract stored before this reads as SPLIT rather
+than as a burn - the safe direction: the money it describes is paid out instead of destroyed. Byte 1, the
+old `COMMITTEE`, no longer decodes at all.
+
+In `slash.js` the line that asked the contract where the remainder went is gone: `hand(honestCommittee,
+rest, out)` runs unconditionally, so no round can be written that burns its own remainder.
+
+AND THE CLOCKS FOLLOWED HEAD: `drain_blocks` is 4032 (four weeks), not 2016. `MAINNET_CLOCKS` and the
+late-claim tail test moved with it.
+
+SUITES: protocol slash-distribution + protocol 40/40; protocol federation-slash + genesis +
+advert-witness + census-resolve 30/30; blwp-node custody + round + winnings-door 56/56; blwp-node server +
+entry-fee-door with blwp-client page-stake + session-pay 28/28.
+
+STILL BURNING, AND NAMED RATHER THAN QUIETLY FIXED: two burns in `slash.js` are structural, not chosen by
+a contract - `hand()` burns when there is nobody at all to pay, and an excluded member's share is burned
+rather than spread over the rest (spreading it would pay the honest MORE the more colleagues were
+slashed). The spec's new sentence is absolute - "every remainder in this document has a recipient" - so
+these two need a recipient naming, and that is a rule call, not a default to flip.
