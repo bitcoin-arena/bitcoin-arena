@@ -46312,3 +46312,27 @@ PHRASE. The seed is 32 random bytes from `tabSeed` in sessionStorage; there is n
 seed-to-words mapping anywhere in the tree (`display-name.js`'s two 64-word lists name a player, they do
 not encode a seed). §23A.8 says twelve or twenty-four words. Writing that from memory is how a player
 copies down words that will not restore his wallet, so it is named rather than guessed.
+
+## The verified flag was not bound to the seed it verified (2026-09-21, found by the checklist)
+
+`70c2dd11` shipped an hour old and had a hole the ruling's own checklist named - "notice gone after
+refresh". Measured:
+
+    tabSeed({ storage: window.sessionStorage })   mints a FRESH 32 bytes when it finds none
+    sessionStorage                                per tab, dies with the tab
+    blwp.backup.verified                          localStorage, outlives every tab, bound to nothing
+
+So: verify the phrase in one tab, open a second, and `tabSeed` mints a wallet nobody has ever written
+down - while the flag still said verified. `mayDeposit` and `mayPayStake` would both have opened for it.
+The gate was answering about a wallet that no longer existed.
+
+FIXED: the flag records `sha256(seed)`, and the gate opens only when the seed in hand hashes to it. A new
+seed is unverified however many older ones were not. Proven by restoring the old behaviour - flag present
+rather than matching - which fails 1 of 10; bound, 10 of 10.
+
+    verified seed          mayDeposit true
+    a different seed       mayDeposit FALSE, mayPayStake FALSE, lobby line back
+    a different seed, free mayJoin({paying:false}) still true
+    no seed at all         unverified; digestOf(undefined) null, digestOf(8 bytes) null
+
+SUITE: blwp-client backup-gate 10/10.
