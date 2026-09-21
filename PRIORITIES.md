@@ -50,19 +50,19 @@ The enum is still NOT flipped - that is the next slice, and it was ordered after
   received, `remainingBalanceMsat` 0). A browser player already hands the fee lock at `client.js:609`,
   inside join and before any input batch - the shipped client was right and only w5b was missing it.
 
-  LISTED RED, CAUSE NOW READ (`0e373e10`): `signer-node-lock.test.js` - four tests failing, ONE assertion
-  between them, raised in the shared fixture `joinedWithLock` at `lock-fixture.js:143`: "this round mints
-  fee locks ... an entry that brings no fee lock is not taken", 409 !== 201. The fixture builds its entry
-  with a zeroed `feePreimage` and a zeroed `feeLockOutpoint` and asserts 201. Same rule that stopped the
-  seven-node round; NOT from the fee-lock handoff, which lives in `tools/w5b.mjs` and no test imports.
-  A pre-existing lock-rule case, not a settlement-path red - the fixture needs to hand a fee lock the way
-  `client.js:609` does. The hang is its own daemon: served at `lock-fixture.js:114`, closed by the
-  fixture's try/catch only around the `/round` post, so the `/entry` assert outside that guard leaves it
-  listening and the tests' `finally` cannot close a fixture that never returned. 5 tests, 4 fail, 1
-  passes - not a fifth test. Read with `--test-reporter=tap`, which prints each failure inline instead of
-  in a summary the hang never reaches. FIX vs LIST is Daniel's call.
-  Also listed: objection-window (red before this letter), ghost-live, replay-solids, two-titles. The
-  one-signer refusal passes alone - contention, not a product red.
+  FIXED (`ba3d089f`): **a joined lock now brings the fee lock the node already requires.** The four
+  `signer-node-lock` reds were one fixture hole, not four node bugs: `joinedWithLock` built its entry
+  with a zeroed `feePreimage` and `feeLockOutpoint`, and the node refuses that when the round mints fee
+  locks. The fixture now names both and hands the lock to `/fee-lock` the way `client.js:609` always
+  has, only for a FEDERATION round. 1 pass / 4 fail and a file that never exited -> **5 pass / 0 fail,
+  exit 0**; the hang went with the throw. No status loosened, no node rule changed, no settle added.
+  Every other suite on that fixture, each alone under the cap: lock-client 1/0, forfeit 2/0, first-mark
+  15/0, one-signer-node-refused 5/0, outage 9/0, lock-settlement 15/0.
+
+  LISTED, TIMING-FLAKY: `lock-settlement` failed two DIFFERENT tests on two runs ("SUBMITTING" where
+  "ACCEPTED" was wanted) and then passed 15/15 - flaky, not a regression. Also listed: objection-window
+  (red before this letter), ghost-live, replay-solids, two-titles. `one-signer-node-refused` passes 5/0
+  alone, which confirms it was contention.
 
   FIXED IN PASSING (`1e9628cd`): **the page served could enter no paying round.** Two of its three money
   scripts, `blwp-client.js` and `blwp-core.js`, had fallen off `known-good-clients.json` when I rebuilt
