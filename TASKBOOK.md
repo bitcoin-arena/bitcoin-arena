@@ -5,6 +5,67 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+A PAID ENTRY MARKS INSIDE ITS WINDOW, LIVE ON THE DAILY (2026-09-21, commits `66add34d`, `0432b7d2`,
+`4b1f6fb6`, `4dc771b5`).
+
+WHAT STOPPED THE ROUND FROM OPENING AT ALL, after the Daily was pinned onto this branch:
+
+  §23.6 two-gateway gate   "1 of 1 gateways can actually receive; the round needs 2" - refused twice a
+                           minute for 25 min; 3 free rounds opened in that window, 0 paying.
+                           `BLWP_LND_GATEWAYS` names them; the Daily's second operator lnd (gateway-b,
+                           rpc 30430) reports 996530 sat inbound.
+  §5 known-good core       the list was generated at df66c6d1, so the page refused the operator's own
+                           round: "that round runs core 6cf38b8877a05417...". Regenerated from the
+                           sources, 31 -> 32 listed, none removed; bundle rebuilt, template copy is the
+                           bundle, deployed (alias and 46216ab4 both serve it).
+
+WHY THE FIRST MARK WAS LATE, with the new origin already live and named in the refusal:
+
+  the player paid          /stake 200 about 10 s after the join
+  the origin               stake_seen_tick 0 on both seats - at HELD the node has received nothing,
+                           because play begins once the hold is seen (§23.1 step 5). Not a bug: the
+                           window is joinTick's, and both seats wrote the same words,
+                           "stake held 0 + 900 = 900".
+  the first mark           tick 5940. Late by 5040 ticks (84 s).
+  the client's own counts  marksSent 0, marksSkipped 90, marksWaited 90, marksTimedOut 9,
+                           "tick 5280: flight-costa... holds inputs before tick 3000" - a seat 2280
+                           ticks (38 s) behind, with markWaitMs 10000.
+  the ceiling              peer round trip 65 ms (median of 2084), one batch 6 ticks -> 92 ticks/s
+                           against a player making 60. Surplus 32 ticks/s, so 2280 ticks took 71 s.
+
+THE FEED, TWO REAL DAEMONS, THE SAME 100-BATCH BACKLOG:
+
+  one batch per round trip   101 frames, 101 waves, 1 at once
+  a window of 32             132 frames,   5 waves, 32 at once
+
+The 31 extra frames are the first wave to a node that had never been given the entry; it is refused once
+and counted once, as before. A steady run has one batch to send and still sends one frame.
+
+LIVE AFTER THE FIX, one paid entry per line, both seats through their quick tunnels:
+
+  round c7e8066eac26    first checkpoint at tick 60 of a window ending at 900 - inside by 840
+                        171 checkpoints stored at BOTH seats, 0 start forfeits, 0 first-mark pairs
+                        peer lag 0..8 ticks across the run, marks sent 171, timed out 0
+  round b067061102fb    179 marks sent, 1 skipped, 0 timed out, both seats and the player at 10800
+  both                  the hold stays HELD when the run ends - the stake has NOT settled yet
+
+§13B ON A REFUSED FIRST MARK NOBODY CARRIED, measured both ways on two real daemons, same entry:
+
+  before   a retry at tick 960 (past the line)  "the player signed another first mark", pair kept
+  after    a retry at tick 960                  "the first mark at tick 960 is after the start deadline"
+  after    a retry at tick 30 (inside the line) "the player signed another first mark" - unchanged
+
+SUITES: blwp-node/first-mark 15/15 (1 new), lnd-settings 10/10 (6 new), paying-round-needs-gateways 7/7,
+hold-two-first 2/2, one-signer-node-refused 5/5, forfeit 2/2; protocol/first-mark 5/5, stopped 2/2,
+known-core 2/2; blwp-client/checkpoint-quorum 9/9 (1 new).
+
+RED, LISTED WITH CAUSE, NOT CHASED AND NOT CAUSED HERE: `equivocation` 0/8 and `five-of-seven` 0/5 are the
+same fixture family as the window-fixture red - equivocation dies in `Round.open` on "that round says a run
+is 9000 ticks and this core ends one at 10800", five-of-seven on the fee-lock door with 409 !== 201, both
+before any mark is sent. Measured against the commit before the §13B change and they fail identically.
+`blwp-client/ghost-field` is slow enough that it does not finish inside `timeout 180`; its shipped-files
+test - the one a deploy rests on - passes.
+
 THE START WINDOW NOW OPENS AT THE TICK THE PLAYER HAD REACHED WHEN THE STAKE WAS HELD (2026-09-21).
 
 This replaces the version committed earlier in this letter, which converted `stake_seen.seen_ms` with

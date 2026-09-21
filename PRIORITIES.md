@@ -211,6 +211,24 @@ open line that is neither fenced nor parked.
     `startWindowOrigin` returns it, so the origin is now in the player's own run clock - the stream the
     batches and marks already use. An entry with no such row keeps `joinTick` word for word. Suites: protocol
     first-mark 5/5, stopped 2/2, node first-mark 14/14. Not live: the Daily is still pinned at df66c6d1.
+    LIVE AND MEASURED 2026-09-21: **a paid entry now makes its first mark at tick 60 of a 900-tick window**
+    and both seats store all 171 of its checkpoints, on the Daily running this branch. Three things stood between the pin and a
+    played round. (1) §23.6's two-gateway gate landed after the old pin and no launcher could name a second
+    node, so every paying round was refused *"1 of 1 gateways can actually receive"* and only free rounds
+    were advertised; `BLWP_LND_GATEWAYS` names them and the Daily runs a second operator lnd. (2) The
+    client's known-good core list was generated at the old pin, so the page refused the operator's own round
+    under §5; regenerated 31 -> 32 and deployed. (3) **The hole was never the window.** With the origin live
+    and named in the refusal - *"stake held 0 + 900 = 900"* - the first mark still went out at 5940, because
+    a mark waits for every seat to hold the inputs before it and the client fed a behind peer ONE BATCH PER
+    ROUND TRIP: 92 ticks/s against a player making 60, so a seat 2280 ticks behind needed 71 s. The feed
+    sends a window now - 100 batches of backlog go from **101 round trips to 5** - and the run before this
+    one sent **179 marks with 0 timed out**. ORIGIN 0 IS NOT A BUG: at HELD the node has received nothing,
+    because play begins once the hold is seen (§23.1 step 5), so `stake_seen_tick` is 0 and the window is
+    joinTick's. Separately, §13B no longer charges a fork against a player whose first mark was refused and
+    never carried - `checkpoints` and `offered_marks` held 0 rows and 80 retries were answered as two first
+    marks. Commits `66add34d`, `0432b7d2`, `4b1f6fb6`, `4dc771b5`. Numbers in TASKBOOK.
+    **STILL OPEN: a stake has not SETTLED** - the hold stays HELD when the run ends, which is the close and
+    payout path, untouched by this letter.
   - PARKED BY RULING: guardians and `federationIsBonded`
 
 FOLLOW-ONS, one line each:
