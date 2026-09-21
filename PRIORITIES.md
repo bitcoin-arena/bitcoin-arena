@@ -50,10 +50,17 @@ The enum is still NOT flipped - that is the next slice, and it was ordered after
   received, `remainingBalanceMsat` 0). A browser player already hands the fee lock at `client.js:609`,
   inside join and before any input batch - the shipped client was right and only w5b was missing it.
 
-  LISTED RED, CORRECTED: `signer-node-lock.test.js` is NOT the five-of-seven wall-time class as I said.
-  It has FOUR tests failing in 35-163 ms plus a file that never terminates, so the detail never prints
-  under the cap. Not from the fee-lock handoff: the only source change in `1e9628cd..HEAD` is one
-  refusal string in `guardiansBonded`, which this suite does not exercise. Cause not yet read.
+  LISTED RED, CAUSE NOW READ (`0e373e10`): `signer-node-lock.test.js` - four tests failing, ONE assertion
+  between them, raised in the shared fixture `joinedWithLock` at `lock-fixture.js:143`: "this round mints
+  fee locks ... an entry that brings no fee lock is not taken", 409 !== 201. The fixture builds its entry
+  with a zeroed `feePreimage` and a zeroed `feeLockOutpoint` and asserts 201. Same rule that stopped the
+  seven-node round; NOT from the fee-lock handoff, which lives in `tools/w5b.mjs` and no test imports.
+  A pre-existing lock-rule case, not a settlement-path red - the fixture needs to hand a fee lock the way
+  `client.js:609` does. The hang is its own daemon: served at `lock-fixture.js:114`, closed by the
+  fixture's try/catch only around the `/round` post, so the `/entry` assert outside that guard leaves it
+  listening and the tests' `finally` cannot close a fixture that never returned. 5 tests, 4 fail, 1
+  passes - not a fifth test. Read with `--test-reporter=tap`, which prints each failure inline instead of
+  in a summary the hang never reaches. FIX vs LIST is Daniel's call.
   Also listed: objection-window (red before this letter), ghost-live, replay-solids, two-titles. The
   one-signer refusal passes alone - contention, not a product red.
 
