@@ -134,6 +134,18 @@ BOLT11 **signed by the entry's session key** and pays it once. Live:
 **The player's own Lightning is up 98 sat and the committee's is down the same 98. The operator keeps
 nothing.** The invoice was signed in the tab; the session key never left the page. Commits `6f97dab8`,
 `a7f0dac3`, `e940d9c0`.
+AND FROM THE PAGE, 2026-09-21 (round `1aa67fb5`, winner DELIVERED at tick 2563, loser ran its whole block).
+No door was posted to by hand: the panel offered the control and it was pressed.
+
+    the page said       "You won 98 sat: paste an invoice for exactly 98000 msat to collect it"
+    alice before         996040        committee before   1000000
+    pressed              PAID in ~2 s, "paid over Lightning"
+    alice after          996138        committee after     999902
+    the page now says   "You won 98 sat, and it has been paid to your wallet"
+    pressed again        PAID, already - alice still 996138
+    the OTHER seat       200 already, paidMsat 0 - alice still 996138
+
+Commit `01ac3a9b`, deployed.
 THE SAME MEASUREMENT FOUND A HOLE IN THE LEG IT WAS PROVING, now closed: seat a wrote PAID/98000 while seat
 b was still OWED/98000, and the seats share one Lightning node - a player asking the second seat with a
 DIFFERENT invoice would be paid the pool twice out of the operator's channel. The seats are asked before
