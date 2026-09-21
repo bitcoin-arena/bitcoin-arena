@@ -5,6 +5,38 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE TWO FIRST MARKS, DECODED (2026-09-21). Entry 6742d6440029e43f, paymentHash 94cda137, round 69dd6355.
+
+Read out of both seats' stores (`first_mark_pairs`), not inferred:
+
+  mark A   type 5 ver 1   tick 5220   prev ZERO   stateHash 39560302d81f6ee5ac43   sig c5e6ceab17f7e0eb
+  mark B   type 5 ver 1   tick 5460   prev ZERO   stateHash a6fbb31b7d70f6289677   sig 3c0f446fbf7f1d77
+  same round, same entry, 462 bytes each, DIFFERENT bytes and different signatures
+  seat a saw the pair at 1789962822986, seat b at 1789962823000 - 14 ms apart, so both seats hold both
+
+BOTH CHAIN TO ZERO. Each claims to be THE FIRST mark of the entry, 240 ticks apart - 4 seconds at 60 ticks a
+second. This is not one mark delivered twice: two payloads, two signatures, two ticks.
+
+THE MECHANISM IS IN THE CLIENT, AND IT IS NAMED. `client.js:947` and `:986` both build with
+`previousHash: this.head`, and the file says what moves the head: "The head is advanced only when the node
+says it STORED the mark ... `readReceipt` counts the signer and moves the head only when the mark is live."
+So a first mark that is not stored leaves `this.head` at NO_PREVIOUS, and the NEXT mark is another first.
+That is exactly the shape of A and B.
+
+AND THE OBVIOUS CAUSE IS RULED OUT BY THE DATA, not by argument. The theory was: the page marks before the
+stake is paid, the node refuses with STAKE_NOT_SEEN (`server.js:1791-1792`), the head never advances. But
+that door RECORDS its refusals - `round.putRefusedFirstMark` - and for this entry:
+
+    refused_first_marks: 0 rows at seat a, 0 rows at seat b
+    offered_marks:       0 rows at either seat
+
+So these marks were not refused for an unseen stake. Something else left the head unadvanced, and no fix is
+written on a theory the store contradicts.
+
+THE NEXT INSTRUMENT, and it is the client's own answer: `mark()` already computes `answer`, `refused`,
+`unreached` and `live` per mark and returns them - nothing logs them. Saying those four out loud, plus
+whether the head moved, names the condition in one run. That is the measurement; the fix follows it.
+
 THE PAID STAKE WAS HELD, JUDGED AND HANDED BACK: VOID BY §13B, TWO FIRST MARKS (2026-09-21).
 
 The browser's own entry, paid from `lnd-alice` standing in for the player's wallet, followed all the way

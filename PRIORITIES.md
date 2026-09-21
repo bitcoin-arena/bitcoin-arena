@@ -135,6 +135,12 @@ open line that is neither fenced nor parked.
     them late (§13B) - VOID once the result window passes"*. A VOID returns the stake, which is the money law
     working. **A stake has still not SETTLED, so this letter stays open**, and the next thread is named:
     why does one entry carry two first marks?
+    DECODED 2026-09-21: two DIFFERENT marks, **tick 5220 and tick 5460, both `previousHash` ZERO** - each
+    claiming to be the first, 4 s apart. The mechanism is `client.js:947/:986`: the chain head only advances
+    when a node stores the mark, so an unstored first leaves the next one also first. The obvious cause -
+    marking before the stake is paid - is **ruled out by the stores**: `refused_first_marks` has 0 rows at
+    both seats, so no mark was refused for an unseen stake. Next: log `mark()`'s own answer/refused/
+    unreached/live, which nothing prints today.
   - PARKED BY RULING: guardians and `federationIsBonded`
 
 FOLLOW-ONS, one line each:
