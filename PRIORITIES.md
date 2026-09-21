@@ -30,6 +30,16 @@ the node LNURL-pays that address the owed msat. Do not refuse a paid join becaus
 Measure: hold invoice paid from any wallet, no NWC, DELIVERED, winner balance rises; a second path
 does not pay twice.
 
+DONE (2026-09-21, round ee903c10 on `fe9dc9e8`): **measured end to end with nothing of the player's
+running.** Both stakes and both fees paid from an ordinary wallet, no NWC string; the address typed once
+while still driving and on disk at 13:29:25 with the round still open; DELIVERED at tick 2062; both
+browsers left with zero game tabs at 13:32:17. The round closed at 13:34:32 and at +598 s the fees were
+still HELD and nobody was owed anything - then at +618 s, in one pass, the fees settled, the winner's own
+stake came back whole, the loser's went into the pool, and the node LNURL-paid the address itself:
+alice 996110 -> 996306 sat, one 98000 msat payment. Three faults were found and fixed getting there - the
+money moving 12 s after the close, the address living only in a tab, and an HTLC sized from a chain pace
+sampled once at launch that had since gone seven times faster. Measurements in TASKBOOK.md.
+
 THIS IS THE LIVE ITEM. Stop whatever else is open.
 
 MEASURED (2026-09-21, round ec9bd34e, `4e9d7244`): stake and fee paid from alice with **no NWC string**,
