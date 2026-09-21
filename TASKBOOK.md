@@ -5,6 +5,55 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+RULING (Daniel 2026-09-21): §22A'S 2% IS SEAT COMPENSATION FOR A ROUND THAT ACTUALLY RAN.
+
+It is not a qualifier's prize and it is not operator profit. In the spec's own shape:
+  1. A VOID round - a technical failure - claims NOTHING. Stakes and fee locks unwind, and the operator must
+     not profit from a failure. Unchanged by this letter.
+  2. A FINISHED round with a loser and no qualifier: the stakes expire back to their players, no stake is
+     paid to a qualifier because there is none, and the FEE LOCKS STILL SETTLE TO THE SEATS. That settlement
+     is ACCEPTED, not NONE.
+
+WHAT THE SETTLER ACTUALLY DID with such a round, printed rather than guessed at (min_score 1000000, the
+delivered run scores 5, so nobody qualifies):
+
+  state                ACCEPTED           submissions 2
+  stake locks held     2 of 2             <- neither stake claimed; both expire back to their players
+  fee locks held       0 of 2             <- both claimed, to pay the seats
+  claimed outpoints    the two fee locks (outIdx :1), once per submission
+  payouts              2000 msat to 021080c4fa, 2000 msat to 02af15b892
+  seats                021080c4fa, 02af15b892      <- exactly the round's two sitting signer nodes
+  winner key           020a0a0a0a         loser key 0205050505      <- NEITHER is paid
+
+The arithmetic is §22A's: two players staking 100000 msat is 200000 gross, 2% of it is 4000 msat, and this
+round's two seats take 2000 each - 1% GAME/VERIFY and 1% SETTLEMENT, both pools.
+
+THE TEST WAS SPLIT, NOT RETUNED. It asserted `NONE` and zero submissions, which was true only while the
+fixture's entries brought no fee lock; on a federation BLWP would accept the round mints them. The
+expectation moved because the fixture is the production shape now. What it pins is strictly MORE than before:
+  - the settlement is ACCEPTED and something was submitted;
+  - NO payout reaches either player's key, and BOTH stake locks are still held (they expire back);
+  - each sitting seat is paid exactly 2000n to its own key;
+  - both fee locks are claimed, so the seats really were paid out of them.
+The title says what is true now: "a round with a loser and no qualifier pays no stake and still pays the
+seats: both stake locks expire back, both fee locks settle the 2%".
+
+COUNTS, `timeout 180 node --test --test-timeout=120000`, lock-settlement in the same five named chunks:
+
+  suite                        before   after
+  lock-settlement              14 / 15  15 / 15
+  outage                        9 / 9    9 / 9
+  first-mark                   14 / 14  14 / 14
+  one-signer-node-refused       5 / 5    5 / 5
+  forfeit                       2 / 2    2 / 2
+  TOTAL                        44 / 45  45 / 45
+
+INTERMITTENT, LISTED AND NOT CHASED: `first-mark` "late start at close (2): signer node B down, then caught
+up late - both sign the same FORFEIT 0, FINAL 2 of 2". Seen red once in three runs, green the other two with
+nothing changed between them; when it fails, B reads PROVISIONALLY_FINAL where FINAL is asked. Cause: the
+test takes B down and brings it back late, then reads finality on a clock - a catch-up race between B's
+rerun and the objection window closing, not a money path. Not investigated, by ruling.
+
 THE FIXTURE'S WINNER DELIVERS AGAIN (2026-09-21). window-fixture.js `wordsAt`.
 
 MEASURED BEFORE CHANGING ANYTHING, straight off the core, no server and no federation:

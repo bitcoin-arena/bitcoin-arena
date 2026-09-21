@@ -59,10 +59,15 @@ closed-loop, so it follows the world if it moves again. **Winner DELIVERED at ti
 M3's own sentence is green for the first time: *claimed 1 loser lock 980000 msat; paid 1 qualifier 978000
 msat; fee locks 2, 40000 msat, paid 2 signer nodes 36000 msat.*
 
-ONE RED LEFT, AND IT NEEDS A RULING, not a fix: "a round with a loser and no qualifier claims nothing" now
-settles ACCEPTED instead of NONE - because the legal federation mints fee locks, so the seats are paid their
-2% even though nobody qualified. The stake side is still right (the loser's lock expires back). **Is §22A's
-2% taken when nobody qualifies?** The test's premise is not rewritten until that is answered.
+RULED, NOT REPAIRED (Daniel 2026-09-21): **§22A's 2% is seat compensation for a round that actually ran** -
+not a qualifier's prize, not operator profit. A VOID round still claims nothing. A finished round with a
+loser and no qualifier pays no stake, returns both locks to their players, and still settles its fee locks to
+the seats: **2000 msat to each of the two sitting seats, 2% of 200000 gross**, neither player paid, both
+stake locks held. The test was split rather than retuned and now pins more than it did.
+**All five suites under this fixture are green: 44/45 -> 45/45** (lock-settlement 15/15, outage 9/9,
+first-mark 14/14, one-signer-node-refused 5/5, forfeit 2/2).
+Listed, not chased: `first-mark` "late start at close (2)" is an intermittent catch-up race - B is taken down
+and brought back late, then finality is read on a clock; red once in three runs, not a money path.
 
 DONE (2026-09-20): **the three threshold suites can sign again**, the same hole as `reconstruct` and not a
 new one. `settle-threshold` 0/2 -> **2/2**, `pool-threshold` 0/4 -> **4/4**, `handout-threshold` 0/2 -> **2/2**:
