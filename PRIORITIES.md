@@ -33,11 +33,15 @@ so it could be measured at all, a setup that throws after `serve()` no longer le
 went from unbounded (killed at 5 min, 4 LISTEN sockets) to **0.383 s, exit 1, 0 sockets**. Commits
 `07d36965`, `e1fcad1e`. Per-suite counts and every remaining red with its cause in TASKBOOK.
 
-NEXT, AND NOTHING IS STARTED ON IT: **a testnet4 hold settles on a preimage the signer nodes reconstruct,
-not one handed to them.** Reconstruction is already the daemon's default (`server.js:323`) and is proved
-in-process, but the live testnet4 tool injects the preimage, so no real sat has ever moved on a key that was
-rebuilt from shares. That is the last "single-node custody" caveat on M3's own sentence, and it does not need
-the fee-lock fence lifted.
+DONE (2026-09-21): **a testnet4 hold settled on a preimage the seats rebuilt, and a real sat moved.** The
+tool handed the 32 bytes in; now it stands up two real signer nodes, deals a handout so shares exist, and
+settles through `fromTheCommittee` - A opens its own share, asks the other seat over `GET /share`, and
+reconstructs P. Both injection sites are gone. **Channel A 86860000 -> 87840000 msat (+980000), B 109670000
+-> 108690000, 0 pending HTLCs, 1 settleinvoice**, and the settled preimage equals the dealt secret and hashes
+to the stake commitment. **Two of two, NOT five of seven** - `receiptsNeeded` knows only 2 and 7, so this
+pair can never be the latter; losing a seat is what five of seven buys and that stays in process.
+Numbers, the five refusals the design raised on the way, and the two assumptions the tool states out loud
+are in TASKBOOK.
 
 DONE (2026-09-21): **the node's money path is green end to end in test - the fee is taken, the seats are paid,
 and failure pays nobody.** Four things, one letter. The fake federation is now one BLWP would accept, so
@@ -66,9 +70,7 @@ Counts in TASKBOOK.
 WHAT IS LEFT FOR M3, none of it started, in no ruled order yet:
   - the testnet4 **fee-lock spend** - the 2% actually moving to the sitting seats on testnet4 (fenced by
     ruling; the hold path is proven, the fee lock has never been minted there)
-  - **FROST / §23.5 on testnet4** - reconstruction IS the daemon's default (`server.js:323`, and the
-    `reconstruct` suite is 7/7); what has never happened is a LIVE settle on a reconstructed preimage,
-    because `tools/custody-testnet4.mjs` injects one. That is the next item above.
+  - ~~FROST / §23.5 on testnet4~~ **DONE 2026-09-21**: a live settle on a reconstructed preimage, 2-of-2.
   - a **playable client slice** - nothing of M3 reaches a player yet
   - PARKED BY RULING: guardians and `federationIsBonded`
 

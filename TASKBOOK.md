@@ -3,7 +3,57 @@
 Measurements, comments, done tests, letter notes.
 Not the status board. Status lives in PRIORITIES.md.
 
-Date convention: when a number is measured, write it here with the commit.
+A TESTNET4 HOLD SETTLED ON A PREIMAGE THE SEATS REBUILT (2026-09-21).
+
+  shares asked of the peer   1   (GET http://127.0.0.1:46649/share)
+  shares that formed P       2   = A's own + 1 from the other seat
+  settle preimage            a6ef8e3fa4ea9be7eb17ae333fd17b95...
+  equals the dealt secret    true
+  hashes to the stake commit true
+  channel A   before 86860000 -> after 87840000 msat   moved +980000
+  channel B   before 109670000 -> after 108690000 msat  moved -980000
+  pending HTLCs on A         0      (the hold did not sit and expire back)
+  lncli settleinvoice runs   1
+  threshold                  receiptsNeeded(2) = 2
+
+TWO OF TWO IS NOT FIVE OF SEVEN. `receiptsNeeded` knows exactly two shapes - 2 slots need 2, 7 need 5 - so
+this pair can only ever be a 2-of-2. BOTH seats had to answer, which is what makes it a reconstruction rather
+than a lookup, but it does not demonstrate surviving the loss of a seat. That is what five of seven buys and
+it is exercised in process by `five-of-seven.test.js`.
+
+WHAT THE TOOL WAS, AND IS. `custody-testnet4.mjs:123` handed the bytes in - `preimageFor: (id, e) =>
+preimageOf(e.pubkey[31])`, fabricated as 0xc0 + run nonce + player number - and `:236` did the same for the
+restart section. Both are gone; nothing in the file can put a fabricated preimage on a settle. It now stands
+up two real signer nodes with `serve()`, names THEIR pubkeys as the round's settlement seats (it named the
+placeholders b32(8)/b32(9), which no process held), deals a handout per entry so shares are published, and
+settles through `fromTheCommittee`.
+
+FIVE THINGS THE DESIGN REFUSED ON THE WAY, each one measured rather than argued with:
+  1. "this node holds stakes and has no preflight" - a paying round will not open until Lightning is shown
+     able to hold one. The live run uses the real `lndPreflight` over the two testnet4 gateways.
+  2. "that randomness names no time, so nothing says it came after committee_time" - the round needs a real
+     beacon. It is lnd's own tip: block hash, height and header time.
+  3. "no stake moves: the operator would keep 980000 msat: a pool of 980000 against 0 handed out" - a round
+     whose only entry is FORFEIT was refused outright. So the walk-away has a qualifier beside it.
+  4. "this node has replayed nothing for that run" - B KEPT ITS SHARE when asked early, and A stopped at
+     "1 of 2 shares: a stake nobody can open stays in flight". A seat does not hand over a share for a run it
+     has not judged, so asserting finality to A alone cannot move it. The qualifier has to actually play.
+  5. "that round closes entry at ..., before its committee forms at ..." - testnet4's header timestamp ran
+     1.8 HOURS ahead of this machine's clock, so a committee time taken off the beacon landed in the future.
+
+AND THE WORLD IS CHOSEN, NOT ASSUMED. The beacon changes every block, and a world that delivers under one
+wrecks under the next: under 00000000bd4c..62a3 the fixture's own 0x5e secret ends FAILED at tick 336 while
+0x55 DELIVERS at 993 with score 176. The tool drives candidates against the core before joining anything and
+takes one that arrives under today's beacon, by the same GATE_X aiming rule `window-fixture` uses.
+
+TWO ASSUMPTIONS ARE STATED OUT LOUD IN THE FILE, not smuggled: `recordSignerNodes` (there is no live testnet4
+census) and `putStakeSeen` on B (the hold is an invoice on A's node; who watches the HTLC for the other seats
+is a real question and not this letter's).
+
+A DRY MODE EXISTS SO THIS COST ONE HOLD TO BRING UP, not a dozen: `--dry` runs the identical code path with
+the Lightning port swapped for a fake. Every refusal above was found dry. Two live runs were made: the first
+settled 980000 msat exactly as the second did, and was reported FAILED by a bug in this tool's own reading -
+`lnd-port` runs `settleinvoice --preimage <hex>` and the comparison read the flag instead of the bytes.
 
 A VOID CLAIMS NOTHING, AND NOW THERE IS A TEST (2026-09-21, commit c05a8002).
 
