@@ -22,24 +22,27 @@ Top item first. Finish and deploy before starting the next.
 
 # NOW  -  M3: what is left
 
-ON TOP, STARTED, ONE RULING NEEDED: **there is no THRESHOLD_LN - only federation and guardians.** Step 1
-(a paying FEDERATION round on the local harness, no `createHeld`) now OPENS and does not yet SETTLE. The
-enum is NOT flipped - the ordered sequence said measure the round first, and it holds.
+ON TOP, STARTED: **there is no THRESHOLD_LN - only federation and guardians.** The enum is NOT flipped.
+Step 1's round now OPENS on seven signer nodes, deals a claim key and LOCKS both stakes; it does not yet
+settle, and the reason is one layer below this letter.
 
-  DONE, measured (`218537cb`, `f2759068`): the harness takes a third signer node (`portC`) with its own
-  store, identity, bond and daemon, and `guardianOf` nests one guardian per node. Against the federation
-  running here - `423e010e`, guardians 4, threshold 3 - the same code, same federation, one operator
-  apart: TWO nodes REFUSED, "2 of that federation's 4 guardians are bonded census nodes, and its
-  threshold is 3: a creator could hold it alone"; THREE nodes OPENED, round `ac661297`, custody
-  FEDERATION, stakeMsat 1000000. And no hold invoice is on the path: every daemon reports
-  `reachesLightning` null, and `createHeld` sits behind custody's `reaches`, so it cannot be called.
+  RULED AND FOLLOWED (Daniel, this letter): the fork is the 5-of-7 already in the protocol, not a new
+  3-slot threshold. `receiptsNeeded(3)` is NOT added; committee sizes stay 2 and 7.
 
-  THE RULING NEEDED - a committee threshold, which is money law: the round opens and never settles,
-  because `dkg.deal` asks `receiptsNeeded(nodes)` and only 2 (2-of-2) and 7 (5-of-7) have an answer.
-  `receiptsNeeded(3)` refuses, so no claim key is ever dealt (measured: 409 on all three for 240 s). §23.6
-  wants three distinct bonded census nodes, fedimintd will not build a federation smaller than 3-of-4, and
-  the committee sizes written down are 2 and 7. Either define a 3-signer-node threshold, or stand SEVEN
-  nodes and use 5-of-7 with three of them advertising guardian keys. I did not invent the number.
+  MEASURED AT SEVEN (`9609ce56`, `1ff5c6d5`): committee 7, `receiptsNeeded` 5; claim key attested 6 of 5
+  needed; both stakes locked at 980000 msat; entries 201 x 7; close "closed" x 7; `reachesLightning` null
+  on all seven, so `createHeld` cannot be called. §23.6 is satisfied by THREE operators advertising a
+  guardian of `423e010e` while the other four guard nothing - two operators still refuse by name.
+
+  OPEN, ONE LAYER DOWN: no signed result is ever published, so "0 of 5 agree on any one run", no forfeit,
+  both entries VOID (§13C) and the locks return at expiry. `verdict.js` tallies signed results and the
+  count is ZERO - not a disagreement. That is the next thread.
+
+  Seven nodes bind 18571..18577, recipients 18787. The Daily's 18080, 18081 and 18777 are untouched.
+
+  FIVE-OF-SEVEN AND FORFEIT ARE GREEN (`a2f6a28b`): 21 pass / 0 fail in 470 s, and 2 pass / 0 fail in
+  16 s. I had reported them as looping; the "4 of 5 signer nodes signed this table" line is the suite's
+  own progress output, and `timeout 180` was the whole problem. Nothing loosened.
 
   FIXED IN PASSING (`1e9628cd`): **the page served could enter no paying round.** Two of its three money
   scripts, `blwp-client.js` and `blwp-core.js`, had fallen off `known-good-clients.json` when I rebuilt
