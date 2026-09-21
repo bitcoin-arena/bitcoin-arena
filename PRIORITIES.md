@@ -22,8 +22,24 @@ Top item first. Finish and deploy before starting the next.
 
 # NOW  -  M3: what is left
 
-NEXT M3 ITEM, ON TOP AND NOT STARTED: **there is no THRESHOLD_LN - only federation and guardians.** The
-standing HARD below (17:08) is now the top open item for M3. Nothing of it is started this turn.
+ON TOP, STARTED AND BLOCKED ON A RULING: **there is no THRESHOLD_LN - only federation and guardians.**
+The standing HARD below (17:08) is the top open item for M3. Step 1 (one paying FEDERATION round on the
+local harness, no `createHeld` on the path) is built as far as it goes and stops on arithmetic, so the
+enum is NOT flipped - that was the ordered sequence and it holds.
+
+  What is done: a bond can name the federation it guards (`d353ba08`), and a real four-guardian
+  federation stands up here, gateway joined, pegged in and vetted - id `423e010e`, `{"guardians":4,
+  "threshold":3}` read from its own port.
+
+  What blocks it, in numbers (`3f60ec76`, detail in TASKBOOK.md): §23.6 wants the federation's threshold
+  in **distinct** bonded census nodes, one guardian key each - "Every guardian / node must have its own
+  bond or it may not take part". Regtest's federation is 3 of 4 (§27A.6 line 4128), so it wants 3 nodes.
+  `round-2of2.mjs` has 2. And the federation cannot be shrunk to fit: fedimintd 0.12.0 refuses outright,
+  "Federation size must be 1 or at least 4", so there is no 3-of-3 and no 2-of-2 to fall back on.
+
+  The one remaining regtest path is a **third signer node**, and only `round-2of2.mjs` and
+  `round-rehearsal-lnd.mjs` exist. That is a letter of its own, not a detail of this one, so it is not
+  taken unruled.
 
 DONE (2026-09-21, `aa88fa23`) - HARD (Daniel 2026-09-21 20:01): **no backup, play is still allowed.**
 Measured on screen, not only in a suite: the lobby carries a large warning, 1280 x 62 px, with its own
