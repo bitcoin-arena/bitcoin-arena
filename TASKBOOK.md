@@ -46370,3 +46370,41 @@ The checksum is why the last word matters: without it a mistyped word gives a di
 the player restores an empty wallet with no error anywhere.
 
 SUITES: blwp-client bip39 6/6, backup-gate 10/10 (unchanged by this).
+
+## §24B on screen: four facts seen, three blocked, and the local node came up fine (2026-09-21)
+
+The pin was NOT moved. A second 2-of-2 was stood up at HEAD on its own chain and ports - regtest datadir
+`scratchpad/rt24b` on rpc 31401, signer nodes 18090/18091, page served from `unity-proto/build/webgl` at
+http://127.0.0.1:8099 so `ws://` is allowed. It came up:
+
+    [chain] 118 blocks in 125 s = 1.059 s a block
+    {"up":true,"a":"http://127.0.0.1:18090","b":"http://127.0.0.1:18091","slots":2,"threshold":2,
+     "firstRound":"f5601eb0...","beacon":126}
+    page bundle NETWORK_ID_REGTEST 66f5caba   |   node NETWORK_ID_REGTEST 66f5caba   - the same network
+
+SEEN, on the daily URL earlier and again here, fresh profile, backup flag null:
+
+    no-backup notice     "There is no backup of this wallet yet - write the phrase down in Settings"
+    balance line         "Balance: not in this wallet yet"
+    Settings             name + donation + seed all present; choices 0% 1% 2% 3% 4% 5%
+    24 words             numbered - "1. stand  2. design  3. aspect ..."
+    Deposit, no backup   "Type your seed phrase back in Settings first - this wallet has no backup yet"
+    Withdraw, no backup  "Withdraw is not wired to a wallet yet."   (ungated, as ruled)
+    Backup word 9 wrong  "word 9 is not the one in the phrase"; flag still null
+    Backup all 24        "Backed up. Deposit and paid rounds are open."; notice cleared; Deposit opens
+    flag cleared + reload -> the gate shuts again
+
+NOT SEEN, with the measured reason for each:
+
+  1. A LISTED PAID ROUND. There is none to click. FEDERATION is the only custody and this local launcher
+     has no federation, so it opens free rounds only - the lobby held exactly one row,
+     "FREE · closes 0:59 · 2 of 2 signer nodes · 0 joined".
+  2/3. THE FREE ROUND DOES NOT JOIN on this path, so nothing drives and the panel is never asked to hide.
+     The gate is NOT what stops it - `blwp-money-why` stayed empty and the flag stayed null. The page logs
+     "[blwp] no session yet: the page has named no node", then "[blwp] practice on (from scene)" and
+     "[blwp] core is driving": it falls into PRACTICE with no session. That is the same symptom PRIORITIES
+     already records from the playable-client letter - the page not turning its query into the globals the
+     opener reads - and it is not §24B's.
+
+So the pin is not the only thing between these three and being seen: one needs a federation and two need
+that join path. Both are named rather than worked around.
