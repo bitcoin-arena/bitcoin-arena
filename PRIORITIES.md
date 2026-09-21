@@ -100,6 +100,20 @@ WHAT IS LEFT FOR M3 (the fee-lock line has been MEASURED but not spent; the rest
 
 NEXT M3 ITEM, ON TOP (2026-09-21): **a played stake must settle, and the hold cannot outlive the round.**
 
+2026-09-21, THE FIRST HOLD RESOLVED BY A DECISION - and still no payout. A two-player paid round
+(`b35f6e48607102f5`), both stakes 98000 msat held: the driven player was **DELIVERED score 174** and their
+hold went **CANCELLED** - "handed back to its owner", §23.2, the committee deciding rather than a clock
+running out. The other was **FAILED 0** and its stake is the pool, and the pool never formed:
+`lncli settleinvoice refused: invoice already canceled`, **payouts 0, payout_signatures 0**.
+NOT THE ON-CHAIN EXPIRY: the HTLC's height 93895 was mined 51 s AFTER that entry's window closed. **lnd
+cancels a held HTLC about 17 blocks early** (height 93878 against a CLTV of 93895), so the usable budget is
+~127 blocks, not the 144 the contract names - 713 s at the measured rate against the 780 s a round needs.
+Whatever is ruled, the door-side sum must use the EFFECTIVE budget.
+AND A LOOSE END: both seats still hold that entry at `SETTLE_REQUESTED` while lnd says CANCELED, because
+`custody.reconcile()` runs only at startup and `settleHeldInvoices` refuses to touch a mid-act state. A
+settle lnd refuses on a live node leaves an intent nothing clears. Naming it, not fixing it - it is the
+settle path and it wants a ruling.
+
 CORRECTION, MEASURED: the line here first said the hold was `ACCEPTED`/`HELD` with the round not closed.
 That was a snapshot taken before the close ran. Read again afterwards, both seats agree: **both rounds ARE
 closed, results ARE written - 2 per seat, outcome FAILED - and both holds ended EXPIRED**, the row saying

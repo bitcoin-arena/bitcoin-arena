@@ -5,6 +5,37 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+THE FIRST ROUND WITH A POOL, AND WHY NO SAT STILL MOVED (2026-09-21, round `b35f6e48607102f5`).
+
+Two players, two browsers so neither renderer is throttled, both on the same paid round, both stakes 98000
+msat HELD. One driven to the gate, one rolled out and left alone. Both seats agree, word for word:
+
+  b9aad72c  DELIVERED / score 174   hold CANCELLED   <- handed back by the committee, not by a timeout
+  e7b78420  FAILED / 0              hold SETTLE_REQUESTED
+
+That CANCELLED is the first hold on the Daily ever resolved by a decision: `[custody] b9aad72c CANCEL ->
+CANCELLED: handed back to its owner`. §23.2 gives a delivered player their own stake back, so it is right.
+
+The loser's stake is the pool, and it did not get there:
+
+  [verify] lncli settleinvoice refused: invoice already canceled
+
+WHY, AND IT IS NOT THE ON-CHAIN EXPIRY. The HTLC's stated expiry was height 93895, mined at 08:03:29 - 51 s
+AFTER the loser's objection window closed at 08:02:38, and the settle was requested at 08:02:39. The chain
+had not reached the expiry. **lnd cancelled the held HTLC 17 blocks early**: at 08:02:37 the height was
+93878 against a CLTV of 93895. So the usable budget is not the 144 blocks the contract names, it is 144
+less lnd's own safety margin - about 127 here, which at 0.178 blocks/s is 713 s against the 780 s a round
+needs. Short by 67 s. Any door-side check has to use the EFFECTIVE budget, not the nominal one.
+
+  payouts 0, payout_signatures 0    - no payout table formed, so no sat moved between the two players
+
+AND A LOOSE END WORTH ITS OWN LINE: both seats still hold that entry at **SETTLE_REQUESTED**, "about to
+settle; if this node dies here, ask Lightning", while lnd says CANCELED. `custody.reconcile()` runs only at
+startup (`server.js:1539`) - it is built for a daemon that stopped, not for a call that came back refused -
+and `settleHeldInvoices` will not touch a MID_ACT state ("reconcile it against Lightning first"). So a
+settle lnd refuses on a live node leaves an intent nothing clears until the next restart, even though lnd
+answered in plain words what happened.
+
 THE FIRST PAID RUN THAT REACHED THE GATE, AND WHAT THE MONEY DID (2026-09-21, commit `fa2a7861`).
 
 WHY NONE EVER HAD. Not the driving. A paid run opens behind the lobby splash and then behind the loadout
