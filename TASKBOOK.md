@@ -55,6 +55,20 @@ player's sats returned by an HTLC timeout rather than by the committee. The mone
 keeps nothing, the player is whole - but no settlement has ever been reached on the Daily, and this is the
 clock that stops it.
 
+AND THE TWO CLOCKS ARE WITHIN 4% OF EACH OTHER, which is why it is not always the same answer. Read on the
+live rounds (scratchpad `fits.mjs`, read-only), one line per quantity the node would need at its own door:
+
+  the chain           200 blocks in 1124 s = 0.178 blocks/s
+  a hold of 144       lives 809 s
+  the run             10800 ticks = 180 s at the core's 60 a second
+  the objection window 600 s (the contract's own `objectionWindowMs`, §13A's reference 10 minutes)
+  nothing settles before 780 s                    -> FITS by 29 s at that rate
+
+At the 0.200 blocks/s measured an hour earlier the same arithmetic gives 720 s against 780 - SHORT by 60 -
+and the DELIVERED run lost by a measured 90 s. So the margin is a few percent of the requirement and the
+outcome flips with the block rate. Whatever is ruled, a rehearsal this close to its own limit will keep
+producing both answers.
+
 THE SHARE: this is the whole of it. 19 holds in each store before this run, 19 EXPIRED, 0 SETTLED,
 0 CANCELED, outcomes 10 FORFEIT / 2 FAILED / 7 with no result row / **0 DELIVERED**. With a delivery in
 hand the refusal changes from "a pool of 98000 against 0 handed out" to a clock the hold cannot outlive.
