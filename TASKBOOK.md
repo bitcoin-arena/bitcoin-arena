@@ -46663,3 +46663,48 @@ not know which.
 
 STILL OPEN on this item: the round OPENS; it has not yet been driven to SETTLE with a stake locked, and
 `createHeld` has not yet been shown absent along a settled path. CUSTODY is untouched.
+
+## The paying round opens on three operators and cannot settle: there is no threshold for 3 (2026-09-21)
+
+Driving the opened round on to a settlement (w5b's own money stack, extended to take the chain and the
+third node) got as far as the claim key and stopped there. Measured, not reasoned:
+
+    reachesLightning per daemon   [null, null, null]
+      createHeld sits behind custody's `reaches`; with no Lightning port a daemon answers
+      "this node reaches no Lightning, so it holds no stakes" and CANNOT call it. No hold invoice is
+      on this path, and that is the shipping default rather than a stub.
+
+    claim key, three nodes, 240 s   409 / 409 / 409, the whole time
+      "this signer node holds no claim key for that round yet" - assigned, but never dealt a key.
+
+    receiptsNeeded(2) -> 2     receiptsNeeded(7) -> 5
+    receiptsNeeded(3) -> REFUSED: no committee threshold for 3 slots
+    receiptsNeeded(4) -> REFUSED
+
+`dkg.deal` asks `receiptsNeeded(signerNodes.length)` before it cuts a polynomial. For three it refuses, so
+no contribution is ever dealt, no claim key is ever combined, no stake can be locked, and `makeClaimKey`
+retries in the background until entry close WITHOUT LOGGING - which is why the first run looked like a
+hang rather than a refusal.
+
+THIS IS A LAW QUESTION AND IS LEFT ALONE. A committee threshold is a money rule: 2-of-2 and 5-of-7 are
+written down, and what 3 signer nodes owe is not. I am not inventing `receiptsNeeded(3)`.
+
+The collision, stated plainly:
+  - §23.6 wants the federation's threshold in DISTINCT bonded census nodes. The smallest federation
+    fedimintd 0.12.0 will build is 3-of-4, so that is THREE nodes.
+  - the committee sizes the protocol defines are TWO and SEVEN.
+  - a census of three with 2+2 slots assigns the union of the two committees, which is 2 only if
+    sortition picks the same pair for both roles and 3 otherwise - so the committee size would be luck.
+
+Two ways out, both Daniel's:
+  (a) define the threshold for a 3-signer-node committee - 3-of-3 or 2-of-3 is a ruling, not a default;
+  (b) stand SEVEN signer nodes: 5-of-7 is already written down, and three of the seven advertise the
+      guardian keys. That is a defined shape end to end, and it is the mainnet shape §27A.6 names.
+
+Meanwhile the harness no longer hangs on it: a round whose committee size has no threshold is refused
+when it is stood up, by name - "3 signer nodes cannot hold a round's key: no committee threshold for 3
+slots ... opens and can never settle, because its claim key is never dealt."
+
+Also fixed on the way, both found by running it: `postRound` posted to A and B only, so the third daemon
+answered "404 this node holds no such round" and was never in the round it was assigned to; and the
+daemon variable `c` shadowed `postRound`'s contract parameter, which posted to `127.0.0.1:undefined`.
