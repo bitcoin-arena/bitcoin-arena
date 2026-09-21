@@ -46032,7 +46032,20 @@ blwp-node census-realblocks + census-chainview + bond-key + roster 46/46. The tw
 unchanged and belong to other letters: bundle-fresh 1/2, ghost-live 10/11. No Unity, no C# - this item
 has touched neither, so no PlayMode or EditMode run is owed.
 
-## The halt case: note holders first, nobody else at all (2026-09-21, spec v4.6.5)
+## The halt case: note holders first, and only then anybody else (2026-09-21)
+
+CORRECTED SAME DAY. I first wrote the halt remainder as BURNED with census nodes and developers at 0%,
+on the 17:xx instruction "census nodes and devs get 0% on a halt". `bc05268f` is the accepted law for
+this letter and says the remainder goes 75/25 after the claim window, and the ruling that named it
+restated that. My v4.6.5 burn was layered on top of bc05268f's 75/25 and left the revision banner saying
+both in one sentence. Reverted: the spec, the module and the tests all say 75/25 of the REMAINDER now.
+
+What is load-bearing and what the tests hold is the ORDER, not the recipients: a halted federation is
+liquidated note by note BEFORE a node or a developer sees a sat, so the people who run the network are
+paid only out of what no player claimed - never out of what a player could still have claimed. A short
+escrow goes entirely to the notes, pro rata, and pays nobody else at all.
+
+## (superseded heading kept for the log) The halt case, first attempt (2026-09-21, spec v4.6.5)
 
 §23A.3 already carried the cap as `(f + 1) x the smallest seated bond` and §23A.5 already paid unspent
 notes at face value first, with the halt proof already falling back to whoever is left plus the observable
@@ -46069,3 +46082,29 @@ A reserve of 9 000 000 sat - which the summing rule would have allowed - is refu
 over 1 600 000.
 
 SUITES: protocol federation-slash 7/7 (new), with genesis + advert-witness + census-resolve 28/28.
+
+## The three halt rules, as code that goes red (2026-09-21, corrected to bc05268f)
+
+`packages/protocol/src/federation-slash.js` - `exposureCap`, `reserveFits`, `slashSplit`,
+`abandonmentProofNeeds`. Each way this gets got wrong turns the suite red, proven by putting the old rule
+back and running it:
+
+    cap summed over all ten bonds again              -> 4 pass, 3 fail
+    nodes paid off the whole bond, notes not first   -> 5 pass, 2 fail
+    halt proof demanding 2f + 1 again                -> 6 pass, 1 fail
+    restored                                         -> 7 pass, 0 fail
+
+CAP, MEASURED. Ten guardians at 7 of 10 (`f = 3`), nine bonds of 1 000 000 sat and one of 400 000:
+
+    sum of all ten bonds (the wrong rule)    9 400 000 sat
+    (f + 1) x smallest  (the rule)           1 600 000 sat   - the sum is 5.875x the real cover
+    testnet 2 of 2, f = 0                    cap = one bond = 50 000 sat, one leaver halts it
+
+A reserve of 9 000 000 sat - which the summing rule would have allowed - is refused, and so is one msat
+over 1 600 000.
+
+STILL ONLY PROSE, and named rather than assumed: the claim window, the spent-note list, the client
+presenting its own unused notes, and the escrow output under the arbitration k-of-m keys. `slashSplit`
+computes the split a liquidation would pay; nothing yet opens a window, publishes a list, accepts a claim
+or builds that output. No node path pays anything on a halt today because no node path implements a
+halt at all - §23A is law with one module under it, not a running system.
