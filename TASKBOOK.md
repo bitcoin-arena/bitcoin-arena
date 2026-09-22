@@ -47632,3 +47632,36 @@ THE START IT WANTS, smallest first: (1) make the step reading Euclidean in BOTH 
 already says which one it is and the two currently disagree by 41%; (2) then, separately, decide whether
 a diagonal crawl is slowed to 0.424 m/s or the movement is normalised so the combined step is the gait -
 that is the part that moves the core and must travel with the pin.
+
+## The candle bodies as flat slabs: the measurement, and why it is a trade-off (2026-09-22)
+
+Listed as "Daniel's eye and not yet a measurement". Here is the measurement, off the core's constants:
+
+    slot width (x)     5.18 m    CANDLE_SLOT, and CANDLE_BODY_HALF is half of it - bodies touch, no padding
+    plateau height (y) 1.00 m    CANDLE_H, and its own comment records "(was 2)"
+    ramp               4.00 m at 25%   CANDLE_RAMP, comment records "(was 5 m at 40%)"
+    WIDTH : HEIGHT     5.2 : 1
+
+A body 5.18 m across and 1 m tall is a low wide plateau. From above that is a slab, which is what was
+seen. The eye was right and the number says so.
+
+BUT THE FLATNESS IS A RULING, NOT A SLIP. `44c72d72` made it, under §4.15 as ruled 13:42-14:40:
+"make it so trucks and tanks get through". That commit built the raised ribbon deliberately - "a full
+slot, bodies touching, 1 m plateau, 4 m ramps at 25% on every free edge. No walls, no wick collider,
+nothing in the solids" - and withdrew the berms with the rule written out: "passability: nothing added
+over 1 m or 25%". It measured the result: "North-south drive at x 20: 97.7% of flat, 0 stops."
+
+So the two readings collide:
+    a chart standing on the ground   wants height against width
+    "trucks and tanks get through"   caps height at 1 m and slope at 25%
+
+RAISING THE PLATEAU IS THE ONE THING THAT CANNOT BE DONE without reopening the passability ruling: 2 m
+back would double the very number that ruling fixed. The lever that does NOT touch it is the WIDTH -
+the same 1 m reads 2.6 times taller beside a 2 m slot than beside a 5.18 m one. The field is
+CANDLE_X0 -75.80 m to CANDLE_EAST 90.00 m, 165.80 m over 32 slots; at 2 m a slot that is 83 candles,
+or 32 candles over 64 m with the rest of the field empty. Bodies touching is itself a ruling (492f128),
+so narrowing means more candles rather than gaps.
+
+NOT CHANGED. Both levers are core constants: either moves CORE_HASH and the network id, which must
+travel with the fleet pin. And which lever to pull is a ruling, because one of them reopens passability
+and the other changes how much of the field the chart occupies.

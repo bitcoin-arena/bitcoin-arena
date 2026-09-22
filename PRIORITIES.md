@@ -779,8 +779,14 @@ and **DELIVERED at tick 599**. Seven parts stay open by ruling so that route exi
 stays as Unity's `(1, 0.45, 1)` height scale, and the miner was not raised. Daily **0.0.1824** (fa989a7e), core
 `2806cfd0e97480a8` identical in dist, on the unique URL and on the alias.
 
-NEXT PLAYTEST ITEM, NOT STARTED: **the candle bodies read as flat slabs from above** rather than a chart standing
-on the ground - listed item 2, Daniel's eye and not yet a measurement.
+NEXT PLAYTEST ITEM, MEASURED 2026-09-22, NEEDS A RULING: **the candle bodies read as flat slabs from above**
+rather than a chart standing on the ground. The eye was right: a body is 5.18 m wide and 1.00 m tall,
+**5.2 : 1**. But the flatness is a ruling, not a slip - `44c72d72` built the 1 m plateau and 4 m/25% ramps
+under §4.15's "make it so trucks and tanks get through", withdrew the berms on "nothing added over 1 m or
+25%", and measured 97.7% of flat with 0 stops. Raising the plateau reopens passability; the lever that does
+not is the WIDTH, since the same 1 m reads 2.6x taller beside a 2 m slot - but bodies touching is itself a
+ruling, so that means more candles, not gaps. Both levers are core constants and travel with the fleet pin.
+Numbers in TASKBOOK.
 
 EARLIER THIS LETTER: **a player who falls behind gets back to the lobby, and the next round shows both trucks.**
 Measured twice on Daily 0.0.1815 with two real browser tabs: both return (t+225/t+235, then t+275/t+290, and not
