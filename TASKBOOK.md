@@ -47846,3 +47846,50 @@ WHAT THIS DOES NOT DO: it does not retire `custody.js`, open the hold path, or a
 `c230bda7` is still custody THRESHOLD_LN at 100000 msat - the Daily opens THRESHOLD_LN rounds because
 `run-2of2.mjs:63` says so, and that is a separate slice. The six rulings are with the spec session and
 none was taken here.
+
+## Ruling 5, the measure: the step is Euclidean on squares (2026-09-22)
+
+WAR_TACTICS §4.16: "both places compare `dx² + dz²` against `(0.01 m)²` in fixed point - squares, no
+root, bit-identical everywhere."
+
+    core   sim.js:2008   was `(|dx| + |dz|) > POSTURE_STEP`
+                         now `(dx*dx + dz*dz) > POSTURE_STEP2`, POSTURE_STEP2 = 655²  = 429025
+    probe  measure-posture.mjs   the same, in all four places it compared (`moved` -> `moved2`)
+
+WHAT THE NEW MEASURE SAYS, computed against the bar:
+
+    an axis crawl, 0.00833 m           euclid² 298116   UNDER the bar
+    a diagonal crawl, 0.00833 per axis euclid² 596232   OVER  - reads STAND
+    a diagonal at 0.5 m/s ALONG ITS
+      DIRECTION, 0.00589 per axis      euclid² 297992   UNDER the bar
+
+So the measure alone does not close §0's row: a diagonal crawl still reads STAND until the GAIT is a
+speed along the direction of travel, which is the second half of the same ruling and is not done here.
+
+    core suite   98 pass / 0 fail and 44 pass / 0 fail, unchanged either side of the change
+
+## Ruling 4 is blocked on an error of mine, and the error is in the ruling's reasoning
+
+§4.16 says "the core owes no edge walls as solids ... the core's `mapSolids` is the list, box for box,
+and it carries **no** wall". THE CORE CARRIES FOUR. Measured just now:
+
+    cx -185.00 cz   0.00  hx   1.50  hz  88.00
+    cx  185.00 cz   0.00  hx   1.50  hz  88.00
+    cx    0.00 cz -85.00  hx 188.00  hz   1.50
+    cx    0.00 cz  85.00  hx 188.00  hz   1.50
+
+They are built at `map.js:95-98` by `edge(±halfX, 0, ...)` and `edge(0, ±halfZ, ...)` - at ±HALF_X and
+±HALF_Z, the CURRENT boundary, not the ±130 Unity gathered. And the code says why they are there:
+
+    "Tall and invisible, so a truck arriving airborne off a fee cliff still cannot clear the edge.
+     Sunk six metres so a dip does not open a gap."
+
+MY EARLIER REPORT SAID THE OPPOSITE - "nothing in the 106 spans a boundary at all" - and the ruling's
+reasoning rests on it. That was a bad filter on my part; the walls were there the whole time, at the new
+boundary. The ruling may well still be right (a wall on top of a clamp is a second boundary, and §1.1
+makes the edge damage where the clamp is a stop) - but it was decided believing the core had none, and
+removing them deletes a guard whose comment names a case the clamp may not cover: a body arriving
+AIRBORNE, where a per-tick position clamp and a solid box are not the same thing.
+
+NOT IMPLEMENTED, and the replay-solids edit I had started is reverted. This needs the ruling re-made
+knowing the walls exist and what they were for.
