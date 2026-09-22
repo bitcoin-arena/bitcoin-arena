@@ -24,10 +24,12 @@ Top item first. Finish and deploy before starting the next.
 
 ## WHAT THIS BRANCH IS WAITING ON (2026-09-22) - one list, so it is not read off six places
 
-THE FLEET PIN MOVE IS DONE (Daniel 2026-09-22): **the fleet runs `02eefc04`**, off `595f0df3`. That commit's subject names `78c501ac` because that is what it recorded; the pin the fleet runs is `02eefc04`. WHAT THE MOVE TO `02eefc04` CLEARED, node-side only: the `/round` refusal of
-THRESHOLD_LN, which cannot be separated from retiring `custody.js` on that pin (the Daily's paid rounds
-really are THRESHOLD_LN - `7d577647b2d8` decoded: custody THRESHOLD_LN, stakeMsat 100000). Not to be
-reopened unless a fresh probe shows the refusal still happens on `02eefc04`.
+THE FLEET PIN MOVE IS DONE (Daniel 2026-09-22): **the fleet runs `02eefc04`**, off `595f0df3`. That commit's subject names `78c501ac` because that is what it recorded; the pin the fleet runs is `02eefc04`. WHAT THE MOVE TO `02eefc04` UNBLOCKED, node-side only - **unblocked, NOT
+done**: the `/round` refusal of THRESHOLD_LN, which cannot be separated from retiring `custody.js` on
+that pin (the Daily's paid rounds really are THRESHOLD_LN - `7d577647b2d8` decoded: custody
+THRESHOLD_LN, stakeMsat 100000). The move removed the block that made the work unstartable; **the work
+itself is not done - the enum is the next slice and is not started.** No probe has been run against
+`02eefc04`, so nothing here says the refusal does or does not still happen on that pin.
 
 WHAT THE PIN THE FLEET RUNS NOW STILL BLOCKS, present tense: **every core change, AND
 `bundle-fresh`.** The core changes are §0's step cap (ruling 5), the candle width, and the map walls
