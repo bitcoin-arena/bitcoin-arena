@@ -281,9 +281,10 @@ AND THE PAGE-VERSUS-NODES DISAGREEMENT WAS THE OLD PIN, present tense: the shipp
 `NETWORK_ID_REGTEST = 66f5caba`, and `595f0df3` carried `b07c4a09`
 (`git show 595f0df3:packages/protocol/src/genesis-ids.js`), so under that pin the page had no authority
 to check against. At `02eefc04` both sides are `66f5caba` - checked at the pin itself, string-identical
-to HEAD - so **the page and the nodes agree**. DEPENDS ON, still: the live pin reaching **HEAD** - the
-bundle rebuild and the page deploy go with that move, in one step, never before, so this red is NOT to
-be cleared by rebuilding now.
+to HEAD - so **the page and the nodes agree**. DEPENDS ON, still: the live pin reaching **HEAD** - `bundle-fresh` is
+blocked because the pin the fleet runs, `02eefc04`, is NOT HEAD, and leaving `595f0df3` did not clear
+it; the bundle rebuild and the page deploy go with that move, in one step, never before, so this red is
+NOT to be cleared by rebuilding now.
 
 MEASURED (2026-09-21, round ec9bd34e, `4e9d7244`): stake and fee paid from alice with **no NWC string**,
 DELIVERED at tick 2240, the address named once - alice 996016 -> 996114 sat, the committee -98 +4, the
