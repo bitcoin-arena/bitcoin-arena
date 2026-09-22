@@ -48189,3 +48189,33 @@ assignment is seeded from the round id the node list is part of. Iterating to a 
 slot count until every bonded node is a seat and §5A.3 has nobody left to pay, so the fixed point is
 the wrong tool here - the door under test reads the seats off the stored contract and never asks who
 was assigned.
+
+## Two more holes in the slash-owing door, and one that was not (2026-09-22)
+
+RULING 3 WAS THE DOOR'S OWN SUBJECT AND ITS LOOP WAS UNMEASURED. "Several slashed nodes: nothing
+pooled - each bond pays the players its own proof names" is exactly what `/slash-owing` answers, and
+every 200-path measurement had used a single filed proof. The census is read ONCE and shared across
+the loop while each proof removes its own accused from it, so a second proof is precisely where a
+shared list would show the first one's exclusion leaking. Measured with two proofs, two accused nodes,
+one run:
+
+    proof against 4f355bdc (0x11)  -> nodes: 6360e856 37500000   players: 0505..05 50000000
+    proof against 6360e856 (0x12)  -> nodes: 4f355bdc 37500000   players: 0505..05 50000000
+
+Each answer sums to its own 100000000 sat bond, and the harmed player is paid the players' half out of
+BOTH, pooled nowhere - which is the ruling, read back off the door rather than off the library.
+
+THE HEIGHT WAS BOUNDED AFTER THE CENSUS, NOT BEFORE. `slash-owing.test.js` pins the order - "a height
+nobody can read yet must not send a node reading a census at it", asserted as `asked === 0` - and that
+property held for the recorder and not for the door, which called `censusAtHeight` first and
+`slashOwing` (whose step 1 is the bound) second. A height below the round's own census height made the
+node scan, resolve and root a whole census before saying the height was never valid. The bound that
+can be checked without a chain view is now checked at the door: measured, 409 "899999 is below the
+round's census height 900000". The tip bound needs a view and stays where it is.
+
+NOT A HOLE, MEASURED: `toPool`. The door reports toPlayers/toNodes/toDevelopers and never a pool, and
+`slashDistribution` does have a `toPool`. It is unreachable on this path - an empty affected set is
+refused at step 3 and an empty eligible set throws at step 6 - and `hand()` hands leftover satoshis out
+one at a time rather than pooling them. Measured on bonds 100000, 206 and 100001: toPool 0 in all
+three, and the three reported numbers sum to the bond exactly. Now asserted per answer at the door's
+own test so a later change cannot open a gap in silence.

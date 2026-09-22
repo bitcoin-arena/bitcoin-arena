@@ -309,6 +309,22 @@ Nothing spends, and the last test asserts the owing's whole shape to keep it tha
   the single bonded node that is neither seat nor accused, developers 12500000. 45 pass / 0 fail:
   slash-distribution + slash-rulings 15, slash-owing 7, slash-filing 4, roster 19.
 
+  AND TWO MORE HOLES CLOSED AFTER THAT, both of the same class - a path nothing walked. RULING 3 IS
+  WHAT THE DOOR EXISTS TO ANSWER ("several slashed nodes: nothing pooled, each bond pays the players
+  its own proof names") and only ONE proof had ever gone through the 200 path, so the loop was
+  unmeasured. It now holds two proofs against two nodes in one run: the census is read once and shared,
+  each proof takes its OWN accused out of it, and measured, the first pays 0x12 and the second pays
+  0x11 - 37500000 each, and the harmed player takes 50000000 out of BOTH bonds, pooled nowhere. Every
+  answer is also asserted to sum to its own bond. SECOND: the door derived a whole census BEFORE
+  bounding the height, contradicting the property `slash-owing.test.js` pins ("a height nobody can read
+  yet must not send a node reading a census at it"). The bound that can be checked without a view is
+  now checked first - measured, 409 "899999 is below the round's census height 900000".
+
+  MEASURED, NOT A HOLE: `toPool`. The door reports `toPlayers`/`toNodes`/`toDevelopers` and not the
+  pool, which looked like a gap in the accounting. It is not reachable here - both empty-set cases are
+  refused before `slashDistribution` returns - and on bonds 100000, 206 and 100001 the pool is 0 and
+  the three reported numbers sum to the bond exactly.
+
   WHAT REMAINS is only steps 3 and 5: the escrow output and MuSig2 over the arbitration keys, neither
   of which exists in this tree. Nothing on this path spends.
 
