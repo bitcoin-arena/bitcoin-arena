@@ -47893,3 +47893,31 @@ AIRBORNE, where a per-tick position clamp and a solid box are not the same thing
 
 NOT IMPLEMENTED, and the replay-solids edit I had started is reverted. This needs the ruling re-made
 knowing the walls exist and what they were for.
+
+## Ruling 5, the gait: the crawl is a speed along its direction (2026-09-22)
+
+§4.16: "the crawl is 0.5 m/s along the direction of travel - the step vector is scaled so its length,
+not its axes, is the speed". Implemented in `army.js` where the step is finalised: for a pinned man on
+foot, if `length2(stepX, stepZ)` exceeds `RIFLE_CRAWL * dt` the vector is scaled to it. Not chosen, as
+ruled: slowing diagonals to 0.424 m/s, which would make a man's speed depend on his heading.
+
+    a diagonal crawl was   0.0118 m a tick   (0.00833 on each axis)
+    now                    0.00833 m         scaled to the gait's own length
+    against §0's bar       euclid² 297992 < 429025 - UNDER, so a pinned man no longer reads STAND
+
+WHAT MOVED, and none of it quietly:
+
+  - `packages/core/dist/blwp-core.js` regenerated. The bundle must be the modules or it is not the same
+    core; `bundle.test.js` proved it by failing on 8 scenarios until it was rebuilt.
+  - 9 golden vector files re-pinned with `tools/make-vectors.js`, the repo's own maker. A ruled core
+    change moves the goldens by definition - they encode the old behaviour - and the bundle-vs-modules
+    check still passes at every 900-tick checkpoint, so the two implementations agree on the NEW
+    behaviour before the golden is written.
+  - ONE DOCTRINE NUMBER MOVED: `tactics.test.js` assaults 10 -> 14. THIS IS THE JUDGEMENT CALL IN THIS
+    COMMIT and it is flagged rather than buried. The count has moved with every ruled change before it -
+    11, then 9, then 8, then 10, each recorded with its cause in the same comment block - and the chain
+    here is the one that block already describes: fewer men read STAND, fewer are exposed, more live,
+    and survivors are what an assault clock reads. Every other clause of §4.12 in that test still
+    passes. If 14 is outside doctrine, the fix is the doctrine row, not this number.
+
+    core suite   98 pass / 0 fail   and   44 pass / 0 fail
