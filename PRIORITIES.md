@@ -99,16 +99,28 @@ THE SIX RULINGS ARE ALL RULED (spec `ef7af68c`, HARD 2026-09-22 08:25) AND ALL S
      would have been worth nothing.
   5. THE STEP - DONE (`25c0491f`, `70077d15`). Both places compare `dx² + dz²` against `(0.01 m)²`, and a
      pinned man crawls 0.5 m/s ALONG HIS DIRECTION, so a diagonal crawl is 0.00833 m and under the bar.
-     THE assaults 10 -> 14 FLAG IS ANSWERED BY MEASUREMENT (2026-09-22): **14 is not what breaks
-     doctrine.** `measure-assault.mjs` is a tool and not a test, so nothing ran it and the question sat
-     open through two letters. Re-measured on the current core: the LULL row says there are too FEW
-     assaults, not too many - nothing running on 84.1% of ticks against a row of 25-60%. And three of
-     the four failing rows were ALREADY RED in TASKBOOK's own ASSAULT PROBE baseline, with the
-     conclusion "Needs a ruling: the row or the cadence": declared-then-happens 1/19 -> 1/14, lulls
-     70.3% -> 84.1%, front-moves-visibly 0/5 -> **4/5 (better)**. Only the fail/win split is newly
-     outside (66.7% -> 75.0%) and it is ONE assault wide on a sample of twelve - noise, not claimed as
-     a finding. **STILL DANIEL'S, unchanged by this letter: the 600-tick row or the 20:30 hold
-     cadence.**
+     THE assaults 10 -> 14 FLAG IS CLOSED (2026-09-22): **14 is not what breaks doctrine**, and the count
+     is not to be reopened. `measure-assault.mjs` is a tool and not a test, so nothing ran it and the
+     question sat open through two letters. Re-measured at TWENTY seeds, two disjoint blocks: the LULL
+     row says there are too FEW assaults, not too many - nothing running on 76.9 / 77.5% of ticks
+     against a row of 25-60%.
+
+     AND THE SAMPLE SIZE MOVED TWO ROWS, BOTH OF WHICH LOOKED LIKE FINDINGS AT FIVE SEEDS: the fail/win
+     split 75.0% (n=12) -> 57.4 / 58.7% (n=47, 46), inside its row - noise, as ruled, confirmed on a
+     disjoint block; and front-moves-visibly 4/5 -> **13/20 and 14/20**, so the "improvement" was noise
+     too, in the other direction. Stable across every sample, and therefore the subject:
+     declared-then-happens 5.3 -> 7.5 -> 6.1%, lulls 70.3 -> 76.9 -> 77.5%.
+
+     RULED (Daniel 2026-09-22) AND WRITTEN (`f9602b0e`, `fe9cba34`): **the hold cadence stays 21:20 and
+     the 600-tick row is the side that yields.** §4.12's declared-to-happens row now reads its push gain
+     within **1800 ticks** - the assault's own maximum life - where it read 600, because a new direction
+     needs two confirmed readings, 10 s, which was the whole of a 600-tick budget. **THE BAR DOES NOT
+     MOVE: >= 80%.** It reads 35.9% there (n=39) and stays RED, and that red is a SIMULATION finding:
+     §0.1 point 3 already names it - "no assault that is declared and then happens" - and §0.1 point 2
+     supplies the numbers, "its ceiling is 24 (a hull 8 m across the seam)", which is exactly what the
+     window probe measured (gains only ever 0, 8, 16, 24). The lull band is NOT restated and stays red;
+     a row merely unmet is a red. My own proposals of >= 30% and 70-85% were the bar moving to meet the
+     measurement and are withdrawn. NO core, C#, cadence or coupling was changed for any of it.
   6. THE CANDLE LEVER - NOTHING TO DO. Neither lever: the plateau stays 1 m, the ramps 4 m at 25%.
 
   AND THE CORE CHANGES NEED A FURTHER PIN MOVE: the fleet runs `02eefc04`, which predates ruling 5's
