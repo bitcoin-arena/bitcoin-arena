@@ -200,10 +200,13 @@ costs 26 hours, not the day the drain alone takes; that is the ruled numbers' ow
 it wants shorter clocks is a later call. Measurements, the two id changes and the suite counts in
 TASKBOOK.md.
 
-LATER ITEM, NOT THIS LETTER: **give the federation's money law a node path.** Nothing calls
-`federation-slash.js` but its own test - no node path opens a claim window, publishes a spent-note list,
-or builds the escrow output under the arbitration keys. The clocks, the cap and the liquidation split are
-law that goes red when changed, not a running system.
+NEXT M3 ITEM, NOT STARTED: **give the slashing money law a node path.** Measured 2026-09-22: NEITHER
+slash path has a caller outside its own tests - not `federation-slash.js` (`slashSplit`, the guardian
+bond) and not `slash.js` (`slashDistribution`, the round bond). No node path opens a claim window,
+publishes a spent-note list, or builds the escrow output under the arbitration keys, and no node path
+turns a slashing into the payments §5A.3 now describes exactly. The clocks, the cap, the exposure rule,
+the liquidation split and the round split are all law that goes red when changed and pays nobody.
+That is the whole of what is left here: the rules are written and guarded, and nothing runs them.
 
 DONE (2026-09-22, `ffa4fd75` + `9bf4e6c3`): **where a slashed bond goes, by §5A.3.** Half to that round's
 players; the other half to the active census at the slashing height MINUS that round's own seats, 75% of
