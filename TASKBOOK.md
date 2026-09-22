@@ -47414,3 +47414,30 @@ CAUSES, which the board listed by name only:
   test expects the input word 45875. A changed score is a core behaviour question. LISTED, not tuned.
 
 So `two-titles` is still 1 pass / 1 fail, on a different and better-understood assertion than before.
+
+## Six unlisted reds in blwp-client, and a claim of mine that was wrong (2026-09-22)
+
+Swept `blwp-client`, which nothing on the board covered: 54 suites. `donation-pay.test.js` was
+14 pass / 6 fail and appears nowhere in any red list.
+
+AND IT CONTRADICTS WHAT I WROTE ON THE BOARD LAST TURN. I said "35 `blockTicks: 9000` literals remain
+across the test packages, and none of them is red for it". One of them was: `donation-pay.test.js:606`
+carried the literal and the node refused the contract with 400 where 201 was expected - the same
+"a contract disagreeing with the network it names" as `two-titles`. I asserted a negative over 35 call
+sites after checking three. Fixed: it takes `BLOCK_TICKS` now, and that recovered one test.
+
+THE OTHER FIVE WERE NOT A PRODUCT BUG AND NOT A STALE NUMBER - they never reached an assertion:
+
+    TypeError: depositEl.replaceChildren is not a function   (x5)
+
+This suite runs the REAL page script out of `unity-proto/.../index.html` against a fake DOM built in the
+test. The page clears the deposit box with `replaceChildren()` (index.html 1623 and 1637); the test's
+element factory made `{ style, textContent, placeholder, disabled }` and nothing else. So five tests
+covering the settlement display - what the stake line reads after a hold ends, what a winner is shown it
+is owed, what counts as spent, the donation shares, where the stake went - died on a missing stub method
+BEFORE checking anything. The display they cover was not being verified at all.
+
+The factory now carries `replaceChildren` and `appendChild`, recording children the way the page does.
+That is coverage restored, not an assertion loosened: no expectation changed.
+
+    donation-pay.test.js   14 pass / 6 fail  ->  20 pass / 0 fail
