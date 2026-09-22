@@ -48106,3 +48106,44 @@ WHY A NODE SHOULD DO THIS BEFORE IT CAN PAY: every observer must recompute the s
 chain data at a height the transaction commits to. A node that files a proof and cannot say what it
 implies has filed an assertion rather than an accusation - and the first time the numbers are worked out
 should not be the first time money moves.
+
+## The slashing door, and the two things it found (2026-09-22)
+
+`GET /slash-owing?round=&entry=&height=` in `blwp-node/src/server.js`, beside `/slash-proofs`. It
+answers what §5A.3 owes for every proof this node filed for a run, out of the census at a height the
+CALLER names. Measured over the re-run fixture's five real filed proofs (`slash-filing.test.js`):
+
+    no height           400  "a slash is owed at a height, and this node does not pick one"
+    unknown entry       404  "this node filed no slash proof for that run"
+    height, no chain    409  "this node has no chain view for that round, so it cannot say who is bonded"
+    entriesForSlash       2  entries, both carrying a player pubkey
+    one filed proof          players 50000, nodes 37500, developers 12500, bond 100000
+                             census 10, seats 7, the three non-seats 12500 each, the seven seats 0
+
+Suites: slash-owing 6/0, slash-filing 4/0, census-scan + assignment 4/0, committee-seed 7/0 = 21/0.
+
+THE HEIGHT IS THE CALLER'S because §5A.3's recipients are "the active census nodes at the slashing
+height" and the arbitration set names that height. A node that picked its own would pick the one that
+paid it best, so the door refuses without one rather than defaulting to the round's.
+
+FOUND 1 - A CENSUS AT A NAMED HEIGHT IS NOT THE ROUND'S CENSUS. The first `censusAtHeight` was one
+line calling `censusFor` with the height swapped. `censusFor` ends by checking the derived root against
+the contract's `censusRoot`, which is what makes a census THIS ROUND'S - and at any other height the
+chain is SUPPOSED to give another root, because bonds funded since the round opened are in it and bonds
+spent since are out. So every slashing height above `census_height` - which is every real one - came
+back "that round names census root X and the chain gives Y at height H". The check now runs only when
+the census is asked for as the round's own; the cache key carries which of the two it was, so a checked
+census and an unchecked one can never be served for each other.
+
+FOUND 2 - `entriesForSlash` READ A COLUMN THAT DOES NOT EXIST. `round.entriesOf` returns the DECODED
+contract under `entry`; the recorder decoded `row.contract`, which is `undefined`, threw, and
+`continue`d on the catch. Every round therefore looked like a round with no entries, `affectedEntries`
+found nobody harmed, and the door would have answered that a slash owes the players nothing. A
+`continue` on a decode failure is right for bytes off the wire and wrong for a field name. The suite
+now pins the entry count at 2.
+
+AND THE OFFENCE IS NOT IN THE PROOF'S BYTES. `encodeSlashProof` carries a transcript hash and a signed
+result id and no offence field, because the offence is what verifying those two objects CONCLUDES.
+Every proof in this table was filed by `fileSlashProofs`, which files exactly one kind, so the door
+names REPLAY_CONTRADICTS and does not guess. A proof arriving by another road would have to carry its
+own verdict.

@@ -269,12 +269,23 @@ Measured: a 100000 sat bond owes players 50000 (pro rata by net stake: 12500 / 3
 developers 12500, the seats nothing. A height outside the window is refused BEFORE any census is read.
 Nothing spends, and the last test asserts the owing's whole shape to keep it that way.
 
-  NEXT UNCODED PIECE, and the design is now known rather than guessed: a door that takes the height the
-  ARBITRATION SET NAMES (the node must not invent one) and answers what is owed. `censusAt(height)` is
-  `deriveCensus` over a view reaching that height with `censusHeight` set to it; `bondSatsOf` comes from
-  THAT census's own entry for the accused node, because the ruling puts `slash_height` at or below the
-  tip when they sign - so the bond is still unspent there and still carries its `bondSats`. What remains
-  after that is only steps 3 and 5: the escrow output and MuSig2, neither of which exists in this tree.
+  AND IT NOW HAS A DOOR, over the five proofs the re-run fixture really files: `GET /slash-owing`
+  takes the height and refuses to pick one (400, "a slash is owed at a height, and this node does not
+  pick one"), refuses a run nobody filed against (404), and names a missing chain view rather than
+  inventing a census (409). Over a real filed proof with a ten-node census: players 50000, nodes 37500
+  over the three who were not seats, developers 12500, seven seats paid nothing. 21 pass / 0 fail
+  across `slash-owing`, `slash-filing`, `census-scan` + `assignment`, `committee-seed`.
+
+  TWO THINGS THE DOOR FOUND, both of which would have answered confidently and wrong. The census at a
+  named height is NOT the round's census and must not be checked against the round's `censusRoot`: the
+  chain is supposed to give a different root at a different height, so `censusAtHeight` refused every
+  slashing height above `census_height` with a divergence message. And `entriesForSlash` read a
+  `contract` column `entriesOf` does not return, decoded `undefined`, and swallowed the throw - so the
+  round's entries came back EMPTY and every offence looked as if it harmed nobody. The fixture now
+  measures 2, which is what that round has.
+
+  WHAT REMAINS is only steps 3 and 5: the escrow output and MuSig2 over the arbitration keys, neither
+  of which exists in this tree. Nothing on this path spends.
 
   (the note below is what that item said before the recorder landed.) Measured 2026-09-22: NEITHER
 slash path has a caller outside its own tests - not `federation-slash.js` (`slashSplit`, the guardian
