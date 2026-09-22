@@ -48568,3 +48568,68 @@ Those two were already red in the ASSAULT PROBE baseline and are the real subjec
 NOT SUBJECTS. The fail/win split at 75.0% is one assault wide on a sample of twelve: noise, not a
 finding, unless a second sample puts it outside the row on its own. Front movement improved to 4 of 5
 and that row is NOT to be loosened to hide the other two.
+
+## The §4.12 rows re-measured at 20 seeds, and the 600-tick row's real shape (2026-09-22)
+
+Under the kept 21:20 cadence, on this tree. Two disjoint 20-seed blocks of `measure-assault.mjs`
+(10800 ticks each), plus a read-only window probe kept out of the repo.
+
+    row                     5 seeds      A: seeds 1-20    B: seeds 21-40    row
+    fail/win split          75.0% (12)   57.4% (47)       58.7% (46)        30-70%
+    declared-then-happens    7.1% (14)    7.5% (53)        6.1% (49)        >= 80%
+    lulls                   84.1%        76.9%            77.5%             25-60%
+    front moves visibly     4 of 5       13 of 20         14 of 20          every seed
+
+SAMPLE: 53 and 49 assaults started, 47 and 46 ended, 20 seeds x 10800 ticks per block.
+
+WHICH ROWS MOVE WITH SAMPLE SIZE, which is the whole reason for 20 seeds:
+  - fail/win split 75.0% -> 57.4 / 58.7%. NOISE, confirmed on a disjoint second sample as ruled.
+  - front moves visibly 4 of 5 -> 13/20 and 14/20. THE IMPROVEMENT WAS ALSO NOISE, in the other
+    direction. 80% of seeds at n=5 is 65-70% at n=20. Recorded because the ruling rested on it having
+    improved; the row is NOT proposed for loosening, and this is not offered as cover for the others.
+  - declared-then-happens 5.3 -> 7.5 -> 6.1% and lulls 70.3 -> 76.9 -> 77.5%: STABLE. These two are the
+    subject, as ruled.
+
+THE 600-TICK ROW'S REAL SHAPE. `measure-assault.mjs` reports only whether +8 m happened inside 600
+ticks, so a separate read-only probe recorded the gain at five windows over seeds 1-20:
+
+    window   n   share>=8m   share>0    mean gain   distinct values seen
+      600   42       9.5%      9.5%       0.95 m    0, 8, 16
+      900   42      14.3%     14.3%       1.71 m    0, 8, 16
+     1200   41      22.0%     22.0%       2.34 m    0, 8, 16
+     1800   39      35.9%     35.9%       4.72 m    0, 8, 16, 24
+     2400   38      44.7%     44.7%       6.32 m    0, 8, 16, 24
+
+TWO FACTS FALL OUT, AND BOTH BEAR ON HOW THE ROW IS WRITTEN:
+
+1. THE THRESHOLD AND THE PERCENTAGE ARE ONE DIAL. `share >= 8m` EQUALS `share > 0` at every window:
+   lane push never lands between 0 and 8, and the observed gains are exactly 0, 8, 16, 24. So "8 m" is
+   not a magnitude, it is "at least one step of push". Any threshold in (0, 8] measures the same thing;
+   16 would demand two steps. A rewrite that tunes the metres is tuning nothing.
+
+2. THE WINDOW IS NOT THE BINDING CONSTRAINT. At 1800 ticks - the assault's OWN maximum life - 35.9%
+   gain a step. At 2400, past the assault entirely, 44.7%. Against a row of >= 80%. Lengthening 600 to
+   1800 moves 9.5% to 35.9% and gets nowhere near.
+
+   So the median assault moves its lane by NOTHING within its own life, and that is the finding. The
+   mechanism is not established here: gains arriving only in multiples of 8 suggests either a quantised
+   push word or that typically one team is on the lane, and `k` was not measured. Named, not claimed.
+
+PROPOSED - NOT ACCEPTED, NOTHING EDITED. Written from the readings above:
+
+    "An assault is declared, then it happens" | tempo §4.12 | within 1800 ticks of an assault's start -
+    its own maximum life, so the row asks about the assault and not an arbitrary prefix - the attacking
+    side's mean push on the assaulted lane is at least one step (>= 8 m) higher than at the start, on
+    >= 30% of assaults.    [measured 35.9%, n=39 over 20 seeds, margin 6 points]
+
+    "Lulls exist" | assault clock §4.12 | on 70% to 85% of ticks no assault is running on either side;
+    no assault starts inside 20 s of the previous one on the same side.
+                           [measured 76.9% and 77.5%, two disjoint 20-seed blocks; the 20 s clause
+                            passes today, 0 violations in 102 assaults]
+
+AND THE HONEST OBJECTION TO BOTH, which is why they are proposed and not written: each bound describes
+this tree rather than the intent it replaced. A row passing at 30% lets seven assaults in ten move
+nothing visible, and "an assault is declared, then it happens" then means almost nothing. A lull band
+of 70-85% blesses a war that is quiet three ticks in four where doctrine wanted it quiet one in two.
+If the intent is to be kept, no bound over this tree satisfies it and the finding is about the
+simulation, not the row.
