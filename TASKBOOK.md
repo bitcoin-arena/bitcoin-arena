@@ -48051,3 +48051,24 @@ EVERY CLIENT RED IS NOW ONE OF THREE, ALL LISTED AND ALL WITH A CAUSE:
 NOTHING ELSE IS HIDING. The two reds this sweep found - `finish-at-delivered` and `join` - were both
 found only because the groups were small enough to finish. Both are fixed. The first was the run-length
 straggler; the second was mine, from §24B, and had been red since `c2437401`.
+
+## blwp-node swept in small groups too, and it hid nothing (2026-09-22)
+
+The ranges earlier chunks never finished - 37-58, 79-98, 104-109 - re-run small enough to print a
+summary:
+
+    41-48   39 tests  38 pass  1 fail   ghost-live, already listed
+    49-58   46        44       2        lock-settlement - AND IT PASSES 15/15 ALONE, which is the
+                                        third time that suite has failed in company and passed by
+                                        itself. It stays listed as timing-flaky, not as two reds.
+    79-88   54        54       0
+    89-98   70        69       1        replay-solids, waiting on ruling 4
+    104-109 25        25       0
+
+So the node package hides nothing the board does not already carry. Its reds are ghost-live,
+replay-solids, objection-window (59-78, confirmed earlier), and lock-settlement's flake.
+
+WHAT THE TWO SWEEPS TOGETHER SAY: the client was hiding two reds behind truncated chunks and the node was
+hiding none. The difference is that the client's suites are slower per file, so a chunk of 18 never
+finished while a chunk of 20 node files usually did - which is exactly why the cap has to be read as a
+result, not as an absence.
