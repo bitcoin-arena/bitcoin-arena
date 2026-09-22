@@ -48026,3 +48026,28 @@ anywhere in the file, comments included. Reworded to name the thing without spel
 
     join.test.js        11 pass / 1 fail  ->  12 pass / 0 fail
     backup-gate + seed-import                13 pass / 0 fail   (§24B's own behaviour, unmoved)
+
+## The client swept in small groups, nothing truncated (2026-09-22)
+
+The whole package, in eight groups small enough that every run printed its own summary line - the
+discipline the truncation taught. 54 suites.
+
+    1-6     49 tests   48 pass  1 fail   bundle-fresh
+    7-13    47         47       0
+    14-20   82         81       1        discovery
+    21-27   47         47       0        (was 1 fail; the join/vault fix cleared it)
+    28-33   22         22       0
+    34-39   52         52       0
+    40-45   25         25       0
+    46-54   47         43       4        wallet-nwc
+
+EVERY CLIENT RED IS NOW ONE OF THREE, ALL LISTED AND ALL WITH A CAUSE:
+
+    bundle-fresh   source is six non-comment lines ahead of the bundle; waits on the fleet pin.
+    discovery      a false positive - `client.js:695` has a local variable named `window`.
+    wallet-nwc     "the wallet was asked 2 times, expected 1"; 14/12 before this letter's migration
+                   and 5 red after, so it predates the work and the migration fixed seven of its twelve.
+
+NOTHING ELSE IS HIDING. The two reds this sweep found - `finish-at-delivered` and `join` - were both
+found only because the groups were small enough to finish. Both are fixed. The first was the run-length
+straggler; the second was mine, from §24B, and had been red since `c2437401`.
