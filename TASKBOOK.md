@@ -47567,3 +47567,35 @@ is the boundary held some other way and Unity should stop drawing walls the core
 answer closes it; guessing either way would put a wall in the simulator or take one out of the picture.
 
     replay-solids.test.js   2 pass / 1 fail, on the cross-check instead of on the subtotal
+
+## objection-window: the node settles on sha256(zeros), not on the entry's commitment (2026-09-22)
+
+The last red without a cause. Run alone: 7 tests, 5 pass, 2 fail - "two signer nodes, a 3 s window" and
+"two signer nodes restarted inside the objection window". Both fail the same way, and it is not a
+timing flake: it is the same wrong hash twice.
+
+    expected   [[ '5ae6e3e5...', '5e26936f...' ]]          one settle: the loser's stakeCommitment
+                                                            and the loser's preimage
+    actual     [[ '66687aad...', '0000...0' ],
+                [ '66687aad...', ... ]]                     TWO settles, both on one hash, one with a
+                                                            zero preimage
+
+And that hash is not arbitrary:
+
+    sha256(32 zero bytes) = 66687aadf862bd776c8fc18b8e9f8e20089714856ee233b3902a591d0d5f2925
+
+So the node is settling a hold whose payment hash is the hash of a ZERO preimage, twice, where the test
+expects one settle carrying the loser's own commitment and preimage. The entry's real
+`stakeCommitment` (5ae6e3e5... in the first case, 827def45... in the second) never reaches the port.
+
+WHAT THIS IS NOT: not contention - it fails identically run alone, and it failed identically at
+`1e9628cd` before any of this letter's work, so it is not from anything done here. Not the run length -
+`blwp-node` carries no `blockTicks: 9000` any more. Not a flake - `lock-settlement`'s flake moved between
+tests and then passed; this one is the same two tests and the same two hashes every time.
+
+WHERE IT SITS: this is the HOLD path - `custody.settle`, payment hashes and preimages - which is the
+stack the sequence retires LAST, after the fleet pin moves off `595f0df3`, because the Daily still runs
+on it. Fixing the preimage that reaches the port means touching custody on a live path, so it is listed
+rather than taken.
+
+    objection-window.test.js   5 pass / 2 fail, cause now known

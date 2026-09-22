@@ -617,7 +617,11 @@ EVERY PACKAGE SWEPT 2026-09-22, and the reds that survive are four (details in T
     (two-titles is GREEN now, 2/0: the counter sums the driver's throttle, and the expectation was the
      old fixed program's 45875 left behind when the fixture started steering at the core's own gate on
      2026-09-21. It reads `120 * wordsAt(0)[0]` now, so it follows the driver instead of restating it.)
-    (objection-window is red and was red before any of this letter's work.)
+    objection-window   5/2, CAUSE NOW KNOWN: the node settles a hold whose payment hash is
+                       sha256(32 zero bytes), twice, where one settle carrying the loser's own
+                       commitment and preimage is expected. Red before any of this letter's work, and
+                       identical run alone. It is the HOLD path, which the sequence retires last while
+                       the Daily still runs on it - so listed, not taken.
 
   WHAT THE SWEEP KEPT FINDING: the run length. `blockTicks: 9000` predates the core's move to 10800, and
   a node refuses such a contract by name, after which every later door answers "no such round". It was
