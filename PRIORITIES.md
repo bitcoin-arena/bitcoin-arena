@@ -59,6 +59,13 @@ THE SIX RULINGS ARE ALL RULED (spec `ef7af68c`, HARD 2026-09-22 08:25) AND ALL S
      stood at +-130, which is why `replay-solids` failed on `Wall_West` at HEAD. Vectors regenerated ON
      PURPOSE (8 files, the header's own procedure and ruling 5's precedent `70077d15`; no
      PROTOCOL_VERSION bump, as there). `CORE_HASH` f253dc6d -> **7db2e423**, appended to known-cores.
+     AND THE REBUILT CORE BUNDLE HAD TO BE RE-PINNED TWICE OVER, which is the trap the board already
+     records from `1e9628cd`: §24 F2 refuses a client that is not on `known-good-clients.json`, and a
+     rebuilt `core/dist/blwp-core.js` falls off it. Caught by `client-hash` going 3/0 -> 2/1 - "the list
+     pins the scripts the rebuilt bundle and the template carry" - and it took TWO fixes, because the
+     WebGL template keeps its own byte-identical copy: list re-pinned with the generator (appends,
+     drops nothing) AND `unity-proto/.../BtcLogistics/blwp-core.js` synced from dist. Back to 3/0.
+     `bundle-fresh` is 1/1 again on `blwp-client.js` alone, its recorded baseline, with core fresh.
      AND MEASURED IN A REAL PLAYER, not just in node: PlayMode `SolidsInventoryTests` 1/1, 0 error CS,
      and the player now gathers **33 world boxes where it gathered 37** - exactly the four edges, with
      `Wall_`/`Barrier_` appearing nowhere in the run. That run was the hole: a collision change to the

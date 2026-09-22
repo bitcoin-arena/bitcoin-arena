@@ -48409,3 +48409,27 @@ measurement: state hashes at 600 ticks (the vectors diverge at 1200), and then t
 node alone. Both were one run away from the truth. The pattern is the same one the fee-secret letter
 hit - trusting a cheap measurement that agreed with me - and the fix is the same: run the expensive one
 before saying done, not after being asked.
+
+## The rebuilt core bundle fell off the known-good list, twice over (2026-09-22)
+
+§24 F2 refuses a client that is not on `blwp-client/known-good-clients.json`. Rebuilding
+`core/dist/blwp-core.js` for ruling 4 therefore took the page's own core off the list - the exact trap
+the board records from `1e9628cd`, where two of three money scripts fell off the same way and "the page
+served could enter no paying round".
+
+Caught by `client-hash` 3/0 -> 2/1: "the list pins the scripts the rebuilt bundle and the template
+carry". It needed TWO fixes, not one:
+
+    1. the list        node packages/blwp-client/tools/known-clients.js
+                       blwp-core.js aea2a2bc... added; the other four already listed
+    2. the template    unity-proto/Assets/WebGLTemplates/BtcLogistics/blwp-core.js was 2e1aaf15...
+                       against a built aea2a2bc..., because the template keeps its OWN byte-identical
+                       copy and the test asserts identity. Synced from dist.
+
+client-hash back to 3/0. bundle-fresh is 1/1 again, red on `blwp-client.js` alone - "dist is not the
+build of this source" and "the WebGL template is not the build of this source" - which is its recorded
+baseline, with blwp-curve.js and blwp-core.js fresh. blwp-client bundle 5/5.
+
+AND THE UNITY BATCHMODE RUN DELETES FILES. `Assets/AddressableAssetsData/link.xml` and its .meta came
+back deleted from the editor run and were restored by hand. Worth knowing before committing after any
+-runTests: check `git status` for deletions the editor made, not just for what you edited.
