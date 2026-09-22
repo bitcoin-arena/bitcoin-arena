@@ -36,18 +36,30 @@ cap, the candle width, the map walls - because each moves `CORE_HASH`.
   `donationKeysForNetworkId(b07c4a09)` is **null** in the page's build, so donation verification has no
   authority to check against on the Daily. The gap costs DONATIONS, not joinability.
 
-SIX RULINGS, none of them mine to take:
-  1. WHICH HEIGHT is "the slashing height"? Named once in the spec, never defined; the slashing
-     transaction's own height is circular with §5A.3B step 5.
-  2. WHO are "the affected players"? §13A lists "the affected player" BESIDE "another player in the
-     round", so it is narrower than every entrant; each proof already names one `playerPubkey`.
-  3. ONE ROUND, SEVERAL SLASHED NODES: each bond to its own proof's players, or all of them pooled?
-  4. THE MAP EDGE: does the core owe edge walls as solids at +-185 / +-85, or does Unity stop drawing
-     walls the core does not build?
-  5. THE STEP READING: `tactics.js:637` and `measure-posture.mjs:102` both measure MANHATTAN where the
-     rule was ruled combined EUCLIDEAN - 41% apart on a diagonal.
-  6. THE CANDLE LEVER: raising the plateau reopens the passability ruling; narrowing the slot means MORE
-     candles, because bodies touching is its own ruling.
+THE SIX RULINGS ARE NAMED (spec `ef7af68c`, HARD 2026-09-22 08:25) AND FOUR ARE IMPLEMENTED:
+
+  1. THE SLASHING HEIGHT - DONE (`e554dad2`). The arbitration set NAMES it: valid iff
+     `census_height <= slash_height <= tip` when they sign, written into the transaction's OP_RETURN and
+     nLockTime. `slashHeightIsValid` refuses outside either bound and says which one. The height a bond
+     is SPENT at is read nowhere - that height exists for spends that are not slashes.
+  2. THE AFFECTED PLAYERS - DONE (`e554dad2`). `affectedEntries` is the spec's table: the two result
+     offences name the one `playerPubkey`; the other four name every financially activated entry;
+     `OPERATOR_PLAYED` drops the operator's own, which §5A.13 voids. The players' half goes PRO RATA BY
+     NET STAKE. A proof naming a player the round has no entry for is refused, not silently empty.
+  3. SEVERAL SLASHED NODES - DONE (`e554dad2`). Nothing pooled: each bond pays the players its own proof
+     names, and an entry named by two proofs is paid from both bonds.
+  4. THE MAP EDGE - **NOT IMPLEMENTED, HANDED BACK.** §4.16 rules the core owes no edge walls. IT BUILDS
+     FOUR, at +-HALF_X / +-HALF_Z (`map.js:95-98`), whose own comment says they catch "a truck arriving
+     airborne off a fee cliff". My earlier report that nothing spanned a boundary was WRONG and is what
+     the ruling's reasoning rests on. Needs re-ruling knowing the walls exist and what they are for.
+  5. THE STEP - DONE (`25c0491f`, `70077d15`). Both places compare `dx² + dz²` against `(0.01 m)²`, and a
+     pinned man crawls 0.5 m/s ALONG HIS DIRECTION, so a diagonal crawl is 0.00833 m and under the bar.
+     ONE DOCTRINE NUMBER MOVED WITH IT: assaults 10 -> 14, flagged in that commit. If 14 is outside
+     doctrine the doctrine row is the fix, not the number.
+  6. THE CANDLE LEVER - NOTHING TO DO. Neither lever: the plateau stays 1 m, the ramps 4 m at 25%.
+
+  AND THE CORE CHANGES NEED A FURTHER PIN MOVE: the fleet runs `02eefc04`, which predates rulings 5's
+  core edit, the rebuilt core bundle, the 9 re-pinned goldens and the new core hash `f253dc6d`.
 
 Everything below this line is either done, or waiting on one of those.
 
