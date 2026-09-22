@@ -586,6 +586,16 @@ DONE (2026-09-20), in order:
 LATER, NOT NOW: different-operator gateways (§23.6's own test; this step is the operator's own two nodes by
 ruling), the Daily declaring both regtest gateways, guardians, `federationIsBonded`, `mass_behind_tunnel`.
 
+M1 CORE ITEM, FOUND 2026-09-22 (`f13bc4cc`), NEEDS A RULING: **the map's four edge walls are not in the
+core's boxes.** `SolidsInventoryTests` gathered Wall_West, Wall_East, Wall_North and Wall_South off a
+running Unity player; `mapSolids` returns 106 boxes and NONE of them is an edge - the outermost are coin
+stacks at cx 183 and post office mouths at cx 170. The walls the suite names sit at +-130, which is
+`RELIEF_HALF_X`, the OLD boundary; `HALF_X` is 185 today, and the core builds no wall there either. M1
+says the map's boxes are the core's, so the core's boxes and the ones Unity draws cannot drift - and they
+have. THE RULING: does the core owe edge walls as solids at +-185 / +-85, or is the boundary held some
+other way and Unity stops drawing walls the core does not have? Not guessed either way: one answer puts a
+wall into the simulator, the other takes one out of the picture. Measurements in TASKBOOK.md.
+
 EVERY PACKAGE SWEPT 2026-09-22, and the reds that survive are four (details in TASKBOOK.md):
 
     core          142 pass / 0 fail   (15 suites, both chunks green)
@@ -601,7 +611,9 @@ EVERY PACKAGE SWEPT 2026-09-22, and the reds that survive are four (details in T
                        pin - NOT to be cleared by rebuilding.
     objective-markers  needs a live Chrome on CDP 9341. An environment, not a defect; deliberately not
                        turned into a silent skip.
-    replay-solids      wants 37 world boxes where the core ships 106 by decision (`fea4a2f6`).
+    replay-solids      NOT a stale number after all - see the M1 item below. Its count assertion WAS
+                       stale (37 is the map subtotal of MAP_BOXES = 106, per `map.js:65`) and is gone;
+                       underneath it the suite fails its real cross-check.
     (two-titles is GREEN now, 2/0: the counter sums the driver's throttle, and the expectation was the
      old fixed program's 45875 left behind when the fixture started steering at the core's own gate on
      2026-09-21. It reads `120 * wordsAt(0)[0]` now, so it follows the driver instead of restating it.)
