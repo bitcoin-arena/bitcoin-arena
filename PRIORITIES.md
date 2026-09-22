@@ -117,8 +117,9 @@ THE SIX RULINGS ARE ALL RULED (spec `ef7af68c`, HARD 2026-09-22 08:25) AND ALL S
      needs two confirmed readings, 10 s, which was the whole of a 600-tick budget. **THE BAR DOES NOT
      MOVE: >= 80%.** It reads 35.9% there (n=39) and stays RED, and that red is a SIMULATION finding:
      §0.1 point 3 already names it - "no assault that is declared and then happens" - and §0.1 point 2
-     supplies the numbers, "its ceiling is 24 (a hull 8 m across the seam)", which is exactly what the
-     window probe measured (gains only ever 0, 8, 16, 24). The lull band is NOT restated and stays red;
+     supplies the numbers, "its ceiling is 24 (a hull 8 m across the seam)" - 24 in push units is EIGHT
+     metres, since the doctrine's rows fix metres across = push - 16. The window probe measured GAINS, only ever
+     0, 8, 16, 24; the 24 there is a gain that reached that ceiling, not the ceiling itself. The lull band is NOT restated and stays red;
      a row merely unmet is a red. My own proposals of >= 30% and 70-85% were the bar moving to meet the
      measurement and are withdrawn. NO core, C#, cadence or coupling was changed for any of it.
   6. THE CANDLE LEVER - NOTHING TO DO. Neither lever: the plateau stays 1 m, the ramps 4 m at 25%.
