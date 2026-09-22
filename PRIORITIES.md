@@ -70,6 +70,21 @@ THE SIX RULINGS ARE ALL RULED (spec `ef7af68c`, HARD 2026-09-22 08:25) AND ALL S
      and the player now gathers **33 world boxes where it gathered 37** - exactly the four edges, with
      `Wall_`/`Barrier_` appearing nowhere in the run. That run was the hole: a collision change to the
      client had been called done off `node --test` alone, which CLAUDE.md names by name.
+
+     AND ONE FILTERED TEST WAS STILL NOT ENOUGH. The FULL suites found two more: EditMode is clean
+     (297/293/1/3, 0 error CS, the one red the long-listed CombatFx flash) but PlayMode came back
+     **16 red against a baseline of 14** - `VehicleTests.TheEdgeOfTheWorldIsAWall` and
+     `WorldSolidsTests.ThereIsAWallBehindTheTruckAndADoorwayInFrontOfIt`. Both PASS with the walls put
+     back, so both are this change's, and both are now re-stated to the ruling rather than deleted:
+       - the edge test is `TheEdgeOfTheWorldIsAClampAndNotAWall` and asserts no `Wall_`/`Barrier_`
+         collider is in the scene. It is NOT re-pointed at a PhysX truck: a rigidbody driven in a test
+         has no core behind it, and PhysX is never the simulator, so it can prove nothing about a rule
+         the core owns. The clamp is measured in `packages/core`.
+       - the post office test WAS PASSING ON THE EDGE WALL, 85 m away. Measured in the bay lane
+         z 10.20: the only box behind the truck is the Lintel at yLow 14.75, because the pillars run a
+         6.8 m pitch with hz 0.9 and that lane falls between Pillar13 and Pillar14 - the gap IS the bay
+         mouth. Split into two stronger claims: the lane is a doorway under a lintel, and the shell is
+         solid where it is not a mouth. Both re-stated tests pass, 2/2, 0 error CS.
   5. THE STEP - DONE (`25c0491f`, `70077d15`). Both places compare `dx² + dz²` against `(0.01 m)²`, and a
      pinned man crawls 0.5 m/s ALONG HIS DIRECTION, so a diagonal crawl is 0.00833 m and under the bar.
      ONE DOCTRINE NUMBER MOVED WITH IT: assaults 10 -> 14, flagged in that commit. If 14 is outside

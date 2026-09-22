@@ -48433,3 +48433,44 @@ baseline, with blwp-curve.js and blwp-core.js fresh. blwp-client bundle 5/5.
 AND THE UNITY BATCHMODE RUN DELETES FILES. `Assets/AddressableAssetsData/link.xml` and its .meta came
 back deleted from the editor run and were restored by hand. Worth knowing before committing after any
 -runTests: check `git status` for deletions the editor made, not just for what you edited.
+
+## The full Unity suites found two tests that encoded the withdrawn edge rule (2026-09-22)
+
+One filtered PlayMode test (`SolidsInventoryTests`) proved the player builds 33 boxes instead of 37 and
+was taken as enough. It was not. The full suites:
+
+    EditMode   297 total, 293 passed, 1 failed, 3 skipped, 0 error CS
+               the one red is CombatFxTests.RifleFireProducesAFlashAndATracer, long-listed
+    PlayMode   257 total, 227 passed, 16 failed, 14 skipped     <- baseline is 14 red
+
+The two extra, by name:
+
+    VehicleTests.TheEdgeOfTheWorldIsAWall
+    WorldSolidsTests.ThereIsAWallBehindTheTruckAndADoorwayInFrontOfIt
+
+PROVED MINE BEFORE TOUCHING THEM. `Bootstrap.cs` restored to its pre-b22f1db9 state and those two run
+alone: 2 total, 2 passed. They are this change's, not part of the 14 - the same HEAD-baseline discipline
+that stopped the lock-settlement regression being filed as known flakiness.
+
+THE EDGE TEST ASSERTED THE WITHDRAWN RULE BY NAME. It buried the throttle at the south edge and failed
+with "die Wand haelt nicht" if the truck passed terrain.depth/2 + 2. Re-stated as
+`TheEdgeOfTheWorldIsAClampAndNotAWall`, asserting no `Wall_`/`Barrier_` collider is in the scene - the
+client's half of the ruling. Deliberately NOT re-pointed at a PhysX truck: a rigidbody driven in a test
+has no core behind it and multiplayer_p2p.md says PhysX is never the simulator, so it could prove
+nothing about a rule the core owns. The old body is kept unreferenced with its reasoning.
+
+THE POST OFFICE TEST WAS PASSING ON THE EDGE WALL, 85 M AWAY. Probe in the truck's own bay lane:
+
+    PROBE match cx=-118.40 cz=0.00 hx=4.00 hz=84.15 yLow=14.75      (the Lintel, high)
+    PROBE lane=10.20 spawnX=-100.40 bayY=6.95 n=33 wall=False lintel=True
+
+The only box behind the truck in its lane is the high Lintel. The pillars run a 6.8 m pitch with
+hz 0.9, so lane 10.20 falls between Pillar13 and Pillar14 - and that gap IS the bay mouth. A doorway is
+exactly what belongs behind a truck parked in a bay; the low "wall" the test demanded was the map's
+west edge wall at x -185. Split into two claims that are each true of the post office: the lane is a
+doorway under a lintel (no low box in lane, lintel present), and the shell is solid where it is not a
+mouth (a low box exists behind the truck at some z). Both re-stated tests: 2 total, 2 passed, 0 error CS.
+
+THIRD TIME THE SAME SHAPE THIS LETTER. 600-tick hashes hid a 1200-tick divergence; node alone hid the
+client half; one filtered PlayMode test hid two suites full of the old rule. Each time the cheaper
+measurement agreed with me and the fuller one did not.
