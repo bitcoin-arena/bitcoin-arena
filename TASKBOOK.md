@@ -47766,3 +47766,26 @@ THRESHOLD_LN - `run-2of2.mjs:63`, `paid = { stakeMsat, custody: 'THRESHOLD_LN' }
 So the guardian advert is not what stands between the Daily and a paid row. It becomes necessary the day
 those rounds are FEDERATION rounds, which is the enum slice, which waits on the pin. Two separate things
 had been written down as one.
+
+## What the network-id gap actually costs: donations, not rounds (2026-09-22)
+
+The board treats the page/node id difference as "two different networks, so no round is joinable". The
+live page disproves the conclusion - rounds list, join and drive. So what DOES it cost? Read off the
+client, not argued:
+
+    client.js:1460 and donation-pay.js:191 look keys up BY THE ROUND'S OWN id:
+        donationKeysForNetworkId(round.networkId)
+    it never compares the round's id against the page's compiled-in NETWORK_ID_REGTEST.
+
+That is why listing and playing are unaffected. And the lookup itself:
+
+    donationKeysForNetworkId(66f5caba...)   KNOWN     <- the page's own id
+    donationKeysForNetworkId(b07c4a09...)   null      <- the id every LIVE round carries
+
+So on the Daily that call returns null for every round, and `donation-pay.js:219` cannot compare a
+donation set's networkId against an authority it has no keys for. THE COST OF THE GAP IS DONATION
+VERIFICATION, not joinability.
+
+This is worth having exactly because the board's version sent effort at the wrong thing: "no round is
+joinable" invites moving the pin to make the lobby work, when the lobby already works and what is broken
+is narrower and elsewhere. Not fixed here - the fix is still the pin or a rebuild, and both are ruled.

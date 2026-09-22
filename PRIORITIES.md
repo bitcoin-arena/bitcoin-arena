@@ -25,10 +25,16 @@ Top item first. Finish and deploy before starting the next.
 ## WHAT THIS BRANCH IS WAITING ON (2026-09-22) - one list, so it is not read off six places
 
 THE FLEET PIN, off `595f0df3`. It blocks, on its own: `bundle-fresh` (the rebuild and the deploy travel
-with it); the hold path behind `objection-window`; the `/round` refusal of THRESHOLD_LN, which cannot be
-separated from retiring `custody.js`; AND EVERY CORE CHANGE - §0's step cap, the candle width, the map
-walls - because each moves `CORE_HASH` and the network id, and the page (`66f5caba`) and the live nodes
-(`b07c4a09`) already disagree there. Landing a core change first widens that gap instead of closing it.
+with it); the hold path behind `objection-window`, because the Daily's paid rounds really are
+THRESHOLD_LN (`7d577647b2d8` decoded: custody THRESHOLD_LN, stakeMsat 100000); the `/round` refusal of
+THRESHOLD_LN, which cannot be separated from retiring `custody.js`; AND EVERY CORE CHANGE - §0's step
+cap, the candle width, the map walls - because each moves `CORE_HASH`.
+
+  WHAT THE ID GAP COSTS, measured 2026-09-22 and NOT what was written here before: the page carries
+  `66f5caba` and every live round carries `b07c4a09`, and rounds still LIST, JOIN and DRIVE - the client
+  looks donation keys up BY the round's own id and never compares it to its own. What breaks is narrower:
+  `donationKeysForNetworkId(b07c4a09)` is **null** in the page's build, so donation verification has no
+  authority to check against on the Daily. The gap costs DONATIONS, not joinability.
 
 SIX RULINGS, none of them mine to take:
   1. WHICH HEIGHT is "the slashing height"? Named once in the spec, never defined; the slashing
