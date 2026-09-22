@@ -47921,3 +47921,50 @@ WHAT MOVED, and none of it quietly:
     passes. If 14 is outside doctrine, the fix is the doctrine row, not this number.
 
     core suite   98 pass / 0 fail   and   44 pass / 0 fail
+
+## Rulings 1-3: the slashing height, who was affected, several slashed nodes (2026-09-22)
+
+All three from §5A.3 as ruled, read back by `protocol/test/slash-rulings.test.js`, 6 pass / 0 fail.
+
+RULING 1 - `slashHeightIsValid({ slashHeight, censusHeight, tipHeight })`. Valid iff
+`censusHeight <= slashHeight <= tipHeight`, and the refusals name WHICH bound, because "invalid height"
+tells an arbitration set nothing:
+
+    at census 900000  ok        inside 900050  ok        at tip 900100  ok
+    below     899999  refused, "below the round's census height"
+    above     900101  refused, "above the tip the arbitration set signs at"
+
+Not implemented and deliberately so: the height a bond is SPENT at. The spec says that height "exists for
+spends that are not slashes at all", and nothing here reads it.
+
+RULING 2 - `affectedEntries({ offence, playerPubkey, entries })`, the spec's own table, measured:
+
+    TWO_RESULTS              a1            the entry the proof is about
+    REPLAY_CONTRADICTS       a1
+    TABLE_IS_NOT_F           a1 a2 a4      every FINANCIALLY ACTIVATED entry
+    SETTLED_WITHOUT_AUTHORITY a1 a2 a4
+    FEE_WITHOUT_SERVICE      a1 a2 a4
+    OPERATOR_PLAYED          a1 a2         ... minus the operator's own, which §5A.13 voids
+
+The fixture round has a fourth entry that never paid; no money offence names her, which is the
+"financially activated" clause doing its work rather than being asserted. A proof naming a player the
+round has no entry for is REFUSED, not silently empty.
+
+And `playersShares` divides the players' half PRO RATA BY NET STAKE (§18 weights entitlement by net
+stake, and so does the harm), flooring each and handing the leftover out in the round's own order:
+
+    100000 : 300000 : 200000 of 600000, over 50000 sat  ->  8334 / 25000 / 16666, paid 50000 exactly
+
+RULING 3 - nothing is pooled. Two proofs in one round produce two `affected[]` sets from their own
+offences - a replay contradiction names one entry, a bad table names three - and an entry named by both
+is paid from both bonds, not once out of a pot.
+
+WHAT A CORE CHANGE DRAGS WITH IT, all deliberate steps the tests named:
+  - `packages/core/dist/blwp-core.js` rebuilt, and copied to the WebGL template so the two match;
+  - the new core hash listed with `protocol/tools/known-cores.js` - `f253dc6d...`, 33 listed. The test
+    says it plainly: "a change to the core turns this red until the new core is deliberately listed";
+  - `known-good-clients.json` re-pinned with the generator - `blwp-core.js` `2e1aaf15...` added, the
+    other four already listed.
+
+    protocol   293 pass / 0 fail and 290 pass / 0 fail
+    blwp-node  files 1-20, 125 pass / 0 fail
