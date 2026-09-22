@@ -116,10 +116,13 @@ byte mapping is guarded meanwhile. Nothing here is blocked on a decision; it is 
   the bundles in the last two letters - §24 F2 refuses a client that is not on the list. Re-pinned with
   the generator (appends, drops nothing): 89 -> 90 and 28 -> 29. client-hash 3 pass, was 0 pass 3 fail.
 
-  LATER ITEM, NOT THIS LETTER: **the daily lobby lists nothing.** The page is at network id `66f5caba`
-  and the live signer nodes are pinned at `595f0df3`, id `b07c4a09` - two different networks, so no round
-  is joinable there. The wallet surface on the daily URL is fine; the lobby is not. Moving the pin is a
-  fleet decision, not a page fix.
+  ~~LATER ITEM: the daily lobby lists nothing.~~ **WRONG, measured on the live page 2026-09-22
+  (`b44442ee`).** `window.BLWP_LOBBY` on the bare Daily URL reads two rows - `a9458457bbff` PAYING and
+  `cb045848e2bd` free - and `measure-cab-headline` joins one and drives 9 m. The network ids DO still
+  differ (page `66f5caba`, live checkout at `595f0df3` `b07c4a09`, pin unmoved) and the lobby lists both
+  kinds anyway, so the conclusion drawn from the mismatch was not what the page does. The row count moves
+  because the keeper opens and closes rounds continuously. Whether a paid row JOINS is still unmeasured
+  and is the guardian-bond/fleet-call-site item, not this one.
 
   LATER ITEM, THE FLEET CALL-SITE ONLY: **a paid row needs a bond that names a guardian.** The tool takes
   it now (`postBond({ guardianOf })`, `d353ba08`) and the seven-node federation round proves it works -

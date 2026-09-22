@@ -47723,3 +47723,23 @@ does not support: whatever the differing id costs, it is not "no round is joinab
 WHAT I DID NOT ESTABLISH, and will not claim: why 2 rows for 4 rounds - whether the two PAYING rounds are
 the ones missing, and whether a paid row would join. That is the difference between "the lobby is empty"
 (false) and "a paid row is refused" (the separate item above, which the fleet call-site explains).
+
+## What the daily lobby actually lists: a paid row and a free one (2026-09-22)
+
+The question left open last turn - why 2 rows for 4 rounds, and whether a paid row is listed - read off
+the live page's own `window.BLWP_LOBBY`, bare URL, Beelink Chrome:
+
+    [{"id":"a9458457bbff","free":false,"phase":"open"},
+     {"id":"cb045848e2bd","free":true,"phase":"open"}]
+
+So the lobby lists ONE PAYING ROW and one free row. `a9458457bbff` is one of the four the node reported
+minutes earlier; `cb045848e2bd` is not, and the two that have gone are not either - the keeper opens and
+closes rounds continuously, so "2 of 4" was never a filter, it was two readings of a moving set.
+
+THAT SETTLES BOTH HALVES:
+  - "the daily lobby lists nothing" is FALSE. It lists rows, one of them paying, and the truck rolls.
+  - the paid row is LISTED. Whether it JOINS is a different question and is still not measured here -
+    the guardian-bond item above is about the fleet call-site, and nothing in this reading contradicts it.
+
+The network ids still differ - page 66f5caba, live checkout at 595f0df3 b07c4a09 - and the lobby lists
+both kinds of round anyway. Whatever that difference costs, it is not the lobby.
