@@ -48373,3 +48373,39 @@ GREEN: core vectors 8/8, rules + canonical 61/61 with them, bundle 20/20, coin-i
 30/30, candles + spawn + round-ends 15/15, chart + poison + private-world + cbrt 16/16,
 transcript-replay 5/5, two-titles 2/0, run-length + round 17/17, replay + canonical + verify 28/28.
 UNCHANGED REDS: replay-solids 2/1 (FacadeRight, above) and ghost-live 10/1, both as the board had them.
+
+## Ruling 4 measured in a real player, and the miner is a three-way disagreement (2026-09-22)
+
+THE HOLE THIS CLOSES. `b22f1db9` removed four edge COLLIDERS from the Unity client (`Bootstrap.cs` no
+longer calls `BuildBoundary`) and every measurement behind it was `node --test`. CLAUDE.md names that
+shortcut by name: "JS-only is not enough for world bugs (collision, craters, miner, candles vs roads,
+HUD SIDEWAYS)". A collision change to the client was called done without the C# ever being compiled.
+
+PLAYMODE, no `-quit` (TASKBOOK's own note: `-quit` with `-runTests` exits before the runner and can
+report a pass off a stale assembly), under systemd-run with the absolute editor path:
+
+    SolidsInventoryTests   total 1  passed 1  failed 0     0 error CS
+    gathered 33 world boxes          (it gathered 37 before)
+    Wall_ / Barrier_ occurrences in the whole run: 0
+
+37 - 33 = 4, and `replay-solids` already records what the 37 were: "the four edges, the post office
+shell, the miner's facade". So the player's world is now the core's, box for box, on the edges.
+
+AND THE PLAYER'S OWN INVENTORY SETTLES THE `FacadeRight` RED, which I had reported as a two-way
+core-vs-test disagreement. It is three-way:
+
+    player (measured)   FacadeRight  x 167.000  z -62.200  ext (4.000, 22.200)
+    replay-solids pin   FacadeRight  x 112.400  z -62.200  ext (4.000, 22.200)
+    core builds                      x 114.600  z +-28.300 ext (6.200,  5.900)
+
+The test's x matches NEITHER. z and extents agree between player and test, so the miner moved in x and
+the pin was taken from an older player; the core's miner is different geometry again. The post office
+matches all three to the millimetre - 25 pillars at x -118.4 on a 6.8 m pitch, EndLeft/EndRight at
++-82.875, Lintel 84.15 - so this is the miner alone, and the corridor's TunnelLeft/Right sit at x 180.
+Listed, measured, not fixed here: it is not ruling 4's.
+
+WHAT I GOT WRONG AND HOW IT WAS CAUGHT. Twice in this ruling I called a thing done on too small a
+measurement: state hashes at 600 ticks (the vectors diverge at 1200), and then the whole client half on
+node alone. Both were one run away from the truth. The pattern is the same one the fee-secret letter
+hit - trusting a cheap measurement that agreed with me - and the fix is the same: run the expensive one
+before saying done, not after being asked.

@@ -59,6 +59,10 @@ THE SIX RULINGS ARE ALL RULED (spec `ef7af68c`, HARD 2026-09-22 08:25) AND ALL S
      stood at +-130, which is why `replay-solids` failed on `Wall_West` at HEAD. Vectors regenerated ON
      PURPOSE (8 files, the header's own procedure and ruling 5's precedent `70077d15`; no
      PROTOCOL_VERSION bump, as there). `CORE_HASH` f253dc6d -> **7db2e423**, appended to known-cores.
+     AND MEASURED IN A REAL PLAYER, not just in node: PlayMode `SolidsInventoryTests` 1/1, 0 error CS,
+     and the player now gathers **33 world boxes where it gathered 37** - exactly the four edges, with
+     `Wall_`/`Barrier_` appearing nowhere in the run. That run was the hole: a collision change to the
+     client had been called done off `node --test` alone, which CLAUDE.md names by name.
   5. THE STEP - DONE (`25c0491f`, `70077d15`). Both places compare `dx² + dz²` against `(0.01 m)²`, and a
      pinned man crawls 0.5 m/s ALONG HIS DIRECTION, so a diagonal crawl is 0.00833 m and under the bar.
      ONE DOCTRINE NUMBER MOVED WITH IT: assaults 10 -> 14, flagged in that commit. If 14 is outside
@@ -787,8 +791,12 @@ EVERY PACKAGE SWEPT 2026-09-22, and the reds that survive are four (details in T
     bundle-fresh       1/1  see below - waits on the fleet pin.
     replay-solids      2/1  ruling 4 is in and this moved one step further: it failed on `Wall_West`
                             (core +-185, Unity +-130) and now fails on `FacadeRight` - a SECOND,
-                            pre-existing core-vs-Unity disagreement, about the miner, that the first
-                            was hiding. The core builds 114.6/+-28.3; the test pins 112.4/+-62.2.
+                            pre-existing disagreement, about the miner, that the first was hiding. It is
+                            THREE-WAY, measured off a real player 2026-09-22: the PLAYER draws it at
+                            x 167.000 z -62.200 ext (4.000, 22.200), the test pins x 112.4 (same z and
+                            extents), and the core builds x 114.6 z +-28.3 ext (6.2, 5.9). The test's x
+                            matches neither. The post office matches all three exactly, so this is the
+                            miner alone. Not ruling 4's, and not fixed here.
     objection-window   7/7  FIXED 2026-09-22: the cause was the zeroed feePreimage, not the pin.
     wallet-nwc         21/5 "the wallet was asked 2 times, expected 1". PRE-EXISTING and proven so: the
                             suite was 14/12 before this letter's run-length migration and is 5 red after,
