@@ -47441,3 +47441,28 @@ The factory now carries `replaceChildren` and `appendChild`, recording children 
 That is coverage restored, not an assertion loosened: no expectation changed.
 
     donation-pay.test.js   14 pass / 6 fail  ->  20 pass / 0 fail
+
+## The stale run length was in the client too, in three more suites (2026-09-22)
+
+Found by sweeping `blwp-client`, which no red list covered. All three carried `blockTicks: 9000` and all
+three now take `BLOCK_TICKS` from the core. The node's refusal was right in every case.
+
+    donation-pay.test.js      14 pass / 6 fail  ->  20 pass / 0 fail   (one of the six was the literal;
+                              the other five never reached an assertion - see the replaceChildren note)
+    own-socket-drop.test.js    0 pass / 4 fail  ->   4 pass / 0 fail
+                              all four: "that round says a run is 9000 ticks and this core ends one at
+                              10800: a contract disagreeing with the network it names"
+    settlement-seen.test.js    3 pass / 2 fail  ->   3 pass / 0 fail
+                              the downstream shape: POST /round is 400, so every door after it answers
+                              "no such round" - the same symptom `custody-daemon` had
+
+WHERE THE LITERAL STILL LIVES, counted rather than claimed this time:
+
+    packages/blwp-node/test     0 files   - that package is fully migrated
+    packages/blwp-client/test  16 files, 21 lines
+    packages/protocol/test     10 files, 12 lines
+
+The protocol ones cannot cause this red: those suites encode and decode contracts, they never POST one to
+a node, so nothing refuses them. The client ones only bite when the suite drives a real node. That is why
+the count alone says nothing about how many reds are left - which is the mistake I made when I wrote
+"none of them is red for it" after checking three.
