@@ -48263,3 +48263,54 @@ second-closer 2/0 and objection-window 5/2 - and the refusal patch is kept out o
 BOARD CORRECTION. Two lines said objection-window waits on the hold-path retirement, which follows the
 fleet pin. It does not: the cause is the zeroed F, and the fix touches neither the custody enum nor
 THRESHOLD_LN. Both corrected in PRIORITIES.md.
+
+## The zeroed fee secret, fixed and swept (2026-09-22)
+
+THE RULE. `holdFee` refuses an entry whose `feePreimage` is thirty-two zero bytes once a fee is owed,
+and `settleFees` refuses to settle a row stored before that rule. Measured on two players of one round:
+
+    before   2 fee holds, 1 distinct payment hash (66687aad = sha256 of 32 zero bytes)
+    after    2 fee holds, 2 distinct payment hashes
+
+THE GUARD ORDER WAS THE REAL RISK, and only a HEAD baseline caught it. The F check first went in BEFORE
+`if (!this.reaches)`, so a FEDERATION round's seats - which reach no Lightning by design - were told
+"that entry hands over no F" where they used to be told "this node reaches no Lightning". Measured:
+lock-settlement 15/15 -> 13/2, both failures naming fee locks. The board lists that suite as
+timing-flaky, so those two LOOKED like known noise. Running HEAD first is the only reason they were not
+filed as such. The node's own capability is asked first now, then the entry's.
+
+THE SWEEP. 69 fixtures build a paying entry with a zeroed F; only FOUR also walk the fee-hold path:
+
+    custody.test.js          30/5  -> 35/35     its own fixture now mints a real F
+    custody-daemon.test.js   12/1  -> 13/13     same
+    second-closer.test.js     2/0  -> 2/0       "A never took the node fees it served for" now means it
+    window-fixture.js                           new shared `feeSecretOf`, derived from the stake
+                                                preimage so entry ids stay deterministic
+    objection-window.test.js  5/2  -> 7/7       the red this started from
+
+Two assertions stop being vacuous: custody.test.js:305 "keyed on the entry's OWN feePreimage" and
+custody-daemon.test.js:158 "quoted against the entry's own fee preimage" were both checking
+`66687aad...`, which is nobody's own.
+
+33 suite groups swept green across blwp-node, blwp-client and protocol, each run alone or in small
+groups under `timeout 180`: five-of-seven 21/21, pool x4, server, round, quota, verify, verdict,
+close-order, no-quorum, equivocation, canonical, receipt-carry, lobby x3, reconstruct, replay x2,
+run-length, signer-node-committee, entry-fee-door, expiry x3, hold-two-first, federation-invoice,
+stake-committed, settle-threshold, payout-second-signer-node, signer-node-relay, legacy-round-restart,
+winnings-door, forfeit, outage, first-mark, signer-node-lock, the client's socket/pay/checkpoint
+suites, protocol vectors/seed/ghost/slash-conflict, and roster + slash-owing + slash-filing at 30/30.
+
+LOCK-SETTLEMENT'S FLAKINESS IS A NUMBER NOW. Three full runs with the rule: 15/0, 14/1, 15/0. The one
+red recurred ("a round with a loser and no qualifier pays no stake and still pays the seats"), so it was
+isolated with --test-name-pattern and run five times each way:
+
+    HEAD        pass fail fail pass fail      3 of 5 fail
+    with rule   fail pass pass fail pass      2 of 5 fail
+
+MORE flaky without the change than with it. Pre-existing, not caused here, and now recorded as a rate
+rather than the word "flaky".
+
+TOOLING NOTE. `systemd-run --user` does NOT inherit nvm's PATH: the first relaunch died instantly with
+`timeout: failed to run command 'node': No such file or directory` and wrote five 69-byte files that
+looked like runs. Absolute node path required. (And a plain `nohup ... &` inside a tool call is killed
+when the call returns - the first three-run loop lost runs 2 and 3 that way.)

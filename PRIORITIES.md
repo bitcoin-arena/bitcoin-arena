@@ -24,7 +24,7 @@ Top item first. Finish and deploy before starting the next.
 
 ## WHAT THIS BRANCH IS WAITING ON (2026-09-22) - one list, so it is not read off six places
 
-THE FLEET PIN is now `78c501ac` (Daniel 2026-09-22 08:25: generate the pin). Move the fleet off `595f0df3` onto this commit. It blocked, on its own: `bundle-fresh` (the rebuild and the deploy travel
+THE FLEET PIN MOVE IS DONE (Daniel 2026-09-22): **the fleet runs `02eefc04`**, off `595f0df3`. That commit's subject names `78c501ac` because that is what it recorded; the pin the fleet runs is `02eefc04`. What the old pin blocked, on its own: `bundle-fresh` (the rebuild and the deploy travel
 with it); the hold path behind `objection-window`, because the Daily's paid rounds really are
 THRESHOLD_LN (`7d577647b2d8` decoded: custody THRESHOLD_LN, stakeMsat 100000); the `/round` refusal of
 THRESHOLD_LN, which cannot be separated from retiring `custody.js`; AND EVERY CORE CHANGE - §0's step
@@ -36,7 +36,7 @@ cap, the candle width, the map walls - because each moves `CORE_HASH`.
   `donationKeysForNetworkId(b07c4a09)` is **null** in the page's build, so donation verification has no
   authority to check against on the Daily. The gap costs DONATIONS, not joinability.
 
-THE SIX RULINGS ARE NAMED (spec `ef7af68c`, HARD 2026-09-22 08:25) AND FOUR ARE IMPLEMENTED:
+THE SIX RULINGS ARE ALL RULED (spec `ef7af68c`, HARD 2026-09-22 08:25) AND FOUR ARE IMPLEMENTED:
 
   1. THE SLASHING HEIGHT - DONE (`e554dad2`). The arbitration set NAMES it: valid iff
      `census_height <= slash_height <= tip` when they sign, written into the transaction's OP_RETURN and
@@ -48,18 +48,19 @@ THE SIX RULINGS ARE NAMED (spec `ef7af68c`, HARD 2026-09-22 08:25) AND FOUR ARE 
      NET STAKE. A proof naming a player the round has no entry for is refused, not silently empty.
   3. SEVERAL SLASHED NODES - DONE (`e554dad2`). Nothing pooled: each bond pays the players its own proof
      names, and an entry named by two proofs is paid from both bonds.
-  4. THE MAP EDGE - **NOT IMPLEMENTED, HANDED BACK.** §4.16 rules the core owes no edge walls. IT BUILDS
-     FOUR, at +-HALF_X / +-HALF_Z (`map.js:95-98`), whose own comment says they catch "a truck arriving
-     airborne off a fee cliff". My earlier report that nothing spanned a boundary was WRONG and is what
-     the ruling's reasoning rests on. Needs re-ruling knowing the walls exist and what they are for.
+  4. THE MAP EDGE - RULED (Daniel 2026-09-22, re-stated knowing the walls exist): **the edge is a CLAMP,
+     not a wall. The core owes no wall solids, and the client stops drawing walls the core does not
+     build.** NOT YET IMPLEMENTED: `map.js:95-98` still builds four solids at +-HALF_X / +-HALF_Z, and
+     Unity still draws them. Both go, and the edge becomes a clamp; it moves `CORE_HASH`.
   5. THE STEP - DONE (`25c0491f`, `70077d15`). Both places compare `dx² + dz²` against `(0.01 m)²`, and a
      pinned man crawls 0.5 m/s ALONG HIS DIRECTION, so a diagonal crawl is 0.00833 m and under the bar.
      ONE DOCTRINE NUMBER MOVED WITH IT: assaults 10 -> 14, flagged in that commit. If 14 is outside
      doctrine the doctrine row is the fix, not the number.
   6. THE CANDLE LEVER - NOTHING TO DO. Neither lever: the plateau stays 1 m, the ramps 4 m at 25%.
 
-  AND THE CORE CHANGES NEED A FURTHER PIN MOVE: the fleet runs `02eefc04`, which predates rulings 5's
-  core edit, the rebuilt core bundle, the 9 re-pinned goldens and the new core hash `f253dc6d`.
+  AND THE CORE CHANGES NEED A FURTHER PIN MOVE: the fleet runs `02eefc04`, which predates ruling 5's
+  core edit, the rebuilt core bundle, the 9 re-pinned goldens and the new core hash `f253dc6d` - and
+  now also ruling 4's, once the edge walls come out.
 
 Everything below this line is either done, or waiting on one of those.
 
@@ -328,31 +329,58 @@ Nothing spends, and the last test asserts the owing's whole shape to keep it tha
   WHAT REMAINS is only steps 3 and 5: the escrow output and MuSig2 over the arbitration keys, neither
   of which exists in this tree. Nothing on this path spends.
 
-NEXT ITEM, MEASURED AND SIZED, NOT STARTED: **a paying entry that hands over no F.** §23.5 gives the
-node fee its own lock, and on Lightning custody that lock is a hold invoice keyed on
-`sha256(entry.feePreimage)`. An entry whose F is thirty-two zero bytes therefore asks for a hold on
-`66687aad...` - which is not that entry's hash but EVERY zero-F entry's, in every round, on every node.
-Measured on two players of one round: **2 fee holds, 1 distinct payment hash**, both HELD, both settled
-afterwards on a preimage anybody can compute. One HTLC carrying two players' fees, claimable by the
-world. Real Lightning already refuses it - `join.js:833` records lnd answering "cannot use hash of
-all-zeroes preimage" on the Daily, where the consequence was that the 2% was never collected at all -
-and the shipped client mints a random F on a paying round. The node does not, and
-`stake-lock-signer-node.js:137` refuses exactly this entry by name on the FEDERATION path while the
-hold-invoice path has no such check.
+DONE (2026-09-22): **a paying entry that hands over no F.** §23.5 gives the node fee its own lock, and on
+Lightning custody that lock is a hold invoice keyed on `sha256(entry.feePreimage)`. An entry whose F is
+thirty-two zero bytes therefore asked for a hold on `66687aad...` - not that entry's hash but EVERY
+zero-F entry's, in every round, on every node. Measured on two players of one round before the fix:
+**2 fee holds, 1 distinct payment hash**, both HELD, both settled afterwards on a preimage anybody can
+compute - one HTLC carrying two players' fees, claimable by the world. After: **2 holds, 2 hashes.**
 
-  THE FIX IS ONE RULE AND A LARGE SWEEP, which is why it is its own item and not a line in this letter.
-  The rule: `holdFee` refuses a zeroed F on a round that owes a fee, and `settleFees` refuses to settle
-  a row stored before it. Measured with the rule in: objection-window 5/2 -> **7/7**, custody 30/5 ->
-  **35/35** and custody-daemon 12/1 -> **13/13** once their own fixtures mint a real F - and those
-  assertions stop being vacuous, because "keyed on the entry's OWN feePreimage" was true of zeros and
-  said nothing. But **69 fixtures across node, client and protocol build a paying entry with a zeroed
-  F**, and second-closer - green today at 2/0 - goes red on "A never took the node fees it served for",
-  which is the correct complaint: with no F there is no fee to take. The tree is left at HEAD; nothing
-  is half-landed, and the refusal patch is kept out of the tree until the sweep is the item.
+  Real Lightning always refused it - `join.js:833` records lnd answering "cannot use hash of
+  all-zeroes preimage" on the Daily, where the consequence was that the 2% was never collected at all -
+  and the shipped client mints a random F on a paying round. `stake-lock-signer-node.js:137` refuses the
+  same entry by name on the FEDERATION path; only the hold-invoice path accepted it. `holdFee` now
+  refuses it too, and `settleFees` refuses to settle a row stored before that rule.
 
-  AND IT IS NOT BEHIND THE FLEET PIN. The board said twice that objection-window waits on the hold-path
-  retirement, which follows the pin. Measured: the cause is the zeroed F, the fix touches neither
-  `custody.js`'s enum nor THRESHOLD_LN, and both lines are corrected above.
+  THE ORDER OF THE TWO GUARDS WAS THE WHOLE RISK, and only a baseline caught it. The F check went in
+  BEFORE the Lightning-reachability check, so a FEDERATION round's seats - which reach no Lightning by
+  design - were told "that entry hands over no F" instead of "this node reaches no Lightning".
+  `lock-settlement` went 15/15 -> 13/2 on exactly that, both failures naming fee locks. The board lists
+  that suite as timing-flaky, so the failures LOOKED like the known noise; running HEAD first is what
+  showed they were mine. Node capability is asked first now, then the entry.
+
+  THE SWEEP WAS MUCH SMALLER THAN THE 69 FIXTURES SIZED. Only FOUR files build a paying entry AND walk
+  the fee-hold path: `custody.test.js`, `custody-daemon.test.js`, `second-closer.test.js`, and a shared
+  `feeSecretOf` in `window-fixture.js`. The other 65 never reach it. Measured:
+
+    objection-window   5/2  -> 7/7          custody          30/5 -> 35/35
+    custody-daemon    12/1  -> 13/13        second-closer     2/0 -> 2/0, fee now really collectible
+
+  And two assertions stop being vacuous: "keyed on the entry's OWN feePreimage" (custody.test.js:305)
+  and "quoted against the entry's own fee preimage" (custody-daemon.test.js:158) were both checking
+  `66687aad...`, which is nobody's own.
+
+  33 SUITE GROUPS SWEPT GREEN with the rule in, across blwp-node, blwp-client and protocol: pool x4,
+  server, round, quota, verify, verdict, close-order, no-quorum, equivocation, canonical, receipt-carry,
+  lobby x3, reconstruct, replay x2, run-length, signer-node-committee, entry-fee-door, expiry x3,
+  hold-two-first, federation-invoice, stake-committed, settle-threshold, payout-second-signer-node,
+  signer-node-relay, legacy-round-restart, winnings-door, forfeit, outage, first-mark, signer-node-lock,
+  five-of-seven 21/21, the client's socket/pay/checkpoint suites, protocol vectors/seed/ghost/
+  slash-conflict, and the slash work re-verified at 30/30.
+
+  LOCK-SETTLEMENT'S FLAKINESS IS NOW A NUMBER, not a word. Three full runs with the rule: 15/0, 14/1,
+  15/0. The one red - "a round with a loser and no qualifier pays no stake and still pays the seats" -
+  recurred, so it was isolated and run five times each way: **HEAD fails 3 of 5, the rule fails 2 of 5.**
+  It is MORE flaky without the change than with it, so it is pre-existing and not caused here. Named
+  rather than left as "flaky".
+
+  AND IT WAS NEVER BEHIND THE FLEET PIN. The board said twice that objection-window waits on the
+  hold-path retirement, which follows the pin. Measured: the cause was the zeroed F, the fix touches
+  neither the custody enum nor THRESHOLD_LN, and both lines are corrected above.
+
+  (AND MY OWN CLAIM THAT PRIORITIES LINE 61 NAMED THE WRONG COMMIT WAS WRONG, Daniel 2026-09-22: the
+  fleet runs `02eefc04`. `02eefc04`'s subject mentions `78c501ac` because that is what the commit
+  recorded, which I read as the pin itself. The line was right and is left standing.)
 
   (the note below is what that item said before the recorder landed.) Measured 2026-09-22: NEITHER
 slash path has a caller outside its own tests - not `federation-slash.js` (`slashSplit`, the guardian
@@ -751,8 +779,7 @@ EVERY PACKAGE SWEPT 2026-09-22, and the reds that survive are four (details in T
   Numbers, hashes and the ruled-out explanations are in TASKBOOK.md.
     bundle-fresh       1/1  see below - waits on the fleet pin.
     replay-solids      2/1  waits on ruling 4 being re-made: the core DOES build four edge walls.
-    objection-window   5/2  settles on the hash of a zero preimage. NOT behind the pin - measured, see
-                            the fee-secret item below: the cause is the fixtures' zeroed feePreimage.
+    objection-window   7/7  FIXED 2026-09-22: the cause was the zeroed feePreimage, not the pin.
     wallet-nwc         21/5 "the wallet was asked 2 times, expected 1". PRE-EXISTING and proven so: the
                             suite was 14/12 before this letter's run-length migration and is 5 red after,
                             so the migration fixed seven of its twelve and caused none.
@@ -789,9 +816,8 @@ EVERY PACKAGE SWEPT 2026-09-22, and the reds that survive are four (details in T
      that the ruling retired it.)
     replay-solids      2/1  the core builds no map edge walls and Unity draws four. WAITS ON the M1
                             ruling below.
-    objection-window   5/2  the node settles a hold on the wrong payment hash, twice. DOES NOT WAIT ON
-                            the pin, measured 2026-09-22: the hash is sha256 of a zeroed feePreimage,
-                            and fixing it is independent of retiring THRESHOLD_LN.
+    objection-window   7/7  FIXED 2026-09-22. It never waited on the pin: the hash was sha256 of a
+                            zeroed feePreimage, and the fix is independent of retiring THRESHOLD_LN.
 
     (two-titles is green, 2/0, since the counter's sum was taken from the driver instead of restating a
      throttle nothing sends.)
