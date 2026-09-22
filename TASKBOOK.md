@@ -47793,8 +47793,9 @@ is narrower and elsewhere. Not fixed here - the fix is still the pin or a rebuil
 ## What a rebuild would actually change: six lines of dead helper (2026-09-22)
 
 `bundle-fresh` is red and the board says the rebuild "must go with the pin move, in one step, never
-before". That rule's premise was the network-id re-pin. The premise is gone, and this is the evidence -
-built with the bundler's OWN compare mode (`BLWP_BUNDLE_OUT`), so `dist/` was never written:
+before". ONE REASON SOMETIMES GIVEN FOR THAT - that a rebuild would ship a new network id - is wrong, and
+this is the evidence. The RULE STANDS: the rebuild waits because THE DEPLOY TRAVELS WITH THE PIN.
+Built with the bundler's OWN compare mode (`BLWP_BUNDLE_OUT`), so `dist/` was never written:
 
     fresh build vs committed bundle    42 differing lines
     of those, non-comment              6
@@ -47806,9 +47807,11 @@ The six are the shared 75/25 helper added to `constants.js` this letter for the 
 never calls `slashDistribution`, so in the bundle they are dead code. Everything else is comment text.
 
 SO: the deployed page already carries `66f5caba`; a rebuild today would ship the same id, the same
-behaviour, and one unused pure function. "Never before the pin" was written when a rebuild meant shipping
-a NEW network id to a page whose nodes carried the old one. That is no longer what it means.
+behaviour, and one unused pure function. THAT DOES NOT LIFT ANYTHING. Six dead lines of
+`splitNodesDevelopers` give the page no donation keys for `b07c4a09`, do not open the hold path and do
+not retire `custody.js`. Three reds stay red, and we do not deploy on red.
 
 NOT REBUILT AND NOT DEPLOYED - both are Daniel's call and both were ruled off this session. `dist/` is
-clean in git; the comparison build went to the scratchpad. What is reported here is only that the reason
-written beside the rule no longer describes the action.
+clean in git; the comparison build went to the scratchpad. What is reported here is ONE SENTENCE
+CORRECTED - "a rebuild ships a new network id" - and nothing else. The rebuild and the deploy still
+travel with the fleet pin off `595f0df3`, never before.
