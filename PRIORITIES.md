@@ -142,10 +142,14 @@ template is not the build of this source". `blwp-curve.js` and `blwp-core.js` st
 said the bundle carried `b07c4a09` "instead of `06ad7746`"; the source now computes `66f5caba` for
 regtest, so that sentence named a target that has since moved twice. The live cause is simply that the
 client's bundle predates later edits to files it inlines - `constants.js` and `contracts.js` among them,
-which this milestone has rewritten more than once, comments included. Nothing is broken live: the signer
-nodes are pinned at `595f0df3` and the page agrees with them. DEPENDS ON: the live pin moving to HEAD -
-the bundle rebuild and the page deploy go with that move, in one step, never before, so this red is NOT
-to be cleared by rebuilding now.
+which this milestone has rewritten more than once, comments included.
+
+AND THE "NOTHING IS BROKEN LIVE" THAT USED TO SIT HERE WAS WRONG, measured 2026-09-22: the shipped
+bundle already carries `NETWORK_ID_REGTEST = 66f5caba`, while the signer nodes pinned at `595f0df3`
+carry `b07c4a09` (`git show 595f0df3:packages/protocol/src/genesis-ids.js`). The page and the nodes do
+NOT agree - which is the same mismatch the daily-lobby item above reports, not a separate comfort.
+DEPENDS ON: the live pin moving to HEAD - the bundle rebuild and the page deploy go with that move, in
+one step, never before, so this red is NOT to be cleared by rebuilding now.
 
 MEASURED (2026-09-21, round ec9bd34e, `4e9d7244`): stake and fee paid from alice with **no NWC string**,
 DELIVERED at tick 2240, the address named once - alice 996016 -> 996114 sat, the committee -98 +4, the
