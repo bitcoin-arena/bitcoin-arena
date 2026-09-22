@@ -48550,3 +48550,21 @@ WHAT THIS CLOSES AND WHAT IT DOES NOT. The flag "is 14 outside doctrine" is answ
 not what the rows measure, and the rows that fail were failing before ruling 5 moved it. What remains
 is the ruling already parked in that baseline, unchanged by this letter: the 600-tick row or the 20:30
 hold cadence. That is Daniel's, and it is not made here.
+
+## RULED (Daniel 2026-09-22): the cadence stays, the 600-tick row yields
+
+THE HOLD CADENCE STAYS AT 21:20. It is not to be reverted to 20:30. Moving the cadence to chase the row
+would undo a kept decision in order to satisfy numbers that were already red before the assault count
+moved.
+
+THE §4.12 600-TICK ROW IS THE SIDE THAT YIELDS, and is the open rewrite. A new direction needs two
+confirmed readings - ten seconds - so that row cannot be met under the cadence that was kept.
+
+THE COUNT FLAG IS CLOSED. 14 is not what breaks doctrine. The count is not to be reopened.
+
+WHAT THE NEW ROW MUST BE WRITTEN AGAINST: declared-to-happens at 1 of 14, and lulls at 84.1% of ticks.
+Those two were already red in the ASSAULT PROBE baseline and are the real subject.
+
+NOT SUBJECTS. The fail/win split at 75.0% is one assault wide on a sample of twelve: noise, not a
+finding, unless a second sample puts it outside the row on its own. Front movement improved to 4 of 5
+and that row is NOT to be loosened to hide the other two.
