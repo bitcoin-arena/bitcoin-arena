@@ -47224,3 +47224,43 @@ STEP 6, SUITES, BEFORE AND AFTER:
 Nothing was loosened. The suite was rewritten because its premise - that the committee is paid - is the
 withdrawn rule; every assertion in it is stricter than before, including the sum, the seats at zero, the
 leftover order, and `burned` at 0n in four shapes.
+
+## The slash comments and the dead exclusion set now match the rule (2026-09-22)
+
+Four statements were describing a recipient the code no longer pays, and one described machinery the
+refusal replaced.
+
+    slash.js 1144-1147   said "Pass them in `slashed`; they are filtered out and their share goes to
+                         the pool". WRONG ABOUT THE CODE - `slashed` throws now. Rewritten: a slashed
+                         identity in the census is REFUSED, because a slash spends the bond output and
+                         `deriveCensus` has already dropped that node, so a census still listing it is
+                         wrong and patching it quietly would hide that.
+    slash.js hand() doc  described a divisor over the whole set with an excluded share set aside.
+                         Nobody is excluded inside `hand` any more - exclusion happens before it is
+                         called - so the doc says that, and says what happens with nobody to pay.
+    protocol.test.js 405 quoted "half burned or to the remaining honest committee members ... AS FIXED
+                         BY THE ROUND CONTRACT" as the rule. Now states the current one: half to that
+                         round's players, the other half to the census MINUS that round's seats, 75%
+                         nodes and 25% developers, nothing burned, nothing to witnesses.
+    constants.js         the odd satoshi is now named as A CHOICE MADE HERE, not a spec figure.
+
+THE DEAD EXCLUSION SET IS GONE: `hand(who, amount, out = new Set())` took a third argument no caller
+passed, and had two branches consulting it - one filtering the payee list, one moving an excluded share
+to the pool. Both deleted. `hand(who, amount)` now pays exactly the set it is given, and the leftover
+order runs over that same set rather than a filtered copy of it.
+
+CHECKED BEFORE KEEPING THE ODD-SAT RULE, as ordered: `payout.js` names an order for leftovers WITHIN one
+set (`remainderOrder`, ascending H(roundId||pubkey)) and says NOTHING about a 75/25 split, so there was
+no existing rule to reuse. Floor-nodes / remainder-to-developers stays, and the comment now says it is a
+choice. The empty-eligible throw stays: the spec names no recipient, so it refuses and names the sats.
+
+    slash-distribution   9 pass / 0 fail
+    federation-slash    12 pass / 0 fail
+    protocol chunk 2    296 pass / 0 fail   (the chunk holding protocol.test.js)
+    blwp-node 1-20      125 pass / 0 fail
+
+GREP, js and md, excluding dist/ and TASKBOOK history: five hits, and every one says what the rule is
+NOT - two of my own comments in `slash.js`, the header of `slash-distribution.test.js`, the note in
+PRIORITIES, and an unrelated line in `verdict.js` about tally ids ("would put every honest committee at
+one of seven"). No source emits "half burned" at all; the one bundle hit is
+`unity-proto/.../blwp-client.js`, generated output that is stale until the next build and NOT hand-edited.
