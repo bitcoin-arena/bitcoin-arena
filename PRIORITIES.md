@@ -205,18 +205,17 @@ LATER ITEM, NOT THIS LETTER: **give the federation's money law a node path.** No
 or builds the escrow output under the arbitration keys. The clocks, the cap and the liquidation split are
 law that goes red when changed, not a running system.
 
-DONE (2026-09-22, `09dbabfe` then the fix below): **a slashed bond's second half goes to the census minus
-the round's seats, and nothing is burned.** The first commit closed the LEFTOVER paths only - nobody to
-pay, an excluded share, the odd satoshi - and left the main recipient as the withdrawn rule: it paid
-`honestCommittee`, which §5A.3 is the set that SUBTRACTS ("minus the round's own seats (the witnesses)").
-Measured on a clean 100000 sat bond, before: seats 25000 each and the census nothing. After: **players
-50000, seats 0, nodes 37500, developers 12500.** Uneven 100001 -> developers 12501, total exact; 206 ->
-77 over three as 25/26/26, leftovers handed out in the round's own order. An empty eligible set THROWS
-and names its 37500 sat rather than inventing a recipient; a node slashed at that height inside the
-census is refused, not dropped, because `deriveCensus` already filters spent bonds. One shared
-`splitNodesDevelopers` now serves both `slash.js` and `federation-slash.js`. Suites: slash-distribution
-8/0 -> 9/0 (rewritten to the spec numbers, not loosened), federation-slash 12/0, protocol 292/0 and
-296/0, blwp-node files 1-20 125/0.
+DONE (2026-09-22, `ffa4fd75` + `9bf4e6c3`): **where a slashed bond goes, by §5A.3.** Half to that round's
+players; the other half to the active census at the slashing height MINUS that round's own seats, 75% of
+it evenly to those nodes and 25% to the developers. Nothing is burned. The round's witnesses get none of
+that half. A slashed identity still listed in the census is REFUSED, not quietly filtered, because
+`deriveCensus` has already dropped a spent bond. An empty eligible set names its satoshis and stops
+rather than inventing a recipient. One `splitNodesDevelopers` serves both slash paths. The comments and
+the dead exclusion argument on `hand()` now say the same thing the code does. Numbers in TASKBOOK.md.
+
+  STILL LAW, NOT A RUNNING SYSTEM: nothing calls `slashDistribution` or `slashSplit` outside their own
+  tests, so no node runs this from this branch. It goes red when changed; it does not pay anybody yet.
+  That is the standing "give the federation's money law a node path" item above, not a gap in this rule.
 
 §24B (Daniel 2026-09-21, spec `1add4655`, gate overridden 20:01): **a wallet with no backup is warned,
 never refused.** The seed is 24 real BIP-39 words the player can restore anywhere; Settings holds exactly
