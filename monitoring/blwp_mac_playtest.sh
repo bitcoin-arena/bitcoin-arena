@@ -6,6 +6,11 @@
 # that answers in 0.52 s to curl took 8.7 s inside such a tab, past the client's ten second budget. The Mac has a
 # Metal GPU and no SwiftShader, so a page there runs at a player's speed.
 #
+# RETIRED BY RULING (Daniel 2026-09-20 15:12): "Live Chrome playtests run on the Beelink only. Do not use
+# the MacBook." This script IS the MacBook path, so its 9341/9342 are left alone - they are what it talks
+# to - but nothing should be driven through it any more. The Beelink's two playtest Chromes are 9351 and
+# 9352, and every probe and suite defaults to those now.
+#
 #   start    the two headless-shell browsers on the Mac (CDP 9341 and 9342), through its own launcher
 #   stop     both of them
 #   status   what the Mac says it is running

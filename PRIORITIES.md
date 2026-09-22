@@ -634,9 +634,11 @@ EVERY PACKAGE SWEPT 2026-09-22, and the reds that survive are four (details in T
   explanations are in TASKBOOK.md.
     bundle-fresh       1/1  dist and the template are not the build of this source. WAITS ON the fleet
                             pin; the rebuild and the deploy travel with it, never before.
-    (objective-markers is GREEN, 1/0: it defaulted to CDP 9341, the MacBook's port from the HARD that
-     2026-09-20 15:12 replaced with "the Beelink only". The Beelink's Chromes are 9351/9352; the default
-     follows the ruling in force now and the suite passes in 18.2 s against the Daily.)
+    (objective-markers is GREEN, 1/0, and so is the rest of that leftover: ONE suite and EIGHTEEN probe
+     tools defaulted to the MacBook's CDP 9341/9342, from the HARD that 2026-09-20 15:12 replaced with
+     "the Beelink only". All nineteen default to 9351/9352 now, each keeping its override;
+     `monitoring/blwp_mac_playtest.sh` keeps its ports because it IS the Mac path, and says at its head
+     that the ruling retired it.)
     replay-solids      2/1  the core builds no map edge walls and Unity draws four. WAITS ON the M1
                             ruling below.
     objection-window   5/2  the node settles a hold on the wrong payment hash, twice. WAITS ON the
