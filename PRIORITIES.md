@@ -645,8 +645,13 @@ EVERY PACKAGE SWEPT 2026-09-22, and the reds that survive are four (details in T
 
   THE THREE THAT SURVIVE - one line each, cause and what it waits on. Numbers, hashes and the ruled-out
   explanations are in TASKBOOK.md. Each waits on the fleet pin or a ruling; none waits on work.
-    bundle-fresh       1/1  dist and the template are not the build of this source. WAITS ON the fleet
-                            pin; the rebuild and the deploy travel with it, never before.
+    bundle-fresh       1/1  dist and the template are not the build of this source. MEASURED 2026-09-22
+                            with the bundler's own compare mode (`dist/` not written): a fresh build
+                            differs by 42 lines, only SIX non-comment, and those six are the unused
+                            `splitNodesDevelopers` helper this letter added. Both carry `66f5caba`, so a
+                            REBUILD CHANGES NO NETWORK ID. The "never before the pin" rule was written
+                            when a rebuild meant shipping a new id to nodes on the old one; it no longer
+                            means that. Still not rebuilt or deployed - that is Daniel's call.
     (objective-markers is GREEN, 1/0, and so is the rest of that leftover: ONE suite and EIGHTEEN probe
      tools defaulted to the MacBook's CDP 9341/9342, from the HARD that 2026-09-20 15:12 replaced with
      "the Beelink only". All nineteen default to 9351/9352 now, each keeping its override;

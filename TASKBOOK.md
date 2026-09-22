@@ -47789,3 +47789,26 @@ VERIFICATION, not joinability.
 This is worth having exactly because the board's version sent effort at the wrong thing: "no round is
 joinable" invites moving the pin to make the lobby work, when the lobby already works and what is broken
 is narrower and elsewhere. Not fixed here - the fix is still the pin or a rebuild, and both are ruled.
+
+## What a rebuild would actually change: six lines of dead helper (2026-09-22)
+
+`bundle-fresh` is red and the board says the rebuild "must go with the pin move, in one step, never
+before". That rule's premise was the network-id re-pin. The premise is gone, and this is the evidence -
+built with the bundler's OWN compare mode (`BLWP_BUNDLE_OUT`), so `dist/` was never written:
+
+    fresh build vs committed bundle    42 differing lines
+    of those, non-comment              6
+    the six                            const NODE_SHARE_PCT = 75n;
+                                       const splitNodesDevelopers = (amount) => { ... };
+    NETWORK_ID_REGTEST, both           66f5caba - A REBUILD CHANGES NO ID
+
+The six are the shared 75/25 helper added to `constants.js` this letter for the slash split. The client
+never calls `slashDistribution`, so in the bundle they are dead code. Everything else is comment text.
+
+SO: the deployed page already carries `66f5caba`; a rebuild today would ship the same id, the same
+behaviour, and one unused pure function. "Never before the pin" was written when a rebuild meant shipping
+a NEW network id to a page whose nodes carried the old one. That is no longer what it means.
+
+NOT REBUILT AND NOT DEPLOYED - both are Daniel's call and both were ruled off this session. `dist/` is
+clean in git; the comparison build went to the scratchpad. What is reported here is only that the reason
+written beside the rule no longer describes the action.
