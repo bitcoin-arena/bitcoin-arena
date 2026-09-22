@@ -47526,3 +47526,44 @@ behind when the driver moved.
 
 Both of this suite's reds turned out to be leftovers of a migration done elsewhere: the run length
 (`blockTicks: 9000`, fixed earlier today) and now the driver's throttle.
+
+## replay-solids: the map's edge walls are not in the core's boxes (2026-09-22)
+
+This one is NOT a fixture leftover like the run length and the throttle were. Measured off the core, with
+no server:
+
+    MAP_BOXES                106   and `mapSolids` returns exactly 106
+    map.js:65 records why    "37 map + 41 miner corridor + 4 coin stacks + 24 post office mouths"
+
+So the old assertion `assert.equal(s.n, 37, 'a running player gathered 37 world boxes')` compared the
+WHOLE count against the MAP SUBTOTAL - a total against a part of itself - and went red the day the
+corridor, the stacks and the mouths were added on purpose. That line is gone; the total is still checked
+against `MAP_BOXES` on the line above, and every named map box is still checked one by one below.
+
+AND UNDERNEATH IT, THE REAL ONE. With that stale comparison out of the way the suite reaches its actual
+cross-check and fails there:
+
+    Wall_West is not among the core's boxes
+
+Checked all four, with the core's own HALF_X / HALF_Z:
+
+    Wall_West  (-130, 0, 1.5, 88)    MISSING
+    Wall_East  ( 130, 0, 1.5, 88)    MISSING
+    Wall_North (0, -85, 133, 1.5)    MISSING
+    Wall_South (0,  85, 133, 1.5)    MISSING
+
+Nothing in the 106 spans a boundary at all - the outermost boxes are structures (coin stacks at cx 183,
+post office mouths at cx 170). And the numbers say where the ±130 came from:
+
+    HALF_X          185      the world's half width TODAY
+    RELIEF_HALF_X   130      the relief grid's, and the coordinate the test's walls sit on
+
+So the walls the test expects are on the OLD boundary, and the core builds no edge walls on the new one
+either. `SolidsInventoryTests` gathered those four off a running Unity player, and §M1's rule is that
+"the map's boxes are the core's now ... so the core's boxes and the ones Unity draws cannot drift".
+
+THE RULING THIS NEEDS, and I am not taking it: does the core owe edge walls as solids at ±185 / ±85, or
+is the boundary held some other way and Unity should stop drawing walls the core does not have? Either
+answer closes it; guessing either way would put a wall in the simulator or take one out of the picture.
+
+    replay-solids.test.js   2 pass / 1 fail, on the cross-check instead of on the subtotal
