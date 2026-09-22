@@ -634,8 +634,9 @@ EVERY PACKAGE SWEPT 2026-09-22, and the reds that survive are four (details in T
   explanations are in TASKBOOK.md.
     bundle-fresh       1/1  dist and the template are not the build of this source. WAITS ON the fleet
                             pin; the rebuild and the deploy travel with it, never before.
-    objective-markers  0/1  needs a live Chrome on CDP 9341. WAITS ON a playtest browser; an
-                            environment, not a defect, and not turned into a silent skip.
+    (objective-markers is GREEN, 1/0: it defaulted to CDP 9341, the MacBook's port from the HARD that
+     2026-09-20 15:12 replaced with "the Beelink only". The Beelink's Chromes are 9351/9352; the default
+     follows the ruling in force now and the suite passes in 18.2 s against the Daily.)
     replay-solids      2/1  the core builds no map edge walls and Unity draws four. WAITS ON the M1
                             ruling below.
     objection-window   5/2  the node settles a hold on the wrong payment hash, twice. WAITS ON the

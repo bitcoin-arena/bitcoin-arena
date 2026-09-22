@@ -47665,3 +47665,29 @@ so narrowing means more candles rather than gaps.
 NOT CHANGED. Both levers are core constants: either moves CORE_HASH and the network id, which must
 travel with the fleet pin. And which lever to pull is a ruling, because one of them reopens passability
 and the other changes how much of the field the chart occupies.
+
+## objective-markers was never a red: it was pointing at the retired machine (2026-09-22)
+
+I listed this as "needs a live Chrome on CDP 9341 - an environment, not a defect" and left it. That was
+wrong on the part that mattered: the port.
+
+    the file's own line 8   "the page is the Daily on Daniel's MacBook (HARD 2026-09-18 19:05: live
+                             Chrome runs there, CDP 9341/9342 forwarded)"
+    the HARD in force       Daniel 2026-09-20 15:12: "Live Chrome playtests run on the Beelink only.
+                             Do not use the MacBook."
+
+So the default was the MacBook's forwarded port, from a ruling the next day replaced. On the Beelink -
+which is where this runs - the two playtest Chromes are 9351 and 9352, and both were sitting idle at
+about:blank. Opened the Daily on 9351 and the suite went green at once:
+
+    BLWP_CDP_PORT=9351   1 pass / 0 fail, 18.2 s
+    default now 9351     1 pass / 0 fail          (BLWP_CDP_PORT still overrides)
+
+Nothing was deployed and nothing was rebuilt to get this: one idle tab was navigated to the Daily.
+
+WHAT I GOT WRONG, worth keeping: "an environment, not a defect" is an easy place to put a red and stop
+looking. The environment was fine - three live browsers' worth of it - and the test was reading a
+superseded ruling. The standing rule says do not refuse a Chrome test, and refusing it is effectively
+what I did by filing it and moving on.
+
+    reds in the tree   4 -> 3
