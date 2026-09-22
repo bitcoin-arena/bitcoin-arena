@@ -47815,3 +47815,34 @@ NOT REBUILT AND NOT DEPLOYED - both are Daniel's call and both were ruled off th
 clean in git; the comparison build went to the scratchpad. What is reported here is ONE SENTENCE
 CORRECTED - "a rebuild ships a new network id" - and nothing else. The rebuild and the deploy still
 travel with the fleet pin off `595f0df3`, never before.
+
+## The fleet pin moved off 595f0df3 onto 02eefc04 (2026-09-22)
+
+Authorised by HARD 08:25. Checked first that the target contains the work: `78c501ac` IS an ancestor of
+`02eefc04`. The pinned checkout was detached at `595f0df3` with no tracked modifications - only stray
+`CPU.*.cpuprofile` files, untracked - so it was clean to move.
+
+    /mnt/bitcoin/blwp-2of2/code   595f0df3 -> 02eefc04
+    that checkout's NETWORK_ID_REGTEST   b07c4a09 -> 66f5caba
+    blwp-daily-signer-nodes       restarted, active, MainPID cwd
+                                  /mnt/bitcoin/blwp-2of2/code/packages/blwp-node
+
+BEFORE, node de4dd194444f: 3 rounds - b99244ee free, 0ac57b18 paid, d945baeb free.
+AFTER: 5 rounds, both tunnels 200 (A sensitivity-ensures-emotions-casa, B flight-costa-nails-watched).
+
+AND THE GAP IS CLOSING, read off the contracts themselves:
+
+    0ac57b18  networkId b07c4a09   opened BEFORE the restart
+    0f9a5ecc  networkId b07c4a09   opened in the overlap
+    c230bda7  networkId 66f5caba   opened AFTER  <- the page's own id
+
+So new rounds now carry the id the deployed page carries. The old ones age out as the keeper closes them;
+nothing had to be rebuilt or deployed to make that happen.
+
+The page still lists and drives: `window.BLWP_LOBBY` polled twelve times over a minute shows the same two
+rows every read - `634df84b` free and `c230bda7` PAYING - and `c230bda7` is the round on the new id.
+
+WHAT THIS DOES NOT DO: it does not retire `custody.js`, open the hold path, or add a `/round` refusal.
+`c230bda7` is still custody THRESHOLD_LN at 100000 msat - the Daily opens THRESHOLD_LN rounds because
+`run-2of2.mjs:63` says so, and that is a separate slice. The six rulings are with the spec session and
+none was taken here.
