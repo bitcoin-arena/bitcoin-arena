@@ -93,9 +93,10 @@ byte mapping is guarded meanwhile. Nothing here is blocked on a decision; it is 
   is joinable there. The wallet surface on the daily URL is fine; the lobby is not. Moving the pin is a
   fleet decision, not a page fix.
 
-  LATER ITEM, NOT THIS LETTER: **a paid row needs a bond that names a guardian.** `regtest-bond.mjs`
-  posts `guardianOf: []`, so `federationIsBonded` counts zero of the federation's threshold and the node
-  refuses a paying round by name - correctly. Belongs with the guardians/federation work below.
+  LATER ITEM, THE FLEET CALL-SITE ONLY: **a paid row needs a bond that names a guardian.** The tool takes
+  it now (`postBond({ guardianOf })`, `d353ba08`) and the seven-node federation round proves it works -
+  two bonded operators refused by name, three opened and settled. What is left is the FLEET call-site,
+  which still passes nothing, so a paid row on the Daily is still refused. That is the parked fleet letter.
 
   LATER ITEM, ON THE PLAYABLE-CLIENT LETTER: **the session does not attach.** "[blwp] no session yet: the
   page has named no node" - the core drives but `BLWP_ROUND` stays false. Measured here only to show the
@@ -930,13 +931,15 @@ CLOSED SINCE, and two of them were my misreadings rather than faults:
   on the ground, so a pinned team must look halted to its neighbour: 426193 of 426193 pinned team-ticks do, and on
   86.5% of them the timer would have had the team rushing.
 
-TWO CORE HOLES ARE OPEN, and they are why this item is not closed:
-1. **The shell clause does not exist.** §11.5: a shell landing inside 8 m of a man - hit or miss - adds 60 to his
-   team. Nothing in the core does it. The hit half is buildable now; the miss half needs a landing point that
-   waits on §4.4.
-2. **A bomb adds 300 per MAN, not per TEAM** (sim.js, inside the per-man loop). A team with two men in one blast
-   takes 600 and is clamped there, so it stays pinned 8.0 s instead of the section's 3.0 s. Bombs open 36.4% of
-   all pinned episodes, so this is a live path.
+BOTH CORE HOLES ARE CLOSED - this list was stale, checked 2026-09-22 against the code and the suite:
+1. **The shell clause exists.** `SHELL_PIN_REACH` is 8 m in `tactics.js:103` and `sim.js` calls
+   `pinTeamsWithin(..., SHELL_PIN_REACH)` on BOTH shell paths (1841 and 1857). `tactics.test.js` carries the
+   courier case the 180 s drives cannot reach, constructed on purpose.
+2. **The bomb lands once per team.** `pinTeamsWithin` fills `blastTeams` and adds to each team once
+   (`sim.js:152-171`); the bomb goes through it at 1215 with `SUPP_BOMB`. The per-man charge ended 2026-09-20,
+   as that function's own comment records, and the suite asserts the word does not leak to the next team or
+   across the seam.
+   core tactics 24 pass / 0 fail.
 
 AND IT KNOCKED §11.3's ROW DOWN: cover occupancy 64.7% against a 70% bar, attributed to the crawl - 746 of 1114
 lost reached man-ticks are pinned men who cannot cross at 0.5 m/s, 368 are men crossing into the pinned bucket,
