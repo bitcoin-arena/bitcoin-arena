@@ -24,15 +24,22 @@ Top item first. Finish and deploy before starting the next.
 
 ## WHAT THIS BRANCH IS WAITING ON (2026-09-22) - one list, so it is not read off six places
 
-THE FLEET PIN MOVE IS DONE (Daniel 2026-09-22): **the fleet runs `02eefc04`**, off `595f0df3`. That commit's subject names `78c501ac` because that is what it recorded; the pin the fleet runs is `02eefc04`. WHAT THE MOVE TO `02eefc04` CLEARED: `bundle-fresh`, because the rebuild and the
-deploy travel with it; and the `/round` refusal of THRESHOLD_LN, which cannot be separated from
-retiring `custody.js` (the Daily's paid rounds really are THRESHOLD_LN - `7d577647b2d8` decoded:
-custody THRESHOLD_LN, stakeMsat 100000).
+THE FLEET PIN MOVE IS DONE (Daniel 2026-09-22): **the fleet runs `02eefc04`**, off `595f0df3`. That commit's subject names `78c501ac` because that is what it recorded; the pin the fleet runs is `02eefc04`. WHAT THE MOVE TO `02eefc04` CLEARED, node-side only: the `/round` refusal of
+THRESHOLD_LN, which cannot be separated from retiring `custody.js` on that pin (the Daily's paid rounds
+really are THRESHOLD_LN - `7d577647b2d8` decoded: custody THRESHOLD_LN, stakeMsat 100000). Not to be
+reopened unless a fresh probe shows the refusal still happens on `02eefc04`.
 
-WHAT THE PIN THE FLEET RUNS NOW STILL BLOCKS, present tense: **every core change.** That is §0's step
-cap (ruling 5), the candle width, and the map walls (ruling 4) - all three ABSENT from `02eefc04`, each
-moving `CORE_HASH`. Leaving `595f0df3` did not resolve them, and this agrees with the six-rulings line
-below: rulings 4 and 5 are settled in the repository and are NOT on the fleet.
+WHAT THE PIN THE FLEET RUNS NOW STILL BLOCKS, present tense: **every core change, AND
+`bundle-fresh`.** The core changes are §0's step cap (ruling 5), the candle width, and the map walls
+(ruling 4) - all three ABSENT from `02eefc04`, each moving `CORE_HASH`. Leaving `595f0df3` did not
+resolve them, and this agrees with the six-rulings line below: rulings 4 and 5 are settled in the
+repository and are NOT on the fleet.
+
+  AND `bundle-fresh` IS BLOCKED BECAUSE THE PIN IS NOT HEAD, not because the fleet is still on
+  `595f0df3`. It is 1/1 red on `blwp-client.js`. A rebuild and page deploy now would ship a page built
+  from HEAD - carrying rulings 4 and 5 and `CORE_HASH` `7db2e423` - against nodes at `02eefc04` that
+  have neither: the page-versus-nodes split this board exists to prevent, the same shape as the id gap
+  under the old pin. It is NOT to be cleared by rebuilding now.
 
   WHAT THE ID GAP COST, and it was the OLD pin: the page carries `66f5caba` and rounds opened at
   `595f0df3` carried `b07c4a09`, so `donationKeysForNetworkId(b07c4a09)` was **null** in the page's build
@@ -270,12 +277,13 @@ regtest, so that sentence named a target that has since moved twice. The live ca
 client's bundle predates later edits to files it inlines - `constants.js` and `contracts.js` among them,
 which this milestone has rewritten more than once, comments included.
 
-AND THE "NOTHING IS BROKEN LIVE" THAT USED TO SIT HERE WAS WRONG, measured 2026-09-22: the shipped
-bundle already carries `NETWORK_ID_REGTEST = 66f5caba`, while the signer nodes pinned at `595f0df3`
-carry `b07c4a09` (`git show 595f0df3:packages/protocol/src/genesis-ids.js`). The page and the nodes do
-NOT agree - which is the same mismatch the daily-lobby item above reports, not a separate comfort.
-DEPENDS ON: the live pin moving to HEAD - the bundle rebuild and the page deploy go with that move, in
-one step, never before, so this red is NOT to be cleared by rebuilding now.
+AND THE PAGE-VERSUS-NODES DISAGREEMENT WAS THE OLD PIN, present tense: the shipped bundle carries
+`NETWORK_ID_REGTEST = 66f5caba`, and `595f0df3` carried `b07c4a09`
+(`git show 595f0df3:packages/protocol/src/genesis-ids.js`), so under that pin the page had no authority
+to check against. At `02eefc04` both sides are `66f5caba` - checked at the pin itself, string-identical
+to HEAD - so **the page and the nodes agree**. DEPENDS ON, still: the live pin reaching **HEAD** - the
+bundle rebuild and the page deploy go with that move, in one step, never before, so this red is NOT to
+be cleared by rebuilding now.
 
 MEASURED (2026-09-21, round ec9bd34e, `4e9d7244`): stake and fee paid from alice with **no NWC string**,
 DELIVERED at tick 2240, the address named once - alice 996016 -> 996114 sat, the committee -98 +4, the
@@ -849,7 +857,8 @@ EVERY PACKAGE SWEPT 2026-09-22, and the reds that survive are four (details in T
 
   THE REDS AS OF 2026-09-22, after the six rulings landed - one line each, cause and what it waits on.
   Numbers, hashes and the ruled-out explanations are in TASKBOOK.md.
-    bundle-fresh       1/1  see below - waits on the fleet pin.
+    bundle-fresh       1/1  still red on `blwp-client.js`; waits on the fleet pin reaching HEAD, not
+                            merely on leaving 595f0df3. See below.
     replay-solids      2/1  ruling 4 is in and this moved one step further: it failed on `Wall_West`
                             (core +-185, Unity +-130) and now fails on `FacadeRight` - a SECOND,
                             pre-existing disagreement, about the miner, that the first was hiding. It is

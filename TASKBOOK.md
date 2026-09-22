@@ -48658,3 +48658,34 @@ NOT TOUCHED: lulls stay written at 25-60% and stay red at 76.9 / 77.5% - a row m
 and no row in that table was ever restated for being unmet. Fail/win stays closed as noise, confirmed
 on a disjoint 20-seed block at 58.7%. Front movement stays as written and stays red at 13-14 of 20; it
 is not loosened. No core, no C#, no cadence, no new coupling.
+
+## bundle-fresh is blocked by the pin not being HEAD, not by leaving 595f0df3 (2026-09-22)
+
+RULED (Daniel 2026-09-22). The waiting-on block had been split into what the move to `02eefc04`
+cleared and what it still blocks, and `bundle-fresh` was put on the cleared side. That was wrong, and
+the board contradicted itself in three places at once:
+
+    line 27    "WHAT THE MOVE TO 02eefc04 CLEARED: bundle-fresh"
+    line 276   "DEPENDS ON: the live pin moving to HEAD ... this red is NOT to be cleared by
+                rebuilding now"
+    line 852   "bundle-fresh 1/1 see below - waits on the fleet pin"
+
+`02eefc04` IS NOT HEAD, so the dependency is unmet and the move cleared nothing here. Confirmed by
+running it: `bundle-fresh` 1/1, red on `blwp-client.js`.
+
+WHY IT CANNOT BE CLEARED BY REBUILDING. A rebuild and page deploy now would ship a page built from HEAD
+- carrying rulings 4 and 5 and `CORE_HASH` 7db2e423 - against nodes at `02eefc04` that have neither.
+That is the page-versus-nodes split the board exists to prevent, and it is the same shape as the id gap
+under the old pin: one side of the deploy moving without the other.
+
+WHAT CHANGED ON THE BOARD, so the four places agree:
+  - `bundle-fresh` moved to the STILL-BLOCKED half, present tense, blocked because the pin is not HEAD.
+  - The cleared half now carries only the `/round` refusal of THRESHOLD_LN, as a node-side fact of
+    retiring `custody.js` on `02eefc04`, not to be reopened unless a fresh probe shows the refusal
+    still happens on that pin.
+  - The "page and the nodes do NOT agree" paragraph was the stale half and is rewritten present tense:
+    the disagreement was the OLD pin, and at `02eefc04` both sides are 66f5caba, checked at the pin.
+    Its "DEPENDS ON" now names the pin reaching HEAD rather than merely leaving 595f0df3.
+  - The reds table line matches: still red, waits on the pin reaching HEAD.
+  - Every core change stays in the still-blocked half: step cap (ruling 5), candle width, map walls
+    (ruling 4), all three absent from `02eefc04`. None is written as having reached the fleet.
