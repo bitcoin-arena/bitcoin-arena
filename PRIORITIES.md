@@ -655,8 +655,21 @@ EVERY PACKAGE SWEPT 2026-09-22, and the reds that survive are four (details in T
                   fixed without changing one expectation: donation-pay 14/6 -> 20/0, own-socket-drop
                   0/4 -> 4/0, settlement-seen 3/2 -> 3/0, player-copy 2/1 -> 3/0.
 
-  THE THREE THAT SURVIVE - one line each, cause and what it waits on. Numbers, hashes and the ruled-out
-  explanations are in TASKBOOK.md. Each waits on the fleet pin or a ruling; none waits on work.
+  THE REDS AS OF 2026-09-22, after the six rulings landed - one line each, cause and what it waits on.
+  Numbers, hashes and the ruled-out explanations are in TASKBOOK.md.
+    bundle-fresh       1/1  see below - waits on the fleet pin.
+    replay-solids      2/1  waits on ruling 4 being re-made: the core DOES build four edge walls.
+    objection-window   5/2  settles on the hash of a zero preimage. The hold path, behind the pin.
+    wallet-nwc         21/5 "the wallet was asked 2 times, expected 1". PRE-EXISTING and proven so: the
+                            suite was 14/12 before this letter's run-length migration and is 5 red after,
+                            so the migration fixed seven of its twelve and caused none.
+    discovery          17/1 the scanner "no file in the client reads an address off the page" flags
+                            `client.js: /window\s*\./`. A FALSE POSITIVE: `client.js:695` has a LOCAL
+                            VARIABLE named `window`, a sliding window of batches. Not loosened - the
+                            fixes are to rename the local or teach the scanner about declarations, and
+                            both are somebody's call. `client.js` last changed at `f4e3e5cf`.
+    (bundle.test.js and ghost-label.test.js still hold a `blockTicks: 9000` literal; neither drives a
+     node, so neither can be refused for it.)
     bundle-fresh       1/1  source is SIX non-comment lines ahead of the committed bundle - the unused
                             `splitNodesDevelopers` helper this letter added, which the client never
                             calls. The rebuild WAITS ON THE FLEET PIN BECAUSE THE DEPLOY TRAVELS WITH IT,
