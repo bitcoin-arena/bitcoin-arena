@@ -136,12 +136,16 @@ sets re-signed under it by the same two authority keys. protocol/genesis 3/3.
 LISTED - ghost-live "the load is what moves the picture": a loaded run is drawn byte-identical to the same
 inputs unloaded (x -50.28 z -8.44 both), which needs the core, not the test.
 
-LISTED - **bundle-fresh is red on `blwp-client.js`, and it is the re-pin's tail.** The curve red is gone:
-`blwp-curve.js` and `blwp-core.js` both measure FRESH now. `blwp-client.js` does not - re-pinning the
-network ids moved a constant that is bundled into the page's money script, and the shipped bundle still
-carries the old regtest id `b07c4a09` instead of `06ad7746`. Nothing is broken live: the signer nodes are
-pinned at `595f0df3`, which carries the old id too, so page and nodes agree. DEPENDS ON: the live pin
-moving to HEAD - the bundle rebuild and the page deploy must go with that move, in one step, never before.
+LISTED - **bundle-fresh is red on `blwp-client.js`, and the reason is broader than the re-pin.** Still
+red, re-measured 2026-09-22: 1 pass / 1 fail, "dist is not the build of this source" AND "the WebGL
+template is not the build of this source". `blwp-curve.js` and `blwp-core.js` stay fresh. The old note
+said the bundle carried `b07c4a09` "instead of `06ad7746`"; the source now computes `66f5caba` for
+regtest, so that sentence named a target that has since moved twice. The live cause is simply that the
+client's bundle predates later edits to files it inlines - `constants.js` and `contracts.js` among them,
+which this milestone has rewritten more than once, comments included. Nothing is broken live: the signer
+nodes are pinned at `595f0df3` and the page agrees with them. DEPENDS ON: the live pin moving to HEAD -
+the bundle rebuild and the page deploy go with that move, in one step, never before, so this red is NOT
+to be cleared by rebuilding now.
 
 MEASURED (2026-09-21, round ec9bd34e, `4e9d7244`): stake and fee paid from alice with **no NWC string**,
 DELIVERED at tick 2240, the address named once - alice 996016 -> 996114 sat, the committee -98 +4, the
