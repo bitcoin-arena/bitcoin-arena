@@ -48000,3 +48000,29 @@ TWO REDS THAT ARE NOT THIS, AND NOT MINE:
     `window` - a sliding window of batches - and `window.map(` matches the scanner's pattern. I did not
     touch `client.js`; it last changed at `f4e3e5cf`. Not loosened, because the honest fixes are to
     rename the local or to teach the scanner about declarations, and both are somebody's call.
+
+## The page reached past its own vault, and it was my §24B commit that did it (2026-09-22)
+
+Found by re-running the client in SMALL groups, after truncated chunks had hidden reds twice.
+
+`join.test.js` asserts the page names the browser's durable store exactly ONCE, inside `vault()`:
+`assert.equal((page.match(/localStorage/g) || []).length, 1, 'the page names localStorage outside
+vault()')`. It read 2.
+
+    index.html:391   inside `vault()`                      the sanctioned one
+    index.html:1397  `backupStore()`, a second raw reach   MINE, added by `c2437401` (§24B)
+
+So the backup-verified flag has been bypassing the vault since §24B landed, and this test has been red
+that whole time - unseen because every client sweep I ran was cut off at the cap before reaching it.
+
+FIXED BY GOING THROUGH THE VAULT, not by relaxing the count. What changes: where the durable store cannot
+be had, `vault()` hands back the tab's own store, so the flag now lasts the session instead of vanishing
+- the way the rest of the page already degrades. The flag stays bound to the seed's digest, so a
+different wallet still never reads another's mark.
+
+AND A SECOND LESSON IN THE SAME TEST: my first fix made it WORSE - 4 occurrences, not 1 - because the
+comment I wrote explaining the change used the word three times, and the scanner counts the string
+anywhere in the file, comments included. Reworded to name the thing without spelling it.
+
+    join.test.js        11 pass / 1 fail  ->  12 pass / 0 fail
+    backup-gate + seed-import                13 pass / 0 fail   (§24B's own behaviour, unmoved)
