@@ -30,11 +30,11 @@ THRESHOLD_LN (`7d577647b2d8` decoded: custody THRESHOLD_LN, stakeMsat 100000); t
 THRESHOLD_LN, which cannot be separated from retiring `custody.js`; AND EVERY CORE CHANGE - §0's step
 cap, the candle width, the map walls - because each moves `CORE_HASH`.
 
-  WHAT THE ID GAP COSTS, measured 2026-09-22 and NOT what was written here before: the page carries
-  `66f5caba` and every live round carries `b07c4a09`, and rounds still LIST, JOIN and DRIVE - the client
-  looks donation keys up BY the round's own id and never compares it to its own. What breaks is narrower:
-  `donationKeysForNetworkId(b07c4a09)` is **null** in the page's build, so donation verification has no
-  authority to check against on the Daily. The gap costs DONATIONS, not joinability.
+  WHAT THE ID GAP COST, and it was the OLD pin: the page carries `66f5caba` and rounds opened at
+  `595f0df3` carried `b07c4a09`, so `donationKeysForNetworkId(b07c4a09)` was **null** in the page's build
+  and donation verification had no authority to check against. Joinability was never affected; rounds
+  listed, joined and drove throughout. The pin the fleet now runs, `02eefc04`, carries `66f5caba`
+  byte-identical to HEAD, so both sides agree and the gap is closed; it costs nothing today.
 
 THE SIX RULINGS ARE ALL RULED (spec `ef7af68c`, HARD 2026-09-22 08:25) AND ALL SIX ARE SETTLED **IN THE
 REPOSITORY** - which is NOT fleet state: **rulings 4 and 5 are NOT on the fleet, because the pin the fleet runs
