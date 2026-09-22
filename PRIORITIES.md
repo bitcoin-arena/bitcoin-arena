@@ -85,6 +85,18 @@ THE SIX RULINGS ARE ALL RULED (spec `ef7af68c`, HARD 2026-09-22 08:25) AND ALL S
          6.8 m pitch with hz 0.9 and that lane falls between Pillar13 and Pillar14 - the gap IS the bay
          mouth. Split into two stronger claims: the lane is a doorway under a lintel, and the shell is
          solid where it is not a mouth. Both re-stated tests pass, 2/2, 0 error CS.
+
+     AND PLAYMODE IS BACK AT ITS BASELINE, 14 RED NAME FOR NAME (257/229/14/14): the nine
+     Battlefield.Army readers, RoadsAreActuallyDrawn, the two MushroomResting rows, GhostAcrossTheDoors
+     and Soldiers. Four full runs were needed to say that honestly, because the suite has THREE
+     intermittent reds, not one: `GhostAcrossTheDoors` (long named), `PostOfficeTests.TheGogglesAnimate`
+     (named, fired only in the walls-restored run) and `RampReadyTests.TheRealTransactions...`, which
+     went red, red, GREEN under the clamp and green with the walls - so it is a flake and not this
+     change's. It was chased down with the same four-cell table as the other two rather than assumed.
+     AND THE RE-STATED TESTS ARE NOT TAUTOLOGIES: a full run with the walls PUT BACK fails both of them,
+     the edge test on the `Wall_`/`Barrier_` colliders and the post office test on the low box the west
+     edge wall puts in the bay lane. A test re-stated to a ruling that could not fail under the old rule
+     would have been worth nothing.
   5. THE STEP - DONE (`25c0491f`, `70077d15`). Both places compare `dx² + dz²` against `(0.01 m)²`, and a
      pinned man crawls 0.5 m/s ALONG HIS DIRECTION, so a diagonal crawl is 0.00833 m and under the bar.
      ONE DOCTRINE NUMBER MOVED WITH IT: assaults 10 -> 14, flagged in that commit. If 14 is outside

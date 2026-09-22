@@ -48474,3 +48474,39 @@ mouth (a low box exists behind the truck at some z). Both re-stated tests: 2 tot
 THIRD TIME THE SAME SHAPE THIS LETTER. 600-tick hashes hid a 1200-tick divergence; node alone hid the
 client half; one filtered PlayMode test hid two suites full of the old rule. Each time the cheaper
 measurement agreed with me and the fuller one did not.
+
+## PlayMode back at baseline, and the suite has three flakes rather than one (2026-09-22)
+
+Four full PlayMode runs, because one is not enough to tell a flake from a regression in a suite that
+has several. All 257 total, 14 skipped:
+
+    run          Bootstrap   passed  failed   notable
+    pm  (1st)    clamp          227      16   + TheEdgeOfTheWorldIsAWall, + ThereIsAWall..., + RampReady
+    pm2 (2nd)    clamp          228      15   wall tests re-stated and green; + RampReady
+    pm3          WALLS BACK     226      17   + Goggles, + BOTH re-stated tests (correctly)
+    pm4 (3rd)    clamp          229      14   EXACTLY the baseline 14, name for name
+
+THE BASELINE 14, matched name for name in pm4: FeatureTests.DamageIsFeltInTheDriving,
+ImportedModelTests.{Soldiers,Tanks}, MushroomRestingTests x2, TruckHealthTests.CrashingIntoArmour,
+VehicleTests.{ArmiesFightNearTheSeam,ArmourBlocksTheTruck,BothArmies,TheTruckCanDriveOn,UnitsDoNotShove},
+VisibilityTests.{ArmiesAreActuallyDrawn,RoadsAreActuallyDrawn}, GhostAcrossTheDoors.
+
+THREE INTERMITTENT REDS, NOT ONE. TASKBOOK named GhostAcrossTheDoors as "the full-suite flake" and
+Goggles as one that "appeared once and passed on re-run". A third is now named:
+`RampReadyTests.TheRealTransactionsReplaceTheStandInsWhileNothingIsLoaded`, measured
+
+    filtered, walls back   3/3 pass        filtered, clamp   3/3 pass
+    full, walls back       PASS            full, clamp       FAIL, FAIL, PASS
+
+Red two runs of three under the clamp and green under the walls looked like a regression and is not
+one: it passes filtered both ways and passed the third full clamp run. Chased with the same four-cell
+table that proved the two wall tests WERE mine, rather than assumed either way.
+
+AND THE RE-STATED TESTS ARE REAL. pm3, with `BuildBoundary` put back, fails BOTH of them - the edge
+test on the `Wall_`/`Barrier_` colliders it now forbids, and the post office test on the low box the
+west edge wall drops into the bay lane. A test re-stated to a ruling that cannot fail under the old
+rule proves nothing; these fail under it, which is what makes them worth keeping.
+
+TOOLING. Every Unity batchmode run deletes `Assets/AddressableAssetsData/link.xml` and its .meta;
+restored after each. And `systemd-run --user` has a bare PATH - the editor needs its absolute path, the
+same trap as node.
