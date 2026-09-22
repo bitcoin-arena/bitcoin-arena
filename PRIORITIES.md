@@ -36,7 +36,9 @@ cap, the candle width, the map walls - because each moves `CORE_HASH`.
   `donationKeysForNetworkId(b07c4a09)` is **null** in the page's build, so donation verification has no
   authority to check against on the Daily. The gap costs DONATIONS, not joinability.
 
-THE SIX RULINGS ARE ALL RULED (spec `ef7af68c`, HARD 2026-09-22 08:25) AND ALL SIX ARE NOW SETTLED:
+THE SIX RULINGS ARE ALL RULED (spec `ef7af68c`, HARD 2026-09-22 08:25) AND ALL SIX ARE SETTLED **IN THE
+REPOSITORY** - which is NOT fleet state: **rulings 4 and 5 are NOT on the fleet, because the pin the fleet runs
+predates them.** The cause is the pin, not an unset ruling.
 
   1. THE SLASHING HEIGHT - DONE (`e554dad2`). The arbitration set NAMES it: valid iff
      `census_height <= slash_height <= tip` when they sign, written into the transaction's OP_RETURN and
