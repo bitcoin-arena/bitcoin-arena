@@ -22,6 +22,10 @@ Top item first. Finish and deploy before starting the next.
 
 # NOW  -  M3: what is left
 
+HARD (Daniel 2026-09-22 22:59): **Dispose of THRESHOLD_LN completely, including old rounds.**
+The value does not stay so old rounds can decode. A round that names it is invalid, past rounds included.
+Delete the enum, the hold-invoice path, and the threshold branch. No decode-only label. THIS IS THE LIVE ITEM.
+
 ## WHAT THIS BRANCH IS WAITING ON (2026-09-22) - one list, so it is not read off six places
 
 THE FLEET PIN MOVE IS DONE (Daniel 2026-09-22): **the fleet runs `02eefc04`**, off `595f0df3`. That commit's subject names `78c501ac` because that is what it recorded; the pin the fleet runs is `02eefc04`. WHAT THE MOVE TO `02eefc04` UNBLOCKED, node-side only - **unblocked, NOT
