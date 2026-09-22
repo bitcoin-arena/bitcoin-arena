@@ -47691,3 +47691,35 @@ superseded ruling. The standing rule says do not refuse a Chrome test, and refus
 what I did by filing it and moving on.
 
     reds in the tree   4 -> 3
+
+## The daily lobby is NOT empty, measured on the live page (2026-09-22)
+
+Found by exercising the repointed probes - the hole I named last turn - rather than by looking for it.
+`measure-cab-headline.mjs`, driving the BARE Daily URL with no node parameters, on the Beelink's own
+playtest Chrome:
+
+    lobby rows 2
+    canvas 1280 x 550
+    try 1: the truck is rolling
+    drove out 9 m
+    core tape at shot 0: $85490.44   samples 0
+
+So the lobby lists rows and a round is joinable and drivable. The board says the opposite: "the daily
+lobby lists nothing ... two different networks, so no round is joinable there."
+
+THE NETWORK IDS DO STILL DIFFER, checked rather than assumed:
+
+    deployed page   https://btc-logistics-core.pages.dev/blwp-client.js -> NETWORK_ID_REGTEST 66f5caba
+    local dist      the same, 66f5caba
+    live checkout   /mnt/bitcoin/blwp-2of2/code at 595f0df3 -> b07c4a09     (the pin has NOT moved)
+
+And the live node is serving rounds:
+
+    GET <tunnel>/rounds   4 open - e138930e and c23727c8 free, 44257607 and a9458457 paying
+
+So the mismatch is real and the lobby works anyway. The board's sentence draws a conclusion the page
+does not support: whatever the differing id costs, it is not "no round is joinable".
+
+WHAT I DID NOT ESTABLISH, and will not claim: why 2 rows for 4 rounds - whether the two PAYING rounds are
+the ones missing, and whether a paid row would join. That is the difference between "the lobby is empty"
+(false) and "a paid row is refused" (the separate item above, which the fleet call-site explains).
