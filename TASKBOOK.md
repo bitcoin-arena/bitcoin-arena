@@ -47317,3 +47317,70 @@ ruling.
 SO THE NEXT SLICE IS RECORDING ONLY, and the print says why that is possible: everything it needs -
 bond value, a census, the seats, the proof - is already in the node, except the slashing height and the
 affected-player rule, which are decisions rather than key material.
+
+## Two readings before a recorder: both come back as conflicts, not readings (2026-09-22)
+
+### 1. Slashing height - THE WORDS WITH NO FORMULA
+
+The phrase occurs ONCE in the whole spec, at line 812:
+
+    "Slashed bonds are distributed: half to the affected players of that round;
+     the other half 75% evenly to the active census nodes AT THE SLASHING HEIGHT
+     minus the round's own seats (the witnesses) and 25% to the donation set of
+     §22A - the developers."
+
+Nothing defines it. §5A.3B, "how a fraud proof becomes a slash", gives five steps and no height:
+
+    1. Anyone publishes a fraud proof ...
+    2. The proof is mechanically checkable ...
+    3. k-of-m arbitration keys sign a slashing transaction spending path B.
+    4. That transaction MUST carry OP_RETURN = H(fraud_proof) || retrieval hint.
+    5. Outputs pay the distribution fixed by the Round Contract.
+
+TWO CANDIDATES, and the first is circular with step 5:
+
+    (a) the height of the block confirming the SLASHING TRANSACTION itself. It is the only event the
+        phrase can naturally mean - the slash is that transaction. But step 5 says that transaction's
+        OUTPUTS pay the census at that height, and the height is not known until it confirms. The
+        outputs cannot be built from a number the building produces.
+    (b) the height at which the BOND OUTPUT WAS SPENT, read off the chain. Derivable, and equal to (a)
+        when the spend IS the slash - but §5A.3B also allows a node to spend its own bond (the spend
+        objection), so this height exists for spends that are not slashes at all.
+
+WHAT THE NODE ALREADY HAS: the proof carries roundId, playerPubkey, nodePubkey, transcriptHash,
+signedResultId, bondTxid, bondVout - AND NO HEIGHT. The contract carries `censusHeight` and
+`censusConfirmations`. The chain view can produce `spentAt` for any outpoint (census.js `chainFactsAt`),
+which is candidate (b). `census_height` is NOT substituted here, silently or otherwise.
+
+STOPPED. The text names neither, so the height is a ruling.
+
+### 2. Affected players - THE SPEC NAMES A NARROWER SET
+
+The working rule offered was "every player pubkey that locked a stake on that round". The spec's other
+use of the phrase, at line 1796 (§13A, who may object), distinguishes them:
+
+    "Who may object: anyone - THE AFFECTED PLAYER, ANOTHER PLAYER IN THE ROUND,
+     a non-selected node, a spectator, a watchtower."
+
+"the affected player" is listed BESIDE "another player in the round", so in this spec affected is not a
+synonym for everyone who played. Line 811 says "the affected playerS of that round" - plural, of that
+round - but under 1796's usage that is the harmed ones, not the entrants.
+
+AND THE NODE ALREADY HOLDS A NARROWER ANSWER: every slash proof carries ONE `playerPubkey`
+(`slash.js` decodeSlashProof), and proofs are stored per (round_id, ENTRY_ID, node_pubkey)
+(`round.js putSlashProof`). So a filed slash already names whose entry was harmed.
+
+STOPPED, as ruled: the text names a narrower set than the working rule, so which one is paid is a ruling.
+
+### 9. A NINTH HOLE, AND IT CHANGES WHO GETS PAID
+
+`slashDistribution` takes ONE `bondSats` and one set of affected players - one bond, one distribution.
+But the store keys proofs per (round, entry, node), so ONE ROUND CAN CARRY SEVERAL SLASHED NODES AND
+SEVERAL HARMED ENTRIES. Nothing says whether:
+
+    - each slashed bond is distributed separately, each to the players ITS OWN proof names; or
+    - the round's slashed bonds are pooled and split over all harmed players together.
+
+The two pay different people different amounts whenever a round slashes more than one node, and the
+old withdrawn comment in `slash.js` shows the case was already in mind ("two nodes caught in one round").
+No spec sentence found for it.
