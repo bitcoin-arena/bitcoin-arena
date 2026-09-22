@@ -47264,3 +47264,56 @@ NOT - two of my own comments in `slash.js`, the header of `slash-distribution.te
 PRIORITIES, and an unrelated line in `verdict.js` about tally ids ("would put every honest committee at
 one of seven"). No source emits "half burned" at all; the one bundle hit is
 `unity-proto/.../blwp-client.js`, generated output that is stale until the next build and NOT hand-edited.
+
+## The gap between a filed slash and a paid one, both paths (2026-09-22)
+
+Measured by reading the code, not by running a probe: no probe can be written yet, because the first
+function on the paying side has no caller to drive.
+
+WHAT A NODE ALREADY HAS, and `slash-filing.test.js` (3 pass / 0 fail) proves it files:
+
+    the slash proof, decoded    roundId, playerPubkey, nodePubkey, transcriptHash, signedResultId,
+                                bondTxid, bondVout                        (slash.js decodeSlashProof)
+    what `slashHolds` returns   { slashed: true, offence: REPLAY_CONTRADICTS,
+                                  bond: { txid, vout }, commitment }
+    where it is kept            `round.putSlashProof(roundId, entryId, nodePubkey, proofId, record)`,
+                                read back by `round.slashProofs(...)`, served at GET /slash-proofs
+    the round contract          `nodes` - the round's own seats, which §5A.3 subtracts - and bondMinSats
+    a census from the chain     derived at `contract.censusHeight`; entries carry `bondSats`
+                                (census.js:1038, `const bondSats = output.valueSats`), and
+                                `deriveCensus` drops spent bonds (census.js:224)
+    the arbitration set         `genesisFor(network).arbitrationKeys` / `arbitrationK`, already used to
+                                build a bond's own output key
+
+WHAT IS MISSING BEFORE ONE SAT MOVES:
+
+    1. THE SLASHED BOND'S VALUE. The proof names the OUTPOINT, never the amount, and `bondSats` does
+       not appear anywhere in `blwp-node/src`. `slashDistribution` takes it as an argument that nobody
+       supplies. It is obtainable - the census entry for that outpoint carries it - but nothing reads it.
+    2. THE CENSUS AT THE SLASHING HEIGHT. A node derives its census at the round's `census_height`. The
+       rule pays "the active census nodes AT THE SLASHING HEIGHT". Nothing computes a slashing height at
+       all: grep `slashingHeight|slashedAt|slashing height` over protocol/src and blwp-node/src returns
+       only comments quoting the spec. The set that must be paid is derived nowhere.
+    3. WHO THE AFFECTED PLAYERS ARE. `affectedPlayers` exists only as a parameter of
+       `slashDistribution` and in its tests. No function decides which players of a round were harmed.
+    4. A CALLER. Neither `slashDistribution` (round bond) nor `slashSplit` (guardian bond) is called
+       outside its own test file - the same gap on both paths, which is what step 2 asked.
+    5. THE CLAIM WINDOW. `federation-slash.js` has `lifecycleBlocks` and `liquidationSchedule` as
+       arithmetic; no node path opens a window, times one, or closes one.
+    6. THE SPENT-NOTE LIST. Nothing publishes one, and `slashSplit`'s halted branch takes `notesOwedMsat`
+       as a number nobody computes.
+    7. THE ESCROW OUTPUT UNDER THE ARBITRATION KEYS. "escrow" appears in federation-slash.js only as
+       prose. No builder exists, though `bondOutputKey`/`bondInternalKey` show the shape for a bond.
+    8. MUSIG2. Referenced in four files (`bond-script.js` "key path MuSig2(node_key,
+       arbitration_aggregate_key)", `slash.js` steps 3 and 5) and IMPLEMENTED IN NONE - a grep for an
+       exported musig function over every src returns nothing.
+
+WHICH NEED NEW KEY MATERIAL: only the spending side. 1, 2, 3, 4, 5 and 6 are arithmetic and bookkeeping
+over things a node already holds - no key is created or used. 7 needs the arbitration aggregate key,
+which exists as PUBLIC keys in genesis but has never been aggregated here. 8 needs MuSig2 signing by the
+arbitration set, which is new protocol and new key handling, and is §5A.3B steps 3 and 5 - later, by the
+ruling.
+
+SO THE NEXT SLICE IS RECORDING ONLY, and the print says why that is possible: everything it needs -
+bond value, a census, the seats, the proof - is already in the node, except the slashing height and the
+affected-player rule, which are decisions rather than key material.
