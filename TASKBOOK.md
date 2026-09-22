@@ -48219,3 +48219,47 @@ refused at step 3 and an empty eligible set throws at step 6 - and `hand()` hand
 one at a time rather than pooling them. Measured on bonds 100000, 206 and 100001: toPool 0 in all
 three, and the three reported numbers sum to the bond exactly. Now asserted per answer at the door's
 own test so a later change cannot open a gap in silence.
+
+## A paying entry that hands over no F (2026-09-22) - measured, sized, not started
+
+§23.5 gives the node fee its own lock; on Lightning custody `holdFee` keys it on
+`sha256(entry.feePreimage)`. A zeroed F therefore asks for a hold on `66687aad...`, which is every
+zero-F entry's hash in every round. Measured on two players of one round, on the node's own store:
+
+    MEASURED custody: THRESHOLD_LN   feeMsat per entry: 2000
+    fee holds on A: [ {entry 0fe46ee9cd90, hash 66687aad..., 2000, HELD},
+                      {entry 24bda68ef90d, hash 66687aad..., 2000, HELD} ]
+    entries: 2   distinct payment hashes: 1      entry ids differ: true
+
+Two players' fees on ONE HTLC, settled afterwards with a preimage anybody can compute. That is the
+`objection-window` red: its settle list is [66687aad/zeros, 66687aad/zeros, the loser's own stake]
+where one settle was expected.
+
+IT IS NOT A NEW RULE. `join.js:833`: "Measured on the Daily when it was left at zeros: lnd answered
+'cannot use hash of all-zeroes preimage' and no fee invoice was ever made, so the 2% went on being
+uncollected." The shipped client mints `random(32)` on a paying round.
+`stake-lock-signer-node.js:137` refuses the same entry by name on the FEDERATION path. Only the
+hold-invoice path accepts it, and only a stub endpoint ever lets it through.
+
+WITH THE RULE IN (holdFee refuses a zeroed F once a fee is owed; settleFees refuses a row stored
+before it), each suite alone:
+
+    objection-window   5/2  -> 7/7
+    custody           30/5  -> 35/35   (once its own fixture mints a real F)
+    custody-daemon    12/1  -> 13/13   (same)
+    federation-invoice + hold-two-first 7/7, void-expiry + walk-away-hold 4/4, unpaid-expiry green
+
+And the assertions stop being vacuous: `custody.test.js:305` says "the fee hold is not keyed on the
+entry's own feePreimage" and `custody-daemon.test.js:158` says "the fee is not quoted against the
+entry's own fee preimage" - both were checking `66687aad...`, which is nobody's own.
+
+WHY IT IS NOT LANDED. `second-closer` is green today at 2/0 and goes red on "A never took the node fees
+it served for" - the correct complaint, because an entry with no F has no fee anyone can take. It
+builds its own entry at line 145, and **69 fixtures across blwp-node, blwp-client and protocol build a
+paying entry with `feePreimage: new Uint8Array(32)`**. That is a sweep of its own, each suite re-run
+chunked, not a line inside the federation letter. The tree is left at HEAD - measured back to
+second-closer 2/0 and objection-window 5/2 - and the refusal patch is kept out of it.
+
+BOARD CORRECTION. Two lines said objection-window waits on the hold-path retirement, which follows the
+fleet pin. It does not: the cause is the zeroed F, and the fix touches neither the custody enum nor
+THRESHOLD_LN. Both corrected in PRIORITIES.md.

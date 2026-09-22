@@ -328,6 +328,32 @@ Nothing spends, and the last test asserts the owing's whole shape to keep it tha
   WHAT REMAINS is only steps 3 and 5: the escrow output and MuSig2 over the arbitration keys, neither
   of which exists in this tree. Nothing on this path spends.
 
+NEXT ITEM, MEASURED AND SIZED, NOT STARTED: **a paying entry that hands over no F.** §23.5 gives the
+node fee its own lock, and on Lightning custody that lock is a hold invoice keyed on
+`sha256(entry.feePreimage)`. An entry whose F is thirty-two zero bytes therefore asks for a hold on
+`66687aad...` - which is not that entry's hash but EVERY zero-F entry's, in every round, on every node.
+Measured on two players of one round: **2 fee holds, 1 distinct payment hash**, both HELD, both settled
+afterwards on a preimage anybody can compute. One HTLC carrying two players' fees, claimable by the
+world. Real Lightning already refuses it - `join.js:833` records lnd answering "cannot use hash of
+all-zeroes preimage" on the Daily, where the consequence was that the 2% was never collected at all -
+and the shipped client mints a random F on a paying round. The node does not, and
+`stake-lock-signer-node.js:137` refuses exactly this entry by name on the FEDERATION path while the
+hold-invoice path has no such check.
+
+  THE FIX IS ONE RULE AND A LARGE SWEEP, which is why it is its own item and not a line in this letter.
+  The rule: `holdFee` refuses a zeroed F on a round that owes a fee, and `settleFees` refuses to settle
+  a row stored before it. Measured with the rule in: objection-window 5/2 -> **7/7**, custody 30/5 ->
+  **35/35** and custody-daemon 12/1 -> **13/13** once their own fixtures mint a real F - and those
+  assertions stop being vacuous, because "keyed on the entry's OWN feePreimage" was true of zeros and
+  said nothing. But **69 fixtures across node, client and protocol build a paying entry with a zeroed
+  F**, and second-closer - green today at 2/0 - goes red on "A never took the node fees it served for",
+  which is the correct complaint: with no F there is no fee to take. The tree is left at HEAD; nothing
+  is half-landed, and the refusal patch is kept out of the tree until the sweep is the item.
+
+  AND IT IS NOT BEHIND THE FLEET PIN. The board said twice that objection-window waits on the hold-path
+  retirement, which follows the pin. Measured: the cause is the zeroed F, the fix touches neither
+  `custody.js`'s enum nor THRESHOLD_LN, and both lines are corrected above.
+
   (the note below is what that item said before the recorder landed.) Measured 2026-09-22: NEITHER
 slash path has a caller outside its own tests - not `federation-slash.js` (`slashSplit`, the guardian
 bond) and not `slash.js` (`slashDistribution`, the round bond). No node path opens a claim window,
@@ -725,7 +751,8 @@ EVERY PACKAGE SWEPT 2026-09-22, and the reds that survive are four (details in T
   Numbers, hashes and the ruled-out explanations are in TASKBOOK.md.
     bundle-fresh       1/1  see below - waits on the fleet pin.
     replay-solids      2/1  waits on ruling 4 being re-made: the core DOES build four edge walls.
-    objection-window   5/2  settles on the hash of a zero preimage. The hold path, behind the pin.
+    objection-window   5/2  settles on the hash of a zero preimage. NOT behind the pin - measured, see
+                            the fee-secret item below: the cause is the fixtures' zeroed feePreimage.
     wallet-nwc         21/5 "the wallet was asked 2 times, expected 1". PRE-EXISTING and proven so: the
                             suite was 14/12 before this letter's run-length migration and is 5 red after,
                             so the migration fixed seven of its twelve and caused none.
@@ -762,8 +789,9 @@ EVERY PACKAGE SWEPT 2026-09-22, and the reds that survive are four (details in T
      that the ruling retired it.)
     replay-solids      2/1  the core builds no map edge walls and Unity draws four. WAITS ON the M1
                             ruling below.
-    objection-window   5/2  the node settles a hold on the wrong payment hash, twice. WAITS ON the
-                            hold-path retirement, which follows the fleet pin.
+    objection-window   5/2  the node settles a hold on the wrong payment hash, twice. DOES NOT WAIT ON
+                            the pin, measured 2026-09-22: the hash is sha256 of a zeroed feePreimage,
+                            and fixing it is independent of retiring THRESHOLD_LN.
 
     (two-titles is green, 2/0, since the counter's sum was taken from the driver instead of restating a
      throttle nothing sends.)
