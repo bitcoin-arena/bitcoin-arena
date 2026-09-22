@@ -48147,3 +48147,45 @@ result id and no offence field, because the offence is what verifying those two 
 Every proof in this table was filed by `fileSlashProofs`, which files exactly one kind, so the door
 names REPLAY_CONTRADICTS and does not guess. A proof arriving by another road would have to carry its
 own verdict.
+
+## The slash-owing door's 200 path, and the two wrongs it was hiding (2026-09-22)
+
+`ea8ca1e3` said the door was measured. What was measured was its refusals: the fixture it was written
+against (`sevenSignerNodes`) has no chain view, so every height came back 409 and the JSON body never
+ran. Re-measured against the mined census in `roster.test.js` - four bonded nodes, two of them the
+round's own seats, one paying entry, one filed proof, bond value read off the real funding output:
+
+    slashHeight 900005   tipHeight 900010   censusSeen 4   seatsOut 2
+    bondSats    100000000
+    toPlayers    50000000   -> 0505..05         50000000     (the one harmed player)
+    toNodes      37500000   -> 6360e856..       37500000     (keyFor 0x12)
+    toDevelopers 12500000
+
+WRONG 1 - THE PLAYER WAS A NODE. Before the fix the `nodes` list carried `0505..05` at 50000000 sat
+beside the players' list, so a 100000000 sat bond appeared to owe 150000000. `slashDistribution` writes
+`hand(affectedPlayers, toPlayers)` and `hand(eligible, toNodes)` into one `shares` map. It cannot be
+unpicked afterwards - a node operator's own entry is legitimately in both halves - so the split is made
+where it is known: `playerShares` and `nodeShares` are returned beside `shares`, which keeps its exact
+old contents and its sum check. `slash-owing.test.js` asserted `nodes.get(SEAT_A)` and `nodes.get(OUT_1)`
+one key at a time and never the whole map, which is why it never saw this.
+
+WRONG 2 - THE ACCUSED WAS PAID FROM ITS OWN BOND: 18750000 of 100000000 sat back to keyFor(0x11), the
+node the proof accuses. Not an accident of the door. At `slash_height` the bond is unspent - that is
+exactly why step 2 can read its value there - so `deriveCensus` counts it and it falls inside "the
+active census nodes at the slashing height". `slashDistribution` asserts the opposite in a comment and
+throws on a `slashed` node inside the census, a guard meant for a census read AFTER the spend. The two
+are each right about their own height, and the ruled window (`census_height <= slash_height <= tip when
+they sign`) puts this one before the spend, because the spend IS the slashing transaction. Resolved by
+taking the accused out of the census the split is computed over, in `slash-owing.js`: the guard is not
+loosened, `slashed` is not passed, and §5A.3's 75% simply divides among the census nodes left. Flagged
+on the board as a reading rather than a ruling.
+
+Suites, each alone: slash-distribution + slash-rulings 15/0, slash-owing 7/0 (a seventh test pins the
+accused at 0 and the players absent from the nodes' map), slash-filing 4/0, roster 19/0 = 45/0.
+
+FIXTURE NOTE. The door's test opens the round on the store rather than posting it to `/round`: that
+door additionally requires `contract.nodes` to be exactly the set the census assigns, and the
+assignment is seeded from the round id the node list is part of. Iterating to a fixed point grows the
+slot count until every bonded node is a seat and §5A.3 has nobody left to pay, so the fixed point is
+the wrong tool here - the door under test reads the seats off the stored contract and never asks who
+was assigned.

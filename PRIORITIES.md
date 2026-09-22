@@ -284,6 +284,31 @@ Nothing spends, and the last test asserts the owing's whole shape to keep it tha
   round's entries came back EMPTY and every offence looked as if it harmed nobody. The fixture now
   measures 2, which is what that round has.
 
+  AND THE DOOR'S 200 PATH IS NOW MEASURED TOO, which `ea8ca1e3` only claimed. That commit tested the
+  refusals and tested `slashOwing` directly; the body the door returns had never executed, because the
+  fixture it used has no chain view. Run against the mined census in `roster.test.js` - four bonded
+  nodes, two of them the round's seats, a real bond of 100000000 sat read off its funding output - it
+  answers 200 and it was WRONG TWICE, both invisible from the refusals:
+
+  - THE HARMED PLAYER WAS LISTED AS A CENSUS NODE, owed the players' half a second time: 50000000 sat
+    reported twice under one 100000000 sat bond. `slashDistribution` hands both halves into ONE `shares`
+    map and a pubkey carries no mark saying which hand put it there - and it cannot be split afterwards,
+    because a key can honestly be in both. It now returns `playerShares` and `nodeShares` beside the
+    union, which is unchanged, and the door reads the nodes' half.
+  - THE ACCUSED NODE WAS PAID 18750000 SAT OUT OF THE BOND IT IS SLASHED FOR. At `slash_height` its bond
+    is still unspent - the same fact that lets the door read its VALUE there - so `deriveCensus` counts
+    it and §5A.3's "active census nodes at the slashing height" includes it. `slashDistribution` says
+    the opposite in a comment ("a node slashed at this height is NOT in the active census, by
+    definition") and THROWS if a caller hands one in. Both are right about their own height: the spend
+    happens in the slashing transaction, which is signed AFTER `slash_height` is fixed. The accused is
+    taken out of the census before the split, no recipient is invented, and the guard - which protects a
+    census read after the spend - is untouched. **DANIEL: this is a reading, not a ruling.** If §5A.3
+    means the slashed node keeps a census share at that height, this is the line to change.
+
+  Measured after both: bond 100000000 -> players 50000000 to the one harmed player, nodes 37500000 to
+  the single bonded node that is neither seat nor accused, developers 12500000. 45 pass / 0 fail:
+  slash-distribution + slash-rulings 15, slash-owing 7, slash-filing 4, roster 19.
+
   WHAT REMAINS is only steps 3 and 5: the escrow output and MuSig2 over the arbitration keys, neither
   of which exists in this tree. Nothing on this path spends.
 
