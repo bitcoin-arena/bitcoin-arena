@@ -47466,3 +47466,38 @@ The protocol ones cannot cause this red: those suites encode and decode contract
 a node, so nothing refuses them. The client ones only bite when the suite drives a real node. That is why
 the count alone says nothing about how many reds are left - which is the mistake I made when I wrote
 "none of them is red for it" after checking three.
+
+## The blwp-client sweep, finished: 54 suites, and what was hiding in them (2026-09-22)
+
+No red list covered this package. Run in chunks under the 180 s cap, and every red re-run ALONE.
+
+    files  1-7     54 tests, 53 pass, 1 fail   (bundle-fresh, already listed, waits on the fleet pin)
+    files  8-14    10 tests, 10 pass, 0 fail
+    files 15-32    donation-pay was the whole of it - 14/6, now 20/0
+    files 33-44    76 tests, 74 pass, 2 fail   (after own-socket-drop was fixed inside it)
+    files 45-54    settlement-seen was the whole of it - 3/2, now 3/0
+
+FIXED, five suites, none by changing an expectation:
+
+    donation-pay      14/6 -> 20/0   stale run length, plus a fake DOM missing `replaceChildren`
+    own-socket-drop    0/4 ->  4/0   stale run length, every test
+    settlement-seen    3/2 ->  3/0   stale run length, seen as "no such round" downstream
+    player-copy        2/1 ->  3/0   see below
+
+`player-copy.test.js` scans the client's source for the word "seat" - a vocabulary rule, because a player
+must never be shown "free seat" or "asking the seats". It was reading `bip39-wordlist.js` and reporting
+  player-facing copy still says seat:
+  bip39-wordlist.js: "seat"
+which is the scanner reading a dictionary: "seat" is one of BIP-39's 2048 English words, fixed by the
+standard and verified here against its published sha256. IT CANNOT BE REWORDED without breaking every
+seed phrase ever written down. THIS RED IS MINE - the wordlist arrived with §24B. The scanner skips that
+one file now, with the reason written beside it; every other file is still scanned and no string changed.
+
+STILL RED, LISTED WITH CAUSE:
+
+    bundle-fresh       1/1  dist and the WebGL template are not the build of this source. Not to be
+                            cleared by rebuilding: the rebuild and the deploy travel with the fleet pin.
+    objective-markers  0/1  "no page on CDP 9341: start it with monitoring/blwp_mac_playtest.sh start".
+                            It drives a LIVE Chrome and cannot pass without one - an environment, not a
+                            defect. Not converted to a skip: a silent skip would hide a real regression
+                            the next time somebody runs it with a browser up.
