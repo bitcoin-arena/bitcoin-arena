@@ -48689,3 +48689,89 @@ WHAT CHANGED ON THE BOARD, so the four places agree:
   - The reds table line matches: still red, waits on the pin reaching HEAD.
   - Every core change stays in the still-blocked half: step cap (ruling 5), candle width, map walls
     (ruling 4), all three absent from `02eefc04`. None is written as having reached the fleet.
+
+## RULED (Daniel 2026-09-23): THRESHOLD_LN disposal - the decoder commit, slice 2, and the store measurement
+
+### Step 1, the decoder commit (not slice 2, never merged with it, never red)
+
+- Byte 0 stays EMPTY. FEDERATION stays byte 1 and is never renumbered onto the freed byte (spec
+  `d8eb4158`): renumbering would make every old record decode as FEDERATION, which the 22:59 ruling forbids.
+- The name THRESHOLD_LN is deleted. Encoding it throws; decoding byte 0 throws the way a bad length does.
+  Not a value, not a reserved slot, not a label.
+- In this commit: `packages/protocol` constants and contracts, and the tests that prove the throw and that a
+  FEDERATION round still decodes as byte 1.
+- STEP 1 DOES NOT SHIP RED. Measured: 95 test files at HEAD encode `custody: 'THRESHOLD_LN'` in code, and
+  every one would throw at build time. So, in this same commit:
+    - a test that only needs a valid PAYING custody, and whose subject is not the withdrawn custody, moves
+      its contract to FEDERATION. That is the new ruling, not the old free-round migration. The 95 are
+      judged one by one, not retargeted blindly;
+    - a test whose subject IS THRESHOLD_LN, the hold invoice or the threshold branch gets no fake
+      FEDERATION pass. Protocol tests of that name assert throw or invalid in step 1; node hold-path tests
+      stay for slice 2.
+- NOT in step 1: `server.js`; the free-round fixture migration; `run-2of2.mjs` (a tool that still names the
+  withdrawn custody is a slice-2 blocker, not a reason to keep the enum or merge the slices).
+
+### Slice 2, one later slice
+
+Retire `custody.js` with the hold-invoice path and the threshold branch, and delete `preflight.js` with it
+(the Lightning preflight: "can this lnd hold a round's stakes"). With byte 0 failing at decode, `/round`
+answers a byte-0 post with a PARSE refusal - no custody-specific 409, nothing stored. The store treats an
+unparseable row as ABSENT on load: not decoded, not replayed, not settled, not listed, not counted. That
+is where "past rounds included" is enforced.
+
+### The measurement contract for slice 2 (recorded 2026-09-23; the live store is NOT to be measured again)
+
+Source: the Daily's own stores, `/mnt/bitcoin/blwp-2of2/a.db` and `/mnt/bitcoin/blwp-2of2/b.db`, table
+`rounds` (the pinned opener writes `store + '/a.db'` and `'/b.db'`, `round-2of2.mjs:174-175` at
+`02eefc04`). Read 2026-09-23 with `sqlite3 -readonly` on `mode=ro` URIs.
+
+THE MEASUREMENT RUNS ON A COPY, NEVER THE LIVE WAL. The copy is
+`sqlite3 "file:/mnt/bitcoin/blwp-2of2/a.db?mode=ro" ".backup <scratch>/a.db"` (and b.db likewise).
+
+1. DECODE THROWS, AND ABSENT FROM /rounds - round `7d577647b2d8`,
+   full id `7D577647B2D8DB205C8914D415A482A8D15EBF2E1B63902C6FC85EB7351A594A`, in both stores. The pin's
+   decoder reads it as custody THRESHOLD_LN, stakeMsat 100000, zero federation id; this tree's refusing
+   decoder throws "custody byte 0 is not a custody of this network". BEACON-ONLY: 1 row in `round_beacons`,
+   and 0 entries, 0 results, 0 holds, 0 fee_holds, 0 close_holds, 0 lock_settlements, 0 payouts. It proves
+   the throw and the absence. It CANNOT prove "not replayed" or "not settled": it has nothing to replay or
+   settle, and those checks would pass vacuously on it.
+
+2. NOT REPLAYED, NOT SETTLED - round `ee903c10`,
+   full id `EE903C10CA9CDBC5D7911F80769A155494CD244D7DA0F768806D95498C5D155A`, the board's own
+   "winnings are always sent" round, played and paid under the withdrawn custody. Before-counts, which
+   must be UNCHANGED after the copy restart:
+
+       table            a.db                    b.db
+       entries          2                       2
+       results          4                       4
+       holds            CANCELLED 1, SETTLED 1  CANCELLED 1, SETTLED 1
+       fee_holds        SETTLED 2               (none)
+       payout_address   1                       0
+
+3. PAST ROUNDS INCLUDED - every byte-0 row, not one:
+
+       a.db   7117 rounds   3127 byte-0 (all paying)   3990 FEDERATION
+       b.db   7032 rounds   3104 byte-0 (all paying)   3928 FEDERATION
+
+   This tree's decoder refuses exactly the 3127 and 3104 and nothing else. On the copy, after restart:
+   `/rounds` lists none of them, the stored bytes stay in place (absent, not deleted), and every dependent
+   count stays as it was.
+
+Also for slice 2: a hand-built byte-0 post to `/round` is refused as UNPARSEABLE, nothing is stored, and
+the refusal is not the old custody 409; a FEDERATION round still decodes to byte 1.
+
+### Left open - not step 1, not to be solved in the decoder commit
+
+- THE TWO-GATEWAY LAW (Daniel 2026-09-20) needs a federation home. Its only call site,
+  `gatewaysAreIndependent` inside `lightningPreflight`, goes with `preflight.js` in slice 2 - and it only
+  ever ran when a node reached Lightning, so it was never enforced for a FEDERATION round.
+- THE ON-CHAIN POOL PAYOUT (`payouts.js` and four regtest tools) is unreachable once the hold close goes:
+  the only thing that queued a payout table was the close path after `settleHeldInvoices`.
+- "WINNINGS ARE ALWAYS SENT" (Daniel 2026-09-21) has no federation implementation: it was built on the
+  signer node's own Lightning paying from the pool.
+
+### Out of both commits
+
+publicationRelays and the §13A comments in the pool fixture, the forfeit diagnostics in the payout test,
+`w5b.mjs`, `build.txt`, `ProjectSettings.asset`, `measure-assault-in-view.mjs`, `PostureDrawTests.cs.meta`,
+and the slice-2 node files already sitting in this working tree.
