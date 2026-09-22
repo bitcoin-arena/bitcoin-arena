@@ -22,6 +22,30 @@ Top item first. Finish and deploy before starting the next.
 
 # NOW  -  M3: what is left
 
+## WHAT THIS BRANCH IS WAITING ON (2026-09-22) - one list, so it is not read off six places
+
+THE FLEET PIN, off `595f0df3`. It blocks, on its own: `bundle-fresh` (the rebuild and the deploy travel
+with it); the hold path behind `objection-window`; the `/round` refusal of THRESHOLD_LN, which cannot be
+separated from retiring `custody.js`; AND EVERY CORE CHANGE - §0's step cap, the candle width, the map
+walls - because each moves `CORE_HASH` and the network id, and the page (`66f5caba`) and the live nodes
+(`b07c4a09`) already disagree there. Landing a core change first widens that gap instead of closing it.
+
+SIX RULINGS, none of them mine to take:
+  1. WHICH HEIGHT is "the slashing height"? Named once in the spec, never defined; the slashing
+     transaction's own height is circular with §5A.3B step 5.
+  2. WHO are "the affected players"? §13A lists "the affected player" BESIDE "another player in the
+     round", so it is narrower than every entrant; each proof already names one `playerPubkey`.
+  3. ONE ROUND, SEVERAL SLASHED NODES: each bond to its own proof's players, or all of them pooled?
+  4. THE MAP EDGE: does the core owe edge walls as solids at +-185 / +-85, or does Unity stop drawing
+     walls the core does not build?
+  5. THE STEP READING: `tactics.js:637` and `measure-posture.mjs:102` both measure MANHATTAN where the
+     rule was ruled combined EUCLIDEAN - 41% apart on a diagonal.
+  6. THE CANDLE LEVER: raising the plateau reopens the passability ruling; narrowing the slot means MORE
+     candles, because bodies touching is its own ruling.
+
+Everything below this line is either done, or waiting on one of those.
+
+
 ON TOP, WAITING ON THE FLEET PIN: **there is no THRESHOLD_LN - only federation and guardians.** A paying
 FEDERATION round OPENS AND SETTLES on seven signer nodes with no `createHeld` on the path, re-measured
 unchanged. The enum is deliberately NOT flipped: the `/round` refusal was written, measured at 10 reds
