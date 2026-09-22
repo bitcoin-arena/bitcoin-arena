@@ -36,7 +36,7 @@ cap, the candle width, the map walls - because each moves `CORE_HASH`.
   `donationKeysForNetworkId(b07c4a09)` is **null** in the page's build, so donation verification has no
   authority to check against on the Daily. The gap costs DONATIONS, not joinability.
 
-THE SIX RULINGS ARE ALL RULED (spec `ef7af68c`, HARD 2026-09-22 08:25) AND FOUR ARE IMPLEMENTED:
+THE SIX RULINGS ARE ALL RULED (spec `ef7af68c`, HARD 2026-09-22 08:25) AND ALL SIX ARE NOW SETTLED:
 
   1. THE SLASHING HEIGHT - DONE (`e554dad2`). The arbitration set NAMES it: valid iff
      `census_height <= slash_height <= tip` when they sign, written into the transaction's OP_RETURN and
@@ -48,10 +48,17 @@ THE SIX RULINGS ARE ALL RULED (spec `ef7af68c`, HARD 2026-09-22 08:25) AND FOUR 
      NET STAKE. A proof naming a player the round has no entry for is refused, not silently empty.
   3. SEVERAL SLASHED NODES - DONE (`e554dad2`). Nothing pooled: each bond pays the players its own proof
      names, and an entry named by two proofs is paid from both bonds.
-  4. THE MAP EDGE - RULED (Daniel 2026-09-22, re-stated knowing the walls exist): **the edge is a CLAMP,
-     not a wall. The core owes no wall solids, and the client stops drawing walls the core does not
-     build.** NOT YET IMPLEMENTED: `map.js:95-98` still builds four solids at +-HALF_X / +-HALF_Z, and
-     Unity still draws them. Both go, and the edge becomes a clamp; it moves `CORE_HASH`.
+  4. THE MAP EDGE - DONE (`map.js`, `sim.js`, `Bootstrap.cs`). The four solids at +-HALF_X / +-HALF_Z are
+     gone, `MAP_BOXES` 106 -> 102, and the clamp is in `sim.js` AFTER the pushes - the armour clamp's own
+     words, "a rule applied to the step and not to the push is half a rule", apply exactly: the truck
+     clear-out and §8.3's hull clearance both move a man after his own step. Unity's `BuildBoundary` is
+     no longer called. Proven: men dropped at twice HALF come back inside in one step, the z pair landing
+     on exactly +-85. AND THE WALLS STOOD INSIDE THE EDGE - the vectors' `straight` reached z 80.24 and
+     now reaches 85.00, `slalom` x 181.31 -> 185.00, and nothing ever leaves the map, before or after.
+     THE CORE AND UNITY NEVER AGREED WHERE THEY WERE: the core built its four at +-185 while Unity's
+     stood at +-130, which is why `replay-solids` failed on `Wall_West` at HEAD. Vectors regenerated ON
+     PURPOSE (8 files, the header's own procedure and ruling 5's precedent `70077d15`; no
+     PROTOCOL_VERSION bump, as there). `CORE_HASH` f253dc6d -> **7db2e423**, appended to known-cores.
   5. THE STEP - DONE (`25c0491f`, `70077d15`). Both places compare `dx² + dz²` against `(0.01 m)²`, and a
      pinned man crawls 0.5 m/s ALONG HIS DIRECTION, so a diagonal crawl is 0.00833 m and under the bar.
      ONE DOCTRINE NUMBER MOVED WITH IT: assaults 10 -> 14, flagged in that commit. If 14 is outside
@@ -778,7 +785,10 @@ EVERY PACKAGE SWEPT 2026-09-22, and the reds that survive are four (details in T
   THE REDS AS OF 2026-09-22, after the six rulings landed - one line each, cause and what it waits on.
   Numbers, hashes and the ruled-out explanations are in TASKBOOK.md.
     bundle-fresh       1/1  see below - waits on the fleet pin.
-    replay-solids      2/1  waits on ruling 4 being re-made: the core DOES build four edge walls.
+    replay-solids      2/1  ruling 4 is in and this moved one step further: it failed on `Wall_West`
+                            (core +-185, Unity +-130) and now fails on `FacadeRight` - a SECOND,
+                            pre-existing core-vs-Unity disagreement, about the miner, that the first
+                            was hiding. The core builds 114.6/+-28.3; the test pins 112.4/+-62.2.
     objection-window   7/7  FIXED 2026-09-22: the cause was the zeroed feePreimage, not the pin.
     wallet-nwc         21/5 "the wallet was asked 2 times, expected 1". PRE-EXISTING and proven so: the
                             suite was 14/12 before this letter's run-length migration and is 5 red after,
@@ -814,8 +824,7 @@ EVERY PACKAGE SWEPT 2026-09-22, and the reds that survive are four (details in T
      "the Beelink only". All nineteen default to 9351/9352 now, each keeping its override;
      `monitoring/blwp_mac_playtest.sh` keeps its ports because it IS the Mac path, and says at its head
      that the ruling retired it.)
-    replay-solids      2/1  the core builds no map edge walls and Unity draws four. WAITS ON the M1
-                            ruling below.
+    replay-solids      2/1  ruling 4 is in; the remaining red is `FacadeRight`, the miner, not the edge.
     objection-window   7/7  FIXED 2026-09-22. It never waited on the pin: the hash was sha256 of a
                             zeroed feePreimage, and the fix is independent of retiring THRESHOLD_LN.
 

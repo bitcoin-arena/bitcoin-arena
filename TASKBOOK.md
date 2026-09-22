@@ -48314,3 +48314,62 @@ TOOLING NOTE. `systemd-run --user` does NOT inherit nvm's PATH: the first relaun
 `timeout: failed to run command 'node': No such file or directory` and wrote five 69-byte files that
 looked like runs. Absolute node path required. (And a plain `nohup ... &` inside a tool call is killed
 when the call returns - the first three-run loop lost runs 2 and 3 that way.)
+
+## Ruling 4: the map edge is a clamp, not a wall (2026-09-22)
+
+RULED (Daniel, re-stated knowing the walls existed): "the map edge is a clamp, not a wall. The core
+owes no wall solids. The client stops drawing walls the core does not build."
+
+WHAT WENT. `rules/map.js` built four boxes at +-halfX / +-halfZ, 3 m thick, 26 m tall, sunk 6 m, whose
+own comment said they caught "a truck arriving airborne off a fee cliff". Gone; `MAP_BOXES` 106 -> 102.
+`Bootstrap.cs` no longer calls `BuildBoundary` - the method is kept unreferenced with its reasoning,
+because a future edge rule has to answer why they were tall and sunk.
+
+WHAT REPLACED IT, AND WHERE. A clamp in `sim.js` over every living unit, x to +-HALF_X and z to
++-HALF_Z, placed AFTER the truck clear-out and §8.3's hull clearance and before the posture pass. The
+armour clamp above it already says why: "a rule applied to the step and not to the push is half a
+rule". Either push can put a man past the edge, so a clamp that ran with the step would be half a rule
+too. A wall was a thing to be pushed through; a clamp is not, whatever pushed.
+
+PROVEN, not assumed: four living men written to twice HALF and stepped once -
+
+    placed   [370,0] [-370,0] [0,170] [0,-170]
+    after    [88.0,0.0] [-83.4,-0.0] [0.0,85.0] [0.0,-85.0]     all inside: true
+
+THE WALLS STOOD INSIDE THE EDGE, which is why the vectors moved. Truck extremes over the eight golden
+vectors, HEAD vs clamp:
+
+    straight   maxZ 80.24 -> 85.00      slalom   maxX 181.31 -> 185.00
+    handbrake  maxZ 81.24 -> 85.00      reverse  maxZ  82.21 ->  85.00
+    firstOutsideTick -1 in every vector, before AND after: nothing ever leaves the map either way
+
+AND THE CORE AND UNITY NEVER AGREED WHERE THEY WERE. `replay-solids` pins the four as the player
+gathered them - Wall_West at cx -130 - and the core built its own at +-185. So at HEAD that test failed
+on "Wall_West is not among the core's boxes": the player and every replay walked different walls, which
+is the divergence the suite exists to catch, not a detail. The four assertions are now their INVERSE -
+`none(-130, 0, 'Wall_West')` and so on - so a core that starts building edge walls again fails here.
+
+A SECOND DISAGREEMENT CAME OUT FROM BEHIND THE FIRST. replay-solids is still 2/1, now failing on
+`FacadeRight`: the test pins the miner facade at 112.4/+-62.2 (hx 4, hz 22.2) and the core builds
+114.6/+-28.3 (hx 6.2, hz 5.9/5.3). Pre-existing, masked by Wall_West failing earlier in the same test,
+and nothing to do with the edge. Listed, not fixed here.
+
+MY FIRST MEASUREMENT OF THIS WAS WRONG AND IS RECORDED AS SUCH. I compared state hashes at 600 ticks,
+found them identical for three seeds, and wrote that the walls were "dead geometry that no run ever
+touched". The golden vectors diverge at tick 1200 and 2400. 600 ticks was simply too short a horizon,
+and the right answer was one `node --test` away.
+
+VECTORS REGENERATED ON PURPOSE. vectors.test.js's own header: "A failure here is never 'update the
+vectors'. It is either a deliberate rule change - in which case the vectors are regenerated ON PURPOSE
+and the protocol version moves - or a bug." This is the deliberate change. Precedent followed from
+ruling 5 (`70077d15`), which regenerated the same eight files and rebuilt `core/dist/blwp-core.js`
+WITHOUT moving PROTOCOL_VERSION - the core hash is what versions a core.
+
+CORE_HASH f253dc6d -> 7db2e423, appended to known-cores (34 listed). An intermediate hash c034e3f2 was
+generated mid-change and REMOVED by hand: it names a core that never left this working tree, and a
+known-good list that vouches for one nobody ran would accept a client running it.
+
+GREEN: core vectors 8/8, rules + canonical 61/61 with them, bundle 20/20, coin-is-solid + tactics
+30/30, candles + spawn + round-ends 15/15, chart + poison + private-world + cbrt 16/16,
+transcript-replay 5/5, two-titles 2/0, run-length + round 17/17, replay + canonical + verify 28/28.
+UNCHANGED REDS: replay-solids 2/1 (FacadeRight, above) and ghost-live 10/1, both as the board had them.
