@@ -24,7 +24,7 @@ Top item first. Finish and deploy before starting the next.
 
 ## WHAT THIS BRANCH IS WAITING ON (2026-09-22) - one list, so it is not read off six places
 
-THE FLEET PIN, off `595f0df3`. It blocks, on its own: `bundle-fresh` (the rebuild and the deploy travel
+THE FLEET PIN is now `78c501ac` (Daniel 2026-09-22 08:25: generate the pin). Move the fleet off `595f0df3` onto this commit. It blocked, on its own: `bundle-fresh` (the rebuild and the deploy travel
 with it); the hold path behind `objection-window`, because the Daily's paid rounds really are
 THRESHOLD_LN (`7d577647b2d8` decoded: custody THRESHOLD_LN, stakeMsat 100000); the `/round` refusal of
 THRESHOLD_LN, which cannot be separated from retiring `custody.js`; AND EVERY CORE CHANGE - §0's step
