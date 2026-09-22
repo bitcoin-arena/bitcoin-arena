@@ -48633,3 +48633,28 @@ nothing visible, and "an assault is declared, then it happens" then means almost
 of 70-85% blesses a war that is quiet three ticks in four where doctrine wanted it quiet one in two.
 If the intent is to be kept, no bound over this tree satisfies it and the finding is about the
 simulation, not the row.
+
+## RULED and written (Daniel 2026-09-22): the declared-to-happens window, and nothing else
+
+ONE ROW CHANGED, ONE FIELD OF IT. §4.12's "An assault is declared, then it happens" now reads its push
+gain within **1800 ticks** of the assault's start - the assault's own maximum life - where it read 600.
+THE BAR IS UNCHANGED at >= 80%.
+
+WHY THE WINDOW AND NOT THE BAR. The rows table already rules this shape four times over on 2026-09-19,
+and every restated row carries an incompatibility, never an inconvenient number: §2.6's "Something is
+always happening" had "the window was 10 s and that number was arithmetic under the 6-10 s leg this row
+was written against ... The window is restated to the leg the doctrine now has ... The bar is still 0
+windows." Same case here: a new direction needs two confirmed readings, 10 s, which is the whole of a
+600-tick budget, so the row spent its entire window confirming and had none left for the push. The
+cadence stays 21:20 and the row yields its window, not its bar.
+
+IT IS STILL RED, AND THAT IS THE POINT. 35.9% on the restated window (n=39, seeds 1-20) against >= 80%.
+That red is a simulation finding, not a doctrine problem, and the bar was not moved to meet it.
+
+WITHDRAWN, BY THE SAME PRECEDENT: my own proposals of >= 30% for this row and 70-85% for the lull band.
+Both were the bar moving to meet the measurement, which is what keeping the cadence refused.
+
+NOT TOUCHED: lulls stay written at 25-60% and stay red at 76.9 / 77.5% - a row merely unmet is a red,
+and no row in that table was ever restated for being unmet. Fail/win stays closed as noise, confirmed
+on a disjoint 20-seed block at 58.7%. Front movement stays as written and stays red at 13-14 of 20; it
+is not loosened. No core, no C#, no cadence, no new coupling.
