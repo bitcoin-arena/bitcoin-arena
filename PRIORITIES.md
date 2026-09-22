@@ -602,7 +602,9 @@ EVERY PACKAGE SWEPT 2026-09-22, and the reds that survive are four (details in T
     objective-markers  needs a live Chrome on CDP 9341. An environment, not a defect; deliberately not
                        turned into a silent skip.
     replay-solids      wants 37 world boxes where the core ships 106 by decision (`fea4a2f6`).
-    two-titles         a counter scoring 120 x 65536 where it expects 120 x 45875 - a core question.
+    (two-titles is GREEN now, 2/0: the counter sums the driver's throttle, and the expectation was the
+     old fixed program's 45875 left behind when the fixture started steering at the core's own gate on
+     2026-09-21. It reads `120 * wordsAt(0)[0]` now, so it follows the driver instead of restating it.)
     (objection-window is red and was red before any of this letter's work.)
 
   WHAT THE SWEEP KEPT FINDING: the run length. `blockTicks: 9000` predates the core's move to 10800, and

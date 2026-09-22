@@ -47501,3 +47501,28 @@ STILL RED, LISTED WITH CAUSE:
                             It drives a LIVE Chrome and cannot pass without one - an environment, not a
                             defect. Not converted to a skip: a silent skip would hide a real regression
                             the next time somebody runs it with a browser up.
+
+## two-titles: the core never changed, the driver did (2026-09-22)
+
+The surviving red was "a counter scoring 120 x 65536 where it expects 120 x 45875 - a core question".
+It was not a core question.
+
+`cores/counter.js` is a toy core that adds `w[0]` once per tick for 120 ticks, so its score IS 120
+throttles. The expectation `120 * 45875` was seven tenths throttle - the fixed program the shared fixture
+drove until 2026-09-21. That day `window-fixture.js` replaced it, and the comment there says why in its
+own words: the old program "was written when the drop-off was close; the world has since grown east and
+it never arrives ... it reaches x 145.9 m at its furthest and ends FAILED with score 2", and nineteen
+tests across five suites read DELIVERED off it. The replacement steers at the gate the core publishes, in
+the core's own units, and drives `words = [65536, steer, 0, 0, 0]` - FULL throttle.
+
+So 65536 is the driver's number and 45875 is the old driver's. The core is untouched by either.
+
+FIXED WITHOUT WRITING A NUMBER: the assertion now reads `120 * wordsAt(0)[0]`, taken from the driver the
+test actually drives with. That is the principle the fixture states about itself - "it is not re-tuned by
+hand ... the day the world moves again, this follows it" - applied to the one expectation that was left
+behind when the driver moved.
+
+    two-titles.test.js   1 pass / 1 fail  ->  2 pass / 0 fail
+
+Both of this suite's reds turned out to be leftovers of a migration done elsewhere: the run length
+(`blockTicks: 9000`, fixed earlier today) and now the driver's throttle.
