@@ -586,7 +586,7 @@ DONE (2026-09-20), in order:
 LATER, NOT NOW: different-operator gateways (§23.6's own test; this step is the operator's own two nodes by
 ruling), the Daily declaring both regtest gateways, guardians, `federationIsBonded`, `mass_behind_tunnel`.
 
-STANDING REDS (each named, none new this letter):
+ONCE-STANDING REDS, ALL RE-MEASURED 2026-09-22 (this block is history now, not a red list):
   - ~~`custody-daemon` 6 of 9 red~~ **FIXED 2026-09-20, 9/9.** Diagnosed on the hold letter because it sat on
     the hold path. The cause was the stale `blockTicks: 9000` a THIRD time: `Round.open` refuses a contract
     that disagrees with the core it names, so `POST /round` was 400, there was no round, and every
@@ -595,10 +595,19 @@ STANDING REDS (each named, none new this letter):
     `payout-second-signer-node` 1/0 and `second-closer` 2/0 both take the run length from a constant
     already; `two-titles.test.js:48` was the last private copy and now takes `BLOCK_TICKS` (`bedcfb76`).
     35 `blockTicks: 9000` literals remain across the test packages, and none of them is red for it.
-  - **`forfeit.test.js` no longer hangs** (0.383 s, exit 1, 0 leftover listeners) but is 0/2, on ruling A.
-  - `close-at-end` 0/1: it hardcodes the run length in ms (`now - 200000n`), so its round is no longer over.
-  - `five-of-seven` needs more than 180 s now that seven signer nodes drive whole 10800-tick runs;
-    `signer-node-lock` passes one test and then stops producing output. Both unattributed, both in TASKBOOK.
+  - **`forfeit.test.js` is GREEN, 2 pass / 0 fail in 16 s** (re-measured 2026-09-22). The board said 0/2.
+  - **`close-at-end` is GREEN, 1 pass / 0 fail.** The board said 0/1 on a hardcoded run length in ms.
+  - **`signer-node-lock` is GREEN, 5 pass / 0 fail, and attributed** (`ba3d089f`): it was not "one test
+    then no output" but four failures on ONE assertion in the shared fixture `joinedWithLock`, which
+    built its entry with a zeroed fee preimage and fee-lock outpoint and asserted 201 where the node
+    answers 409. The file also never exited, because that assert threw outside the fixture's own guard
+    and left its daemon listening; with the assert passing, the hang went too.
+  - `five-of-seven` is GREEN and SLOW, not red: 21 pass / 0 fail in 470 s with the machine to itself.
+    It needs more than the 180 s cap now that seven signer nodes drive whole 10800-tick runs, and it
+    halves again under CPU contention, so it does not share a machine with a probe.
+
+  SO THIS BLOCK NO LONGER HOLDS A STANDING RED. What is red, each run alone and each with its cause, is
+  listed at the top of this file: objection-window, ghost-live, replay-solids, two-titles.
 
 # DONE  -  2026-09-20 18:56 / 18:59  playtest: coin, finish gate, mempool line
 
