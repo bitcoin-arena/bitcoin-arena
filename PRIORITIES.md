@@ -99,8 +99,16 @@ THE SIX RULINGS ARE ALL RULED (spec `ef7af68c`, HARD 2026-09-22 08:25) AND ALL S
      would have been worth nothing.
   5. THE STEP - DONE (`25c0491f`, `70077d15`). Both places compare `dx² + dz²` against `(0.01 m)²`, and a
      pinned man crawls 0.5 m/s ALONG HIS DIRECTION, so a diagonal crawl is 0.00833 m and under the bar.
-     ONE DOCTRINE NUMBER MOVED WITH IT: assaults 10 -> 14, flagged in that commit. If 14 is outside
-     doctrine the doctrine row is the fix, not the number.
+     THE assaults 10 -> 14 FLAG IS ANSWERED BY MEASUREMENT (2026-09-22): **14 is not what breaks
+     doctrine.** `measure-assault.mjs` is a tool and not a test, so nothing ran it and the question sat
+     open through two letters. Re-measured on the current core: the LULL row says there are too FEW
+     assaults, not too many - nothing running on 84.1% of ticks against a row of 25-60%. And three of
+     the four failing rows were ALREADY RED in TASKBOOK's own ASSAULT PROBE baseline, with the
+     conclusion "Needs a ruling: the row or the cadence": declared-then-happens 1/19 -> 1/14, lulls
+     70.3% -> 84.1%, front-moves-visibly 0/5 -> **4/5 (better)**. Only the fail/win split is newly
+     outside (66.7% -> 75.0%) and it is ONE assault wide on a sample of twelve - noise, not claimed as
+     a finding. **STILL DANIEL'S, unchanged by this letter: the 600-tick row or the 20:30 hold
+     cadence.**
   6. THE CANDLE LEVER - NOTHING TO DO. Neither lever: the plateau stays 1 m, the ramps 4 m at 25%.
 
   AND THE CORE CHANGES NEED A FURTHER PIN MOVE: the fleet runs `02eefc04`, which predates ruling 5's

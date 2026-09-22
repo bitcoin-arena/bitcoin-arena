@@ -48510,3 +48510,43 @@ rule proves nothing; these fail under it, which is what makes them worth keeping
 TOOLING. Every Unity batchmode run deletes `Assets/AddressableAssetsData/link.xml` and its .meta;
 restored after each. And `systemd-run --user` has a bare PATH - the editor needs its absolute path, the
 same trap as node.
+
+## The assaults 10 -> 14 flag, answered by measurement (2026-09-22)
+
+Ruling 5 was recorded DONE with a flag attached: "assaults 10 -> 14 ... If 14 is outside doctrine the
+doctrine row is the fix, not the number." Nobody had checked, and the row that would decide it is
+reported by `tools/measure-assault.mjs`, which is a TOOL and not a test - so nothing ran it. That is
+how a settled ruling kept an open question for two letters.
+
+Re-measured on the current core (rulings 4 and 5 both in), seeds 1-5:
+
+    assaults started 14, target unheld by the attacker at the start 14 of 14
+    ended 12: took the objective 9 (75.0%, row 30-70%), failed 3; still running 2
+    declared then happens: lane push >= +8 m inside 600 ticks on 1 of 14 (7.1%, row >= 80%)
+    lulls: no assault running on 84.1% of ticks (row 25-60%)
+    front moves visibly: a forward hull >= 16 m across on 4 of 5 seeds (row: every seed)
+    first starts 22.1, 47.7, 32.0, 23.4, 26.8, 28.1 s (rule 20-40 s); none inside 20 s of a side's end
+
+THE COUNT WAS THE WRONG QUESTION. The lull row says there are too FEW assaults, not too many: 84.1% of
+ticks with nothing running against a row of 25-60%. Fourteen is not what breaks doctrine.
+
+AND THREE OF THE FOUR REDS ARE ALREADY PARKED. TASKBOOK's own ASSAULT PROBE baseline recorded
+"RED: lane push >= +8 m inside 600 ticks on 1 of 20 -> 1 of 19 (row >= 80%); no assault running on
+62.1% -> 70.3% of ticks (row 25-60%); a forward hull >= 16 m across on 0 of 5 seeds", with the
+conclusion "Needs a ruling: the row or the cadence" - because "a new direction needs two confirmed
+readings (10 s) and the §0.1 600-tick row cannot be met under the 20:30 hold cadence". So:
+
+    declared then happens   1/19 -> 1/14    red before, red now, same in kind
+    lulls                   70.3% -> 84.1%  red before, drifting further
+    front moves visibly     0/5 -> 4/5      BETTER, nearly passing now
+    fail/win split          66.7% -> 75.0%  NEWLY outside its row
+
+ONLY THE LAST IS NEW, AND IT IS ONE ASSAULT WIDE. Nine of twelve ended assaults took the objective;
+eight of twelve would be 66.7% and inside the row. On a sample of twelve that is noise, not a finding,
+and it is not claimed as one. It is also the direction ruling 5's own chain predicts - fewer men read
+STAND, fewer are exposed, more live, and survivors are what an assault clock reads.
+
+WHAT THIS CLOSES AND WHAT IT DOES NOT. The flag "is 14 outside doctrine" is answered: no - the count is
+not what the rows measure, and the rows that fail were failing before ruling 5 moved it. What remains
+is the ruling already parked in that baseline, unchanged by this letter: the 600-tick row or the 20:30
+hold cadence. That is Daniel's, and it is not made here.
