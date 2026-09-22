@@ -208,6 +208,24 @@ turns a slashing into the payments §5A.3 now describes exactly. The clocks, the
 the liquidation split and the round split are all law that goes red when changed and pays nobody.
 That is the whole of what is left here: the rules are written and guarded, and nothing runs them.
 
+  THE GAP IS MEASURED (`17de6615`): eight things stand between a filed slash and a paid one, and only
+  two of them - the escrow output under the arbitration keys, and MuSig2, which is referenced in four
+  files and implemented in none - need new key material. The other six are bookkeeping over what a node
+  already holds, which is why a recording-only slice is possible before any spend.
+
+  BLOCKED ON THREE RULINGS, EACH OF WHICH DECIDES WHO GETS PAID (`81665526`). A recorder cannot be
+  written without them, and I will not pick them:
+    - WHICH HEIGHT is "the slashing height"? The phrase occurs once in the spec and is never defined.
+      The slashing transaction's own height is circular - §5A.3B step 5 pays the census at a height that
+      transaction produces - and the bond's spend height also covers a node spending its own bond.
+      `census_height` is not a silent substitute.
+    - WHO ARE "the affected players"? §13A line 1796 lists "the affected player" BESIDE "another player
+      in the round", so it is narrower than every entrant. Each proof already names one `playerPubkey`.
+    - ONE ROUND, SEVERAL SLASHES: `slashDistribution` takes one bond and one set of players, but proofs
+      are stored per (round, entry, node). Each bond to its own proof's players, or all of the round's
+      bonds pooled? The two pay different people different amounts.
+  Quotes and the field-by-field reading are in TASKBOOK.md.
+
 DONE (2026-09-22, `ffa4fd75` + `9bf4e6c3`): **where a slashed bond goes, by §5A.3.** Half to that round's
 players; the other half to the active census at the slashing height MINUS that round's own seats, 75% of
 it evenly to those nodes and 25% to the developers. Nothing is burned. The round's witnesses get none of
