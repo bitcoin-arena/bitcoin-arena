@@ -586,6 +586,31 @@ DONE (2026-09-20), in order:
 LATER, NOT NOW: different-operator gateways (§23.6's own test; this step is the operator's own two nodes by
 ruling), the Daily declaring both regtest gateways, guardians, `federationIsBonded`, `mass_behind_tunnel`.
 
+EVERY PACKAGE SWEPT 2026-09-22, and the reds that survive are four (details in TASKBOOK.md):
+
+    core          142 pass / 0 fail   (15 suites, both chunks green)
+    protocol      588 pass / 0 fail   (292 + 296)
+    blwp-node     green in every chunk re-run this day; the `blockTicks: 9000` literal is GONE from
+                  that package entirely
+    blwp-client   54 suites swept - nothing had ever covered this package. FIVE were red and are
+                  fixed without changing one expectation: donation-pay 14/6 -> 20/0, own-socket-drop
+                  0/4 -> 4/0, settlement-seen 3/2 -> 3/0, player-copy 2/1 -> 3/0.
+
+  THE FOUR THAT SURVIVE, each run alone, each with a cause:
+    bundle-fresh       dist and the template are not the build of this source. Travels with the fleet
+                       pin - NOT to be cleared by rebuilding.
+    objective-markers  needs a live Chrome on CDP 9341. An environment, not a defect; deliberately not
+                       turned into a silent skip.
+    replay-solids      wants 37 world boxes where the core ships 106 by decision (`fea4a2f6`).
+    two-titles         a counter scoring 120 x 65536 where it expects 120 x 45875 - a core question.
+    (objection-window is red and was red before any of this letter's work.)
+
+  WHAT THE SWEEP KEPT FINDING: the run length. `blockTicks: 9000` predates the core's move to 10800, and
+  a node refuses such a contract by name, after which every later door answers "no such round". It was
+  behind reds in blwp-node earlier, then `two-titles`, then three client suites. The remaining literals
+  are 21 lines in blwp-client and 12 in protocol; the protocol ones never POST a contract, so they
+  cannot cause it.
+
 ONCE-STANDING REDS, ALL RE-MEASURED 2026-09-22 (this block is history now, not a red list):
   - ~~`custody-daemon` 6 of 9 red~~ **FIXED 2026-09-20, 9/9.** Diagnosed on the hold letter because it sat on
     the hold path. The cause was the stale `blockTicks: 9000` a THIRD time: `Round.open` refuses a contract
