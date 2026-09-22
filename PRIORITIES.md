@@ -668,8 +668,19 @@ EVERY PACKAGE SWEPT 2026-09-22, and the reds that survive are four (details in T
                             VARIABLE named `window`, a sliding window of batches. Not loosened - the
                             fixes are to rename the local or teach the scanner about declarations, and
                             both are somebody's call. `client.js` last changed at `f4e3e5cf`.
+    ghost-live         10/11 the load is what moves the picture - listed long before this letter, waits
+                            on the core.
+    lock-settlement    15/0  TIMING-FLAKY, not a red: it has now failed in company and passed ALONE
+                            three separate times, on different tests each time.
     (bundle.test.js and ghost-label.test.js still hold a `blockTicks: 9000` literal; neither drives a
      node, so neither can be refused for it.)
+
+  BOTH PACKAGES SWEPT IN GROUPS SMALL ENOUGH TO FINISH (2026-09-22): blwp-client 54 suites in eight
+  groups, blwp-node's unfinished ranges 41-58 / 79-98 / 104-109 re-run the same way. The client was
+  hiding TWO reds behind truncated chunks - `finish-at-delivered`, the last run-length straggler, and
+  `join`, which was mine from §24B and red since `c2437401`; both are fixed. The node hid none. The
+  difference is that client suites are slower per file, so a chunk of eighteen never finished where
+  twenty node files usually did - THE CAP IS A RESULT, NOT AN ABSENCE.
     bundle-fresh       1/1  source is SIX non-comment lines ahead of the committed bundle - the unused
                             `splitNodesDevelopers` helper this letter added, which the client never
                             calls. The rebuild WAITS ON THE FLEET PIN BECAUSE THE DEPLOY TRAVELS WITH IT,
