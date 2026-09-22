@@ -124,10 +124,14 @@ byte mapping is guarded meanwhile. Nothing here is blocked on a decision; it is 
   because the keeper opens and closes rounds continuously. Whether a paid row JOINS is still unmeasured
   and is the guardian-bond/fleet-call-site item, not this one.
 
-  LATER ITEM, THE FLEET CALL-SITE ONLY: **a paid row needs a bond that names a guardian.** The tool takes
-  it now (`postBond({ guardianOf })`, `d353ba08`) and the seven-node federation round proves it works -
-  two bonded operators refused by name, three opened and settled. What is left is the FLEET call-site,
-  which still passes nothing, so a paid row on the Daily is still refused. That is the parked fleet letter.
+  ~~LATER ITEM: a paid row needs a bond that names a guardian.~~ **NOT WHAT STOPS THE DAILY, measured
+  2026-09-22 (`da8b9de3` and below).** The live lobby carries one PAYING row and one free row in all 12
+  reads over a minute, and the node opens them: round `7d577647b2d8` decodes as **custody THRESHOLD_LN,
+  stakeMsat 100000, federationId zero**. `guardiansBonded` is only reached for FEDERATION rounds with a
+  stake (`server.js:1793`), and the Daily's paid rounds are THRESHOLD_LN (`run-2of2.mjs:63`). The tool
+  does take `guardianOf` now (`d353ba08`) and the seven-node round proved it - two operators refused by
+  name, three opened and settled - but that matters the day the Daily's rounds become FEDERATION rounds,
+  which is the enum slice waiting on the pin. Two things had been written down as one.
 
   LATER ITEM, ON THE PLAYABLE-CLIENT LETTER: **the session does not attach.** "[blwp] no session yet: the
   page has named no node" - the core drives but `BLWP_ROUND` stays false. Measured here only to show the

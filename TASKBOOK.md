@@ -47743,3 +47743,26 @@ THAT SETTLES BOTH HALVES:
 
 The network ids still differ - page 66f5caba, live checkout at 595f0df3 b07c4a09 - and the lobby lists
 both kinds of round anyway. Whatever that difference costs, it is not the lobby.
+
+## The Daily's paid rows are listed and open, because they are THRESHOLD_LN (2026-09-22)
+
+Polled the live page's `window.BLWP_LOBBY` twelve times over a minute, Beelink Chrome, bare Daily URL:
+
+    t+0s   [{"id":"5d8c4ddb","free":true},{"id":"7d577647","free":false}]
+    t+40s  [{"id":"7d577647","free":false},{"id":"79dc4d66","free":true}]
+    reads with rows 12/12 | paying rows seen 12 | free rows seen 12
+
+One paying row and one free row in EVERY read. And the paying round's own contract, fetched from the
+live node and decoded:
+
+    7d577647b2d8   custody THRESHOLD_LN   stakeMsat 100000   federationId all zero
+
+THAT EXPLAINS THE BOARD'S CLAIM AND RETIRES IT. The item said `regtest-bond.mjs` posts `guardianOf: []`,
+so "`federationIsBonded` counts zero of the federation's threshold and the node refuses a paying round by
+name - correctly". The node does NOT refuse them, and the contract says why: `guardiansBonded` is reached
+only for `custody === 'FEDERATION' && stakeMsat > 0n` (`server.js:1793`), and the Daily's paid rounds are
+THRESHOLD_LN - `run-2of2.mjs:63`, `paid = { stakeMsat, custody: 'THRESHOLD_LN' }`.
+
+So the guardian advert is not what stands between the Daily and a paid row. It becomes necessary the day
+those rounds are FEDERATION rounds, which is the enum slice, which waits on the pin. Two separate things
+had been written down as one.
