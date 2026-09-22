@@ -48072,3 +48072,37 @@ WHAT THE TWO SWEEPS TOGETHER SAY: the client was hiding two reds behind truncate
 hiding none. The difference is that the client's suites are slower per file, so a chunk of 18 never
 finished while a chunk of 20 node files usually did - which is exactly why the cap has to be read as a
 result, not as an absence.
+
+## The recorder: a node can now say what a filed slash owes (2026-09-22)
+
+The gap print listed eight things between a filed proof and a paid one. Three were rulings and are made;
+this is the node path over the four that are arithmetic. `blwp-node/src/slash-owing.js`, tested by
+`slash-owing.test.js`, 6 pass / 0 fail.
+
+    bondSats 100000  ->  toPlayers 50000   toNodes 37500   toDevelopers 12500
+    the players' half PRO RATA BY NET STAKE   alice 12500, bob 37500   (100000 : 300000)
+    the seats take nothing                    seatA 0
+    the three other census nodes take evenly  out1 12500
+    censusSeen 5, seatsOut 2
+
+WHAT IT PROVES BESIDES THE SPLIT:
+
+  - THE ORDER IS THE RULING'S ORDER. A height outside the window is refused BEFORE any census is read -
+    the test counts the reads and asserts zero. A height nobody can read yet must not send a node
+    reading a census at it.
+  - THE BOND NAMES AN OUTPOINT, NEVER A VALUE. `bondSatsOf` is the caller's, because the value is on the
+    chain and not in the proof; a bond the chain does not hold owes nothing, by name.
+  - EACH BOND PAYS ITS OWN PROOF'S PLAYERS. A replay proof names Alice alone and she takes the WHOLE
+    50000 out of that bond; a table proof over the same bond names both and splits it. Nothing pooled.
+  - AN EMPTY ELIGIBLE SET NAMES ITS SATOSHIS AND STOPS, inherited from `slashDistribution` rather than
+    re-invented here.
+
+AND IT SPENDS NOTHING, asserted rather than promised: the last test pins the owing's whole shape -
+amounts and names, no transaction, no signature, no outpoint spent. §5A.3B steps 3 and 5 need MuSig2
+over the arbitration keys, which exists nowhere in this tree, and an escrow output no builder exists for.
+Those stay their own letter.
+
+WHY A NODE SHOULD DO THIS BEFORE IT CAN PAY: every observer must recompute the same recipient list from
+chain data at a height the transaction commits to. A node that files a proof and cannot say what it
+implies has filed an assertion rather than an accusation - and the first time the numbers are worked out
+should not be the first time money moves.
