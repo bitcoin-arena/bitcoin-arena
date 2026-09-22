@@ -47599,3 +47599,36 @@ on it. Fixing the preimage that reaches the port means touching custody on a liv
 rather than taken.
 
     objection-window.test.js   5 pass / 2 fail, cause now known
+
+## §0's 0.01 m step, measured before anything is changed (2026-09-22)
+
+The board calls this "the one core remainder that is now free to run" - unparked because cover came back
+to 91.7% against a 70 bar. Measured from the core's own constants, no probe needed:
+
+    RIFLE_CRAWL          32768 Q16.16 = 0.5 m/s, at 60 Hz
+    per axis, one tick   0.00833 m      under the 0.01 m bar
+    EUCLIDEAN diagonal   0.01179 m      OVER the bar by 18%
+    MANHATTAN (x + z)    0.01667 m      OVER the bar by 67%
+    a crawl that fits 0.01 m Euclidean on a diagonal: 0.424 m/s, against 0.5 today
+
+AND A DISCREPANCY NOBODY HAS NAMED: the ruling is "combined EUCLIDEAN, not per-axis", but the code
+measures the step as MANHATTAN. Both places:
+
+    core   tactics.js:637   "his OWN step this tick was over 0.01 m (x + z)"
+    probe  measure-posture.mjs:102
+           `Math.abs(s[b+U_X] - b4[0]) + Math.abs(s[b+U_Z] - b4[1])`
+
+Manhattan is neither the per-axis reading that was rejected nor the Euclidean one that was ruled. It
+happens to agree with Euclidean on the VERDICT here - a diagonal crawl is over the bar either way - but
+it is 41% larger on a diagonal, so the two disagree about how far a man moved, and any threshold tuned
+against one is wrong for the other.
+
+WHY IT IS NOT STARTED: capping the crawl to fit 0.01 m Euclidean changes a gait in `army.js`, and a gait
+change is a CORE change - it moves `CORE_HASH`, which moves the network id, which the page and the signer
+nodes both carry. The fleet pin is already what blocks `bundle-fresh` and the hold path; landing a core
+change before that pin moves widens the same gap rather than closing it. So this is measured and left.
+
+THE START IT WANTS, smallest first: (1) make the step reading Euclidean in BOTH places, since the ruling
+already says which one it is and the two currently disagree by 41%; (2) then, separately, decide whether
+a diagonal crawl is slowed to 0.424 m/s or the movement is normalised so the combined step is the gait -
+that is the part that moves the core and must travel with the pin.
