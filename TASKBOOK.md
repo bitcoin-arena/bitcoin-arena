@@ -47968,3 +47968,35 @@ WHAT A CORE CHANGE DRAGS WITH IT, all deliberate steps the tests named:
 
     protocol   293 pass / 0 fail and 290 pass / 0 fail
     blwp-node  files 1-20, 125 pass / 0 fail
+
+## The run-length straggler, swept out of blwp-client (2026-09-22)
+
+Found while verifying the core change, not by looking for it: `finish-at-delivered` failed four times
+over with "that round says a run is 9000 ticks and this core ends one at 10800". My earlier client sweep
+never reached it - that chunk was cut off at the 180 s cap and I read the partial output as complete.
+
+Thirteen suites carried `blockTicks: 9000` AND drive a node. All thirteen now take `BLOCK_TICKS`:
+
+    two-nodes-play  claim-key-attest  ghost-realtime  page-lock  late-join  lobby  join
+    checkpoint  wallet-nwc  discovery  ghost-consume  finish-at-delivered  own-socket-drop
+
+Two of them needed a second pass: `own-socket-drop` and `finish-at-delivered` each had a second
+occurrence without a trailing comma (`client.setRound({ ..., blockTicks: 9000 })`) that my first
+replace missed. Literals left in client tests: two, in `bundle.test.js` and `ghost-label.test.js`,
+neither of which drives a node, so neither can be refused.
+
+    finish-at-delivered   0 pass / 4 fail  ->  4 pass / 0 fail
+    checkpoint + the two above, together    ->  28 pass / 0 fail
+    wallet-nwc           14 pass / 12 fail ->  21 pass / 5 fail
+
+`checkpoint` needed the TAP reporter to give up its cause at all: it does not terminate, so a plain run
+printed no summary and no assertion - the same trick that cracked `signer-node-lock`.
+
+TWO REDS THAT ARE NOT THIS, AND NOT MINE:
+  - `wallet-nwc`, the remaining 5: "the wallet was asked 2 times, expected 1". Pre-existing, and the
+    before/after above proves it - it was 12 red before the migration and is 5 red after.
+  - `discovery`: "no file in the client reads an address off the page" flags
+    `client.js: /window\s*\./`. It is a FALSE POSITIVE: `client.js:695` has a LOCAL VARIABLE named
+    `window` - a sliding window of batches - and `window.map(` matches the scanner's pattern. I did not
+    touch `client.js`; it last changed at `f4e3e5cf`. Not loosened, because the honest fixes are to
+    rename the local or to teach the scanner about declarations, and both are somebody's call.
