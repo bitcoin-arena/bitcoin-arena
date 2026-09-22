@@ -1028,7 +1028,13 @@ behind them, its fixture pair needing a third re-pick.
 §11.5's REMAINDERS - none of them a §11.5 clause, all of them blocked elsewhere:
 1. **The shell MISS half** - §11.5's own sentence is "hit or miss". Hits are in. A miss has no landing point in
    this core, so there is no share to quote and none is invented. BLOCKED ON §4.4, which owns the shell.
-2. **§0's "never a step past 0.01 m"** - 78.9% of pinned man-ticks step past it, because a diagonal crawl spends
+2. **§0's "never a step past 0.01 m"** - MEASURED 2026-09-22 AND LEFT. Per axis 0.00833 m is under the bar;
+   the EUCLIDEAN diagonal is 0.01179 m, over by 18%; a crawl that would fit is 0.424 m/s against 0.5 today.
+   AND THE READING IS WRONG IN BOTH PLACES: the rule was ruled combined EUCLIDEAN, but `tactics.js:637`
+   says "over 0.01 m (x + z)" and `measure-posture.mjs:102` adds the absolute axes - Manhattan, 41% larger
+   on a diagonal. NOT STARTED: capping the gait is a CORE change, so it moves CORE_HASH and the network id,
+   and that must travel with the fleet pin rather than widen the gap it already blocks. Numbers in TASKBOOK.
+   Original note kept: 78.9% of pinned man-ticks step past it, because a diagonal crawl spends
    0.00833 m on each axis. Ruled combined Euclidean, not per-axis. It was PARKED until cover came back over 70%,
    because capping it slows a diagonal crawl and takes men off their holes. **Cover is now 91.7%, so the parking
    condition is met and this is UNPARKED** - not started here, and it is the one core remainder that is now free
