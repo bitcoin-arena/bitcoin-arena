@@ -606,22 +606,19 @@ EVERY PACKAGE SWEPT 2026-09-22, and the reds that survive are four (details in T
                   fixed without changing one expectation: donation-pay 14/6 -> 20/0, own-socket-drop
                   0/4 -> 4/0, settlement-seen 3/2 -> 3/0, player-copy 2/1 -> 3/0.
 
-  THE FOUR THAT SURVIVE, each run alone, each with a cause:
-    bundle-fresh       dist and the template are not the build of this source. Travels with the fleet
-                       pin - NOT to be cleared by rebuilding.
-    objective-markers  needs a live Chrome on CDP 9341. An environment, not a defect; deliberately not
-                       turned into a silent skip.
-    replay-solids      NOT a stale number after all - see the M1 item below. Its count assertion WAS
-                       stale (37 is the map subtotal of MAP_BOXES = 106, per `map.js:65`) and is gone;
-                       underneath it the suite fails its real cross-check.
-    (two-titles is GREEN now, 2/0: the counter sums the driver's throttle, and the expectation was the
-     old fixed program's 45875 left behind when the fixture started steering at the core's own gate on
-     2026-09-21. It reads `120 * wordsAt(0)[0]` now, so it follows the driver instead of restating it.)
-    objection-window   5/2, CAUSE NOW KNOWN: the node settles a hold whose payment hash is
-                       sha256(32 zero bytes), twice, where one settle carrying the loser's own
-                       commitment and preimage is expected. Red before any of this letter's work, and
-                       identical run alone. It is the HOLD path, which the sequence retires last while
-                       the Daily still runs on it - so listed, not taken.
+  THE FOUR THAT SURVIVE - one line each, cause and what it waits on. Numbers, hashes and the ruled-out
+  explanations are in TASKBOOK.md.
+    bundle-fresh       1/1  dist and the template are not the build of this source. WAITS ON the fleet
+                            pin; the rebuild and the deploy travel with it, never before.
+    objective-markers  0/1  needs a live Chrome on CDP 9341. WAITS ON a playtest browser; an
+                            environment, not a defect, and not turned into a silent skip.
+    replay-solids      2/1  the core builds no map edge walls and Unity draws four. WAITS ON the M1
+                            ruling below.
+    objection-window   5/2  the node settles a hold on the wrong payment hash, twice. WAITS ON the
+                            hold-path retirement, which follows the fleet pin.
+
+    (two-titles is green, 2/0, since the counter's sum was taken from the driver instead of restating a
+     throttle nothing sends.)
 
   WHAT THE SWEEP KEPT FINDING: the run length. `blockTicks: 9000` predates the core's move to 10800, and
   a node refuses such a contract by name, after which every later door answers "no such round". It was
