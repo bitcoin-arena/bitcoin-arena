@@ -47384,3 +47384,33 @@ SEVERAL HARMED ENTRIES. Nothing says whether:
 The two pay different people different amounts whenever a round slashes more than one node, and the
 old withdrawn comment in `slash.js` shows the case was already in mind ("two nodes caught in one round").
 No spec sentence found for it.
+
+## The listed reds, run alone, and one straggler fixed (2026-09-22)
+
+Run individually, because a 20-file chunk has already faked a red once in this milestone
+(`one-signer-node-refused` failed in a chunk and passes 5/0 alone). Both of these are REAL:
+
+    replay-solids.test.js   3 tests, 2 pass 1 fail
+    two-titles.test.js      2 tests, 1 pass 1 fail
+
+CAUSES, which the board listed by name only:
+
+  replay-solids - "the core builds the map Unity draws, box for box": a running player gathered
+  actual 106 world boxes where the test expects 37. The core ships 106 map boxes deliberately
+  (`fea4a2f6`, "the committed core bundle carries the 106 map boxes"), so the EXPECTATION is what
+  predates the map. Not changed here: 37 -> 106 is exactly the shape of tuning a test green, and which
+  number is right is a core question, not a test question.
+
+  two-titles - FIXED IN PART. `open()` defaulted `blockTicks = 9000`, the run length from before
+  WAR_TACTICS moved it to 10800, so the node refused the contract by name: "that round says a run is
+  9000 ticks and this core ends one at 10800: a contract disagreeing with the network it names" - 400
+  where 201 was expected. The rest of that family was migrated when the core moved; this one was missed,
+  and the refusal was right the whole time. It now takes `BLOCK_TICKS` from the core, as
+  `committee-seed` and `donation-set-door` already do.
+
+  AND UNDERNEATH IT, A SECOND STALE NUMBER, NOT GUESSED: with the contract accepted the test gets
+  further and fails on `assert.equal(facts[k].a[0].score, 120 * 45875)` - expected 5505000, actual
+  7864320. That is 120 x 65536 against 120 x 45875: the counter core now scores ONE per tick where the
+  test expects the input word 45875. A changed score is a core behaviour question. LISTED, not tuned.
+
+So `two-titles` is still 1 pass / 1 fail, on a different and better-understood assertion than before.
