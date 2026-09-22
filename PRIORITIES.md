@@ -630,8 +630,8 @@ EVERY PACKAGE SWEPT 2026-09-22, and the reds that survive are four (details in T
                   fixed without changing one expectation: donation-pay 14/6 -> 20/0, own-socket-drop
                   0/4 -> 4/0, settlement-seen 3/2 -> 3/0, player-copy 2/1 -> 3/0.
 
-  THE FOUR THAT SURVIVE - one line each, cause and what it waits on. Numbers, hashes and the ruled-out
-  explanations are in TASKBOOK.md.
+  THE THREE THAT SURVIVE - one line each, cause and what it waits on. Numbers, hashes and the ruled-out
+  explanations are in TASKBOOK.md. Each waits on the fleet pin or a ruling; none waits on work.
     bundle-fresh       1/1  dist and the template are not the build of this source. WAITS ON the fleet
                             pin; the rebuild and the deploy travel with it, never before.
     (objective-markers is GREEN, 1/0, and so is the rest of that leftover: ONE suite and EIGHTEEN probe
