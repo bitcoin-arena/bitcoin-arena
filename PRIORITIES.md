@@ -80,8 +80,12 @@ byte mapping is guarded meanwhile. Nothing here is blocked on a decision; it is 
 
   LISTED, TIMING-FLAKY: `lock-settlement` failed two DIFFERENT tests on two runs ("SUBMITTING" where
   "ACCEPTED" was wanted) and then passed 15/15 - flaky, not a regression. Also listed: objection-window
-  (red before this letter), ghost-live, replay-solids, two-titles. `one-signer-node-refused` passes 5/0
-  alone, which confirms it was contention.
+  (red before this letter), ghost-live, replay-solids, two-titles - each run ALONE and each carrying its
+  cause in TASKBOOK: replay-solids wants 37 world boxes where the core ships 106 by decision
+  (`fea4a2f6`); two-titles had the last `blockTicks = 9000` literal, now taking `BLOCK_TICKS`, and fails
+  one step further on a counter scoring 120 x 65536 where it expects 120 x 45875 - a core question,
+  listed rather than tuned. `one-signer-node-refused` passes 5/0 alone, which confirms it was
+  contention.
 
   FIXED IN PASSING (`1e9628cd`): **the page served could enter no paying round.** Two of its three money
   scripts, `blwp-client.js` and `blwp-core.js`, had fallen off `known-good-clients.json` when I rebuilt
@@ -587,10 +591,10 @@ STANDING REDS (each named, none new this letter):
     the hold path. The cause was the stale `blockTicks: 9000` a THIRD time: `Round.open` refuses a contract
     that disagrees with the core it names, so `POST /round` was 400, there was no round, and every
     `POST /entry` answered "no such round". The fixture reads `BLOCK_TICKS` now.
-  - **85 files, 93 occurrences still name `blockTicks: 9000`** - 53 blwp-node, 22 blwp-client, 10 protocol;
-    46 are blwp-node suites and `test/pool-fixture.js` is a second shared fixture. `test/window-fixture.js`
-    is done. Three suites keep a private copy and stay red for it: `two-titles.test.js:48`,
-    `payout-second-signer-node.test.js:143`, `second-closer.test.js:91`.
+  - **the `blockTicks: 9000` sweep is done for the three suites this named** (re-measured 2026-09-22):
+    `payout-second-signer-node` 1/0 and `second-closer` 2/0 both take the run length from a constant
+    already; `two-titles.test.js:48` was the last private copy and now takes `BLOCK_TICKS` (`bedcfb76`).
+    35 `blockTicks: 9000` literals remain across the test packages, and none of them is red for it.
   - **`forfeit.test.js` no longer hangs** (0.383 s, exit 1, 0 leftover listeners) but is 0/2, on ruling A.
   - `close-at-end` 0/1: it hardcodes the run length in ms (`now - 200000n`), so its round is no longer over.
   - `five-of-seven` needs more than 180 s now that seven signer nodes drive whole 10800-tick runs;
