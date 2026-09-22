@@ -24,11 +24,15 @@ Top item first. Finish and deploy before starting the next.
 
 ## WHAT THIS BRANCH IS WAITING ON (2026-09-22) - one list, so it is not read off six places
 
-THE FLEET PIN MOVE IS DONE (Daniel 2026-09-22): **the fleet runs `02eefc04`**, off `595f0df3`. That commit's subject names `78c501ac` because that is what it recorded; the pin the fleet runs is `02eefc04`. What the old pin blocked, on its own: `bundle-fresh` (the rebuild and the deploy travel
-with it); the hold path behind `objection-window`, because the Daily's paid rounds really are
-THRESHOLD_LN (`7d577647b2d8` decoded: custody THRESHOLD_LN, stakeMsat 100000); the `/round` refusal of
-THRESHOLD_LN, which cannot be separated from retiring `custody.js`; AND EVERY CORE CHANGE - §0's step
-cap, the candle width, the map walls - because each moves `CORE_HASH`.
+THE FLEET PIN MOVE IS DONE (Daniel 2026-09-22): **the fleet runs `02eefc04`**, off `595f0df3`. That commit's subject names `78c501ac` because that is what it recorded; the pin the fleet runs is `02eefc04`. WHAT THE MOVE TO `02eefc04` CLEARED: `bundle-fresh`, because the rebuild and the
+deploy travel with it; and the `/round` refusal of THRESHOLD_LN, which cannot be separated from
+retiring `custody.js` (the Daily's paid rounds really are THRESHOLD_LN - `7d577647b2d8` decoded:
+custody THRESHOLD_LN, stakeMsat 100000).
+
+WHAT THE PIN THE FLEET RUNS NOW STILL BLOCKS, present tense: **every core change.** That is §0's step
+cap (ruling 5), the candle width, and the map walls (ruling 4) - all three ABSENT from `02eefc04`, each
+moving `CORE_HASH`. Leaving `595f0df3` did not resolve them, and this agrees with the six-rulings line
+below: rulings 4 and 5 are settled in the repository and are NOT on the fleet.
 
   WHAT THE ID GAP COST, and it was the OLD pin: the page carries `66f5caba` and rounds opened at
   `595f0df3` carried `b07c4a09`, so `donationKeysForNetworkId(b07c4a09)` was **null** in the page's build
