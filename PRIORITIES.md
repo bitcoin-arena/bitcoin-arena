@@ -262,7 +262,21 @@ costs 26 hours, not the day the drain alone takes; that is the ruled numbers' ow
 it wants shorter clocks is a later call. Measurements, the two id changes and the suite counts in
 TASKBOOK.md.
 
-NEXT M3 ITEM, NOT STARTED: **give the slashing money law a node path.** Measured 2026-09-22: NEITHER
+M3 ITEM, STARTED (`af3845ae`): **give the slashing money law a node path.** The RECORDER is in -
+`blwp-node/src/slash-owing.js`, 6 pass / 0 fail - and it is the four gaps of the eight that are
+arithmetic: the bond's value, the census at the named height, who the offence harmed, and the split.
+Measured: a 100000 sat bond owes players 50000 (pro rata by net stake: 12500 / 37500), nodes 37500,
+developers 12500, the seats nothing. A height outside the window is refused BEFORE any census is read.
+Nothing spends, and the last test asserts the owing's whole shape to keep it that way.
+
+  NEXT UNCODED PIECE, and the design is now known rather than guessed: a door that takes the height the
+  ARBITRATION SET NAMES (the node must not invent one) and answers what is owed. `censusAt(height)` is
+  `deriveCensus` over a view reaching that height with `censusHeight` set to it; `bondSatsOf` comes from
+  THAT census's own entry for the accused node, because the ruling puts `slash_height` at or below the
+  tip when they sign - so the bond is still unspent there and still carries its `bondSats`. What remains
+  after that is only steps 3 and 5: the escrow output and MuSig2, neither of which exists in this tree.
+
+  (the note below is what that item said before the recorder landed.) Measured 2026-09-22: NEITHER
 slash path has a caller outside its own tests - not `federation-slash.js` (`slashSplit`, the guardian
 bond) and not `slash.js` (`slashDistribution`, the round bond). No node path opens a claim window,
 publishes a spent-note list, or builds the escrow output under the arbitration keys, and no node path
