@@ -48983,3 +48983,37 @@ The full measure of this commit went red once on lock-settlement test 2; capture
                     live truck that touches armour is written off (Daniel 2026-09-16, sim.js:1448) while a
                     practice truck is not - the flag doing its job. The helper now parks armour at that reach
                     plus 0.5 m, derived from solids.js; the assertion is unchanged. rules.test 50/50.
+
+## The two-gateway gate, on a federation of our own (RULED Daniel 2026-09-23: hole 1 of 3, first)
+
+§23.6: "deposits and withdrawals through any of at least two gateways ... run by different operators".
+A paying FEDERATION round's `POST /round`, on a signer node with a lock port, now counts that round's
+federation's gateways through the port - `blwp-stake-lock --mode gateways`: every name the guardians
+registered, whether it answered `routing_info`, and the Lightning node key it answered with. Identity is that
+key; two names on one key are one gateway, then counted (`federationGatewayCount`, protocol/gateways.js - not
+`gatewaysAreIndependent`, whose inbound count and refuse-the-set rule are the operator's, not the door's).
+Under two distinct live: refused by name, with the count, BEFORE anything is stored - 404, nothing kept. A port
+on another federation than the round names is refused naming both. Inbound is NOT read at the door and not
+claimed there: the federation's API does not say it. It is shown only by a deposit that commits through each.
+
+Unit (gateway-gate.test.js, the shared lock fixture): 0, 1, two names on one node, one of two not answering
+-> 409 by name, 404, stored 0; two independent, and two plus a second name on one -> 201; a free round is
+not refused. 3/3. The two fake ports that reach the door report two gateways (lock-fixture, guardians-bonded).
+
+OWN FEDERATION (the port-shifted federation-hold-probe, SECOND_GATEWAY=1, on 31101..31182; the other session's
+probe on 30101 untouched): 4 guardians, threshold 3, federation a9d2f0b8; gateway A 31170 on bob's lnd
+022d23b6, gateway B 31180 on carol's 03046818; payer alice with a channel to each. `tools/gateway-probe.mjs`:
+
+    one gateway (B off all 4 guardians' lists)   409 x2 "that round's federation has 1 distinct live gateway(s)
+                                                  (1 registered): a paying round needs at least two ..."
+                                                  held 404 x2, stored 0 x2
+    two gateways (B back on)                     201 x2, held 200 x2, stored 1 x2; lobby: listed, federation-lock
+    deposit, B down (the page's own lock client  invoice payee = A's node, paid, Claimed in 4.9 s; the stake lock
+      build, no gateway named - it picks)          verified and committed 980000 msat on both signer nodes
+    deposit, A down                              payee = B's node, Claimed in 2.3 s; committed 980000 x2
+
+So each distinct live gateway received a deposit that committed - its inbound - and the client fell back to the
+live one each time. Pass for this slice. Found on the way: the harness's pids file holds the self-extracting
+wrapper, not the gatewayd it runs (killing it stops nothing); the probe stops a gateway by its listening port
+and restarts it through the wrapper. Full measure: no red but the baseline; the hole-2 pin its one skip.
+Winnings (hole 2's neighbour, "always sent") is the next slice, not started.
