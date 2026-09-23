@@ -22,9 +22,13 @@ Top item first. Finish and deploy before starting the next.
 
 # NOW  -  M3: what is left
 
+HARD (Daniel 2026-09-23 10:19): **Introduce FEDERATION in parallel.** Do not wait until THRESHOLD_LN is gone.
+New paying rounds are FEDERATION now. The deletion of the old path continues beside that, not in front of it.
+THIS IS THE LIVE ITEM.
+
 HARD (Daniel 2026-09-22 22:59): **Dispose of THRESHOLD_LN completely, including old rounds.**
 The value does not stay so old rounds can decode. A round that names it is invalid, past rounds included.
-Delete the enum, the hold-invoice path, and the threshold branch. No decode-only label. THIS IS THE LIVE ITEM.
+Delete the enum, the hold-invoice path, and the threshold branch. No decode-only label.
 
 ## WHAT THIS BRANCH IS WAITING ON (2026-09-22) - one list, so it is not read off six places
 
