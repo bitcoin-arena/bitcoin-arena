@@ -48924,3 +48924,50 @@ failure on test 1 was SUBMITTING at `lock-settlement.test.js:210` - the same ass
 the machine's load, not the tree: alone, sequentially, HEAD 4 of 20 and slice 2 8 of 11 (the later block,
 under more load); INTERLEAVED, HEAD and slice 2 alternating under one load (7.6 - 14.8), HEAD 6 of 6 and
 slice 2 4 of 6. Logs: scratchpad `lsfail2/`, `lsfail3/`. Baseline, not fixed here.
+
+## 087b707f's reds, classified and the deploy-path ones fixed (RULED 2026-09-23: the reds come first)
+
+Measured on clean worktrees at named commits - 087b707f itself, its parent 6e371394, and 25de371f - never the
+main checkout (its pull was blocked: 61 of the 68 files 25de371f brings are modified in that working tree).
+087b707f (Daniel 2026-09-23: FIRE_DAMAGE 11/13 -> 12/14, RIFLE_DAMAGE 10 -> 11, FRONT_SCORE_SPAN 40 -> 36 m)
+moved the core hash and the game config hash and re-pinned nothing. None of these is a flake: each is
+deterministic, green at 6e371394, red at 087b707f.
+
+    genesis        config hash bbae68dc.. vs pinned b0f1c338..; regtest id 83cea98f.. vs pinned 66f5caba..
+    vectors        every state hash (straight 1b9f9dba.. vs 4eaadca6..), inputs unchanged
+    core-gate      "that round runs core 2a68e8d4.., which is not on this client's known-good list"
+    donation-pay   12 of 15, the same refusal - a paying round on an unknown core
+    known-core, claim-key-attest, donation-choice, federation-stake, join, page-lock, page-threshold:
+                   the same unknown core / old id
+    core bundle    dist/blwp-core.js is not the modules' core (state hashes differ across the vectors)
+
+FIXED, all ON THE DEPLOY PATH (what the page and the nodes check each other against), with the generators,
+the rules untouched - the 2026-09-21 precedent, "the network id is a gate, not a waiver":
+  genesis-ids.js re-pinned (config bbae68dc, testnet4 55307fd7, regtest 83cea98f; the same public keys);
+  test-donation-sets.js re-signed by the existing authority keys under the new ids (sign-donation-set.mjs);
+  known-cores.js lists core 2a68e8d4 (known-cores.js; appends, drops nothing); test-vectors remade
+  (make-vectors.js - hashes only); core/dist/blwp-core.js rebuilt, the WebGL template's copy synced, and
+  known-good-clients.json re-pinned (known-clients.js) - the b1297842 chain, which client-hash caught again.
+  All green: genesis 3/3, known-core 2/2, vectors 8/8, bundle 12/12, core-gate 4/4, donation-pay 15/15,
+  client-hash 3/3, and the seven client files above.
+
+NOT FIXED - introduced by 087b707f but not a defect on the deploy path; each pins a figure or a fixture the
+intended difficulty change moved, and retuning to meet them is what the ruling forbids:
+  core rules.test 23 "nothing but the truck reads the practice flag": the live truck, pinned at 100 hp, is
+    now wrecked in one step at tick 2625 (never in 3600 at 6e371394); the practice truck is shielded. The
+    differing words are 19 S_ELAPSED and 23 S_STATE - the wreck's own consequences - besides S_PRACTICE.
+    No second reader of the flag is shown; the fixture's "a pinned truck survives" no longer holds.
+  core tactics.test 15: "12 assaults, not the measured 14".
+  node forfeit.test 2: expects "DELIVERED with score 5"; the run's score moved with the scoring band.
+
+Still red and pre-existing, same test and cause: five-of-seven (timeout), ghost-live 9, replay-solids 2,
+discovery 18, world-seed-bridge (timeout), bundle-fresh (blwp-client.js, and blwp-curve.js - stale already
+at 6e371394; 087b707f's added core staleness is gone). A new network id widens the page-and-nodes gap the
+fleet pin already has (02eefc04 carries 66f5caba): nothing is deployed and the pin is not moved.
+
+LOCK-SETTLEMENT TEST 13 (the line owed from slice 2): captured on 25de371f's tree, test 13 fails at
+lock-settlement.test.js:558, `assert.equal(got.state, 'ACCEPTED', got.why)`, SUBMITTING - "signed by the
+signer nodes; submitted by the signer node that combined it". The flake class clean HEAD shows on tests 2,
+11 and 15: pre-existing, and it did not block slice 2. Log: scratchpad lsfail5/run7.tap.
+The full measure of this commit went red once on lock-settlement test 2; captured on this tree it is line
+243, the same `got.state` read, SUBMITTING - the class clean HEAD shows on test 2. Pre-existing; not a block.
