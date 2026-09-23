@@ -48971,3 +48971,15 @@ signer nodes; submitted by the signer node that combined it". The flake class cl
 11 and 15: pre-existing, and it did not block slice 2. Log: scratchpad lsfail5/run7.tap.
 The full measure of this commit went red once on lock-settlement test 2; captured on this tree it is line
 243, the same `got.state` read, SUBMITTING - the class clean HEAD shows on test 2. Pre-existing; not a block.
+
+### The three pinned tests follow the rules played (the 2026-09-21 precedent: the pin moves, the rules do not)
+
+  tactics.test 15   re-pinned 14 -> 12, measured; every §4.12 clause still passes, only the count moved.
+  forfeit.test 2    the fixture winner's score is 2, not 5, measured in the node's own score (not carried
+                    from a core figure); the claim - a DELIVERED run under min_score is refused - unchanged.
+  rules.test 23     NOT a leak and NOT a figure: `keepArmourOff` parked armour at 7.0 m, inside the core's own
+                    contact reach (BODY_FRONT + BODY_RADIUS + hypot(ARMOUR_HALF_L, ARMOUR_HALF_W) = 7.30 m).
+                    On 087b707f a tank parked at exactly 7.00 m touched the pinned live truck at t=2625, and a
+                    live truck that touches armour is written off (Daniel 2026-09-16, sim.js:1448) while a
+                    practice truck is not - the flag doing its job. The helper now parks armour at that reach
+                    plus 0.5 m, derived from solids.js; the assertion is unchanged. rules.test 50/50.
