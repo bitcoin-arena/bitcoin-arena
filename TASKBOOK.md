@@ -49142,3 +49142,69 @@ Full suite (244 files, one per node --test, 180 s cap): the baseline reds - ghos
                    the diff was cut). Not reproduced: 2/2 alone and 15/15 as a whole file at load 14. It compares signed
                    results fixed before the close, with B back up before any settlement - the send-plan retry does not reach
                    them. Named here as a load flake, not seen before in this file; watch it.
+
+## The page asks a winner once where to send the winnings (RULED Daniel 2026-09-23: the accepted sequence)
+
+THE PAGE (packages/blwp-client/src/winnings.js, index.html, blwp.jslib): on the existing BLWP_RUN_OVER hook, and only when
+the page's own core says DELIVERED at or above the contract's min_score, `blwp.winnings.asked.<round>.<entry>` is written
+and then ONE window.prompt ("Where should your winnings be sent? Lightning address (name@host)"). The bridge hands the hook
+the run (round, entry, the core's word and score, min_score, the round's nodes) and ONE narrow call that signs the
+address's UTF-8 bytes with the session key and nothing else: no score, no payout, no round id; the key stays in the
+closure. It checks the name@host shape itself (the shipped bundle waits for the pin, so the bridge calls no new bundle
+export - ghost-field 6 measured that); the full Lightning-address check is the page's before it signs and every door's
+after. An accepted address is kept as `blwp.winnings.addr.<round>.<entry>` (address, signature, the round's nodes, who
+answered 201) and POSTed to every signer node on the round's node list, not the gateways. Every load re-posts the same
+bytes only to the nodes that did not answer 201, until all have. Empty, cancelled or not an address: nothing kept,
+nothing posted. THE DOOR: the first address stands - the same bytes again 201 and nothing changes, another address 409.
+The committed dist/template bundle is the pin's and is not rebuilt here; until it is, `askForWinnings` is absent and the
+page asks nothing (index.html checks for it).
+
+ON A 5-OF-7 (the measurement's shape, and forced by the federation): fed2 is 3-of-4, so §23.6 refuses a round unless three
+distinct bonded signer nodes each vouch for one guardian, and a paying committee is 2 or 7 (`receiptsNeeded`) - measured:
+two nodes refused "0 of that federation's 4 guardians are bonded", a 3-node round cannot settle. So seven signer nodes,
+bonded on fed2's own regtest chain (standUpRound with rpc; the fixture chain carries two bonds), three vouching.
+
+FOUND BY MEASURING, AND FIXED ON THE SETTLEMENT PATH (each red first):
+  - the send plan needed EVERY peer: one signer node that saw the run end differently stalled a 5-of-7. It needs the
+    signing threshold.
+  - a peer that rebuilt other bytes still committed, and its share would spoil the combined signature: /settle-commit
+    names the asker's txid, and a peer that rebuilt another refuses by name.
+  - every node that took the plan combined at once; each peer shares over one list only ("keeps no second pair") and no
+    combination completed (measured: fee-only round NONE after 240 s). And a single fixed proposer (the lowest key) that
+    signed the run FAILED stalled the round for good (measured: 1 of 5 took its plan, 120 tries). RULED ALREADY, applied:
+    M3.3-19's takeover - the round's nodes sorted by key, rotated by an index from the round id (`askerOrder`); seat 0
+    alone at the close, seat k once the chain is k x TAKEOVER_BLOCKS past the round's beacon; no chain tip, no takeover.
+    The others answer, keep the signature they are handed, and ask the federation every 2 s (not the minute's sweep).
+  - two askers eligible at once each fetched an invoice; the peers split 4 and 2. An asker now adopts a plan its peers
+    keep (GET /settle-sends) if it stands here, and two plans converge on the lower-keyed (payment hashes sorted) while
+    nothing is settled or sent. Unpaid extra invoices expire; one is paid.
+  - "is it in?" read stored payout contracts, and a sent winning's contract is claimed by the gateway as it pays: a paid
+    winning's preimage, held only if it hashes to the invoice, now counts; a SUBMITTING row of other bytes gives way to
+    a signature over the bytes the node rebuilds now; "neither" makes an answering node ask again.
+  Tests moved with it, each by name: the no-qualifier settlement is polled on the asker (it was a fixed WINDOW+3 s sleep,
+  red 1 in 2 on origin; with one asker it was red every time); two W6 checks accept the sent contract claimed; the
+  lock-settlement tests read the asker's own row (`proposerOf` = seat 0).
+
+MEASURED, tools/winnings-page-probe.mjs on fed2, driving the page's own bundle (built from this tree) and the shipped
+blwp.jslib in Node: index.html's join (committee, attested claim key, dealt stake, handout, lockStake through the stock
+lock client, alice paying the deposit, entryFor), its Client.at wrapper, its hook and its load; a truck steered at the
+gate off the bridge's own core (a world the core delivers in, rolled before the join: 8-18 rolls); a loser beside it.
+Final code:
+  A  asked 1; one POST per node, 7 x 201; the hook fired twice (FINISHING, FINISHED), asked once; reload 0 posts; all
+     seven signed DELIVERED; ACCEPTED, 980000 msat pot sent; alice SETTLED 970179 msat once (3 invoices asked by the
+     seats already eligible - the tip is past the beacon at the start - 1 paid); 7 PAID rows; restart all seven, 30 s:
+     asked 3 -> 3, settled 18 -> 18, same txid.
+  B  asked 1, 0 after a reload; 0 POSTs; nothing held on any node; 0 invoices; fee-only settlement; the winner's 980000
+     msat pooled; both stake locks still stored.
+  C  B down as the player answered: 6 x 201, B ECONNREFUSED; reload with B up: prompt still 1, ONE post, to B, 201; all
+     seven hold the address. B, down across the run's last ticks, signed the run FAILED 112 where six signed DELIVERED
+     112. One block mined, the takeover moved on: ACCEPTED, alice SETTLED 970179 msat once, 6 PAID rows (B none - it saw
+     no winning); restart all, 30 s: settled 17 -> 17, same txid. Another address signed through the bridge's own call:
+     409 at all seven; the bridge refused to sign a string that is not an address.
+Client unit (winnings.test.js) 4/4: A, B (empty/null/blank/not-an-address), C (down node posted once on reload, same
+bytes), and no prompt for a wreck, a miss or a score below min_score. Door test: 201, 201 unchanged, 409 at both.
+Full suite: the baseline only - ghost-live 9, replay-solids 2, bundle-fresh (the pin), discovery 18, the pin's one skip.
+
+NAMED, NOT FIXED HERE: a signer node down for ~7 s at a run's end signs that run differently for good (FAILED where the
+others signed DELIVERED) - the prompt shows while the finish is in flight. The 5-of-7 settles without it; a 2-of-2 would
+not. The harness's loser lock was once refused 409 at all seven (posted before the federation showed it); rerun, 201.
