@@ -49076,3 +49076,69 @@ The suite takes ~60-70 min run one file at a time under a 180 s cap each, and tw
                       in 89 s, at load ~8-9. 141 s leaves ~40 s at more load; split again if it tightens.
 Both leave the baseline, which is now: ghost-live 9, replay-solids 2, bundle-fresh (the pin), discovery 18, and
 lock-settlement's flake class. The next suite runs with per-file wall times recorded (the runner's own change).
+
+## The pool: a qualifier who names no address is not paid (RULED Daniel 2026-09-23: (ii), with (iii); never (i))
+
+The rule, on the settlement path (protocol lockSettlement, `addressed`): only a qualifier whose entry named a Lightning
+address is paid. An unaddressed qualifier's share stays in the pot and is split over the addressed ones by the payout
+table's own weights, renormalised over that set; the msat the division leaves goes to the first addressed row in the
+table's order, so the payouts, their fees and the input fees are the whole claimed pot - no remainder for the guardians.
+With nobody addressed no loser's stake lock is claimed: each expires back; the fee locks still settle. Nothing is ever
+paid to a key-held contract a winner would have to collect: a signed plan with an addressed qualifier and no accepted
+send is refused (`requireSends`). Every signer node reads the addressed set from its own stored addresses; a peer
+holding another set rebuilds other amounts and refuses the proposer's plan by name (the proposer now hands out an empty
+plan too).
+
+NOT RULED, AND TAKEN AS (iii): an addressed qualifier outside the paying ranks has no weight in the table. When every
+qualifier with a paying rank is unaddressed, the addressed set's weights sum to nothing, there is no split to renormalise,
+and none is invented: no stake lock is claimed, each expires back (stakeWhy says so). Measured on the node: two
+qualifiers make one paying rank; the top one unaddressed and the other addressed claimed nothing.
+
+Found and fixed on the way, each measured red first:
+  - a peer that refused its own settle while waiting for the plan never settled after taking it (A ACCEPTED, B NONE for
+    30 s): it settles as soon as it takes the plan.
+  - a peer not yet FINAL refused the plan and nothing offered it again before the 60 s sweep: the proposer offers it
+    again every second, at most 120 times.
+  - a signer node restarted inside a settlement asked again before it knew its peers and "handed" a new plan to nobody:
+    a plan handed to no peer is a refusal.
+  - W6 (b)+(c): the fee rule changed between plan and submit, and every rebuild was refused against the old payout. A
+    send planned for another amount is refused, and a kept first plan the payout no longer matches is dropped and planned
+    again - only while the round is not ACCEPTED and nothing of it was sent. Send planning now runs after the W6 federation
+    check, so a plan the money already moved on is never re-planned.
+
+UNIT (protocol lock-settlement 21/21): POOL A - nine qualifiers, rows 1 and 3 addressed, row 2 pooled: only 1 and 3 paid,
+once each, each above its own share, row 3 exactly its renormalised weight, input fees + payouts + output fees = pot,
+unspent 0; the dust - pool 294000 over weights 127136:71513, floors 188160 + 105839, 1 msat left - to the first row
+(188161). POOL B - nobody addressed: no stake claim, pool/fees/unspent 0, fee locks still claimed. POOL C - all addressed:
+every row but the first exactly the pre-ruling split, each a sent contract to the committee key; a missing send refused.
+The existing tests now name who is addressed.
+NODE (fake lock port): winnings-pool 2/2 - A: five real qualifiers (tools/find-players.mjs: scores 268, 179, 138, 132,
+60), the top one unaddressed: one sent contract of the whole 98000 pot to rank 179's invoice, gateway asked once, PAID on
+both, no row for the others, the top one's own lock kept for its forfeit, settling again adds nothing. B: no stake lock
+claimed, no invoice, fee locks settled. winnings-sent 4/4. lock-settlement (9) and lock-settlement-restart (6, split out for
+the 180 s cap) now name the winner's address; the /settled list shows no payout for the seed to collect (the winning was
+sent).
+
+OWN FEDERATION (fed2; gateways A 31170 on bob, B 31180 on carol; LNURL on alice), winnings-probe.mjs PHASE=poolA|poolB|poolC,
+1000 sat stakes, the federation charging 0 on inputs and outputs:
+  A   five qualifiers + a loser, the top (268) unaddressed. Claimed the loser's 980000; pooled: 268 owed 560000; paid ONE
+      sent contract of 980000 to 179 (owed 420000); input fees 0, output fees 0, unspent 0. Alice's invoice 970179 msat
+      SETTLED over A (the lowest live key), 1 htlc, preimage = hash, one attempt, PAID on both. Qualifiers 138, 132, 60
+      (addressed, no paying rank) and 268: no row, own locks still stored. RESTART both, 30 s: address asked 1 -> 1, alice's
+      settled invoices 9 -> 9, ACCEPTED, PAID.
+  B   one qualifier + a loser, nobody addressed: settlement of the two fee locks only (20000 to each signer node); the
+      qualifier's 980000 listed pooled; stakeWhy names (iii); address asked 0; both stake locks still stored, 150 blocks.
+  C   as A, all addressed: 560000 to 268 and 420000 to 179 (the table's own split), unspent 0; two invoices, 552684 and
+      413519 msat, both SETTLED over A, one attempt each; the loser's lock gone. RESTART: asked 2 -> 2, settled 11 -> 11,
+      PAID on both for both. (The probe printed 268's row before it was made - it waited for "every row that exists"; it now
+      waits for every sent payout. The restart line read PAID/PAID.)
+Known and left: the page does not yet ask for the address (the next slice); a peer holding an address the proposer lacks
+stops the round until the locks expire back - money-safe, not live.
+Full suite (244 files, one per node --test, 180 s cap): the baseline reds - ghost-live 9, replay-solids 2, bundle-fresh
+(the pin), discovery 18 - and the hole-2 pin's one skip; plus two:
+  forfeit 1        THIS SLICE: its round's winner named no address, so the loser's lock was (rightly) not claimed. The
+                   winner now names the fixture's address; the same assertions pass, 2/2.
+  first-mark 7     "late start at close (2)" failed once in the suite at load 8.9 (the deep-equal on node A's signed result;
+                   the diff was cut). Not reproduced: 2/2 alone and 15/15 as a whole file at load 14. It compares signed
+                   results fixed before the close, with B back up before any settlement - the send-plan retry does not reach
+                   them. Named here as a load flake, not seen before in this file; watch it.
