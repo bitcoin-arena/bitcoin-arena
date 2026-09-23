@@ -49017,3 +49017,47 @@ live one each time. Pass for this slice. Found on the way: the harness's pids fi
 wrapper, not the gatewayd it runs (killing it stops nothing); the probe stops a gateway by its listening port
 and restarts it through the wrapper. Full measure: no red but the baseline; the hole-2 pin its one skip.
 Winnings (hole 2's neighbour, "always sent") is the next slice, not started.
+
+## Winnings are always sent, on a FEDERATION round (RULED Daniel 2026-09-23; hole 3 of 3, after the gateway gate)
+
+"Winnings are always sent. There is no Collect" (Daniel 2026-09-21). A qualifier's payout was a pre-expired contract only
+the winner's key could move, collected by the page. Now, when the winner named a Lightning address once (POST
+/payout-address, signed with the entry's session key), the settlement pays that qualifier by an LNv2 OUTGOING CONTRACT:
+  - the gateway: the LOWEST KEY among the round's federation's distinct live gateways (the door's own count);
+  - the invoice: fetched from the address for what that gateway's own send fee leaves of the payout, taken only if its
+    amount and its LUD-06 description hash (sha256 of the address's metadata) stand - otherwise no payout is built on it;
+  - the refund key: the round's COMMITTEE claim key, never the winner's - the winner never acts.
+One signer node proposes the plan (the round's lowest key: two proposals fetched two invoices and built two transactions
+no signature joined - measured); every other signer node checks it itself before it rebuilds. After the guardians accept,
+the committee FROST-signs the invoice's consensus hash (the gateway pays only with the refund key's signature), the gateway
+is asked, and the preimage is checked against the invoice and kept on every signer node: one payment row each. Unpaid past
+its expiration, the contract is refunded to the committee and re-sent through the next live gateway to a fresh invoice.
+A sweep drives it, so nothing of the player's runs. Tool: blwp-stake-lock settle takes invoice payouts and --refunds,
+`send` asks a gateway, `gateways` reports each gateway's send terms and the federation's height.
+
+Unit (winnings-sent.test.js, fake lock port and LNURL): pass - one contract to the checked invoice, lowest gateway,
+committee refund key, gateway asked once, PAID on both, settling again adds nothing; fail - no qualifier: no output, no
+invoice asked; refuse - bad amount, bad description hash: no settlement; expiry - re-sent once through the next gateway,
+paid once. 4/4, 114 s.
+
+OWN FEDERATION (a9d2f0b8, 3-of-4; gateway A 31170 on bob's lnd, B 31180 on carol's; the winner's address an https LNURL
+on alice's lnd), tools/winnings-probe.mjs, on the committed code:
+  PASS    W owed 980000 msat; invoice 70748411.. 970179 msat through A (module 03e63da0), expiration 3404; contract at
+          settlement c4e197f5..:2, id 5bcebf3b..; alice SETTLED 970179 msat over her channel to A; preimage sha256 = hash;
+          the contract no longer held (the gateway claimed it); L's lock claimed into the pool; PAID on both; address asked 1.
+          RESTART both signer nodes, 30 s: address asked 1, alice's settled count 6 -> 6, settlement ACCEPTED, PAID on both.
+  FAIL    both runs under min_score, W's address named: only the two fee locks claimed, address asked 0, no rows, both stake
+          locks still held (150 blocks left).
+  EXPIRY  A live but its node drained below the winning (an ordinary bob->alice payment, after the round's deposits - a
+          deposit through A had refilled it, and A paid attempt 0: measured): attempt 0 through A, contract in settlement
+          7655d0a6.., the gateway cancelled; alice's first invoice OPEN. Mined to federation height 3533 past 3404. Attempt 1
+          through B, funded by the committee's refund 2fc93e87..; alice's second invoice SETTLED 970179 msat; preimage =
+          hash; PAID on both; address asked 2.
+Why "stop the lowest-key gateway before settling" was realised as a drain: a stopped gateway is not live, so the plan
+picks the other one and nothing expires - measured: bob's lnd down, A answered FailedToRequestRoutingInfo.
+
+Known and left: attempt 0's row reads SENDING, not EXPIRED, after its re-send; the proposer is the one that drives sends,
+so a proposer down leaves winnings waiting until it is back (restart resumes); in the probe both signer nodes share one
+federation client directory, and once a tool call collided on its lock - retried by the next sweep. The page does not yet
+ask for the address; the probe names it at the door.
+Full suite: no red but the baseline; the hole-2 pin its one skip; winnings-sent and lock-settlement passed.
