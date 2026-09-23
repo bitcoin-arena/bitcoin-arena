@@ -49208,3 +49208,14 @@ Full suite: the baseline only - ghost-live 9, replay-solids 2, bundle-fresh (the
 NAMED, NOT FIXED HERE: a signer node down for ~7 s at a run's end signs that run differently for good (FAILED where the
 others signed DELIVERED) - the prompt shows while the finish is in flight. The 5-of-7 settles without it; a 2-of-2 would
 not. The harness's loser lock was once refused 409 at all seven (posted before the federation showed it); rerun, 201.
+
+## RULED Daniel 2026-09-23: §10's required window for the run's last mark (the hole 86f52c3b left)
+
+The window is not a new second-count - spec and code never named one, and no timeout constant is invented. It runs from
+the checkpoint ask until the settlement is combined in M3.3-19's takeover order. A receipt counts only if it is the SAME
+mark already asked, posted again to the signer node that missed it, and it lands before that combine. No second prompt to
+the winner; the signature stays the address only. Two-of-two: if that re-offer lands before the combine, both sign
+DELIVERED and the winner is paid once to the named address. If the page's tick clock is already closed, or the settlement
+already combined, both sign FAILED at the last accepted mark - one payout, and the missing final receipt is not paid.
+Five-of-seven uses the same window: the rule is not split so that five-of-seven pays and two-of-two does not. A 7 s outage
+fits inside it (ruled). Not coded yet: the game path is not touched until the measurement below is read.
