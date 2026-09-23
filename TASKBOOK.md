@@ -49061,3 +49061,18 @@ so a proposer down leaves winnings waiting until it is back (restart resumes); i
 federation client directory, and once a tool call collided on its lock - retried by the next sweep. The page does not yet
 ask for the address; the probe names it at the door.
 Full suite: no red but the baseline; the hole-2 pin its one skip; winnings-sent and lock-settlement passed.
+
+## The two baseline timeouts are gone: one leak, one file too long for the cap (Daniel 2026-09-23: "Do 1. And 2.")
+
+The suite takes ~60-70 min run one file at a time under a 180 s cap each, and two baseline files spent that cap every run.
+  world-seed-bridge   all 5 tests passed in ~3.3 s and the process never exited: three MessagePorts held it - the page's
+                      tick clock opens a BroadcastChannel for the page's life (blwp.jslib), and the test never closed the
+                      three bridge instances' clocks. The test now closes Module.blwpTickClock beside the client: 3 s.
+                      No assertion changed.
+  five-of-seven       never hung: ten tests, 18-40 s each (seven signer nodes apiece), ~220 s in one file - so the cap
+                      cut it every run and TESTS 9 AND 10 HAD NEVER RUN. Split at its seam, helpers moved unchanged into
+                      five-of-seven-fixture.js: five-of-seven.test.js (two first marks, signer nodes down through the
+                      lock's expiry) 6/6 in 141 s, five-of-seven-receipts-lost.test.js (receipts lost, outage-VOID) 4/4
+                      in 89 s, at load ~8-9. 141 s leaves ~40 s at more load; split again if it tightens.
+Both leave the baseline, which is now: ghost-live 9, replay-solids 2, bundle-fresh (the pin), discovery 18, and
+lock-settlement's flake class. The next suite runs with per-file wall times recorded (the runner's own change).
