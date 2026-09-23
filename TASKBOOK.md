@@ -48827,3 +48827,35 @@ same cause is not a new red; any other red blocks the commit:
     client world-seed-bridge      times out at 180 s
 
 claim-key-own and lock-settlement are not baseline: they failed only when two suites shared a port.
+
+## New paying Daily rounds are FEDERATION, on their own seven (HARD, Daniel 2026-09-23 10:19)
+
+"Introduce FEDERATION in parallel. Do not wait until THRESHOLD_LN is gone. New paying rounds are FEDERATION
+now." The Daily's launcher opened its paying kind as THRESHOLD_LN on the free pair - which no longer encodes
+since 6e371394 - so at HEAD a paying Daily round could not be opened at all.
+
+`run-2of2.mjs`: BLWP_PAID_STAKE_MSAT now opens FEDERATION rounds on a committee of their own, SEVEN signer
+nodes (BLWP_PAID_PORTS; the ruled 5-of-7 - §23.6 needs the federation's threshold in distinct bonded
+operators, fedimintd's smallest federation is 3-of-4, and `receiptsNeeded` defines only 2 and 7). The first
+threshold-many advertise one guardian key each, read with the federation id and threshold through the lock
+port a signer node verifies with (BLWP_STAKE_LOCK_BIN, BLWP_FEDERATION_CLIENT_DIR, BLWP_FEDERATION_INVITE or
+_FILE). The free round keeps its 2-of-2 on A and B, unchanged. `daily.json` lists both committees' nodes
+and the federation's invite, so the lobby shows both kinds (`dailyLobbySearch` already takes both). Refused
+by name, before anything is created, without the federation or with anything but seven ports of its own
+(`daily-paid-federation.test.js`). RPCAUTH / RPCWALLET / BLWP_RECIPIENT_PORT let it run on a probe chain
+beside the live Daily.
+
+MEASURED against the regtest federation running here (probe chain rpc 30101, federation 423e010e,
+4 guardians, threshold 3), free pair 18591/18592, the seven on 18571..18577, recipients 18787:
+
+    free       6067976e  2-of-2, open                                   then b339ba48 opened by the keeper
+    paying     e88dc3da  custody FEDERATION  1000000 msat  7 signer nodes  then 49f455c8 opened by the keeper
+    §23.6      the round OPENED, so POST /round ran the bonded-federation gate and it passed
+    claim key  200 on all seven for e88dc3da
+    lobby      wallet federation-lock, needed 5, signerNodes 7, signed; the free pair lists only its free round
+    daily.json 9 nodes and the federation's invite
+
+What this does not do: the LIVE Daily still runs pin 02eefc04 and still opens THRESHOLD_LN paying rounds.
+Taking it there needs a federation on the Daily's own chain (none runs on RT/30401), seven more public
+tailnet paths for the seven, and the fleet pin moved with a page build - and HEAD is red on its own since
+087b707f (core, protocol and client tests), which must not ship.
