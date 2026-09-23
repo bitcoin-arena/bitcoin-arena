@@ -49219,3 +49219,63 @@ DELIVERED and the winner is paid once to the named address. If the page's tick c
 already combined, both sign FAILED at the last accepted mark - one payout, and the missing final receipt is not paid.
 Five-of-seven uses the same window: the rule is not split so that five-of-seven pays and two-of-two does not. A 7 s outage
 fits inside it (ruled). Not coded yet: the game path is not touched until the measurement below is read.
+
+## The run's final mark reaches a signer node that missed its last inputs (RULED Daniel 2026-09-23, the window above)
+
+MEASURED FIRST, on the code as it stood (tools/last-mark-window-probe.mjs: the page's own bundle and blwp.jslib on the
+Daily's two-of-two shape, a free round - a paying two-of-two FEDERATION round cannot be stood up: Fedimint 0.12.0 refuses
+a federation of 2, one guardian is single custody, and at 4 guardians §23.6 wants three vouching signer nodes). Signer
+node B stopped as the core said DELIVERED and was served again 7 s later: `finish` asked for the final mark, `markNow`
+held it for every peer, B's feed sat 4 ticks short (1002 of 1006) with its socket closed, and after the existing 10 s
+input wait the final mark was SENT TO NOBODY; no pending link, no relink, B's feed never ran again. A signed DELIVERED,
+B FAILED - 3 runs of 3 (e.g. A 1126 ticks, B 1122). The page's tick clock was never closed (last post 18-41 ms before
+DELIVERED). It was the inputs, not the mark: B lacked the last batch the final mark committed to.
+
+THE RULE, AS BUILT:
+  THE PAGE (client.js). `finish` asks for the run's FINAL mark (`markNow(..., { final: true })`): it waits only for this
+  client's own node to hold its inputs and goes to the peers that hold them - it has no successor, so no second child of
+  its parent can follow it. Every other mark keeps the all-peers wait and its existing timeout. The final mark is the
+  pending link and `finalLink`; `#catchUpFinal` re-offers that SAME object once a second (a cadence, not a timeout),
+  FEED FIRST - `#relink` runs a behind peer's input feed from the first batch it never answered, through the batch
+  ending at the mark's tick, nothing past it - until every signer node has receipted it, the page leaves (`close`), or
+  the node answers the settlement combined. Five of seven receipts end the ask, not the catch-up of a node still behind.
+  THE SIGNER NODE (round.js, verify.js). At its close, a run that would be signed as a stopped transcript, while the
+  close's own receipt pull shows a peer holding a mark this node has not got - read from that peer, session-signed,
+  chained on a mark held here, over inputs this node is short of - is HELD BACK: kept in `held_final_ask`, no result
+  signed. While held, the batch door takes after the close only batches ending before the mark's tick, then the
+  checkpoint door only that mark, byte for byte; anything else is "the round is closed", as is everything for a node
+  that holds no such ask. Inputs whole but the mark not yet taken: still held (feed first, then the mark). The node that
+  holds the final mark's ask, the run DELIVERED, while the mark is not yet carried (a peer short of its inputs) holds its
+  close too, so both sign over the same transcript - measured without it: A signed at its close without the final mark,
+  B after its catch-up with it, two transcript hashes, never 2 of 2. Only a DELIVERED run: a player who kept its last
+  inputs from one node cannot hold a pair open on a run it lost (§15). The combine ends it: then the stopped result is
+  signed and the doors shut. The close retries on the finality cadence it already had; no new timer on the node.
+
+MEASURED ON THE FIX:
+  Free two-of-two, B back after 7 s, close the moment B returns (CLOSE_AFTER_BACK_MS=0), 3 runs: both DELIVERED, same
+  score, same transcript hash, same ticks (1027/1027, 999/999, 1259/1259), same checkpoints, final mark 2 of 2 -
+  3 of 3. Before the hold-back: B FAILED, 4-6 ticks short, "the round is closed" (2 of 2 runs).
+  Free two-of-two, close 5 s after B returns, 3 runs: the same - 3 of 3 (and 3 of 3 before the node change).
+  Client test (final-mark-catchup.test.js): the final mark goes to A alone, pending at 120; B back: one batch, ticks
+  60-119, then the same mark byte for byte (message 2 of 2), receipted after 1 re-offer; 120 ticks and one transcript
+  hash at both; no fork proof. Control: a non-final mark with B down waits its 1500 ms bound, is sent to nobody, never
+  a final link; the next mark after B returns chains on the head both hold, no fork proof.
+  Doors test (held-final-ask.test.js): after the close, no ask - batch and mark refused; with the ask - a batch past the
+  tick refused, another mark at the same tick and parent refused, the mark before its inputs refused, then the batch
+  (60 ticks) and the mark taken; dropped - refused again.
+  fed2, 5-of-7, case W (winnings-page-probe.mjs, B stopped at DELIVERED, back after 7 s):
+    close 5 s after B back: all seven DELIVERED 1, final mark 7 of 7 after 8 re-offers, B's inputs whole at +8.3 s;
+      combined +60 s; alice SETTLED 970179 msat once; 7 PAID; restart all, 30 s: nothing more; another address 409 x 7.
+    close 12 ms after B back: all seven DELIVERED 472; combined +125 s; alice SETTLED once; 7 PAID; restart nothing
+      more; 409 x 7. B took the page's batches before its close was processed, so at its close its inputs were whole
+      and only the mark was missing: it closed as today (ruled: hold only while the inputs are short) and signed over
+      its chain without the final mark; the re-offer then met the closed door; the mark stayed 6 of 7 and the six
+      carried the settlement.
+  Measuring it needed, on fed2: the federation's height caught up with the chain before a round (after many blocks
+  mined, a lock's expiry from the federation's height fell short of the nodes' rule - one run discarded for it), and
+  bonds of a run killed mid-stand-up aged out of the 20-block census read (30 blocks mined).
+  Full suite (247 files, one per node --test, 180 s cap): the baseline reds - ghost-live 9, replay-solids 2, bundle-fresh
+  (the pin), discovery 18, the pin's one skip - and objective-markers timed out at 180 s. That file drives the live
+  playtest Chrome on the Beelink (CDP 9351, the deployed Daily page) and touches nothing this slice changed; run from a
+  clean worktree of origin's own HEAD it times out the same, 180 s, with the Chrome up and the page open. It passed in
+  38 s in the earlier suites: the live page, not this code. Named, not fixed here.
