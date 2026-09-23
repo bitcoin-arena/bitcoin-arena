@@ -49279,3 +49279,41 @@ MEASURED ON THE FIX:
   playtest Chrome on the Beelink (CDP 9351, the deployed Daily page) and touches nothing this slice changed; run from a
   clean worktree of origin's own HEAD it times out the same, 180 s, with the Chrome up and the page open. It passed in
   38 s in the earlier suites: the live page, not this code. Named, not fixed here.
+
+## A DELIVERED signed without the final mark is a failure, not a close (RULED Daniel 2026-09-24)
+
+The pass at 3dc6177b let one 5-of-7 run through that broke the rule: B's batches landed milliseconds before its close,
+so at the close it was short only the MARK, did not hold (the hold was only while the inputs were short), and signed
+DELIVERED over a transcript without it; the final mark stayed 6 of 7. Measured as a miss, forced every run:
+winnings-page-probe.mjs CASE=WF (harness only - the page and the signer node unchanged) stops B at DELIVERED, brings it
+back after 7 s, lets the page's batch feed through, sends the close only once B's inputs are whole, and holds back the
+final mark's bytes to B until B has applied its close. BEFORE THE FIX: six nodes DELIVERED 328 over one transcript
+(69612afc..), 17 checkpoints, 6 receipts of the final mark; B DELIVERED 328 over ANOTHER (d8175c0f..), 16 checkpoints,
+0 receipts; the client 6 of 7.
+
+THE FIX: the close holds back also while the node lacks the final mark itself - a peer holds it, session-signed and
+chained on a mark held here (the close's pull names it: "a receipt for a mark this node has not got") - not only while
+its inputs are short. One check whatever the replay said; the hold is dropped once the mark and its inputs are both in,
+and the run is signed over the transcript with it; until the combine, as ruled. While held, the checkpoint door takes
+that same mark byte for byte after the close; everything else is "the round is closed". AND the receipt a node issues
+for a mark taken after its close is offered at once to every peer over the play socket (§10's receipt exchange): the
+peers signed before it existed and pull no more - measured without it: every node agreed on the result, the client
+counted 7 of 7, and the six others held 6.
+
+MEASURED ON THE FIX (per node: its OWN signed result, /transcript ticks, /checkpoints, its receipts of the final mark):
+  forced WF, 3 runs: all seven DELIVERED 2 / 241 / 98, one transcript hash per run (b8070047.., d1d777ad.., b3330525..),
+  1163 / 1004 / 1224 ticks, 20 / 17 / 21 checkpoints at every node, the final mark 7 of 7 at every node and on the
+  client; paid once, 7 PAID, restart of all seven adds nothing (same txid), second address 409 x 7 - each run.
+  unforced W, close 10 ms and 5 s after B back: the same, all seven one result (DELIVERED 94 / 88), 7 of 7 everywhere,
+  paid once, 7 PAID, restart nothing, 409 x 7.
+  free two-of-two, 6 runs (3 close at once, 3 at +5 s): both DELIVERED, one score, one transcript hash, the same ticks
+  and checkpoints, final mark 2 of 2 - 6 of 6. In one close-at-once run node A had not yet fetched B's (identical)
+  signature when the tool stopped at 90 s: past its result window A gathers on a 60 s cadence. Named, not a disagreement.
+  Doors test: a node holding back only for the mark, its inputs whole before the close, takes that same mark after it
+  and nothing else. Client tests: final-mark-catchup 2/2, checkpoint-quorum 9/9, finish-at-delivered 4/4, backpressure
+  21/21.
+  Full suite (247 files): the baseline reds (ghost-live 9, replay-solids 2, bundle-fresh the pin, discovery 18, the pin's
+  one skip), objective-markers' 180 s timeout on the live Beelink Chrome (origin's own code times out the same, above),
+  and first-mark 7 ("late start at close (2)") once. That one is intermittent under a loaded suite and predates this
+  slice's code (it failed once in the pool slice's suite, before any final-mark code existed): 3/3 alone, 3/3 as a
+  whole file (15/15 each) on this code. Named, not fixed here.
