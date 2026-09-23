@@ -48859,3 +48859,68 @@ What this does not do: the LIVE Daily still runs pin 02eefc04 and still opens TH
 Taking it there needs a federation on the Daily's own chain (none runs on RT/30401), seven more public
 tailnet paths for the seven, and the fleet pin moved with a page build - and HEAD is red on its own since
 087b707f (core, protocol and client tests), which must not ship.
+### Slice 2 - the hold path retired, and past THRESHOLD_LN rounds absent (RULED 2026-09-23)
+
+Removed: `custody.js`, `preflight.js`, the hold path in `server.js` (the `custody` object, the expiry sweep,
+reconcile and resume, `/invoice`, `/winnings`, the join-time `x-hold`, the hold fields of `/settlement`, the
+hold close and the payout it queued), the preflight wiring in `main.js` and `lnd-settings.js`, the hold
+methods of `lnd-port.js` (`invoice` and `decode` stay), the hold branch of `funding.js`, the client's hold
+invoice (`client.js` `invoice`/`joinHold`, `join.js` `settledLine`, `nwc.js` `owedLine`/`noteSettlement`,
+`ghost-field.js`, the page's hold line), and the seven hold tools. `run-2of2.mjs`, `round-2of2.mjs`,
+`screen.mjs` and `measure-ghost-lag.mjs` name no withdrawn custody (a slice-2 blocker, ruled).
+
+Group C is deleted with the code, not skipped: the 23 whole files, and the per-test cases of five-of-seven,
+objection-window, publication-finality, signer-node-relay, reconstruct and donation-pay. Also deleted:
+`walk-away-hold.test.js` - a hold-path test Step 1 missed, which ran green on FEDERATION with a Lightning
+port in 6e371394 - and `winnings-fixture.js`, whose only importer was winnings-door. `window-fixture`'s
+join no longer pays a hold invoice (`/invoice`, `/stake` on the node's Lightning): the stake is taken as
+seen, as the lock fixtures do - rerun and slash-filing had passed in Step 1 only through that hold path.
+
+THE STORE (`round.js`): every read of `rounds` - `get`, `openRounds`, `closedRounds`, the receipts count -
+answers a row whose contract does not parse as no row. Nothing is written or deleted.
+`withdrawn-custody-absent.test.js`: a byte-0 post to `/round` is 400 as bytes that do not parse, nothing
+stored; a store holding byte-0 rows restarts with them unlisted, 404 at `/round`, and every byte in place
+(red on HEAD's `round.js`, measured).
+
+THE MEASUREMENT CONTRACT, on copies (`sqlite3 mode=ro .backup`), a node of this tree restarted on each copy
+in its own network namespace (the Daily's ports unreachable):
+
+    store  rounds  byte-0  FEDERATION   /rounds names old   /round 7d577647b2d8, ee903c10   rows after
+    a.db   7337    3237    4100         none                404, 404                       unchanged
+    b.db   7252    3214    4038         none                404, 404                       unchanged
+
+    ee903c10 on the copy, before = after:  a.db entries 2, results 4, holds CANCELLED 1 SETTLED 1,
+    fee_holds SETTLED 2, payout_address 1;  b.db entries 2, results 4, holds CANCELLED 1 SETTLED 1,
+    fee_holds 0, payout_address 0 - the recorded before-counts. 7d577647b2d8: beacon only, as recorded.
+
+The byte-0 count grew from the recorded 3127 / 3104: the pinned Daily still opens THRESHOLD_LN rounds.
+
+HOLE 2 IS NOW VISIBLE IN A TEST: `pool-outpoint.test.js` pinned `payouts.settleQueued(` on the close path.
+That close is retired, so the pin is its own skipped test naming hole 2 and its later commit; the rest of
+the file runs. The three holes stay open, for later commits of this disposal:
+
+- two-gateway law: `preflight.js` held its only call site (`gatewaysAreIndependent`); now it has none.
+- on-chain pool payout: `payout.js` `queue()` has no caller; the start-up sweep and `PoolWatch` remain.
+- winnings always sent: `/winnings` is gone, and nothing sends winnings through the federation.
+
+Measured: a clean worktree of 6e371394 plus this diff, one file at a time. No red but the baseline, same
+test and cause: five-of-seven (timeout), ghost-live 9, replay-solids 2, bundle-fresh, discovery 18,
+world-seed-bridge (timeout); wallet-nwc is deleted with group C. One skip: the hole-2 pin.
+
+WITHDRAWN: "claim-key-own and lock-settlement are not baseline: they failed only when two suites shared a
+port" (the Step 1 section above). Wrong for lock-settlement: it flakes ON ITS OWN at HEAD. Measured on a
+clean 6e371394, alone, six runs: 2 failed, both test 15 ("a round with a loser and no qualifier pays no
+stake and still pays the seats"), a fee lock read NONE where ACCEPTED was expected, with "fetch failed" in
+the settle log. The ruling that it is not baseline rested on that claim and is withdrawn (Daniel
+2026-09-23). THAT PATTERN - fetch failed, NONE against ACCEPTED - is baseline, on any test number; any
+other lock-settlement failure blocks.
+
+CLASSIFIED (the slice-2 red that blocked this commit): it is that pattern. The failing assertion is
+`assert.equal(got.state, 'ACCEPTED', got.why)` - the round's settlement read before it is ACCEPTED - and
+the value read is NONE or SUBMITTING ("signed by the signer nodes; submitted by the signer node that
+combined it"); "fetch failed" is in the settle log on some runs, not all. Clean 6e371394 shows both values:
+NONE on test 15, SUBMITTING on tests 2, 11 and 15, and a run or two cut at 180 s mid-flake. The slice-2
+failure on test 1 was SUBMITTING at `lock-settlement.test.js:210` - the same assertion. The rate follows
+the machine's load, not the tree: alone, sequentially, HEAD 4 of 20 and slice 2 8 of 11 (the later block,
+under more load); INTERLEAVED, HEAD and slice 2 alternating under one load (7.6 - 14.8), HEAD 6 of 6 and
+slice 2 4 of 6. Logs: scratchpad `lsfail2/`, `lsfail3/`. Baseline, not fixed here.
