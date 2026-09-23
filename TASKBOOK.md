@@ -48775,3 +48775,55 @@ the refusal is not the old custody 409; a FEDERATION round still decodes to byte
 publicationRelays and the §13A comments in the pool fixture, the forfeit diagnostics in the payout test,
 `w5b.mjs`, `build.txt`, `ProjectSettings.asset`, `measure-assault-in-view.mjs`, `PostureDrawTests.cs.meta`,
 and the slice-2 node files already sitting in this working tree.
+
+### Step 1 - the decoder commit (RULED 2026-09-23)
+
+Product change: `protocol/src/constants.js` and `protocol/src/contracts.js` only. `CUSTODY` is
+`[undefined, 'FEDERATION']`: byte 0 stays empty, FEDERATION stays byte 1, the name THRESHOLD_LN is gone.
+Encoding it throws (`THRESHOLD_LN is not a custody this network has: the one value is FEDERATION`);
+decoding a record carrying byte 0 throws (`custody byte 0 is not a custody of this network ...`), as a bad
+length does. No decode-only label. The 17 slice-2 deletions stay out; hold-invoice deletion has not started.
+
+Split (113 files: the 96 that name THRESHOLD_LN, and 17 that reach it only through a fixture):
+
+- GROUP A, assert the throw: `protocol/test/custody-byte.test.js`; the two custody cases of
+  `protocol.test.js`; the federation-named case that opened a THRESHOLD_LN round (a byte-0 post is now 400).
+  Same treatment for the withdrawn-custody cases in signer-node-lock, guardians-bonded, page-lock test 24.
+- GROUP B, moved to FEDERATION naming TEST_FEDERATION_ID. `window-fixture.js` and `pool-fixture.js`
+  default to FEDERATION. A paying FEDERATION round names a publication relay (§13A) - THRESHOLD_LN rounds
+  were never asked on a node without Lightning - so the moved paying rounds, both fixtures included, name
+  `wss://r.example` (the relay federation-named already used). signer-node-committee test 3 is a free
+  round: its door reaches no federation, and its subject is the chain's committee, not custody.
+  ghost-socket stays B: measured, a FEDERATION free round answers x-hold `FREE, FREE`.
+- GROUP C, skipped, never moved to FEDERATION: at HEAD the hold path still runs on a FEDERATION round that
+  has a Lightning port, so a green run would be the wrong reason. Each skip says slice 2 and the subject;
+  slice 2 deletes these tests with the code.
+
+Skipped - the hold path (reason: "slice 2: the subject is the hold path ..."):
+
+    blwp-node   custody 35, custody-daemon 9, preflight 13, winnings-door 9, launcher-funded 7,
+                paying-round-needs-gateways 7, entry-fee-door 6, federation-invoice 5, unpaid-expiry 4,
+                void-expiry 3, stake-committed 3, close-order 3, settle-threshold 2, second-closer 2,
+                hold-two-first 2, payout-second-signer-node 1                      (whole files)
+                five-of-seven: the 11 "5 of 7, a hold" tests (10 stake-lock tests run)
+                objection-window tests 1-4; publication-finality tests 6-7;
+                signer-node-relay tests 1, 2, 4; reconstruct tests 4-5 (the two Custody tests)
+    blwp-client wallet-nwc 26, stake-seen 9, page-stake 9, session-pay 8, settlement-seen 3,
+                stake-wait 1                                                        (whole files)
+                donation-pay tests 9-12 and 15 (its hold round: HELD/SETTLED, returned stake, spent)
+
+Skipped - the withdrawn custody's store (reason: "slice 2: the subject is the withdrawn custody's store"):
+`legacy-round-restart` 1.
+
+BASELINE - red at HEAD 1f888c06 alone, one file at a time, not custody, not fixed here. Same test and
+same cause is not a new red; any other red blocks the commit:
+
+    node   five-of-seven          times out at 180 s
+    node   ghost-live             test 9: a load moved this drive 0.000 m
+    node   replay-solids          test 2: FacadeRight is not among the core's boxes
+    client bundle-fresh           dist is not the build of this tree (the pin)
+    client discovery              test 18: a client file reads an address off the page
+    client wallet-nwc             test 18: depositEl.replaceChildren is not a function (now skipped, group C)
+    client world-seed-bridge      times out at 180 s
+
+claim-key-own and lock-settlement are not baseline: they failed only when two suites shared a port.
