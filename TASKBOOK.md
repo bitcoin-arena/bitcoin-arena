@@ -49592,3 +49592,31 @@ result-window, no-quorum, objection. Full suite (247 files, 1648 pass = 1647 + 1
 replay-solids 2, bundle-fresh 1 the pin, discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout.
 Next, named not done: C2b (a second valid objection inside the re-run's window: a stored row, then VOID), C2c (slash
 proofs against the re-run's signers), C3 (the settlement does not wait on a suspended entry).
+
+## FEDERATION: a second valid objection inside the re-run's own window makes the entry VOID (RULED Daniel 2026-09-24, ruling C, slice C2b)
+
+SEARCHED FIRST: POST /objection names a round and an entry; `objections` is one row per (round, entry), INSERT OR IGNORE,
+so a second objection answered 200 "already objected" and stored nothing - an agreed re-run could not be objected to.
+
+THE CUT: a new table rerun_objections (round_id, entry_id, seen_ms), the first objection's shape, one per entry - no
+column on objections, no migration; Round.objectRerun / rerunObjectedAt mirror object / objectedAt. The intake is one
+exported function, server.js objectionIntake, called by the HTTP door and by the test on a stubbed clock: the first
+objection as before (201); a second only while this node answers PROVISIONALLY_FINAL on an agreed re-run (201, stored
+once); after that window 409 "the re-run's objection window has closed", nothing stored; while still SUSPENDED, or a
+third, 200 "already objected"; a missing entry or a round the entry is not in, 404. finality.js: a stored second
+objection with agreed <= seen_ms < agreed + W that objectionHolds accepts - the same round, the committee's receipts,
+signedResultId the agreed re-run's run id, and this node's own re-run contradicting it - is VOID at once, no third run.
+The VOID goes the suspended entry's way to the money; no new money code. FORFEIT, slash proofs against the re-run's
+signers (C2c) and the settlement's wait on SUSPENDED (C3) are not here; filing time is still the node's seen_ms.
+
+MEASURED, rerun.test, W = WINDOW_MS (3000), stubbed clock, no sleep. Fixture: five of the other six keys re-run to another
+score, so the re-run agrees at 5 of 7 without the holder, whose own re-run keeps the old score. RED FIRST on 559437b4: the
+second POST was 200 "already objected" where 201 was asserted, the state PROVISIONALLY_FINAL. After: 201, stored 154 ms
+after the agreement (agreed 835 ms after the filing); VOID at agreed + W - 1, at agreed + W and at filed + 3W; mayRelease
+refuses (state VOID), entriesOnRecord VOID/0, the forfeit refuses (the lock returns to the player at its expiry); a
+third POST 200, the stored time unchanged. Outside: the intake at agreed + W answers 409 and stores nothing; a row
+written straight to the store at agreed + W is not counted - FINAL. While SUSPENDED: 200, no second row; missing or
+foreign entry 404, this entry unchanged. rerun 10/10 twice; slash-filing + objection-window 7/7; result-window, no-quorum,
+objection, rerun-object 25/25. Full suite (247 files, 1651 pass = 1648 + 3): the baseline reds only (ghost-live 9,
+replay-solids 2, bundle-fresh 1 the pin, discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout.
+Next, named not done: C2c (slash proofs against the re-run's signers), C3 (the settlement does not wait on a suspended entry).
