@@ -49317,3 +49317,43 @@ MEASURED ON THE FIX (per node: its OWN signed result, /transcript ticks, /checkp
   and first-mark 7 ("late start at close (2)") once. That one is intermittent under a loaded suite and predates this
   slice's code (it failed once in the pool slice's suite, before any final-mark code existed): 3/3 alone, 3/3 as a
   whole file (15/15 each) on this code. Named, not fixed here.
+
+## The combine comes first: the last-mark window closes (RULED Daniel 2026-09-24)
+
+MEASURED AS A MISS FIRST (winnings-page-probe.mjs CASE=WC: B stopped at DELIVERED, kept down until the other six combined
+the settlement, then brought back and closed): B held its close for ever - 180 s, no result - with a held-back ask at
+tick 1006 and its door taking the final mark ("this node holds this run's inputs only ..."), not "the round is closed".
+B had been down across the combine, so its own store held no settlement row and it never learned the window had ended.
+And nothing was paid: the harness's loser played one late first mark, which by M3.3-34 waits on every unreachable node,
+and with B down past the 3 s result window §13C voided it - no stake to claim.
+
+THE FIX: a node asks whether the settlement is combined of its own row OR of a peer's row whose combined signature
+verifies under the round's claim key over the message it names (only a threshold of the round's signer nodes can make
+one, so a peer's word alone ends nothing). If the combine came first while a node still lacked the final mark, it signs
+the stopped transcript - never a DELIVERED without the mark - and its held ask is dropped, the doors shut. The harness's
+loser now plays an on-time first mark at tick 60, then its last - its close depends on nobody.
+
+THE REGRESSION PASS FOUND TWO MISSES IN THE WINNINGS SEND, BOTH FIXED HERE (each red first):
+  - a signer node keeping another send plan committed to the send's auth anyway, and its share over its own invoice spoiled
+    the combined auth: 34 x "the auth signature does not verify under the claim key", the winner never paid. The send's
+    commit now names the plan's payment hash, and a node keeping another refuses - the settlement's own txid guard.
+  - after the combine, a later asker's lower-keyed plan still replaced the settled one at three nodes (the convergence rule
+    read "settled" as ACCEPTED only): "3 of 5 signer nodes committed to the auth", 165 times, unpaid. A plan no longer gives
+    way once this node holds the combined settlement (SUBMITTING or ACCEPTED): signed is settled.
+
+MEASURED ON THE FINAL CODE, fed2 5-of-7:
+  WC (combine first), 3 runs: the six DELIVERED 250/288/196 over one transcript each, the final mark 6 of 6 at each; B
+  back 0.75 s after the combine (+42 to +95 s), signs FAILED over its own shorter transcript, no held ask, answers the
+  final mark "error the round is closed"; the page's catch-up ends "combined", 0 re-offers after; paid once (6 PAID - B
+  was down across the send); restart adds nothing; second address 409 x 7. Then again on the final send code, 3 runs:
+  the same, each paid (6 PAID), restart nothing, 409 x 7.
+  WF (forced short-only-the-mark), 3 runs: all seven one result, one transcript, one tick and checkpoint count, 7 of 7
+  receipts at every node and on the client, paid once, 7 PAID, restart nothing, 409 x 7.
+  unforced W, close at once and at +5 s: the same, 7 PAID, 7 of 7.
+  free two-of-two, 6 runs (3 at once, 3 at +5 s): one result over one transcript each, the final mark 2 of 2.
+  Node tests: held-final-ask 3/3, checkpoint 21/21, lock-settlement 9/9, lock-settlement-restart 6/6, winnings-sent 4/4,
+  winnings-pool 3/3.
+  Full suite (247 files): the baseline reds only (ghost-live 9, replay-solids 2, bundle-fresh the pin, discovery 18, the
+  pin's one skip) and objective-markers' live-Chrome timeout (origin's own code the same, above).
+The last-mark window is closed: from the ask until the settlement is combined, the same mark, no DELIVERED on a transcript
+that lacks it, 7 of 7 after a late mark that lands in time, and the stopped result when the combine comes first.
