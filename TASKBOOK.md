@@ -49878,3 +49878,44 @@ block"); a filing in the end block itself outside on both (4 in, 1 out). Three r
 the end block itself and was outside on both.
 Committed: the test and its block-clock helper only. The earlier implementation (moments to their first block, end at
 open + W) is not committed; it is kept aside, to be redone to this ruling in the next pass. No settlement edit.
+
+## FEDERATION: the §13A windows are blocks at both ends, and every filing names its block (RULED Daniel 2026-09-24)
+
+THE RULINGS IMPLEMENTED (locked at e460687a): every §13A window is [open block, end block) - the first objection window,
+the re-run window, the re-run's own window. The end block is the first later block whose median time past is at or after
+open + objection_window_ms (median time past, not a header's own time: it only rises). A filing is assigned to the block
+hash IT CARRIES - not a receipt time, not anyone's sighting, and with no "within N below my tip" bound: inside only if that
+block is in this chain, at or after the open and strictly before the end block; the end block or later, or a hash not in
+the chain once the end block is present, is outside. A node without the block it needs decides nothing - no FINAL, VOID,
+slash or claim; tip lag is a wait. The first window opens at the block the POSTING RECORD names - the posting that
+completes the threshold, by the chain's order (one signature never marks it).
+
+THE WIRE CHANGE: protocol posting.js - the posting record carries blockHash (POSTING_BYTES 131 -> 163), and
+transcriptIsPublished returns the counted postings' blocks; rerun.js - the re-run record carries blockHash (RERUN_BYTES
++32). The objection intake (/objection) requires block=<hash> and keeps it (objections.block_hash, and rerun_objections'
+for the second objection; ALTER TABLE for older stores). A node names its chain tip on its own postings and re-runs and
+refuses by name without a chain.
+THE NODE: finality.js resultFinality reads every window from the node's chain (chainIndex over `round.chainView`: a
+block's height by hash and its median time past; windowEnd; place -> inside / outside / pending); `now` no longer decides
+a window. server.js sets round.chainView from its own `chainFor`, or from `windowChain` (a harness hands its daemons a
+block clock this way without the verifier checking the fixtures' beacon against it); the re-run watch keeps asking while
+a block is awaited. No settlement, slash, send or money path was edited: they read finality and follow it.
+THE FIXTURES: test/block-clock.js - one block per second, a block's time its median time past; a view is the chain AS OF
+the round's own clock (`this.now()`), so a stubbed read sees exactly that moment's blocks; `tipAt`, `mtpOf`, `endAt`.
+window-fixture's `opts` carries windowChain, so every fixture daemon reads it; fixture postings, re-runs and objections
+name the tip. Tests moved from receive times to block anchors; a few file a block apart where two windows must not end at
+one block; tests with 1 ms windows wait for the next block. No assertion loosened; changed expectations are the ruled
+outcome.
+
+MEASURED. window-blocks.test (two holder daemons, one a VACUUM INTO copy of the other; the one objection naming one
+block, received ~1510 ms apart; W = 3000; three runs green): at t + 5000 both VOID for the same reason (the local-clock
+finality measured A VOID / B PROVISIONALLY_FINAL at e460687a); with the end block both VOID, and the locked ruledWindow
+agrees; a node holding blocks only to end - 1 decides nothing (SUSPENDED, blockPending); a sixth re-run naming the end
+block is outside on both (4 counted); a seventh naming a block inside turns both to FINAL 5 together. Guards: rerun
+18/18, slash-filing 4/4, objection-window 3/3 (three runs, two under full-suite load), late-settlement 5/5,
+late-settlement-resend 4/4, lock-settlement 9/9, result-window 8/8, no-quorum 5/5, publication-finality 5/5, posting
+3/3, rerun-object 3/3, protocol slash 12/12, reconstruct 5/5, verify 9/9, close-retry 3/3, first-mark 15/15. Full suite
+(250 files, 1673 pass): the baseline reds only (ghost-live 9, replay-solids 2, bundle-fresh 1 the pin, discovery 18,
+pool-outpoint's one skip) and objective-markers' live-Chrome timeout. (A run before objection-window moved to block reads
+had it red under load; its timings were sub-block on a one-second clock - fixed in the test, not the rule.)
+Next, named not done: THRESHOLD_LN cut 6 (the hold vocabulary in protocol payout.js).
