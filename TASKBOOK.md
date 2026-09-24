@@ -49652,3 +49652,37 @@ slash 12/12, slash-filing + objection-window 7/7, objection / no-quorum / rerun-
 (247 files, 1654 pass = 1651 + 3): the baseline reds only (ghost-live 9, replay-solids 2, bundle-fresh 1 the pin,
 discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout.
 Next, named not done: the first result's signers' slash when the entry ends VOID (second objection or §13C), then C3.
+
+## FEDERATION: the first result's signers are slashed when the entry ends VOID, or FORFEIT by §13C (RULED Daniel 2026-09-24, ruling C steps 2 and 3)
+
+SEARCHED FIRST: the first-result slash (fileSlashProofs) was filed only when a re-run made the entry FINAL - its verdict
+asked for an authoritative re-run - so a second-objection VOID and §13C's VOID or FORFEIT slashed nobody, though ruling C
+says "the slashing of the first result's signers stands, because the objection that proved them wrong already exists".
+AND A PRODUCTION HOLE: the re-run watch's default budget was the objection plus one window, which stops before §13C
+(filed + W) and, since C2a, before the re-run's own window closes; the slash-filing tests only filed because they set
+the rerunMs test aid to 8 s.
+
+THE CUT (verify.js, server.js; no protocol, store or settlement change): fileSlashProofs's body is one private helper,
+shared; fileFirstResultSlashProofs files through it with the verdict "this node's own replay differs from the contradicted
+run", only when this node answers VOID by a second objection, or VOID or FORFEIT with noQuorum - never while SUSPENDED or
+PROVISIONALLY_FINAL. Same evidence (joinSlashEvidence), check (slashHolds), table (slash_proofs), dedupe. Named
+refusals, nothing stored: the holder ("this node's own result, which is the replay"), a stranger ("... is not on this
+round's committee" - now checked before the advertisement), a re-run signer who never signed the first result ("signed
+the re-run, not the contradicted result"), a missing advertisement ("no advertisement names its bond"). The 201 that takes
+a second objection files these after the re-run proofs, before it answers; the watch files on VOID or FORFEIT with
+noQuorum (or a second-objection VOID) and stops. The watch's default budget is filed + 2W and one tick; rerunMs stays a
+test aid. A signer of both results has one row in slash_proofs and one in rerun_slash_proofs. Money is untouched.
+
+MEASURED, rerun.test, W = WINDOW_MS: RED FIRST on a5121cd9 - all four new cases 0 proofs. After: the 201 files exactly the
+five first-result signers, each slashHolds accepts, each also in rerun_slash_proofs; the sixth key (re-ran to the agreed
+outcome, never signed the first) has no first-result row. Stubbed clock: nothing while PROVISIONALLY_FINAL; 4 filed with
+one advertisement withheld and the four refusals by name; that advertisement restored, 1; after the window, 0 -
+publications 4, 1, 0; money before and after identical (VOID, mayRelease refuses, VOID/0, the forfeit refuses). §13C on
+the C1 fixture: nothing while SUSPENDED; FORFEIT with proven equivocation at filed + W files 5, mayRelease identical
+before and after; the VOID at the same instant dedupes. Real clock, default budget, no rerunMs: the watch filed the five
+about 4.4 s after the filing (after filed + W; poll bounded at filed + 2W + 4 s). RULED FLIP: C2c's firstResultProofs 0
+after the 201 is 5 - that 0 marked this cut. rerun 16/16 twice; slash-filing + objection-window 7/7; slash, no-quorum,
+rerun-object, result-window, objection 37/37. Full suite (247 files, 1658 pass = 1654 + 4): the baseline reds only
+(ghost-live 9, replay-solids 2, bundle-fresh 1 the pin, discovery 18, pool-outpoint's one skip) and objective-markers'
+live-Chrome timeout.
+Next, named not done: C3 (the settlement does not wait on a suspended entry) - parked until planned and accepted.
