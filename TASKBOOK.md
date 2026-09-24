@@ -49379,3 +49379,27 @@ RE-MEASURED, what must already be true:
   discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout, as before.
 Left for later cuts, as ruled: payout.js's holdSettlement/SETTLE/CANCEL/settlementAction, lnd-port.js, lnd-settings.js,
 the DKG pool files, the regtest tools, comments naming THRESHOLD_LN, the pinned bundle and its template copy.
+
+## THRESHOLD_LN, the enum slice's second cut: no label in the byte-0 throw (RULED Daniel 2026-09-24)
+
+SEARCHED FIRST, every package, tool, test, dist/ and the template copy, for the suffix text and for custodyOrRefuse: only
+protocol/src/contracts.js. Neither dist/ nor the WebGL template carries the text; no node, client or tool code branches
+on custody byte 0 (round.js:47 names it in a comment only); every test matched the sentence before the suffix.
+
+THE CUT: custodyOrRefuse throws one sentence for every byte but FEDERATION's - "custody byte N is not a custody of this
+network: the one value is FEDERATION" - and the byte-0 suffix naming the withdrawn custody is gone, with the doc-comment
+sentence that said byte 0 was named on purpose. The codec, CUSTODY's empty hole at 0 and the store's "does not parse is
+no row" are unchanged. holdSettlement, SETTLE, CANCEL, actionByte, actionOf, settlementAction, preimage.js and /share
+stay: live FEDERATION code imports them (lock-settlement.js, slash.js, settlement.js); removing them rebuilds the verdict
+and waits for its own ruling.
+
+MEASURED (each new test red on 89a177cb's contracts.js, green on the cut):
+  - custody-byte.test.js 4/4: byte 0 and byte 2 throw the same sentence, only the digit changed; neither names it.
+  - withdrawn-custody-absent.test.js 6/6: a byte-0 and a byte-2 POST of the same contract, 400 each, the bodies differ in
+    the digit only, 0 rows stored; a restart on a store holding byte-0 and byte-2 rows (open and closed each) answers all
+    four alike - not in /rounds, not in openRounds/closedRounds, 404 at /round, get null, settle "this node holds no
+    such round", retried close "no such round" - /settled 0 rounds, the store's list the FEDERATION round only, 5 rows kept.
+  - protocol.test 32/32, protocol lock-settlement 21/21; node federation-named 1/1, signer-node-lock 5/5,
+    guardians-bonded 3/3, lock-settlement 9/9, winnings-sent 4/4, winnings-pool 3/3; client page-lock 27/27.
+  Full suite (246 files, 1639 pass): the baseline reds only (ghost-live 9, replay-solids 2, bundle-fresh 1 the pin,
+  discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout, as before.
