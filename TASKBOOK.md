@@ -49763,3 +49763,44 @@ winnings-pool + winnings-sent + daily-paid-federation 9/9, rerun 18/18. Full sui
 the baseline reds only (ghost-live 9, replay-solids 2, bundle-fresh 1 the pin, discovery 18, pool-outpoint's one skip)
 and objective-markers' live-Chrome timeout.
 Next, named not done: C3b-2 (the late payout by send plans keyed by (round, entry)).
+
+## FEDERATION: the late winners are sent, not collected - send plans per late (round, entry) (RULED Daniel 2026-09-24, ruling C, slice C3b-2a)
+
+SEARCHED FIRST: winnings_sends is keyed (winner entry, attempt), so a winner's late send would share a key with its
+first-round send; WinningsSend reaches its rows only through the Round's send methods (putSendPlan, sendAttemptsOf,
+sendPlansOf, markSend, dropPlannedSends, putWinnings, lockSettlement).
+
+THE CUT. Protocol: lateLockSettlement takes `sends` and `requireSends` - a winner with an accepted late send is paid by
+an outgoing contract to its invoice, refunding to the committee claim key, for exactly the split's payout (a send for
+another amount refused by name); with requireSends a winner without one is refused by name; a send needs no winner lock
+row. Node: store late_winnings_sends, key (round, late entry, winner entry, attempt) - never winnings_sends. Round
+lateSendScope(lateEntry) is the store seen through one late settlement: its send methods read and write that table, its
+settlement row is the late one, and putWinnings writes nothing (the first round's winnings row stands). WinningsSend
+takes `scopeParam` (`&late=<entry>`) on its peer calls. settlement.js: a late WinningsSend per (round, entry)
+(lateWinningsFor); the asker proposes the late plans from the late base plan and hands them to the peers (POST
+/settle-sends?late=), each checking them as for the first round (takeLateSends); the late transaction is built with the
+sends (requireSends) and commits to their payment hashes; one plan set per late settlement, unreplaceable once it is
+SUBMITTING (the scoped lockSettlement); once ACCEPTED the asker sends (sendLate): committee auth over the invoice, the
+gateway pays, the preimage checked and kept on every signer node. server.js: /settle-sends, /send-commit, /send-share,
+/winnings-paid take `late=`; the late sweep also carries unpaid late sends of ACCEPTED late settlements. Gateway: the
+lowest live one, as the first round. A round settled before 6074fbeb has no stored shares: refused, "kept no shares",
+its late lock returns at expiry. Amounts exactly lateLockSettlement's; the fee lock still pays the nodes; the first
+transaction untouched.
+`finalityOf` STAYS A SERVE TEST AID - pinned at the source level: an option only of server.js (default resultFinality,
+used by the settle pass and handed to the LockSettlement it makes) and settlement.js (default resultFinality); main.js
+never names it; verify.js names it only as its own import alias of resultFinality.
+
+MEASURED. Protocol (red first: no sent payouts): with sends each late payout is `sent` for exactly the base payout's
+msat under 1000 msat base fees, refunding to the committee, the fees the same; another amount and a missing send refused
+by name. Node late-settlement.test on the lock-round fixture, zero-fee federation (red first on 6074fbeb's src: the late
+winner was paid by a contract to its own key 020a0a...): late FAILED and late FORFEIT - the late payout 98000 msat, sent,
+payoutPk the committee claim key; invoiceMsat 93440, the largest invoice whose own fee under the lowest gateway's rule
+(4000 msat + 6000 ppm) fits in 98000; the late send PAID at attempt 0 with a preimage that hashes to the invoice at both
+signer nodes, and the late transaction commits to that hash; the first-round send still PAID at attempt 0; the winner
+paid exactly twice, once per transaction; a second sweep adds no second late row. (C3b-1's assertion that the late payout
+goes to the winner's own lock key is RULED changed to sent-to-the-committee.) Named suites: late-settlement 5/5 twice,
+protocol lock-settlement 24/24, lock-settlement 9/9, lock-settlement-restart + pool-settle 17/17, winnings-pool +
+winnings-sent + daily-paid-federation 9/9, rerun 18/18. Full suite (248 files, 1668 pass = 1666 + 2): the baseline reds
+only (ghost-live 9, replay-solids 2, bundle-fresh 1 the pin, discovery 18, pool-outpoint's one skip) and objective-markers'
+live-Chrome timeout.
+Next, named not done: C3b-2b (restart mid-send; the expiry re-send of a late winning).
