@@ -49456,3 +49456,36 @@ Full suite (247 files, 1640 pass): the baseline reds only (ghost-live 9, replay-
 discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout, as before.
 Next cut, named not done: lobby.js's 'lightning' wallet label, claim-key-attest's hold-invoice round, and roundLocks' doc
 line "A hold-invoice round names none".
+
+## THRESHOLD_LN, the enum slice's fifth cut: the page's hold round - its lobby label and its entry (RULED Daniel 2026-09-24)
+
+SEARCHED FIRST: after the fourth cut the page still had one place that drew a hold round and one that built its entry.
+lobby.js named a paying row's wallet 'lightning' when roundLocks was false, and lobbyLine drew it "a Lightning payment";
+only lobbyLine read that value. join.js entryFor built an entry for a paying round that names no federation - a stake,
+no lock, a zero claim-key attestation - which was the hold invoice's shape. A stored custody-byte-0 round never reaches
+either: the codec refuses it, so it lands only in the lobby's refused list.
+
+THE CUT: a paying row's wallet is 'federation-lock' and its line is only "a federation stake lock"; lobby.js no longer
+imports roundLocks. entryFor throws "this round takes a stake and names no federation, so it is not a round of this
+network (§23.6)" for a paying round that does not lock. roundLocks' doc line has no hold-invoice sentence. No label is
+kept for the withdrawn custody.
+
+TESTS: lobby.test +2 (a paying row is a federation stake lock whatever its wallet field, and lobby.js names no
+'lightning' wallet; a node that lists and serves a custody-byte-0 round gets no row, only a refusal naming custody byte
+0 and never THRESHOLD_LN). claim-key-attest's hold half now expects the entryFor refusal. Both fail on d4e818da.
+FIXTURES, RULED option (a), assertions unchanged: seven test files built paying rounds with no federation_id and no lock -
+join.test (3 fixtures), core-gate (1), donation-choice (1), donation-pay (1, 12 tests through entryOf), federation-stake
+(1; a FEDERATION stake on a round that never named its federation). Each now names TEST_FEDERATION_ID and passes a real
+lock: an attested claim key and a stake lock with a non-zero outpoint, paying to the dealt stake's point where one is
+dealt. The first full run caught the last four files (16 tests red on the new refusal); none was rewritten to expect it.
+Non-test callers of entryFor: every src and w5/closed-* tool path already passes a lock; round-rehearsal-lnd.mjs (the LND
+rehearsal) now meets the refusal, which is right - it is one of the regtest tools named for its own cut.
+
+MEASURED: join 12/12, lobby 10/10, claim-key-attest 5/5, core-gate 4/4, donation-choice 7/7, donation-pay 15/15,
+federation-stake 4/4. Full suite (247 files): 1626 pass with the four fixture files red, and 1642 after they were
+fixed (1640 on d4e818da plus the two lobby tests); the reds that remain are the baseline only (ghost-live 9, replay-solids 2,
+bundle-fresh 1 the pin, discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout.
+Left, each its own cut: holdSettlement, SETTLE/CANCEL/NOTHING, actionByte/actionOf/settlementAction (payout.js),
+preimage.js and /share - live FEDERATION code still imports them (lock-settlement.js, slash.js, settlement.js:122);
+lnd-port.js and lnd-settings.js; the DKG pool; the regtest tools; comments naming THRESHOLD_LN; the pinned bundle and
+its template copy.
