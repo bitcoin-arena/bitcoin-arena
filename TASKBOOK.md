@@ -49804,3 +49804,48 @@ winnings-sent + daily-paid-federation 9/9, rerun 18/18. Full suite (248 files, 1
 only (ghost-live 9, replay-solids 2, bundle-fresh 1 the pin, discovery 18, pool-outpoint's one skip) and objective-markers'
 live-Chrome timeout.
 Next, named not done: C3b-2b (restart mid-send; the expiry re-send of a late winning).
+
+## FEDERATION: a late winning through a restart, and re-sent after its contract expires (RULED Daniel 2026-09-24, ruling C, slice C3b-2b)
+
+SEARCHED FIRST: /resend-sends took only the round's own sends (winnings.checkResend over settlements.message), so a late
+re-send was checked against the first round's rows and refused; a re-send's nonce was sha256 over round, winner entry and
+attempt, so a late attempt 1 would share a nonce with that winner's first-round attempt 1.
+
+THE CUT (winnings-send.js, server.js; no settlement.js or store change): resendNonce({ roundId, lateEntryId, entryId,
+attempt }) - a late sender (its scoped store names lateEntryId) hashes its late entry in, under its own tag; the first
+round's nonce is unchanged. /resend-sends routes `late=` to the late sender and lateMessage; the late routes (/resend-sends,
+/send-commit, /send-share, /winnings-paid) refuse by name a `late` naming no late settlement of this round: "no late
+settlement for that entry". A re-send is attempt + 1 in late_winnings_sends under the same (round, late entry, winner) -
+not a new plan set - through the next live gateway the entry's earlier attempts did not use, to a new invoice from the
+address the winner named, refunding to the committee claim key; its payout is largestPayoutMsat(fees, prev - fee(prev)),
+the existing re-send rule. A second re-send of the same expired attempt adds no row (ON CONFLICT DO NOTHING, and the
+peer's "not the next attempt"); if attempt 1 also expires, attempt 2 is legitimate.
+
+MEASURED, late-settlement-resend.test (new file, split from late-settlement.test for the 180 s cap), the lock round on
+FILE-BACKED stores as lock-settlement-restart.test has them, the late sweep slowed out of the way and each step driven by
+the round's asker. RED FIRST on 632293e7's src: the file fails at import (resendNonce absent); run with that import
+stubbed, the peer checked the late re-send against its first-round rows ("attempt 0 has not expired here ...") and no
+re-send was taken or signed. After:
+1. Restart (a), killed after the late plans were proposed and taken, before signing: after the restart the same payment
+   hash (the kept plan, no new invoice), the late transaction ACCEPTED, one row per node PAID at attempt 0 with a preimage
+   that hashes to the invoice, one late submission, the first-round rows unchanged.
+2. Restart (b), killed after ACCEPTED with the send unpaid (SENDING): the txid equal before and after the restart and to
+   the rebuilt one, the one row resumed to PAID, one late submission.
+3. Expiry (port.gatewayDown on the lowest gateway, port.height past the expiration): attempt 1 through gw-b to a new payment
+   hash at the same address, 98000 msat on the zero-fee federation, the re-send refunding to the committee claim key, PAID
+   with a preimage that hashes to attempt 1's invoice at both nodes; the late re-send nonce 64f7404c... is not the first
+   round's dd81e254... .
+4. A second re-send of attempt 0 adds no row: attempts 0 and 1 at both nodes.
+5. late= naming the winner's own first-round entry: /resend-sends and /send-commit 409 "no late settlement for that
+   entry", nothing stored, the first-round rows unchanged.
+6. VOID and a late qualifier still never sent: late-settlement.test 5/5.
+7. Under the 1000 msat base fee a 98000 msat expired contract re-sends exactly largestPayoutMsat(fees, 98000 - 1000) =
+   96000 msat, PAID.
+A HARNESS EFFECT, NAMED: right after both nodes restart on the same ports a peer's first answer can fail at the connection
+("fetch failed" - seen in 1 of 3 runs of restart (a)); the daemon's late sweep asks again, and the test drives settleLate
+and sendLate as the sweep does, a bounded number of passes, reporting them: restart (a) 1-2 passes, restart (b) 1.
+Named suites: late-settlement-resend 4/4 twice (restart cases 3 more times), late-settlement 5/5, winnings-pool +
+winnings-sent + daily-paid-federation 9/9, lock-settlement 9/9. Full suite (249 files, 1672 pass = 1668 + 4): the
+baseline reds only (ghost-live 9, replay-solids 2, bundle-fresh 1 the pin, discovery 18, pool-outpoint's one skip) and
+objective-markers' live-Chrome timeout.
+Ruling C (C1, C2a, C2b, C2c, the first-result slash, C3a, C3b-1, C3b-2a, C3b-2b) is on origin with this.
