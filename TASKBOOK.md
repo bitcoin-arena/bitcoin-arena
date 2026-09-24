@@ -49357,3 +49357,25 @@ MEASURED ON THE FINAL CODE, fed2 5-of-7:
   pin's one skip) and objective-markers' live-Chrome timeout (origin's own code the same, above).
 The last-mark window is closed: from the ask until the settlement is combined, the same mark, no DELIVERED on a transcript
 that lacks it, 7 of 7 after a late mark that lands in time, and the stopped result when the combine comes first.
+
+## THRESHOLD_LN, the enum slice's first cut: hold-window.js deleted (RULED Daniel 2026-09-24: "First files, and only these")
+
+SEARCHED FIRST, every package and tool, for an import or a use of `protocol/src/hold-window.js`'s exports
+(SETTLE_SAFETY_BLOCKS, MAX_PAYABLE_CLTV_BLOCKS, ROUTE_CLTV_BLOCKS, askableCltvBlocks, TICKS_PER_SECOND, CLOSE_SECONDS,
+finalSeconds, HOLD_MARGIN, cltvBlocksFor, holdCoversRound): its own test the only importer; TICKS_PER_SECOND elsewhere
+only in comments (core/src/tick.js, core/dist/blwp-core.js, the template's copy). Nothing live. Deleted: hold-window.js
+and hold-window.test.js. No THRESHOLD_LN name, label or decode-only path added.
+
+RE-MEASURED, what must already be true:
+  - custody byte 0 throws at decode, byte 2 too; CUSTODY[0] is an empty hole; any custody but FEDERATION throws at
+    encode (custody-byte.test.js 3/3).
+  - the same contract, two bytes (withdrawn-custody-absent.test.js, new): byte 0 POST /round 400 "custody byte 0 is not
+    a custody of this network", 0 rows, GET of those bytes' id 404; byte 1 201, GET 200, 1 row.
+  - a stored byte-0 round, open and closed (new, store level): /rounds names neither, /settled?since=0 lists 0 rounds,
+    a settle of either "this node holds no such round", a retried close "no such round".
+  - withdrawn-custody-absent 4/4, custody-byte 3/3, protocol lock-settlement 21/21, node lock-settlement 9/9,
+    winnings-sent 4/4, winnings-pool 3/3.
+  Full suite (246 files, one fewer): the baseline reds only (ghost-live 9, replay-solids 2, bundle-fresh 1 the pin,
+  discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout, as before.
+Left for later cuts, as ruled: payout.js's holdSettlement/SETTLE/CANCEL/settlementAction, lnd-port.js, lnd-settings.js,
+the DKG pool files, the regtest tools, comments naming THRESHOLD_LN, the pinned bundle and its template copy.
