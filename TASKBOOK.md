@@ -49536,3 +49536,39 @@ Named suites: beacon-selection + beacon 16/16. Full suite (247 files, 1644 pass 
 only (ghost-live 9, replay-solids 2, bundle-fresh 1 the pin, discovery 18, pool-outpoint's one skip) and
 objective-markers' live-Chrome timeout.
 Next, named not done: c4a0eff6 ruling C, SUSPENDED ends in at most three windows.
+
+## FEDERATION: a suspended entry ends with its re-run window - §13C at filed + W, and a contract's window is six hours at most (RULED Daniel 2026-09-24, c4a0eff6 ruling C, slice C1)
+
+SEARCHED FIRST: SUSPENDED is recomputed, never stored - objection.js finality() answers it for a valid objection filed
+inside the window, and finality.js resultFinality() was the only thing that ended it: 5 of 7 re-runs on one outcome,
+posted, made it FINAL. Nothing timed it out ("what 13C does then is timed from the result window, which the contract does
+not carry yet"), so four re-runs stayed SUSPENDED forever (rerun.test.js:106 pinned that). The window is the contract's
+objection_window_ms, in ms; the result window is the same field (ruled 2026-09-15). contracts.js roundWindowsAreValid
+refused only a window <= 0.
+
+THE CUT: resultFinality counts only re-runs stored before rerunEnds = filed + objection_window_ms (filed = this node's
+objection seen_ms; the spec's block-timestamped filing is a gap flagged, not fixed), so the answer at that instant is the
+answer from then on. No threshold by then is §13C's noQuorumOutcome (payout.js, imported, not edited): FORFEIT when
+round.provenTwoFirstMarks, VOID otherwise. settlement.js entriesOnRecord lists a finality FORFEIT as FORFEIT score 0,
+like the VOID line above it - no stored §13C record needed; a stored one is still taken once, above, never twice.
+MAX_OBJECTION_WINDOW_MS = 21_600_000n in constants.js; roundWindowsAreValid refuses a window over it, naming the cap.
+Until C2, a re-run agreed inside the window is FINAL at once with no objection window of its own: short of the spec and
+inside its three-window cap. The second objection row (C2) and the settlement's waiting on SUSPENDED (C3) are not here.
+
+MEASURED, W = WINDOW_MS (3000) on the node's own clock stubbed, no sleep: filed + 2999 SUSPENDED; filed + 3000 VOID
+("the re-run window closed at ... with 4 of 5 re-runs on one outcome (§13A, §13C)"); filed + 6000 VOID. VOID refunds:
+mayRelease refuses, entriesOnRecord lists VOID/0, the forfeit refuses (the lock returns to the player at its expiry).
+Proven equivocation at the same instant: FORFEIT; mayRelease { ok, FORFEIT, proven }; entriesOnRecord FORFEIT/0 on the
+finality alone (before the settlement line: "nothing is claimed while a run is not final"); with a stored record too it
+is listed once. Cap: 21600000 opens, 21600001 and 86400000 refused.
+FIXTURES, RULED: the re-runs land 0.66-0.94 s after the filing (measured, three runs and two more at 0.85-0.93), so an
+800 ms re-run window was luck. rerun.test and slash-filing use WINDOW_MS; rerun.test:106 flipped to VOID (ruled), and its
+test 5 and slash-filing's short-of-five case read at filed + W - 1, assertions unchanged (SUSPENDED, "3 of 5 committee
+signer nodes have re-run", no proof filed). objection-window reads at the windows' close, inside the re-run window
+(no share, /suspend/), and at filed + W: no share, VOID. result-window.test's "any positive window" list stops at 6 h.
+The first full run caught slash-filing (1, 2, 4) and objection-window 1 before those two files moved.
+Named suites: rerun 6/6 twice, slash-filing 4/4 twice, objection-window 3/3 twice, result-window 8/8, objection 9/9,
+entry-window + no-quorum. Full suite (247 files, 1647 pass = 1644 + 3 new): the baseline reds only (ghost-live 9,
+replay-solids 2, bundle-fresh 1 the pin, discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout.
+Next, named not done: C2 (the re-run's own objection window; a second valid objection voids), C3 (the settlement does not
+wait on a suspended entry).
