@@ -49513,3 +49513,26 @@ wording. signer-node-lock:60 (port.height + 100) stays refused, its regex unchan
 Full suite (247 files, 1643 pass = 1642 + the new test): the baseline reds only (ghost-live 9, replay-solids 2,
 bundle-fresh 1 the pin, discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout.
 Next slice, named not done: c4a0eff6 ruling B, the beacon hash itself is the randomness (the height term dropped).
+
+## FEDERATION: round_randomness is the beacon block's hash itself, no height term (RULED Daniel 2026-09-24, c4a0eff6 ruling B)
+
+SEARCHED FIRST: no computation ever mixed in a height. committeeSeedFrom (protocol/src/beacon.js) hashes
+root || root || round_id || round_randomness under TAG.committeeSeed; committeeSeedFromBeacon hands it the block hash
+alone; playerSubSeed / seedWordForEntry (seed.js) take the same bytes for the world. beaconFromChain takes
+blockHashOf(header) = hash256 of the raw 80-byte header, internal order, never reversed, and beacon-source.js hands those
+bytes to main.js's randomnessFor. Height is read only to choose and check the block (beaconIsAfterRound, depth,
+beaconIsTheChains) and is returned beside the hash for display and agreement (join.js:192, the server's putBeacon);
+all of that stays. The one stale sentence was beacon.js's comment "The spec then takes round_randomness =
+H(hash(beacon_block) || height(beacon_block))".
+
+THE CUT: that comment now says round_randomness is hash(beacon_block) in internal order and the callers seed with the
+block hash itself; the height only chooses and checks the block. No function body changed.
+
+A PIN, NOT A RED-FIRST TEST: beacon-selection.test's new case passes on 458fb47e and after, because nothing it measures
+changed. It fixes the bytes: the mainnet genesis header's internal hash 6fe28c0a...19000000000000, the committee seed
+89bcdfa54f3fd95285a230736281bd2e1c78ff0cf1bbeeae2300826787a2fbbd for root b32(2) in both positions and round id
+b32(0x11), and the seed from the reversed explorer hash (000000000019d668...8ce26f) is another value, 9c282f0c...39732a.
+Named suites: beacon-selection + beacon 16/16. Full suite (247 files, 1644 pass = 1643 + the pin): the baseline reds
+only (ghost-live 9, replay-solids 2, bundle-fresh 1 the pin, discovery 18, pool-outpoint's one skip) and
+objective-markers' live-Chrome timeout.
+Next, named not done: c4a0eff6 ruling C, SUSPENDED ends in at most three windows.
