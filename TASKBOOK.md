@@ -49429,3 +49429,30 @@ Full suite (247 files, 1640 pass): the baseline reds only (ghost-live 9, replay-
 discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout, as before.
 Left for the later client-and-codec cut: join.js roundLocks and contracts.js federationIsNamed (they read objects built
 in memory; join.js is in the pinned bundle).
+
+## THRESHOLD_LN, the enum slice's fourth cut: the codec's and the page's custody branch (RULED Daniel 2026-09-24)
+
+SEARCHED FIRST: outside the node files the third cut took, two comparisons against a custody were left in running code,
+both real branches - contracts.js federationIsNamed (called from encodeRoundContract BEFORE the custody byte, so an
+in-memory non-FEDERATION object skipped the federation_id question and died at custodyByte instead), and join.js
+roundLocks (its callers, page-lock.js x10, lobby.js, join.js x4, all hand it a paying round's contract; on anything that
+decodes the comparison is true and the federation_id decides). The pinned bundle (dist/blwp-client.js, the template
+copy) still carries both: pinned, not rebuilt; bundle-fresh stays red with one more source difference.
+
+THE CUT, three steps in order: encodeRoundContract asks custodyByte(c.custody) first, so anything but FEDERATION still
+throws "... is not a custody this network has", never the federation_id message; federationIsNamed drops the custody
+branch (no stake: ok; a stake: a non-zero federation_id); roundLocks is roundPays plus a non-zero federation_id. The
+decode path, custodyOrRefuse, CUSTODY's hole at 0, custodyFieldsAreValid and every refusal message stay.
+
+MEASURED - SOURCE-LEVEL, NOT A BEHAVIOUR TEST: no-custody-branch.test.js now reads protocol/src and blwp-client/src
+beside the node's src: 2 comparisons on b710cb5e (contracts.js:616, join.js:267), 0 after. The reorder is guarded by
+behaviour: with step 1 removed, protocol.test's withdrawn-custody case (line 501) goes red; with it, that case,
+signer-node-lock:131 and guardians-bonded:161 pass unchanged.
+Stayed green: protocol custody-byte 4/4, protocol.test 32/32, lock-settlement 21/21; node no-custody-branch 1/1,
+withdrawn-custody-absent 6/6, federation-named 1/1, signer-node-lock 5/5, guardians-bonded 3/3, lock-settlement 9/9,
+lock-settlement-restart 6/6, winnings-sent 4/4, winnings-pool 3/3, daily-paid-federation 2/2; client claim-key-attest
+5/5, page-lock 27/27, lobby 8/8, lobby-names 5/5, join 12/12, late-join 6/6.
+Full suite (247 files, 1640 pass): the baseline reds only (ghost-live 9, replay-solids 2, bundle-fresh 1 the pin,
+discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout, as before.
+Next cut, named not done: lobby.js's 'lightning' wallet label, claim-key-attest's hold-invoice round, and roundLocks' doc
+line "A hold-invoice round names none".
