@@ -49919,3 +49919,41 @@ late-settlement-resend 4/4, lock-settlement 9/9, result-window 8/8, no-quorum 5/
 pool-outpoint's one skip) and objective-markers' live-Chrome timeout. (A run before objection-window moved to block reads
 had it red under load; its timings were sub-block on a one-second clock - fixed in the test, not the rule.)
 Next, named not done: THRESHOLD_LN cut 6 (the hold vocabulary in protocol payout.js).
+
+## FEDERATION: §13C's result window is blocks at both ends, opened at the contract end (RULED Daniel 2026-09-24, ruling (a))
+
+THE RULING IMPLEMENTED: the result window opens at the first block at or after roundEndMs(contract) - entry close + 2 x
+start deadline + run length, the same instant at every holder - by the same beacon-from-chain ask the other windows use,
+and ends at the first later block whose median time past is at or after open + objection_window_ms. No open block or no
+end block: no decision. No close record, no closed_ms + W. The clocks at server.js's watches stay polling budgets.
+THE NODE: finality.js resultWindow(round, rid, contract) -> { ok, open, end } over the node's chain (chainIndex now also
+hands back the headers). The four §13C checks read it: verify.js #unretrievedPastWindow, shortPastWindow and #noQuorum
+(a pending decision says it waits for the chain's end block), server.js voidStands. No closed_ms is read to decide
+anything (one log line keeps it). No money path, refund, claim or forfeit amount edited; the §13A rules untouched.
+THE FIXTURES (harness only): window-fixture presentDay(contract, endMs) moves a round's committee time, start and entry
+close so roundEndMs lands at endMs, every interval unchanged; the fixture beacon's time is the round's committee time +
+400 (exactly the old 900 on a 1970 round). The §13C rounds of one-signer-node-refused, close-retry, first-mark 5b-5e and
+five-of-seven moved to present-day times and wait for the chain's end block, then each node's decision, not W after a
+close. Changed expectations are the ruled outcome only: close-retry's "B decides >= 3000 ms after its own close" (a
+local-clock rule) became "the in-window read was before the end block, B closed after it"; five-of-seven's wait counts
+a Void that stands past the end block as that node's answer. late-settlement's finalityOf import pin allows resultWindow.
+
+RED FIRST (today's local-clock window, two holders closing ~3 s apart): VOID written at A +3866 ms and B +6094 ms after
+A's close against the result window's end block at +9728; FORFEIT A +3.1 s, B +6.2 s against +13.6 s - each at its own
+close + W. GREEN (one-signer-node-refused 8/8): VOID - closes 3007 ms apart, A wrote at +11936, B at +12888, end block at
++10763, VOID at both; FORFEIT - A +16988, B +20105, end block +13761, FORFEIT at both; a holder whose chain lags 4 s wrote
+nothing while A wrote (A 1022 ms past the end block), saw no end block, wrote the same VOID 4940 ms after it; with the end
+block as tip resultWindow is ok at both, one block before it at neither. The gap between the two writes is each watch's
+polling back-off (a budget, as ruled), not a decision split: neither writes before the end block, both write one outcome.
+Guards: close-retry 3/3, first-mark 15/15, five-of-seven 6/6 (143 s), late-settlement 5/5, slash-filing 4/4.
+Full suite (250 files, 1676 pass): the baseline reds only (ghost-live 9, replay-solids 2, bundle-fresh 1 the pin,
+discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout; close-retry 3/3, first-mark 15/15,
+five-of-seven 6/6 (136 s), late-settlement 5/5, slash-filing 4/4 inside it.
+
+KNOWN, NOT RULED: (1) a node whose close comes after the end block, holding an ENTRY_VOID shown by doors, has its Void
+stand at once - its close never holds the entry, so it pulls no pair and writes no §13C VOID (five-of-seven path 2,
+node 4 down: nodes 5 and 6; at 8c03514e they held and wrote VOID at their own close + W). Every assertion - no refund
+door 2xx, nothing kept, the lock held - is unchanged. (2) Evidence (an equivocation pair, a refusal) is not placed on a
+block: one arriving after the end block can still split two holders. (3) slash-filing test 2 went red once under the
+extra load of files run beside the suite (§13A re-run window, not this slice; green alone and in the other runs).
+Next, named not done: THRESHOLD_LN cut 6 (the hold vocabulary in protocol payout.js).
