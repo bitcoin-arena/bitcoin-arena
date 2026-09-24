@@ -49403,3 +49403,29 @@ MEASURED (each new test red on 89a177cb's contracts.js, green on the cut):
     guardians-bonded 3/3, lock-settlement 9/9, winnings-sent 4/4, winnings-pool 3/3; client page-lock 27/27.
   Full suite (246 files, 1639 pass): the baseline reds only (ghost-live 9, replay-solids 2, bundle-fresh 1 the pin,
   discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout, as before.
+
+## THRESHOLD_LN, the enum slice's third cut: the node-side threshold branch (RULED Daniel 2026-09-24)
+
+SEARCHED FIRST, every .custody read in node src, tools and tests: the six comparisons, each on a contract straight from
+decodeRoundContract (server.js:1294 settleTheStakes and :1653 POST /round; settlement.js:148; stake-lock-signer-node.js:83
+and :131), locksStake's two callers the same, verifyStakeLock/verifyFeeLock called only from server.js:2444/:2464. Every
+test naming another custody (federation-named, signer-node-lock, guardians-bonded, page-lock, custody-byte, protocol.test)
+expects the codec's throw at encode, and the four regtest tools that still name THRESHOLD_LN die at that same throw -
+none reaches these branches. Nothing hand-built, nothing needing the other side.
+
+THE CUT: server.js's three gates read "takes a stake" (the custody-field check, the two-gateway count and the bonded-
+guardians check stay as they were); stake-lock-signer-node.js's stake-lock and fee-lock guards read the zero federation_id
+only, their refusals unchanged; locksStake is the named federation and the stake. The decoder answers FEDERATION or
+throws, so on every contract these sites read the comparison was always true: what left is the other side, the
+withdrawn custody's branch.
+
+MEASURED - SOURCE-LEVEL, NOT A BEHAVIOUR TEST: no door can reach the deleted branch, so no behaviour could go red first.
+no-custody-branch.test.js reads the node's src for any comparison against a custody: 6 found on 7d23861d (red), 0 after.
+Stayed green: protocol custody-byte 4/4, protocol.test 32/32, lock-settlement 21/21; node withdrawn-custody-absent 6/6,
+federation-named 1/1, signer-node-lock 5/5, guardians-bonded 3/3, lock-settlement 9/9, lock-settlement-restart 6/6,
+winnings-sent 4/4, winnings-pool 3/3, daily-paid-federation 2/2, and the doors the search found: gateway-gate 3/3,
+no-base-fee 6/6, lock-client 1/1.
+Full suite (247 files, 1640 pass): the baseline reds only (ghost-live 9, replay-solids 2, bundle-fresh 1 the pin,
+discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout, as before.
+Left for the later client-and-codec cut: join.js roundLocks and contracts.js federationIsNamed (they read objects built
+in memory; join.js is in the pinned bundle).
