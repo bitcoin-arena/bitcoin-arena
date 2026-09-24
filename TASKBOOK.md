@@ -50005,3 +50005,23 @@ one-signer-node-refused 9/9, window-blocks 3/3, rerun 18/18, slash-filing 4/4, c
 Full suite (253 files, 1681 pass): the baseline reds only (ghost-live 9, replay-solids 2, bundle-fresh 1 the pin,
 discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout.
 Next, named not done: THRESHOLD_LN cut 6 (the hold vocabulary in protocol payout.js) - not started, as ruled.
+
+## THRESHOLD_LN cut 6a: the bundle the page runs refuses byte 0 and does not name the withdrawn custody (RULED Daniel 2026-09-24)
+
+THE RULING: this cut may rebuild the pinned client bundle and the template copy the page loads (the earlier
+do-not-rebuild pin lifted for this cut only); decoding a byte-0 contract must throw the source's sentence, and the bundle
+text must not contain THRESHOLD_LN. The fleet pin is not moved: the Daily's signer nodes stay on 02eefc04, no byte-0 round
+is posted live, the service is not restarted - the live refusal probe is not part of this cut.
+RED FIRST (blwp-client/test/withdrawn-custody-bundle.test.js, today's bundle, 0/2): the source refused one fixture contract
+with its custody byte at 0 - "custody byte 0 is not a custody of this network: the one value is FEDERATION" - and dist and
+the WebGL template's copy both decoded it as { custody: 'THRESHOLD_LN' } (their CUSTODY still read ['THRESHOLD_LN',
+'FEDERATION']); both texts named THRESHOLD_LN.
+THE CUT: seven comment lines in four bundled sources named it (protocol constants.js; blwp-client join.js, client.js,
+ghost-field.js) - reworded to "the withdrawn Lightning custody", no code changed; dist/blwp-client.js rebuilt
+(tools/bundle.js) and copied to unity-proto/Assets/WebGLTemplates/BtcLogistics/blwp-client.js; its hash appended to
+known-good-clients.json by tools/known-clients.js (the earlier hashes stay listed).
+GREEN: withdrawn-custody-bundle 2/2 - both copies throw the source's sentence, neither text names THRESHOLD_LN.
+bundle-fresh stays red, now only for blwp-curve.js (not this cut's pin); blwp-client.js is the build of this source.
+Full suite (254 files, 1683 pass): the baseline reds only (ghost-live 9, replay-solids 2, bundle-fresh 1 - curve only -
+discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout.
+Next, named: cut 6b - the hold vocabulary out of protocol payout.js (the red 2 of this letter).
