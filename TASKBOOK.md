@@ -49572,3 +49572,23 @@ entry-window + no-quorum. Full suite (247 files, 1647 pass = 1644 + 3 new): the 
 replay-solids 2, bundle-fresh 1 the pin, discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout.
 Next, named not done: C2 (the re-run's own objection window; a second valid objection voids), C3 (the settlement does not
 wait on a suspended entry).
+
+## FEDERATION: an agreed re-run gets its own objection window before it is FINAL (RULED Daniel 2026-09-24, ruling C, slice C2a)
+
+THE CUT (finality.js resultFinality): a re-run at the threshold inside the re-run window is PROVISIONALLY_FINAL until its
+own objection window closes. The window opens when this node held the re-run at threshold - the seenMs of the record that
+first made the count, among the records inside the re-run window - and is objection_window_ms long. That start is before
+filed + W, so it closes before filed + 2W and before P + 3W: the three-window cap holds by construction. After it, FINAL,
+and only once the re-run's transcript is posted (P2), as before.
+OPEN EDGE, NOT A RULE: a re-run transcript still unposted at that close leaves the entry not-FINAL, which can outlive the
+cap. The re-run replays the same canonical transcript the objection already needed posted, so it should not happen in
+practice; no timeout is added.
+
+MEASURED, rerun.test's new case, W = WINDOW_MS (3000) on the node's own clock stubbed, no sleep: on 1962890c the entry was
+FINAL and a share was released at agreed + W - 1; now PROVISIONALLY_FINAL with no share, and FINAL at agreed + W. The
+fifth re-run landed 766-859 ms after the filing (three runs). rerun 7/7 twice (cases 1 and 2 at filed + 2W stay FINAL);
+slash-filing 4/4 twice, its polls unchanged (proofs are filed once FINAL, now about W later); objection-window 3/3,
+result-window, no-quorum, objection. Full suite (247 files, 1648 pass = 1647 + 1): the baseline reds only (ghost-live 9,
+replay-solids 2, bundle-fresh 1 the pin, discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout.
+Next, named not done: C2b (a second valid objection inside the re-run's window: a stored row, then VOID), C2c (slash
+proofs against the re-run's signers), C3 (the settlement does not wait on a suspended entry).
