@@ -49957,3 +49957,51 @@ door 2xx, nothing kept, the lock held - is unchanged. (2) Evidence (an equivocat
 block: one arriving after the end block can still split two holders. (3) slash-filing test 2 went red once under the
 extra load of files run beside the suite (§13A re-run window, not this slice; green alone and in the other runs).
 Next, named not done: THRESHOLD_LN cut 6 (the hold vocabulary in protocol payout.js).
+
+## FEDERATION: §13C's evidence is tied to the block it sits in, and a late closer gets no free stand (RULED Daniel 2026-09-24)
+
+THE RULINGS IMPLEMENTED. Evidence counts when its block is strictly before that window's end block - the open is not a
+floor, so play-time first marks, equivocation, refusals and peer refusal answers count; a record in the end block or later
+is outside at every holder (filings keep their own open-to-end rule). Each evidence record stores the tip of the node that
+records it; a pulled record keeps the block the peer named; a holder places a mark at the earliest block among the records
+it holds, pulls peers before it decides, and decides only once the end block is there. A pair counts only if both marks
+are before the end block - on the result window and the re-run window alike. No block on the player's mark: core, protocol
+and client unchanged. No free stand: past the end block an ENTRY_VOID with no counted pair does not end the close; every
+holder writes the same §13C record - VOID, or FORFEIT on a counted pair - and the first-result slash follows it. Amounts
+unchanged. Residuals stand as ruled: an unreachable earlier record may still differ; a lying node may name an older block.
+THE NODE. store.js: evidence_blocks (entry, mark id, block) - every record kept, the earliest placed; first_mark_offers
+gains block_hash (ALTER; a repeated answer keeps its first block). round.js: tipOf, noteEvidenceBlock (stamped on a
+checkpoint, an offered mark, a pair's two marks, a late start, the Void's first mark, a refused first mark), evidenceBlocks,
+markCounts(entry, mark, chain, end), provenTwoFirstMarks(..., window). finality.js: resultWindow hands back its chain; the
+re-run window's §13C reads provenTwoFirstMarks gated by its end block. verify.js: #pullEvidenceBlocks (/evidence-blocks of
+each peer) before any §13C decision; #equivocationProven(..., window) counts a pair only when both marks count;
+#noQuorum reads the window first - a late start, a pair, a refusal (the offer's block, the refusing node's mark block) count
+only before the end block; a Void (its own, or a peer's on-time first-mark Void read at /entry-void by a holder with no
+first mark) is decided VOID past the end block even with a peer down; #unretrievedPastWindow and shortPastWindow read the
+gated, pulled proof; pullEvidence for the re-run watch. server.js: voidStands no longer ends a close on a Void;
+GET /evidence-blocks; the re-run watch pulls the peers' evidence before it reads a §13C outcome and files the slash.
+THE FIXTURES (harness only). window-fixture joinAndPlay returns otherFirstMark (the player's second first mark). The
+seven-node lock paths start 25 s before their contract end so every mark of the path is play-time evidence, and
+lockAfterClose asserts the close came before the end block; the standing-Void shortcut of the last slice is gone. Split to
+stay inside the suite's 180 s: five-of-seven-expiry.test.js (the three "down through the lock's expiry" paths),
+first-mark-fixture.js + first-mark-late.test.js (5b-5e and the late proof); five-of-seven-receipts-lost's rounds
+moved to the present the same way. No assertion changed except the ruled outcomes.
+
+MEASURED, RED FIRST on 6f46b643 (no src changed): (1) late closer, seven nodes, path 2 with signer node 4 (the pair)
+down: 0-3 closed before the end block and wrote VOID, 5 and 6 - shown the Void by the doors - closed after it and wrote
+nothing (evidence-blocks.test). (2a) late proof, result window: B voided, closed before the end block; the player's late
+first mark reached A after it - A FORFEIT, B nothing, its Void standing (first-mark-late). (2b) late pair, re-run window:
+the player's second first mark reached holder A after the re-run window's end block - A FORFEIT, B VOID, 5 first-result
+slashes at each (window-blocks). (2c) late refusal: A closed before the end block holding nothing, B refused the on-time
+first mark after it - A signed FORFEIT/0, B VOID (one-signer-node-refused).
+GREEN: (1) all six up write VOID, the same (empty - no first result was signed) slash set; (2a) VOID at both; (2b) VOID
+at both, the same 5 slashes - and the same pair made inside the window: FORFEIT at both, the same 5; (2c) FORFEIT/0 at
+both, no VOID; a refusal inside the window still VOID at both (refused 1, 8). No holder writes before the end block.
+OUTCOMES THAT MOVED, all toward one record at every holder: five-of-seven path 2 - FORFEIT at all seven (5 and 6 wrote
+nothing); path 2 with node 4 down - VOID at all six up; receipts-lost's genuine outage-VOID - VOID at all seven (none
+wrote anything before: each Void stood). Every refund-door, kept-forfeit and lock-held assertion unchanged.
+Guards: first-mark 11/11, first-mark-late 5/5, five-of-seven 3/3, five-of-seven-expiry 3/3, receipts-lost 4/4,
+one-signer-node-refused 9/9, window-blocks 3/3, rerun 18/18, slash-filing 4/4, close-retry 3/3, evidence-blocks 1/1.
+Full suite (253 files, 1681 pass): the baseline reds only (ghost-live 9, replay-solids 2, bundle-fresh 1 the pin,
+discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout.
+Next, named not done: THRESHOLD_LN cut 6 (the hold vocabulary in protocol payout.js) - not started, as ruled.
