@@ -50025,3 +50025,39 @@ bundle-fresh stays red, now only for blwp-curve.js (not this cut's pin); blwp-cl
 Full suite (254 files, 1683 pass): the baseline reds only (ghost-live 9, replay-solids 2, bundle-fresh 1 - curve only -
 discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout.
 Next, named: cut 6b - the hold vocabulary out of protocol payout.js (the red 2 of this letter).
+
+## THRESHOLD_LN cut 6b: the hold invoice's vocabulary is deleted; a stake lock has its own three ends (RULED Daniel 2026-09-24)
+
+THE RULING: delete the hold vocabulary from payout.js; lock-settlement.js takes settle-or-refund from a federation-only
+function with the same outputs; update preimage.js, /share, lnd-port.js, lnd-settings.js, the four regtest tools and the
+comments that name THRESHOLD_LN. No decode-only label; an old round that names it stays invalid. The fleet pin not moved.
+RED FIRST (protocol/test/no-hold-vocabulary.test.js, 0/4 on 16dbfa06): payout.js exported SETTLE, CANCEL, NOTHING, ACTIONS,
+actionByte, actionOf, settlementAction, holdSettlement, HELD, SETTLED, CANCELLED, EXPIRED, holdAfter, invoiceMatchesEntry;
+lock-settlement.js, slash.js and blwp-node preimage.js imported them; 13 files under src/ and tools/ named THRESHOLD_LN;
+there was no lock-action.js.
+THE CUT. protocol/src/lock-action.js: CLAIM (a loser's lock claimed into the settlement), RETURN (a qualifier's lock
+forfeited back to its refund key), EXPIRE (VOID: nobody acts, the lock refunds at expiry) - LOCK_ACTIONS in the byte order
+SETTLE/CANCEL/NOTHING had, so the settlement record (slash.js, 5A.3 row 4) encodes the same bytes; lockAction and
+lockActions are 23.2's table and the pool split, the same rules and outputs as settlementAction and holdSettlement.
+payout.js keeps SETTLEMENT_THRESHOLD and loses the rest of the hold section (actions, table, split, state machine, invoice
+check). lock-settlement.js, slash.js (encode/decode and slashHoldsOnSettlement) and preimage.js (the share gate /share
+serves: a preimage leaves only for a lock that is CLAIMed) read lock-action.js. Every src/tools comment that named the
+withdrawn custody says "the withdrawn Lightning custody"; lnd-port/lnd-settings were already invoice-read only. The four
+regtest tools (payout-committee-regtest, payout-regtest, settle-crash-regtest, settle-regtest) build a FEDERATION round on
+TEST_FEDERATION_ID - syntax-checked, not run (isolated-regtest harnesses, not in the suite).
+TESTS: hold.test.js deleted (it tested only the deleted vocabulary and state machine, as cut 1 deleted hold-window's);
+inclusive, shares, slash-settlement, slash-conflict, no-quorum moved to the lock names, assertions unchanged - except
+inclusive's invoice check and no-quorum's holdAfter line, deleted with that code; reconstruct's refusal text now "would
+let anyone claim a lock that has to go back to its player".
+THE BUNDLE: payout.js is in the page's bundle, so dist/blwp-client.js and the WebGL template copy were rebuilt again under
+this item's lifted pin (not deployed); its hash appended to known-good-clients.json (one new hash). It names no hold
+function and no THRESHOLD_LN; withdrawn-custody-bundle stays 2/2.
+GREEN: no-hold-vocabulary 4/4, inclusive 7/7, shares 15/15, slash-settlement 13/13, slash-conflict 10/10, slash-rulings 6/6,
+slash 12/12, lock-settlement 24/24, custody-byte 4/4, protocol 32/32, no-quorum 5/5, reconstruct 5/5; in the full suite
+late-settlement 5/5, late-settlement-resend 4/4, winnings-pool 3/3, payout-pay 25/25, federation-stake 4/4,
+withdrawn-custody-absent 6/6, one-signer-node-refused, evidence-blocks, first-mark, first-mark-late, five-of-seven,
+rerun, slash-filing green. Full suite (254 files, 1675 pass): the baseline reds (ghost-live 9, replay-solids 2,
+bundle-fresh 1 - blwp-curve.js only - discovery 18, pool-outpoint's skip), objective-markers' timeout, and window-blocks
+test 1 - a sub-block timing flake of the last slice's test, fixed in the harness in the next commit (3 of 3 green).
+THE LIVE CHECK stays blocked: the Daily runs the fleet pin 02eefc04, whose CUSTODY still reads byte 0 as THRESHOLD_LN;
+not moved, nothing posted live, the service not restarted.
