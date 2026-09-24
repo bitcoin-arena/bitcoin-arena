@@ -49686,3 +49686,37 @@ rerun-object, result-window, objection 37/37. Full suite (247 files, 1658 pass =
 (ghost-live 9, replay-solids 2, bundle-fresh 1 the pin, discovery 18, pool-outpoint's one skip) and objective-markers'
 live-Chrome timeout.
 Next, named not done: C3 (the settlement does not wait on a suspended entry) - parked until planned and accepted.
+
+## FEDERATION: the round's one settlement no longer waits on an entry still in its re-run window (RULED Daniel 2026-09-24, ruling C, slice C3a)
+
+SEARCHED FIRST: two gates held a round's money on one objected entry. server.js's settle pass called settlements.settle
+only when no entry was PROVISIONALLY_FINAL and none SUSPENDED; settlement.js entriesOnRecord refused the whole round
+("nothing is claimed while a run is not final") for any entry not FINAL, VOID, FORFEIT or ENTRY_VOID. The finality watch
+retried with back-off, so since C1/C2a the round waited for the entry's own decision - up to P + 3W.
+
+THE CUT (settlement.js, server.js; no payout.js, preimage.js, protocol or store change): entriesOnRecord leaves out an
+entry SUSPENDED, or PROVISIONALLY_FINAL on a re-run, and names it in `leftOut`; it is not in the payout table and its lock
+is neither claimed nor forfeited; the other entries settle as today. The settle gate is server.js settleWaitsOn: only a
+run PROVISIONALLY_FINAL inside its first objection window is waited on. No second transaction. LockSettlement
+lockAfterSettlement(rid, eid) says what becomes of an entry's lock once the round settled, from what is kept - the claimed
+outpoints the round's settlement recorded (lockSettlementMoves) and the entry's finality: claimed there; left out, still
+in its re-run window; VOID - nothing acts, the lock returns to the player at its expiry (the forfeit keeps refusing a
+§13C VOID; "forfeited to the player on VOID" is the expiry, RULED); FORFEIT, or FINAL and not a qualifier - "claimed in
+the round's second settlement, not built yet"; FINAL and a qualifier - its stake back by its own forfeit, stake back
+only, no share (RULED: no share, no clawback; the first table stands without that entry).
+OPEN EDGE, UNTIL C3b: a left-out lock that later ends FAILED or FORFEIT is not claimed in C3a and returns to its player at
+expiry - the same as a round that cannot settle today. C3b, RULED, not built: FORFEIT or FAILED is claimed in a second
+transaction; that stake only increases the pool; the difference is paid to the winners already paid; no clawback.
+
+MEASURED, rerun.test, W = WINDOW_MS, stubbed clock; a round with a FINAL loser and one objected entry. RED FIRST on
+c893b2f4: the gate waited on the SUSPENDED entry and entriesOnRecord refused the round. (The red test carries today's
+gate literally - "PROVISIONALLY_FINAL or SUSPENDED waits" - so it fails on the old code with settleWaitsOn absent.) After:
+SUSPENDED - the gate waits on nothing, entriesOnRecord lists only the decided entry, the objected one in leftOut "still in
+its re-run window", its forfeit refuses ("no forfeit before the result is final"), mayRelease refuses. PROVISIONALLY_FINAL
+on a re-run - left out too; an ordinary PROVISIONALLY_FINAL is still waited on. Then VOID - "VOID: nothing acts, and the
+lock returns to the player at its expiry", the forfeit refuses VOID. Then FORFEIT (§13C, proven equivocation), and FINAL
+with the replay FAILED - "claimed in the round's second settlement, not built yet". rerun 18/18 twice; lock-settlement
+9/9, lock-settlement-restart + pool-settle 17/17, winnings-pool + winnings-sent + daily-paid-federation 9/9, slash-filing +
+objection-window + no-quorum 12/12. Full suite (247 files, 1660 pass = 1658 + 2): the baseline reds only (ghost-live 9,
+replay-solids 2, bundle-fresh 1 the pin, discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout.
+Next, named not done: C3b (the second settlement for a late FORFEIT or FAILED).
