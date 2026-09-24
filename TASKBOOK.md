@@ -49620,3 +49620,35 @@ foreign entry 404, this entry unchanged. rerun 10/10 twice; slash-filing + objec
 objection, rerun-object 25/25. Full suite (247 files, 1651 pass = 1648 + 3): the baseline reds only (ghost-live 9,
 replay-solids 2, bundle-fresh 1 the pin, discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout.
 Next, named not done: C2c (slash proofs against the re-run's signers), C3 (the settlement does not wait on a suspended entry).
+
+## FEDERATION: slash proofs against the agreed re-run's signers once a second objection has made the entry VOID (RULED Daniel 2026-09-24, ruling C, slice C2c)
+
+SEARCHED FIRST: the published evidence was a proof plus a signed PLAYER result (joinSlashEvidence, SLASH_EVIDENCE_BYTES),
+and slashHolds decodes a player result; a re-run signer signed a RE-RUN result { contradictedRunId, result } over
+rerunResultId, which that path cannot carry. slash_proofs is keyed (round, entry, node_pubkey), so a node that signed
+both the first result and the re-run would collide. The only filing (fileSlashProofs) ran when a re-run made the entry
+FINAL; a VOID filed nothing.
+
+THE CUT: slash.js joinRerunSlashEvidence / splitRerunSlashEvidence (RERUN_SLASH_EVIDENCE_BYTES = proof + signed re-run,
+its own size) and slashHoldsOnRerun - offence still REPLAY_CONTRADICTS: on the committee; the accused's own signature
+(verify injected) over rerunResultId; this round, this player, the canonical transcript; the agreed re-run's run, not
+another outcome; the bond from their own advertisement; and this node's own re-run differing from the agreed one.
+Store: rerun_slash_proofs, one row per (round, entry, signer), no migration, no new key on slash_proofs. verify.js
+fileRerunSlashProofs mirrors fileSlashProofs: only on a VOID by a second objection; the holder, a stranger, a key whose
+re-run is another outcome and a signer with no advertisement refused by name, nothing stored; stored once, published
+once. server.js: the 201 that takes the second objection files before it answers; the relay's PUT /slash/<id> keeps
+the new shape, checked against the re-run it names. Money does not move: no k-of-m spend. The first result's signers
+are not filed against here - that is the next cut, before the settlement wait.
+
+MEASURED, rerun.test on the C2b fixture (W = WINDOW_MS): RED FIRST on 67554344 - the second objection's 201 filed 0
+proofs, 5 asserted. After: 5, exactly the agreeing re-run signers, each slashHoldsOnRerun accepts, none against the
+holder, 0 rows in slash_proofs, the relay keeps each. On a stubbed clock: nothing filed while SUSPENDED, PROVISIONALLY_FINAL
+or a clean FINAL; on the second-objection VOID 4 filed with one advertisement withheld, the holder / stranger / other
+outcome / missing advertisement refused by name; that advertisement restored, 1 more; again after the window, none -
+publications 4, 1, 0; rows = the 5 committee signers who agreed. Money before and after the proofs identical: VOID,
+mayRelease refuses, entriesOnRecord VOID/0, the forfeit refuses (the lock returns at expiry). protocol slash.test: each
+refusal of slashHoldsOnRerun by name, and neither evidence shape splits as the other. Named suites: rerun 12/12 twice,
+slash 12/12, slash-filing + objection-window 7/7, objection / no-quorum / rerun-object / result-window 36/36. Full suite
+(247 files, 1654 pass = 1651 + 3): the baseline reds only (ghost-live 9, replay-solids 2, bundle-fresh 1 the pin,
+discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout.
+Next, named not done: the first result's signers' slash when the entry ends VOID (second objection or §13C), then C3.
