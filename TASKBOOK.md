@@ -49489,3 +49489,27 @@ Left, each its own cut: holdSettlement, SETTLE/CANCEL/NOTHING, actionByte/action
 preimage.js and /share - live FEDERATION code still imports them (lock-settlement.js, slash.js, settlement.js:122);
 lnd-port.js and lnd-settings.js; the DKG pool; the regtest tools; comments naming THRESHOLD_LN; the pinned bundle and
 its template copy.
+
+## FEDERATION: a lock's expiry is checked against the lock's own height, not the verifier's tip + 144 (RULED Daniel 2026-09-24, c4a0eff6 ruling A, option (a))
+
+SEARCHED FIRST: the check was protocol/src/stake-lock.js lockMatchesEntry - refused when expiration < height + 144,
+where height is the federation block count at verification (stake-lock-signer-node.js passes st.blockCount, stake lock
+and fee lock alike). The page built its locks at count + 144 + LOCK_EXPIRY_MARGIN_BLOCKS (6, W1a's number) only to
+survive that off-by-the-wait. The stock federation has no lock height: lnv2 process_output stores
+OutgoingContractKey(outpoint) -> OutgoingContract with no creation height, and outgoing_contract_expiration answers only
+(contract_id, blocks_left).
+
+THE CUT, option (a): lock_height = the federation-held expiration less stake_expiry_blocks - the expiration the node
+already checks equals blockCount + blocksLeft, never the player's number - so expiration >= lock_height + 144 holds by
+construction and the check that bites is freshness: refused when lock_height < verify height - 12, i.e. expiration <
+verify height + 132. STAKE_LOCK_FRESHNESS_BLOCKS = 12 is in constants.js. The page's margin is deleted, not zeroed:
+both locks are built at count + 144. stake-lock-signer-node.js changes only its comment.
+
+MEASURED: stake-lock.test's new case (built at 306, expiration 450) is refused on 458fb47e at 316 ("expires at 450,
+before 316 + 144") and counted after, at 316 and 318; at 319 it is refused as stale, the message naming the 12-block
+bound. Line 41's refused row moves from HEIGHT + 143 (now valid, 143 >= 132) to HEIGHT + 131 with the lock-height
+wording. signer-node-lock:60 (port.height + 100) stays refused, its regex unchanged. page-lock's two pinned deltas are
+144. Named suites: stake-lock 5/5 + protocol 32/32, signer-node-lock 5/5, page-lock 27/27.
+Full suite (247 files, 1643 pass = 1642 + the new test): the baseline reds only (ghost-live 9, replay-solids 2,
+bundle-fresh 1 the pin, discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout.
+Next slice, named not done: c4a0eff6 ruling B, the beacon hash itself is the randomness (the height term dropped).
