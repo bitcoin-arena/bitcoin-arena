@@ -49720,3 +49720,46 @@ with the replay FAILED - "claimed in the round's second settlement, not built ye
 objection-window + no-quorum 12/12. Full suite (247 files, 1660 pass = 1658 + 2): the baseline reds only (ghost-live 9,
 replay-solids 2, bundle-fresh 1 the pin, discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout.
 Next, named not done: C3b (the second settlement for a late FORFEIT or FAILED).
+
+## FEDERATION: a late loser's second settlement - the left-out lock that ends FAILED or FORFEIT, claimed alone and paid to the winners already paid (RULED Daniel 2026-09-24, ruling C, slice C3b-1)
+
+SEARCHED FIRST: the round's settlement is one per round - lock_settlements, lock_settlement_moves and the `built` cache are
+keyed by round - and lockSettlement computes one pool from every loser's lock; nothing kept what the first settlement
+paid each winner. A lock left out by C3a that ended FAILED or FORFEIT was never claimed and went back at expiry.
+
+THE CUT - PROTOCOL (lock-settlement.js): lockSettlement returns `stakeShares`, what it paid each winner in the table's
+order. lateLockSettlement: only a FAILED or FORFEIT late entry (VOID - "not claimed: ... returns to its player at its
+expiry"; DELIVERED - "stake back only, no share"); the first settlement paid nobody - nothing claimed; the lock must hold
+the net stake. Its net stake less this transaction's input fee is split by the first shares (target = share x spendable /
+first pool, the largest payout that pays its own fee, a share too small folded back, the dust to the first row), paid as
+pre-expired payout contracts to each winner's own lock key; the late fee lock, where minted, claimed with it and paid to
+the sitting signer nodes by §22A, never the pool. Nonce: lateSettlementNonce(round, entry), never the round's.
+NODE: store late_lock_settlements (one row per (round, entry), never a second row under the round key) and
+lock_settlement_shares (the first settlement's shares, written when it is signed, so a restart splits the same way).
+settlement.js lateMessage rebuilds the plan only after the round's settlement is ACCEPTED, for an entry it did not claim
+that is no longer in its re-run window, the P opened as for any loser; settleLate combines on the round's asker (M3.3-19
+turn), a second attempt on an ACCEPTED row builds nothing, a peer holding a handed signature reads ACCEPTED back from the
+federation (claimed lock gone, a payout stored). commit/share/take take an optional entry; lockAfterSettlement says
+"claimed in the round's second settlement" once it is ACCEPTED. server.js: /settle-commit|share|signature take &entry=;
+a sweep (finality.lateEveryMs, else the back-off) visits the objected entries of ACCEPTED rounds. A TEST AID, named as
+such: `finalityOf` (serve option, default resultFinality), because two signer nodes that agree on a run cannot hold a
+valid objection against it - the late-settlement tests hand both nodes the "still in its re-run window" and the outcome.
+Winners are paid by payout contracts, as the base plan does - no send plans (C3b-2). No payout.js, preimage.js or
+winnings-send.js change. The first transaction is never touched: no clawback.
+
+MEASURED. Protocol lock-settlement.test (red first: stakeShares and lateLockSettlement absent): FAILED and FORFEIT split
+to the msat under 1000 msat base fees, the stake wholly accounted for (paid + output fees + input fee), the nonce the
+entry's; VOID, DELIVERED, a first table that paid nobody and a wrong amount refused by name; a late fee lock pays 1000 +
+1000 to the two signer nodes and leaves the winner's amount unchanged. Node late-settlement.test on the lock-round fixture
+(red first: the file fails at import on the old src, lateLockSettlement absent): late FAILED - the first settlement
+claimed only the on-time loser and left the late lock held; while in its window settleLate refuses and nothing is
+submitted; once FAILED the sweep builds the second transaction, both nodes ACCEPTED on one txid, exactly the late stake and
+fee lock claimed, the winner paid 98000 msat to its own key (the protocol's arithmetic; the fixture federation charges
+no fee), 2 signer nodes paid the fee lock, the first settlement unchanged, 2 submissions, lockAfterSettlement "claimed in
+the round's second settlement" at both, a second attempt kept and nothing submitted. Late FORFEIT - the same. Late VOID -
+no second transaction, the lock held, refused by name. Late DELIVERED qualifier - in no transaction, no share, its own
+forfeit 200. Named suites: late-settlement 4/4 twice, lock-settlement 9/9, lock-settlement-restart + pool-settle 17/17,
+winnings-pool + winnings-sent + daily-paid-federation 9/9, rerun 18/18. Full suite (248 files, 1666 pass = 1660 + 6):
+the baseline reds only (ghost-live 9, replay-solids 2, bundle-fresh 1 the pin, discovery 18, pool-outpoint's one skip)
+and objective-markers' live-Chrome timeout.
+Next, named not done: C3b-2 (the late payout by send plans keyed by (round, entry)).
