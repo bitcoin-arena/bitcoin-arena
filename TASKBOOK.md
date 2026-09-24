@@ -49849,3 +49849,32 @@ winnings-sent + daily-paid-federation 9/9, lock-settlement 9/9. Full suite (249 
 baseline reds only (ghost-live 9, replay-solids 2, bundle-fresh 1 the pin, discovery 18, pool-outpoint's one skip) and
 objective-markers' live-Chrome timeout.
 Ruling C (C1, C2a, C2b, C2c, the first-result slash, C3a, C3b-1, C3b-2a, C3b-2b) is on origin with this.
+
+## FEDERATION: the objection windows are blocks at both ends - the ruling locked as a measurement, no src changed (RULED Daniel 2026-09-24)
+
+THE HOLE: every §13A window counted from this node's own receive time (resultFinality: objectedAt's seen_ms, the re-run
+records' seenMs, the threshold's and the posting's seenMs), so two honest holders could decide one objected entry
+differently.
+THE RULING, locked in test/window-blocks.test.js as `ruledWindow`: a window opens at the timestamp of the block its opening
+event sits in (the objection's filing; for the re-run's own window, the block where the agreed re-run first sits at
+threshold) and ends at the first later block whose timestamp is >= open + objection_window_ms - both ends chain facts, no
+receive time an input on either. An event is inside only if its own block timestamp is strictly before the end block's;
+a filing in the end block or later is outside. A node without the end block decides nothing (no FINAL, VOID, slash or
+claim): tip lag is a wait. Holders with the same blocks through the end block name the same outcome.
+WHY NOT "OPEN + W" ON A CLOCK (measured before this ruling, not committed): with each moment moved to its first block at
+or after it and the end left at open + W, an objection that arrived inside the window was placed after it - W 3 s on a
+10 s chain: the window closed at ...893000, the objection sat at ...900000, and the entry went on to FINAL. And any rule
+that maps receive times to blocks per node still splits when a block falls between two holders' arrivals.
+
+MEASURED (two holder daemons: the fixture's holder and a second daemon on a VACUUM INTO copy of its store - the same
+holder, its own clock; the fixtures' block clock, one block per second, a block's timestamp its median time past; each
+filing assigned ONE block, the first at or after its first sighting at either holder; W = 3000): the objection reached A
+at t + 2 and B at t + 1632, the fifth agreeing re-run at t + 3540. TODAY'S ANSWER, the committed local-clock finality at
+t + 5000: A VOID, B PROVISIONALLY_FINAL - the split, asserted as measured (the code that follows the ruling turns it).
+The ruled window: open ...933000, end ...936000, the fifth's block ...937000 - both holders VOID, "4 of 5 re-runs inside
+[open, end), none proves the player: §13C VOID", the same reason; with the fifth moved to a block inside, both
+PROVISIONALLY_FINAL for the same reason; a node holding blocks only to end - 1 decides nothing ("does not yet hold the end
+block"); a filing in the end block itself outside on both (4 in, 1 out). Three runs, all green; in two the fifth fell in
+the end block itself and was outside on both.
+Committed: the test and its block-clock helper only. The earlier implementation (moments to their first block, end at
+open + W) is not committed; it is kept aside, to be redone to this ruling in the next pass. No settlement edit.
