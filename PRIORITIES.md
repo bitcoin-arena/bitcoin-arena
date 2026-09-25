@@ -20,6 +20,23 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-09-25 21:41 (Daniel)
+
+Playtest bug stops the current letter. Top item first. Finish and deploy before the next.
+The section below is the record, not the order, until this list is done.
+
+1. After the game load, only the new lobby. No old splash (BTC LOGISTICS WAR, SPECTATE).
+   The wallet page belongs in Settings. It is not the page after load.
+2. The finish straight to the miner is completely free. A truck at speed does not stop and
+   does not crawl. All collisions are marked in color. The buildings stay readable.
+   Tonight, before testnet. This overrides the earlier "after testnet" deferral.
+3. Result screen: nothing overlaps. "copy game replay" copies one https link. The replay
+   must work externally. A localhost link does not count. A 404 on the Daily's /replay
+   does not count. A phone off this machine opens the copied link and the run plays.
+4. The arrival card prints the core's E, T and C. Their product is the score.
+5. Then FEDERATION live: fleet pin, guardians, first paying testnet4 round.
+   THRESHOLD_LN deletion continues beside that, not in front of it.
+
 # NOW  -  M3: what is left
 
 HARD (Daniel 2026-09-23 10:19): **Introduce FEDERATION in parallel.** Do not wait until THRESHOLD_LN is gone.
