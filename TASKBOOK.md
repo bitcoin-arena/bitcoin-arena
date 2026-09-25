@@ -50419,3 +50419,27 @@ CAUSE TWO - NO PAYOUT CONTRACT TO REDEEM: under the pool rule (RULED 2026-09-23;
 outgoing Lightning send to the address it named; a qualifier with no address is paid nothing and no stake lock is claimed
 (winnings-pool test 2). There is no payout contract for the page to redeem into any wallet.
 NOT PATCHED (RULED): the timer, the Withdraw path, the pool send and the settlement stay as they are.
+
+## FEDERATION REHEARSAL ITEM 9 (b): TWO ROUNDS STAKED FROM THE ONE PLAYER WALLET AFTER ONE DEPOSIT - GREEN (2026-09-25)
+
+HOW MEASURED (RULED Daniel 2026-09-25: staked, not played - no win, no gate driver): packages/blwp-node/tools/
+rehearsal-9b-regtest.sh + rehearsal-9b.mjs, one fresh regtest - stock fedimintd 0.12.0, 4 guardians 3 of 4, two gateways,
+seven bonded signer nodes. One Lightning deposit into the player wallet, sized as twice the one-round top-up item 8's
+wallet was credited (2 x 1009152 msat), through the wallet's own depositFor/receive once (fundPlayerWallet's one-round
+default left alone). Then two paying rounds of the same federation (423e010e...), the second opened on the same bonded
+daemons and chain (openNext), each staked by page-lock.js's lockStake from that wallet.
+THE DEPOSIT: invoice 2026383 msat, credited 2018304, SUCCEEDED, 1 payment by the player's lnd.
+ROUND 1 (374931b0...): 2018304 -> 1017344 msat, 1000960 left the wallet into a 980000 msat stake lock and a 20000 msat fee
+lock; /lock 201 at all seven ("stake lock verified: contract e2f36e4c... holds 980000 msat - counted once its fee lock
+is verified (this round mints fee locks)"), 7 committed of 5.
+ROUND 2 (73a3b674...): 1017344 -> 16384 msat, 1000960 left the wallet the same way; /lock 201 at all seven ("stake lock
+verified: contract ddc8cd8c... holds 980000 msat - ..."), 7 committed of 5.
+THE WALLET KEY: one for both rounds (35789e9a..., walletSecretFor(seed, federation)); the per-round wallets 49adc394... and
+a2ec6a19... not used; 0 tab keys of any per-round wallet.
+LIGHTNING AFTER THE DEPOSIT: 0.
+PASS: both rounds staked from the one wallet per seed and federation, zero Lightning after the one deposit, both locks
+accepted.
+ITEM 9 (c), FROM THE CODE, NOT RUN: the page's only withdraw is collectAndWithdraw / withdrawCollected, over the round's
+wallet (the Withdraw press collects a round's payout and stake there and withdraws that wallet); no page path withdraws the
+player wallet. So "one withdrawal of the whole balance through B while A is down" of the player wallet is red before any
+run for that cause.
