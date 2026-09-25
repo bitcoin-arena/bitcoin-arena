@@ -50144,3 +50144,23 @@ an old store keeps its table and row, unread; nothing outside round.js calls the
 deleted code, which assertion 1 covers).
 GREEN: lock-settlement 9/9, late-settlement 5/5, winnings-sent 4/4, withdrawn-custody-absent 6/6. Full suite (249 files, 1619
 pass): the known reds only (ghost-live 9, replay-solids 2, discovery 18, objective-markers' timeout).
+
+## FEDERATION: a paying round does not open on a federation that charges a base fee (RULED Daniel 2026-09-25)
+
+THE RULING: POST /round refuses a paying round whose federation charges a base fee - the rule /entry already enforced -
+and does not open, store or list it; federationTakesNoBaseFee is called before round.open(contract), with the entry
+refusal's own sentence and 409.
+RED FIRST (blwp-node/test/round-open-base-fee.test.js; the lock fixture's port, two distinct live gateways naming the
+round's federation, only the fee rule changed; the round moved to the present so /rounds would list it): case 1 (base fee
+1000 msat) 201, case 2 the round stored and listed, case 5 no guard call before round.open - red; case 3 (base fee 0) 201
+and listed, case 4 (no fee rule known) 201 - green.
+THE CUT: server.js's POST /round, after the two-gateway count and before round.open(contract), asks the lock port's fee
+rule through federationTakesNoBaseFee and answers 409 with its sentence ("that round's federation charges a base fee of
+1000 msat on every input and output - ..."); a fee rule it cannot read is 503; an unknown rule is not a base fee.
+GREEN: round-open-base-fee 5/5 (409 naming the fee and amount; the round not stored, not listed; 0 and unknown open).
+no-base-fee's test 6 went red on the first full run - a search-start bug, not a missing entry call: indexOf found POST
+/round's new call, earlier in the file, first. Fixed by one line (the search starts at the /entry door); a mutation check
+showed deleting the entry call still turns it red (-1) and the /round call cannot count. Guards: no-base-fee 6/6,
+lock-settlement 9/9, federation-stake 4/4, gateway-gate 3/3, guardians-bonded 3/3. Full suite (250 files, 1624 pass):
+ghost-live 9, replay-solids 2, discovery 18 and objective-markers' timeout only (the first run, before the one line:
+1623 pass and no-base-fee 6 red).
