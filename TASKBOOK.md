@@ -50090,3 +50090,20 @@ reconciles or sweeps the pool payout, main.js reads no census for it; lock-settl
 winnings-pool 3/3, dkg-dealer 2/2, close-peers 2/2. Full suite (247 files, 1610 pass, no skip): the baseline reds only
 (ghost-live 9, replay-solids 2, bundle-fresh 1 - blwp-curve.js only - discovery 18) and objective-markers' timeout.
 Next, named: rebuild blwp-curve.js (separate commit).
+
+## blwp-curve.js is the build of its source again, in dist and the WebGL template (RULED Daniel 2026-09-25)
+
+THE RULING: the lifted bundle pin covers rebuilding blwp-curve.js - bundle freshness, not a fleet move; rebuild it from its
+source into dist and the WebGL template, append its hash to the known-good list, show bundle-fresh green for it.
+MEASURED: a plain rebuild left bundle-fresh red. esbuild writes each module's path, relative to its working directory,
+into the bundle: the committed curve was built from the repository root ("// packages/blwp-client/src/page-curve.js"),
+bundle-fresh builds from packages/blwp-client ("// src/page-curve.js"), and a worktree whose node_modules is a symlink
+wrote a path through it ("// ../../../../../../../btc-phase0/packages/blwp-client/node_modules/..."): three bundles of one
+source, and no committed one fresh everywhere.
+THE CUT: tools/bundle-curve.js runs esbuild from the package directory with --preserve-symlinks (no source changed); the
+worktree and the main checkout then build the same bytes (sha256 2492e155...), which is dist/blwp-curve.js and the
+template's copy now. That hash was already on known-good-clients.json (an earlier build from the package directory), so
+the list is unchanged.
+GREEN: bundle-fresh 2/2 ("all three fresh in dist and the template"), page-curve 3/3, withdrawn-custody-bundle 2/2. Full
+suite (247 files, 1611 pass): bundle-fresh leaves the baseline; the reds are ghost-live 9, replay-solids 2, discovery 18
+and objective-markers' timeout.
