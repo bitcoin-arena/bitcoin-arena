@@ -50164,3 +50164,36 @@ showed deleting the entry call still turns it red (-1) and the /round call canno
 lock-settlement 9/9, federation-stake 4/4, gateway-gate 3/3, guardians-bonded 3/3. Full suite (250 files, 1624 pass):
 ghost-live 9, replay-solids 2, discovery 18 and objective-markers' timeout only (the first run, before the one line:
 1623 pass and no-base-fee 6 red).
+
+## FEDERATION: a paying round does not open on a signer node that reaches no federation (RULED Daniel 2026-09-25)
+
+THE RULING: POST /round refuses a paying round on a node with no lock port - 409 before round.open, guardiansBonded's own
+no-port sentence, nothing stored or listed; the gateway count and the base-fee check unchanged. Paying-round test daemons
+get the lock fixture's port with contracts unchanged; a round is made free only in a file whose assertions do not depend on
+the stake, named before its edit.
+MEASURED BEFORE (a scratch probe): the federation checks sat inside `if (contract.stakeMsat > 0n && stakeLocks)`, so with no
+lock port a named paying round was 201, stored and listed - under the fixture's funding and the launcher's operatorFunding -
+and every entry into it 402 ("this node stores nothing for an entry nobody has funded").
+RED FIRST (blwp-node/test/round-open-no-lock-port.test.js): 1 (no lock port, launcher funding: 409 with the sentence), 2 (not
+stored, not listed) and 6 (the refusal sits before round.open in POST /round) red; 3 (a free round opens and lists, the
+Daily launcher's rule), 4 (lock port, zero base fee: 201) and 5 (unreadable fee rule: 503) green. After: 6/6.
+THE CUT: server.js - `if (contract.stakeMsat > 0n && !stakeLocks) return text(res, 409, REACHES_NO_FEDERATION)` before the
+gateway count; the sentence is one constant shared with guardiansBonded.
+THE FIXTURES (37 files the full run turned red, classified one by one with evidence before any edit):
+  free - nothing asserted depends on the stake (round and entries 0n): node core-registry, donation-set-door,
+    ghost-socket, quota, server, verify; client backpressure, bridge, checkpoint, discovery, finish-at-delivered,
+    ghost-consume, ghost-field, ghost-realtime, late-join, load-published, own-socket-drop, refused-batch,
+    sample-published, two-nodes-play.
+  lock port only - paying rounds opened, no paying entry through the door: federation-named, lobby, signer-node-relay,
+    withdrawn-custody-absent (the paying-post test's daemon), roster (the two committee-door daemons), handout-threshold,
+    sealed-shares; client claim-key-attest, join, donation-pay.
+  lock port and locked entries - the entry's stake and 2% fee locked in the port (lock-fixture's new lockedEntry, which
+    names the fee preimage and both outpoints): handout-accept, reconstruct (locks made once per stake, the same entry on
+    every node); window-fixture's sevenSignerNodes (a lock port on its holder, joinAndPlay locking each entry) for
+    objection-window, publication-finality, rerun, slash-filing, window-blocks.
+  A measured probe first: backpressure with a lock port alone went 0/21 at the entry door ("this round mints fee locks
+  ... an entry that brings no fee lock is not taken") - so a port alone was not the fix for files that enter.
+Full suite (251 files, 1630 pass): ghost-live 9, replay-solids 2, discovery 18 and objective-markers' timeout only; the
+measuring run before the fixtures had those plus the 37 files. Kept green by name: round-open-base-fee 5/5, no-base-fee
+6/6, gateway-gate 3/3, guardians-bonded 3/3. Next, named and not measured: whether a paying round refused for an unbonded
+federation (guardiansBonded, after round.open) is listed.
