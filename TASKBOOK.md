@@ -50227,3 +50227,45 @@ is stored, not the POST's 201, because 201 would need the contract changed.
 GREEN: round-open-unbonded 6/6, guardians-bonded 3/3, roster 19/19, round-open-no-lock-port 6/6, round-open-base-fee 5/5,
 no-base-fee 6/6, gateway-gate 3/3, close-peers 2/2.
 Full suite (252 files, 1636 pass): ghost-live 9, replay-solids 2, discovery 18 and objective-markers' timeout only.
+
+## FEDERATION: the seed slice - a paying round reads its beacon from the bonded chain, and the players seed from it (IMPLEMENTATION.md §12.1, RULED Daniel 2026-09-25, B)
+
+THE DOOR: POST /round refuses a paying round on a signer node with no chain view, 409 with the census's own sentence
+(roster.js NO_CHAIN_VIEW_WHY), before round.open - nothing stored or listed. Measured before: 201, stored and listed with 0
+signer nodes and no claim key. Pin round-open-no-chain-view.test.js read 1, 2, 5 red and 3, 4 green; after, 5/5.
+THE FIXTURES: bondedChainFor(nodes, contract, slot) in lock-fixture.js bonds exactly the contract's nodes (game+settlement,
+each a guardian of the round's federation), mines the chain around the contract's own committee time (the first eleven
+blocks at its second, then one a second, so the beacon lands at 899996, after the publication in block 1), caches one view
+per round, and returns only censusRoot and committeeTimeMs - the two fields the ruling lets change. Every paying-round
+test daemon now serves chainFor and randomnessFor from that chain; the live DKG is kept where every committee member is a
+daemon, claimKeyFor only where the committee has keyless keys. Every player seeds its marks from the round's beacon
+(w.randomness), no longer from the fixtures' constant RANDOMNESS. A node with a chain view checks every round's census,
+free ones too, so lobby and signer-node-relay bond their free rounds as well.
+MEASURED (beacon-seed.test.js, 3/3): both holders and the player name one beacon, the bonded chain's block at 899996, and
+another round names another; the roster's committee seed at both holders is committeeSeedFromBeacon over that hash (a
+flipped byte gives another); the stored transcript replayed under the beacon agrees with the player's mark, and under the
+old constant diverges at tick 1000; the same contract re-mined from nothing names the same beacon, and four replays of both
+holders' transcripts reach one state, the player's own.
+ONE EXPECTATION CHANGED, NOT OF THE LISTED CAUSE: lobby.test.js freePending and payingOpen assignedHere false -> true. The
+bonded census names the daemon and gives each of the two nodes a slot, so the node is assigned; false was a node with no
+chain view, which assigned nobody (only freeOpen was forced by assumeAssigned). Also: slash-filing's withHeight refusal now
+reads "that chain ends at height N, before this round's census height 964950" (the fixture has a chain); five-of-seven
+test 1 endIn 15000 -> 25000 (the round decided after its window's end block with the chain read at every census).
+LISTED RED - cause "recorded inputs, another run's beacon" (the scripted winner's wordsAt tape, recorded on another world,
+is FAILED on a beacon-seeded round; every one measured with 0 DELIVERED runs; not tuned, not skipped, no fixed beacon,
+expectations unchanged; for this slice only - the recompute is the next slice):
+- first-mark 1
+- forfeit 1, 2
+- late-settlement 1, 2, 4
+- late-settlement-resend 1, 2, 3, 4 (the file runs past the suite's 180 s cap)
+- lock-settlement 1, 3, 4, 5, 6, 7, 8
+- lock-settlement-restart 1, 4, 5, 6
+- one-signer-node-refused 5 (the "5, 6" case)
+- outage 1 ((a))
+- winnings-pool 1
+- winnings-sent 1, 3, 4
+FOUND, NOT THIS SLICE: rerun 11 is red under load (suite load 9; ten CPU burners reproduce it) and green alone (18/18 twice).
+The holder daemon's own re-run watch files the first result's signers (§13C, ruling C) during the test, before its count of
+0 is read. Reproduced the same at a worktree of 3c760421, so it predates this slice. It is not fixed here.
+Full suite (254 files, 1616 pass): the listed reds above, rerun 11 (load), and the known ghost-live 9, replay-solids 2,
+discovery 18, objective-markers' timeout.
