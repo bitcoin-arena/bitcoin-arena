@@ -50443,3 +50443,39 @@ ITEM 9 (c), FROM THE CODE, NOT RUN: the page's only withdraw is collectAndWithdr
 wallet (the Withdraw press collects a round's payout and stake there and withdraws that wallet); no page path withdraws the
 player wallet. So "one withdrawal of the whole balance through B while A is down" of the player wallet is red before any
 run for that cause.
+
+## FEDERATION REHEARSAL ITEM 9 (c): THE WHOLE PLAYER WALLET WITHDRAWN THROUGH B WHILE A IS DOWN - GREEN (2026-09-25)
+
+BUILT (RULED Daniel 2026-09-25, §24A.1: the player "withdraws from over a Lightning invoice whenever he likes, in any
+amount"): page-lock.js withdrawPlayerWallet - the one wallet per seed and federation, opened as the stake opens it, handed
+to the same withdraw the round's wallet uses (withdrawCollected); a balance the stock client's send fees would eat is
+answered by name, nothing spent. The page's Withdraw press calls it once, after the round wallet's collect-and-withdraw;
+nothing else calls it. page-lock's timer guard now counts withdrawPlayerWallet as a spend and pins its one call inside the
+press. page-lock 30/30 (one new test: the withdraw spends the wallet the stakes left, its whole balance to the player's
+invoice; an empty wallet spends nothing). The stand-in lock client now keeps its balance after a lock as the real
+database does. Bundle and template rebuilt; the new blwp-client.js pinned (97019adf...; an intermediate build, never
+shipped, left off the list). No payout contract added; item 9 (a) stays red by design.
+HOW MEASURED: rehearsal-9c-regtest.sh + rehearsal-9c.mjs, one fresh regtest - stock fedimintd 0.12.0, 4 guardians 3 of 4,
+two gateways (A on 30170, B on 30180), seven bonded signer nodes; the 9 (b) shape exactly, then the page's timer call
+(lookOwed over each round, every 5 s for 20 s), gateway A stopped by its recorded process group, then the press's
+player-wallet spend (withdrawPlayerWallet) to an invoice from the player's own lnd.
+THE 9 (b) SHAPE: one deposit (invoice 2026383 msat, credited 2018304, 1 payment); round 1 and round 2 staked from the one
+wallet (6ccbf39f..., both rounds), 1000960 msat out each (2018304 -> 1017344 -> 16384); 0 Lightning after the deposit;
+7 committed of 5 in each round.
+BEFORE THE PRESS: 8 timer looks, 0 payments by the player's lnd. THE PLAYER WALLET HELD 16384 msat AFTER THE SECOND STAKE
+(lockStake's own read) AND 16384 msat WHEN THE PRESS OPENED IT (the withdraw's own read): nothing moved in between. NOTE, A
+HARNESS DEFECT: the harness's "before the press" balance line (2018304, 2018304) and its after-the-press line (2018304)
+read the harness's own client, opened before the deposit, whose in-memory balance never saw the two stakes - those three
+numbers are stale and are not the measurement.
+GATEWAY A: stopped (process group 2400119), no longer answering on 30170.
+THE PRESS: from the player wallet, state Success, gateway http://127.0.0.1:30180/ (B); withdrawable 12311 msat; balance
+16384 -> 0; the player's lnd invoice SETTLED, 12311 msat received; fees 4073 msat (16384 - 12311).
+PASS: two rounds staked from the one player wallet with zero Lightning after the deposit; nothing moved before the press;
+the press withdrew the whole balance through B while A was down.
+OBSERVED, NOT FIXED: the harness held two lock-client instances over the one wallet database at once (its own, and the
+ones lockStake and the withdraw open); only one ever spent here. The page's own comment warns that two wallets over one
+database would spend the same notes.
+GREEN (item 9 (c)): page-lock 30/30, bundle-fresh 2/2, client-hash 3/3. Full suite (254 files, 1619 pass): the listed
+reds and the known ghost-live 9, replay-solids 2, discovery 18, objective-markers' timeout - and round.test 8, which the
+UNCOMMITTED replay page caused (it sat in blwp-node/src, where the guard allows a core to be stepped only in replay.js);
+that page moved to blwp-node/pages/ in its own slice, round.test 12/12.
