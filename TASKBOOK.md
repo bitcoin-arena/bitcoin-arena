@@ -50298,3 +50298,29 @@ words rolled forward on the core, the stricter pick; misses 7eb49d03 dead at 296
 ce568eaf LIVE at the cap); no seventh word, no seed search, no beacon resample, no tape fallback. Its code stays
 uncommitted.
 
+
+## FEDERATION REHEARSAL ITEM 8: a stake spent from the player wallet into a lock, no Lightning between - RED (2026-09-25)
+
+THE CHECK FIRST (RULED Daniel 2026-09-25): items 8-11 had no record in TASKBOOK or PRIORITIES under the rehearsal's own
+words; the W-slices covered part of 9 (the page redeems a payout into its wallet on its own, 38990) and part of 10
+(`GET /settled?since=`, 39596). Item 12 (reshare) stays parked until 8-11 are measured.
+HOW MEASURED: packages/blwp-node/tools/rehearsal-8-regtest.sh + rehearsal-8.mjs, one clean run on a fresh regtest: stock
+fedimintd 0.12.0, 4 guardians 3 of 4, two gateways (SECOND_GATEWAY=1), seven bonded signer nodes on the chain (four bond
+one guardian each). One player's stake made by page-lock.js's own lockStake; every Lightning payment the player's lnd
+makes during it counted (lncli listpayments before and after).
+THE MEASUREMENT:
+- the wallet the stake is funded from: the lock client lockStake joins, keyed by lockSecretFor(seed, roundId) - one wallet
+  per round, not the player wallet of spec v4.6.3 §24A.1 ("one e-cash wallet per player seed and federation"). It held
+  0 msat when the stake began.
+- Lightning inside the stake path: 1 payment. lockStake's fund() asked depositFor / receive and handed the invoice to
+  onDeposit: invoice 1012140 msat, credited 1007104 msat of ecash, paid by the player's lnd.
+- msat leaving the wallet: 1007104 held -> 26624 after the stake lock (980480 for a 980000 msat lock) -> 6144 after the
+  fee lock (20480 for a 20000 msat lock); 1000960 msat out, 1000000 msat arriving in the two locks.
+- the lock verified by the seats as in item 1: 7 of 7 entries 201, 7 of 7 locks 201, committed 7.
+RED CAUSE: the stake is funded by an lnd-paid invoice inside the per-round path - page-lock.js fund() deposits for each
+round's locks into a wallet keyed to that round. There is no player wallet the stake is spent from, so "no Lightning
+payment between" cannot hold. Item 8 is not done; items 9-11 are not started (the slice stops red, RULED).
+SET-UP DEFECTS FIXED IN THE HARNESS BEFORE THE RUN THAT COUNTS (no measurement in either): three signer nodes are a
+refused committee size (f2759068: 2 or 7) - seven now; one gateway is refused for a paying round (§23.6) - the second
+gateway on. An orphaned federation-hold-probe regtest from an earlier run (/tmp/federation-hold-probe-T7H6PE, up ~3.8
+days on 30101/30107, not the Daily's chain on 30401) was stopped by its own pid list first; its data dir is kept.
