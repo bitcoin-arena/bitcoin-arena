@@ -50107,3 +50107,28 @@ the list is unchanged.
 GREEN: bundle-fresh 2/2 ("all three fresh in dist and the template"), page-curve 3/3, withdrawn-custody-bundle 2/2. Full
 suite (247 files, 1611 pass): bundle-fresh leaves the baseline; the reds are ghost-live 9, replay-solids 2, discovery 18
 and objective-markers' timeout.
+
+## THRESHOLD_LN cut 2b: the hold-invoice store is gone from the node (RULED Daniel 2026-09-25)
+
+THE RULING: classify every hold-looking tool first (hold-invoice: delete; federation-gateway: keep; unclear: stop); a red
+pin that matches the classification; delete the hold methods, the hold= read on the settle log, and the holds table from
+new stores only - old stores keep theirs, no store rewritten; funding.js node.holds(roundId) stays. Fleet pin not moved.
+THE CLASSIFICATION (by what each calls and what its invoice is):
+  round-rehearsal-lnd.mjs     hold-invoice, dead (set the deleted signing/payouts/poolWatch) - deleted
+  remote-signer-probe.sh      hold-invoice: addholdinvoice/settleinvoice/cancelinvoice via a committee-signed lnd - deleted
+  swap-into-pool-probe.sh     hold-invoice: addholdinvoice/settleinvoice for the superseded submarine swap - deleted
+  closed-claim.mjs, closed-line.mjs, outage.mjs, settle-live-regtest.mjs   federation-gateway: stake locks on a real
+                              federation; lookupinvoice of an ordinary addinvoice withdrawal - kept
+  stake-lock-step5.sh, stake-lock-step6.sh   federation-gateway: withdrawal to an ordinary addinvoice, no hold call - kept
+  blwp-client winnings-page-probe.mjs        federation-gateway: looks up a sent winning's ordinary invoice - kept
+RED FIRST (blwp-node/test/no-hold-store.test.js, 0/4): round.js defined putHold, hold, holdsOf, holdsInState (and dropHold)
+over `holds`, and nothing in src/ wrote one; server.js read round.hold() into the settle log (hold=-); the three
+hold-invoice tools called the hold commands; a new store created `holds`.
+THE CUT: the hold methods deleted; the settle log line prints no hold=; store.js no longer creates `holds` (a store from
+before keeps it - the test opens one with a row and finds the row); the three tools deleted; five-of-seven-fixture's
+signerNodeHolds drops its round.hold() field (it fed a log line only).
+GREEN: no-hold-store 4/4; lock-settlement 9/9 (node) and 24/24 (protocol), lock-settlement-restart 6/6, late-settlement 5/5,
+late-settlement-resend 4/4, winnings-sent 4/4, winnings-pool 3/3, client winnings 4/4. Full suite (248 files, 1615 pass):
+ghost-live 9, replay-solids 2, discovery 18, objective-markers' timeout only.
+FOUND, NOT IN THIS CUT: round.js's §23.5 fee hold store - putFeeHold, feeHold, feeHoldsOf over `fee_holds`, created in every
+new store - has no caller in src, tests or tools: the same dead hold-invoice record; it needs its own ruling.
