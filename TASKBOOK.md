@@ -50251,21 +50251,50 @@ bonded census names the daemon and gives each of the two nodes a slot, so the no
 chain view, which assigned nobody (only freeOpen was forced by assumeAssigned). Also: slash-filing's withHeight refusal now
 reads "that chain ends at height N, before this round's census height 964950" (the fixture has a chain); five-of-seven
 test 1 endIn 15000 -> 25000 (the round decided after its window's end block with the chain read at every census).
-LISTED RED - cause "recorded inputs, another run's beacon" (the scripted winner's wordsAt tape, recorded on another world,
-is FAILED on a beacon-seeded round; every one measured with 0 DELIVERED runs; not tuned, not skipped, no fixed beacon,
-expectations unchanged; for this slice only - the recompute is the next slice):
+LISTED RED - cause "recorded inputs fixed, each run's own beacon, recomputed winner none" (sharpened 2026-09-25, RULED:
+the scripted winner's recorded words - wordsAt, recorded on the constant RANDOMNESS world - replayed on each run's own
+bonded-chain beacon, and the winner recomputed from what both signer nodes sign there: none qualifies. That is the result,
+not a hole: no qualifier-producing input, no changed recorded input, no changed beacon, no edited expected winner; not
+tuned, not skipped; expectations unchanged):
 - first-mark 1
 - forfeit 1, 2
 - late-settlement 1, 2, 4
 - late-settlement-resend 1, 2, 3, 4 (the file runs past the suite's 180 s cap)
 - lock-settlement 1, 3, 4, 5, 6, 7, 8
-- lock-settlement-restart 1, 4, 5, 6
+- lock-settlement-restart 1, 4, 6
 - one-signer-node-refused 5 (the "5, 6" case)
 - outage 1 ((a))
 - winnings-pool 1
 - winnings-sent 1, 3, 4
+LISTED RED - its own cause, "no qualifier, so the settlement follows the failed winner and stays SUBMITTING" (not the
+beacon-winner cause, and not the fee rule, which is ruled out):
+- lock-settlement-restart 5
 FOUND, NOT THIS SLICE: rerun 11 is red under load (suite load 9; ten CPU burners reproduce it) and green alone (18/18 twice).
 The holder daemon's own re-run watch files the first result's signers (§13C, ruling C) during the test, before its count of
 0 is read. Reproduced the same at a worktree of 3c760421, so it predates this slice. It is not fixed here.
 Full suite (254 files, 1616 pass): the listed reds above, rerun 11 (load), and the known ghost-live 9, replay-solids 2,
 discovery 18, objective-markers' timeout.
+
+## FEDERATION: the scripted winner, recomputed from each run's own beacon, is none (RULED Daniel 2026-09-25)
+
+THE MEASUREMENT: the recorded words fixed; once on the recorded beacon (the constant RANDOMNESS, 9b9b9b9b...) and once on the
+run's own beacon; the winner read from what both signer nodes signed. Scratch copies of the test files outside the repo,
+imports pointed at the repo, assertions verbatim, one print line each; the repo untouched.
+- The control stands: on 9b9b9b9b... the recorded words deliver - winner DELIVERED at tick 1020, score 2; loser LIVE at its
+  1000 ticks, score 109.
+- On each run's own beacon the winner moves on every listed test, both signer nodes agreeing, FINAL: lock-settlement 1, 3-8
+  (FAILED, scores 0-23); first-mark 1 (FAILED/3, forfeit 409 where 200 is asserted); forfeit 1, 2 (FAILED/25 and FAILED/12);
+  late-settlement 1, 2, 4 (FAILED/0, FAILED/0, FAILED/14); late-settlement-resend 1-4 (FAILED, all dying in settledOnDisk
+  on "the winner's first-round send is not PAID"); lock-settlement-restart 1, 4, 6 (FAILED/123, FAILED/0, FAILED/1). The
+  core replay of the same words puts the truck WRECKED short of the gate, or still LIVE at the close tick 1320.
+- lock-settlement-restart 5: on beacon a7165b2f... (winner FAILED/15, WRECKED at tick 292) the post-restart rebuild is
+  refused at lock-settlement.js's stake part - "no lock is claimed: the operator would keep 196000 msat: a pool of 196000
+  against 0 handed out" (lock-action.js): nobody qualifies, and under the test's 1500 msat base fee the 2000 msat fee locks
+  are not claimed either, so no fee-only plan is built. 0 submissions, both rows SUBMITTING, the loser's lock held. On the
+  recorded beacon the winner takes the pool and the same rule reaches ACCEPTED: the fee scenario is the same on both; the
+  qualifier is what differs.
+NOT DONE, AND WHY: a closed-loop driver in the round's own world was measured and stopped at 6 deliveries of 10 (six fixed
+words rolled forward on the core, the stricter pick; misses 7eb49d03 dead at 296, f9fa51b2 dead at 228, e52546d6 and
+ce568eaf LIVE at the cap); no seventh word, no seed search, no beacon resample, no tape fallback. Its code stays
+uncommitted.
+
