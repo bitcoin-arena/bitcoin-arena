@@ -50394,3 +50394,13 @@ THE 409 OF THE RUN BEFORE (24c5c60b) IS NOT EXPLAINED: its seven refusal sentenc
 not reproduce it, so no cause is named. One difference seen between the two runs, not a cause: the page's claim-key
 attestation was 5 of 5 needed there and 7 of 5 here.
 ITEM 8 STAYS OPEN (RULED): one run with the seats' verification and one without it; the 409's sentence is not on the page.
+
+## FEDERATION REHEARSAL ITEM 8: CLOSED, GREEN ON 8a577642 (RULED Daniel 2026-09-25)
+
+Closed on the run of 8a577642: one wallet per seed and federation; the stake left it (1000960 msat into a 980000 msat
+stake lock and a 20000 msat fee lock); the only Lightning payment was the deposit into that wallet, none between the
+deposit and the lock; the lock accepted by all seven signer nodes (201 "stake lock verified ... holds 980000 msat",
+7 committed).
+THE 409 OF 24c5c60b: a prior red, unreproduced and unexplained - its refusal text was never recorded. Not a gate, not
+remaining work; no further run is spent on it.
+NEXT: rehearsal item 9 - named, not started.
