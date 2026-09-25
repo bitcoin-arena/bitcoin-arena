@@ -50061,3 +50061,32 @@ bundle-fresh 1 - blwp-curve.js only - discovery 18, pool-outpoint's skip), objec
 test 1 - a sub-block timing flake of the last slice's test, fixed in the harness in the next commit (3 of 3 green).
 THE LIVE CHECK stays blocked: the Daily runs the fleet pin 02eefc04, whose CUSTODY still reads byte 0 as THRESHOLD_LN;
 not moved, nothing posted live, the service not restarted.
+
+## THRESHOLD_LN cut 6c: the withdrawn custody's on-chain pool payout is deleted (RULED Daniel 2026-09-25)
+
+THE RULING: "Cut the on-chain pool payout and those four tools now ... Payouts wiring, settleAllQueued, reconcile,
+pool-watch, and pool-signing, but only if nothing else uses them ... Do not relabel them FEDERATION." The fleet pin not
+moved. (Cut 6b had moved the four tools to FEDERATION: wrong - no federation round is paid that way; they are deleted.)
+RED FIRST (blwp-node/test/no-pool-payout.test.js, 0/3 on d81c2941): a daemon served /payout (200) and had /pool/commit and
+/pool/share doors (404 from inside the door, "this node holds no such round"); server.js built Payouts, PoolSigning and
+PoolWatch and ran payouts.reconcile() and payouts.settleAllQueued() at every start it could spend; main.js read a census
+for every PAYOUT_QUEUED round and handed the node chainSpendOver; pool-signing.js, pool-watch.js and payout-regtest,
+payout-committee-regtest, settle-regtest, settle-crash-regtest existed. Nothing writes PAYOUT_QUEUED any more: a round's
+winners are paid by its lock settlement.
+CALLERS CHECKED FIRST: pool-watch and pool-signing had no live caller (main.js's chainSpendOver fed only Payouts). KEPT
+because live: askerOrder, eligibleAsker, TAKEOVER_BLOCKS in the node's payout.js (settlement.js, the lock settlement's
+asker); the node's DKG (a round's claim key); pool-wire.js (the forfeit and settlement signing doors); payout-table.js; the
+four payout state words (a store from before keeps them). NOT TOUCHED, and dead: tools/round-rehearsal-lnd.mjs still sets
+d.signing, d.payouts and d.poolWatch - an lnd rehearsal that has met the byte-0 refusal since cut 5; not one of the four.
+THE CUT: src/pool-watch.js, src/pool-signing.js and the Payouts class deleted; server.js loses the wiring, the watch, the
+startup reconcile and sweep, and the three doors (now "no such door"); main.js loses the census loop and the pool options;
+the four tools deleted. Tests of only that path deleted: pool-bad-share, pool-committee, pool-fixture, pool-outpoint (its
+skip, the baseline's one, goes with it), pool-settle, pool-signing, pool-threshold, pool-watch, payout-pay. close-peers
+loses its payout-gather test and one peersOf assertion (the preimage checks stay); dkg-dealer keeps its trusted-dealer
+helper inline and its pinned tool list loses the deleted tools; the `d.payouts.peers = there` wiring line leaves 12
+fixtures and 8 probe tools.
+MEASURED AFTER: no-pool-payout 3/3 - /payout, /pool/commit, /pool/share each "404 no such door", no server path builds,
+reconciles or sweeps the pool payout, main.js reads no census for it; lock-settlement 9/9, winnings-sent 4/4,
+winnings-pool 3/3, dkg-dealer 2/2, close-peers 2/2. Full suite (247 files, 1610 pass, no skip): the baseline reds only
+(ghost-live 9, replay-solids 2, bundle-fresh 1 - blwp-curve.js only - discovery 18) and objective-markers' timeout.
+Next, named: rebuild blwp-curve.js (separate commit).
