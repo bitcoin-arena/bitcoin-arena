@@ -50404,3 +50404,18 @@ deposit and the lock; the lock accepted by all seven signer nodes (201 "stake lo
 THE 409 OF 24c5c60b: a prior red, unreproduced and unexplained - its refusal text was never recorded. Not a gate, not
 remaining work; no further run is spent on it.
 NEXT: rehearsal item 9 - named, not started.
+
+## FEDERATION REHEARSAL ITEM 9 (a): RED BY DESIGN, FROM THE CODE AND THE EXISTING TESTS - NO RUN (RULED Daniel 2026-09-25)
+
+Item 9 (a), FEDERATION.md: "a payout contract and a forfeit redeemed into the wallet by the client on its own, with no
+press". Recorded red against two rulings already in force, measured from the code and the tests that pin them; no harness
+built and no regtest run spent (the gate driver wins 6 of 10, which is why a run was refused - not a measurement to chase).
+CAUSE ONE - NO PRESS, NO REDEEM: the page redeems nothing on a timer. Its timer lookThePayout (WebGL template
+index.html:1486) only calls lookOwed; the collect runs inside the player's Withdraw press (collectAndWithdraw), into the
+round's wallet (index.html:994-1010). page-lock.test.js:788 ("the page spends nothing on a timer") pins it. The ruling it
+keeps is W4/6d: a closed tab must not collect money it then loses. So nothing is redeemed into the one wallet per seed and
+federation without a press.
+CAUSE TWO - NO PAYOUT CONTRACT TO REDEEM: under the pool rule (RULED 2026-09-23; settlement.js:462) a winner is paid by an
+outgoing Lightning send to the address it named; a qualifier with no address is paid nothing and no stake lock is claimed
+(winnings-pool test 2). There is no payout contract for the page to redeem into any wallet.
+NOT PATCHED (RULED): the timer, the Withdraw path, the pool send and the settlement stay as they are.
