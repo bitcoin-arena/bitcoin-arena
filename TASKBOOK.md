@@ -50324,3 +50324,55 @@ SET-UP DEFECTS FIXED IN THE HARNESS BEFORE THE RUN THAT COUNTS (no measurement i
 refused committee size (f2759068: 2 or 7) - seven now; one gateway is refused for a paying round (§23.6) - the second
 gateway on. An orphaned federation-hold-probe regtest from an earlier run (/tmp/federation-hold-probe-T7H6PE, up ~3.8
 days on 30101/30107, not the Daily's chain on 30401) was stopped by its own pid list first; its data dir is kept.
+
+## FEDERATION: §24A.1's player wallet, and the stake spent from it (RULED Daniel 2026-09-25) - the invariants, before code
+
+The red of rehearsal item 8 (27e1fbb9) is the spec's fault line: page-lock.js fund() paid an lnd invoice into a wallet
+keyed by seed AND ROUND. A round is not a federation. The slice builds only the player wallet and the paying-round spend.
+THE INVARIANTS (written before any code; the measurement is held to them):
+1. ONE WALLET PER SEED AND FEDERATION: its secret is a function of the seed and the federation id only - never of a round
+   id - and its store is keyed the same way. Two paying rounds of one federation open the same wallet.
+2. THE STAKE LEAVES THAT WALLET: the stake lock and the fee lock are funded from the player wallet's notes, and the page's
+   lockStake takes that wallet; it opens no per-round wallet and asks for no deposit.
+3. NO LIGHTNING BETWEEN THE PLAYERS: nothing Lightning sits in the per-round stake path. A top-up into the player wallet is
+   its own act, before a round's stake and never inside it.
+4. THE PER-ROUND LND INVOICE IS NOT THE STAKE SOURCE: a wallet that cannot cover the round's locks refuses the stake by
+   name; the stake path never answers a shortfall with an invoice.
+5. AFTER THE SPEND THE STAKE SITS IN THE FEDERATION, in its §23 stake lock (a stock OutgoingContract to claim_pk) - not in
+   a threshold hold-invoice.
+6. A PAYING ROUND WITH NO SUCH WALLET DOES NOT OPEN for this page: no player wallet, no stake, no entry. Free rounds stay
+   free - no wallet is opened for them.
+NOT IN THIS SLICE: refunds, redeems and payouts still open the per-round wallet (items 9-10 decide where they land); the
+Unity C# scripts; THRESHOLD_LN.
+BUILT (this slice): page-lock.js - walletSecretFor(seed, federationId) under its own tag (TAG.playerWalletSecret),
+walletStoreFor keyed by the federation, playerWallet (the one join), fundPlayerWallet (the top-up: a Lightning deposit
+into the player wallet only when it is short of the round's locks, the quote-then-allowance loop the stake used to run),
+and lockStake now opening the player wallet and spending the stake and the fee lock from it - no per-round wallet, no
+deposit; a short wallet is refused by name. The page (WebGL template index.html) tops the player wallet up first, then
+stakes; the bundle and its template copy rebuilt (bundle-fresh 2/2). page-lock 29/29: the five tests that pinned the
+per-round deposit moved to the player wallet, two new ones pin the invariants (a short wallet is refused and asks no
+deposit; two rounds of one federation open one wallet, another federation or seed another). Every regtest tool that stakes
+tops up first. Refunds, redeems and payouts still open the per-round wallet (not this slice).
+
+## FEDERATION REHEARSAL ITEM 8, REMEASURED ON THE PLAYER WALLET (2026-09-25): both ruled facts pass; the seats refuse the lock
+
+HOW MEASURED: rehearsal-8-regtest.sh, one run on a fresh regtest - stock fedimintd 0.12.0, 4 guardians 3 of 4, two
+gateways, seven bonded signer nodes (four bond one guardian each). rehearsal-8.mjs now measures two acts apart: the deposit
+into the player wallet (fundPlayerWallet), then the stake from it (lockStake), counting the player's lnd payments between.
+THE TWO FACTS:
+- THE STAKE LEFT THE PLAYER WALLET: YES. The wallet keyed by seed and federation (id ed8b5767..., not the round's
+  2897346a...; the tab holds 76 keys of it and 0 of any per-round wallet) held 1009152 msat after the deposit and 8192
+  after the locks: 1000960 msat left it, into a 980000 msat stake lock and a 20000 msat fee lock, stock OutgoingContracts
+  to claim_pk (§23), not a hold invoice.
+- LIGHTNING BETWEEN THE DEPOSIT AND THE LOCK: NONE. 1 payment by the player's lnd for the deposit into the player wallet
+  (invoice 1014194 msat, credited 1009152, SUCCEEDED), and 0 between that deposit and the lock.
+RED, THE NEW CAUSE: the seven signer nodes refused the wallet-funded lock - POST /lock 409 at all seven, committed 0 (the
+per-round lock of 27e1fbb9 was 201 at all seven). The entries were 201 at all seven. The refusal text was NOT recorded:
+the harness printed handLock's statuses and not its said[].why, and the daemons log no /lock refusal - so which of
+verifyStakeLock's checks refused is not measured. That is the next thing to measure, and it is not guessed here.
+THE HARNESS FIXED FOR THE NEXT RUN (not remeasured): rehearsal-8.mjs now records each signer node's /lock answer text
+(said[].why) and counts the seats' verification in its verdict.
+GREEN: page-lock 29/29, bundle-fresh 2/2, bundle 5/5, withdrawn-custody-bundle 2/2, client-hash 3/3 (the rebuilt
+blwp-client.js pinned by tools/known-clients.js, 5d121e3a...). Full suite (254 files, 1617 pass): the listed reds, and
+the known ghost-live 9, replay-solids 2, discovery 18, objective-markers' timeout only (client-hash, red in that run
+before the pin, 3/3 after it).
