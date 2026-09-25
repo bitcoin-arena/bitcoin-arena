@@ -30,9 +30,10 @@ The section below is the record, not the order, until this list is done.
 2. The finish straight to the miner is completely free. A truck at speed does not stop and
    does not crawl. All collisions are marked in color. The buildings stay readable.
    Tonight, before testnet. This overrides the earlier "after testnet" deferral.
-3. Result screen: nothing overlaps. "copy game replay" copies one https link. The replay
-   must work externally. A localhost link does not count. A 404 on the Daily's /replay
-   does not count. A phone off this machine opens the copied link and the run plays.
+3. Result screen: nothing overlaps, and it stays up 3 seconds longer than the 5 s it
+   holds now (8 s). "copy game replay" copies one https link. The replay must work
+   externally. A localhost link does not count. A 404 on the Daily's /replay does not
+   count. A phone off this machine opens the copied link and the run plays.
 4. The arrival card prints the core's E, T and C. Their product is the score.
 5. Then FEDERATION live: fleet pin, guardians, first paying testnet4 round.
    THRESHOLD_LN deletion continues beside that, not in front of it.
