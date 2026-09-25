@@ -50197,3 +50197,33 @@ Full suite (251 files, 1630 pass): ghost-live 9, replay-solids 2, discovery 18 a
 measuring run before the fixtures had those plus the 37 files. Kept green by name: round-open-base-fee 5/5, no-base-fee
 6/6, gateway-gate 3/3, guardians-bonded 3/3. Next, named and not measured: whether a paying round refused for an unbonded
 federation (guardiansBonded, after round.open) is listed.
+
+## FEDERATION: a paying round does not open on an unbonded federation (§23.6, P3; RULED Daniel 2026-09-25)
+
+THE RULING: guardiansBonded runs before round.open and refuses with 409 and its own sentence ("this signer node assigns no
+round on an unbonded federation (§23.6): " + federationIsBonded's reason); nothing stored, nothing listed; censusFor takes
+the posted contract with no stored row required and the same census; contracts unchanged; assignSignerNodes and the claim
+key stay after round.open. Out of this slice: a node with no chain view still counts no guardians and asks no bond check.
+MEASURED BEFORE (a probe on guardians-bonded's fixture with the round's clock inside its entry window): under threshold (2 of
+4 guardians bonded, threshold 3) and none bonded (0 of 2) were 409 with the round STORED and LISTED - guardiansBonded ran
+after round.open; bonded (2 of 2) 201, stored, listed, 2 signer nodes; a federation other than the round names the gateway
+409, nothing stored.
+RED FIRST (blwp-node/test/round-open-unbonded.test.js, the same fixture): 2 (under threshold not stored, not listed), 3 (none
+bonded: 409, the sentence, not stored, not listed) and 6 (the source asks guardiansBonded before round.open) red; 1 (409 with
+the sentence and "2 of that federation's 4 guardians ... threshold is 3"), 4 (bonded 201 stored listed, 2 signer nodes) and 5
+(other federation: gateway 409, nothing stored) green. After: 6/6.
+THE CUT: roster.js censusFor(rid, atHeight, { posted }) derives from the posted contract when given; guardiansBonded passes its
+contract as posted; server.js POST /round asks guardiansBonded (chain view, paying round) after the base-fee check and before
+round.open - the check after round.open is gone.
+TWO GUARDS THAT READ A REFUSED ROUND, fixed in their tests: guardians-bonded test 3 posted the 4-guardian federation's refused
+round and fetched its guardian bonds - now 404, and asserted; the page counts federation B (4 keys, threshold 3) against the
+bonds served for (a)'s stored bonded round, whose bonds advertise the same two guardian keys (the two doors' signer nodes are
+different nodes, not one census), and the count equals the node's refusal. roster test 7's paying round was on a federation
+nobody bonded (the lock fixture's port answers no guardians) - now refused before round.open; its bonds advertise the fixture
+federation's guardian keys and its port answers guardians() with them (threshold 2; the short census: one bond, threshold 1),
+so the round is stored before the committee door is read. The POST itself is still 409 afterwards, from assignment (the
+fixture contract names one key, the census assigns two) - unchanged by this slice, the round kept; the test asserts the round
+is stored, not the POST's 201, because 201 would need the contract changed.
+GREEN: round-open-unbonded 6/6, guardians-bonded 3/3, roster 19/19, round-open-no-lock-port 6/6, round-open-base-fee 5/5,
+no-base-fee 6/6, gateway-gate 3/3, close-peers 2/2.
+Full suite (252 files, 1636 pass): ghost-live 9, replay-solids 2, discovery 18 and objective-markers' timeout only.
