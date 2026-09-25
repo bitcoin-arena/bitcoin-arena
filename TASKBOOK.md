@@ -50132,3 +50132,15 @@ late-settlement-resend 4/4, winnings-sent 4/4, winnings-pool 3/3, client winning
 ghost-live 9, replay-solids 2, discovery 18, objective-markers' timeout only.
 FOUND, NOT IN THIS CUT: round.js's §23.5 fee hold store - putFeeHold, feeHold, feeHoldsOf over `fee_holds`, created in every
 new store - has no caller in src, tests or tools: the same dead hold-invoice record; it needs its own ruling.
+
+## THRESHOLD_LN: the §23.5 fee's hold store is deleted (RULED Daniel 2026-09-25; code commit ae116c10)
+
+THE RULING: the fee hold store is the same dead hold-invoice record as cut 2b's; it does not stay so an old round can
+decode. The pin before any delete (blwp-node/test/no-fee-hold-store.test.js) read 1 red, 2 red, 3 green, 4 green; after
+the delete, 4/4.
+THE CUT: putFeeHold, feeHold and feeHoldsOf are gone from round.js; a new store creates no fee_holds table (store.js);
+an old store keeps its table and row, unread; nothing outside round.js calls the three methods (assertion 4 scans every
+.js/.mjs/.sh under the four packages' src, test and tools, skipping src/round.js - the self-call of feeHoldsOf sat inside the
+deleted code, which assertion 1 covers).
+GREEN: lock-settlement 9/9, late-settlement 5/5, winnings-sent 4/4, withdrawn-custody-absent 6/6. Full suite (249 files, 1619
+pass): the known reds only (ghost-live 9, replay-solids 2, discovery 18, objective-markers' timeout).
