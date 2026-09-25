@@ -50376,3 +50376,21 @@ GREEN: page-lock 29/29, bundle-fresh 2/2, bundle 5/5, withdrawn-custody-bundle 2
 blwp-client.js pinned by tools/known-clients.js, 5d121e3a...). Full suite (254 files, 1617 pass): the listed reds, and
 the known ghost-live 9, replay-solids 2, discovery 18, objective-markers' timeout only (client-hash, red in that run
 before the pin, 3/3 after it).
+
+## FEDERATION REHEARSAL ITEM 8, THE /lock ANSWERS RECORDED (2026-09-25): 201 at all seven - the 409 of 24c5c60b did not recur
+
+HOW MEASURED: rehearsal-8-regtest.sh as pushed in 24c5c60b (each node's /lock answer text kept), one fresh regtest run,
+the same shape: stock fedimintd 0.12.0, 4 guardians 3 of 4, two gateways, seven bonded signer nodes, one stake from the
+player wallet.
+THE SEVEN /lock ANSWERS, word for word, the same at every node: 201 "stake lock verified: contract
+5df441834a7dc39cff3205d75ecb27213c9f701e14bbe6878cf363aa75152506 holds 980000 msat - counted once its fee lock is
+verified (this round mints fee locks)". Committed 7 of the 5 needed. Entries 201 at all seven.
+THE WALLET FACTS, SAME RUN: the stake left the player wallet (keyed by seed and federation, id 5a43504f..., the round's
+wallet b286ad36... not used; 76 tab keys of the player wallet, 0 of any per-round wallet) - 1009152 msat held after the
+deposit, 8192 after the locks: 1000960 out into a 980000 msat stake lock and a 20000 msat fee lock. The only Lightning
+payment was the deposit into that wallet (1 by the player's lnd, invoice 1014194 msat, SUCCEEDED); 0 between the deposit
+and the lock.
+THE 409 OF THE RUN BEFORE (24c5c60b) IS NOT EXPLAINED: its seven refusal sentences were never recorded, and this run did
+not reproduce it, so no cause is named. One difference seen between the two runs, not a cause: the page's claim-key
+attestation was 5 of 5 needed there and 7 of 5 here.
+ITEM 8 STAYS OPEN (RULED): one run with the seats' verification and one without it; the 409's sentence is not on the page.
