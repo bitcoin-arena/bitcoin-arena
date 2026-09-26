@@ -50525,3 +50525,12 @@ BATTLEFIELD LINE (not scored): at x 43.7..46.1 speed went 20.89 -> 13.69 -> 12.5
 was shoved sideways from z 10.20 to 8.84 with its heading unchanged - no map box stands near x 45; the tanks' armour is
 solid in the core. It recovered to 14.39 m/s by x 59 and 18.00 by x 94.
 
+THE MINER FROM OUTSIDE, LIVE (2026-09-26): PASS. btc-logistics-core.pages.dev, phone shape 390x844, DPR 3, touch, from the
+lobby's SPECTATE (the game's own free camera), no round. The miner preset (SpectatorCamera.Go(Spot.Miner), 95 m west of the
+miner, aimed at it) cannot be called from the page - SendMessage passes no Spot enum; the camera stayed at the post office
+- so the same free camera was flown there with its own controls (a 180-degree drag, 1.6 s up, 2.7 s forward), then pulled
+straight back along its view (S) for 5 s: west of the miner, outside the run-in, aimed at the facade. In frame and readable:
+MINING, the hash lines, 929 EH/s, 0.376 BTC, 0.21 BTC, 238,138 sat, the panel's bars, the fans, the B coin, the coin stacks.
+The magenta is two translucent side slabs (the facade's side boxes) and the tunnel walls; the left slab crosses the edge
+of the MINING panel and the text reads through it. Not a wash. No game code changed.
+
