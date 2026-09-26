@@ -50479,3 +50479,25 @@ GREEN (item 9 (c)): page-lock 30/30, bundle-fresh 2/2, client-hash 3/3. Full sui
 reds and the known ghost-live 9, replay-solids 2, discovery 18, objective-markers' timeout - and round.test 8, which the
 UNCOMMITTED replay page caused (it sat in blwp-node/src, where the guard allows a core to be stepped only in replay.js);
 that page moved to blwp-node/pages/ in its own slice, round.test 12/12.
+
+## THE ARRIVAL CARD: THE CORE'S SCORE IS THE PRODUCT OF E, T AND C, AND THE CARD PRINTS THEM - CLOSED (2026-09-26)
+
+RULE. The score is 1000 x E x T x C on the 5-decimal grid: each factor an integer count of 1e-5 formed from the core's
+own words (E from S_EXPOSURE over the 320 m reference, T = 3900 over S_ELAPSED held to 2600..15600 ticks, C from the
+S_CARGO bed fraction), and the score their product, kept in 1e-5 points (SCORE_SCALE 100000). min_score is in the same
+unit and compared with the score directly; the Daily's is 100000 (1 point). The card prints
+"load C x danger E x speed T x 1000 = S" with S the core's S_DELIVERED, the same number as the SCORE line.
+
+MEASURES. Lane 0, seed 0: 7.50000 on phase0 (C 0.20000 x E 0.02500 x T 1.50000), 9.91500 on the fleet. The 72-run
+arrival set (9 lanes x 8 seeds, all delivered): the product of the printed factors equals S on every run, 0 failures.
+
+LIVE RUN. btc-logistics-core.pages.dev, phone shape: round 14bff641..., entry 194e48a7..., "load 0.70000 x danger
+0.31721 x speed 1.00360 x 1000 = 222.84637"; S 222.84637, equal to S_DELIVERED (22284637) read at delivery and to the
+score the copied replay of that run shows.
+
+COMMITS AND DEPLOY. 5196d882 on phase0-deterministic-core; b15af416 on fleet-replay-02eefc04; page deploy b483fc89;
+Daily restarted onto b15af416 at 01:33:29 UTC with only the free round in play; no Lightning refusal after that restart
+(paying rounds opened at 01:34, 01:36 and 01:39).
+
+NOT PART OF THIS COMMIT. The phone check off this machine is Daniel's. The scratch worktrees stay until that check is back.
+

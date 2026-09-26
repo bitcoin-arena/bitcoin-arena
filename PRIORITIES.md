@@ -34,7 +34,8 @@ The section below is the record, not the order, until this list is done.
    holds now (8 s). "copy game replay" copies one https link. The replay must work
    externally. A localhost link does not count. A 404 on the Daily's /replay does not
    count. A phone off this machine opens the copied link and the run plays.
-4. The arrival card prints the core's E, T and C. Their product is the score.
+4. CLOSED 2026-09-26: the core's score is the product of E, T and C, and the arrival card prints them, live on
+   btc-logistics-core.
 5. Then FEDERATION live: fleet pin, guardians, first paying testnet4 round.
    THRESHOLD_LN deletion continues beside that, not in front of it.
 
