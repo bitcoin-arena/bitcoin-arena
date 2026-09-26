@@ -50818,6 +50818,8 @@ GUARDIANS
     - :8443 / and :18789 / -> 127.0.0.1:18789 (an openclaw gateway), tailnet only.
   - No path points at the testnet4 side, and no guardian or gateway path exists. How guardians are reached is still
     open: no public path is made, Funnel is not edited, no port is bound, no daemon is started.
+  - fed2's regtest APIs ws://127.0.0.1:31121, 31131, 31141 and 31151 are local only and are not the testnet4 reach; the
+    first paying testnet4 round waits on a public wss guardian address, which this session will not invent.
 
 THE PAYING ROUND: WHAT IS LOCKED BEFORE THE FIRST testnet4 PAYMENT
 - On chain, before the round opens:
