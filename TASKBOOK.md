@@ -50716,3 +50716,9 @@ MACHINE PROOF BEHIND THE FROZEN LINK (2026-09-26 11:20..11:25, from this machine
   score 146.21250: the three pass numbers.
 The phone gate above is still open: no phone off this machine has opened the link.
 
+RE-MEASURED ON THIS MACHINE, NOT A PHONE (2026-09-26, same frozen link, same host).
+- 12:42:51..12:42:52 CEST: every request answered 200 with the same sizes as at 11:20 - the page shell, client.js,
+  nodes, transcript, round, entry, randomness and core.js.
+- 12:43:00 CEST: the served core stepped the run to tick 2125 (last index 2124). The result is DELIVERED, 146.21250.
+This pass is this machine, not a phone. The phone gate stays open.
+
