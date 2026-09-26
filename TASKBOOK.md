@@ -50704,3 +50704,15 @@ As of this entry, no phone off this machine has opened it. What does not count: 
 machine, a localhost link, and a 404 on the Daily /replay. The link is a trycloudflare quick tunnel: it dies if that
 tunnel restarts.
 
+MACHINE PROOF BEHIND THE FROZEN LINK (2026-09-26 11:20..11:25, from this machine; not the phone gate).
+- The link answered HTTP 200 through Cloudflare. It is served by blwp-daily-tunnel-b (cloudflared PID 1642694, up since
+  2026-09-20 08:17:45, a quick tunnel to signer node b on 100.74.66.98:18081), whose log names this hostname.
+- The page is a 200 text/html shell of 17310 bytes with no round id in its HTML: it reads round and entry from its own
+  URL and fetches the run.
+- Every request the page makes answered 200 from the same tunnel host: /replay/client.js, /replay/nodes, the
+  /replay/transcript for that round and entry (2125 ticks, 0..2124), /round, /entry, /randomness and /replay/core.js for
+  that round (core 44107ead).
+- Those files, stepped through the served core the way the page steps them, ran 2125 ticks and ended DELIVERED with
+  score 146.21250: the three pass numbers.
+The phone gate above is still open: no phone off this machine has opened the link.
+
