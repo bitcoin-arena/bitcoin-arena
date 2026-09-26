@@ -50864,6 +50864,7 @@ GUARDIANS
     the tailnet side answered 200). Nothing on this machine changed Tailscale.
 - ITEM 5 STATUS (2026-09-27, read-only on e042e442; signet refused by Daniel, no patch, no chain change):
   paying round NOT STARTED - chain remains testnet4; signet refused; Funnel has the four /guardian-N paths to the testnet4 nodes but the public ingress answered 0 of 6; blocked on no stock gateway joining a testnet4 federation (Fedimint 0.12 labels testnet4 regtest; gateway lib.rs:1057).
+  HOLD (2026-09-27): the first paying testnet4 round waits on Daniel to hand over one thing - a stock gateway that can join the existing 3-of-4 testnet4 federation d3756588...; until it arrives no gateway is started, nothing is probed, no coin moves, Fedimint is not patched, the chain stays testnet4, and item 5 stays open.
   - Code facts at e042e442: testnet4 federationNominal 4 (protocol/src/genesis.js:183); testnet4 network id the
     re-pinned 26b9162e... (genesis-ids.js:49); one guardian key per node (tools/run-2of2.mjs:138, i < fed.keys.length).
 - THE TESTNET4 GUARDIANS, RULED (2026-09-26):
