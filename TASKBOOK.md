@@ -50683,3 +50683,24 @@ copied! (fleet 39b04f60, the same change here).
 - Both clipboards hold the one https link, equal to BLWP_REPLAY_URL. Holds 8025 and 8050 ms.
 - EditMode: fleet 32/32, here 27/27.
 
+## THE RESULT SCREEN (PRIORITIES item 3) - OPEN: THE PHONE GATE (2026-09-26)
+
+MEASURED ON THIS MACHINE (live btc-logistics-core, fleet 65e6d18f, phase0 08b469be). These do not close the item.
+- Nothing on the result screen overlaps. Checked at 390x844 and 1280x720, delivered and failed. The HUD score block, the
+  assault banner and the players panel stand aside while the card is up.
+- The card stays up 8 s at full strength, not the old 5 s. The lobby took over at 7982..8143 ms over six runs, pressed and
+  not.
+- Copy game replay puts exactly one https link on the clipboard, not localhost, equal to BLWP_REPLAY_URL. "copied!" shows
+  on the card once the clipboard write resolved.
+- The Daily /replay answers 200 for that link, not 404.
+
+THE OPEN PHONE GATE. The copied link, frozen, not to be replaced:
+https://flight-costa-nails-watched.trycloudflare.com/replay?round=d79b10094779e0f4fbf3b482a30372d4d7394bc7aaea00cda4e4f458f583ff08&entry=8cbf8d5cd5f2405da909449a6911b7f1fe2974e77e09822a537c9f1bc682bd24
+Pass only when a phone off this machine opens that exact link, presses play, and it:
+- reaches tick 2125;
+- ends DELIVERED;
+- shows score 146.21250.
+As of this entry, no phone off this machine has opened it. What does not count: a 200 from this machine, a browser on this
+machine, a localhost link, and a 404 on the Daily /replay. The link is a trycloudflare quick tunnel: it dies if that
+tunnel restarts.
+
