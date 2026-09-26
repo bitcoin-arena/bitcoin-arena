@@ -50756,3 +50756,47 @@ THE STABLE NAME (in code, not yet on).
 - BLWP_REPLAY_PUBLIC stays unset until those paths exist. The measure still owed: a link copied after that plays after
   the quick tunnel restarts.
 
+## ITEM 5, THE CUT BEFORE CODE (2026-09-26, not yet agreed): fleet pin, guardians, the first paying testnet4 round
+
+ORDER: fleet pin, then guardians, then the first paying testnet4 round. The free 2-of-2 stays up. The paying committee is
+5-of-7, separate from the free pair. THRESHOLD_LN deletion goes beside this, not in front. Reach (BLWP_REACH) stays
+local and unshipped until this cut is agreed.
+
+FLEET PIN
+- Commit: phase0-deterministic-core at b86de94b (corrected 2026-09-26 from edccc29d, which only records that copied
+  replay cores are kept), core d15c39bb. The pin is that commit, not a working tree.
+  - It carries the kept replay cores (BLWP_REPLAY_CORES_DIR) and /replay/nodes' stable bases, and on top of those the
+    closed-round refusal, the copy-replay card, the replay clock and the ROLL OUT camera.
+  - core/src has not changed since edccc29d: hash-core.js gives d15c39bb on b86de94b too.
+  - The paying round names core d15c39bb with the genesis config.
+- The live Daily today: /mnt/bitcoin/blwp-2of2/code detached at fleet 4bb61e81, core 44107ead (both nodes' rounds name
+  it). The pin moves the Daily's core from 44107ead to d15c39bb.
+- Replays after the move: the Daily's kept-cores directory already holds 44107ead, d12e7abc and the 12 before them, and
+  a node on b86de94b writes d15c39bb there when it starts. So a replay copied before the pin still plays after it.
+- The copied replay link: on b86de94b it names the nodes' stable bases through BLWP_REPLAY_PUBLIC. The reach parameter
+  is not on phase0; it is unshipped fleet work.
+- Only /blwp-a and /blwp-b exist on Funnel, which covers the free pair. The seven paying nodes have no stable base yet,
+  so a replay of a paying round would name its quick-tunnel endpoints until each has one.
+
+GUARDIANS
+- Four fedimintd guardians, 3 of 4. Four is the smallest federation fedimintd builds (threshold n - floor((n-1)/3)). §23.6
+  wants the threshold in distinct bonded census nodes, so four of the seven paying nodes each advertise one guardian key.
+- Zero base fee; two gateways, one on each testnet4 LND (the ruled pick A).
+- The invite carries the federation id and a guardian API address. The page's lock client joins with it and reads the
+  config, which lists every guardian's API address. It opens those from the player's browser.
+  - So each guardian's API address (FM_API_URL) must be a public wss address a phone can open, not the regtest rig's
+    ws://127.0.0.1.
+  - How each is reached is the same reach question as the signer nodes. It is not settled by this cut.
+
+THE PAYING ROUND: WHAT IS LOCKED BEFORE THE FIRST testnet4 PAYMENT
+- On chain, before the round opens:
+  - Each signer node's bond on testnet4. The census reads it, and a paying round opens only when federationIsBonded -
+    the four guardian-advertising nodes are bonded.
+- Per player, in the federation, before the run: the stake lock (the Daily names 100000 msat, 100 sat) and, beside it,
+  the fee lock for the 2% node fee (§22A). Both are made from the player wallet after its deposit, with no Lightning
+  payment between. The deposit into the player wallet is the first testnet4 Lightning payment.
+- The bond amount: the spec names no fixed amount.
+  - §5A.3: bond_min(role) is named in each Round Contract.
+  - §5A.10: bond_min is two to four times the largest round pool, and at least max_round_volume per role.
+  - The 50,000 sat in round-2of2.mjs is a launcher's choice, not the spec's. This cut does not invent one.
+
