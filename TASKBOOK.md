@@ -50726,3 +50726,33 @@ CLOSED 2026-09-26 13:24: Daniel approved the phone gate - the phone off this mac
 run played. The link watch (page, core, transcript, tunnel-b PID 1642694, once a minute from 13:05) found no failure
 until it was stopped at the close.
 
+## PLAYTEST 13:28: A COPIED REPLAY LINK KEEPS WORKING (2026-09-26) - CORES KEPT: DONE; STABLE NAME: BLOCKED ON FUNNEL
+
+RULED (Daniel 2026-09-26 13:28). The copied replay link must keep working, always.
+- Keep and serve every core a stored round names; do not drop it when HEAD moves.
+- Copy the stable Funnel name (https://beelink.tail1723e2.ts.net/blwp-a or /blwp-b), not the quick-tunnel hostname.
+- Keep a round, its entry, transcript, randomness and core at least 7 days, across restarts.
+
+THE CORES (fleet 47872b4a, the same change here).
+- The node serves a round whose core it no longer runs from BLWP_REPLAY_CORES_DIR/<hash>.js, and writes its own core
+  there when it starts. The Daily's directory is /mnt/bitcoin/blwp-2of2/replay-cores, outside the checkout.
+- tools/archive-replay-cores.mjs finds each core's commit by hash-core's rule and bundles it. bundle-replay.js takes
+  BLWP_REPLAY_SRC and guards its exports.
+- replay.html replays an older core without factors, landmarks or map solids.
+- The stores name 15 cores. 14 are archived, each from the commit whose core/src hashes to it: 5f3b5176 .. 44107ead.
+  f33aa45c (rounds of 2026-09-12..13, older than the 7 days) predates the replay adapter and is not.
+- Nothing in the node prunes rounds, entries, ticks or randomness; the stores keep rounds from 2026-09-12.
+- MEASURED LIVE (Daily on 47872b4a, restarted with no players):
+  - The morning link (round 80c143d4, core d12e7abc) that 409'd plays again: core.js 200, 2188 ticks, DELIVERED
+    333.53250, as this morning.
+  - An older run (core 6cf38b88) replays: 1200 ticks, FAILED.
+  - replay.test 9/9 on the fleet and here; server.test 5/5 here.
+
+THE STABLE NAME (in code, not yet on).
+- /replay/nodes answers 'stable' from BLWP_REPLAY_PUBLIC. The page copies from it when there is any (deployed,
+  a202af9c).
+- BLOCKED: Funnel serves only / -> localhost:3001, and adding /blwp-a and /blwp-b needs root: `sudo tailscale set
+  --operator=daniel` once, or the two `sudo tailscale funnel --bg --set-path` commands.
+- BLWP_REPLAY_PUBLIC stays unset until those paths exist. The measure still owed: a link copied after that plays after
+  the quick tunnel restarts.
+
