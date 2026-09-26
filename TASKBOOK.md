@@ -50773,6 +50773,11 @@ FLEET PIN
   it). The pin moves the Daily's core from 44107ead to d15c39bb.
 - Replays after the move: the Daily's kept-cores directory already holds 44107ead, d12e7abc and the 12 before them, and
   a node on b86de94b writes d15c39bb there when it starts. So a replay copied before the pin still plays after it.
+- RULED OUT OF THE PIN CHECK (2026-09-26): core f33aa45c61db5f53, source 6d625093 (2026-09-09). The archive run over
+  a.db and b.db names 15 cores; 14 are kept and this one does not bundle (today's bundler wants adapter.js, which that
+  core has none of). Its rounds: 2026-09-12 12:59 through 2026-09-13 11:39 UTC, node a 573 rounds of which 12 have
+  entries, node b 533 rounds of which 11 have entries. Their replays already fail on the live Daily (core 44107ead); the
+  pin does not add that miss. Not a clean archive and not fixed: no bundler change, no game change.
 - The copied replay link: on b86de94b it names the nodes' stable bases through BLWP_REPLAY_PUBLIC. The reach parameter
   is not on phase0; it is unshipped fleet work.
 - Only /blwp-a and /blwp-b exist on Funnel, which covers the free pair. The seven paying nodes have no stable base yet,
