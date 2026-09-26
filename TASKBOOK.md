@@ -50549,3 +50549,40 @@ EARLIER STRAIGHT RUNS, LIVE. Three desktop and three phone-shaped free-round run
 MINER FACADE STOP: LOCAL BUILD ONLY. Measured on a local build: the truck stood on the facade box's face, 0 m inside it. No
 live run reaches that face without the teleport that was ruled out.
 
+## THE LOAD PATH: ONLY THE NEW LOBBY, THE WALLET IN SETTINGS, A CLOSED ROUND BACK TO THE LOBBY - CLOSED (2026-09-26)
+
+THE MISS. Case (c), a closed round's link with play=1: the page built the entry locally, so its join fallback never ran;
+Unity auto-played from the address and opened the cargo chooser; then the node refused the session ("the node refused
+the entry: the round is closed"). The bridge dropped its client, but the game's running-session mark stayed set, and
+BlwpNetEnded read only the client, so the run looked live forever. The chooser stood there with a players-panel line.
+
+THE FIX (fleet 7dc2e8f9, the same patch here). First patch:
+- The bridge's failed open calls the page's BLWP_ENTRY_REFUSED.
+- The page takes the join fallback's own steps. The round globals are cleared, the join is recorded refused with the
+  node's words, round and play leave the address, and the lobby shows.
+- SplashScreen, while hidden with no live session and the chooser open, reads the refused join and closes the chooser
+  without rolling out (LoadoutPanel.Dismiss). It then shows the lobby.
+First patch measured live: the page side passed, the game side did not come back. Unity reported showing false in 26
+of 27 samples, and the chooser was still up in the last screenshot. BlwpNet.Running stayed true after the refusal, so
+Live never went false.
+Second patch (RULED 2026-09-26): a bridge in error with no client is over (BlwpNetEnded returns 1), so the session is
+not live.
+
+MEASURED, LIVE. btc-logistics-core.pages.dev, framework 90d9c9d5, headless Chrome on the Beelink (Vulkan). Each case ran
+on a brand-new profile, phone shape 390x844, DPR 3, touch, cache off. Unity's own lobby report was read every 250 ms for
+15 s after the loading screen.
+(a) Bare root. 35 samples, all lobby, 0 in title mode. Wallet rows (balance, deposit, withdraw, move) hidden. The gear
+    opens Settings with the Wallet row; Close hides it; "Back up now" opens Settings with the phrase. PASS.
+(b) Bare root, then a reload of the same tab. 36 + 36 samples, all lobby, 0 in title mode. Wallet as in (a). PASS.
+(c) Closed round 14bff641... with play=1 (the node said "the round is closed", not an unknown round).
+    - 27 of 28 samples lobby. The one before, at 1.2 s, was the run starting from the address.
+    - 0 in title mode.
+    - Unity reports showing and lobby, with "Not joined: the node refused the entry: the round is closed." drawn in the
+      red box and on the hint line.
+    - The cargo chooser is gone in the last screenshot.
+    - The address keeps node, bond and advert; no round, no play, no round id.
+    - The bridge is in error with no client; the join is recorded refused.
+    - Wallet rows hidden after load, the Wallet row inside Settings.
+    PASS.
+EditMode OnlyTheLobbyTests + ResultHold + Timer/Void return + RunStopped: 27 of 27.
+

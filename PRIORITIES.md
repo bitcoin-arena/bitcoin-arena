@@ -25,8 +25,9 @@ Top item first. Finish and deploy before starting the next.
 Playtest bug stops the current letter. Top item first. Finish and deploy before the next.
 The section below is the record, not the order, until this list is done.
 
-1. After the game load, only the new lobby. No old splash (BTC LOGISTICS WAR, SPECTATE).
-   The wallet page belongs in Settings. It is not the page after load.
+1. CLOSED 2026-09-26: after the game load, only the new lobby - no old splash, no title mode - and the wallet only in
+   Settings; a closed round's link with play=1 comes back to that lobby with "Not joined: the node refused the entry:
+   the round is closed", live on btc-logistics-core.
 2. CLOSED 2026-09-26: the finish straight to the miner is free, a truck at speed does not stop or crawl, collisions
    are marked in color, and both buildings read from outside.
 3. Result screen: nothing overlaps, and it stays up 3 seconds longer than the 5 s it
