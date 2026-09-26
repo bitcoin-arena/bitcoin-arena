@@ -38,6 +38,10 @@ The section below is the record, not the order, until this list is done.
    btc-logistics-core.
 5. Then FEDERATION live: fleet pin, guardians, first paying testnet4 round.
    THRESHOLD_LN deletion continues beside that, not in front of it.
+   HARD (Daniel 2026-09-26 22:54): testnet is 3 of 4, and one node is one guardian. A node starts its own guardian
+   with zero config - no second binary, no FM_API_URL typed, no invite pasted - and its endpoint is the node's own
+   public address. Four nodes, each one guardian; the Daily's 2-of-2 is not this federation. The UI offers no
+   2-of-2 paying federation and shows no guardian as a separate setup.
 
 # NOW  -  M3: what is left
 
@@ -556,6 +560,7 @@ are deleted from the source and are `undefined` in the bundle the daily URL serv
 HARD (Daniel 2026-09-21 17:08): **there is no THRESHOLD_LN. Only federation and guardians.** Spec
 changed (`c7b74585`). A round naming any other custody is invalid. Guardians are no longer parked:
 testnet on the 2-of-2 that runs, seated by its two bonded operators. The federation holds the money.
+[OVERRIDDEN 2026-09-26 22:54: testnet is 3 of 4, one node one guardian - item 5 above.]
 No hold invoices. No committee lnd as the stake. THIS IS THE LIVE ITEM.
 
 The 17:01 chain rule still holds under that: six real testnet4 confirmations, no `rt.mine(6)`, no

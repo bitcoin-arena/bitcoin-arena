@@ -50820,6 +50820,10 @@ GUARDIANS
     open: no public path is made, Funnel is not edited, no port is bound, no daemon is started.
   - fed2's regtest APIs ws://127.0.0.1:31121, 31131, 31141 and 31151 are local only and are not the testnet4 reach; the
     first paying testnet4 round waits on a public wss guardian address, which this session will not invent.
+- SUPERSEDED 2026-09-26 22:54 (Daniel): testnet is 3 of 4, one node one guardian, four nodes; the 2-of-2 count below
+  and "the guardians are the Daily's nodes a and b" no longer hold. Each node binds its own Funnel path
+  (/guardian-1 to /guardian-4), chosen by the node, not the operator. The zero-config node-as-guardian and the
+  stock-wallet pick below stand.
 - THE TESTNET4 GUARDIANS, RULED (2026-09-26):
   - Count: 2 guardians, 2 of 2, federation_min 2 (multiplayer_p2p.md §23A.1 table: the testnet column; §23A: "the
     2-of-2 federation ... seated by the two bonded operators it has"). The guardians are the Daily's nodes a and b.
