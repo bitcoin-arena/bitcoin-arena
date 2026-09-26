@@ -50586,3 +50586,28 @@ on a brand-new profile, phone shape 390x844, DPR 3, touch, cache off. Unity's ow
     PASS.
 EditMode OnlyTheLobbyTests + ResultHold + Timer/Void return + RunStopped: 27 of 27.
 
+AFTER THE CLOSE, WHAT THE GOAL STILL NEEDED (2026-09-26, live on framework 90d9c9d5). No core, physics or replay code
+changed, so there is no core-vs-old engine comparison for this item.
+- THE NORMAL PATH. Bare root, phone shape; PLAY on the free round, joined, AUTO, ROLL OUT, delivered.
+  - The straight: 15.32..15.84 m/s, no drop.
+  - The lobby is back at 8.5 s.
+  - The error-means-over rule did not touch a live run: the bridge enters error only on a failed open.
+- THE LOBBY WE COME BACK TO WORKS.
+  - Before, a second PLAY after a refused session was blocked: BlwpNet.MayStart needs !running || over, and the session
+    counted as running and never over.
+  - From the case (c) lobby I picked the FREE row and pressed PLAY. The join came back "joined", the session opened with a
+    client, the address named the free round with play=1, and the cargo chooser came up with 2 players in the round.
+- THE UNKNOWN-ROUND LINK with play=1 (the join's own fallback), phone shape.
+  - 26 of 26 samples lobby, 0 in title mode.
+  - "Not joined: no node holds the round this URL names: ... answered 404".
+  - Round gone from the address; wallet rows hidden.
+- DESKTOP, 1280x720, no touch.
+  - Bare root: 32 of 32 samples lobby, 0 in title mode. Wallet rows hidden; Settings holds Wallet.
+  - Closed round with play=1: 34 of 36 samples lobby; the 2 before 1.1 s were the run starting from the address. Then the
+    lobby, with the refusal line in the red box and on the hint line; the bridge in error with no client.
+- THE REFUND LINE UNDER THE CANVAS. A joined round link builds #blwp-refund: the refund key fingerprint, "seed backup"
+  and the "use my seed" import. After the refusal it stays in the page.
+  - It sits at the top of the page, under the canvas, which is on top at the centre of every control.
+  - Neither seen nor clickable, and it is in no screenshot.
+  - It is the refund line every joined round link builds, not the wallet page, and not a marker of the old splash.
+
