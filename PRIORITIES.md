@@ -27,9 +27,8 @@ The section below is the record, not the order, until this list is done.
 
 1. After the game load, only the new lobby. No old splash (BTC LOGISTICS WAR, SPECTATE).
    The wallet page belongs in Settings. It is not the page after load.
-2. The finish straight to the miner is completely free. A truck at speed does not stop and
-   does not crawl. All collisions are marked in color. The buildings stay readable.
-   Tonight, before testnet. This overrides the earlier "after testnet" deferral.
+2. CLOSED 2026-09-26: the finish straight to the miner is free, a truck at speed does not stop or crawl, collisions
+   are marked in color, and both buildings read from outside.
 3. Result screen: nothing overlaps, and it stays up 3 seconds longer than the 5 s it
    holds now (8 s). "copy game replay" copies one https link. The replay must work
    externally. A localhost link does not count. A 404 on the Daily's /replay does not
