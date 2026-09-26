@@ -50824,6 +50824,44 @@ GUARDIANS
   and "the guardians are the Daily's nodes a and b" no longer hold. Each node binds its own Funnel path
   (/guardian-1 to /guardian-4), chosen by the node, not the operator. The zero-config node-as-guardian and the
   stock-wallet pick below stand.
+- THE NODE STARTS ITS GUARDIAN (2026-09-26 23:00-23:50, spec e7f71f5f §23A.2), measured live on the Beelink:
+  - Code: blwp-node/src/guardian.js; main.js starts it before serve() and stops it on SIGINT/SIGTERM; server.js carries
+    /guardian to it (upgrade dispatcher: /play as before, /guardian piped to the guardian's local API, anything else
+    400) and answers GET /guardian with {guardian, endpoint}. test/guardian.test.js 4/4.
+  - Nothing is guardian config. The chain from the node's own bitcoind (getblockchaininfo.chain); bitcoind URL and
+    cookie are the node's BLWP_BITCOIND_URL/COOKIE; data beside the store (<store>.guardian/, admin password made there,
+    mode 600); local ports node+1000 api, +2000 p2p, +3000 ui, +4000 metrics; FM_API_URL is the node's own Funnel path
+    (the handler that proxies to the node's port, read from tailscale funnel status) + /guardian; base fees off; iroh
+    off; the stock wallet module (walletv2 off). fedimintd is found on the node's PATH like any tool it runs; with no
+    fedimintd or no chain the node says "not a guardian" by name and starts.
+  - TESTNET4 IS A CHAIN FEDIMINT 0.12 DOES NOT KNOW. fedimint-server-core/src/bitcoin_rpc.rs network_from_chain_id
+    names mainnet, testnet3, signet and mutinynet by their block-1 hash and calls every other chain Regtest. Measured:
+    guardians configured testnet4 stop after the ceremony - walletv2 (lib.rs:425, left Regtest right Testnet4) and the
+    wallet module ("Wrong Network", wallet-server lib.rs:1280) - on the node's bitcoind and on mempool.space's Esplora
+    alike (throwaway federations fedtry/fedtry2). Still so in v0.12.1 (2026-09-12) and on master. So on testnet4 the
+    node runs its guardian under Fedimint's own label for that chain, `regtest`, unpatched.
+  - The fedimint bundle runs in a user chroot that does not see /mnt/bitcoin (its own disk, /dev/sda1): guardians with
+    stores there wrote their databases under the hidden mountpoint. The four stores live on the root filesystem,
+    ~/blwp-testnet4/node-N.db (store path is ordinary node config).
+  - FOUNDED, 3 OF 4: four nodes (node src/main.js 31221|31231|31241|31251 ~/blwp-testnet4/node-N.db, tn4 bitcoind)
+    each started its guardian and found its own path wss://beelink.tail1723e2.ts.net/guardian-N/guardian;
+    tools/testnet4-federation.sh ran the stock ceremony among them (not §23A.2's sortition - the advert carries no
+    guardian_capable yet): all four "ConsensusIsRunning", no crash, federation id d37565887249dd74...; the invite
+    names wss://beelink.tail1723e2.ts.net/guardian-1/guardian. Stopping a node stops its guardian (measured on node 4).
+  - BLOCKED: NO GATEWAY CAN JOIN IT. Stock gatewayd on lnd-testnet4 with the federation's label panics at start,
+    gateway-server lib.rs:1057 "Lightning node network does not match Gateway's network. LN: testnet4 Gateway:
+    regtest"; labelled testnet4 it would fail check_federation_network (lib.rs:2080) against the regtest-labelled
+    federation. So stock Fedimint 0.12 cannot run a Lightning-connected federation on testnet4: no deposit, no stake
+    lock, no winnings. The two ways out are a Fedimint patch naming testnet4's chain (§23A.2 says unpatched) or
+    another network Fedimint knows (signet). Daniel's call.
+  - Full suite with this change (261 files): reds are the known four (ghost-live, replay-solids, discovery,
+    objective-markers timeout) plus reds that fail identically on unchanged HEAD 2b46949e..abbbc2bd: first-mark 1,
+    forfeit 2, outage 1, replay-page 1, winnings-pool 1, winnings-sent 3, lock-settlement 7, late-settlement 3,
+    lock-settlement-restart 4, one-signer-node-refused 1, bridge 1, late-settlement-resend (timeout). rerun 17/1 in the
+    loaded run is 18/0 alone. first-mark's is a scripted run that ends FAILED where it expects DELIVERED, core/src from
+    before 087b707f too, so not the core source; to re-derive against the current map.
+  - The public Funnel ingress failed TLS for 3 of 4 requests from 23:40 (blwp-a and guardian-N alike, curl exit 35;
+    the tailnet side answered 200). Nothing on this machine changed Tailscale.
 - THE TESTNET4 GUARDIANS, RULED (2026-09-26):
   - Count: 2 guardians, 2 of 2, federation_min 2 (multiplayer_p2p.md §23A.1 table: the testnet column; §23A: "the
     2-of-2 federation ... seated by the two bonded operators it has"). The guardians are the Daily's nodes a and b.
