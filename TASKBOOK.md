@@ -50777,6 +50777,17 @@ FLEET PIN
   it). The pin moves the Daily's core from 44107ead to d15c39bb.
 - Replays after the move: the Daily's kept-cores directory already holds 44107ead, d12e7abc and the 12 before them, and
   a node on 38d7299b writes d15c39bb there when it starts. So a replay copied before the pin still plays after it.
+- PIN-FORWARD CANDIDATE (2026-09-27, recorded, not deployed): phase0 e042e442, core d15c39bb83b7cb63.
+  - The earliest commit carrying the re-pinned testnet4 id (26b9162e...), and the last commit that changes code
+    (c225e684 and 11c7d0af after it are TASKBOOK notes). Its core hash is 38d7299b's: genesis moved the network id,
+    not core/src. 38d7299b stays the check that passed; it is not the pin, because it carries the old testnet4 id.
+  - Kept-cores check on e042e442: pass - the stores name 15 cores, 14 kept, the missing one is f33aa45c (ruled out
+    below).
+  - Spot check on e042e442's replay page and client bundle with the kept core 44107ead: round 7e05b113 entry 287a4f8f
+    DELIVERED, first at core tick 1459, score 0.65100. The round's data was read from node a at 100.74.66.98:18080
+    because the public Funnel failed TLS; that direct read is not a public reach.
+  - Not moved: the live Daily stays on fleet 4bb61e81, core 44107ead - no restart, no node move, no launcher change.
+    The gateway hold stands; the first paying testnet4 round is not started.
 - RULED OUT OF THE PIN CHECK (2026-09-26): core f33aa45c61db5f53, source 6d625093 (2026-09-09). The archive run over
   a.db and b.db names 15 cores; 14 are kept and this one does not bundle (today's bundler wants adapter.js, which that
   core has none of). Its rounds: 2026-09-12 12:59 through 2026-09-13 11:39 UTC, node a 573 rounds of which 12 have
