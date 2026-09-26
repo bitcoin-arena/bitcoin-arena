@@ -50509,3 +50509,19 @@ FOLLOW-UP, LOADOUT LOAD. The loadout panel's LOAD moved from the bed fill to the
 91a6a28e, deploy e2fb66d9). Live: LOAD x0.70000, TRUCK FULL 86% outside the score, card 219.24000 equal to S_DELIVERED,
 DANGER x0.21 against E 0.20880.
 
+## THE FINISH STRAIGHT, HANDS-OFF, LIVE: PASS UNDER RULE B (2026-09-26) - PRIORITIES ITEM 2 STAYS OPEN
+
+RULE B (RULED 2026-09-26). The truck settles on the lane inside x -60..0 - within 1.5 m of z 10.2 and 3 degrees of east -
+then no steering and no brake, full throttle only, through to the miner's mouth at x 145.4. The drop rule (a drop over
+0.3 m/s, a stop or a crawl) is scored ONLY from the miner's door at x 108.3 to the mouth. Battlefield samples between the
+cut and the door go on their own line and do not fail the straight.
+
+RUN. btc-logistics-core.pages.dev, phone shape 390x844, DPR 3, touch, one free round, truck from bay 13 (z 10.2); round
+5f3fa1df..., entry da15af74..., delivered.
+Cut: x -59.61, z 10.20, heading 0.00 degrees off east, 14.33 m/s. Hands-off from there to the mouth: 96 samples.
+SCORED, door to mouth (x 108.3 to 145.4): lowest 19.38 m/s (x 117.7), 20.34 m/s at the mouth (x 139.3, the last sample);
+no drop over 0.3 m/s, no stop, no crawl; z held at 8.84. PASS.
+BATTLEFIELD LINE (not scored): at x 43.7..46.1 speed went 20.89 -> 13.69 -> 12.57 m/s (lowest 12.48 at x 47.5) while the truck
+was shoved sideways from z 10.20 to 8.84 with its heading unchanged - no map box stands near x 45; the tanks' armour is
+solid in the core. It recovered to 14.39 m/s by x 59 and 18.00 by x 94.
+
