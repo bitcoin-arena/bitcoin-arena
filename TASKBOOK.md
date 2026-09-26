@@ -50534,3 +50534,18 @@ MINING, the hash lines, 929 EH/s, 0.376 BTC, 0.21 BTC, 238,138 sat, the panel's 
 The magenta is two translucent side slabs (the facade's side boxes) and the tunnel walls; the left slab crosses the edge
 of the MINING panel and the text reads through it. Not a wash. No game code changed.
 
+POST OFFICE HEAD-ON STOP, LIVE. Truck facing west (heading x -0.992), throttle held: stood at x -111.14, 0.158 m/s, 0 m
+inside any box, gap 0 against the face at x -114.4.
+
+POST OFFICE OUTSIDE READ, LIVE. The game's free camera at its post-office viewpoint, 95 m out, pulled back: MEMPOOL
+readable, the block panels and bay numbers 04 to 21 readable; the teal is only a thin band at the bay mouths and prisms
+above the roof.
+
+COLOUR COUNT, LIVE. 89 of the core's 91 boxes drawn (52 post office, 37 miner); the two not drawn are lintels the truck
+drives under.
+
+EARLIER STRAIGHT RUNS, LIVE. Three desktop and three phone-shaped free-round runs, all delivered.
+
+MINER FACADE STOP: LOCAL BUILD ONLY. Measured on a local build: the truck stood on the facade box's face, 0 m inside it. No
+live run reaches that face without the teleport that was ruled out.
+
