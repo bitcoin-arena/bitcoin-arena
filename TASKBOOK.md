@@ -50611,3 +50611,75 @@ changed, so there is no core-vs-old engine comparison for this item.
   - Neither seen nor clickable, and it is in no screenshot.
   - It is the refund line every joined round link builds, not the wallet page, and not a marker of the old splash.
 
+## PLAYTEST 07:18: THE SIDE BOXES OF THE FINISH STRAIGHT COME OUT, THE COIN STACKS ARE SOLID WHERE DRAWN - CLOSED (2026-09-26)
+
+RULED (Daniel 2026-09-26 07:18, phone, block 968644). The collisions left and right of the finish straight are wrong and
+come out; the passage stays free. The circled coin stack (on its black round plinth, the truck's right, against the pink
+miner wall) gets a box where the stack is drawn, not where an old measurement put coin_stack, and not in the lane.
+
+THE CAUSE, MEASURED. A PlayMode probe built a real Bootstrap world and handed the miner .glb to DeliveryGate.ShowMiner as
+the streamer does, then read Renderer.bounds in world metres. The 2026-09-20 reading of the model that map.js was written
+from is MIRRORED about the miner's origin x 169, and 0.45 too low:
+- The tunnel's walls, ribs, jambs and seams are drawn at x 169..193, inside the building past the gate. map.js had them
+  as 26 boxes at x 145..171, |z| 32.8..40, lining the finish straight where nothing is drawn.
+- The coin stacks are drawn at x 145.6..164.4, |z| 40.6..59.4 (plinth y 0.42..1.82, tiers to 7.22). map.js had them at
+  x 173.6..192.4, where nothing is drawn, so the drawn stacks were air.
+
+THE FIX (fleet 73c311dd; the same map change here). The 26 corridor boxes come out and are not put back: a run is over at
+the gate, so nothing past it is ever driven. The four coin boxes move to the drawn stacks, with heights less the 0.40 m the
+miner is drawn above the core's ground: plinth 0.02..1.42, tiers 0.12..6.82. MAP_BOXES 87 -> 61 here (91 -> 65 on the
+fleet, which still has its edge walls). Core d15c39bb here, 44107ead on the fleet.
+
+MEASURED.
+- core/test/coin-is-solid 8/8.
+  - Driving east at z -50 and at z 50, the truck's nose stops on the stack's west face at x 145.6. On the old map it drove
+    through to the facade at x 163.
+  - Driving out of the straight toward a stack, it stops on the stack's inner face at |z| 40.6. On the old map a phantom
+    rib stopped it at |z| 32.89.
+  - The four boxes stand outside the passage and the lane.
+- finish-straight-is-free 3/3. New test 3: nothing the truck can reach stands inside the 40 m mouth from the door to the
+  gate. The old map failed it with boxes 61..86.
+- LIVE, btc-logistics-core with the Daily on the fleet 39b04f60, phone shape.
+  - A truck point-steered onto z -50 at full throttle met the circled stack at x 142.8 (nose on the face at 145.6). It slid
+    along the face and stopped at x 142.33, z -41.04, 0.07 m/s with the throttle held, never past the face. The magenta
+    collision box draws on the plinth.
+  - The box is square and the plinth is round: toward the corners it stops the truck up to about 2.7 m before the round
+    edge, never through it.
+- LIVE, the finish straight, rule B. Settled on the lane and steering cut at x 0.03, z 8.75, -2.09 degrees. Hands-off at
+  full throttle: door to mouth 25 samples at 22.48..22.93 m/s, no drop; mouth to gate 22.95..23.17 m/s, no drop;
+  DELIVERED.
+- GATE. The core and protocol tests and the replay and bundle node and client tests, one file at a time, on the change and
+  on a clean worktree of the parent. Fleet: 95 files, the same single red on both (replay-solids: Wall_West is not among
+  the core's boxes). Here, on clean worktrees of 54cd1d92: 95 files, the same single red on both (replay-solids:
+  FacadeRight is not among the core's boxes).
+
+## PLAYTEST 07:12: THE REPLAY PRINTS THE TICK'S NUMBERS, AND THE CARD SAYS copied! - DONE (2026-09-26)
+
+RULED (Daniel 2026-09-26 07:12). The replay page shows two lines at the bottom on every tick, playing or scrubbed:
+- Line 1: health, danger, speed, practice on or off, score.
+- Line 2: the card's working for that tick, load x danger x speed x 1000 = score.
+The copy button shows "copied!" once the link is in the clipboard; a log line is not the confirmation.
+
+THE REPLAY LINES (fleet 39b04f60, the same change here).
+- Health is the truck's T_HP. Practice is the core's S_PRACTICE.
+- The factors are score.js's own exposure5 (danger), time5 (speed) and cargo5 (load); the score is its scoreOf. All come
+  from the core the page stepped: the replay core now exports them (tools/bundle-replay.js; src untouched).
+- A fixed bar at the bottom, wrapping on a phone.
+- MEASURED LIVE on the node, no proxy, on a delivered run of core 44107ead, at 390x844 and 1280x800:
+  - At every sampled tick, playing and scrubbed, the printed factors multiply to the printed score. Line 1's danger,
+    speed and score equal line 2's. The bar is in view with no side scroll.
+  - The last tick prints the card's own working: load 0.70000 x danger 0.31727 x speed 1.32069 x 1000 = 293.31072 at
+    tick 2953. The tick before would have paid 293.41066.
+  - A failed (timer) run prints its would-pay score each tick: speed falls 1.50000 -> 0.36111; danger stays 0 because
+    that truck held on the apron.
+
+copied! (fleet 39b04f60, the same change here).
+- The page sets BLWP_REPLAY_COPIED to the link once navigator.clipboard.writeText has resolved. The bridge's
+  BlwpReplayCopied reads it. DriveHud draws "copied!" beside the button, on the button's own row, for 3 s.
+- MEASURED LIVE, phone: touch at 3.27 s after the run's end. "handed to the page" at 3.32 s, the clipboard write resolved
+  at 3.36 s, "copied! shown" at 3.37 s. "copied!" is on the card in every frame from 4.07 s to 5.89 s, covering no other
+  line.
+- MEASURED LIVE, desk: the mouse press. "copied!" is 11 ms after the write resolved, and on the card.
+- Both clipboards hold the one https link, equal to BLWP_REPLAY_URL. Holds 8025 and 8050 ms.
+- EditMode: fleet 32/32, here 27/27.
+
