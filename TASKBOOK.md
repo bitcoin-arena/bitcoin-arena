@@ -50509,7 +50509,7 @@ FOLLOW-UP, LOADOUT LOAD. The loadout panel's LOAD moved from the bed fill to the
 91a6a28e, deploy e2fb66d9). Live: LOAD x0.70000, TRUCK FULL 86% outside the score, card 219.24000 equal to S_DELIVERED,
 DANGER x0.21 against E 0.20880.
 
-## THE FINISH STRAIGHT, HANDS-OFF, LIVE: PASS UNDER RULE B (2026-09-26) - PRIORITIES ITEM 2 STAYS OPEN
+## THE FINISH STRAIGHT, HANDS-OFF, LIVE: PASS UNDER RULE B (2026-09-26) - CLOSED (2026-09-26)
 
 RULE B (RULED 2026-09-26). The truck settles on the lane inside x -60..0 - within 1.5 m of z 10.2 and 3 degrees of east -
 then no steering and no brake, full throttle only, through to the miner's mouth at x 145.4. The drop rule (a drop over
