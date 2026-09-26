@@ -50501,3 +50501,11 @@ Daily restarted onto b15af416 at 01:33:29 UTC with only the free round in play; 
 
 NOT PART OF THIS COMMIT. The phone check off this machine is Daniel's. The scratch worktrees stay until that check is back.
 
+FOLLOW-UP, HUD DANGER. The live DANGER meter moved from clamped metres to the core's E, and the card's factors were
+checked value by value against the core's (fleet 91dfd8fe, phase0 aa9b672c, deploy c78f1e44). Live: DANGER x0.30
+against E 0.29580.
+
+FOLLOW-UP, LOADOUT LOAD. The loadout panel's LOAD moved from the bed fill to the core's C (fleet 0e5c6891, phase0
+91a6a28e, deploy e2fb66d9). Live: LOAD x0.70000, TRUCK FULL 86% outside the score, card 219.24000 equal to S_DELIVERED,
+DANGER x0.21 against E 0.20880.
+
