@@ -50862,6 +50862,10 @@ GUARDIANS
     before 087b707f too, so not the core source; to re-derive against the current map.
   - The public Funnel ingress failed TLS for 3 of 4 requests from 23:40 (blwp-a and guardian-N alike, curl exit 35;
     the tailnet side answered 200). Nothing on this machine changed Tailscale.
+- ITEM 5 STATUS (2026-09-27, read-only on e042e442; signet refused by Daniel, no patch, no chain change):
+  paying round NOT STARTED - chain remains testnet4; signet refused; Funnel has the four /guardian-N paths to the testnet4 nodes but the public ingress answered 0 of 6; blocked on no stock gateway joining a testnet4 federation (Fedimint 0.12 labels testnet4 regtest; gateway lib.rs:1057).
+  - Code facts at e042e442: testnet4 federationNominal 4 (protocol/src/genesis.js:183); testnet4 network id the
+    re-pinned 26b9162e... (genesis-ids.js:49); one guardian key per node (tools/run-2of2.mjs:138, i < fed.keys.length).
 - THE TESTNET4 GUARDIANS, RULED (2026-09-26):
   - Count: 2 guardians, 2 of 2, federation_min 2 (multiplayer_p2p.md §23A.1 table: the testnet column; §23A: "the
     2-of-2 federation ... seated by the two bonded operators it has"). The guardians are the Daily's nodes a and b.
