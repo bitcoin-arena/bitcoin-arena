@@ -50683,7 +50683,7 @@ copied! (fleet 39b04f60, the same change here).
 - Both clipboards hold the one https link, equal to BLWP_REPLAY_URL. Holds 8025 and 8050 ms.
 - EditMode: fleet 32/32, here 27/27.
 
-## THE RESULT SCREEN (PRIORITIES item 3) - OPEN: THE PHONE GATE (2026-09-26)
+## THE RESULT SCREEN (PRIORITIES item 3) - CLOSED 2026-09-26 13:24 (Daniel's phone approval)
 
 MEASURED ON THIS MACHINE (live btc-logistics-core, fleet 65e6d18f, phase0 08b469be). These do not close the item.
 - Nothing on the result screen overlaps. Checked at 390x844 and 1280x720, delivered and failed. The HUD score block, the
@@ -50721,4 +50721,8 @@ RE-MEASURED ON THIS MACHINE, NOT A PHONE (2026-09-26, same frozen link, same hos
   nodes, transcript, round, entry, randomness and core.js.
 - 12:43:00 CEST: the served core stepped the run to tick 2125 (last index 2124). The result is DELIVERED, 146.21250.
 This pass is this machine, not a phone. The phone gate stays open.
+
+CLOSED 2026-09-26 13:24: Daniel approved the phone gate - the phone off this machine opened the frozen link above and the
+run played. The link watch (page, core, transcript, tunnel-b PID 1642694, once a minute from 13:05) found no failure
+until it was stopped at the close.
 

@@ -31,10 +31,9 @@ The section below is the record, not the order, until this list is done.
 2. CLOSED 2026-09-26: the finish straight to the miner is free, a truck at speed does not stop or crawl, collisions
    are marked in color, and both buildings read from outside. Playtest 07:18: the side boxes of the straight came out
    (26 boxes mirrored off the drawn tunnel) and the coin stacks are solid where they are drawn - measured live.
-3. Result screen: nothing overlaps, and it stays up 3 seconds longer than the 5 s it
-   holds now (8 s). "copy game replay" copies one https link. The replay must work
-   externally. A localhost link does not count. A 404 on the Daily's /replay does not
-   count. A phone off this machine opens the copied link and the run plays.
+3. CLOSED 2026-09-26 13:24 (Daniel's phone approval): the result screen - nothing overlaps, it stays up 8 s at full
+   strength, "copy game replay" copies one https link, and a phone off this machine opened the copied link and the
+   run played.
 4. CLOSED 2026-09-26: the core's score is the product of E, T and C, and the arrival card prints them, live on
    btc-logistics-core.
 5. Then FEDERATION live: fleet pin, guardians, first paying testnet4 round.
