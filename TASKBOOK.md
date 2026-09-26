@@ -50796,6 +50796,28 @@ GUARDIANS
   - So each guardian's API address (FM_API_URL) must be a public wss address a phone can open, not the regtest rig's
     ws://127.0.0.1.
   - How each is reached is the same reach question as the signer nodes. It is not settled by this cut.
+- HOST CHECK, READ ONLY, PASSED (2026-09-26, Beelink):
+  - Chain: testnet4 bitcoind /mnt/bitcoin/tn4 at 154059, blocks = headers, not syncing, the same tip hash as
+    mempool.space/testnet4 (its timestamp runs ~1.7 h ahead of this clock). lnd-testnet4 and lnd-testnet4-b both
+    synced_to_chain and synced_to_graph at that hash. On chain 529,433 and 1,069,998 sat; one channel between them,
+    87,840 / 108,690 sat.
+  - 1. Clean slate: no fedimintd or gatewayd on testnet4. The six running are fed2's regtest rig, which holds
+    127.0.0.1:31120-31153 (four fedimintd) and 31170-31182 (two gatewayd; their LNDs on 31110 and 31113).
+  - 2. Binaries: fedimintd 0.12.0 and gatewayd (fedimint-gateway-server) 0.12.0 both carry "testnet4" and both parse
+    it, stopping at a missing required argument; a made-up network ("notanet") is rejected at parse.
+  - 3. Gateway credentials, names and sizes only, at LND's defaults (no path overrides in either lnd.conf):
+    - /mnt/bitcoin/lnd-testnet4: tls.cert 1001 B, tls.key 227 B, data/chain/bitcoin/testnet4/admin.macaroon 293 B,
+      invoice.macaroon 132 B.
+    - /mnt/bitcoin/lnd-testnet4-b: tls.cert 1237 B, tls.key 227 B, data/chain/bitcoin/testnet4/admin.macaroon 293 B,
+      invoice.macaroon 132 B.
+    - Both also hold readonly, router, invoices, signer, walletkit and chainnotifier macaroons.
+  - 4. Funnel as it stands: public only on beelink.tail1723e2.ts.net:443.
+    - :443 / -> localhost:3001 (a node server in ~/finedining_api).
+    - :443 /blwp-a -> 100.74.66.98:18080 (the Daily's free signer node a).
+    - :443 /blwp-b -> 100.74.66.98:18081 (the Daily's free signer node b).
+    - :8443 / and :18789 / -> 127.0.0.1:18789 (an openclaw gateway), tailnet only.
+  - No path points at the testnet4 side, and no guardian or gateway path exists. How guardians are reached is still
+    open: no public path is made, Funnel is not edited, no port is bound, no daemon is started.
 
 THE PAYING ROUND: WHAT IS LOCKED BEFORE THE FIRST testnet4 PAYMENT
 - On chain, before the round opens:
