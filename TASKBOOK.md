@@ -50820,6 +50820,22 @@ GUARDIANS
     open: no public path is made, Funnel is not edited, no port is bound, no daemon is started.
   - fed2's regtest APIs ws://127.0.0.1:31121, 31131, 31141 and 31151 are local only and are not the testnet4 reach; the
     first paying testnet4 round waits on a public wss guardian address, which this session will not invent.
+- THE TESTNET4 GUARDIANS, RULED (2026-09-26):
+  - Count: 2 guardians, 2 of 2, federation_min 2 (multiplayer_p2p.md §23A.1 table: the testnet column; §23A: "the
+    2-of-2 federation ... seated by the two bonded operators it has"). The guardians are the Daily's nodes a and b.
+    Four guardians, 3 of 4, is the regtest rehearsal's column only; the four-guardian lines above do not apply to testnet.
+  - The node is the guardian (Daniel 22:40): starting the node starts its guardian, stopping it stops it, with no
+    second service, config, start command or invite for the operator. Each node's guardian endpoint is its own reach:
+    /blwp-a and /blwp-b. The Funnel paths /guardian-1 to /guardian-4 (Daniel 22:33) were a one-machine shortcut; no
+    operator is pointed at them.
+  - The ceremony: stock Fedimint setup, unpatched, disable_base_fees on, between those two guardians (§23A.2).
+  - The wallet module: Fedimint's stock wallet module, not 0.12.0's default walletv2. Measured 2026-09-26 on four stock
+    fedimintd 0.12.0 on testnet4 (tn4 bitcoind, ports 31220-31253, since stopped): setup and peer exchange passed, and
+    all four panicked in the key ceremony at fedimint-walletv2-server/src/lib.rs:425 (left: Regtest, right:
+    Testnet4). A panic cannot seat a paying round, and Fedimint is not patched to force walletv2 onto testnet4.
+  - Not settled by this note: fed2's local ws ports are still not the testnet4 reach, no public wss address is
+    invented, nothing is dialed, and the first paying round stays closed until a later message gives a public wss
+    guardian address in full and a separate decision names the dial.
 
 THE PAYING ROUND: WHAT IS LOCKED BEFORE THE FIRST testnet4 PAYMENT
 - On chain, before the round opens:
