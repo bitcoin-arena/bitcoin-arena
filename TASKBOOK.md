@@ -50788,6 +50788,13 @@ FLEET PIN
     because the public Funnel failed TLS; that direct read is not a public reach.
   - Not moved: the live Daily stays on fleet 4bb61e81, core 44107ead - no restart, no node move, no launcher change.
     The gateway hold stands; the first paying testnet4 round is not started.
+- PIN CALL (Daniel 2026-09-27): pin-forward accepted is c596133d, core d15c39bb. e042e442 is not the pin. The Daily
+  is not moved. Why c596133d: item 5 needs a node to say it is a guardian and to start one only if it holds a guardian
+  key, and that work (the census advert, the launcher's read of GET /guardian, node-start) is on c596133d, not on
+  e042e442. Old Daily bond adverts do not decode on c596133d - the advert-format change, a known split, not a reason
+  to keep the older line; they stay unreadable there until a later order moves the Daily. Kept-cores pass and entry
+  287a4f8f DELIVERED at tick 1459 stand as measured below. The noon plan (a Fedimint patch, a re-founding, gateways,
+  a paying round at 12:00) does not stand.
 - PIN CHECKS RE-RUN ON HEAD c596133d (2026-09-27, measure only; the Daily not moved, no code change):
   - Core: c596133d builds d15c39bb83b7cb63, the same as e042e442 and 38d7299b (core/src unchanged since).
   - Kept cores: pass - the stores name 15 cores, 14 kept, the missing one f33aa45c (ruled out below).
