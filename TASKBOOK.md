@@ -50788,6 +50788,21 @@ FLEET PIN
     because the public Funnel failed TLS; that direct read is not a public reach.
   - Not moved: the live Daily stays on fleet 4bb61e81, core 44107ead - no restart, no node move, no launcher change.
     The gateway hold stands; the first paying testnet4 round is not started.
+- PIN CHECKS RE-RUN ON HEAD c596133d (2026-09-27, measure only; the Daily not moved, no code change):
+  - Core: c596133d builds d15c39bb83b7cb63, the same as e042e442 and 38d7299b (core/src unchanged since).
+  - Kept cores: pass - the stores name 15 cores, 14 kept, the missing one f33aa45c (ruled out below).
+  - Spot check, c596133d's replay page and client bundle (f0bdadf2...) with the kept core 44107ead, the round's data
+    read from node a at 100.74.66.98:18080 (not a public reach; the Funnel still fails TLS): round 7e05b113 entry
+    287a4f8f DELIVERED, first at core tick 1459, score 0.65100, no page error.
+  - What the live Daily holds, decoded read-only by c596133d against its own code (fleet 4bb61e81):
+    - stored round contracts: a.db 6409 of 11924, b.db 6347 of 11839; the rest (5515 and 5492) are custody byte 0,
+      refused by design since THRESHOLD_LN cut 5. The Daily's code decodes all.
+    - bond adverts on the Daily's regtest chain (the last 8, heights 189396-190021, tip 200752): the Daily's code
+      decodes 8, c596133d decodes 0 ("bad UTF-8 lead byte at 0") - the advert format of 73f33a0f; old bonds do not
+      decode. A Daily moved onto c596133d posts new-format bonds at its start (round-2of2), so its new rounds' census
+      reads those, not these.
+  - So of the candidates: e042e442 still decodes the Daily's bonds; c596133d does not, and carries the advert,
+    launcher and node-guardian work since. Not moved; the pin decision stays Daniel's.
 - RULED OUT OF THE PIN CHECK (2026-09-26): core f33aa45c61db5f53, source 6d625093 (2026-09-09). The archive run over
   a.db and b.db names 15 cores; 14 are kept and this one does not bundle (today's bundler wants adapter.js, which that
   core has none of). Its rounds: 2026-09-12 12:59 through 2026-09-13 11:39 UTC, node a 573 rounds of which 12 have
