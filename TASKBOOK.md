@@ -50873,6 +50873,26 @@ GUARDIANS
     before 087b707f too, so not the core source; to re-derive against the current map.
   - The public Funnel ingress failed TLS for 3 of 4 requests from 23:40 (blwp-a and guardian-N alike, curl exit 35;
     the tailnet side answered 200). Nothing on this machine changed Tailscale.
+- A NODE RUNS A GUARDIAN ONLY IF IT HOLDS A GUARDIAN KEY (2026-09-27, Daniel; src/node-start.js):
+  - The key test: <store>.guardian/private.json and consensus.json both exist and parse (what a completed ceremony
+    writes). Pass: startNode starts the node's own guardian (guardian.js, unchanged) and serves with it. Fail: no
+    guardian, no directory, GET /guardian {guardian: false}. main.js and round-2of2 standUpRound (the bare serve that
+    answers GET /guardian and the full serve) start nodes only through startNode; the launcher never decides.
+  - Measure 1: node-start.test red on 0a926231 (the launcher's node A held a key and answered {guardian: false}),
+    2/0 after: A answers {guardian: true, endpoint} and advertises capable 1; B, no key, false and 0.
+  - Measure 2: no .guardian, or a .guardian without private.json: no fedimintd started, no directory, false.
+  - Measure 3: launcher-guardian 3/0 through startNode (a second start on the same store holds the first start's
+    rounds); guardian.test 4/0.
+  - MEASURE 4, LIVE: 3 OF 4, NOT PASSED. The four testnet4 nodes restarted through main.js -> startNode all answer
+    {guardian: true, endpoint: wss://beelink.tail1723e2.ts.net/guardian-N/guardian}. Guardians 1-3 ConsensusIsRunning.
+    Guardian 4 exits on every start: fedimint-wallet-server lib.rs:1548 asserts a new block's parent is the block it
+    stored for the height before. Cause, outside this slice: a testnet4 reorg at height 154066 orphaned the block
+    guardian 4 stored there (000000000cb125c5..., confirmations -1; active 0000000000497774...), and under the
+    `regtest` label the wallet's finality delay is 10 blocks (default_finality_delay, lib.rs:294-298) against forks
+    27 and 79 deep on this chain. Guardian 4 stays down: no Fedimint patch, no new founding, no restart here. The
+    federation keeps its threshold with one guardian down; a second down would halt it. Recovery is not this item.
+  - GAP: GET /guardian's guardian: true is the key test plus the endpoint, not a running fedimintd - node 4 answers
+    true while its guardian process is down. No liveness field in this commit; a later item if the spec asks.
 - ITEM 5 STATUS (2026-09-27, read-only on e042e442; signet refused by Daniel, no patch, no chain change):
   paying round NOT STARTED - chain remains testnet4; signet refused; Funnel has the four /guardian-N paths to the testnet4 nodes but the public ingress answered 0 of 6; blocked on no stock gateway joining a testnet4 federation (Fedimint 0.12 labels testnet4 regtest; gateway lib.rs:1057).
   HOLD (2026-09-27): the first paying testnet4 round waits on Daniel to hand over one thing - a stock gateway that can join the existing 3-of-4 testnet4 federation d3756588...; until it arrives no gateway is started, nothing is probed, no coin moves, Fedimint is not patched, the chain stays testnet4, and item 5 stays open.
