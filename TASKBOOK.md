@@ -51115,3 +51115,50 @@ PASS: seven pinned units that are not transient and use no session path, one con
 
 NOT SHOWN: a reboot. The pin is proven against a user-manager re-exec and a full stop/start of the target, not
 against a machine restart, which was not done. The paying round is still blocked and was not started.
+
+## Item 5: the payment-path block re-measured on the stock federation - a stock gateway on testnet4 is refused (2026-09-28)
+
+Daniel 2026-09-28: the payment path is to wait for an upstream stock Fedimint release that maps testnet4 (a change
+released upstream counts as stock; a local patch does not; signet stays refused). Before that wait is treated as
+confirmed, re-measure the block on this federation. No round, no payment, no patch, no chain switch.
+
+WHAT RAN: one stock gatewayd from the pinned bundle (~/blwp-testnet4/stock/bin/gatewayd, `fedimint-gateway-server
+0.12.0`, sha256 23f1474e2048f618...; gateway-cli e0d3c1d2488e0f3b...), unit blwp-tn4-gw-stock-probe, port 31300, a new
+data directory ~/blwp-testnet4/gw-stock-probe, against the testnet4 LND on 127.0.0.1:11009. The gateway reached
+Running and read its LND as:
+
+    "alias": "beelink-testnet4", "network": "testnet4", "synced_to_chain": true
+
+connect-fed with the stock set's invite (federation 337ae01a...), 15:52:22 UTC. gateway-cli answered:
+
+    {"error": "Invalid request", "code": "internal"}
+
+and the gateway's log gave the reason:
+
+    ERROR connect_fed{...}: fm::gw: Incorrect LNv2 network for federation
+          federation_id=337ae01ad1e9bb35b5628faad3457e62d69d036efe8a34bcfc20cb31b42bb75e network=testnet4
+    ERROR connect_fed{...}: fm::gw: error=Admin error: Failed to create a federation client
+
+The stock client reads the same federation from outside the tailnet as:
+
+    client reads network: regtest federation_id: 337ae01ad1e9bb35b5628faad3457e62d69d036efe8a34bcfc20cb31b42bb75e
+
+CONFIRMED ON THE STOCK SET: federation labelled regtest, Lightning node on testnet4, the stock gateway refuses. The
+first paying testnet4 round stays unstarted. Upstream checked the same day: v0.12.1 (2026-09-12) and master map no
+testnet4 in fedimint-server-core/src/bitcoin_rpc.rs (mainnet, testnet3, signet, mutinynet only).
+
+AROUND IT:
+- gw-a was stopped 15:51:59 to free LND-a (LND takes one HTLC interceptor) and, being a transient unit, lost its
+  definition. Recreated with the command, PATH and HOME its unit showed:
+  tailnet-exec /bin/bash .../gw/packages/blwp-node/tools/testnet4-gateway.sh /mnt/bitcoin/lnd-testnet4
+  127.0.0.1:11009 31270 /home/daniel/blwp-testnet4/gw-a, PATH=.../01b12b8a.../fmpath:/usr/bin:/bin,
+  HOME=.../3702e750.../fm/home. Listening on 31270 (gatewayd pid 378690). Its log is ~/blwp-testnet4/gw-a.log, the
+  file whose first line is its own first start (2026-09-27T06:24:28Z "Starting gatewayd").
+- gw-a is still a transient unit on session paths; it was not pinned. Its client state was joined to the PATCHED set
+  under the same federation id; since the restart it uploads backups to the stock guardians ("Successfully backed up
+  federation federation_id=337ae01a..."). Same id, old keys - the risk recorded with the refound.
+- After gw-a was back, stock/check-outside.sh from the public relay: 101 on all seven guardian API addresses, 502 on a
+  missing path, config 82dcf7043e3bb947, 7 peers, threshold 5 from every guardian, federation 337ae01a..., session 10:
+  OUTSIDE PASS.
+- The probe gateway is stopped; its data directory stays. The seven pinned guardians (blwp-tn4-nodes.target) stayed up
+  throughout; blwp-tn4-paid stays stopped. No node code, no Unity file touched.
