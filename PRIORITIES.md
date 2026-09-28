@@ -37,11 +37,13 @@ The section below is the record, not the order, until this list is done.
 4. CLOSED 2026-09-26: the core's score is the product of E, T and C, and the arrival card prints them, live on
    btc-logistics-core.
 5. Then FEDERATION live: fleet pin, guardians, first paying testnet4 round.
-   STATUS 2026-09-28: OPEN. Guardians and fleet pin done; the paying testnet4 round is unstarted and BLOCKED on
-   upstream (stock Fedimint does not map testnet4). When a new stock release maps it: upgrade the seven guardians and
-   refound with the testnet4 label (federation 337ae01a has regtest fixed in its founding config); then the outside
-   guardian check must pass again; then the stock gateway must connect without the mismatch refusal. blwp-tn4-paid
-   stays stopped until all of that passes; no sats move before it. TASKBOOK 3dbb3337.
+   STATUS 2026-09-28 21:42: OPEN. Guardians and fleet pin done. Stock Fedimint v0.12.1 does not map testnet4.
+   That fact is closed. Do not measure upstream again. Do not stop on that question. The path is the patched fork
+   git@github.com:george-prime/fedimint.git branch blwp/testnet4-v0.12.1. Prove the patched binary reads testnet4,
+   not regtest. Then upgrade the seven guardians and refound with the testnet4 label (federation 337ae01a has
+   regtest fixed in its founding config); then the outside guardian check must pass again; then the gateway must
+   connect without the mismatch refusal. blwp-tn4-paid stays stopped until that proof and those steps pass; no
+   sats move before it. TASKBOOK 3dbb3337.
    THRESHOLD_LN deletion continues beside that, not in front of it.
    HARD (Daniel 2026-09-27 10:04, replaces 2026-09-26 22:54's 3 of 4): testnet is 7 nodes and 7 guardians, one
    each, stock threshold 5 of 7. One node is one guardian. A node starts its own guardian with zero config - no
