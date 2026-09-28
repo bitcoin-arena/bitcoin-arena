@@ -51055,3 +51055,63 @@ Raw log:
     15:30:24 all seven: guardian-5 session_count 5
     15:30:26 all seven: guardian-6 session_count 5
     15:30:29 all seven: guardian-7 session_count 5
+
+## Item 5: the seven stock guardians pinned, so they outlive the session that started them (2026-09-28)
+
+Daniel 2026-09-28: pin the seven stock nodes already up, keep /guardian-1 on the Funnel, and a client outside the
+tailnet still reads the same config, seven peers, threshold 5. No refound, no guardian.js edit, the wrapper stays,
+finality delay 10 stays a recorded risk, the patched directories stay, blwp-tn4-paid stays stopped.
+
+WHY THE OLD UNITS WOULD NOT HAVE LASTED: linger is on, so they outlived a logout, but they were transient
+(/run/user/1000/systemd/transient) and everything they ran lived in session scratchpads under /tmp/claude-1000 - the
+node code (another session's gw worktree), the stock bundle (another session's fm/bin), the wrapper, the bundle's HOME.
+
+PINNED, no repository code changed:
+- ~/blwp-testnet4/stock/bin/fedimintd, fedimint-cli: byte copies of the stock nix bundle 0.12.0 (fedimintd sha256
+  29c64e7d254bcbff...); stock/path/fedimintd: the wrapper, whose only act is FM_BITCOIN_NETWORK testnet4 -> regtest;
+  stock/home: the bundle's HOME. All on the root filesystem (the bundle cannot see /mnt/bitcoin).
+- ~/blwp-testnet4/code: a detached worktree at 513e4217, node_modules copied from the gw worktree, no source edited.
+  Its guardian.js is newer than the one the transient units ran (it asks a slow bitcoind again, the 09:27 fix);
+  its testnet4 label is unchanged, so the wrapper still does the relabelling.
+- ~/.config/systemd/user/blwp-tn4-node@.service (instance N = node N on port 31211 + 10 N, store node-N.db, its
+  guardian keys node-N.db.guardian; Restart=on-failure) and blwp-tn4-nodes.target (wants @1..@7), enabled under
+  default.target.
+- The transient blwp-tn4-stock-node-1..4, -5b, -6b, -7b stopped; the target started. No founding, same keys.
+
+THE UNITS THAT SURVIVE: blwp-tn4-nodes.target, blwp-tn4-node@1.service ... blwp-tn4-node@7.service.
+
+CHECKS:
+    1 persistence   all seven Transient=no, FragmentPath ~/.config/systemd/user/blwp-tn4-node@.service, no
+                    /tmp/claude-1000 in ExecStart, PATH or HOME; blwp-tn4-nodes.target enabled
+    2 survival      systemctl --user daemon-reexec, all seven stopped (0 guardians), target started: seven
+                    fedimintd 0.12.0, one per blwp-tn4-node@N, API 32221..32281, every one FM_BITCOIN_NETWORK=regtest.
+                    The launcher is stock/bin/fedimintd; the nix bundle unpacks its binary to a fresh /tmp/nix*/ on
+                    every start, so the running executable is there, not under stock/ - the bundle's own design.
+    3 Funnel        https://beelink.tail1723e2.ts.net (Funnel on), /guardian-1 .. /guardian-7 listed
+    4 outside       stock/check-outside.sh (public relay 185.40.234.210, not 100.74.66.98):
+                    public relay 185.40.234.210 (tailnet address 100.74.66.98 is not used)
+                    handshake guardian-1/guardian: HTTP/1.1 101 Switching Protocols
+                    handshake guardian-2/guardian: HTTP/1.1 101 Switching Protocols
+                    handshake guardian-3/guardian: HTTP/1.1 101 Switching Protocols
+                    handshake guardian-4/guardian: HTTP/1.1 101 Switching Protocols
+                    handshake guardian-5/guardian: HTTP/1.1 101 Switching Protocols
+                    handshake guardian-6/guardian: HTTP/1.1 101 Switching Protocols
+                    handshake guardian-7/guardian: HTTP/1.1 101 Switching Protocols
+                    handshake guardian-9/guardian: HTTP/1.1 502 Bad Gateway
+                    15:42:36 guardian-1: config 82dcf7043e3bb947 peers 7 threshold 5 session_count 7
+                    15:42:39 guardian-2: config 82dcf7043e3bb947 peers 7 threshold 5 session_count 7
+                    15:42:42 guardian-3: config 82dcf7043e3bb947 peers 7 threshold 5 session_count 7
+                    15:42:47 guardian-4: config 82dcf7043e3bb947 peers 7 threshold 5 session_count 7
+                    15:42:51 guardian-5: config 82dcf7043e3bb947 peers 7 threshold 5 session_count 7
+                    15:42:55 guardian-6: config 82dcf7043e3bb947 peers 7 threshold 5 session_count 7
+                    15:42:59 guardian-7: config 82dcf7043e3bb947 peers 7 threshold 5 session_count 7
+                    federation_id 337ae01ad1e9bb35b5628faad3457e62d69d036efe8a34bcfc20cb31b42bb75e
+                    OUTSIDE PASS
+                    15:45:56 guardian-1 session_count 8
+                    15:45:58 guardian-7 session_count 8
+
+PASS: seven pinned units that are not transient and use no session path, one config 82dcf7043e3bb947, federation_id
+337ae01a..., seven peers, threshold 5, read from outside, sessions 7 -> 8 on guardians 1 and 7 after the pin.
+
+NOT SHOWN: a reboot. The pin is proven against a user-manager re-exec and a full stop/start of the target, not
+against a machine restart, which was not done. The paying round is still blocked and was not started.
