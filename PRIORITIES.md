@@ -37,6 +37,8 @@ The section below is the record, not the order, until this list is done.
 4. CLOSED 2026-09-26: the core's score is the product of E, T and C, and the arrival card prints them, live on
    btc-logistics-core.
 5. Then FEDERATION live: fleet pin, guardians, first paying testnet4 round.
+   STATUS 2026-09-28: OPEN. Guardians and fleet pin done; the paying round is BLOCKED on upstream (stock Fedimint does
+   not map testnet4) and unstarted. TASKBOOK 3dbb3337.
    THRESHOLD_LN deletion continues beside that, not in front of it.
    HARD (Daniel 2026-09-27 10:04, replaces 2026-09-26 22:54's 3 of 4): testnet is 7 nodes and 7 guardians, one
    each, stock threshold 5 of 7. One node is one guardian. A node starts its own guardian with zero config - no
