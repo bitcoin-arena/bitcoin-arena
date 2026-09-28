@@ -5,6 +5,24 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+ITEM 5: THE FIRST PAYING TESTNET4 ROUND IS HELD, AND ITS RUNNING NODE'S CENSUS READS THE UPDATES (2026-09-29).
+
+Pin /home/daniel/blwp-testnet4/code moved 513e4217 -> 7b694e81 (fast-forward), blwp-tn4-node@1..7 restarted one at a
+time: all seven answered /guardian, the outside check passed (one config c49212436953348d, 7 peers, threshold 5,
+wallet testnet4). The runner then started from that tree (blwp-tn4-paid, patched PATH, a fresh lock client dir
+client-lock-tn4 joined with the patched fedimint-cli - client-lock9 held the old regtest-labelled config and its old
+keys); it runs the seven nodes itself on the same ports and stores, so the seven units are stopped while it runs.
+
+  bonds       the runner reused all seven 154172 bonds, each "its advertisement is the update ..." (154282); none posted
+  round       816da5b5198169f62138532bb010d2edce3d7c60efbabf7a1f08333ad7c928de, published in ed5190d6, FEDERATION on
+              337ae01a, 7 guardians threshold 5, stake 10000000 msat
+  beacon      154295 (the first block past committee time 1790640778000; two testnet4 reorgs at 154293 were re-read)
+  census      read from the RUNNING node 1 (127.0.0.1:31221, GET /guardian-bonds?round=816da5b5...), the path a held
+              round uses: ok, 7 bonds, all 7 with their update; node 1 (2fca1090) = bond 0c82db59, bond advert key
+              034d69fa, update 7f6b3e59, key 027acbea. The other six likewise name their current keys.
+
+Open: a real payment into this round.
+
 ITEM 5: ADVERTISEMENT UPDATES, NOT NEW BONDS (2026-09-28/29, spec §5A.2, Daniel's advertisement-update letter).
 
 The refound kept federation 337ae01a and gave every guardian a new key, so the seven bonds of height 154172 still
