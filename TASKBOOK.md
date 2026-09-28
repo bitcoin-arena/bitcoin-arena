@@ -50949,3 +50949,109 @@ THE PAYING ROUND: WHAT IS LOCKED BEFORE THE FIRST testnet4 PAYMENT
   - §5A.10: bond_min is two to four times the largest round pool, and at least max_round_volume per role.
   - The 50,000 sat in round-2of2.mjs is a launcher's choice, not the spec's. This cut does not invent one.
 
+
+## Item 5: the guardian set, measured on STOCK fedimintd 0.12.0 from outside the tailnet (2026-09-28)
+
+Daniel 2026-09-28: refound the seven unpatched; the patched set does not count and was not measured. The paying
+round stays blocked (stock 0.12.0 labels testnet4 regtest and takes no testnet4 gateway). This is the guardian-set
+check only.
+
+FOUND BEFORE: the seven running guardians were a PATCHED fedimintd (fm/target/release, built 2026-09-27), diffed
+against the stock 0.12.0 crates from crates.io: fedimint-server-core bitcoin_rpc.rs (testnet4 chain id added, a
+testnet4 fee-rate fallback), fedimint-wallet-server lib.rs (testnet4 finality delay 2 -> 100), fedimint-lnv2-client
+lib.rs (invoice expiry on Fedimint's clock). Guardian 1 was not running and /guardian-1 was not on the Funnel.
+
+WHAT WAS DONE, no repository code changed:
+- blwp-tn4-paid stopped (it was the patched guardians' parent and the paying runner; the paying round is blocked).
+- Refounded with the unchanged tools/testnet4-found.mjs, PATH pointing at the STOCK nix bundle fedimintd 0.12.0
+  (fm/bin/fedimintd, `--version` 0.12.0, sha256 29c64e7d254bcbff...) through a wrapper whose only act is
+  FM_BITCOIN_NETWORK testnet4 -> regtest, which stock 0.12.0 requires on this chain. Every running guardian's
+  environment reads FM_BITCOIN_NETWORK=regtest. The patched directories are kept, not deleted:
+  node-N.db.guardian.founded-2026-09-28T1457.
+- The seven nodes started as plain `node src/main.js <port> <store>` (units blwp-tn4-stock-node-1..7), no paying
+  runner. /guardian-1 added with `tailscale funnel --bg --set-path`; Funnel stays on for host:443.
+
+REACH, from the public side: beelink.tail1723e2.ts.net resolves here to Funnel's public relay (2a00:dd80:20::...,
+185.40.234.210), not the tailnet address 100.74.66.98. WebSocket handshake to each API address
+wss://beelink.tail1723e2.ts.net/guardian-k/guardian through 185.40.234.210:
+
+    guardian-1..7/guardian   HTTP/1.1 101 Switching Protocols   (all seven)
+    guardian-9/guardian      HTTP/1.1 502 Bad Gateway           (control: a path that does not exist)
+
+THE STOCK CLIENT (nix bundle fedimint-cli 0.12.0) joined the new invite through the public relay and asked each
+guardian alone (`dev api --peer-id k client_config`, `session_count`):
+
+    guardian   config sha256 (canonical JSON)   peers   threshold n - floor((n-1)/3)
+    1..7       82dcf7043e3bb947 (all seven the same)   7       5
+    federation_id 337ae01ad1e9bb35b5628faad3457e62d69d036efe8a34bcfc20cb31b42bb75e, network regtest,
+    federation_name blwp-testnet4
+
+SESSIONS (read from outside, guardian 1 unless named):
+
+    15:09  all seven up               2 (every guardian 2)
+    15:10  guardians 6 and 7 stopped  2
+    15:17  two down                   4 on guardians 1-5          ADVANCES
+    15:17  guardian 5 stopped         4
+    15:18-15:25  three down, sampled every ~56 s for 8.5 min      4 throughout   HALTS
+           (before: one session per ~3.4 min)
+    15:25  guardian 5 back            4
+    15:29  after return               5 on guardians 1-5          RESUMES
+    15:30  guardians 6 and 7 back     5 on all seven
+
+PASS on the named criteria: one config, one federation_id, seven peers, threshold 5 from all seven public API
+addresses; two down advances, a third halts, its return resumes.
+
+WHAT THIS DOES NOT SHOW, said so nobody reads more into it:
+- THE FEDERATION ID DID NOT CHANGE. It is 337ae01a..., the id the patched set had. Fedimint 0.12 derives it from
+  the guardians' names and API URLs, which are the same; the keys are new (node-1 broadcast keys hash 7583e87a...
+  now, 77e45711... in the patched directory). Any invite or client state from the patched set names the same id
+  and will not work against the new keys.
+- THE NODE CODE STILL SAYS "patched". src/guardian.js maps testnet4 -> 'testnet4' and its header says Fedimint is
+  patched; the stock run works only through the PATH wrapper. Making the node itself pass `regtest` is a code
+  change, not made here.
+- THE STOCK testnet4 LIMIT IS REAL: finality delay 10 on the regtest label (the patch had raised testnet4's to 100
+  after 11-14 block reorgs made a guardian panic). A deep testnet4 reorg may stop these stock guardians.
+- The paying round is blocked and was not started; blwp-tn4-paid stays stopped.
+- The Unity files were not touched and are not staged.
+
+Raw log:
+    15:09:13 guardian-1 peer 0: config sha256 82dcf7043e3bb947  peers 7  threshold n-floor((n-1)/3) = 5  urls guardian-1,guardian-2,guardian-3,guardian-4,guardian-5,guardian-6,guardian-7  session_count 2
+    15:09:17 guardian-2 peer 1: config sha256 82dcf7043e3bb947  peers 7  threshold n-floor((n-1)/3) = 5  urls guardian-1,guardian-2,guardian-3,guardian-4,guardian-5,guardian-6,guardian-7  session_count 2
+    15:09:21 guardian-3 peer 2: config sha256 82dcf7043e3bb947  peers 7  threshold n-floor((n-1)/3) = 5  urls guardian-1,guardian-2,guardian-3,guardian-4,guardian-5,guardian-6,guardian-7  session_count 2
+    15:09:26 guardian-4 peer 3: config sha256 82dcf7043e3bb947  peers 7  threshold n-floor((n-1)/3) = 5  urls guardian-1,guardian-2,guardian-3,guardian-4,guardian-5,guardian-6,guardian-7  session_count 2
+    15:09:31 guardian-5 peer 4: config sha256 82dcf7043e3bb947  peers 7  threshold n-floor((n-1)/3) = 5  urls guardian-1,guardian-2,guardian-3,guardian-4,guardian-5,guardian-6,guardian-7  session_count 2
+    15:09:36 guardian-6 peer 5: config sha256 82dcf7043e3bb947  peers 7  threshold n-floor((n-1)/3) = 5  urls guardian-1,guardian-2,guardian-3,guardian-4,guardian-5,guardian-6,guardian-7  session_count 2
+    15:09:41 guardian-7 peer 6: config sha256 82dcf7043e3bb947  peers 7  threshold n-floor((n-1)/3) = 5  urls guardian-1,guardian-2,guardian-3,guardian-4,guardian-5,guardian-6,guardian-7  session_count 2
+    federation_id 337ae01ad1e9bb35b5628faad3457e62d69d036efe8a34bcfc20cb31b42bb75e network regtest meta {'federation_name': 'blwp-testnet4'}
+    15:10:11 STOPPED guardian-6 and guardian-7 (nodes 6, 7)
+    15:10:13 two down, start: session_count 2
+    15:17:00 two down: guardian-1 session_count 4
+    15:17:02 two down: guardian-2 session_count 4
+    15:17:03 two down: guardian-3 session_count 4
+    15:17:05 two down: guardian-4 session_count 4
+    15:17:06 two down: guardian-5 session_count 4
+    15:17:15 STOPPED guardian-5 (third down)
+    15:17:17 three down, start: session_count 4
+    15:18:12 three down: guardian-1 session_count 4
+    15:19:09 three down: guardian-1 session_count 4
+    15:20:05 three down: guardian-1 session_count 4
+    15:21:02 three down: guardian-1 session_count 4
+    15:21:58 three down: guardian-1 session_count 4
+    15:22:55 three down: guardian-1 session_count 4
+    15:23:51 three down: guardian-1 session_count 4
+    15:24:48 three down: guardian-1 session_count 4
+    15:25:44 three down: guardian-1 session_count 4
+    15:25:56 RESTARTED guardian-5 (back to five of seven)
+    15:29:36 after return: guardian-1 session_count 5
+    15:29:38 after return: guardian-2 session_count 5
+    15:29:39 after return: guardian-3 session_count 5
+    15:29:41 after return: guardian-4 session_count 5
+    15:29:42 after return: guardian-5 session_count 5
+    15:29:55 RESTARTED guardian-6 and guardian-7 (all seven up)
+    15:30:14 all seven: guardian-1 session_count 5
+    15:30:17 all seven: guardian-2 session_count 5
+    15:30:19 all seven: guardian-3 session_count 5
+    15:30:22 all seven: guardian-4 session_count 5
+    15:30:24 all seven: guardian-5 session_count 5
+    15:30:26 all seven: guardian-6 session_count 5
+    15:30:29 all seven: guardian-7 session_count 5
