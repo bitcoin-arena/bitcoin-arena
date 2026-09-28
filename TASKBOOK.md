@@ -5,6 +5,32 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+ITEM 5: ADVERTISEMENT UPDATES, NOT NEW BONDS (2026-09-28/29, spec §5A.2, Daniel's advertisement-update letter).
+
+The refound kept federation 337ae01a and gave every guardian a new key, so the seven bonds of height 154172 still
+advertised the old ones (node 1: 034d69fa). Measured before: census all old keys, page 0 of 7 bonded, the runner's
+bond search found nothing. Now each bond has one signed update naming its node's current key - no bond posted, no bond
+spent, no maturity clock.
+
+  published   funding b599ce98 (spends only 3029fc6f:1, 7 carriers of 3000 sat, fee 826 sat), then one update per
+              node, 347 vB each: 7f6b3e59 0f08be7a 5f240134 6f2d14b1 d1aa098e 223a497a 78da8302; all mined at 154282
+  measured    tools/testnet4-advert-measure.mjs at tip 154287, blocks 154100..tip (log advert-update-measure.log):
+              census  - the seven 154172 bonds, each with its update, each naming its node's current key
+                        (node 1 = 0c82db59, key 027acbea, updatedBy 7f6b3e59); the older 154120 bonds keep old keys
+              page    - bondedGuardians over /guardian-bonds and the chain's own headers: ok, 7 of 7, threshold 5,
+                        14 offers, 7 with an update, nothing refused
+              runner  - findBond selects the 154172 bond for all seven, node 1 0c82db59:0 via 7f6b3e59
+              bonds   - newest unspent bond height 154172 for every node key: no new bond
+  code        protocol/src/advert-update.js ("BLW" 'A' + bond outpoint + advert id, body in the witness); census takes
+              the newest update at or below census_height, checked against the bond's key; /guardian-bonds carries
+              the update; the page proves it into its headers and must see it at or above its bond; round-2of2 off
+              regtest stops instead of posting a bond; tools/testnet4-advert-update.mjs is the publish tool
+  suite       269 files, 1663 passing; reds are the known list plus client-hash 2 (the committed bundle 71d1904d was
+              never added to known-good-clients.json after 0cc8c776 - same on a251a7d8, this change leaves the
+              bundle unchanged) and a rerun flake (one failure on a251a7d8 too, a different test)
+
+Not started: the paying runner. Peg-in 9d68228c needs 100 confirmations.
+
 A PLAYER COLLECTS THEIR WINNINGS FROM THE PAGE (2026-09-21, commits `01ac3a9b`, `83564dd3`).
 
 The last leg of the money. Before it, a settled round left the pool in the committee's own channel and a
