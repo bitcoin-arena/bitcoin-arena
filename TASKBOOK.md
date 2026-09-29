@@ -51231,3 +51231,52 @@ AROUND IT:
   OUTSIDE PASS.
 - The probe gateway is stopped; its data directory stays. The seven pinned guardians (blwp-tn4-nodes.target) stayed up
   throughout; blwp-tn4-paid stays stopped. No node code, no Unity file touched.
+
+## A walk-away is never a refund, even with no qualifier (RULED Daniel 2026-09-30, destination 1)
+
+Ruling: a walk-away is §15 FORFEIT 0 at the door, never ENTRY_VOID, never a refund. With nobody qualifying, its stake
+lock is claimed and paid by the ruled remainder split: 75% to the round's sitting signer nodes (one pre-expired contract
+each to its own key, the fee-lock path), 25% to the donation set by share_bps through the Lightning-address send. Other
+losers keep the no-qualifier expiry.
+
+BEFORE (door-walkaway-noqualifier.test.js test 1 on 53d97748): door FORFEIT 0 at both, entryVoid null, /forfeit 409;
+the close ACCEPTED with the fee lock only (2 payouts to the signer nodes, 1 lock claimed); the walker's stake lock not
+among the claims and still held - due to expire back to the walker.
+
+CHANGE:
+- settlement.js marks `atTheDoor` on a FORFEIT result this store holds with no first mark, or a first mark recorded
+  late (startForfeit). No-quorum and equivocation FORFEITs stay unmarked. It hands lockSettlement the round's signed
+  donation set (server.js passes its donationSetFor, one line).
+- lock-action.js: nobody qualifying and a door loser present -> the door locks CLAIM, the other losers EXPIRE,
+  remainderMsat = what they hold (the pool equality counts it).
+- lock-settlement.js remainderSettlement: less the input fees, 75% evenly to the sitting signer nodes (dust to the
+  first), 25% splitDonation by share_bps; each recipient paid by a send kept under donationSendId(round, index). The
+  signed plan without a recipient's send, or without a held donation set, is refused. Also in the pool's (iii) case
+  (qualifiers, none addressed): the door locks are claimed the same way, the others expire.
+- winnings-send.js: the donation shares are wanted sends beside the addressed qualifiers - LNURL (bech32) decoded to
+  its pay request, proposed, checked by the seats, signed, sent, re-sent if unpaid; a PAID donation writes no winnings
+  row. The record: store.js donation_sends (winnings_sends' columns, no entries reference - a recipient is no entry);
+  round.js reads both tables.
+
+MEASURED:
+- door-walkaway-noqualifier.test.js 4/4 (fake port): walker alone - claimed, 98000 msat -> 73500 to 2 nodes
+  (36750 each), 24500 to the set (16335 + 8165 by 6667/3333 bps), both donation sends PAID, lock gone, /forfeit 409;
+  late first mark - recorded FORFEIT at both, claimed; control, FAILED alone - not claimed, held; mixed walker +
+  FAILED - only the walker's 98000 claimed, the FAILED lock held.
+- protocol walkaway-remainder.test.js 4/4: actions, the split, refusal without a donation send / without a set.
+- door-walkaway-settled.test.js (walker beside a winner) stays green.
+- REAL REGTEST FEDERATION (patched fork f1481d4bcfae fedimintd, 4 guardians 3 of 4, two gateways; winnings-probe
+  PHASE=walkaway; locks by the page's own lock client): door 23 s after the lock, FORFEIT/0 at A and B, entryVoid
+  false x2; late first mark refused FORFEIT at both, recorded x2. Settlement a1d7948c ACCEPTED in 42 s, both seats'
+  certificates 2 of 2: claims stake 980000 + fees 20000 x2; remainder 735000 to 2 nodes (367500 each), 245000 to the
+  set (163342 + 81658); each node redeemed its remainder contract and its fee contract with its own key (accepted,
+  none held after); donation invoices on alice SETTLED 158392 and 77195 msat through gateway A, preimages hash, PAID at
+  A and B; the walker's lock gone; the FAILED player's lock held, 131 blocks left; /forfeit 409 for both. The donation
+  set names 127.0.0.1:18777, which the probe never binds: its LNURL fetch points at the recipients on a free port.
+- Full suite, 279 files, 1720 passing. Reds: the accepted ghost-live 9, replay-solids 2, replay-page 1, bridge 1,
+  discovery 18, objective-markers timeout; and replay-heat 5 ("CargoBay no longer says what a full whale is"), red on
+  HEAD 53d97748 without this change: 73105484 (CARGO-BTC-2148) made the HUD's heat divide the BTC term by the 20 BTC
+  truck limit while the core caps it at 25 BTC (core/src/rules/cargo.js BTC_AT_FULL) - the gauge is not the core's
+  heat. Not touched here. Three reds of the first run were this change's own and are fixed: bundle-fresh (the client
+  bundle carries lock-settlement.js - dist and the template copy rebuilt), late-settlement 5 (finalityOf stays the
+  constructor's last option), this file's test 1 (the donation outputs sort by payment hash - matched by LNURL).
