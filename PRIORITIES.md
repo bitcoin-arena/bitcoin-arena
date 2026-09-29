@@ -20,6 +20,28 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-09-29 17:33 (Daniel)
+
+HARD: Until peg-in 425279e9 has 100 confirmations and gateway B is credited, do everything
+that can be done today and tomorrow. Do not wait idle on the peg-in.
+
+Guardians must be running. The seven blwp-tn4-node units are down. Start them on the patched
+binary. Do not refound. Do not post a bond. Do not spend a bond. Do not stop pegin-watch-b.
+Do not stop the paying runner. Do not move the Daily pin. Do not redeploy Daily.
+
+Do today and tomorrow, none of it waiting on the peg-in:
+1. Finish the series pieces except the minimum. round_id(i) = H(series_id || i). The Round
+   Contract carries the series id and the index. A node refuses an entry, a lock, or a
+   settlement whose round_id is not that hash. genesis_series_start is a genesis parameter.
+   Section 15 walk-away at the door is FORFEIT, score 0, never ENTRY_VOID, never a refund.
+   Do not add the 22A minimum-service field. Adding it would move every round id.
+2. Seats agree before a winner payout as a threshold, not over HTTP. Prove it on regtest.
+3. Fee-lock path measured on regtest. Do not spend it on testnet4.
+4. M4, in the repo only: a load test, and the bond and arbitration transaction built.
+   Do not post or spend a live bond. External review is not this wait.
+
+When the peg-in credits, the armed retry and the paying deposit continue. That wait is not a stop.
+
 # NOW  -  2026-09-25 21:41 (Daniel)
 
 Playtest bug stops the current letter. Top item first. Finish and deploy before the next.
@@ -37,13 +59,10 @@ The section below is the record, not the order, until this list is done.
 4. CLOSED 2026-09-26: the core's score is the product of E, T and C, and the arrival card prints them, live on
    btc-logistics-core.
 5. Then FEDERATION live: fleet pin, guardians, first paying testnet4 round.
-   STATUS 2026-09-28 21:42: OPEN. Guardians and fleet pin done. Stock Fedimint v0.12.1 does not map testnet4.
-   That fact is closed. Do not measure upstream again. Do not stop on that question. The path is the patched fork
-   git@github.com:george-prime/fedimint.git branch blwp/testnet4-v0.12.1. Prove the patched binary reads testnet4,
-   not regtest. Then upgrade the seven guardians and refound with the testnet4 label (federation 337ae01a has
-   regtest fixed in its founding config); then the outside guardian check must pass again; then the gateway must
-   connect without the mismatch refusal. blwp-tn4-paid stays stopped until that proof and those steps pass; no
-   sats move before it. TASKBOOK 3dbb3337.
+   STATUS 2026-09-29 17:33: OPEN. The paying testnet4 round has not landed a payment. Peg-in 425279e9
+   is the wait, not a stop. Guardians must be running on the patched binary. Do not refound. The paying
+   runner stays up. No bond is posted or spent. Stock v0.12.1 does not map testnet4. That fact is closed.
+   The path is the patched fork. TASKBOOK 3dbb3337.
    THRESHOLD_LN deletion continues beside that, not in front of it.
    HARD (Daniel 2026-09-27 10:04, replaces 2026-09-26 22:54's 3 of 4): testnet is 7 nodes and 7 guardians, one
    each, stock threshold 5 of 7. One node is one guardian. A node starts its own guardian with zero config - no
