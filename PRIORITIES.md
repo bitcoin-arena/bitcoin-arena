@@ -42,6 +42,12 @@ Do today and tomorrow, none of it waiting on the peg-in:
 
 When the peg-in credits, the armed retry and the paying deposit continue. That wait is not a stop.
 
+HARD (Daniel 2026-09-29 17:46): Deploy the UI and the regtest nodes only when everything worked on
+today is finished. Not before. That deploy is the page he plays and the regtest nodes that serve it,
+together, same commit. Do not deploy a page against nodes that do not have the work. Do not move the
+Daily pin for this. Do not touch the peg-in, the paying runner, or the seven testnet4 guardians for
+this deploy.
+
 # NOW  -  2026-09-25 21:41 (Daniel)
 
 Playtest bug stops the current letter. Top item first. Finish and deploy before the next.
