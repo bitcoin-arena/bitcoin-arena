@@ -21,7 +21,12 @@ keys); it runs the seven nodes itself on the same ports and stores, so the seven
               round uses: ok, 7 bonds, all 7 with their update; node 1 (2fca1090) = bond 0c82db59, bond advert key
               034d69fa, update 7f6b3e59, key 027acbea. The other six likewise name their current keys.
 
-Open: a real payment into this round.
+Open: a real payment into this round. First attempt 2026-09-29 00:45Z: a test player (scratchpad paid-run.mjs,
+headless Chrome on the Beelink, the LOCAL page 127.0.0.1:18991 - the public page on this machine gets "Failed to
+fetch" for every node host) saw the row "PAID - 10000 sats - 7 of 5 signer nodes", was asked a 10068942 msat deposit,
+and our LND paid it to gateway B (025f17c2). Gateway B: "Error relaying incoming lightning payment err=Insufficient
+funds", HOLD invoice canceled; LND: FAILED, INCORRECT_PAYMENT_DETAILS. No stake lock, no payment landed. The gateways
+hold no e-cash in the refounded federation; their e-cash is the peg-in. That is the one wait.
 
 ITEM 5: ADVERTISEMENT UPDATES, NOT NEW BONDS (2026-09-28/29, spec §5A.2, Daniel's advertisement-update letter).
 
