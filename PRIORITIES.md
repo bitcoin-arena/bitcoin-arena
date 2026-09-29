@@ -50,10 +50,10 @@ this deploy.
 
 HARD (Daniel 2026-09-29 22:00, phone, build 0.0.2302). Playtest stops the letter. Measure on a phone width.
 
-1. The result screen, or WASTED if that was the ending, stands for a minimum of 8 seconds. "joining next
-   round in N seconds" does not appear during those 8 seconds. After 8 seconds the countdown appears
-   beside "exit game", until the next start. At 2 seconds after delivery the countdown is absent and the
-   card is up. At 9 seconds the countdown is up.
+1. CORRECTED 2026-09-29 22:09. The countdown comes immediately, during the result screen, WASTED,
+   or the timeout screen. It does not wait 8 seconds. "joining next round in N seconds" and "exit game"
+   are on screen while that ending is up, until the next start. The ending stays. The lobby does not
+   replace it.
 2. The result screen folds shut so spectate is visible. A control on the card collapses it. Folded, the
    game underneath is what you see, and spectate works. Unfold brings the card back. This holds during
    the 8 seconds and during the countdown.
@@ -90,7 +90,7 @@ The phone orders in that same hour, all of them: result card wide enough that wo
 no Level, bulls, bears, lead percent, BULLS & BEARS FLOW, or "the core said at tick"; bull and bear
 attacks stay; nothing clipped under the red percent; no stray red letter; LIVE MEMPOOL does not
 overlap CHOOSE; AUTO and ROLL OUT larger on mobile; no Lightning address prompt; winnings to the
-federation wallet; result card or WASTED for 8 s before the countdown; card folds so spectate is
+federation wallet; countdown immediately during result, WASTED, or timeout; card folds so spectate is
 visible; no lobby during joining next round; exit game does not overlap; one clock; free rounds
 are 90 s too.
 
