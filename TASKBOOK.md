@@ -5,6 +5,26 @@ Not the status board. Status lives in PRIORITIES.md.
 
 Date convention: when a number is measured, write it here with the commit.
 
+DEPLOY 2026-09-29 (Daniel: option 2): THE PAGE AND A SECOND REGTEST PAIR AT bd13ad66, TOGETHER. The Daily is untouched
+(pin a535ec62, its units, its tunnels); the peg-in, pegin-watch-b, the paying runner and the testnet4 guardians untouched.
+
+  code        /mnt/bitcoin/blwp-2of2-s/code, detached at bd13ad66 (series ids: regtest network 30927357ec89...)
+  chain       regtest bitcoind, datadir /mnt/bitcoin/blwp-2of2-s/btc, rpc 30501, wallet "series"   (unit blwp-series-btc)
+  nodes       run-2of2.mjs, A 100.74.66.98:18985, B :18986, stores + daily.json in /mnt/bitcoin/blwp-2of2-s
+              (unit blwp-series-nodes; log series.log)
+  tunnels     blwp-series-tunnel-a/b (quick tunnels): medline-tender-vbulletin-greater, personalized-handle-pounds-greatly
+  page        the 18:09 WebGL build (0.0.2294; no Unity script changed after it) with bd13ad66's template copied over
+              (blwp-client.js carries the new network ids); deploy-core.sh from bd13ad66, BLWP_2OF2_DIR = the pair
+  deployed    https://81a46577.btc-logistics-core.pages.dev; the alias serves the same daily.json and bundle
+
+Measured live (Beelink headless Chrome): the lobby lists the pair's free round; a phone run joined round b8db2879
+(both nodes: joined 1, playing 1), drove to the miner and the core said DELIVERED at tick 1845, score +206.61900 on
+the card; at the close both nodes signed DELIVERED, agreed within 3 s (objection window 10 min).
+Free rounds only: a paying round at bd13ad66 needs a 7-node committee and a federation, which a pair is not.
+NOT DURABLE, SAID: the four units are transient (systemd-run), so a reboot takes the pair down; the pair has no keeper,
+so a tunnel restart leaves daily.json naming dead names; and the Daily's keeper redeploys ITS page to this project
+whenever its own tunnel names change - that would put the old page back.
+
 ITEM 5: THE FIRST PAYING TESTNET4 ROUND IS HELD, AND ITS RUNNING NODE'S CENSUS READS THE UPDATES (2026-09-29).
 
 Pin /home/daniel/blwp-testnet4/code moved 513e4217 -> 7b694e81 (fast-forward), blwp-tn4-node@1..7 restarted one at a
