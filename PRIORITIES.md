@@ -77,6 +77,23 @@ HARD (Daniel 2026-09-29 22:00, phone, build 0.0.2302). Playtest stops the letter
     truck carries a limited amount of BTC. The limit comes from how much BTC a real block moves, not a
     liked round number. Name the limit and why.
 
+HARD (Daniel 2026-09-29 21:48, the BTC change, and the phone orders from 21:01 through 22:00).
+This is the same list as the 22:00 block. It is not optional and it is not waiting on the peg-in.
+
+BTC, not sat fees. We transport BTC to the miners. Each parcel is one transaction, sized in BTC.
+The truck carries a limited total of BTC. Find the best realistic limit from how much BTC a real
+block actually moves. Name the limit, the parcel sizes, and why. Then the cargo panel and the score
+labels say BTC to the miners, not sat fees. Do not change 1000 * E * T * C unless a factor must be
+relabelled.
+
+The phone orders in that same hour, all of them: result card wide enough that words do not break;
+no Level, bulls, bears, lead percent, BULLS & BEARS FLOW, or "the core said at tick"; bull and bear
+attacks stay; nothing clipped under the red percent; no stray red letter; LIVE MEMPOOL does not
+overlap CHOOSE; AUTO and ROLL OUT larger on mobile; no Lightning address prompt; winnings to the
+federation wallet; result card or WASTED for 8 s before the countdown; card folds so spectate is
+visible; no lobby during joining next round; exit game does not overlap; one clock; free rounds
+are 90 s too.
+
 # NOW  -  2026-09-25 21:41 (Daniel)
 
 Playtest bug stops the current letter. Top item first. Finish and deploy before the next.
