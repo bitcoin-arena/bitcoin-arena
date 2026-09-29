@@ -48,6 +48,35 @@ together, same commit. Do not deploy a page against nodes that do not have the w
 Daily pin for this. Do not touch the peg-in, the paying runner, or the seven testnet4 guardians for
 this deploy.
 
+HARD (Daniel 2026-09-29 22:00, phone, build 0.0.2302). Playtest stops the letter. Measure on a phone width.
+
+1. The result screen, or WASTED if that was the ending, stands for a minimum of 8 seconds. "joining next
+   round in N seconds" does not appear during those 8 seconds. After 8 seconds the countdown appears
+   beside "exit game", until the next start. At 2 seconds after delivery the countdown is absent and the
+   card is up. At 9 seconds the countdown is up.
+2. The result screen folds shut so spectate is visible. A control on the card collapses it. Folded, the
+   game underneath is what you see, and spectate works. Unfold brings the card back. This holds during
+   the 8 seconds and during the countdown.
+3. While joining next round, the lobby must not appear. Not PLAY, not the round list, not the backup
+   banner. The lobby returns only on exit game, or when the next round starts. During the wait the
+   player spectates.
+4. "exit game" does not overlap the countdown words. On a phone they sit side by side. Neither is cut off.
+5. The countdown and the lobby row are the same clock. "joining next round in 84 seconds" while the row
+   said "closes 0:54" was wrong.
+6. Free rounds are also 90 s rounds. A new free round every 90 s, a run at most 82 s, then the same card
+   and countdown. Free play does not keep the old clock.
+7. No "Where should your winnings be sent? Lightning address". Winnings go to the federation wallet and
+   are paid out to the user there. No address prompt, free or paying.
+8. The result card is wide enough on a phone that words do not break mid-word. Remove Level, bulls,
+   bears, lead percent, "BULLS & BEARS FLOW", and the run-stopped sentence ("the core said … at tick")
+   from every ending. Bull and bear attacks stay. Nothing is clipped under the red percent. No stray
+   red letter sits in the middle of the screen.
+9. "LIVE MEMPOOL" does not overlap "CHOOSE YOUR MEMPOOL CARGO". AUTO and ROLL OUT are larger on mobile
+   only, so they can be tapped. Desktop size stays.
+10. Cargo is BTC to the miners, not sats of fees. Each parcel is one transaction of some BTC size. The
+    truck carries a limited amount of BTC. The limit comes from how much BTC a real block moves, not a
+    liked round number. Name the limit and why.
+
 # NOW  -  2026-09-25 21:41 (Daniel)
 
 Playtest bug stops the current letter. Top item first. Finish and deploy before the next.
