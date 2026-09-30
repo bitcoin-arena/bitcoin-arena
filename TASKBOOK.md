@@ -51455,3 +51455,8 @@ roster, committee-seed, census-derive, series-doors, old-series, series-round 48
 Then GET /rounds still passed 90 s: each round's chain check (the beacon's block, its proof of work, the series
 publication - ~220 ms) was kept per round past a 64-entry cache. Now kept per series, randomness and view extent; the
 per-round seed is still derived per round. roster, committee-seed, census-derive, series-doors, beacon-seed 45/45.
+Then the page offered no series round: the series writer only opened the rounds (round.open) and never assigned their
+signer nodes, so no node listed itself assigned and the page counted 0 agreeing; and the page fetched each of ~450
+listed contracts one after another on every paint. Now the writer assigns the rounds starting in the next 2 h (20 a pass;
+the claim key is the committee's, made once), and the lobby keeps contracts by id and fetches 16 at a time. lobby 16/16,
+series-doors, series-ahead, roster, node lobby 25/25.
