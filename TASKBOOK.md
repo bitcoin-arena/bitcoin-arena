@@ -51542,3 +51542,10 @@ Found on the way: with both series a node listed 1155 rounds per GET /rounds in 
 seconds held the nodes' loops 8-11 s - the lobby now asks next=8 per series, a large listing is kept 30 s. Open: Unity's
 row reads "entry open" for this pending round (entries open at the committee time); nodes answer the capped listing in
 0.4-14 s right after a restart.
+16:31 RULE (until tomorrow 10000 sat, then 100 sat): the lobby's newest-series preference showed the PENDING 100 sat round
+and hid the joinable 10000 sat rounds - no paid round could be joined. Now the newer series wins only once its row is open
+(its committee time passed). Measured on https://btc-logistics-core.pages.dev (deploy d626427f) 15:43Z: FREE and "PAID ·
+10000 sats", joinable, closes 1:52. lobby 12/12. HOLES LEFT: series 3cfbe516's last round starts 2026-09-30 19:50:35Z and
+8172fffd's first 2026-10-02 00:00Z - no paid round is played in between (series 0 of the new id could no longer be
+posted); and 8172fffd covers 24 h, not 72 - series k=2 and k=3 can be posted only once their census cut passes
+(tip median ~2026-10-01 12:00Z and ~2026-10-02 12:00Z).
