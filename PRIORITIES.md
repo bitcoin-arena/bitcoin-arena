@@ -31,8 +31,9 @@ screen over the QR. A reload of that URL lands on the lobby he plays from.
 
 # FINISHED  -  2026-09-30 20:53 (Daniel)
 
-STATUS: finished. Live at dcff7485 (deploy de58de42): gross invoice, round tabs, Settings deposit
-and withdrawal. A Custom withdrawal over what the wallet can send shows only "Not enough to withdraw
+STATUS: finished. Live at dcff7485 (deploy de58de42): gross invoice, round tabs, the same round
+tabs for the Settings deposit. Settings withdrawal: 25%, 50%, 100%, Custom (Daniel's later change),
+all off at 0. A Custom withdrawal over what the wallet can send shows only "Not enough to withdraw
 that amount after fees. Choose a smaller amount." - measured on the live page.
 
 
