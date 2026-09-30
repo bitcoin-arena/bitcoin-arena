@@ -20,6 +20,14 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-09-30 14:18 (Daniel)
+
+HARD: The page always shows both lobbies, free and testnet. The nodes serve both.
+A phone opening the Core UI sees a free row and a paid testnet row of series 3cfbe516.
+Do not hide one to show the other. Do not point the testnet row at Daily /blwp-a.
+Deploy the Core UI so this is true. Do not move the Daily pin. Do not publish a new series.
+Do not spend a bond. Do not refound. Do not stop the 17:00 tests.
+
 # NOW  -  2026-09-30 14:11 (Daniel)
 
 HARD: Both tests done by 17:00 Europe/Berlin. Series 3cfbe516, beacon 154268, gateway B.
