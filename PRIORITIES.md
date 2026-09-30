@@ -22,10 +22,9 @@ Top item first. Finish and deploy before starting the next.
 
 # NOW  -  2026-09-30 21:07 (Daniel)
 
-HARD: Reloading the deposit page must not put a status box on the QR. The box that
-says "A ok · B ok", "play · not started", "round named · not joined" does not belong
-over the deposit invoice. On a reload of the deposit page the QR and the pay line
-stay clear. No debug strip on top of them.
+HARD (corrected 2026-09-30 21:10): Reloading the deposit page redirects to the normal
+Core page. Do not stay on the deposit screen. Do not show the status box or the loading
+screen over the QR. A reload of that URL lands on the lobby he plays from.
 
 # NOW  -  2026-09-30 20:53 (Daniel)
 
