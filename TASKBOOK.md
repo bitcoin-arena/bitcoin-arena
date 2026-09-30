@@ -51488,3 +51488,15 @@ THE PAID TESTNET4 ROUND (Daniel PAID-BY-1400 / PICK-B-0855, 2026-09-30): series 
   11:33:45Z SETTLED, ACCEPTED (5 of 7 seats), txid 05d706f1e123aa2049849f55dc422529e01527d199727b09a5d1f7d1806f3c0c: 0 loser
   locks claimed, 0 qualifiers; fee lock 200000 msat paid to the 7 signer nodes (28570-28572 msat each). The FAILED
   stake lock is not claimed: it refunds to the player's key at its expiry.
+TWO-GAMES-1407 (Daniel 2026-09-30 14:07): two games on series 3cfbe516 through gateway B.
+  A SCRIPTED DRIVER IN THE REAL PAGE (harness only, scratchpad drive-inject.js over CDP): BLWPCLIENT.entryFor is wrapped so
+  the entry's world secret is one the closed-loop driver (window-fixture driverWords) delivers in - or wrecks in, for a
+  loser - searched with the page's own core under the round's randomness; the page core's step on the live state is
+  stepped with the driver's words and the network tick is sent those same words. Rehearsed on a free core round:
+  DELIVERED at tick 1007 (the search said 1009). Under series 3cfbe516's randomness 10 of 40 worlds deliver, ~280 ms each.
+  12:37Z game 1, attempt 1: deposit 9867 sat through gateway B, stake lock 9800000 msat made (expires 154698), then
+  every node refused POST /round of 56019ebd: "this node has no chain view for that round, so it cannot say who is
+  bonded" - the old series' bonding is read at census 154300, a view key nobody had read since the 11:31 restart, and
+  chainFor answers no view while its first read is in flight. That refusal started the read. The lock REFUNDS AT EXPIRY
+  to that profile's key (pr-prof-EQgMnV) - no entry was committed. Fix to make after the games: read a held series'
+  view keys (census and bond height) at node start.
