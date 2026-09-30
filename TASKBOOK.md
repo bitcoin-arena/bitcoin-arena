@@ -51428,3 +51428,14 @@ protocol 88/88; node series-doors, donation-set-door 5/5, series-ahead, donation
 A node process (main.js, BLWP_SERIES_FILE = the template, BLWP_DONATION_NETWORK=testnet4, no chain): starts, "3cfbe516:
 510 round(s) written" (indices 450-959), /rounds lists them paying 10000 sat, entry open; the template posted as a plain
 round is refused 409 "only series 3cfbe516 is taken under it". Full suite to follow the pin move (deadline 12:00Z).
+
+## The testnet4 bitcoind flood, 07:10Z (caused by the series listing) - and its fix
+
+After units 1-4 were restarted on fceca56f holding series 3cfbe516 (~508 rounds each), every listing asked each round's
+chain view, keyed by round id and read ~100 blocks at a time, with no guard for a read in flight: the testnet4 bitcoind hit
+"Too many open files" at 07:10:27Z, its unit restarted it (07:14:28 shutdown, 07:15:25 up, a new cookie), LND-a shut down at
+07:15:13 and LND-b at 07:18:29 (their bitcoind backend gone), the guardians kept the old cookie (bitcoind: "incorrect
+password attempt" every few seconds), and unit 6, restarted at 07:14, found no cookie and is up without its guardian.
+Fix: main.js chainFor keys a view by what it depends on - census height, committee_time, confirmation depth - so every
+round of the series shares one, with one read in flight per key; beacon-source refresh the same (one read per question).
+beacon-seed, beacon-source, chain-rpc, main-settings, series-doors, committee-seed 24/24.
