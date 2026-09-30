@@ -51549,3 +51549,10 @@ and hid the joinable 10000 sat rounds - no paid round could be joined. Now the n
 8172fffd's first 2026-10-02 00:00Z - no paid round is played in between (series 0 of the new id could no longer be
 posted); and 8172fffd covers 24 h, not 72 - series k=2 and k=3 can be posted only once their census cut passes
 (tip median ~2026-10-01 12:00Z and ~2026-10-02 12:00Z).
+THE GAP 2026-09-30 19:52Z - 2026-10-02 00:00Z, CLOSED BY THE 16:31 RULE ("until tomorrow, 10000 sat. Then 100 sat"): the paying
+runner (blwp-tn4-paid, attached, entry window 6 h) keeps opening one-off paid rounds - last opened 3798dcb3 at 12:38Z - at
+10000 sat; a systemd timer (runner-100-switch, 2026-10-01 00:00:00 UTC) restarts it from runner-attach.env with
+BLWP_PAID_STAKE_MSAT=100000, so its rounds are 100 sat from tomorrow until series 8172fffd plays. The lobby's newest series
+now wins only when its row is JOINABLE (open and assigned; a node assigns a series round 2 h before its start) - an open,
+unassigned 8172fffd row on 2026-10-01 would otherwise have hidden the runner's joinable round. lobby 12/12; live page
+(deploy a088b366) 15:5xZ: FREE and PAID 10000 sats, joinable. Series k=2, k=3: series-waiter posts them when postable.
