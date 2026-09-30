@@ -24,7 +24,8 @@ Top item first. Finish and deploy before starting the next.
 
 HARD: The posted rounds are 10000 sats. That is wrong. Post a new 72-hour series for tomorrow,
 100 sats a round. This series takes priority over the old posted rounds. The lobby shows these
-100 sat rounds, not the 10000 sat ones. Do not spend a bond. Do not refound.
+100 sat rounds, not the 10000 sat ones. Same federation, same peg-ins, same gateways, same nodes.
+Only the rounds are new. Do not spend a bond. Do not refound.
 
 # NOW  -  2026-09-30 16:15 (Daniel)
 
