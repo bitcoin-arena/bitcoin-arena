@@ -51439,3 +51439,6 @@ password attempt" every few seconds), and unit 6, restarted at 07:14, found no c
 Fix: main.js chainFor keys a view by what it depends on - census height, committee_time, confirmation depth - so every
 round of the series shares one, with one read in flight per key; beacon-source refresh the same (one read per question).
 beacon-seed, beacon-source, chain-rpc, main-settings, series-doors, committee-seed 24/24.
+Then GET /rounds on node 1 took over 90 s: ~500 series rounds each derived their census from the ~2080-block view past a
+64-entry cache keyed by round id. Now roster censusFor keys a series round's census by its series id (one template, one
+census), and guardianBondsFor indexes a view's txids once per view. roster, committee-seed, census-derive, series-doors 42/42.
