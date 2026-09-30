@@ -51442,3 +51442,13 @@ beacon-seed, beacon-source, chain-rpc, main-settings, series-doors, committee-se
 Then GET /rounds on node 1 took over 90 s: ~500 series rounds each derived their census from the ~2080-block view past a
 64-entry cache keyed by round id. Now roster censusFor keys a series round's census by its series id (one template, one
 census), and guardianBondsFor indexes a view's txids once per view. roster, committee-seed, census-derive, series-doors 42/42.
+Then no series round drew a committee - two refusals, measured against the testnet4 chain (read-only):
+  - the seed check looked only for a round's own publication; a series round has none, its series' is its (3029fc6f,
+    154237, below beacon 154268). Now roster takes the series publication for a series round (findSeriesPublication),
+    strictly below the beacon.
+  - the census root: the series names 726a0b87, derived by the 2026-09-28 runner from a view starting at 154152 (the
+    seven bonds at 154172); a node's 2016-block lookback also sees each key's earlier bond at 154120 - fourteen entries,
+    root a86ea4e0 - and refused ("names census root ... and the chain gives ..."), re-deriving it for every round (3.4 s
+    each). For series 3cfbe516 alone the census is read from 154152, as published (old-series.js) - an extension of the
+    pick-B exception to the census root; the committee is the same seven keys either way.
+roster, committee-seed, census-derive, series-doors, old-series, series-round 48/48; bundle-fresh, client-hash green.
