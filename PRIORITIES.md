@@ -20,6 +20,20 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-09-30 20:53 (Daniel)
+
+HARD: The deposit invoice is always the gross round amount. A 10000 sat round invoices
+10000 sat, not 9906. Fee and donation are not subtracted from the invoice.
+
+The deposit modal has a close button. If the wallet cannot fund the round, it says
+"insufficient funds to play this round. Do you want to do a lightning deposit?"
+The player picks how many rounds to fund. The tabs are 1 round, 2 rounds, 5 rounds,
+10 rounds, and Custom. Custom opens a field for an amount. Switching a tab rewrites
+the invoice and the amount. The amount is this round's stake times the count, not a
+fixed 10000. A 100 sat round is 100, 200, 500, 1000.
+
+The same tabs are under Settings, for deposit and for withdrawal.
+
 # NOW  -  2026-09-30 16:31 (Daniel)
 
 HARD: General rule. Until tomorrow, accept the rounds of the series already posted. Those are
