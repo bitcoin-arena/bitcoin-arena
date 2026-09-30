@@ -51500,3 +51500,23 @@ TWO-GAMES-1407 (Daniel 2026-09-30 14:07): two games on series 3cfbe516 through g
   chainFor answers no view while its first read is in flight. That refusal started the read. The lock REFUNDS AT EXPIRY
   to that profile's key (pr-prof-EQgMnV) - no entry was committed. Fix to make after the games: read a held series'
   view keys (census and bond height) at node start.
+DEPLOY-1900 (Daniel 2026-09-30 16:07): https://btc-logistics-core.pages.dev (deploy df77b330), Unity build 0.0.2343 with
+the template of 06ef77a5; the series pair (/mnt/bitcoin/blwp-2of2-s, free rounds) and the 7 testnet4 nodes both pinned
+06ef77a5 and restarted. daily.json carries the pair's lobby plus 'testnet' (the testnet4 nodes via the public Funnel
+guardian-1..7, bond, advert, federation invite, gateway B). Measured on the live alias 14:38Z: FREE (series pair, 2 of 2)
+and PAID 10000 sats (series 3cfbe516, 7 nodes) both in the lobby Unity draws; on the build served locally, a free PLAY
+entered the row's round and went live; a paid PLAY showed the invoice 3.8 s after the join began, its QR code decoded
+from a screenshot (274 chars). NOTE: a device ON the tailnet resolves beelink.tail1723e2.ts.net to 100.x, and Chrome's
+local-network check then blocks the public page from the testnet nodes (measured with the harness's host mapping) - test
+with Tailscale off, or allow local network access when asked.
+THE TWO GAMES, NOT PASSED (TWO-GAMES-1407):
+  54be0243 (game 1): DELIVERED score 47250 < min_score 100000 - not a qualifier; 76c61aae (game 2): winner DELIVERED 2100,
+  loser FAILED 270900 - no qualifier. The driver took any score > 0 and an empty truck. Nothing claimed; each stake lock
+  refunds at its expiry to its player's key.
+  14170d09 (game 1 again) and b15e67f6 (game 2 again, both players): FORFEIT 0 at all 7 nodes - no first mark reached them
+  (game 2's windows never started the run in Unity; game 1's drove in the page and still read FORFEIT). By the walk-away
+  rule those locks are claimed, 75% to the signer nodes, 25% to the donation set: 3 deposits (9867 + 9905 + 9905 sat) lost
+  to their players. Cause not found yet.
+  56019ebd: lock made, POST /round refused (cold view, fixed 64108a3c) - refunds at expiry. c94cb761: WRECKED - refunds.
+  Seeds: /home/daniel/blwp-testnet4/paid/player-seeds-2026-09-30.jsonl (0600) for the last three windows; the earlier
+  windows' seeds are in their Chrome profiles' SessionStorage (pr-prof-EQgMnV, pr-prof-BiOWgi, ... under the scratchpad).
