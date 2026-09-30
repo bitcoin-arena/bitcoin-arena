@@ -20,6 +20,14 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-09-30 08:55 (Daniel)
+
+HARD: Pick B. The current code accepts series 3cfbe516d93ddf4b from the old network id
+beside bf876cb1. A named exception to the network identity and to the lead and grid rules.
+24 hours before the start is enough. HORIZON72-1131 must not refuse this series and must not
+crash a node that loads it. Beacon 154268 still counts. Do not take A. Do not take C.
+Do not publish a new series. Do not refound. Do not spend a bond.
+
 # NOW  -  2026-09-30 08:50 (Daniel)
 
 HARD: Only the 72-hour series and the old beacon count. It is already done.
