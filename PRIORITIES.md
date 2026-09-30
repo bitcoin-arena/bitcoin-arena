@@ -20,13 +20,21 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-# NOW  -  2026-09-30 21:07 (Daniel)
+# FINISHED  -  2026-09-30 21:07 (Daniel)
+
+STATUS: finished. Live at dcff7485 (deploy de58de42): a reload of the deposit URL lands on the lobby.
+
 
 HARD (corrected 2026-09-30 21:10): Reloading the deposit page redirects to the normal
 Core page. Do not stay on the deposit screen. Do not show the status box or the loading
 screen over the QR. A reload of that URL lands on the lobby he plays from.
 
-# NOW  -  2026-09-30 20:53 (Daniel)
+# FINISHED  -  2026-09-30 20:53 (Daniel)
+
+STATUS: finished. Live at dcff7485 (deploy de58de42): gross invoice, round tabs, Settings deposit
+and withdrawal. A Custom withdrawal over what the wallet can send shows only "Not enough to withdraw
+that amount after fees. Choose a smaller amount." - measured on the live page.
+
 
 HARD: The deposit invoice is always the gross round amount. A 10000 sat round invoices
 10000 sat, not 9906. Fee and donation are not subtracted from the invoice.
