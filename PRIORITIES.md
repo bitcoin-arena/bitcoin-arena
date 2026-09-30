@@ -20,6 +20,23 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-09-30 15:23 (Daniel)
+
+HARD: The user-facing money path is instant, like a Lightning payment. Measured today
+on game 1: PLAY to deposit invoice was about 7 minutes, the lobby only showed a paying
+round whose start was at least 20 minutes away, and withdraw was 5-10 minutes.
+
+1. Deposit is instant. PLAY to the deposit invoice is a Lightning payment, not a 7 minute
+   join. The slow steps (round, claim key, stake handout, lock client joining the federation)
+   do not sit in front of the user.
+2. A payable round is always in the lobby. The player can join one now. Do not hide paying
+   rows until their start is 20 minutes away. SERIES_JOIN_LEAD_MS is not the fix.
+3. Withdrawal is instant for the user. Once the result allows the payout, the sats arrive
+   as a Lightning payment, not a 5-10 minute wait.
+
+Do not change the objection window. It stays counted in blocks. Do not spend a bond.
+Do not refound. Do not publish a new series. Gateway B only, the one that holds e-cash.
+
 # NOW  -  2026-09-30 14:30 (Daniel)
 
 HARD: A deposit goes only to a gateway that holds e-cash. Gateway B holds the peg-in.
