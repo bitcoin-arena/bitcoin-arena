@@ -51604,3 +51604,17 @@ read back by cfg display and by the wallet's gateway list (send_fee 0/0). A gros
 For every federation a gateway joins later: FM_DEFAULT_ROUTING_FEES / FM_DEFAULT_TRANSACTION_FEES = "0 msat,0" in
 testnet4-gateway.sh and federation-hold-probe.sh, and systemd drop-ins zero-fees.conf for blwp-tn4-gw-a/b (read at
 their next start; the gateways were not restarted).
+PAY-STATUS (Daniel 2026-09-30 21:xx-22:xx, with PRIORITIES 21:07/21:10):
+- Reload of the deposit page lands on the lobby: the join's deposit offer notes its address and the lobby behind it in
+  sessionStorage; the boot script sends that same address back to the lobby before anything reads it. Live (Beelink
+  Chrome, 18994): modal up on the round link, reload -> address "", lobby showing, no modal, no join.
+- Copy invoice beside a one-line invoice; green "Copied ✓" for 1.5 s (red on failure). Live: clipboard == invoice.
+- Status line and bar under the invoice (deposit) and under Withdraw: deposit "Creating your invoice" -> "Waiting for
+  your Lightning payment of N sat via <gateway host>" -> "Payment received! N sat are now in your wallet." (or expired /
+  failed, red); withdraw "Opening your wallet" -> "Checking your invoice" -> "Sending N sat over Lightning" -> "Done!"
+  (or refunded / failed, red). depositOffer.watch hears each invoice's end (Claimed/Expired/Failure). The in-between
+  federation states (gateway funded the contract, claiming) need a lock-client wasm change; no Rust toolchain here.
+- Modal fits 800x437 without scrolling (tabs at 74 px, scrollH == clientH 368).
+- Withdraw tabs 25% / 50% / 100% of what the wallet can send after fees (whole sat), then Custom; Settings' button
+  style no longer hides the chosen tab. Live: empty wallet -> shares off, Custom 20000 -> "You withdraw 20,000 sat".
+Tests: client page set 71/71 (deposit-reload new, deposit status, withdraw shares), client-hash 3/3.
