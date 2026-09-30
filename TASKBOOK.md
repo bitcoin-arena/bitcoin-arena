@@ -51460,3 +51460,4 @@ signer nodes, so no node listed itself assigned and the page counted 0 agreeing;
 listed contracts one after another on every paint. Now the writer assigns the rounds starting in the next 2 h (20 a pass;
 the claim key is the committee's, made once), and the lobby keeps contracts by id and fetches 16 at a time. lobby 16/16,
 series-doors, series-ahead, roster, node lobby 25/25.
+Then the page's one paying row was 5eaa0966 (latest entry close wins). Now lobbyOnePerKind prefers a series round, the soonest leaving 3 min (SERIES_JOIN_LEAD_MS) for the deposit and the lock. lobby 16/16.
