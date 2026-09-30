@@ -51295,3 +51295,41 @@ Success; deployed to btc-logistics-core (288ae3a0) on the series pair; the live 
 nodes take the join. Full suite 279 files, 1721 passing; reds the accepted six, plus rerun 1 (under the build's load;
 18/18 alone) and client-hash (74abeed7 rebuilt the client bundle and did not list its hash - known-good-clients.json
 regenerated, 3/3).
+
+## Item 1, hole 1 (a): a donation recipient that does not answer is HELD, and the walk-away still settles (RULED Daniel 2026-09-30)
+
+Before (74abeed7): with the donation set not answering, the plan was refused ("the donation recipient's invoice does not
+stand") - no settlement at all, the fee locks not claimed either, and the walker's lock left to expire back: a refund.
+
+Now: the proposer plans an unanswered recipient's share HELD (a send row with no invoice); the seats take it as their own
+share of that recipient; the settlement pays it into a pre-expired contract under the committee claim key only - not a
+signer fee, not the walker's, never part of the 75%. The proposer's sweep asks the same recipient again; once it answers,
+the re-send spends the held contract (the committee's refund) into the Lightning-address send to its invoice. Unpaid, it
+stays held for a later send to the same address. Code: lock-settlement.js (kind 'held'), winnings-send.js (propose, check,
+sendsFor, contractOf, sendAll), settlement.js (summary heldMsat). No HUD, no core.
+
+MEASURED, fixtures (door-walkaway-held.test.js 2/2, walkaway-remainder.test.js 5/5): 2-of-2, set down - ACCEPTED, the
+walker's 98000 claimed, 36750 x2 to the signer nodes, 16335 + 8165 held under the claim key, both HELD, nothing asked of the
+set; the set answers - both re-sent (attempt 1) and PAID to the set's two LNURLs, the held contracts spent, no new
+pre-expired contract. 5 of 7 (lockRound n: 7): door FORFEIT at all 7, ACCEPTED, 10500 x7, 24500 held.
+
+MEASURED, private regtest, patched fork f1481d4bcfae (4 guardians 3 of 4, two gateways), winnings-probe PHASE=walkaway
+DONATION_DOWN=1, locks by the page's own lock client, nothing listening for the set:
+  2 of 2: door FORFEIT/0 x2, late mark recorded x2; ACCEPTED in 41 s; 980000 claimed -> 367500 x2 to the nodes (each
+          redeemed with its own key), 163342 + 81658 held under the committee claim key (both stored, HELD, recipients
+          asked 0); walker's lock gone. Recipients started: attempt 1 PAID for both, alice SETTLED 158392 and 77195 msat,
+          preimages hash, PAID at the other node, held contracts spent; FAILED player's lock held (136 blocks); /forfeit 409.
+  5 of 7: door FORFEIT/0 at all 7, late mark recorded at all 7; ACCEPTED in 45 s; send plan signed by 7 seats, 5 needed;
+          105000 x7 to the nodes (all 7 redeemed); 163342 + 81658 held; then PAID at all 7, alice SETTLED 158392 and 77195,
+          held contracts spent; FAILED player's lock held (150 blocks); /forfeit 409.
+
+HOLE 3's proof, the round-id refusal on the private regtest that holds the series file (series-regtest.mjs, bitcoind
+30601, two main.js with BLWP_SERIES_FILE): the genuine round i 201 x2, its id the hash; a moved window, index 960, a round
+of a series not held - 409 by name; the same store without the series refuses an entry, a lock and a settlement commit
+naming it. With the chain view on, the genuine round passes the series door and meets the chain's bond door.
+KNOWN GAPS, RULED to stay (Daniel 2026-09-30): testnet4 runs pin 061193a1 - a paying no-qualifier walk-away there still
+refunds until a later pin go. Series stays regtest-only: no series file on the core pair or on testnet4.
+Full suite 280 files, 1725 passing; reds the accepted six, plus rerun (test 11 this run, test 1 the run before - timing
+under the suite's load; 18/18 alone, twice) and bundle-fresh (lock-settlement.js is in the client bundle: dist, template
+copy and known-good-clients.json rebuilt - bundle-fresh 2/2, client-hash 3/3). The live page stays 0.0.2313 on b878d089:
+this change is node-side and on private regtest only, as ruled.
