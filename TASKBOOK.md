@@ -51520,3 +51520,12 @@ THE TWO GAMES, NOT PASSED (TWO-GAMES-1407):
   56019ebd: lock made, POST /round refused (cold view, fixed 64108a3c) - refunds at expiry. c94cb761: WRECKED - refunds.
   Seeds: /home/daniel/blwp-testnet4/paid/player-seeds-2026-09-30.jsonl (0600) for the last three windows; the earlier
   windows' seeds are in their Chrome profiles' SessionStorage (pr-prof-EQgMnV, pr-prof-BiOWgi, ... under the scratchpad).
+THE FORFEITS OF 14170d09 AND b15e67f6, FOUND (2026-09-30): node 1's door signed 26a81e36 "no first mark past the start
+deadline". The harness's model-predictive driver re-planned on the page's main thread - 42 variants x 1600 ticks every 60
+ticks, measured up to 9864 ms a plan - and the three players were windows of one site in one Chrome, sharing one renderer
+thread: every plan froze all three pages, game 1's first mark reached the nodes after the deadline and game 2's windows
+never started their run. The harness's fault, not the page's. Fixed in the harness (scratchpad drive-inject.js v3): the
+plans run in a Web Worker over the page's own blwp-core.js, the page only posts a copy of the state; the entry's world
+search is capped at 16 worlds. Measured on a free round of the live core page 14:47Z: plans 5.6-8.7 s in the worker while
+the page kept stepping, the page core DELIVERED at tick 1469, and the series pair's signer nodes signed entry 39c276d2
+DELIVERED (x2) - not FORFEIT.
