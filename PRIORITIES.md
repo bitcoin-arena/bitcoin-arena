@@ -20,6 +20,15 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-09-30 08:50 (Daniel)
+
+HARD: Only the 72-hour series and the old beacon count. It is already done.
+Series 3cfbe516d93ddf4b. Publication 3029fc6fca6adf20 confirmed in block 154237.
+Beacon 154268, already past 6 deep. Committee time 2026-09-28 21:52 Europe/Zurich.
+Do not wait for another beacon. Do not publish another round. 5eaa0966 does not count.
+The peg-in is already in gateway B. The paying deposit uses a round of this series.
+The node listing one open round is the bug. Fix the list. Do not refound. Do not spend a bond.
+
 # NOW  -  2026-09-30 08:44 (Daniel)
 
 HARD: The 72-hour series is what counts. Series 3cfbe516d93ddf4b, publication 3029fc6fca6adf20
