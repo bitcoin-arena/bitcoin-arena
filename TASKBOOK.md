@@ -51529,3 +51529,16 @@ plans run in a Web Worker over the page's own blwp-core.js, the page only posts 
 search is capped at 16 worlds. Measured on a free round of the live core page 14:47Z: plans 5.6-8.7 s in the worker while
 the page kept stepping, the page core DELIVERED at tick 1469, and the series pair's signer nodes signed entry 39c276d2
 DELIVERED (x2) - not FORFEIT.
+SERIES 8172fffd, 100 SAT A ROUND (Daniel 2026-09-30): posted on testnet4, publication 2a1a3f2b (one non-bond wallet output,
+155599 sat in, fee 477). Round 5eaa0966's contract (network bf876cb1, same federation, nodes, gateways, donation set) with
+stake 100 sat; series k=1 by the spec clock - the only one postable now (series 0's committee time 2026-09-30 00:00Z had
+passed): start 2026-10-02 00:00Z, committee time 2026-10-01 00:00Z (entries open then), last round 2026-10-02 23:58:30Z;
+census 154539 (the highest block at the 2026-09-30 12:00Z cut), root a86ea4e0 (14 entries) as the node's Roster derives it.
+The 7 nodes hold both series (series-both.txt); 960 rounds of 8172fffd written. Page deploy 398d9c9b, nodes and pair at
+b9ce39f1.
+MEASURED on https://btc-logistics-core.pages.dev 15:34Z: the lobby Unity draws is FREE and "PAID · 100 sats" - round
+be5785e3 = series 8172fffd round 0 (node: stake 100000 msat, pending, start 2026-10-02 00:00Z); no 10000 sat row shown.
+Found on the way: with both series a node listed 1155 rounds per GET /rounds in 63 s, and old pages asking it every few
+seconds held the nodes' loops 8-11 s - the lobby now asks next=8 per series, a large listing is kept 30 s. Open: Unity's
+row reads "entry open" for this pending round (entries open at the committee time); nodes answer the capped listing in
+0.4-14 s right after a restart.
