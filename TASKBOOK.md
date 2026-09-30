@@ -51598,3 +51598,9 @@ deploy 7ba598b3. NOTE, measured by the fee rules: a gross 100 sat invoice credit
 round and the page asks again; 2 rounds (200 sat) cover. At 10000 sat one round is covered (9968 sat credited).
 Also asked 20:5xZ: gateway B holds 21019 sat e-cash in 337ae01a, 669971 sat lightning outbound, 1367760 sat inbound,
 49886 sat on-chain; gateway A 0 e-cash.
+FEES-0 (Daniel 2026-09-30 21:xx, "fees 0, now and forever, for all new federation gateways"): gateway-cli cfg set-fees
+on gateway A (31270) and B (31280) for 337ae01a: lightning and transaction fees 0 msat + 0 ppm (were 2000 msat + 3000 ppm),
+read back by cfg display and by the wallet's gateway list (send_fee 0/0). A gross 100 sat invoice now credits 100 sat.
+For every federation a gateway joins later: FM_DEFAULT_ROUTING_FEES / FM_DEFAULT_TRANSACTION_FEES = "0 msat,0" in
+testnet4-gateway.sh and federation-hold-probe.sh, and systemd drop-ins zero-fees.conf for blwp-tn4-gw-a/b (read at
+their next start; the gateways were not restarted).
