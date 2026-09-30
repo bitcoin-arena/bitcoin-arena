@@ -51618,3 +51618,14 @@ PAY-STATUS (Daniel 2026-09-30 21:xx-22:xx, with PRIORITIES 21:07/21:10):
 - Withdraw tabs 25% / 50% / 100% of what the wallet can send after fees (whole sat), then Custom; Settings' button
   style no longer hides the chosen tab. Live: empty wallet -> shares off, Custom 20000 -> "You withdraw 20,000 sat".
 Tests: client page set 71/71 (deposit-reload new, deposit status, withdraw shares), client-hash 3/3.
+PAY-STATUS 2 (Daniel 2026-09-30 22:04-22:1x, phone screenshot: "you cannot type into the custom deposit field"):
+- Measured (Beelink Chrome, real key events): the field had focus and value stayed "" - Unity's WebGL keyboard capture
+  took every keydown. A window capture-phase guard registered before Unity loads stops keys whose target is an input,
+  textarea, select or editable element; the character still lands. Live: "1234" typed -> invoice lntb12340n (1,234 sat).
+- Custom deposit: a text field (inputmode numeric) read with parseInt as typed; the invoice and QR follow 450 ms after
+  the last key; no Set amount button. Withdraw Custom the same.
+- The deposit modal's height never moves: QR square with a placeholder, amount line, custom row (visibility), invoice row
+  and two-line status all fixed. Live 430x900: 615 px at every state. 800x437: fits, scrollH == clientH 405 (QR 33vh).
+- Withdraw at 0: every tab (Custom too), the invoice field and Withdraw are off and greyed; "Your wallet is empty, so
+  there is nothing to withdraw."
+Tests: page set 72/72 (key guard test new).
