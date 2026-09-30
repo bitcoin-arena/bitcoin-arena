@@ -20,6 +20,14 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-09-30 16:15 (Daniel)
+
+HARD: After the 19:00 deploy, not before. Do not stop that deploy for this.
+
+Settings, under the balances, shows a transaction history. Every deposit, every withdrawal,
+and every deduction for a game stake. A stake row names the round. Clicking it opens that
+round's replay in a new window. The panel also shows the federation id that holds his funds.
+
 # NOW  -  2026-09-30 16:07 (Daniel)
 
 HARD: Deploy everything so Daniel can test on testnet himself by 19:00 Europe/Berlin.
