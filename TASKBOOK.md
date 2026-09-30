@@ -51472,3 +51472,19 @@ DEPOSITS THROUGH GATEWAY B THAT REACHED NO ROUND (2026-09-30, each 9867634 msat 
   09:35Z round 161c833c, profile pr-prof-txPLYK: every node answered POST /round 402 (series rounds not "funded"); reopened,
          its wallet also read 0 msat.
 Then POST /round refused the series rounds 'on an unbonded federation (§23.6)': the series' census (154206) predates the advertisement updates naming each node's guardian (154282). For series 3cfbe516 alone the bonding is counted from the census at 154300 (read from 154152): 7 entries, each naming its guardian (measured against the testnet4 chain) - another extension of the pick-B exception; the committee stays the series' own census's. Deposit 10:36Z (9867 sat through gateway B, SUCCEEDED) reached no round: refused by this, before its lock.
+  10:36Z a join through gateway B refused 'on an unbonded federation' (before 0472835e): the same recovery.
+THE PAID TESTNET4 ROUND (Daniel PAID-BY-1400 / PICK-B-0855, 2026-09-30): series 3cfbe516 round fbd8294e169437530e1295ffe4877ad7eb56258c9bd2bb163e4e436ecae83cb3.
+  10:48:07Z deposit 9867 sat through gateway B (payee 025f17c2...); stake dealt to the 7 settlement nodes, 7 of 7 accepted,
+  stake locked; entry f1059b9811c7ea1652a63baa53ca85ed9f1f6dc840eb5008ef464f42baead85d at all 7. 11:02:41Z the player
+  entered; the run ended FAILED (MISSED at tick 10800 - the headless harness page runs ~3 fps). Closed ~11:06Z, all 7
+  agreed FAILED, all 7 posted.
+  Then it never went final: an attached node (main.js) answered the §13A/§13C windows from the round's census view, which
+  stops at the beacon's depth and is kept for good - no later block came into view, so no window could end, and the
+  postings named that stale block (154273). Fixed in 8c46b619 (src/tip-view.js: a header view that follows the tip, as
+  round-2of2's does); measured on node 1's store against testnet4 - FINAL, window [154273, 154274); pin moved to
+  8c46b619, the 7 units restarted one at a time (bitcoind ~60 fds).
+  NOTE: because the postings named 154273, this run's objection window lay in the past - it had in effect none. Postings
+  from 8c46b619 on name the real tip.
+  11:33:45Z SETTLED, ACCEPTED (5 of 7 seats), txid 05d706f1e123aa2049849f55dc422529e01527d199727b09a5d1f7d1806f3c0c: 0 loser
+  locks claimed, 0 qualifiers; fee lock 200000 msat paid to the 7 signer nodes (28570-28572 msat each). The FAILED
+  stake lock is not claimed: it refunds to the player's key at its expiry.
