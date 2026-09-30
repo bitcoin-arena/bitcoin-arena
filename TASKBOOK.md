@@ -51357,3 +51357,29 @@ gauge (b878d089): CargoBay.Heat's formula (float32, as committed) against core/s
 (fee 0..40000 sats x 0..30 BTC): worst difference 0.0000213 (the core's 1/65536 fixed point; at 500 sats, 15.92 BTC:
 core 0.311539, HUD 0.311560). A full 20 BTC truck: core 0.359985, HUD 0.360000. The 73105484 gauge (BTC part at 20 BTC)
 was off by up to 0.0900 (500 sats, 20 BTC: core 0.384979, HUD 0.475000).
+
+## The paying runner waits for its own publication before a beacon (Daniel 2026-09-30, pick (b), after fcb15cca)
+
+Measured on testnet4: round fcb15cca's publication 37af92a0 (2 sat/vB, broadcast 21:48:57Z) sat ~3.5 h in the mempool
+and confirmed at 154489, after its beacon block (~154477). The runner waited for the beacon alone, posted the round at 6
+deep, node 1 (31221) refused it - rightly, "there is no publication transaction to read" - and the runner exited
+01:18:32Z; deposit-fcb15cca exited 01:18:47Z (its round never came up). fcb15cca stays dead; 37af92a0 not rebroadcast.
+
+Now (src/publication-wait.js, used by round-2of2.mjs on a chain it does not mine): the publication is replaceable; no
+beacon is named and nothing posted until it has confirmed; each block that comes without it raises its fee (bumpfee,
+doubling, 100 sat/vB at most); only a beacon strictly above the publication's block counts; a round whose beacon block
+came first - unconfirmed, or confirmed at or above it - is dead: never posted, the first round drafted again (new committee
+time just past the tip, same windows after it, its own census root and publication; six in a row at most), and a keeper
+round not opened (the keeper drafts the next). A node that has not yet read a publication the runner saw confirm is asked
+again, not exited on.
+
+MEASURED, private regtest (tools/publication-regtest.mjs: own bitcoind 30601, blocks 10 min apart on a mock clock, the
+publication kept out of blocks until the step lets it in):
+  1, 2, 4: blocks 140, 141, 142 without the publication - the wait still waiting, no beacon block yet; fee raised 2 -> 4
+          -> 8 sat/vB (0ce12577 -> 7943f6f9 -> 9e51f987, the first gone from the mempool); confirmed at 143; the beacon
+          named at 146, above it.
+  3a:     the beacon block 157 came while the publication was unconfirmed - dead, "not a published round".
+  3b:     then confirmed at 158, after the beacon block - still dead, not forced through.
+round-2of2 users: assignment, claim-key-own, lobby 6/6; launcher-guardian, node-start 5/5.
+The runner runs from its own checkout of this commit (/home/daniel/blwp-testnet4/runner-code); the seven units stay on
+the pin 061193a1 - nothing the runner does (contract encoding, series, round-2of2 besides this wait) differs between them.
