@@ -51350,3 +51350,10 @@ signer node restarted on its own store (and port) while held - still HELD; the r
 both, alice SETTLED 158392 and 77195, held contracts spent; walker's lock gone, FAILED lock held, /forfeit 409.
 Full suite 280 files, 1726 passing; reds the accepted six, plus rerun (a different test each loaded run - 1, 11, 6;
 18/18 alone) and series-doors (a 180 s timeout in the suite; 1/1 alone twice, 14 s).
+
+## Item 1 close check, core vs HUD by numbers (2026-09-30)
+Item 1 touched no simulation: the core, PhysX and the recording are unchanged by it. Its one C#-vs-core point, the heat
+gauge (b878d089): CargoBay.Heat's formula (float32, as committed) against core/src/rules/cargo.js heat() over 81 loads
+(fee 0..40000 sats x 0..30 BTC): worst difference 0.0000213 (the core's 1/65536 fixed point; at 500 sats, 15.92 BTC:
+core 0.311539, HUD 0.311560). A full 20 BTC truck: core 0.359985, HUD 0.360000. The 73105484 gauge (BTC part at 20 BTC)
+was off by up to 0.0900 (500 sats, 20 BTC: core 0.384979, HUD 0.475000).
