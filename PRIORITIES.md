@@ -22,7 +22,8 @@ Top item first. Finish and deploy before starting the next.
 
 # FINISHED  -  2026-09-30 21:07 (Daniel)
 
-STATUS: finished. Live at dcff7485 (deploy de58de42): a reload of the deposit URL lands on the lobby.
+STATUS: finished. Live at 288193a9 (deploy 52d50dcd): a reload of the deposit URL lands on the lobby.
+A payment made just before the reload is credited and gets its history row (one real 100 sat deposit).
 
 
 HARD (corrected 2026-09-30 21:10): Reloading the deposit page redirects to the normal
@@ -31,7 +32,7 @@ screen over the QR. A reload of that URL lands on the lobby he plays from.
 
 # FINISHED  -  2026-09-30 20:53 (Daniel)
 
-STATUS: finished. Live at dcff7485 (deploy de58de42): gross invoice, round tabs, the same round
+STATUS: finished. Live at 288193a9 (deploy 52d50dcd): gross invoice, round tabs, the same round
 tabs for the Settings deposit. Settings withdrawal: 25%, 50%, 100%, Custom (Daniel's later change),
 all off at 0. A Custom withdrawal over what the wallet can send shows only "Not enough to withdraw
 that amount after fees. Choose a smaller amount." - measured on the live page.
