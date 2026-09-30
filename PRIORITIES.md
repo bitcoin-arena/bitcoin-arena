@@ -20,6 +20,14 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-09-30 14:23 (Daniel)
+
+HARD: After the testnet UI is deployed, not before. Do not stop the 17:00 tests or the lobby deploy for this.
+
+The player key persists in localStorage. A new tab is not a new wallet. The name stays the name of that key.
+Settings gets a restore: the player writes the 24 words and gets that same key back. A phone that dropped
+the tab comes back as the same player, not glad-puma with a new number.
+
 # NOW  -  2026-09-30 14:18 (Daniel)
 
 HARD: The page always shows both lobbies, free and testnet. The nodes serve both.
