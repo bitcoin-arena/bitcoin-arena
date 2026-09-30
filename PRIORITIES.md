@@ -20,6 +20,13 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-09-30 08:44 (Daniel)
+
+HARD: The 72-hour series is what counts. Series 3cfbe516d93ddf4b, publication 3029fc6fca6adf20
+confirmed in block 154237, committee time 2026-09-28 21:52 Europe/Zurich, beacon 154268.
+The node listing one open round is the bug. The paying path uses this series, not a one-off
+publication such as 5eaa0966. Do not publish a new series. Do not refound. Do not spend a bond.
+
 # NOW  -  2026-09-30 08:18 (Daniel)
 
 HARD: A paid testnet4 round by 14:00 Europe/Berlin. The peg-in is already in gateway B.
