@@ -51333,3 +51333,20 @@ Full suite 280 files, 1725 passing; reds the accepted six, plus rerun (test 11 t
 under the suite's load; 18/18 alone, twice) and bundle-fresh (lock-settlement.js is in the client bundle: dist, template
 copy and known-good-clients.json rebuilt - bundle-fresh 2/2, client-hash 3/3). The live page stays 0.0.2313 on b878d089:
 this change is node-side and on private regtest only, as ruled.
+
+## Item 1, the last hole: a donation recipient that answers the proposer and not a seat (inside ruling (a))
+
+Before: the HELD fallback ran only where the PROPOSER could not reach a recipient. A seat that could not read that
+recipient's pay request refused the plan - on a 2-of-2, or short of the threshold, nothing settled and the walker's lock
+would expire back. Measured (door-walkaway-held test 3 before the fix): 297 invoices asked of the set, no settlement.
+Now: the seat names the recipient it cannot reach ("the donation recipient does not answer here: <lnurl>"); the proposer
+plans each one named HELD and offers the plan again until the seats agree or name no new one. And an unfunded re-send is
+offered to the seats again before it is signed (winnings-send offerResend): a seat that refused a held share's retry while
+it could not reach the set takes the same attempt once it can.
+Measured: fixture - the set down at the non-proposing seat only: ACCEPTED, the walker's lock claimed, 16335 + 8165 held,
+no sent output; the seat reaches the set -> both attempt 1 PAID. door-walkaway-held 3/3, winnings-sent 4/4,
+late-settlement-resend 4/4. Private regtest (patched fork, 2 of 2, DONATION_DOWN=1 RESTART=1): both shares HELD, every
+signer node restarted on its own store (and port) while held - still HELD; the recipients answer -> attempt 1 PAID at
+both, alice SETTLED 158392 and 77195, held contracts spent; walker's lock gone, FAILED lock held, /forfeit 409.
+Full suite 280 files, 1726 passing; reds the accepted six, plus rerun (a different test each loaded run - 1, 11, 6;
+18/18 alone) and series-doors (a 180 s timeout in the suite; 1/1 alone twice, 14 s).
