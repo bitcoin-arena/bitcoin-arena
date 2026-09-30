@@ -51452,3 +51452,6 @@ Then no series round drew a committee - two refusals, measured against the testn
     each). For series 3cfbe516 alone the census is read from 154152, as published (old-series.js) - an extension of the
     pick-B exception to the census root; the committee is the same seven keys either way.
 roster, committee-seed, census-derive, series-doors, old-series, series-round 48/48; bundle-fresh, client-hash green.
+Then GET /rounds still passed 90 s: each round's chain check (the beacon's block, its proof of work, the series
+publication - ~220 ms) was kept per round past a 64-entry cache. Now kept per series, randomness and view extent; the
+per-round seed is still derived per round. roster, committee-seed, census-derive, series-doors, beacon-seed 45/45.
