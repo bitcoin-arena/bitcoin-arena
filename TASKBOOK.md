@@ -51388,3 +51388,25 @@ settlement lands under load; 9/9 alone, twice) and rerun (18/18 alone) - no red 
 LIVE (testnet4, the runner restarted once on runner-code 5cb0a0a1 at the marker in paid.log): round 5eaa0966 published in
 8e2d92ff at 2 sat/vB; block 154500 came without it -> fee raised to 4 sat/vB (5113a1a5); published at 154500; no beacon
 named while it was unconfirmed; the beacon block 154506, above it, waited to 6 deep. deposit-new armed for 5eaa0966 only.
+
+## One node key, one seat (Daniel 2026-09-30, pick (a), after testnet4 round 5eaa0966)
+
+Before (testnet4, pin 061193a1): round 5eaa0966's census still held extra bond rows under some node keys; the per-row draw
+seated node 7 (fefa1945) and node 4 (a63a3cd4) twice in the game pool and node 2 (f4bfe620) twice in settlement; the page's
+join was refused before any invoice: "0 of the 5 signer nodes needed to open this stake took the handout ... two signer
+nodes of that handout are one key". 5eaa0966 left as it is; no deposit into it.
+Now (protocol/src/sortition.js selectCommittee): a node key is drawn at most once - all its bonds for the role one entry,
+their sats summed into its weight, its ticket drawn on its lowest outpoint; an outpoint excluded for a re-draw excludes its
+key; fewer keys than seats gives each key once (the census minimum still refuses a census too small - roster.test pins the
+smaller honest committee). GET /rounds names what a committee was drawn from (eligibleEntries, eligibleKeys).
+MEASURED: sortition-one-key.test 3/3 - a census of 13 entries under 7 keys (keys 2, 4, 7 with two extra rows), 1000
+draws: the per-row draw repeated a key in 984, one key one seat in 0; three rows of 100000 draw as one entry of 300000.
+Private regtest (attach-regtest.mjs EXTRA_BONDS=1: seven node processes, extra bond rows under nodes 2, 4, 7): census 13
+entries, 7 keys; three rounds opened by the attached runner, each game 7/7 distinct and settlement 7/7 distinct; the stake
+handout dealt to that committee (needed 5) taken by all seven (201 x7); claim key at all seven for each round.
+Full suite 281 files, 1727 passing; reds the accepted six, plus reconstruct (180 s cap under load; 5/5 alone, 181 s at load
+13 - it ran 162-167 s before this change and touches no draw: one bond per node key).
+Also: publication-wait - a fee raise the node refuses (testnet4, 99ce7662: 4 -> 8 sat/vB, "must be at least" the old fee +
+increment) is doubled again at once up to the cap; publication-regtest re-run: 2 -> 4 -> 8, confirmed 143, beacon 146; dead
+cases dead. The one-shot opener that published 99ce7662 (PAID-BY-1400) was stopped before any beacon (OLD-BEACON-0850:
+do not publish another round); 99ce7662 is never posted.
