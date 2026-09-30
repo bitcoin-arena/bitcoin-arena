@@ -51556,3 +51556,11 @@ BLWP_PAID_STAKE_MSAT=100000, so its rounds are 100 sat from tomorrow until serie
 now wins only when its row is JOINABLE (open and assigned; a node assigns a series round 2 h before its start) - an open,
 unassigned 8172fffd row on 2026-10-01 would otherwise have hidden the runner's joinable round. lobby 12/12; live page
 (deploy a088b366) 15:5xZ: FREE and PAID 10000 sats, joinable. Series k=2, k=3: series-waiter posts them when postable.
+RUNNER-LEAD MEASURED (2026-09-30): the paying runner restarted 16:00:46Z on 6af61673 (keepOpen leadMs 4 h; a start keeps the
+link's gateway=), stake left at 10000 sat. Its first round 1ea2d054 was published at once (b56c7517, fee raised 2->4 sat/vB,
+confirmed 154575), its beacon 6 deep at 154589; "paid: up" 17:46:30Z stakeMsat 10000000. paid/lobby-url.txt rewritten
+17:46:30Z and it still names gateway=https://cleaner-cindy-duty-biggest.trycloudflare.com/. On https://btc-logistics-core
+.pages.dev 17:5xZ the testnet listing carries 3798dcb3 (10000 sat, joinable until 19:03:39Z) and 1ea2d054 (10000 sat,
+joinable until 23:45:40Z), every node answering: the rounds overlap, no gap after 19:03. With the 4 h lead the next one-off
+is published at about 19:45Z, before 1ea2d054's close. The 00:00Z timer (runner-100-switch) still restarts it at 100 sat.
+The runner now logs to its journal (journalctl --user -u blwp-tn4-paid), not paid.log.
