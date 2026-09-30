@@ -51636,3 +51636,7 @@ from the withdraw's result (withdrawableMsat < chosen). Measured (Beelink Chrome
 empty tab wallet's sendable amount stubbed): A) 5000 sat sendable, Custom 20000 -> the player line, red; B) sendable
 stubbed high so the real withdraw ran on the empty wallet and answered 0 -> the same line. msat: no; library sentence: no.
 Page tests 72/72. Committed, not deployed (the live page stays b987d404).
+DEPLOYED dcff7485 (Daniel 2026-09-30): https://btc-logistics-core.pages.dev (deploy de58de42), page and client byte-equal
+to dcff7485 on the unique URL and the alias. Measured on the alias (Beelink Chrome, stubbed sendable, nothing spent): a
+Custom withdrawal over the sendable amount reads only "Not enough to withdraw that amount after fees. Choose a smaller
+amount." in red, both at the press and from the wallet's answer; no msat, no library sentence.
