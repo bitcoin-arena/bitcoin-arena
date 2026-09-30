@@ -51383,3 +51383,8 @@ publication kept out of blocks until the step lets it in):
 round-2of2 users: assignment, claim-key-own, lobby 6/6; launcher-guardian, node-start 5/5.
 The runner runs from its own checkout of this commit (/home/daniel/blwp-testnet4/runner-code); the seven units stay on
 the pin 061193a1 - nothing the runner does (contract encoding, series, round-2of2 besides this wait) differs between them.
+Full suite at 5cb0a0a1: 280 files, 1727 passing; reds the accepted six, plus lock-settlement 5 (reads the winner before the
+settlement lands under load; 9/9 alone, twice) and rerun (18/18 alone) - no red from the runner change.
+LIVE (testnet4, the runner restarted once on runner-code 5cb0a0a1 at the marker in paid.log): round 5eaa0966 published in
+8e2d92ff at 2 sat/vB; block 154500 came without it -> fee raised to 4 sat/vB (5113a1a5); published at 154500; no beacon
+named while it was unconfirmed; the beacon block 154506, above it, waited to 6 deep. deposit-new armed for 5eaa0966 only.
