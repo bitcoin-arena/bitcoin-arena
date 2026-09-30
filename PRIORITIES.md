@@ -20,6 +20,19 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-09-30 16:07 (Daniel)
+
+HARD: Deploy everything so Daniel can test on testnet himself by 19:00 Europe/Berlin.
+The page he opens always shows both: a free round and a live paid testnet round of series
+3cfbe516. The nodes serve both. Do not hide one to show the other. Do not point the testnet
+row at Daily /blwp-a.
+
+The live page is still build 0.0.2313. That build does not show the testnet rounds. Deploy
+the Core UI and the nodes that serve it, same commit, before 19:00. Put the URL in the reply.
+
+Do not spend a bond. Do not refound. Do not publish a new series. Gateway B only.
+Do not move the Daily pin for a Daily-only deploy. The page he tests is the testnet lobby.
+
 # NOW  -  2026-09-30 15:23 (Daniel)
 
 HARD: The user-facing money path is instant, like a Lightning payment. Measured today
