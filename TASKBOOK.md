@@ -51410,3 +51410,21 @@ Also: publication-wait - a fee raise the node refuses (testnet4, 99ce7662: 4 -> 
 increment) is doubled again at once up to the cap; publication-regtest re-run: 2 -> 4 -> 8, confirmed 143, beacon 146; dead
 cases dead. The one-shot opener that published 99ce7662 (PAID-BY-1400) was stopped before any beacon (OLD-BEACON-0850:
 do not publish another round); 99ce7662 is never posted.
+
+## Pick B: series 3cfbe516 of testnet4's old id, taken (Daniel 2026-09-30 08:55, OLD-BEACON-0850)
+
+Why the nodes listed only 5eaa0966: series 3cfbe516 (publication 3029fc6f in 154237, beacon 154268, committee_time
+2026-09-28 19:52:05Z, start 2026-09-29 19:52:05Z, 960 rounds of 90 s, 10000 sat, FEDERATION, the seven unit keys, core
+d15c39bb and config bbae68dc - both HEAD's) names testnet4's network id before 04c5ecec made genesis_series_start a genesis
+parameter: 26b9162e..., where every node now is bf876cb1... . No unit held it; loaded, the 72 h lead a network nobody knows
+gets and the 2026-10-01 grid refused it and the node exited.
+Now (protocol/src/old-series.js, one named exception): networkOf and the donation authority take the old id as testnet4;
+the series clock is testnet4's (24 h lead) for it; the grid is waived for series 3cfbe516 alone; the node holds testnet4's
+old signed donation set (7b128a1b, as at 04c5ecec^); POST /round refuses any round naming the old id that is not a round of
+this series. Any other series under the old id is still refused (off the grid).
+MEASURED: old-series.test 2/2 (its id, 24 h lead taken, testnet4 genesis and keys, its donation set; another series of the
+old id refused); protocol contract-network, donation-authority, donation, genesis, series-round, test-donation-sets,
+protocol 88/88; node series-doors, donation-set-door 5/5, series-ahead, donation-rotation 7/7; bundle-fresh, client-hash.
+A node process (main.js, BLWP_SERIES_FILE = the template, BLWP_DONATION_NETWORK=testnet4, no chain): starts, "3cfbe516:
+510 round(s) written" (indices 450-959), /rounds lists them paying 10000 sat, entry open; the template posted as a plain
+round is refused 409 "only series 3cfbe516 is taken under it". Full suite to follow the pin move (deadline 12:00Z).
