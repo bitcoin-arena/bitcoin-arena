@@ -51640,3 +51640,18 @@ DEPLOYED dcff7485 (Daniel 2026-09-30): https://btc-logistics-core.pages.dev (dep
 to dcff7485 on the unique URL and the alias. Measured on the alias (Beelink Chrome, stubbed sendable, nothing spent): a
 Custom withdrawal over the sendable amount reads only "Not enough to withdraw that amount after fees. Choose a smaller
 amount." in red, both at the press and from the wallet's answer; no msat, no library sentence.
+DEPOSIT-RELOAD-PAID (Daniel 2026-09-30 go: one real deposit, Custom 100 sat from Settings, paid from LND-a through
+gateway B, one reload while it is being claimed; the tab's player wallet, not a round; 94a56ba9 untouched).
+Holes closed first: (a) a deposit paid just before a reload had no history row - every invoice is now kept under
+blwp.deposit.pending.<fed> until it ends, and the reopened wallet (warmPlayerWallet -> resumeDeposits) waits on each kept
+operation and writes its row once (by invoice hash); (b) the Confirmed/Pending boxes read BLWP_WALLET_BALANCE and nothing
+ever set it ("–" for every player) - the warmed wallet now sets it (balanceMsat) at open, every 10 s, after a claim and
+after a withdrawal.
+Measured (Beelink Chrome, 18994 = this commit's page, 430x900): before 0 sat, no rows. Custom "100" typed -> lntb1u
+invoice, "Waiting for your Lightning payment of 100 sat via cleaner-cindy-...". lncli payinvoice started 261.9 s,
+SUCCEEDED 264.3 s; page status at 262.4 s still "Waiting ..."; reload issued then. After the reload: address "" (lobby),
+no modal; same tab phrase (77522e03); Confirmed 99 sat in Settings and in the lobby; history one row "Deposit +100 sat";
+pending list holds only the unpaid 10000 sat "1 round" invoice (ends at its expiry). 100 sat paid credits 99.x sat: the
+federation's own fee on the claim (the gateway fees are 0).
+Not seen live: the green "Payment received!" line and the modal closing 2.5 s later (this one deposit was reloaded
+before its claim), and a join deposit's stake lock after it (Settings has no round). Tests: page set 73/73, client-hash 3/3.
