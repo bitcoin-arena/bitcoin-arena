@@ -51280,3 +51280,18 @@ MEASURED:
   heat. Not touched here. Three reds of the first run were this change's own and are fixed: bundle-fresh (the client
   bundle carries lock-settlement.js - dist and the template copy rebuilt), late-settlement 5 (finalityOf stays the
   constructor's last option), this file's test 1 (the donation outputs sort by payment hash - matched by LNURL).
+
+## The heat gauge's BTC part is the core's 25 BTC again (Daniel 2026-09-30: "Gauge back to 25 BTC")
+
+73105484 (CARGO-BTC-2148) made CargoBay.Heat fill its BTC part at the truck's 20 BTC load limit; the core
+(core/src/rules/cargo.js BTC_AT_FULL) fills it at 25 BTC, so the gauge was not the game's heat and replay-heat 5 was
+red. Restored to BtcCarried / 25.0. The core is not moved; 20 BTC stays the truck's load limit only. A full truck does
+not fill the BTC part - accepted.
+
+Measured: replay-heat 5/5. Unity EditMode 5/5; PlayMode 73: DamageIsFeltInTheDriving and CaptureTheDrivingHud fail
+as they did before the change (cargo-pm and spec-pm runs of 2026-09-29), IdlingEarnsNothingEvenOnTheSeam failed under
+the suite's load and passed alone (ScoreTests + CargoTests 37 of 38, 0 failed). WebGL 0.0.2313 Build Finished, Result:
+Success; deployed to btc-logistics-core (288ae3a0) on the series pair; the live page lists the free round and both
+nodes take the join. Full suite 279 files, 1721 passing; reds the accepted six, plus rerun 1 (under the build's load;
+18/18 alone) and client-hash (74abeed7 rebuilt the client bundle and did not list its hash - known-good-clients.json
+regenerated, 3/3).
