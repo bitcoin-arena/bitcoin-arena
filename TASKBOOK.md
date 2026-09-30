@@ -51577,3 +51577,24 @@ money: https://btc-logistics-core.pages.dev (deploy 3543a300) Settings reads "Fe
 d69d036efe8a34bcfc20cb31b42bb75e" (no rows there - that origin holds no lock); the served testnet4 page, in the tab that
 holds today's saved locks, shows three stake rows (14170d09 -9,800 sat, entered; b15e67f6 x2, not entered), and a real
 mouse click on 14170d09 opened a new window at guardian-1/replay?round=14170d09...&entry=26a81e36..., which answers 200.
+GROSS-INVOICE-2053 (Daniel 2026-09-30 20:53): the deposit invoice is the gross round amount, chosen in round tabs.
+page-lock.js: depositChoices(stake) - "1 round", "2 rounds", "5 rounds", "10 rounds" at n x this round's stake, then
+"Custom"; depositOffer - a new gross invoice at every switch through the funded gateway, claimed by whichever is paid,
+closable; fundPlayerWallet's askDeposit shows it when the wallet cannot fund the round (DEPOSIT_INSUFFICIENT, the exact
+words), looks again once one is paid; the estimate path invoices the gross stake; settingsDepositOffer for Settings;
+withdrawPlayerWallet/withdrawCollected take a chosen amount and pay only an invoice of exactly it. index.html: the modal
+(close, message, tabs, custom field, amount, QR, invoice), centred and scrollable; Settings Deposit opens it over Settings,
+Settings Withdraw shows the tabs and takes a pasted invoice of that amount.
+Tests: page-lock 37/37 (tabs 100/200/500/1000 and 10000..100000; gross invoices per switch, the paid one funds, a close
+refuses; a withdrawal pays only an invoice of the chosen amount; the no-timer guard widened to the Settings Withdraw press),
+join 12/12, lobby, deposit-gateway, qr, bundle-fresh, client-hash; client suite otherwise only the known reds (bridge,
+discovery, objective-markers). Live on the served testnet4 page, nothing paid: PLAY on "PAID 10000 sats" opened the modal
+with "insufficient funds to play this round. Do you want to do a lightning deposit?", five tabs, a close and a QR; "1 round"
+invoiced lntb100u (10000 sat), "2 rounds" a new lntb200u (20000 sat); the modal fits 437 px (top 13, bottom 424); Close
+ended the join refused ("the deposit was closed: nothing was paid"). Settings: Deposit - the same modal over Settings,
+10000 sat for 1 round; Withdraw - the tabs, "Withdraw 10000 sat - paste an invoice for exactly that amount". Core page
+deploy 7ba598b3. NOTE, measured by the fee rules: a gross 100 sat invoice credits 97.7 sat after gateway B's receive fee
+(2 sat + 3000 ppm) and one 100 sat round needs 98.3 sat (net 96 + lock allowance) - "1 round" at 100 sat cannot fund its
+round and the page asks again; 2 rounds (200 sat) cover. At 10000 sat one round is covered (9968 sat credited).
+Also asked 20:5xZ: gateway B holds 21019 sat e-cash in 337ae01a, 669971 sat lightning outbound, 1367760 sat inbound,
+49886 sat on-chain; gateway A 0 e-cash.
