@@ -51564,3 +51564,16 @@ confirmed 154575), its beacon 6 deep at 154589; "paid: up" 17:46:30Z stakeMsat 1
 joinable until 23:45:40Z), every node answering: the rounds overlap, no gap after 19:03. With the 4 h lead the next one-off
 is published at about 19:45Z, before 1ea2d054's close. The 00:00Z timer (runner-100-switch) still restarts it at 100 sat.
 The runner now logs to its journal (journalctl --user -u blwp-tn4-paid), not paid.log.
+SETTINGS HISTORY (Daniel 2026-09-30 16:15; the accepted sequence): an append-only ledger per federation in the tab's
+vault, blwp.ledger.<federation id>, written from page-lock.js - a deposit row once fundPlayerWallet's receive is claimed
+(amount, credited, invoice hash), a stake row when saveLock keeps the lock (round, player, amount; markLockCommitted adds
+the entry), a withdrawal row when withdrawPlayerWallet or collectAndWithdraw succeeds; stakes kept by saveLock before it
+existed are read in once. Settings shows, under the balance line, "Federation <LockClient.federationIdOf(invite)>" and the
+rows newest first (deposit +, stake -, withdrawal -); a stake row with an entry opens that round's replay in a new window
+(/replay/nodes?round= -> replayLinkFor), the window opened on the click itself - opened after the fetch, the browser
+blocked it (measured). Tests: page-lock 34/34 (deposit -> stake -> withdrawal: three rows, the stake row naming its round
+and entry, a replay link built; saved stakes read once), bundle-fresh 2/2, client-hash 3/3, lobby 12/12. Live, no new
+money: https://btc-logistics-core.pages.dev (deploy 3543a300) Settings reads "Federation 337ae01ad1e9bb35b5628faad3457e62
+d69d036efe8a34bcfc20cb31b42bb75e" (no rows there - that origin holds no lock); the served testnet4 page, in the tab that
+holds today's saved locks, shows three stake rows (14170d09 -9,800 sat, entered; b15e67f6 x2, not entered), and a real
+mouse click on 14170d09 opened a new window at guardian-1/replay?round=14170d09...&entry=26a81e36..., which answers 200.
