@@ -20,6 +20,18 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-09-30 14:11 (Daniel)
+
+HARD: Both tests done by 17:00 Europe/Berlin. Series 3cfbe516, beacon 154268, gateway B.
+Do not publish a new series. Do not deposit into 5eaa0966. Do not spend a bond. Do not refound.
+Do not move the Daily pin. Do not wait idle.
+
+1. One player, a stake, then a refund that actually arrives. Not a note that it refunds at expiry.
+   Show the sats back.
+2. Then two players. One wins. That winner is paid. Show the winning sats arrived.
+
+fbd8294e is not this test. That run was FAILED and the stake only refunds at expiry.
+
 # NOW  -  2026-09-30 09:39 (Daniel)
 
 HARD: After the paid testnet4 round is finished and tested, fix these two. Not before.
