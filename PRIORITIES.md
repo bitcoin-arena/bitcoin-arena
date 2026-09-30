@@ -20,6 +20,13 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-09-30 21:07 (Daniel)
+
+HARD: Reloading the deposit page must not put a status box on the QR. The box that
+says "A ok · B ok", "play · not started", "round named · not joined" does not belong
+over the deposit invoice. On a reload of the deposit page the QR and the pay line
+stay clear. No debug strip on top of them.
+
 # NOW  -  2026-09-30 20:53 (Daniel)
 
 HARD: The deposit invoice is always the gross round amount. A 10000 sat round invoices
