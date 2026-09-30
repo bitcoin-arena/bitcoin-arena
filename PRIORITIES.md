@@ -35,6 +35,11 @@ Do today and tomorrow, none of it waiting on the peg-in:
    settlement whose round_id is not that hash. genesis_series_start is a genesis parameter.
    Section 15 walk-away at the door is FORFEIT, score 0, never ENTRY_VOID, never a refund.
    Do not add the 22A minimum-service field. Adding it would move every round id.
+   DONE 2026-09-30 (abf53207, accepted by Daniel): door FORFEIT score 0; walker lock claimed 75/25 (sitting signer nodes /
+   donation set); unaddressed qualifiers the same claim; a FAILED player keeps expiry; a donation recipient that does not
+   answer is held under the committee key and retried to that same recipient; series round id = H(series id, index), a
+   bad id refused; no 22A field; patched fork only. Gaps outside this close: testnet4 pin stays 061193a1; series stays
+   regtest-only.
 2. Seats agree before a winner payout as a threshold, not over HTTP. Prove it on regtest.
 3. Fee-lock path measured on regtest. Do not spend it on testnet4.
 4. M4, in the repo only: a load test, and the bond and arbitration transaction built.
