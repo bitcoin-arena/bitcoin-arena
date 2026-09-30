@@ -20,6 +20,12 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-09-30 16:31 (Daniel)
+
+HARD: The posted rounds are 10000 sats. That is wrong. Post a new 72-hour series for tomorrow,
+100 sats a round. This series takes priority over the old posted rounds. The lobby shows these
+100 sat rounds, not the 10000 sat ones. Do not spend a bond. Do not refound.
+
 # NOW  -  2026-09-30 16:15 (Daniel)
 
 HARD: After the 19:00 deploy, not before. Do not stop that deploy for this.
