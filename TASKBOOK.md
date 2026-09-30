@@ -51629,3 +51629,10 @@ PAY-STATUS 2 (Daniel 2026-09-30 22:04-22:1x, phone screenshot: "you cannot type 
 - Withdraw at 0: every tab (Custom too), the invoice field and Withdraw are off and greyed; "Your wallet is empty, so
   there is nothing to withdraw."
 Tests: page set 72/72 (key guard test new).
+WITHDRAW-OVER (Daniel 2026-09-30): a Custom withdrawal over what the wallet can send reads, in the red status line,
+"Not enough to withdraw that amount after fees. Choose a smaller amount." - no msat, never the library's "the wallet can
+send X msat after the fees, less than the Y msat asked". Checked at the press against the wallet's own answer, and mapped
+from the withdraw's result (withdrawableMsat < chosen). Measured (Beelink Chrome, 18994, 430x900, nothing spent, the
+empty tab wallet's sendable amount stubbed): A) 5000 sat sendable, Custom 20000 -> the player line, red; B) sendable
+stubbed high so the real withdraw ran on the empty wallet and answered 0 -> the same line. msat: no; library sentence: no.
+Page tests 72/72. Committed, not deployed (the live page stays b987d404).
