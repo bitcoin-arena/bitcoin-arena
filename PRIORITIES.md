@@ -20,6 +20,15 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-09-30 08:18 (Daniel)
+
+HARD: A paid testnet4 round by 14:00 Europe/Berlin. The peg-in is already in gateway B.
+Finish the one-key-one-seat suite, commit, push, move the testnet4 pin onto that commit.
+Do not deposit into 5eaa0966. Leave it. The runner opens the next paying round. One deposit
+into that new round only, through gateway B. Do not spend a bond. Do not post a bond.
+Do not refound. Do not stop the paying runner. Do not move the Daily pin.
+The beacon must be 6 deep before the round is named. A reorg resets that count. Do not wait idle.
+
 # NOW  -  2026-09-29 17:33 (Daniel)
 
 HARD: Until peg-in 425279e9 has 100 confirmations and gateway B is credited, do everything
