@@ -20,6 +20,18 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-09-30 09:39 (Daniel)
+
+HARD: After the paid testnet4 round is finished and tested, fix these two. Not before.
+Do not stop the 14:00 deposit for them.
+
+1. The lobby shows a round at 1:05. Join puts the player in the next round, so they wait
+   more than a minute. Join must enter the round the row shows, the one that starts in 1:05,
+   not the one after it.
+2. After the countdown the lobby comes back and the player must join by hand. Wrong.
+   The next round starts by itself. The player is already joined. They see the mempool
+   loading screen, loading into the truck. No lobby. No second tap.
+
 # NOW  -  2026-09-30 08:55 (Daniel)
 
 HARD: Pick B. The current code accepts series 3cfbe516d93ddf4b from the old network id
