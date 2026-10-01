@@ -20,6 +20,14 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-10-01 09:31 (Daniel)
+
+HARD: The objection window is exactly 10 minutes. Not counted in blocks. Not 10 to 30.
+
+The winnings show as pending in the balances immediately after the result. If the
+payment becomes invalid, the pending line disappears. Do not wait for the window to
+close before the pending line appears.
+
 # FINISHED  -  2026-10-01 08:14 (Daniel)
 
 STATUS: finished. Lock client rebuilt (notes from 1 msat), live at 321e025f (deploy 85c3abe0): a 100 sat
