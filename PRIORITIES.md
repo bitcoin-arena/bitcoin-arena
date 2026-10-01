@@ -38,13 +38,15 @@ start to the next free round's start: 90 seconds.
 HARD (Daniel 2026-10-01 15:44, updated 15:45): After the free-round clock, not before.
 Every node serves /Dashboard. An interactive page with charts.
 
-A node earns the 2% node fee of each round it sits. 1% is the game/verify pool,
-1% the settlement pool, paid to the sitting signer nodes of that round. The donation
-is not a node fee. Gateway fees and Lightning routing are costs, not that fee.
+A node earns from the 2% node fee. The fee splits three ways, equal: 2/3 % to the
+game/verify pool, 2/3 % to the settlement pool, both to the sitting seats, and 2/3 %
+to the guardian pool, the seated guardians of the federation the round names. That
+is one third of the fee to the custody operators. The donation is not a node fee.
+Gateway fees and Lightning routing are costs, not that fee.
 
 Each category has its own earnings, and totals for the day, the month, and the year.
-Categories: game/verify fee, settlement fee, other earnings if any, Lightning costs,
-gateway costs, and absolute profit. Also: since when the node has been active, which
+Categories: game/verify fee, settlement fee, guardian/custody fee, other earnings if
+any, Lightning costs, gateway costs, and absolute profit. Also: since when the node has been active, which
 rounds it checked and what it earned on each, which settlements it made, and which
 federations it is in.
 
