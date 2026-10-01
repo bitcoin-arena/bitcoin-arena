@@ -20,6 +20,18 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-10-01 16:51 (Daniel)
+
+HARD: This is an error. Live rounds run up to 180 s, because block ticks are 10800.
+82 s is only in the docs. That is wrong.
+
+Prepare new rounds, free and paid, at 82 s run inside 90 s gross, within 24 hours.
+Change the core. It is a hard fork. Do everything that is needed.
+
+The round length is part of the contract, not a fixed constant. It is part of the
+round announcement. A node refuses a round whose announced length is not the one
+it runs.
+
 # NOW  -  2026-10-01 15:25 (Daniel)
 
 HARD: The nodes always serve both at once. Testnet4 rounds and free rounds.
