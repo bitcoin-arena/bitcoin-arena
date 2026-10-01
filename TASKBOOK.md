@@ -51802,3 +51802,14 @@ page copy /mnt/bitcoin/blwp-2of2-s/page now this build). Measured: build.txt 0.0
 index carries the tab lock (blwp.phrase. x8); daily.json has testnet; loader webgl-0917. Beelink Chrome on the alias:
 title "build 0.0.2413"; tab A phrase 1405e2d3 (102 sat); a copy of its session reloaded moved to 99b85f40; A kept
 1405e2d3 and 102 sat. Daily pin, bonds, federation and series untouched.
+RESTORE ON 0.0.2413 (letter after DEPLOY-DAS-0917): the copied-session run was not a Chrome restore (a script wrote tab A's
+session storage into a new tab and reloaded). Measured now, live alias, Beelink Chrome, one profile:
+- tab D91A9910 on 1405e2d3 (102 sat); SIGKILL + restart with --restore-last-session: Chrome restored no tab; a fresh tab
+  took 1405e2d3 (102 sat), the only client.
+- that tab (3C63C4A2, 1405e2d3) - clean browser stop, restart --restore-last-session, a fresh tab opened at once: RESTORED
+  13ABAA72 came back on 1405e2d3 with its own tab id 69a87656... (the same tab, load type back_forward), 102 sat; FRESH
+  4C2049BB took 67385177 (0 sat). navigator.locks.query(): blwp.phrase.1405e2d3 held by one client only, 67385177 by the
+  other. No second wallet client on 1405e2d3.
+- not producible here: a restored tab BESIDE a still-open tab on the same phrase (Reopen-closed-tab / Ctrl+Shift+T has no
+  DevTools command in headless Chrome); it reaches the page the same way as the copied session - the phrase in session
+  storage at load - and the lock moves it off.
