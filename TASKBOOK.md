@@ -51813,3 +51813,8 @@ session storage into a new tab and reloaded). Measured now, live alias, Beelink 
 - not producible here: a restored tab BESIDE a still-open tab on the same phrase (Reopen-closed-tab / Ctrl+Shift+T has no
   DevTools command in headless Chrome); it reaches the page the same way as the copied session - the phrase in session
   storage at load - and the lock moves it off.
+REOPEN CLOSED TAB ON 0.0.2413 (closes the last restore case): Chrome's own Reopen-closed-tab, chrome.sessions.restore()
+from a 2-line extension (permission "sessions"), live alias, Beelink Chrome. Tab R on 1405e2d3 (102 sat) closed; a fresh
+tab A took 1405e2d3 (102 sat); R reopened by Chrome with its saved session, found the phrase's lock held by A and reloaded
+onto its own phrase 67385177 (0 sat); A kept 1405e2d3 and 102 sat; navigator.locks: 1405e2d3 one holder (A), 67385177 one
+holder (the reopened tab). No second wallet client.
