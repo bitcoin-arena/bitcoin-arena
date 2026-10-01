@@ -51727,3 +51727,15 @@ sized its rounds without the donation (stake lock 98000 -> 98304 + fee 2048 + ma
 N ROUNDS = N x 1 ROUND (Daniel 2026-10-01 08:00 phone: "2 rounds 198.656" read as wrong beside "1 round 100.352"): the
 reserve counted once made N rounds less than N x 1 round. Now every round is funded as the first - 100.352, 200.704,
 501.76, 1003.52 sat for a 100 sat round.
+101 SAT PER ROUND (Daniel 2026-10-01: "1 with note, donation is paid by the player as well"; "the round costs exactly 100
+sats and we deposit a bit more"; "which amounts are safe so we show no odd amounts" -> "yes"):
+- A round costs its 100 sat: stake lock 96 + node fee 2 + donation 2 (2%). The donation is now paid from the player wallet
+  when no outside wallet is connected (Client.payDonation payWith -> the wallet's own send of each recipient's invoice);
+  a donation history row.
+- Each part is paid in whole 0.512 sat notes (mintv2 client_denominations 9..41), so a round takes 100.352 sat (one
+  recipient) or 100.864 (two: 1334/666). The 2.006 sat reserve is dropped where the federation's fee rule is 0/0.
+- Tabs in whole sats: the smallest P with N x P credited (whole notes) >= N rounds for every tab: 101 -> 101, 202, 505,
+  1010 sat. The rest: the smallest whole sat that covers the shortfall, floor 5 sat. Note under the amount: "A round
+  costs 100 sat. You deposit 101 sat per round because ...".
+- The federation itself signs notes from 1 msat (consensus_denominations 0..41); only the client limits to 512 msat - a
+  rebuilt lock client (no Rust toolchain here) would make 1 sat = 1 sat with no new federation.
