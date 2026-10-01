@@ -51764,3 +51764,9 @@ OPEN; balance 115 sat). gw-a.log 06:32:22: the wallet chose gateway A (LND-a, th
 invoice for an incoming federation payment: "IncomingPayment(No corresponding decryption contract available)". A
 withdrawal to an invoice issued by a gateway's own node cannot be paid; our only nodes, LND-a and LND-b, are the two
 gateway nodes. A player's own wallet is another node, routed normally. Still open: one withdrawal to a non-gateway wallet.
+WITHDRAW GATEWAY (Daniel 2026-10-01 08:34 phone: 99 sat refunded). His wallet's invoices are made on LND-a (LND-a's own
+invoice list: 99 sat at 06:28 and 06:34Z). The stock pick (select_gateway) takes the gateway registered for the payee's
+node - gateway A - which treats the invoice as a federation receive: "IncomingPayment(No corresponding decryption contract
+available)", cancelled, refunded. An invoice can be sent only once (operation id from the invoice). Lock client withdraw
+now takes a preferred gateway and never the one whose Lightning node is the payee (routing_info lightning_public_key);
+the page prefers the funded gateway (B) for withdrawals and the donation.
