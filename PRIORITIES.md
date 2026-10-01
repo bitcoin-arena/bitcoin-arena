@@ -38,10 +38,10 @@ moment a publication confirms.
 2. Then /Dashboard on every node. Charts. Categories: game/verify, settlement,
    guardian/custody, Lightning costs, gateway costs, absolute profit. Totals for
    the day, the month, and the year.
-3. Then the rest that is still open and not marked FINISHED: transaction history
-   under the balances, key persisted in localStorage with restore, one real refund,
-   then two players and a paid winner, join the round the lobby shows, and the next
-   round starts by itself after the countdown.
+3. Then the only older item still open: one real refund, then two players and a
+   paid winner. Show the sats. Checked 2026-10-01 21:21 against commits:
+   history is 9bf32e3a, phrase persist is 147a2dba, join-the-shown-row and the
+   next round starting itself are 4aa2d3e4 and 73105484. Do not redo those.
 4. Only after that: the 82/90 hard fork, and both rows at once.
 
 # NOW  -  2026-10-01 16:51 (Daniel)
