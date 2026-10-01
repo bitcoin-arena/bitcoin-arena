@@ -51908,3 +51908,33 @@ a free round is not posted on the chain in advance and is still multiplayer):
 - Two windows, one free round (live page, series pair): under load 33 (the full suite and two Unity tabs) both pages' chain
   providers timed out at 10 s - "no proven endpoint" - one joined, one refused; the providers answer in 0.3 s. To be
   measured again unloaded.
+ITEM 1, THE LIVE FINAL GATE (Daniel 2026-10-01 (a), then FREE-MP-1531: a free round is not posted on the chain): free round
+5590a88f42ca322fb55da35b759ebaf90d76a817f74f10b5822cfee7530ec32f on the 7 testnet4 nodes (no publication - roster.js now
+takes a free round without one; BLWP_FUND_FREE_ROUNDS set for it, removed after), one walk-away entry 8e6278ae (FORFEIT 0,
+agreed 7 of 7). Start 15:15:00Z, end 15:18:29.949Z, window closed 15:28:29.949Z, final_after 15:28:34.949Z. Measured
+15:31Z off each seat's store: every seat holds all 7 FINAL signatures, signed 15:28:35.666Z .. 15:28:38.075Z (the first
+0.72 s after final_after), each received 37 .. 186 ms after it was signed (inside the 5 s tolerance), 0 refused as
+evidence; each seat logs "signed FINAL by 7 of 7 seats after the objection window closed at 2026-10-01T15:28:29.949Z";
+node 1's money watch "live=FINAL settle=final" at close + 607 s. The two on-chain publications of the withdrawn path:
+b77346fa (round 23df78b8) and dddb39d6 (round bdd041b6, dead), 676 sat; neither round opened.
+THE 82/90 HARD FORK (Daniel 2026-10-01: "Prepare new rounds with 82/90 seconds for free and paid in 24 hours, do everything
+that is needed. Change the core, it's basically a hard fork"; "The round length must be part of the contract / not a fixed
+constant. It must be part of the round announcement"; "There may be no gaps between 90 sec rounds"):
+- Before: every live round named blockTicks 10800 (180 s, the truck's BLOCK_TICKS); the node held a contract to the core's
+  constant; Unity's HUD clock was the generated constant; runs outlasted their 90 s slot (round end = start + 209.9 s).
+- Core (new hash 2069b4c2ab39...): init(seed, { runTicks }) - the round's run length beside the state, not in it; the run
+  ends MISSED at it; 1..10800, default 10800. A 10800 run is the old run hash for hash (round-ends.test, every 600th tick
+  and the last); 4920 ends MISSED at 4920. The old hash d15c39bb... stays installed as this core held to 10800
+  (cores.js TRUCK_BEFORE_FORK) - every round before the fork replays as before. Both hashes on the client's known-good list.
+- Node: a contract's blockTicks must fit its core (runLengthFits), the round's length rides with the core into every replay
+  and ghost (an 82 s round replays to its own 4920, one tick more refused - run-length.test); /rounds announces blockTicks
+  and runMs; a series on the new core must run at most 82 s of its 90 s slot (protocol seriesRunFits: 4921 ticks is the
+  longest, 4922 refused); a round of a series the node no longer holds is not announced.
+- Page/Unity: the plugin starts a joined run at its contract's blockTicks; BlockClock.RunTicks reads the running core's
+  (BlwpRunTicks), the generated constant only a default. EditMode 16/16 (BlockClockIsTheCores, RunEndsAtDelivered,
+  TimerReturnsToLobby); WebGL 0.0.2433 built.
+- The fork instant: 2026-10-03 00:00Z, series k=2's start on the testnet4 grid (the first grid slot 24 h out). Paid:
+  series k=2 re-made at 4920 on the new core (dry run: series 7f0f3ce5773af302, census 154668, publication a5b8a903, 477
+  sat) to replace e321c036 (10800, published 13:51Z, not started); series-waiter-82.sh posts k=3, 4, ... each day at 82 s.
+  Free: the opener names 4920 for rounds starting from the instant (BLWP_RUN82_FROM_MS), keeps 8 rounds ahead and resumes
+  its grid from the rounds the pair already holds, so a restart skips no slot.
