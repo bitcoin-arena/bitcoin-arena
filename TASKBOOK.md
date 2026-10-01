@@ -52002,3 +52002,16 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
   stands, 2026-10-02 has no paid round from 09:00Z.
 - 7f0f3ce5 (paid 82 s from 2026-10-03 00:00Z) needs its publication below the first block whose median passes 2026-10-02
   00:00Z: at 1201 s of median a block that is ~154722, ~2 h 20 min of wall clock from 21:50Z if the pace holds.
+
+## ANSWER-WAIT-2159 (Daniel 2026-10-01 23:59 local): the cut removed, 7f0f3ce5 confirmed without a mine
+- (b) not needed: series 7f0f3ce5's publication a4260564 confirmed at 154716 (a 358-transaction block, 21:57Z block time),
+  the first non-empty block since 154705. No block was mined here, no sat spent. Its beacon (first block whose median passes
+  2026-10-02 00:00Z) is not on the chain yet (tip 154724): blwp-beacon-82-watch logs until it is, and whether 154716 is
+  below it.
+- (a) series-both.txt: `cut=360` removed from 8172fffd (backup .pre-uncut). The dead tail's line (93d7cb2b count=600) is
+  removed too - kept, the nodes still announced its 4920-tick rounds beside 8172fffd's from 09:00Z, a row the lobby could
+  offer and no node would settle. The 7 nodes restarted one at a time, twice (each answered /identity in 3-4 s).
+- Measured after: nodes 1 and 7 list 1920 rounds - 2026-10-02 at 10800 ticks all day (08:58:30, 09:00:00 ... 23:58:30), no
+  4920 round on 10-02; 2026-10-03 00:00:00 at 4920 (7f0f3ce5). POST /round of 8172fffd's round 400 (10:00:00Z) -> 201 (a
+  409 "no chain view" first, 189 s after the restart, then 201 three times); POST /round of a tail round -> 409 "series
+  round refused: that round names series 93d7cb2b59ebd6f4, and this node holds no such series".
