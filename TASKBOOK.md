@@ -51974,3 +51974,31 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
   kept opening the held rounds on time (17:51:57, 17:53:27 played through the stop) - started 17:53:36; it reopened from
   the last held slot: 18:00:57, 18:02:27 ... 18:11:27, all 4920 ticks, 90 s apart, no slot skipped and none doubled; 10
   rounds held ahead by 17:56:31Z.
+
+## ORDER-2116 item 1, first finding: the free pair could not sign FINAL (2026-10-01 19:40-21:50Z, fixed live)
+- Measured: the live page showed no free row; both free nodes ran at >100 % CPU, /identity and /rounds timed out (30 s /
+  90 s); node a held FINAL by itself only (44 entries 1 of 2, 9 of 2 of 2). Causes, each measured, each fixed:
+  1. past the window the finality watch ran the whole close logic again on every tick for a run short only of its peer's
+     FINAL signature (loop held 60-80 s per pass, 43 rounds) - 38255bb1: it runs again only on a change (a run turned
+     FINAL, a window closing once, a transcript not posted);
+  2. a CPU profile then: 50 % re-verifying the same Schnorr signatures under resultFinality, 41 % re-deriving a census
+     per committee draw - 78ccd683: a verdict on fixed bytes is kept (verify-kept.js); 50749de9: the draw kept per round;
+  3. the pair's nodes run as their own units since 17:47Z and lost the peers the 2-of-2 launcher handed them; the census
+     adverts name tunnel names that moved, so neither node asked the other for its FINAL signature (node b served it in
+     6 ms) - 50749de9: main.js takes BLWP_PEERS, node-a.env/node-b.env name each other (backups *.pre-peers), and a run
+     still short asks the DKG peers too.
+- Measured after (pair on 50749de9, 21:50Z): every one of the 54 held entries signed FINAL 2 of 2 at both nodes; CPU 56 %
+  each; /identity 0.8 ms. Node tests green (window-10, close-retry, held-final-ask, five-of-seven, first-mark, outage,
+  publication-finality, late-settlement, lock-settlement, standing, verdict, rerun and the rest of the window set; first-mark
+  and standing red once under load 20, green alone). window-10 test 3 now reads its five slash proofs until filed.
+
+## The 82/90 publications on testnet4: the tail missed its beacon (2026-10-01 21:50Z)
+- testnet4 has mined only empty blocks since 154705: 154705..154715 each carry 1 transaction (the coinbase), 1201 s apart
+  in block time, block time ~1 h ahead of the wall clock - a min-difficulty miner. Our mempool and mempool.space hold both
+  publications, unconfirmed: tail 93d7cb2b (74819b1b..., 5596 sat, 35 sat/vB) and series 7f0f3ce5 (a4260564..., 477 sat).
+- The tail's beacon (first block whose median time passes 2026-10-01 21:00Z) is 154713 (median 21:17:02Z). Its
+  publication is not below it, so every tail round is refused (roster.js: "published at H, not below its beacon block"):
+  the tail is dead. The nodes' series file still cuts 8172fffd from index 360 - unchanged, waiting on a ruling: as it
+  stands, 2026-10-02 has no paid round from 09:00Z.
+- 7f0f3ce5 (paid 82 s from 2026-10-03 00:00Z) needs its publication below the first block whose median passes 2026-10-02
+  00:00Z: at 1201 s of median a block that is ~154722, ~2 h 20 min of wall clock from 21:50Z if the pace holds.
