@@ -51866,3 +51866,11 @@ Fixtures: one shared clock that skips (test/test-clock.js, roundClock), contract
 where a window must still be open. Not moved: regtest harness tools that name short windows (lock-client-regtest,
 gateway-probe, signer-node-lock-regtest, federation-round-3, w5b, walk-away, void-then-late, winnings-page-probe,
 last-mark-window-probe, page-lock.mjs collect) - refused now; each needs 600000n and a skip before its next run.
+PENDING OFF A SETTLED ROUND (Daniel 2026-10-01, same item): /standing gives no pending amount, the state left
+PROVISIONALLY_FINAL and a reason naming the settlement, when all four hold: the result PROVISIONALLY_FINAL; this seat's
+clock past end + 605 s; this seat's own lock_settlements row ACCEPTED; that settlement pays the entry's share (its player
+among lock_settlement_shares, or its stake lock among the claimed). Nothing signs a FINAL for it. Old VOID entries
+(refund by lock expiry) untouched. Measured (standing.test, twice): settled + ACCEPTED, no FINAL signature -> winner and
+loser no pending amount, PROVISIONALLY_FINAL; the same round SUBMITTING -> winner 196000, loser 0; no settlement record ->
+winner 196000; a live 7-seat round past end + 605 s, unsettled -> its row reported (0, payout). Page (pending-line.test):
+three nodes answering that settled shape -> pending 0 sat and no window line; a live 196000 majority -> 196.
