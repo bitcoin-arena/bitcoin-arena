@@ -32,10 +32,15 @@ screen over the QR. A reload of that URL lands on the lobby he plays from.
 
 # FINISHED  -  2026-09-30 20:53 (Daniel)
 
-STATUS: finished. Live at 288193a9 (deploy 52d50dcd): gross invoice, round tabs, the same round
-tabs for the Settings deposit. Settings withdrawal: 25%, 50%, 100%, Custom (Daniel's later change),
-all off at 0. A Custom withdrawal over what the wallet can send shows only "Not enough to withdraw
-that amount after fees. Choose a smaller amount." - measured on the live page.
+STATUS: live at c48e8957 (deploy 38c0d343). REPLACED 2026-10-01 (Daniel, option 2): "N rounds" funds N rounds -
+N x one round's locks in whole 512 msat e-cash notes plus the stake check's reserve (100 sat round: 1 round 100.352 sat,
+10 rounds 985.088 sat); every invoice in whole notes; Settings sized with the donation as PLAY is. A paid deposit still
+short shows the green line, then in the same modal "This round needs N more sat for fees. Pay the rest to join." -
+floor 5.12 sat. Settings withdrawal: 25%, 50%, 100%, Custom, all off at 0; over-balance shows only "Not enough to
+withdraw that amount after fees. Choose a smaller amount." Phrase kept in the browser (2026-10-01): a browser opened
+again gets its wallet back; two open tabs stay two players. Paid rows only as 90 s series rounds (2026-10-01): none
+until series 8172fffd opens 2026-10-02 00:00Z; the one-off runner is stopped.
+OPEN: the 2.5 s close not timed on an unstarved device; N rounds not yet played live; no real withdrawal measured.
 
 
 HARD: The deposit invoice is always the gross round amount. A 10000 sat round invoices
