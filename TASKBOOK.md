@@ -51775,3 +51775,12 @@ WITHDRAW MEASURED (771af9e6, deploy cfe30a0b, wasm f2426deb; tab seed 1405e2d3):
 wallet 107168 -> 102168 msat (exactly 5000). Two attempts before it on 84b81ae7 ended "Failure" (funding rejected, reason
 not yet reported then); after the first the wallet read whole again (115360), after the second 8192 msat are still out
 (102168, expected 110360) - watched. An invoice can be paid once: a retry needs a new invoice.
+WITHDRAW BY INVOICE (Daniel 2026-10-01: "does the withdrawal selector make sense when the invoice defines the amount?" ->
+"1 and 3"): the 25/50/100%/Custom tabs are gone. The panel says "You can withdraw up to N sat. Make an invoice in your own
+wallet for any amount up to that and paste it here."; pasting reads the amount off the invoice ("You withdraw X sat.",
+or "Please use an invoice with an amount." / "That is not a Lightning invoice."); over the limit shows the over-balance
+line; empty wallet greys it out.
+THE 8192 MSAT (test wallet seed 1405e2d3): sendLog shows the failed send's funding rejected "The transaction had an invalid
+input: 2-The note is already spent" - a double spend: session restore had reopened several tabs on this seed, each its own
+wallet client on the same storage. Hazard for players with a duplicated or restored tab: one tab per wallet (Web Locks) is
+the fix, next.
