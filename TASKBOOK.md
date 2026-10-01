@@ -51706,3 +51706,9 @@ balance, and Settings Deposit and Withdraw refused "No paying round is listed". 
 paying round the signer nodes hold (moneyRound: a series round first, the soonest; else the latest-starting one) - all
 day today that is 8172fffd's rounds (100 sat), listed a day ahead though not joinable. Also: the load (about 26 on 12
 cores) was mostly the measurement Chrome's software-GL GPU process (~625% CPU); it is stopped between measurements.
+PAYTRACE 5 SAT #2 (f0821111 live; tab seed 1405e2d3; long tasks recorded): with no paid row the wallet opened and showed
+10 sat (the MONEY fix holds). lncli SUCCEEDED 05:41:57.65Z; green 05:41:57.912Z; close 05:42:00.925Z: 3013 ms; long tasks
+between green and close: 0. Wallet 10 -> 15 sat, one deposit row 5000 msat. Timer probe in the same tab, no payment, five
+setTimeout(2500): hidden (as the harness ran it) 2700/3000/3000/3000/3000 ms - Chrome's 1 s alignment of a hidden tab's
+timers; brought to front and focused 3679/3589/5029/6220/5676 ms - the game drawn in software GL on a host at load ~26.
+So the 3585 and 3013 ms are the harness browser's timer delivery, not the page: the page asks 2500 ms from the claim.
