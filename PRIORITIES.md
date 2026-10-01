@@ -47,8 +47,11 @@ A free round is 90 seconds gross, the same as a paid round. Not a longer clock.
 The run inside it is at most 82 seconds, the same as paid. Measure a free round's
 start to the next free round's start: 90 seconds.
 
-HARD (Daniel 2026-10-01 15:44, updated 15:45): After the free-round clock, not before.
-Every node serves /Dashboard. An interactive page with charts.
+HARD (Daniel 2026-10-01 17:46): The 10-minute objection window and the pending line
+come before /Dashboard. Not the other way around. Finish that live proof first.
+
+HARD (Daniel 2026-10-01 15:44, updated 15:45): After the window and the pending line,
+not before. Every node serves /Dashboard. An interactive page with charts.
 
 A node earns from the 2% node fee. The fee splits three ways, equal: 2/3 % to the
 game/verify pool, 2/3 % to the settlement pool, both to the sitting seats, and 2/3 %
