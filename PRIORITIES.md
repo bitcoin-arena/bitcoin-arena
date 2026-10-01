@@ -20,6 +20,23 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-10-01 21:16 (Daniel)
+
+HARD: Order. Do these before the 82/90 fork and before the both-rows item.
+Do not start those two until this list is done.
+
+1. The 10-minute objection window and the pending line, live. FINAL must be signed.
+   Winnings show as pending immediately after the result, and the line disappears
+   if the payment becomes invalid.
+2. Then /Dashboard on every node. Charts. Categories: game/verify, settlement,
+   guardian/custody, Lightning costs, gateway costs, absolute profit. Totals for
+   the day, the month, and the year.
+3. Then the rest that is still open and not marked FINISHED: transaction history
+   under the balances, key persisted in localStorage with restore, one real refund,
+   then two players and a paid winner, join the round the lobby shows, and the next
+   round starts by itself after the countdown.
+4. Only after that: the 82/90 hard fork, and both rows at once.
+
 # NOW  -  2026-10-01 16:51 (Daniel)
 
 HARD: This is an error. Live rounds run up to 180 s, because block ticks are 10800.
