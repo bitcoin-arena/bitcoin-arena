@@ -51787,3 +51787,8 @@ the fix, next.
 VERIFIED ON A REAL DEVICE (Daniel 2026-10-01 ~07:1xZ: "Deposit and withdrawal verified on a real device. Fast and good.
 Done"): live 01012273 (deploy 810684d0). Left open, named: one tab per wallet (Web Locks) - two clients on one wallet's
 storage double-spent a note in the test browser (8192 msat of seed 1405e2d3 lost there).
+ONE TAB PER PHRASE (Daniel 2026-10-01: "Fix that problem"): the phrase keeper takes the browser's exclusive Web Lock
+'blwp.phrase.<16 hex>' for the tab's phrase (at start, and for a phrase minted or imported later) and holds it while the
+tab lives. A tab whose phrase another tab holds - duplicated, or restored beside its original - drops the phrase, takes a
+new tab id and reloads as its own player (a free kept phrase, or a new one). seed-keeper.test.js: a duplicate with copied
+session storage is moved off the phrase.
