@@ -51685,3 +51685,7 @@ PHRASE KEPT (Daniel 2026-10-01, replaces the tab-only rule of 2026-09-30): blwpS
 phrase a tab holds in localStorage (blwp.seeds) with a 4 s heartbeat per held phrase; a tab with none takes a kept phrase
 no live tab holds (12 s), so a browser opened again gets it back and two open tabs stay two players. seed-keeper.test.js
 (restart, crash, two tabs, reload, import); join.test's guard allows localStorage in vault() and the keeper only.
+PHRASE-KEPT LIVE (147a2dba, deploy 049d1ebf, Beelink Chrome from scratchpad/blwp-browser, one profile): the funded tab
+reloaded on the new page kept 1405e2d3; with it open, window A got 67385177 and window B 0ceedbec (two tabs, two
+players); blwp.seeds held all three. The browser was then stopped (whole process), started again, its restored tabs
+closed, and a fresh window opened 05:15Z: phrase 1405e2d3, balance 6 sat, its 3 history rows - the wallet came back.
