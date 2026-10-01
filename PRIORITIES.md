@@ -20,6 +20,13 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-10-01 15:25 (Daniel)
+
+HARD: The nodes always serve both at once. Testnet4 rounds and free rounds.
+Not one or the other. A player opening the page sees a free row and a paid
+testnet4 row together. Do not drop free to show testnet4. Do not drop testnet4
+to show free.
+
 # NOW  -  2026-10-01 09:31 (Daniel)
 
 HARD: The objection window is exactly 10 minutes. Not counted in blocks. Not 10 to 30.
