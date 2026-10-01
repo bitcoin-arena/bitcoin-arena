@@ -51695,3 +51695,9 @@ then"; "90 seconds as soon as it's valid"): the one-off runner blwp-tn4-paid sto
 (lobbyOnePerKind paidSeriesOnly). Earliest valid 90 s paid rounds: series 8172fffd (100 sat), round 0 be5785e3 at
 2026-10-02 00:00Z; a series posted now could not start before ~2026-10-02 05:30Z (24 h committee lead). Then k=2, k=3 by
 the series waiter. Rounds 8029f4ce and 41dcfe88 (one-off, 6 h) stay on the nodes until their entry closes, unlisted.
+PAYTRACE 5 SAT (Daniel 2026-10-01 "5 sat payment"; d6b1db85 live; tab seed 1405e2d3; Settings, Custom 5): a
+MutationObserver on #blwp-deposit, installed in the page before LND-a paid, wrote the times. lncli SUCCEEDED 05:26:53.9Z;
+green "Payment received! 5 sat are now in your wallet." 05:26:59.488Z; modal emptied 05:27:03.074Z: close - green =
+3585 ms (performance.now) - 1085 ms later than the 2.5 s. Wallet 6 -> 10 sat, one deposit row 5000 msat. Not yet known
+what holds the page's thread past the 2.5 s timer. Same run: the lobby showed "PAID · 100 sats · closes 1113:28 · 0 of 5
+signer nodes - waiting" (8172fffd round 0, a day out) - now a paid row is listed only once it can be joined.
