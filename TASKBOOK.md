@@ -51752,3 +51752,8 @@ reserve asked back; a wallet funded for exactly its round would have been refuse
 deposits). Settings, Custom 100: invoice lntb1u (100 sat); LND-a SUCCEEDED 06:25:30.8Z; green "Payment received! 100 sat
 are now in your wallet." 06:25:58.7Z; close 06:26:02.0Z. The wallet's own balanceMsat after: 115360 = 15360 + 100000 -
 the 100 sat credited whole (the stock client gave 99840). The old 512 msat notes still count and spend.
+WITHDRAW "Invoice is for a different currency" (Daniel 2026-10-01 08:28 phone, playtest bug): every send from the player
+wallet - withdrawal and the donation - refused a testnet4 invoice (lntb990n). The LNv2 client compares the federation's
+network with the invoice's currency; the fork labels this federation Testnet4 (f1481d4bcfa), and BOLT11 has no testnet4
+prefix - lntb reads as Testnet - so no withdrawal could ever have worked here (never measured before). Patched:
+fedimint-lnv2-testnet4-invoices.patch - a Testnet4 federation takes Testnet invoices. Lock client rebuilt (wasm 2f297f4c).
