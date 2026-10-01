@@ -51880,3 +51880,16 @@ qualifier; the ACCEPTED settlement 05d706f1 claimed only fee lock 1205497c, the 
 claimed, back at its expiry); round 76c61aae's two entries the same, amount 0. State stays PROVISIONALLY_FINAL; no FINAL is
 signed. The page shows no line for amount 0, as for an invalid payment. VOID expiry refunds stay off this item. No
 /standing code change.
+ITEM 1 HOLES (Daniel 2026-10-01, same item): (1) the live FINAL gate is a one-off free round on the 7 testnet4 nodes, not
+the paid round - the 2026-10-02 00:00Z paid round does not hold this item, and its later failure does not reopen it.
+(2) the series pair (/mnt/bitcoin/blwp-2of2-s/code) moved b9ce39f1 -> 5f0f88dd, blwp-series-nodes restarted, its node
+lists its rounds again; the 600 s wall window and the FINAL path apply to the free series there. The Daily pin a535ec62 is
+an explicit exception, untouched.
+THE FREE ROUND, TRIED: the testnet4 units fund no free round (BLWP_FUND_FREE_ROUNDS unset: 402); set for the run in a
+drop-in, then removed (the units restarted as before). With it set, POST /round answered 409 on all seven: six "no chain
+view for that round" (each node reads a 2107-block census view, ~11 s alone, minutes with seven after a restart), node 7
+"there is no publication transaction to read" - a round that is not of a series must have its own testnet4 publication
+confirmed below its beacon block (§5A.5 P1, roster.js), so a free one-off round needs an on-chain publication (a fee from
+the operator's wallet, ~1 h to confirm and reach the beacon's depth). Not done; asked. Left behind: three free rounds
+stored by the refused opens (192657550e9f, 20e96b13673d, 2e004346a37c), no committee, ended; each holds one walk-away
+entry (the entry door answered 201). Nothing moved.
