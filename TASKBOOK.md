@@ -51689,3 +51689,9 @@ PHRASE-KEPT LIVE (147a2dba, deploy 049d1ebf, Beelink Chrome from scratchpad/blwp
 reloaded on the new page kept 1405e2d3; with it open, window A got 67385177 and window B 0ceedbec (two tabs, two
 players); blwp.seeds held all three. The browser was then stopped (whole process), started again, its restored tabs
 closed, and a fresh window opened 05:15Z: phrase 1405e2d3, balance 6 sat, its 3 history rows - the wallet came back.
+PAID-90S-ONLY (Daniel 2026-10-01 05:2xZ: "We want always 90 second rounds in Testnet like before"; "no paid row till
+then"; "90 seconds as soon as it's valid"): the one-off runner blwp-tn4-paid stopped and disabled (unlinked) - no more
+6 h one-off rounds; the 7 node units untouched. The core page lists a paying round only if it is a series round
+(lobbyOnePerKind paidSeriesOnly). Earliest valid 90 s paid rounds: series 8172fffd (100 sat), round 0 be5785e3 at
+2026-10-02 00:00Z; a series posted now could not start before ~2026-10-02 05:30Z (24 h committee lead). Then k=2, k=3 by
+the series waiter. Rounds 8029f4ce and 41dcfe88 (one-off, 6 h) stay on the nodes until their entry closes, unlisted.
