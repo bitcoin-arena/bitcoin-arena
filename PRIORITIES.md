@@ -22,9 +22,9 @@ Top item first. Finish and deploy before starting the next.
 
 # NOW  -  2026-10-01 21:19 (Daniel)
 
-HARD: Items 1 and 2 wait in parallel until the publications confirm. Do not stop
-that watch. When 7f0f3ce5 or 93d7cb2b confirms, interrupt everything else until
-those 82/90 rounds are tested. Then resume the list below.
+HARD: Keep checking the 82/90 fork in parallel, and keep working the list below.
+Do not stop the watch on 7f0f3ce5 and 93d7cb2b. When that fork is confirmed and
+ready, interrupt everything else until those rounds are tested. Then resume the list.
 
 # NOW  -  2026-10-01 21:16 (Daniel)
 
