@@ -51757,3 +51757,10 @@ wallet - withdrawal and the donation - refused a testnet4 invoice (lntb990n). Th
 network with the invoice's currency; the fork labels this federation Testnet4 (f1481d4bcfa), and BOLT11 has no testnet4
 prefix - lntb reads as Testnet - so no withdrawal could ever have worked here (never measured before). Patched:
 fedimint-lnv2-testnet4-invoices.patch - a Testnet4 federation takes Testnet invoices. Lock client rebuilt (wasm 2f297f4c).
+WITHDRAW LIVE CHECK (ffc8a285, deploy c16252ed, wasm 2f297f4c; tab seed 1405e2d3, 115.36 sat): Settings -> Withdraw ->
+Custom 5 sat to a fresh 5 sat invoice from LND-a. The currency refusal is gone - "Sending 5 sat over Lightning ..." - but
+the send came back Refunded ("The payment could not be completed. Your 5 sat are back in your wallet."; LND-a invoice
+OPEN; balance 115 sat). gw-a.log 06:32:22: the wallet chose gateway A (LND-a, the invoice's own node), which took the
+invoice for an incoming federation payment: "IncomingPayment(No corresponding decryption contract available)". A
+withdrawal to an invoice issued by a gateway's own node cannot be paid; our only nodes, LND-a and LND-b, are the two
+gateway nodes. A player's own wallet is another node, routed normally. Still open: one withdrawal to a non-gateway wallet.
