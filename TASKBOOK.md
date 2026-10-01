@@ -51792,3 +51792,6 @@ ONE TAB PER PHRASE (Daniel 2026-10-01: "Fix that problem"): the phrase keeper ta
 tab lives. A tab whose phrase another tab holds - duplicated, or restored beside its original - drops the phrase, takes a
 new tab id and reloads as its own player (a free kept phrase, or a new one). seed-keeper.test.js: a duplicate with copied
 session storage is moved off the phrase.
+ONE TAB PER PHRASE LIVE (c52d8694, deploy 8f23f867, Beelink Chrome): tab A on phrase 1405e2d3 (tab id 5ffab334..., 102
+sat); tab B given a copy of A's session storage (phrase and tab id, as a duplicated tab carries) and reloaded: B found the
+phrase's lock held, dropped it and came back on its own phrase ec2984cf with a new tab id; A kept 1405e2d3 and its 102 sat.
