@@ -51675,3 +51675,13 @@ tabs hidden, one amount (2000 msat = the shortfall + 1 sat, whole sat). MISS: th
 Amount is too small to cover fees". Probed on the same wallet through gateway B (invoices only, nothing paid): 2, 3, 4 sat
 refused with that error; 5, 6, 8, 10, 15, 20 sat made. So the smallest receivable deposit is 5 sat, and a rest under it
 cannot be invoiced. Nothing was paid; the modal was closed (join refused); the run stopped. Not patched.
+REST-FLOOR LIVE (0808e1cc, deploy 7350daac; tab seed 1405e2d3, round 41dcfe88). The modal opened as the rest: "This round
+needs 2 more sat for fees. The smallest Lightning deposit is 5 sat. Pay 5 sat to join.", invoice lntb50n (5 sat). LND-a
+paid it, SUCCEEDED 04:45:36.7Z. The wallet then held 104448 msat, need 100310: funded; the modal was gone at 04:45:41.0Z
+(4.3 s after the payment). Stake lock: join "joined", blwp.lock.saved for 41dcfe88, history deposit 100000 / deposit 5000
+/ stake 98000 (41dcfe88); balance 6 sat. NOT SEEN: the green line - the sampler (100 ms, page busy claiming) caught no
+frame between "Waiting ..." and the close, so neither it nor the 2.5 s close is measured.
+PHRASE KEPT (Daniel 2026-10-01, replaces the tab-only rule of 2026-09-30): blwpSeedKeeper in the boot script keeps every
+phrase a tab holds in localStorage (blwp.seeds) with a 4 s heartbeat per held phrase; a tab with none takes a kept phrase
+no live tab holds (12 s), so a browser opened again gets it back and two open tabs stay two players. seed-keeper.test.js
+(restart, crash, two tabs, reload, import); join.test's guard allows localStorage in vault() and the keeper only.
