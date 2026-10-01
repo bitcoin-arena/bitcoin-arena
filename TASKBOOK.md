@@ -51712,3 +51712,11 @@ between green and close: 0. Wallet 10 -> 15 sat, one deposit row 5000 msat. Time
 setTimeout(2500): hidden (as the harness ran it) 2700/3000/3000/3000/3000 ms - Chrome's 1 s alignment of a hidden tab's
 timers; brought to front and focused 3679/3589/5029/6220/5676 ms - the game drawn in software GL on a host at load ~26.
 So the 3585 and 3013 ms are the harness browser's timer delivery, not the page: the page asks 2500 ms from the claim.
+N-ROUNDS-PLAY-N (Daniel 2026-10-01, option 2: "so rounds can always be played. 10 rounds deposit must be capable of playing
+10 rounds" - replaces the gross-invoice rule of 20:53). Measured basis: federation 337ae01a issues e-cash in powers of two
+from 512 msat (lnv2 and mint fees 0/0): 100000 msat credited 99840 (65536+32768+1024+512), 5000 credited 4608; a lock costs
+its amount rounded up to 512 msat (90000->90112, 96000->96256, 98000->98304). So: "N rounds" = N x one round's locks (each
+in whole notes) + the stake check's fee-lock margin, rounded up to 512 msat (roundsDepositMsat); every invoice is in whole
+notes (ceilNote) and credits whole; Custom too; the rest is the shortfall in whole notes, floor 5 sat -> 5120 msat. The
+modal shows exact amounts (e.g. 100.352 sat). Test: a note-model wallet funded by each tab plays exactly N rounds' locks
+with no further deposit, N = 1, 2, 5, 10.
