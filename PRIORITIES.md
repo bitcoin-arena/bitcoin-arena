@@ -31,6 +31,10 @@ A free round is not posted on the chain in advance. It is still multiplayer.
 Several players join the same free round, see each other, and the result is the
 same round. Stake 0 does not make it single-player.
 
+A free round is 90 seconds gross, the same as a paid round. Not a longer clock.
+The run inside it is at most 82 seconds, the same as paid. Measure a free round's
+start to the next free round's start: 90 seconds.
+
 # NOW  -  2026-10-01 09:31 (Daniel)
 
 HARD: The objection window is exactly 10 minutes. Not counted in blocks. Not 10 to 30.
