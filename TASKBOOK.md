@@ -51739,3 +51739,12 @@ sats and we deposit a bit more"; "which amounts are safe so we show no odd amoun
   costs 100 sat. You deposit 101 sat per round because ...".
 - The federation itself signs notes from 1 msat (consensus_denominations 0..41); only the client limits to 512 msat - a
   rebuilt lock client (no Rust toolchain here) would make 1 sat = 1 sat with no new federation.
+1 SAT = 1 SAT (Daniel 2026-10-01 ~08:15: "Fix it instead right now and rebuild rust etc. we want 1 sat = 1 sat and round
+100 sat round numbers"). The 512 msat floor was the stock mintv2 CLIENT (client_denominations 9..41); the federation
+signs 0..41. Lock client rebuilt on the fork (v0.12.1 + testnet4, f1481d4bcfa) in a worktree with the send-expiry patch and
+fedimint-mintv2-whole-msat.patch (client_denominations 0..41), rustup stable + wasm32, wasi-sdk 25 clang, wasm-bindgen
+0.2.106, getrandom wasm_js: lock-client/build-wasm.sh. Same 26 exported methods; wasm 68c1eed2..., glue d5710a61... added
+to known-good (nodes do not enforce the list; only tools/client-hash.mjs reads it). Page: NOTE_MSAT 1 - tabs 100, 200, 500,
+1000 sat for a 100 sat round (stake 96 + fee 2 + donation 2); the note shows only when deposit != stake (now never).
+Found on the way: lockStake re-checked funds with only {amount, feeMsat} - the fee-free flag and the donation dropped, the
+reserve asked back; a wallet funded for exactly its round would have been refused at the lock. Now the same locks object.
