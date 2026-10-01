@@ -51818,3 +51818,19 @@ from a 2-line extension (permission "sessions"), live alias, Beelink Chrome. Tab
 tab A took 1405e2d3 (102 sat); R reopened by Chrome with its saved session, found the phrase's lock held by A and reloaded
 onto its own phrase 67385177 (0 sat); A kept 1405e2d3 and 102 sat; navigator.locks: 1405e2d3 one holder (A), 67385177 one
 holder (the reopened tab). No second wallet client.
+WINNINGS-AUTO + PENDING LINE (Daniel 2026-10-01: "automatic payout to players federation wallet but pending at first as
+spec says"; "test fee payments and donations properly"; spec 3d12dea4):
+- protocol lockSettlement / lateLockSettlement: every qualifier (first and late) gets a payout contract to its own lock
+  refund key; no winner send is planned or required (C3b-2a/C3b-2b withdrawn). Donations (walk-away 25%) still sent by
+  Lightning address; the seats' fee lock unchanged.
+- node: winnings-send plans no qualifier sends; the late plan is the contract plan; GET /standing?entry= (standing.js):
+  state, the entry's row of the payout table over results signed so far, provisional flag, window open = round end,
+  close = +600000 ms.
+- client: collectIntoPlayerWallet redeems the payout contract into the player wallet by itself (ledger row 'winnings');
+  the page polls /standing every 2 s and shows "Pending N sat - window closes HH:MM:SS UTC - provisional", gone when the
+  nodes take it away; Confirmed when the notes are in.
+- tests: protocol lock-settlement 23, walkaway-remainder 6; node winnings-pool 3, winnings-sent 3, lock-settlement 9,
+  late-settlement 5, late-settlement-resend 2 (restart a/b on the contract path), plan-taken 3, standing 1,
+  donation-resend 1 (donation gateway down -> refund past expiry -> re-sent through the next gateway, each recipient paid
+  once, settling again pays nothing); client page-lock 49, pending-line 4. Fee lock measured in the late restart: 98000
+  msat to the winner, 2000 msat fee split 1000/1000 to 2 signer nodes.
