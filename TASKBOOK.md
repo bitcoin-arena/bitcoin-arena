@@ -51938,3 +51938,18 @@ constant. It must be part of the round announcement"; "There may be no gaps betw
   sat) to replace e321c036 (10800, published 13:51Z, not started); series-waiter-82.sh posts k=3, 4, ... each day at 82 s.
   Free: the opener names 4920 for rounds starting from the instant (BLWP_RUN82_FROM_MS), keeps 8 rounds ahead and resumes
   its grid from the rounds the pair already holds, so a restart skips no slot.
+82/90 LIVE (2026-10-01): page 0.0.2433 deployed (dc38f17d; core bundle with runTicks, plugin and Unity run clock from the
+contract). Free: the series pair on cabe9849 with BLWP_RUN82_FROM_MS 16:01:00Z - the first 82 s free round announced
+16:01:34Z (blockTicks 4920, runMs 81979), every later one 90 s apart; the restart left one off-grid round 20 s after the
+last (an overlap, no slot lost). Played live (Beelink Chrome): free round c9d1f78d joined 16:37:10Z, the page's core
+restarted for it at runTicks 4920 (the contract's); the round was over at 16:39:25.973Z = start + 15 + 15 + 81.979 s, both
+nodes signed the entry FAILED 2 of 2. The headless Chrome ran the core at ~8.6 ticks/s (software GL at 470% CPU), so the
+82 s wall clock of a run is not readable there. Paid: series 7f0f3ce5 (82 s, k=2, 2026-10-03 00:00Z) published
+a4260564980f105302e005f06dd9452c9ffd8c1417a069c82a148102c7210261 (477 sat); series-both.txt e321c036 -> 7f0f3ce5 (backup
+series-both.txt.pre-fork); the 7 nodes on cabe9849 hold 8172fffd and 7f0f3ce5; /rounds: 23:57:00 and 23:58:30 at 10800,
+then 00:00:00, 00:01:30 ... at 4920, 90 s apart, every 10-03 round 4920. blwp-series-waiter-82 (enabled unit) posts k=3, 4,
+... at 82 s; the old waiter disabled. 2026-10-02's paid rounds stay 180 s: 8172fffd was published with 10800 and a
+replacement for that day is past its committee time - the spec clock allows none. The free opener cannot open further
+ahead than one period (each open waits for its beacon block on the regtest chain): a restart resumes the grid from the
+rounds the pair holds, so one shorter than ~90 s skips no slot. Lobby: each side drawn as soon as it answers, a side that
+did not answer keeps its last open rows - 12 of 12 live samples showed both rows.
