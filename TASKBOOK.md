@@ -51795,3 +51795,10 @@ session storage is moved off the phrase.
 ONE TAB PER PHRASE LIVE (c52d8694, deploy 8f23f867, Beelink Chrome): tab A on phrase 1405e2d3 (tab id 5ffab334..., 102
 sat); tab B given a copy of A's session storage (phrase and tab id, as a duplicated tab carries) and reloaded: B found the
 phrase's lock held, dropped it and came back on its own phrase ec2984cf with a new tab id; A kept 1405e2d3 and its 102 sat.
+DEPLOY-DAS-0917 (Daniel 2026-10-01 09:17: rebuild, then deploy; not the old directory): Unity 6000.0.82f1 WebGL build of
+fc02939b (BuildWebGL.Run) into scratchpad/webgl-0917 -> 0.0.2413, Build/webgl-0917.*; its page files equal the template
+(blwp-client, lock client 2-file, core, curve). Deployed that directory to btc-logistics-core (deploy 80443d2f; the kept
+page copy /mnt/bitcoin/blwp-2of2-s/page now this build). Measured: build.txt 0.0.2413 on the deploy URL and the alias;
+index carries the tab lock (blwp.phrase. x8); daily.json has testnet; loader webgl-0917. Beelink Chrome on the alias:
+title "build 0.0.2413"; tab A phrase 1405e2d3 (102 sat); a copy of its session reloaded moved to 99b85f40; A kept
+1405e2d3 and 102 sat. Daily pin, bonds, federation and series untouched.
