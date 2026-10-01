@@ -51834,3 +51834,35 @@ spec says"; "test fee payments and donations properly"; spec 3d12dea4):
   donation-resend 1 (donation gateway down -> refund past expiry -> re-sent through the next gateway, each recipient paid
   once, settling again pays nothing); client page-lock 49, pending-line 4. Fee lock measured in the late restart: 98000
   msat to the winner, 2000 msat fee split 1000/1000 to 2 signer nodes.
+WINDOW-10-SPEC, POINTS 1-4 (Daniel 2026-10-01: "Accepted ... Go. Build that plan"; re-run window opens at the previous
+window's close, E+600, never at the objection's arrival or block). E = the round's end from its contract (roundEndMs).
+1. protocol/src/contracts.js: objectionWindowMs must be exactly 600000n, else invalid (MAX_OBJECTION_WINDOW_MS withdrawn;
+   OBJECTION_WINDOW_MS + FINAL_TOLERANCE_MS 5000 in constants.js, windowsOf() in protocol/src/window.js). Node refuses open
+   (POST /round 400), list (/rounds skips a held one), entry (Round.enter); the page's fetchRound refuses list and join.
+   Measured (window-10.test 1): 0/599999/600001 -> 400 "objection window is N ms: ... exactly 600000ms", 600000 -> 201,
+   a pre-rule round in the store not listed, enter refused by name. Client page-lock.test: same three refused by fetchRound.
+2. FINAL is a signed record (protocol/src/final-sig.js, TYPE 0x1a: round, entry, run, signer, signed-at). A seat signs from
+   its own E+605 s, holding PROVISIONALLY_FINAL, transcript posted, no valid objection received in time; GET /final-sig signs
+   fresh, POST /final-sig takes one; each watch gathers the peers' (gatherFinal). Counted only if signed within 5 s of the
+   receiver's clock, at/after E+605, by a committee seat; one refused for its time is kept as evidence (final_sig_evidence).
+   FINAL = the round's threshold (5 of 7, 2 of 2). finality.js reads no block for any window; settlement/payout wait as before
+   on FINAL; the pending line unchanged. §13C result deadline: E+600 (decided from E+605).
+   Measured (window-10.test 2): end-open 600000 ms; no block for 30 min and an hour of fast blocks alike: not signable at
+   E+604999, signable at E+605000; fixtures' chain heights at open/close 500036/500636 (one block a second, informational);
+   holder 409 and five early signatures refused ("before the window's final_after") at E+604 s; 4 signatures not FINAL,
+   one 20 s-fast clock not counted (evidence row), the fifth FINAL.
+3. Objections count by arrival on the seat's clock (objectedAt), until its E+605 s. Measured (window-10.test 3): received at
+   E+604.903 s SUSPENDED, never FINAL with 5 others' signatures; at E+605.1 s PROVISIONALLY_FINAL, lateObjection, FINAL once
+   signed, and the holder filed REPLAY_CONTRADICTS against the 5 signers by itself. Replaces the 30 s arrival grace.
+4. Re-run window [E+600, E+1200): a re-run counts if signed after the objection was held, arrived before the seat's E+1205,
+   signed time within 5 s of arrival (the re-run record carries signedAtMs instead of a block). No threshold by E+1205:
+   §13C, written once (no_quorum). With one: own window [E+1200, E+1800), FINAL signed from E+1805; a valid objection to the
+   re-run before E+1805 VOID at once, after it 409. Measured (window-10.test 4/4b): objections at E+30 s and E+590 s both
+   close their re-run window at E+1200 s; agreed re-run own window 1200000/1800000, final_after 1805000; FINAL at E+1805 s
+   on the re-run's run; three re-runs: SUSPENDED at E+1204 s, VOID at E+1205 s; second objection at E+1500 s VOID.
+§13C evidence (pairs, refusals) counts if recorded before the decision (E+605 / E+1205), a pulled record by its peer's time;
+window-blocks.test now measures it on two holders (late pair: VOID at both, same slash set; pair in time: FORFEIT at both).
+Fixtures: one shared clock that skips (test/test-clock.js, roundClock), contractFor writes 600000n, present-day rounds
+where a window must still be open. Not moved: regtest harness tools that name short windows (lock-client-regtest,
+gateway-probe, signer-node-lock-regtest, federation-round-3, w5b, walk-away, void-then-late, winnings-page-probe,
+last-mark-window-probe, page-lock.mjs collect) - refused now; each needs 600000n and a skip before its next run.
