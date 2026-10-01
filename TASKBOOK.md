@@ -51669,3 +51669,9 @@ Stopped there: the modal closed (join refused, nothing more paid), the run stopp
 /home/daniel/blwp-testnet4/paid/player-seeds-2026-10-01.jsonl (99840 msat in its player wallet). Not patched.
 Also: the hourly host cleanup (monitoring/chrome_zombie_cleanup.sh, pkill 'chrome-linux64/chrome.*--headless') killed
 the test Chrome at every :05; the measurement Chrome now runs from a copy at scratchpad/blwp-browser.
+OPTION-2 LIVE (2026-10-01, 73903480 deployed as 83205639; the tab with seed 1405e2d3, 99840 msat; round 41dcfe88, 100 sat).
+The modal opened as the rest at once (short only by fees): "This round needs 2 more sat for fees. Pay the rest to join.",
+tabs hidden, one amount (2000 msat = the shortfall + 1 sat, whole sat). MISS: the invoice was not made - "No invoice:
+Amount is too small to cover fees". Probed on the same wallet through gateway B (invoices only, nothing paid): 2, 3, 4 sat
+refused with that error; 5, 6, 8, 10, 15, 20 sat made. So the smallest receivable deposit is 5 sat, and a rest under it
+cannot be invoiced. Nothing was paid; the modal was closed (join refused); the run stopped. Not patched.
