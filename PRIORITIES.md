@@ -20,6 +20,15 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-10-01 08:14 (Daniel)
+
+HARD: Right after the deploy, not instead of it. Fix round_to_multiple now.
+Rebuild the Rust toolchain and the wasm. Do not leave the 101 sat version.
+
+100 sat deposited is 100 sat. No crooked amounts. The guardians already sign notes
+down to 1 msat. The wallet client must not round to 512 msat. A 100 sat invoice
+credits 100 sat.
+
 # FINISHED  -  2026-09-30 21:07 (Daniel)
 
 STATUS: finished. Live at 288193a9 (deploy 52d50dcd): a reload of the deposit URL lands on the lobby.
