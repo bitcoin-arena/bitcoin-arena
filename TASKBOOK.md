@@ -51953,3 +51953,24 @@ replacement for that day is past its committee time - the spec clock allows none
 ahead than one period (each open waits for its beacon block on the regtest chain): a restart resumes the grid from the
 rounds the pair holds, so one shorter than ~90 s skips no slot. Lobby: each side drawn as soon as it answers, a side that
 did not answer keeps its last open rows - 12 of 12 live samples showed both rows.
+
+## The 82 s tail of 2026-10-02 and the free opener ahead (Daniel 2026-10-01, letter after 16:51; code 2a1c40f5)
+- Tail: series 93d7cb2b59ebd6f4 (testnet4 only, new core 2069b4c2, 4920 ticks, 600 rounds from round index 360 of
+  8172fffd = 2026-10-02 09:00:00Z to the day's end; same federation, peg-ins, guardians, gateways, stake 100 sat, donation
+  set, census 154539 / a86ea4e0; committee time 2026-10-01 21:00Z for this tail only). Publication 365df18c... sat
+  unconfirmed and was fee-bumped to 30 sat/vB: 851909cc88002d400b1f068ceca6d0a74d33fae366971bdc9deae524ad6e8947 (4770 sat).
+  Its confirmation below the beacon (the first block whose median time passes 1790888400) is watched by blwp-tail-watch;
+  recorded below once on the chain.
+- Each node's series file (series-both.txt, backup .pre-tail): 8172fffd cut=360, 3cfbe516, 7f0f3ce5, 93d7cb2b count=600.
+  Measured live: /rounds goes 08:58:30 (8172fffd, 10800) -> 09:00:00 (tail, 4920), 90 s apart; POST /round of 8172fffd's
+  round 400 -> 409 by name ("replaced from index 360 by its 82 s tail: not announced, entered, locked or settled"), POST
+  /entry -> 409 by name.
+- Free pair as separate processes (user units): blwp-series-node@a / @b (node-a.env, node-b.env), blwp-series-clock (one
+  regtest block every 10 s), and blwp-series-nodes (the opener, a real unit now, BLWP_ATTACH=1, BLWP_PUBLISH_AHEAD=1,
+  BLWP_ROUNDS_AHEAD=10, BLWP_RUN82_FROM_MS). Each round is posted as soon as it is drafted; a node answers 202 for a round
+  whose beacon is not yet on the chain and assigns it when it is. The migration left a free gap 17:39-17:48Z (the old
+  opener unit was transient and had to be written as a file).
+- Free restart measured (2026-10-01): held 17:50:27 ... 17:59:27 (7 rounds), opener stopped 17:50:53 for 163 s - the nodes
+  kept opening the held rounds on time (17:51:57, 17:53:27 played through the stop) - started 17:53:36; it reopened from
+  the last held slot: 18:00:57, 18:02:27 ... 18:11:27, all 4920 ticks, 90 s apart, no slot skipped and none doubled; 10
+  rounds held ahead by 17:56:31Z.
