@@ -51655,3 +51655,17 @@ pending list holds only the unpaid 10000 sat "1 round" invoice (ends at its expi
 federation's own fee on the claim (the gateway fees are 0).
 Not seen live: the green "Payment received!" line and the modal closing 2.5 s later (this one deposit was reloaded
 before its claim), and a join deposit's stake lock after it (Settings has no round). Tests: page set 73/73, client-hash 3/3.
+HOLE-2 JOIN DEPOSIT (Daniel go 2026-10-01: one 100 sat join deposit after 00:00Z, no reload; ship nothing unless a miss).
+Round 41dcfe8825313a68a1d62cb8f786b96cde349aec3d2b118dea063069327179a3 (100 sat; the first, 3b20ac3f, never confirmed -
+testnet4 blocks 154628-154638 came empty, coinbase only - and the runner redrafted it). Live page 288193a9, Beelink Chrome.
+04:03:47Z modal "insufficient funds ...", tab "1 round", lntb1u (100 sat). lncli payinvoice from LND-a SUCCEEDED 04:03:51Z.
+MISS: the wallet then held 99840 msat and the round's locks need more, so fundPlayerWallet asked again: at 04:04:00Z the
+modal was redrawn ("Creating your invoice for 100 sat ...") with a new invoice; the green "Payment received!" line was
+replaced within one 100 ms sample (never seen), the modal did not close, no stake was locked. History: one deposit row,
+100000 msat. Wallet quotes (read-only lockCostMsat): 90000 -> 90112, 96000 -> 96256, 98000 -> 98304, 100000 refused
+(insufficient funds); fee rule 0/0 - the note-spend cost, plus the node fee lock, put the need above 99840.
+So at 100 sat the "1 round" tab cannot fund one round (the federation's claim fee, ~160 msat, and the lock costs).
+Stopped there: the modal closed (join refused, nothing more paid), the run stopped. The tab's seed is saved in
+/home/daniel/blwp-testnet4/paid/player-seeds-2026-10-01.jsonl (99840 msat in its player wallet). Not patched.
+Also: the hourly host cleanup (monitoring/chrome_zombie_cleanup.sh, pkill 'chrome-linux64/chrome.*--headless') killed
+the test Chrome at every :05; the measurement Chrome now runs from a copy at scratchpad/blwp-browser.
