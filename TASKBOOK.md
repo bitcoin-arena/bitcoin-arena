@@ -51748,3 +51748,7 @@ to known-good (nodes do not enforce the list; only tools/client-hash.mjs reads i
 1000 sat for a 100 sat round (stake 96 + fee 2 + donation 2); the note shows only when deposit != stake (now never).
 Found on the way: lockStake re-checked funds with only {amount, feeMsat} - the fee-free flag and the donation dropped, the
 reserve asked back; a wallet funded for exactly its round would have been refused at the lock. Now the same locks object.
+1 SAT = 1 SAT LIVE (321e025f, deploy 85c3abe0, wasm 68c1eed2): tab seed 1405e2d3 held 15360 msat (old 512-note
+deposits). Settings, Custom 100: invoice lntb1u (100 sat); LND-a SUCCEEDED 06:25:30.8Z; green "Payment received! 100 sat
+are now in your wallet." 06:25:58.7Z; close 06:26:02.0Z. The wallet's own balanceMsat after: 115360 = 15360 + 100000 -
+the 100 sat credited whole (the stock client gave 99840). The old 512 msat notes still count and spend.

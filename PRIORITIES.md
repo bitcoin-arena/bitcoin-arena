@@ -20,7 +20,11 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
-# NOW  -  2026-10-01 08:14 (Daniel)
+# FINISHED  -  2026-10-01 08:14 (Daniel)
+
+STATUS: finished. Lock client rebuilt (notes from 1 msat), live at 321e025f (deploy 85c3abe0): a 100 sat
+invoice credited exactly 100000 msat (measured 06:25Z). Tabs 100, 200, 500, 1000 sat.
+
 
 HARD: Right after the deploy, not instead of it. Fix round_to_multiple now.
 Rebuild the Rust toolchain and the wasm. Do not leave the 101 sat version.
