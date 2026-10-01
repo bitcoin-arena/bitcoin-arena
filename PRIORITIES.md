@@ -20,10 +20,17 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-10-01 21:19 (Daniel)
+
+HARD: Items 1 and 2 wait in parallel until the publications confirm. Do not stop
+that watch. When 7f0f3ce5 or 93d7cb2b confirms, interrupt everything else until
+those 82/90 rounds are tested. Then resume the list below.
+
 # NOW  -  2026-10-01 21:16 (Daniel)
 
-HARD: Order. Do these before the 82/90 fork and before the both-rows item.
-Do not start those two until this list is done.
+HARD: Order. Do these before starting new work on the 82/90 fork and the both-rows
+item. The confirmation watch above runs beside this list, and preempts it the
+moment a publication confirms.
 
 1. The 10-minute objection window and the pending line, live. FINAL must be signed.
    Winnings show as pending immediately after the result, and the line disappears
