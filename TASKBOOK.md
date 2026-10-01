@@ -51724,3 +51724,6 @@ SETTINGS SIZED WITH THE DONATION (Daniel 2026-10-01 07:56 phone: "102.4, it shou
 sized its rounds without the donation (stake lock 98000 -> 98304 + fee 2048 + margin 2006 -> 102400). The join locks
 96000 (100 sat less the 2% donation and the 2 sat fee): 96256 + 2048 + 2006 = 100310, measured live 04:45Z as "need 100310"
 -> 100352 in whole notes. Settings now passes the Settings donation (roundStake x donationBps / 10000) like the join.
+N ROUNDS = N x 1 ROUND (Daniel 2026-10-01 08:00 phone: "2 rounds 198.656" read as wrong beside "1 round 100.352"): the
+reserve counted once made N rounds less than N x 1 round. Now every round is funded as the first - 100.352, 200.704,
+501.76, 1003.52 sat for a 100 sat round.
