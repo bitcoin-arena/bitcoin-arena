@@ -51874,3 +51874,9 @@ among lock_settlement_shares, or its stake lock among the claimed). Nothing sign
 loser no pending amount, PROVISIONALLY_FINAL; the same round SUBMITTING -> winner 196000, loser 0; no settlement record ->
 winner 196000; a live 7-seat round past end + 605 s, unsettled -> its row reported (0, payout). Page (pending-line.test):
 three nodes answering that settled shape -> pending 0 sat and no window line; a live 196000 majority -> 196.
+FEE-ONLY CLAIM (Daniel 2026-10-01, same item, the call): fee lock is not the entry's share. "Pays the entry's share" stays
+the player among the paid shares, or that entry's stake lock claimed. fbd8294e and f1059b98 stay amount 0 (FAILED, no
+qualifier; the ACCEPTED settlement 05d706f1 claimed only fee lock 1205497c, the 2% for the 7 seats; stake lock bd83b05e not
+claimed, back at its expiry); round 76c61aae's two entries the same, amount 0. State stays PROVISIONALLY_FINAL; no FINAL is
+signed. The page shows no line for amount 0, as for an invalid payment. VOID expiry refunds stay off this item. No
+/standing code change.
