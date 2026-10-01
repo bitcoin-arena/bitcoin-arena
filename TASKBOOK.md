@@ -51701,3 +51701,8 @@ green "Payment received! 5 sat are now in your wallet." 05:26:59.488Z; modal emp
 3585 ms (performance.now) - 1085 ms later than the 2.5 s. Wallet 6 -> 10 sat, one deposit row 5000 msat. Not yet known
 what holds the page's thread past the 2.5 s timer. Same run: the lobby showed "PAID · 100 sats · closes 1113:28 · 0 of 5
 signer nodes - waiting" (8172fffd round 0, a day out) - now a paid row is listed only once it can be joined.
+MONEY WITHOUT A PAID ROW (2026-10-01 05:35Z, measured): with no paid row listed the player wallet never opened - no
+balance, and Settings Deposit and Withdraw refused "No paying round is listed". The wallet and Settings now count in any
+paying round the signer nodes hold (moneyRound: a series round first, the soonest; else the latest-starting one) - all
+day today that is 8172fffd's rounds (100 sat), listed a day ahead though not joinable. Also: the load (about 26 on 12
+cores) was mostly the measurement Chrome's software-GL GPU process (~625% CPU); it is stopped between measurements.
