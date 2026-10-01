@@ -51770,3 +51770,8 @@ node - gateway A - which treats the invoice as a federation receive: "IncomingPa
 available)", cancelled, refunded. An invoice can be sent only once (operation id from the invoice). Lock client withdraw
 now takes a preferred gateway and never the one whose Lightning node is the payee (routing_info lightning_public_key);
 the page prefers the funded gateway (B) for withdrawals and the donation.
+WITHDRAW MEASURED (771af9e6, deploy cfe30a0b, wasm f2426deb; tab seed 1405e2d3): a 5 sat withdrawal to a fresh LND-a invoice
+(gateway A's own node - Daniel's case) went through gateway B: state Success, preimage d40f90f7..., LND-a invoice SETTLED,
+wallet 107168 -> 102168 msat (exactly 5000). Two attempts before it on 84b81ae7 ended "Failure" (funding rejected, reason
+not yet reported then); after the first the wallet read whole again (115360), after the second 8192 msat are still out
+(102168, expected 110360) - watched. An invoice can be paid once: a retry needs a new invoice.
