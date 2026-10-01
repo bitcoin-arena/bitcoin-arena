@@ -35,6 +35,12 @@ A free round is 90 seconds gross, the same as a paid round. Not a longer clock.
 The run inside it is at most 82 seconds, the same as paid. Measure a free round's
 start to the next free round's start: 90 seconds.
 
+HARD (Daniel 2026-10-01 15:44): After the free-round clock, not before. Every node
+serves /Dashboard. An interactive page with charts. It shows, for that node:
+since when it has been active; which rounds it checked, and what it earned on each;
+which settlements it made; which federations it is in, and what it earned there per
+day; its costs, Lightning payments and gateway payments; and the absolute profit.
+
 # NOW  -  2026-10-01 09:31 (Daniel)
 
 HARD: The objection window is exactly 10 minutes. Not counted in blocks. Not 10 to 30.
