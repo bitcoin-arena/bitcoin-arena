@@ -51720,3 +51720,7 @@ in whole notes) + the stake check's fee-lock margin, rounded up to 512 msat (rou
 notes (ceilNote) and credits whole; Custom too; the rest is the shortfall in whole notes, floor 5 sat -> 5120 msat. The
 modal shows exact amounts (e.g. 100.352 sat). Test: a note-model wallet funded by each tab plays exactly N rounds' locks
 with no further deposit, N = 1, 2, 5, 10.
+SETTINGS SIZED WITH THE DONATION (Daniel 2026-10-01 07:56 phone: "102.4, it should only be 100.xx"): the Settings deposit
+sized its rounds without the donation (stake lock 98000 -> 98304 + fee 2048 + margin 2006 -> 102400). The join locks
+96000 (100 sat less the 2% donation and the 2 sat fee): 96256 + 2048 + 2006 = 100310, measured live 04:45Z as "need 100310"
+-> 100352 in whole notes. Settings now passes the Settings donation (roundStake x donationBps / 10000) like the join.
