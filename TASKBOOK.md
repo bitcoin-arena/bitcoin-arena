@@ -51784,3 +51784,6 @@ THE 8192 MSAT (test wallet seed 1405e2d3): sendLog shows the failed send's fundi
 input: 2-The note is already spent" - a double spend: session restore had reopened several tabs on this seed, each its own
 wallet client on the same storage. Hazard for players with a duplicated or restored tab: one tab per wallet (Web Locks) is
 the fix, next.
+VERIFIED ON A REAL DEVICE (Daniel 2026-10-01 ~07:1xZ: "Deposit and withdrawal verified on a real device. Fast and good.
+Done"): live 01012273 (deploy 810684d0). Left open, named: one tab per wallet (Web Locks) - two clients on one wallet's
+storage double-spent a note in the test browser (8192 msat of seed 1405e2d3 lost there).
