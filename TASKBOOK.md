@@ -51893,3 +51893,18 @@ confirmed below its beacon block (§5A.5 P1, roster.js), so a free one-off round
 the operator's wallet, ~1 h to confirm and reach the beacon's depth). Not done; asked. Left behind: three free rounds
 stored by the refused opens (192657550e9f, 20e96b13673d, 2e004346a37c), no committee, ended; each holds one walk-away
 entry (the entry door answered 201). Nothing moved.
+FREE-MP-1531 (Daniel 2026-10-01 15:25/15:31, PRIORITIES NOW: the nodes always serve testnet4 rounds and free rounds at once;
+a free round is not posted on the chain in advance and is still multiplayer):
+- Measured before: the live lobby showed the free row alone. Series 8172fffd's first round starts 00:00Z, ~8 h out; the
+  series writer assigned signer nodes only to rounds starting within 2 h, so all 7 nodes listed it assignedHere false,
+  no listing counted, the paid row was dropped. Now the writer also assigns the soonest round, however far ahead
+  (series-writer soonest(); series-ahead.test: first round 8 h out, none within 2 h, soonest = round 0).
+- A free round (stake 0) is checked against the chain as every round is, without its publication (roster.js); a paying
+  round still needs its own. free-unpublished.test: on a bonded chain with no publication, the free round 201 with its
+  committee drawn; the paying round 409 "there is no publication transaction to read".
+- The on-chain free round of the FINAL gate is withdrawn by this rule: published b77346fa869f4b3c (round 23df78b84cc8dc5a,
+  338 sat) and dddb39d646787126 (round bdd041b67f4bcdee, dead: its beacon block was already there - testnet4's block times
+  run up to 2 h ahead of the wall clock), 676 sat in fees; the wait stopped, neither round opened.
+- Two windows, one free round (live page, series pair): under load 33 (the full suite and two Unity tabs) both pages' chain
+  providers timed out at 10 s - "no proven endpoint" - one joined, one refused; the providers answer in 0.3 s. To be
+  measured again unloaded.
