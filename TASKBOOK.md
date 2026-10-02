@@ -52086,3 +52086,22 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
   end + 1205 s the 4 decide VOID and report the stake back as a refund (§23.2/§24), so the winnings line becomes a refund
   line (96 sat), it does not vanish.
 - Page 0.0.2437 deployed (b19be977). testnet4 nodes on 0a081f8a. Unity still without a licence.
+
+## ORDER-2116 item 1 steps 1-3, landed on round 83f8d209 (2026-10-02 05:51Z, 100 sat, page 0.0.2437 local, Beelink Chrome)
+- Step 1: winner 36682f66 DELIVERED, score 30393300 (front-line route, gate leg straight cut), loser 76226532 WRECKED;
+  every seat signed DELIVERED, pending figure 192000 msat (each net stake 96000: 100000 less the 2000 node fee and the
+  2000 donation committed in the entry).
+- Step 2: the first seat's result at 05:54:48.3Z (96000, provisional - the winner's own stake only), all 7 at 192000 by
+  05:54:49.9Z; the page showed "96 sat, window closes 06:04:29 UTC · provisional" at 05:54:49.949Z and "192 sat, window
+  closes 06:04:29 UTC" at 05:54:51.6Z (page polls every 2 s). Screenshot res-pending-w21-win/balance-pending.png: Settings
+  > Wallet, Confirmed 2 sat, Pending 192 sat, window closes 06:04:29 UTC.
+- Step 3: window closed 06:04:29.949Z; FINAL from 06:04:34.949Z. Every seat FINAL 192000 by 06:05:11Z, each holding all 7
+  FINAL signatures, first signed 06:04:35.691Z, received 8-619 ms after signing (5 s tolerance), none kept as evidence.
+  Settlement 707d3975... ACCEPTED 06:16:54Z: the loser's stake lock 96000 msat and both fee locks 4000 msat claimed; the
+  qualifier paid 96000 msat; the seats ~570 msat each. The page dropped the line at FINAL with nothing collected - a
+  second player in the same browser had replaced the round's collect record (fixed 7cf69241, page 0.0.2438). Reopened on
+  the winner's seed: wallet 2 -> 194 sat at 06:31:59Z (96000 msat payout + its own 96000 msat stake), the record "96000
+  msat payout and your 96000 msat stake".
+- Donation: committed in each entry (2000 msat) but not paid: the testnet4 set names loopback LNURLs
+  (127.0.0.1:18777/lnurlp/blwp-test-a, -b); no donation send; the 2 sat stayed in each wallet (LNURL-0822).
+- Step 4 (the dissent switch) not run yet: LNURL-0822 comes first.
