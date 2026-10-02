@@ -20,6 +20,14 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-10-02 19:05 (Daniel)
+
+HARD: The node pass is enough for now. The only priority is the join. From the
+click to being in the round: 2 to 3 seconds. Measure PLAY to the committed entry,
+and the moment the round is entered. Paid and free. Cut whatever is between those
+two clocks. Do not stop until a paid join is inside 3 seconds. Do not spend a bond.
+Do not refound. Do not publish a new series.
+
 # NOW  -  2026-10-02 16:41 (Daniel)
 
 HARD: Until 22:00 Europe/Berlin today, this is the only priority. Optimize the
