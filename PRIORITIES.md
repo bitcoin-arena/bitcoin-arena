@@ -30,6 +30,9 @@ Then test every round variant with the MacBook as the load helper, until each
 variant runs without an error. Free and paid. Empty, open, joined, locked, run,
 result, refund, win. Do not call a variant done on one success.
 
+The join takes too long. Cut that time. PLAY to a committed entry is the clock.
+Measure it before and after. Same priority, until 17:00.
+
 # NOW  -  2026-10-02 12:13 (Daniel)
 
 HARD: Playtest. Daniel cannot join the paid round. The 100 sats were locked and
