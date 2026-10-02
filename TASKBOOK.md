@@ -52058,3 +52058,7 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
   node 1's lobby read 0.55-0.83 s -> 0.12 s. The 7 testnet4 nodes moved to ba920bf0 (from 2a1c40f5), one at a time.
 - Deployed 0.0.2434: https://e75cba15.btc-logistics-core.pages.dev and the core alias both serve it (patched framework
   verified in each).
+- Retry on the live fix (01:10:30Z, round 0682e644, one player driven to win): the run started at the round's start,
+  DELIVERED, signed by the nodes PROVISIONALLY_FINAL DELIVERED, window closing 01:23:59.949Z - but score 0 (no exposure
+  on the route the driver took), under min_score 100000, so pending 0 and no line. The page and the nodes did their part;
+  what is still missing for item 1 is a qualifying drive.
