@@ -20,6 +20,14 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-10-02 16:30 (Daniel)
+
+HARD: Playtest. Daniel still cannot join a game. The lobby shows FREE d097076d
+(closes 0:33, 2 of 2) and PAID 100 sats 475e5be5 (closes 2:36). PLAY says it joins
+d097076d. The red line is "Not joined PAID · 100 sats round dfdd8351: socket error
+(18 tries)." That is a third round. Fix the join. A socket error must not sit on
+the lobby after the round it names is gone. Do not spend a bond. Do not refound.
+
 # NOW  -  2026-10-02 13:56 (Daniel)
 
 HARD: Until 17:00 Europe/Berlin today, this is the only priority. Do not start the
