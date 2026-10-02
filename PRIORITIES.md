@@ -23,10 +23,11 @@ Top item first. Finish and deploy before starting the next.
 # NOW  -  2026-10-02 19:05 (Daniel)
 
 HARD: The node pass is enough for now. The only priority is the join. From the
-click to being in the round: 2 to 3 seconds. Measure PLAY to the committed entry,
-and the moment the round is entered. Paid and free. Cut whatever is between those
-two clocks. Do not stop until a paid join is inside 3 seconds. Do not spend a bond.
-Do not refound. Do not publish a new series.
+Join click to the round actually loaded: 2 to 3 seconds at most. This assumes a
+round is already open. Do not count waiting for the next round to start. Measure
+that clock, paid and free. Cut whatever is between the click and the loaded round.
+Do not stop until a paid join of an open round is inside 3 seconds. Do not spend a
+bond. Do not refound. Do not publish a new series.
 
 # NOW  -  2026-10-02 16:41 (Daniel)
 
