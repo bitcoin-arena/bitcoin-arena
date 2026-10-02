@@ -20,6 +20,14 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-10-02 21:55 (Daniel)
+
+HARD: Until 07:00 Europe/Berlin tomorrow, this is the only priority. Test the paid
+rounds as thoroughly as possible. Every case, every variant. The MacBook is
+available so the load stays small. Use it. When the paid-round tests are done,
+resume the priorities that were already open. Do not spend a bond. Do not refound.
+Do not publish a new series.
+
 # NOW  -  2026-10-02 19:05 (Daniel)
 
 HARD: The node pass is enough for now. The only priority is the join. From the
