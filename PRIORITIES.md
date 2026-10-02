@@ -20,6 +20,16 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-10-02 13:56 (Daniel)
+
+HARD: Until 17:00 Europe/Berlin today, this is the only priority. Do not start the
+other letters until 17:00.
+
+Keep cutting the load of empty and open rounds. He is already on that.
+Then test every round variant with the MacBook as the load helper, until each
+variant runs without an error. Free and paid. Empty, open, joined, locked, run,
+result, refund, win. Do not call a variant done on one success.
+
 # NOW  -  2026-10-02 12:13 (Daniel)
 
 HARD: Playtest. Daniel cannot join the paid round. The 100 sats were locked and
