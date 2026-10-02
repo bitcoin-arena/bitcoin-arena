@@ -52062,3 +52062,27 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
   DELIVERED, signed by the nodes PROVISIONALLY_FINAL DELIVERED, window closing 01:23:59.949Z - but score 0 (no exposure
   on the route the driver took), under min_score 100000, so pending 0 and no line. The page and the nodes did their part;
   what is still missing for item 1 is a qualifying drive.
+
+## ORDER-2116 item 1, the ordered sequence (Daniel 2026-10-02: front-line route; invalidation case 1) - step 1 not landed yet
+- Route as accepted, driven on the page against the 7 testnet4 nodes: east along frontAt(x + 20) until exposure is twice
+  the minimum, then the gate (the straight cut, or the corridor the planner bends to when its look-ahead sees the straight
+  one wreck); the world search runs whole runs. Offline at 10800 ticks: 4 of 4 qualified with the corridor gate leg.
+- Live attempts 02:06Z-04:51Z, 100 sat rounds, a winner and a driven loser each (two deposits each, from our lnd through
+  gateway B): DELIVERED and qualifying four times (01:52Z 36.1 M, 02:39Z 39.9 M, 04:30Z 37.8 M, 04:51Z 32.8 M). None became
+  a signed winning, each for a cause found and fixed or still open:
+  1. 01:52Z: signed DELIVERED 192000 msat at all 7 (01:56:30Z) - the page showed nothing: two players in one browser shared
+     one pending note per round; fixed (2f5509c4, page 0.0.2435, pending-line.test two-tab case).
+  2. 02:39Z and 04:30Z: signed FAILED at all 7 - inputs handed over during the held join diverged the page's core from the
+     replay (first lost from the core, then ninety samples at tick 0 against one at the nodes); fixed (676b3603, page
+     0.0.2437) and measured: 04:47Z the seats signed exactly the page's scores (15709050, 4521300).
+  3. 04:51Z: FORFEIT at the door - no first mark within the 20 s door after the start: every mark waits for all 7 seats to
+     hold its inputs, and under load 30-32 that took longer; 23 marks skipped. OPEN.
+- Also fixed on the way: the held join (190c93e4), the doors' federation facts kept a minute (0a081f8a: POST /round 80-110 s
+  under two sessions), a stray 10-day rehearsal 2-of-2 of an earlier session stopped (128 % CPU), the driver's planner
+  (fewer variants, the truck waits at the bay for the world's first plan; a 42-variant plan took 14-17 s).
+- Step 4's switch is built and off by default (test-dissent.js, 0a081f8a): for the named entry 4 seats count their
+  replay as differing and sign their re-run one score higher. What the page will show, by the existing rules: while those
+  4 are SUSPENDED the 3 honest seats still report the winning (the page shows the figure most answering seats give); at
+  end + 1205 s the 4 decide VOID and report the stake back as a refund (§23.2/§24), so the winnings line becomes a refund
+  line (96 sat), it does not vanish.
+- Page 0.0.2437 deployed (b19be977). testnet4 nodes on 0a081f8a. Unity still without a licence.
