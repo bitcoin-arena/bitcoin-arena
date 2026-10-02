@@ -52015,3 +52015,29 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
   4920 round on 10-02; 2026-10-03 00:00:00 at 4920 (7f0f3ce5). POST /round of 8172fffd's round 400 (10:00:00Z) -> 201 (a
   409 "no chain view" first, 189 s after the restart, then 201 three times); POST /round of a tail round -> 409 "series
   round refused: that round names series 93d7cb2b59ebd6f4, and this node holds no such series".
+
+## ORDER-2116 item 1, the live attempt of 2026-10-02 00:00Z (paid round be5785e3, 100 sat) - not closed
+- 82/90: series 7f0f3ce5's beacon is 154729 (median 00:05:30Z); its publication at 154716 is below it - the fork's
+  publication is confirmed. Its 2026-10-03 rounds need the beacon 6 deep (tip 154734) before a node draws their committee.
+- Free row, measured live and fixed (8e9a3497, b47831cd): (1) a chain view read before the beacon was kept for good;
+  (2) the rounds awaiting their beacon lived in memory, every restart forgot them; (3) with a 90 s lead the beacon is 6 deep
+  ~95 s after committee_time on the 10 s clock - after entry closed (opener BLWP_COMMITTEE_LEAD_MS=180000 now); (4) an
+  opener restarted 5.6 h of 10 s blocks after bonding named a census with 0 game nodes (census kept inside the nodes'
+  2016-block window); (5) each round re-read 400 beacon headers on every ask (one shared, extended window now). After:
+  free rounds 993e6416, 53bc2a6a, b9534093 joinable (assigned, entry open) 22 s, 57 s, 58 s before their start.
+  posted-ahead-restart.test and beacon-source.test cover (2) and (5).
+- Paid row from the Beelink measurement Chrome: the public page could not reach the testnet4 nodes with the tailnet host
+  map (Chrome blocks a public page fetching a private address) nor open their /play sockets without it (all 7 errored in
+  ~2 s); the 0.0.2433 page served on 127.0.0.1:18999 with the map does both (sockets open in ~1 s).
+- Two players joined at 23:45-23:48 (deposits 100000 msat each through gateway B, all 7 nodes 201 first); one entry post
+  failed under load ("Failed to fetch", no node holds fc50c178 - its lock returns at expiry); the winner a4ea17d0 and two
+  earlier walk-aways (903f99f0, c40f6e2b) are held by all 7. All three FORFEIT 0, so there was no winning to show:
+  THE CAUSE (page): a join held to the round's start still named the round's chain, so Unity opened the session at entry
+  and the core entered the round's world 12 min before its start; the page, slow under load 30, jumped ticks to keep up,
+  the marks at 360 and 720 timed out waiting on node 4 (its entry arrived late - POST /entry ~7 s there), and the first mark
+  at tick 992 was past the 900-tick start deadline - FORFEIT at every node. Anyone joining a paid round early (the lobby
+  shows it hours ahead) loses it this way. Fix written (blwp.jslib BlwpNetNodeUrl: no session while BLWP_JOIN.held), not
+  built: Unity refuses to start - "No valid Unity Editor license found" (access token unavailable; entitlements last
+  granted 2026-10-01 15:23Z, license refreshed 20:58Z and since empty).
+- Seen, not fixed: a rejoin of a refused paid join throws "Cannot read properties of null (reading 'catch')"; two players
+  in one browser profile share one localStorage pending note per round.
