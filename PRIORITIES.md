@@ -20,6 +20,12 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-10-02 08:22 (Daniel)
+
+HARD: Next, after the settlement check that is already running. The donation set
+on testnet4 must use real LNURL addresses. Not a placeholder. Not an address nothing
+reachable can pay. Use the local testnet4 LNDs. Prove a donation arrives at one of them.
+
 # NOW  -  2026-10-01 21:19 (Daniel)
 
 HARD: Keep checking the 82/90 fork in parallel, and keep working the list below.
