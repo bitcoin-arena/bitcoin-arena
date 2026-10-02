@@ -52131,3 +52131,12 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
   8f511f73... ACCEPTED (stake 96000 + fee locks 2 x 2000 msat). The page's balance read 194 sat at 07:33:49.7Z and the
   pending line was gone at 07:33:50.9Z - the winnings in the wallet and the line replaced by the balance, in the same tab.
 - The donation proof round ce910db3 published at 154779 (fee raised to 32 sat/vB, 03153af0...), posted to all 7 seats: 201.
+
+## LNURL-0822 proved: a player's donation arrived on a local testnet4 LND (2026-10-02 08:21Z)
+- Proof round ce910db3 (stake 100 sat, census 154777, donation set 79b7f62a serial 2, no series): publication confirmed at
+  154779 (fee raised to 32 sat/vB, 03153af0...), posted to all 7 seats: 201. One player joined from page 0.0.2439 on the
+  Beelink Chrome (deposit 100000 msat through gateway B, all 7 seats 201 first).
+- The page paid the 2 % donation (2000 msat) to the set's recipients: blwp-donate-a asked for 1334 msat at 08:21:20.921Z,
+  invoice 165aee96... on LND a (beelink-testnet4) SETTLED, amt_paid 1334 msat, settle 08:21:23Z. Share B (666 msat) unpaid:
+  "666 msat is outside what the endpoint takes (1000..100000000 msat)" - the recipient server's own minimum; lowered to
+  1 msat (lnurl-donate.mjs), a 666 msat invoice now minted on LND b. The page records the donation "part".
