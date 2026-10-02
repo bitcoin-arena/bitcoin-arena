@@ -52041,3 +52041,20 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
   granted 2026-10-01 15:23Z, license refreshed 20:58Z and since empty).
 - Seen, not fixed: a rejoin of a refused paid join throws "Cannot read properties of null (reading 'catch')"; two players
   in one browser profile share one localStorage pending note per round.
+
+## The held-join fix, built without Unity and live (2026-10-02 00:22-01:05Z)
+- Unity still refuses its licence, so 0.0.2434 is the deployed 0.0.2433 with its framework patched by hand (the jslib
+  function is in the built framework as plain JS; the loader takes a file with no brotli marker as it is, so the patched
+  framework is served uncompressed under the same name). Source: blwp.jslib at 190c93e4, the same chain.
+- First try (00:30Z, round bd58ee9a): holding the session itself until the start - the entry is posted by the session, so
+  it reached no node before entry closed ("holds no such entry in the round"); both 100 sat locks return at expiry.
+- The fix as committed: the session opens at entry; only the core's init and setRound wait for the page's release.
+- Live (00:57Z, round 9e27a501, 100 sat, two players held ~4 min, page 0.0.2434 on 127.0.0.1:18999, Beelink Chrome): both
+  sessions ready while held, the core in the lobby world; at 00:57:00 both runs started at tick 0 in the round's world,
+  first marks accepted; every node signed both results FAILED (both drives wrecked), PROVISIONALLY_FINAL, window closing
+  01:10:29.949Z, FINAL from 01:10:34.949Z. Before the fix the same join was FORFEIT at every node.
+- The testnet4 doors under two lobby pages: POST /round 48 s avg (82 s max), POST /lock 40 s, POST /entry 19 s; GET /rounds
+  ?next=8 decoded all ~2000 held contracts per ask. Fixed (ba920bf0: each contract, end and series verdict read once);
+  node 1's lobby read 0.55-0.83 s -> 0.12 s. The 7 testnet4 nodes moved to ba920bf0 (from 2a1c40f5), one at a time.
+- Deployed 0.0.2434: https://e75cba15.btc-logistics-core.pages.dev and the core alias both serve it (patched framework
+  verified in each).
