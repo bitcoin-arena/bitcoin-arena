@@ -52124,3 +52124,10 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
   force at its census (k=3 onward: the new set).
 - The proof round: ce910db3756ca28a... (stake 100 sat, census 154777, set 79b7f62a, no series), publication d3fc484a...
   (3180 sat), committee 08:14Z, start 08:59Z; blwp-donation-proof-round waits for it below its beacon.
+
+## ORDER-2116 item 1 step 3 again, on page 0.0.2438 with nothing reopened (round c21fa7c8, 2026-10-02 07:18Z)
+- Winner 1492e921 DELIVERED, score 31825500; every seat signed DELIVERED 192000 msat; the page showed "192 sat, window closes
+  07:31:29 UTC" at 07:21:50Z. FINAL from 07:31:37Z, every seat holding all 7 FINAL signatures, none as evidence. Settlement
+  8f511f73... ACCEPTED (stake 96000 + fee locks 2 x 2000 msat). The page's balance read 194 sat at 07:33:49.7Z and the
+  pending line was gone at 07:33:50.9Z - the winnings in the wallet and the line replaced by the balance, in the same tab.
+- The donation proof round ce910db3 published at 154779 (fee raised to 32 sat/vB, 03153af0...), posted to all 7 seats: 201.
