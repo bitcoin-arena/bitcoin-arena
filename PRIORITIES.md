@@ -20,6 +20,13 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-10-02 11:34 (Daniel)
+
+HARD: Set up a third LND. LND B is gateway B's own node, so a donation paid through
+gateway B asks that node to pay itself. Open channels for the third LND. Then try the
+donations again, to a real LNURL that this third node can receive. Do not spend a bond.
+Do not refound. Do not touch mainnet.
+
 # NOW  -  2026-10-02 08:22 (Daniel)
 
 HARD: Next, after the settlement check that is already running. The donation set
