@@ -20,6 +20,16 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-10-02 11:55 (Daniel)
+
+HARD: Do this beside the LND C channel wait. Do not stop that wait. Do not touch
+the third LND or its channel.
+
+The 10-minute objection window and the pending line, live. FINAL must be signed.
+Winnings show as pending in the balances immediately after the result. If the
+payment becomes invalid, the pending line disappears. The measured rounds that
+stayed PROVISIONALLY_FINAL are not done.
+
 # NOW  -  2026-10-02 11:34 (Daniel)
 
 HARD: Set up a third LND. LND B is gateway B's own node, so a donation paid through
