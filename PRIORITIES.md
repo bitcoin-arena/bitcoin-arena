@@ -20,6 +20,15 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-10-02 16:41 (Daniel)
+
+HARD: Until 22:00 Europe/Berlin today, this is the only priority. Optimize the
+node software for CPU, memory, and performance. When a pass is done, look again.
+Do not stop until you can say the nodes are perfectly optimized. Measure before
+and after. Do not spend a bond. Do not refound. Do not publish a new series.
+
+# NOW  -  2026-10-02 16:41 (Daniel)
+
 # NOW  -  2026-10-02 16:30 (Daniel)
 
 HARD: Playtest. Daniel still cannot join a game. The lobby shows FREE d097076d
