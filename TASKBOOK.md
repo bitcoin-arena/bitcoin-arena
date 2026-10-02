@@ -52140,3 +52140,17 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
   invoice 165aee96... on LND a (beelink-testnet4) SETTLED, amt_paid 1334 msat, settle 08:21:23Z. Share B (666 msat) unpaid:
   "666 msat is outside what the endpoint takes (1000..100000000 msat)" - the recipient server's own minimum; lowered to
   1 msat (lnurl-donate.mjs), a 666 msat invoice now minted on LND b. The page records the donation "part".
+
+## ORDER-2116 item 1 step 4: the payment made invalid by the test fault (round d239c730, 2026-10-02 09:10Z, page 0.0.2439)
+- Winner d91b8d7e DELIVERED, score 15416100; every seat signed DELIVERED 192000 msat (the page's run and the replay agree
+  on 0.0.2439); the page showed "192 sat, window closes 09:23:59 UTC" at 09:14:23Z.
+- Armed (09:10:59Z) seats 1-4 for d91b8d7e through paid/dissent-entry.txt (BLWP_TEST_DISSENT_FILE, off by default); the
+  objection POSTed to all 7 at 09:18:09Z (end + 250 s), 201 at each. Seats 1-4 SUSPENDED ("a valid objection reached this
+  seat at 09:18:09.820Z, before 09:24:04.949Z"), seats 5-7 PROVISIONALLY_FINAL 192000 (their replay agrees). Each armed seat
+  signed its re-run with score 15416101 (the fault); no re-run reached 5.
+- At end + 1205 s the 4 decided VOID (09:34:05-06Z), each reporting the stake back as a refund, 96000 msat. The page's line
+  went 192 sat -> 96 sat at 09:34:06.5Z: the winnings left it; the player's own stake shows as coming back. Seats 5-7 hold
+  PROVISIONALLY_FINAL 192000 ("3 of 5 seats have signed FINAL") - no FINAL, so no settlement pays the winning.
+- The page counts the figure most answering seats give and skips seats that give none: while 4 seats were SUSPENDED (no
+  figure) the 3 honest seats' 192000 still showed. The "window closes 09:23:59 UTC" label stayed beside the refund.
+- Disarmed after: dissent-entry.txt empty.
