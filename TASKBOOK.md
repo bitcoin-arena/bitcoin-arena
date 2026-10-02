@@ -52105,3 +52105,22 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 - Donation: committed in each entry (2000 msat) but not paid: the testnet4 set names loopback LNURLs
   (127.0.0.1:18777/lnurlp/blwp-test-a, -b); no donation send; the 2 sat stayed in each wallet (LNURL-0822).
 - Step 4 (the dissent switch) not run yet: LNURL-0822 comes first.
+
+## LNURL-0822: testnet4's donation set with real recipients, as a soft fork (Daniel 2026-10-02 08:22)
+- Found: every testnet4 contract named the test set (7b128a1b, serial 1) whose recipients are loopback LNURLs
+  (http://127.0.0.1:18777/lnurlp/blwp-test-a/-b); the page reported "the share will show unpaid" and nothing was paid.
+- Recipients: blwp-tn4-donate (enabled user unit, /home/daniel/blwp-testnet4/donate/lnurl-donate.mjs) - LNURL-pay (LUD-06) on
+  127.0.0.1:18779, public through Funnel (tailscale funnel --set-path /lnurlp): https://beelink.tail1723e2.ts.net/lnurlp/
+  blwp-donate-a mints invoices on LND a (beelink-testnet4, 11009), blwp-donate-b on LND b (11010); description hash = SHA-256
+  of the metadata.
+- The set: protocol/tools/sign-testnet4-donation-set.mjs signs, with testnet4's donation authority (checked against the key
+  genesis names), serial 2, valid_from 154777, shares 6667 / 3333 - src/testnet4-donation-set.js, set id 79b7f62a... .
+- The protocol change (27A.4, the upgrade path Daniel named): a round names its set by id (22A, it cannot change after
+  entry); the set in force at a round's census height is the highest validly signed serial whose valid_from that height
+  has reached. Wired now (0761cf6c): a signer node serves a round's set only if it is the one in force at the round's census
+  height, and a paying POST /round naming another is refused by name. Every published paid series (census 154206, 154539,
+  154668) keeps serial 1; from 154777 serial 2. donation-set-door.test: below 200, at the height the old set refused, the new
+  one 200. The 7 testnet4 nodes run 5ce488d7 (/donation-set of a 10-02 round: 200). The daily series tool names the set in
+  force at its census (k=3 onward: the new set).
+- The proof round: ce910db3756ca28a... (stake 100 sat, census 154777, set 79b7f62a, no series), publication d3fc484a...
+  (3180 sat), committee 08:14Z, start 08:59Z; blwp-donation-proof-round waits for it below its beacon.
