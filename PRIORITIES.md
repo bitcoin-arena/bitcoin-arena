@@ -20,6 +20,14 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-10-02 12:13 (Daniel)
+
+HARD: Playtest. Daniel cannot join the paid round. The 100 sats were locked and
+seen by 5 of 7 nodes. The lobby shows PAID 100 sats round f3310e0a, closes 1:45,
+and "PLAY joins round f3310e0a - 7 of 5 signer nodes agree". The red line is
+"Not joined PAID · 100 sats round 3fe0d7d1: socket error." That is a different
+round. Fix the join. Do not lose the locked stake. Do not spend a bond. Do not refound.
+
 # NOW  -  2026-10-02 11:55 (Daniel)
 
 HARD: Do this beside the LND C channel wait. Do not stop that wait. Do not touch
