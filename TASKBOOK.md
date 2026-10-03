@@ -52337,3 +52337,13 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 - Daniel's round d917975d (start ~06:31:30Z): 9f0926ce DELIVERED 24232198, 3007 ticks at 7 of 7; 7 FINAL signatures; window closed 06:43:21Z; settlement ACCEPTED at 7 of 7 06:43:34-44Z (1 loser lock claimed, 1 qualifier paid 96000 msat). His wallet line: "Pending 192 sat - window closes 06:43:21 UTC" at 06:47Z, still not collected.
 - Cause (from the code; his tab's log was not read): the collect looked only at the NEWEST open kept round; the 24 h owed scan re-saves the rounds it finds with a fresh time, so an older round that cannot finish can stay "newest" and starve the round just won. Fix: every open round is collected, older first, each on its own. Also: past the close the line says "window closed hh:mm:ss UTC · paying out".
 - Measured: Daniel reloaded on 0.0.2485 - "yes, it arrived" (06:52Z).
+
+### Nobody won: the stake back at settlement (Daniel 2026-10-03 option 1, a363710a; seats rolled 07:04-07:07Z; page 0.0.2487)
+- M6 (MacBook), round 58e023ed (start 07:13:30Z), both players wrecked on purpose: d63adce9 182 ticks FAILED:0 and ccb49bd1 473 ticks FAILED:4200, both at 7 of 7, stake seen 7 of 7, 7 FINAL signatures each. Settlement ACCEPTED at 7 of 7 07:25:41-42Z (no loser lock claimed; fee locks paid).
+- Both stakes back at 07:25:43Z - 2 s after the settlement, not after 144 blocks: each history shows "Refund · round 58e023ed · stake back +96 sat" (above "Stake −98 sat" and "Deposit +100 sat"); each wallet 98 sat (100 deposited, 2 node fee + 2 donation kept by the round).
+- PASS. stake_expiry_blocks stays 144 (the backstop); a walk-away is never refunded.
+
+### The lobby offers the next round to a funded wallet (Daniel 2026-10-03: "I always have to wait for the next round that starts in XX minutes"), page 0.0.2488
+- A free row, or a paid row whose stake the player wallet already holds: the soonest series round with 15 s of entry left (FUNDED_JOIN_LEAD_MS); a wallet that must deposit first keeps the 90 s lead. The next round after a run skips one with under 15 s of entry left.
+- Measured on the MacBook, lead-1: before funding the lobby's paid row was a430f149, 165 s out; with 100 sat in the wallet the row at the click was e9b8b617, 55 s out. Lead-2: clicked 6 s after the funding - the lobby had not repainted with the new balance yet and still showed 61c44c30, 154 s out (the 64 s round 7bf7a6fc was listed). Loaded 0.33-0.51 s after PLAY.
+- Joining the round already running (late join) is not built: it needs entry close past the start - a new series and a seat rule; asked of Daniel.
