@@ -27,8 +27,6 @@ priorities and the tests. The round set keeps running in the background. Do not
 stop it for the donations. Do not spend a bond. Do not refound. Do not publish a
 new series.
 
-# NOW  -  2026-10-03 18:19 (Daniel)
-
 # NOW  -  2026-10-03 11:55 (Daniel)
 
 HARD: Do not sit idle until the round is done. Keep working the other open
