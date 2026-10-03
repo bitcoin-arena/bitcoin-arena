@@ -52537,3 +52537,7 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 - Offline (copy of seat 7's store, real bitcoind view): one census = view read 4.2 s (async, off the loop) + txid index 0.33 s + deriveCensus 2.7 s on the loop (20,975 transactions parsed and hashed: sha256, fromHex, parseTransaction, chainFactsAt).
 - f2aa3984: a census checked against its round's own root is kept in the store (census_kept) and read back after a restart; a kept one with another root is not taken. roster 20/20 (new test).
 - Live, seats at f2aa3984: roll 1 (fills the store) longest series-writer hold 3.3-5.6 s per seat, 28 missed probes; roll 2 (kept censuses) 150-252 ms per seat (was 15-33 s this afternoon, 3.1-7.6 s after the slicing), 16 missed probes (each seat's own ~3 s restart). All guardians adopted both times. DONE.
+
+### /dashboard (Daniel 22:10, corrected: per node, lowercase)
+- Each node's own dashboard was built and closed (2026-10-01); every node answers /dashboard (and /dashboard.json) with its own figures. Measured over each node's public route: all 7 answer 200 with their own day profit (35.4-36.6 sat today, 221 rounds checked).
+- New: btc-logistics-core.pages.dev/dashboard/ (page 0.0.2500, deploy ebb7bd57) - an index, not a combined dashboard: one row per node linking to that node's own /dashboard over the route daily.json names (renamed when a tunnel restarts), with its key, today's profit and rounds checked read from its /dashboard.json. Shown in MacBook Chrome.
