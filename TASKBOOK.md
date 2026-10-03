@@ -52631,3 +52631,13 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 - CAUSE: the hold's early release ("this run signed by 5") fires on the very read that brings the signed lines; any cap only bounds the unsigned case.
 - Seats, all 7: ticks 0..2118 no gap, 36 marks (last 2119), 0 refused, 0 equivocations. One stake, no second. Bonds 10 outputs, 542347 sat.
 - Screenshots, curls, the page's summary lines: docs/playthrough-2026-10-03/summary3/.
+
+### No early release: the card holds to close + 20 s (2026-10-03 23:01-23:09Z): page 0.0.2511 (7a2a87a3, core alias; Unity 0.0.2639 unchanged), d414ecb0
+- index.html: hold = now < the round's close + 20 s, nothing else (the "signed by 5" release is gone - on 52650809 it let go on the read that brought the signed lines). Page tests 128/128, the page's inline scripts parse.
+- Wallet: 50 sat spendable + 96 pending after 52650809; one deposit of 60 sat from LND A for this one run's 100 sat lock.
+- Paid round d9956f24 (entry 909f8cf2), MacBook Chrome 1280x720, continue off, the driver round the miner: DELIVERED at tick 2407, 23:06:40.27Z (card +98.63700). "the card holds until 23:08:11Z (the round closed + 20 s)".
+- +1.70 / +4.25 / +7.27 / +10.28 s and every 15 s to +75 s: card up, lines = the seat's curl (state 0, signedBy 0: "1 still driving / HIGH SCORE  - / YOU  PENDING / preliminary · 0 of 1 runs signed / you  pending").
+- Signers: the page saw 3 at +80.8 s (23:08:01.07), the seat's curl had 7 by +81.33 s; the card drew "DELIVERED you / HIGH SCORE  1. you 98.63700" from 23:08:01.07 and "preliminary · 1 of 1 runs signed" from 23:08:03.12. Screenshot m-e2 at +83.30 s (signedBy 7 in the curl) shows all four lines ON THE CARD: DELIVERED you / HIGH SCORE  1. you 98.63700 / YOU  PENDING / preliminary · 1 of 1 runs signed / you  pending. YOU and the net stay pending (settlement later).
+- The card stood through all 7 signers: the hold let go at 23:08:12.251 "(the round closed + 20 s)", +92.0 s; lobby up at +92.33 s. The signed names and high score stood 11.2 s on the card, the signed count 9.1 s.
+- Seats, all 7: entry 909f8cf2, ticks 0..2406 no gap, 41 marks (last 2407), 0 refused, 0 equivocations. One stake, no second. Bonds 10 outputs, 542347 sat. The running round set untouched.
+- Screenshots, curls, the page's summary lines: docs/playthrough-2026-10-03/summary4/.
