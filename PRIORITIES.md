@@ -51,6 +51,21 @@ A click on a player opens that player's replay in a new window
 (/replay?round=&entry=). Do not stop the console playtest already in progress
 for this. Do it with the /Dashboard item. Do not spend a bond. Do not refound.
 
+# NOW  -  2026-10-03 22:50 (Daniel)
+
+Assign each live gateway to an existing signer node, as one package with its LND.
+Node 1 hosts gateway A and LND 1 (gw-a, 31270, LND beelink-testnet4 on 11009).
+Node 2 hosts gateway B and LND 2 (gw-b, 31280, LND beelink-testnet4-b on 11010).
+Nodes 3 to 7 host neither. Do not start a new gateway. Do not move the processes
+off this machine. The assignment is what the node owns.
+
+Each node's own /Dashboard must follow that assignment. Node 1 and node 2 must not
+say "this node holds no Lightning channel" or "this node pays no gateway". Show the
+LND and the gateway that node hosts, and that node's gateway figures. Nodes 3 to 7
+keep those two notes, because they host neither. Do not stop the console playtest
+already in progress for this. Do it with the /Dashboard item. Do not spend a bond.
+Do not refound. Do not stop the round set.
+
 # NOW  -  2026-10-03 21:40 (Daniel)
 
 Checked against TASKBOOK and the code. These are the only open items.
