@@ -52564,3 +52564,12 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 - Seats, all 7: one entry, ticks 0..4919 no gap, 81 marks (last 4920), 0 refused, 0 equivocations, one stake lock. Page: 52 marks accepted / 0 refused. Bond wallet: 10 outputs, 542347 sat (as in run 1).
 - STILL OPEN (from the named blocker "straight to driving WITH ITS CARGO"): after the reload the bay is empty and the HUD says "CARGO empty" (07-*); the score (core) still counts the load (1.83750 before and after). Unity's parcels are not restored from the run's load.
 - Screenshots: docs/playthrough-2026-10-03/run2/.
+
+### The mid-run reload playthrough with the cargo kept (2026-10-03 21:21-21:24Z): page 0.0.2504 (85e7f4a3, played on the core alias), Unity from 19e4f47b (MacBook build 0.0.2627; CargoTests PlayMode 34 passed / 0 failed / 1 skipped, incl. KeptBedComesBackAsTheSameParcels)
+- The wallet is per origin: run 2's 400000 msat stays in the c9ee9ac6 origin. From now on playthroughs run on https://btc-logistics-core.pages.dev (one deposit there, 500 sat from LND A).
+- PAID row eb33434c selected, PLAY: loaded 363 ms, lock accepted 1403 ms after the entry, wallet 402000. AUTO (9 parcels), ROLL OUT: the bed kept for the round in sessionStorage (blwp.cargo.<round>).
+- Reload at 21:22:50.213 (tick 1156, 1:03 left). Resumed at tick 1206 (+3.7 s); "resumed run: the cargo panel closed, driving on with 9 parcel(s) kept from before the reload" 14 ms later. Screenshots 07-after-6s/10s: the same crates on the bed, no cargo panel, score 0.77700 as before.
+- Driven after the reload: ArrowDown 3.5 s 15 m back, then ArrowLeft+ArrowUp to (145.3, -39.3). The run ended MISSED at tick 4920 (not delivered: 0:26 left when I started going round the obstacle).
+- Seats, all 7: entry ed9eca31, ticks 0..4919 no gap, 82 marks (last 4920), 0 refused, 0 equivocations, one stake lock. Page 61/0. No second stake (continue off); wallet 400000 = 402000 - the 2% donation. Bonds 10 outputs, 542347 sat.
+- SEEN, NOT A RELOAD MATTER: ArrowUp held from the roll-out drives into the miner pedestal's pink box at x=142.3, 56-64 m short of the drop-off - in runs 2 and 3 alike, before any reload.
+- The blocker is closed: a reloaded run goes straight back to driving with its cargo. Screenshots: docs/playthrough-2026-10-03/run3/.
