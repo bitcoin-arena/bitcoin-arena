@@ -52509,3 +52509,7 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 - Fixed (mine today): client-hash (known-good list + dist lock client synced to the deployed build), no-hold-vocabulary (a comment), bundle-fresh (bundle rebuilt after the lock-settlement change), player-copy (the resume console line said "seats").
 - Fixed (older, bisected): lobby-names - red since 669b39be (the 5 s listing cache served a renamed player's old name); a taken name now drops the small cached listings. ghost-realtime - red since 41a58db5 (no warm pictures for unwatched rounds: a late watcher was shown tick 149 of a truck at 1199); a new watcher now has the others walked to their newest tick once (bounded as the warm step). ghost-socket 9, ghost-produce 6, ghost-door 1, warm-ghost-matches-replay 3, ghost-consume 7, ghost-live 10/11 (its known red).
 - Flake under load: objection-window (a scripted run DELIVERED where FAILED was meant) - 3/3 alone.
+
+### Seats at bb1a9367 (2026-10-03 18:48-18:49Z)
+- Seats' code tree moved ac0d738d -> bb1a9367 (a renamed player listed at once; a late ghost watcher shown the others at their newest tick); roll7, all 7 up in 3-6 s, every guardian adopted.
+- OPEN (load): on a seat's start its series writer held the event loop up to 32.7 s (seat 1; 21 s at 15:48Z) - seats 1 and 2 answered /identity only after 1.6-8 s, and nothing (000 within 10 s) right after the roll. With ~4,500 series rounds in series-both.txt, every seat restart is ~30 s of a seat that answers no join.
