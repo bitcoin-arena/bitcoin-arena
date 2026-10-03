@@ -20,6 +20,15 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-10-03 21:24 (Daniel)
+
+HARD: If the series is still unconfirmed at 22:00 Europe/Berlin, post a new series.
+It uses the new donation version set. Rounds are 90 seconds, back to back. The
+first round starts 36 hours after the post. Give that publication 12 hours to
+confirm. Until 22:00, and while that publication confirms, keep testing everything
+and do the open priorities. Do not stop the round set that is already running.
+Do not spend a bond. Do not refound.
+
 # NOW  -  2026-10-03 18:19 (Daniel)
 
 HARD: Today the first priority is donations. Finish them. Then continue the open
