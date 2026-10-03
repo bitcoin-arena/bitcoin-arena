@@ -52265,3 +52265,7 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
   its lock afterwards (a protocol change) or a lock made before PLAY removes it.
 - deploy-core.sh asked a bare /rounds (every round the node holds: 2.2 MB, 7 s, up to 17.3 s on seat 1's event loop -
   every join's play node); now /rounds?next=1. A deploy in 11 s, no stall at seat 1.
+- Regression on the final page 0.0.2475 (lockBoth, the lobby's round prep, the warmed session), Beelink Chrome, two players each:
+  - R1 05e08992 (start 00:57:00Z): the winner's round began in bay z 17.0 - "teleport refused" at 00:57:00.248 - and DELIVERED 30762900 on the page; all 7 seats signed DELIVERED:30762900 (1197 ticks x7); loser FAILED (617 x7); pending 192 ("window closes 01:08:51 UTC"); FINAL 01:08:57; winner wallet 194 sat at 01:09:31; settlement ACCEPTED at 7 of 7.
+  - R2 b021cd7d (start 01:04:30Z): winner DELIVERED 21043050 at the page and at 7 of 7 (1264 x7), loser FAILED:0; FINAL 01:16:27; winner wallet 194 sat at 01:16:45.
+  - R3 bd5158ed (start 01:22:30Z): session cut at tick 112 for 6 s, restored, all 498 ticks at 7 of 7; the other player reloaded after locking - "stake lock kept from before the reload" (6d5b9567, made by lockBoth), held to the start ("round starts in 3:10"), one entry, no second deposit, lock seen 7 of 7.
