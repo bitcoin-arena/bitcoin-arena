@@ -48,6 +48,15 @@ resume, guardians that outlive a node restart.
 
 Do not spend a bond. Do not refound.
 
+# NEXT  -  2026-10-03 22:05 (Daniel): after the 21:40 list, also tonight
+
+1. A REAL SPECTATE MODE after WRECKED / FINISHED. Today the player still sees the truck and can do nothing. Instead the
+   player roams freely while the round runs to its end: the camera slowly leaves the 3D view for a more top-down view of
+   the world, which the player steers with the usual controls. The timer and the result controls stay as they are.
+2. UNDER THE RESULT: a summary of who won and who lost (names) and the score high-score list. Once results are in, what
+   this player won or lost. A preliminary balance-change list is fine, updated while other drivers still reach the
+   target or get wrecked.
+
 # NOW  -  2026-10-03 21:24 (Daniel)
 
 HARD: If the series is still unconfirmed at 22:00 Europe/Berlin, post a new series.
