@@ -29,6 +29,17 @@ Clean that up tonight. Make it much more compact. A small button labeled Console
 opens it. Collapsed by default. Do not spend a bond. Do not refound. Do not stop
 the round set that is already running.
 
+# NOW  -  2026-10-03 22:20 (Daniel)
+
+HARD: Do not block. If the first live paid join on a key-set round is not live yet
+(donations, seats, redeem), and if a live late join cannot be measured yet, leave
+those two and keep going. Do not wait on them. Do not let anything else block the
+night either. Next, in order: the compact Console button above, then a real
+mid-run reload playthrough, then spectate after wrecked/finished, then the result
+summary (names, high score, this player's win or loss, a preliminary balance list),
+then each node's own /Dashboard. No combined page. Come back to the paid join and
+the late join when they are actually live. Do not spend a bond. Do not refound.
+
 # NOW  -  2026-10-03 21:40 (Daniel)
 
 Checked against TASKBOOK and the code. These are the only open items.
