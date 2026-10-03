@@ -52503,3 +52503,9 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 - A further mid-run resume (round 8863c96e, a harness mistake turned it into one): resumed at 276, WRECKED at 409, 1 mark accepted / 0 refused.
 - RELOAD AFTER THE RUN ENDED, round still open (round 94b830dd): the run ended WRECKED at tick 340; the page had put the lobby's address back (as designed), so the reload 3 s later opened the lobby - nothing resumed, nothing re-sent. Seats: 1 entry, 340 ticks, 5 marks, last at 340, 0 refused.
 - Harness: chain-clock.mjs RELOAD_AGAIN_S (a second reload) and AFTER_END (waits for that round's own BLWP_ENDED_RUN - BLWP_RUN_ENDED keeps the previous run's word).
+
+### Full suite at 5af08df0 + fixes (2026-10-03 17:46-18:29Z): 309 files
+- The six accepted reds, as listed: ghost-live 9, replay-solids 2, discovery 18, objective-markers, replay-page 1, bridge 1.
+- Fixed (mine today): client-hash (known-good list + dist lock client synced to the deployed build), no-hold-vocabulary (a comment), bundle-fresh (bundle rebuilt after the lock-settlement change), player-copy (the resume console line said "seats").
+- Fixed (older, bisected): lobby-names - red since 669b39be (the 5 s listing cache served a renamed player's old name); a taken name now drops the small cached listings. ghost-realtime - red since 41a58db5 (no warm pictures for unwatched rounds: a late watcher was shown tick 149 of a truck at 1199); a new watcher now has the others walked to their newest tick once (bounded as the warm step). ghost-socket 9, ghost-produce 6, ghost-door 1, warm-ghost-matches-replay 3, ghost-consume 7, ghost-live 10/11 (its known red).
+- Flake under load: objection-window (a scripted run DELIVERED where FAILED was meant) - 3/3 alone.
