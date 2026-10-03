@@ -52251,3 +52251,17 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 - warm the session at the click (35152f90, 0.0.2471): randomness from all nodes at once + kept per round (1.5 s -> 19-32 ms at the click), chain proof + POST /round started at the click (openRound in the session 1150-1422 ms -> 0-1 ms; chain REUSED). Stake locked -> join done: 4.95 s -> 2.0 s.
 - quotes kept per wallet state and asked together (9a1979ab, 0.0.2472): 'wallet is open' -> 'locking' 1.9 s -> 0.13 s.
 - After a wallet holds enough (paid join with deposit): quote 0.13 s + lock 3.3 s + entry/session 1.3 s = 4.8 s. A truly funded join (no deposit) is measured next (F1: a winner's wallet, then PLAY again in the same Chrome).
+- Funded paid join (the tab's own wallet funded before PLAY, PLAY 5 s after the lobby showed the round), PLAY to join done:
+  0.0.2472 (round 7bd58c39) 8.66 s -> 0.0.2474 (f76e82f5, signer nodes + claim key asked by the lobby) 4.85 s ->
+  0.0.2475 (a9463b62, donation set + lock quotes asked by the lobby too) 4.65 s: donation set 0 ms, signer nodes 0 ms,
+  deposit check 0.52 s (quote missed: this run funded the wallet after the lobby's warm quote), stake shares + handout
+  0.55 s, quote 0.17 s, lockBoth 2.04 s, session start 0.70 s (Unity asks for the node every 0.5 s), openRound 0 ms, join
+  0.48 s. With the quote kept (an unchanged wallet) about 4.2 s.
+- Free join on 0.0.2475 (round ec9c01b5): PLAY to session ready 1.05 s (randomness warm 167 ms, openRound 47-126 ms, join 238 ms).
+- What stands between 4.2 s and 3 s, each a decision rather than a cut: (1) the handout is posted before the lock exists
+  (a lock never stands on a stake whose shares the signer nodes do not hold) - posting it beside the lock saves ~0.5 s;
+  (2) Unity asks the page for the session every 0.5 s (NetSession) - a Unity build; (3) the entry names the stake and fee
+  lock outpoints, so the lock (1.8-3.5 s, one federation transaction) is always before the entry - only an entry that binds
+  its lock afterwards (a protocol change) or a lock made before PLAY removes it.
+- deploy-core.sh asked a bare /rounds (every round the node holds: 2.2 MB, 7 s, up to 17.3 s on seat 1's event loop -
+  every join's play node); now /rounds?next=1. A deploy in 11 s, no stall at seat 1.
