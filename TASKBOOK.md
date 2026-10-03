@@ -52513,3 +52513,9 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 ### Seats at bb1a9367 (2026-10-03 18:48-18:49Z)
 - Seats' code tree moved ac0d738d -> bb1a9367 (a renamed player listed at once; a late ghost watcher shown the others at their newest tick); roll7, all 7 up in 3-6 s, every guardian adopted.
 - OPEN (load): on a seat's start its series writer held the event loop up to 32.7 s (seat 1; 21 s at 15:48Z) - seats 1 and 2 answered /identity only after 1.6-8 s, and nothing (000 within 10 s) right after the roll. With ~4,500 series rounds in series-both.txt, every seat restart is ~30 s of a seat that answers no join.
+
+### A starting seat's series pass, sliced (2026-10-03 18:51-19:05Z)
+- Offline, on a copy of seat 7's store with the live series file: opening the 2,123 rounds of the next 72 h took 121 ms (0.06 ms each). The 15-33 s holds were the same pass's signer-node assignments (up to 20 per series, 9 series), each reading a census from the chain, cold after a restart.
+- 445925f5 sliced the writing (150 ms, the soonest first, setImmediate between): live, holds still 15-28 s. 99f2f3dc slices the assignments too: live roll, longest series-writer hold per seat 3.1-7.6 s (was 15-33 s); probes of /identity every 2 s with a 3 s timeout during and 60 s after the roll: 32 misses across the 7 seats (3-6 each), against seats that answered nothing for 20-30 s before.
+- OPEN: a single assignment still takes seconds on a cold census (the chain view); slicing between them cannot cut one - the census read itself is the next thing to move off the loop or keep warm across a restart.
+- Seats' code tree now 99f2f3dc; roll7 three times this evening, every guardian adopted each time.
