@@ -52532,3 +52532,8 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
   | 42d36255 (0.0.2499) | 1.21-1.35 s | 2.86 s |
   Was 3.5-4.7 s to the entry (0.0.2479). The entry is inside 3 s every time; the stake counted by 5 of 7 is inside in 2 of 3 on 0.0.2499. A seat's verification is ~0.3 s (tool: id 11 ms, status 310 ms, in parallel); the rest is the federation's acceptance (0.8 s to over 2 s). page-lock 57/57 (new: a submitted lock answers its outpoints before acceptance; moved or refused rejects), checkpoint 22, join 12, two-tabs 5, deposit-reload 6.
 - The MacBook's headless Chrome had hung after a Chrome self-update (debug port silent); restarted.
+
+### OPEN-LIST-2140 item 4: a seat's start, the cold census (2026-10-03 20:00-20:16Z)
+- Offline (copy of seat 7's store, real bitcoind view): one census = view read 4.2 s (async, off the loop) + txid index 0.33 s + deriveCensus 2.7 s on the loop (20,975 transactions parsed and hashed: sha256, fromHex, parseTransaction, chainFactsAt).
+- f2aa3984: a census checked against its round's own root is kept in the store (census_kept) and read back after a restart; a kept one with another root is not taken. roster 20/20 (new test).
+- Live, seats at f2aa3984: roll 1 (fills the store) longest series-writer hold 3.3-5.6 s per seat, 28 missed probes; roll 2 (kept censuses) 150-252 ms per seat (was 15-33 s this afternoon, 3.1-7.6 s after the slicing), 16 missed probes (each seat's own ~3 s restart). All guardians adopted both times. DONE.
