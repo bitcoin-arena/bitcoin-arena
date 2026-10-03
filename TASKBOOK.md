@@ -52520,3 +52520,15 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 - OPEN: a single assignment still takes seconds on a cold census (the chain view); slicing between them cannot cut one - the census read itself is the next thing to move off the loop or keep warm across a restart.
 - Seats' code tree now 99f2f3dc; roll7 three times this evening, every guardian adopted each time.
 - 939053df (one txid index per chain view object): live roll, longest holds 3.3-7.3 s, 22 missed probes - no measurable gain (the views differ per series, or the derivation itself is the cost). Kept (harmless, census/roster suites green); the cold census stays OPEN. Seats at 939053df, all guardians adopted.
+
+### OPEN-LIST-2140 (2026-10-03 19:40-20:00Z)
+- ITEM 1, DONE: both key-set publications confirmed at 154978 (b0c5e5cc, 10-04 10:00Z tail, and 88fe9eed, 10-05) - the beacon guard read "SAFE: confirmed at 154978, beacon not yet" (no block's median time had reached 22:00Z). Series 7c2ead5b and 7cfa7b5c stand; no new series posted. (Tool ready for one anyway: testnet4-key-tail.mjs COMMITTEE_AT_MS, dry run c30e8a93.)
+- ITEM 3: the lock answered on submission. wasm lockSubmit / lockAccepted: live, submit answered in 122-226 ms, acceptance 0.8-1.4 s after, every output stored where built (stake 0, donations 1, 2). Page 0.0.2498: the entry names the submitted outpoints and goes out at once; acceptance checked after (a moved or refused lock refuses the join by name). 0.0.2499: the client hands the lock to the signer nodes the moment it is accepted (the backoff's first tries fell before acceptance).
+  Measured (MacBook Chrome, funded, already-open rounds), from PLAY:
+  | round | entry at all 7 seats | stake verified, 5th of 7 |
+  | 6c3b086f (0.0.2498) | 1.38-1.51 s | 3.52 s |
+  | 357b347f (0.0.2499) | 1.05-1.11 s | 2.12 s |
+  | df2183d4 (0.0.2499) | 1.55-1.69 s | 3.69 s |
+  | 42d36255 (0.0.2499) | 1.21-1.35 s | 2.86 s |
+  Was 3.5-4.7 s to the entry (0.0.2479). The entry is inside 3 s every time; the stake counted by 5 of 7 is inside in 2 of 3 on 0.0.2499. A seat's verification is ~0.3 s (tool: id 11 ms, status 310 ms, in parallel); the rest is the federation's acceptance (0.8 s to over 2 s). page-lock 57/57 (new: a submitted lock answers its outpoints before acceptance; moved or refused rejects), checkpoint 22, join 12, two-tabs 5, deposit-reload 6.
+- The MacBook's headless Chrome had hung after a Chrome self-update (debug port silent); restarted.
