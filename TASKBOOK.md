@@ -52290,3 +52290,17 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
   - R7, round bb172454 (start 03:28:30Z), reload 0.4 s into sending: session key aaa6c5a5 the same, world secret 1c69a260 the same, entry 0faf2261 the same; no second deposit. The seats hold exactly two entries: 0faf2261 (lock e88b0088, seen 7 of 7, 527 ticks at 7 of 7, FAILED:960750) and e746d788 (lock d96f4c83, seen 7 of 7, 428 ticks at 7 of 7, FAILED:690900). No stray entry, no FORFEIT. Settlement ACCEPTED at 7 of 7 (03:40:44Z, 7 of 7 payout contracts, 2 of 2 claimed locks gone).
 - No bond spent, no refound, no new series; the Daily pin untouched.
 - Paid join of an already-open round on 0.0.2479, funded wallet, PLAY 15 s after the lobby showed the round (join-clock, Beelink Chrome), PLAY to join done: 4.29 s (6461b9a5), 3.54 s (8748e6a3), 4.71 s (a21b02a4). NOT within 3 s. Split: PLAY to the lock's start 0.9-1.2 s (the player wallet's balance and the locks' need read twice: once in the funding check, once in lockStake), the lock 1.9-2.6 s (one federation transaction to acceptance), after it 0.5-0.9 s (socket connect 136-508 ms, join 100-300 ms). The kept key costs nothing measurable here (one PKCS#8 export).
+
+### Paid join to the loaded round within 3 s (Daniel 2026-10-03) - b16076a9, page 0.0.2480
+- Blocker measured on 0.0.2479: the lock's federation acceptance (1.9-2.6 s, 1.7-5.2 s earlier) sat on the click's path; PLAY to join 3.54-4.71 s.
+- Page only, seats unchanged: a lobby join held to its round's start (at least 20 s away) shows the round loaded - the "round starts in m:ss" countdown - once the player wallet holds this round's locks and the stake's handout is taken; the lock and then the entry are made behind the countdown. No entry reaches a seat before its lock is accepted (the entry still names an accepted lock); a failed lock or entry refuses the join by name.
+- Live, Beelink Chrome, funded wallet, PLAY 15 s after the lobby showed the round (join-clock; click -> "TIMED round loaded"; then the lock, then the entry committed):
+  - c8141c1e: loaded 0.84 s, locked 3.64 s, entry ff09491b committed 4.49 s (start 121 s ahead), stake seen 7 of 7
+  - c4d0d40b: loaded 0.68 s, locked 2.61 s, entry 3ba441c8 committed 3.25 s (153 s ahead), stake seen 7 of 7
+  - 27ec0f78: loaded 0.80 s, locked 3.48 s, committed 4.37 s (111 s ahead)
+  - 16ab21fe: loaded 0.66 s, locked 3.11 s, committed 3.67 s (154 s ahead)
+  - d8f921e7: loaded 0.70 s, locked 3.30 s, committed 4.21 s (154 s ahead)
+  - (the join clock closes its tab after the commit: those entries never play and are signed FORFEIT at close - the harness, not a stray entry)
+- Two PLAYs answered false at the click (7f21eabd in a fresh Chrome profile; c4d0d40b again in the profile that had just joined it), no join started, nothing paid; not reproduced in the next 3 runs. Cause not found - open.
+- Full pair on 0.0.2480, R8 round b9b02c71 (start 04:15:00Z), both tabs through the early-loaded path (BLWP_JOIN.loaded and .committed true, state joined): winner 8c47dd8c (lock 5134fa22, seen 7 of 7, 1156 ticks at 7 of 7, DELIVERED 34946100, address posted 201 at 7 of 7), other 0c7410fd (lock ba8f2645, seen 7 of 7, 458 ticks at 7 of 7, WRECKED).
+  - R8 settled: 7 FINAL signatures on each entry; settlement ACCEPTED at 7 of 7 (04:27:04Z: 1 loser lock claimed 96000 msat, 1 qualifier paid 96000 msat, 2 fee locks 4000 msat to 7 signer nodes). A round shown loaded before its lock was accepted ran and settled as before.
