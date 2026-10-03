@@ -1,0 +1,280 @@
+{
+ "at": "2026-10-03T23:43:18.960Z",
+ "rows": [
+  {
+   "seat": 1,
+   "what": "LND alias",
+   "page": "beelink-testnet4",
+   "direct": "beelink-testnet4",
+   "ok": true
+  },
+  {
+   "seat": 1,
+   "what": "LND pubkey",
+   "page": "0274e26122c7b8fc11f6caaee03f8b639965ffb83196eb1a9aa1a281906898d6b9",
+   "direct": "0274e26122c7b8fc11f6caaee03f8b639965ffb83196eb1a9aa1a281906898d6b9",
+   "ok": true
+  },
+  {
+   "seat": 1,
+   "what": "LND active channels",
+   "page": "1",
+   "direct": "1",
+   "ok": true
+  },
+  {
+   "seat": 1,
+   "what": "LND local msat",
+   "page": "1082086628",
+   "direct": "1082086628",
+   "ok": true
+  },
+  {
+   "seat": 1,
+   "what": "LND remote msat",
+   "page": "459114372",
+   "direct": "459114372",
+   "ok": true
+  },
+  {
+   "seat": 1,
+   "what": "gateway name",
+   "page": "gw-a",
+   "direct": "gw-a",
+   "ok": true
+  },
+  {
+   "seat": 1,
+   "what": "gateway state",
+   "page": "Running",
+   "direct": "Running",
+   "ok": true
+  },
+  {
+   "seat": 1,
+   "what": "gateway e-cash msat",
+   "page": "248999936",
+   "direct": "248999936",
+   "ok": true
+  },
+  {
+   "seat": 1,
+   "what": "gateway lightning msat",
+   "page": "1082086628",
+   "direct": "1082086628",
+   "ok": true
+  },
+  {
+   "seat": 1,
+   "what": "gateway inbound msat",
+   "page": "459114372",
+   "direct": "459114372",
+   "ok": true
+  },
+  {
+   "seat": 1,
+   "what": "gateway on-chain sat",
+   "page": "20446",
+   "direct": "20446",
+   "ok": true
+  },
+  {
+   "seat": 1,
+   "what": "note lightning has no \"holds no Lightning channel\"",
+   "page": "false",
+   "direct": "false",
+   "ok": true
+  },
+  {
+   "seat": 1,
+   "what": "note gateway has no \"pays no gateway\"",
+   "page": "false",
+   "direct": "false",
+   "ok": true
+  },
+  {
+   "seat": 1,
+   "what": "hosts read age s (<= 60 + 30)",
+   "page": "true",
+   "direct": "true",
+   "ok": true
+  },
+  {
+   "seat": 2,
+   "what": "LND alias",
+   "page": "beelink-testnet4-b",
+   "direct": "beelink-testnet4-b",
+   "ok": true
+  },
+  {
+   "seat": 2,
+   "what": "LND pubkey",
+   "page": "025f17c2563260049cbae649699fdcbdcd3706d7c298d2d2d4ce7e49bf529c4cc4",
+   "direct": "025f17c2563260049cbae649699fdcbdcd3706d7c298d2d2d4ce7e49bf529c4cc4",
+   "ok": true
+  },
+  {
+   "seat": 2,
+   "what": "LND active channels",
+   "page": "3",
+   "direct": "3",
+   "ok": true
+  },
+  {
+   "seat": 2,
+   "what": "LND local msat",
+   "page": "722117053",
+   "direct": "722117053",
+   "ok": true
+  },
+  {
+   "seat": 2,
+   "what": "LND remote msat",
+   "page": "1332143947",
+   "direct": "1332143947",
+   "ok": true
+  },
+  {
+   "seat": 2,
+   "what": "gateway name",
+   "page": "gw-b",
+   "direct": "gw-b",
+   "ok": true
+  },
+  {
+   "seat": 2,
+   "what": "gateway state",
+   "page": "Running",
+   "direct": "Running",
+   "ok": true
+  },
+  {
+   "seat": 2,
+   "what": "gateway e-cash msat",
+   "page": "224296960",
+   "direct": "224296960",
+   "ok": true
+  },
+  {
+   "seat": 2,
+   "what": "gateway lightning msat",
+   "page": "722117053",
+   "direct": "722117053",
+   "ok": true
+  },
+  {
+   "seat": 2,
+   "what": "gateway inbound msat",
+   "page": "1332143947",
+   "direct": "1332143947",
+   "ok": true
+  },
+  {
+   "seat": 2,
+   "what": "gateway on-chain sat",
+   "page": "69116",
+   "direct": "69116",
+   "ok": true
+  },
+  {
+   "seat": 2,
+   "what": "note lightning has no \"holds no Lightning channel\"",
+   "page": "false",
+   "direct": "false",
+   "ok": true
+  },
+  {
+   "seat": 2,
+   "what": "note gateway has no \"pays no gateway\"",
+   "page": "false",
+   "direct": "false",
+   "ok": true
+  },
+  {
+   "seat": 2,
+   "what": "hosts read age s (<= 60 + 30)",
+   "page": "true",
+   "direct": "true",
+   "ok": true
+  },
+  {
+   "seat": 3,
+   "what": "hosts",
+   "page": "null",
+   "direct": "null",
+   "ok": true
+  },
+  {
+   "seat": 3,
+   "what": "note lightning",
+   "page": "this node holds no Lightning channel",
+   "direct": "this node holds no Lightning channel",
+   "ok": true
+  },
+  {
+   "seat": 3,
+   "what": "note gateway",
+   "page": "this node pays no gateway",
+   "direct": "this node pays no gateway",
+   "ok": true
+  },
+  {
+   "seat": 1,
+   "what": "no password / macaroon in dashboard.json",
+   "page": "false",
+   "direct": "false",
+   "ok": true
+  },
+  {
+   "seat": 2,
+   "what": "no password / macaroon in dashboard.json",
+   "page": "false",
+   "direct": "false",
+   "ok": true
+  },
+  {
+   "seat": 3,
+   "what": "no password / macaroon in dashboard.json",
+   "page": "false",
+   "direct": "false",
+   "ok": true
+  }
+ ],
+ "notes": {
+  "1": {
+   "guardian": "the guardian third (§22A) goes to the census nodes guarding the round's federation; this node's share is shown when it guards it",
+   "lightning": "this node hosts LND beelink-testnet4; its Lightning costs are the fees its own payments paid",
+   "gateway": "this node hosts gateway gw-a; gateway costs are 0: the gateway is what charges, the node pays it nothing"
+  },
+  "2": {
+   "guardian": "the guardian third (§22A) goes to the census nodes guarding the round's federation; this node's share is shown when it guards it",
+   "lightning": "this node hosts LND beelink-testnet4-b; its Lightning costs are the fees its own payments paid",
+   "gateway": "this node hosts gateway gw-b; gateway costs are 0: the gateway is what charges, the node pays it nothing"
+  },
+  "3": {
+   "guardian": "the guardian third (§22A) goes to the census nodes guarding the round's federation; this node's share is shown when it guards it",
+   "lightning": "this node holds no Lightning channel",
+   "gateway": "this node pays no gateway"
+  }
+ },
+ "totalsDay": {
+  "1": {
+   "gameVerifyMsat": "13323",
+   "settlementMsat": "13321",
+   "guardianMsat": "13348",
+   "otherMsat": "0",
+   "lightningCostMsat": "7000",
+   "gatewayCostMsat": "0",
+   "profitMsat": "32992"
+  },
+  "2": {
+   "gameVerifyMsat": "13038",
+   "settlementMsat": "13038",
+   "guardianMsat": "13068",
+   "otherMsat": "0",
+   "lightningCostMsat": "0",
+   "gatewayCostMsat": "0",
+   "profitMsat": "39144"
+  }
+ }
+}
