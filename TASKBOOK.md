@@ -52493,3 +52493,7 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 - With it: status 3/3 at 154968; the seats' verifyDonationOutputs on a real lock with donation outputs (tx 9bb1b5ea…, 2001 msat to dev a, 999 msat to dev b): ACCEPTED in 631 ms with both rows; swapped outputs refused by name (352 ms); a 3001 msat donation (shares 2001/1000) refused by name (672 ms).
 - A paid join on Beelink Chrome after the roll (round 2b7d7699): all 7 seats verified the stake 2.0-2.5 s after the lock; no new federation error in any seat log.
 - The MacBook is off again (Daniel 16:40Z): its Chrome unit stopped.
+
+### Mid-run reload: the screen question, closed as "the harness cannot show it" (2026-10-03 16:55Z)
+- Baseline WITHOUT a reload (Beelink Chrome, round with a donation, 0.8-3.6 s into the run, ticks 30-212, the truck moving x -100.4 -> -90.8): the screen shows the LOBBY (PLAY / SPECTATE, round list) over the running game. In a harness-driven run Unity's interface never enters game mode - the driver steps the core without the interface flow - so the cargo chooser seen over the resumed run (MacBook, 14:52Z) is the same artifact, not a reload fault. The truck and the core agree in both (WASTED at the core's WRECKED tick). What a player sees after a mid-run reload needs a real playthrough (Daniel) or a harness that presses through the interface.
+- The same screenshot: "Donation: 1334 msat paid ... 666 msat paid" - the test-set forwarder working in today's rounds.
