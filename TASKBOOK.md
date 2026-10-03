@@ -52619,3 +52619,6 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 - result and netMsat stay "pending" until the round's settlement is ACCEPTED: at 22:44:45Z this round still pending; round 2b687e57 (ended 22:28:56Z) now reads result "won", netMsat -4000 (settled within 16 min of its end). On the continue-off path the YOU line and the balance list cannot show a win, loss or net within any hold of round close + seconds.
 - Seats, all 7: entry eaeb6fcc, ticks 0..2157 no gap, 36 marks (last 2158), 0 refused, 0 equivocations. No second stake (continue off). Bonds 10 outputs, 542347 sat. Wallet 190000 msat after the lock.
 - Screenshots, curls, the page's summary lines: docs/playthrough-2026-10-03/summary2/.
+
+### The end card's hold cap: round close + 20 s (Daniel 2026-10-04, accepted)
+- index.html RESULT_HOLD_PAST_CLOSE_MS 10000 -> 20000: on 555342f8 the seats signed 9.3-11.3 s after the close and close + 10 s let go 0.35 s before the 7th signer. YOU and the net stay pending on the card (settled numbers are a later item on the lobby or a node's dashboard). Page only, display only; no Unity change.
