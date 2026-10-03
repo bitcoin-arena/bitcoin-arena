@@ -52154,3 +52154,100 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 - The page counts the figure most answering seats give and skips seats that give none: while 4 seats were SUSPENDED (no
   figure) the 3 honest seats' 192000 still showed. The "window closes 09:23:59 UTC" label stayed beside the refund.
 - Disarmed after: dissent-entry.txt empty.
+
+## PAID-NIGHT-2155 (Daniel 2026-10-02 21:55): every paid-round case, live on testnet4 - round ids and what arrived
+
+
+### P1 - round d08a6a39e1b244ac (start 20:34:30Z), page 0.0.2462, two players (winner, loser)
+- join: winner held to the start (joined 20:29:44, deposit asked 1.3 s after join, paid via gateway B); loser deposit asked 26 s after join.
+- stake: winner lock ded75b1aa0c9, loser lock f6ab16fff922 - each seen by 7 of 7 (stake_seen).
+- run: winner DELIVERED 46887750 at tick 1225, loser WRECKED at tick 404; all ticks at 7 of 7 seats (1225 x7, 404 x7).
+- address: winner@giving-deal-trades-incidents.trycloudflare.com posted, 201 at 7 of 7.
+- result: 7 of 7 signed DELIVERED:46887750 / FAILED:571200; pending 192 sat shown on the winner's page ("window closes 20:47:59 UTC"), 0 for the loser.
+- window: PROVISIONALLY_FINAL until 20:47:59; FINAL at 7 of 7 at 20:48:18 (192000 / 0 msat); final_sigs 7 per entry.
+- settlement ACCEPTED 20:48:12-20 at 7 of 7: claimed loser lock 96000 -> qualifier 96000; winner's own lock 96000 returned; fee locks 4000 -> 7 signer nodes (570-572 each).
+- arrived: winner wallet 194 sat (2 before + 96 returned + 96 won).
+
+### P2 - round d581529b54e55a49 (start 20:40:30Z), page 0.0.2462: winner with an 8 s session cut, loser with a reload after locking
+- cut: session cut at tick 114, restored 8 s later; red bar shown during the cut; winner then WRECKED at 712 (driver's best effort).
+- reload: BUG - the reloaded page rejoined d581529b with its kept lock but Unity drove the pre-start world at once; a wreck there ended the "run", the page continued to the next round 192003b2 and asked a second 100 sat deposit (not paid). Also its play socket went to the Funnel host alone (1006): the second route was only read by the lobby.
+- fixed in 0.0.2463: a round link for a round not yet started is joined from the lobby, held to its start; the second route is read at page start.
+
+### P3 - round 552cd56540e1c00b (start 20:49:30Z), page 0.0.2463: loser reloads after locking
+- reload 11 s after the deposit: "round link 552cd565 ... joined from the lobby, held to its start", "stake lock kept from before the reload" (188ae497), same round, NO second deposit, countdown on the join line.
+- one entry per player at the seats (c667392c lock bb495e1b, 4b11d3de lock 188ae497), each stake seen by 7 of 7; winner DELIVERED at 1088 (7 of 7 seats), loser WRECKED at 494 (7 of 7).
+- P3 result: BUG - the winner's page said DELIVERED at tick 1088 (score 6232800), the 7 seats replayed the SAME 1088 ticks to FAILED 2988300 (truck stuck at x 143.4 z -44.9 against the miner's wall); stepping the stored transcript through the page's own core (blwp-core.js) gives the same as the replay core, same world seed 0x98611601 - so the page's game took an input the seats never got. Liquidations are written into the page's core by Unity alone (BlwpLiquidation, never sent), held out only while BlwpNet.Live; the page log of that minute was pushed out by retry-storm socket lines. FINAL 7 of 7 at 21:03:06 (FAILED/FAILED); settlement ACCEPTED 21:03:11-22: no qualifier, 0 stake claimed, fee locks 4000 -> 7 signer nodes; both stakes expire back (block 155000).
+
+### P4 - round 80c353775eff6766 (start 20:55:30Z), page 0.0.2463: winner with an 8 s cut, loser reloads after locking
+- reload: second success - one entry (2204b17e, lock 560c88a9 seen 7 of 7), no second deposit, 495 ticks at 7 of 7.
+- cut: winner wrecked 4 s into the cut (harness ended its loop before the restore); seats held 73-89 of 288 ticks; restored ~70 s later -> "resumed at tick 89 after 9 tries", all 288 ticks at 7 of 7 before the round's close.
+- found: the winner's tab had TWO lock-client wasm instances (56 sockets with '/guardian' + 4 NUL + 'uardian') -> fixed in 0.0.2465 (one loader).
+
+### P5 - round 4d41170a365bf17d (start 21:04:30Z), page 0.0.2464: winner + a below-min-score deliverer
+- INVALID by my action: the second route's quick tunnel answered 429 (too many requests in flight, tonight's retry storms) and I restarted it at 21:04:14, 16 s before the start; the Funnel relay .210 also reset from the MacBook then. Winner's ticks reached seat 1 only (1202), loser's none; both FORFEIT:0 at the seats. Shows: both routes down at the start = paid entry lost.
+
+### Operations
+- 21:03Z quick tunnel 429 -> restarted (ago-gallery-wearing-smtp), daily.json redeployed (0.0.2465 a46e4ea0).
+- 21:16Z the MacBook left the tailnet (no ping, no ssh); pairs run on the Beelink measurement Chrome, one pair at a time.
+
+### P6 - round 6c8e3ad54bd071d1 (start 21:22:30Z), page 0.0.2466, Beelink Chrome: winner + loser
+- stake: winner lock 49a461ed, loser 7b737561, each seen by 7 of 7; ticks 1307 x7 and 220 x7.
+- feed: two live OKX liquidations during the wait/run "not offered to the core: a signed run is live" - held out as they must be.
+- result: DELIVERED:10578750 (the seats' replay delivers at tick 1306 with the page's own score) / FAILED:172200; pending 192 shown 200 s after the run ("window closes 21:35:59 UTC").
+- FINAL 7 of 7 by 21:36:06; settlement ACCEPTED 21:36:18-22 (loser lock 96000 -> qualifier, fee locks 4000 -> 7 signer nodes).
+- arrived: winner wallet 194 sat at 21:36:38 (2 + 96 returned + 96 won), 33 s after FINAL; pending line gone.
+
+### P7 - round 766be651ae43b1dd (start 21:28:30Z), page 0.0.2466, Beelink Chrome: two qualifiers (the "low score" driver still scored 18.7 M, over min 100000)
+- both DELIVERED at 7 of 7 with the pages' own scores (26873700, 18749850); ticks 1200 x7 and 1226 x7; locks 40034cfa, fb7b6056 seen 7 of 7.
+- pending 96 on each page ("window closes 21:41:59 UTC"); FINAL 96000/96000 at 7 of 7 by 21:42:06; settlement ACCEPTED 21:42:24-31 (no loser, pool 0; fee locks to signer nodes).
+- arrived: both wallets 98 sat (2 + 96 own stake returned) at 21:42:34 and 21:42:36.
+
+### Second route, per guardian (21:30Z)
+- one quick tunnel holds ~200 requests in flight; measured 136 with three game tabs (~45 each). Seven more tunnels (blwp-tn4-alt-g1..7), the page routes guardian-N to tunnel N; keeper blwp-tn4-alt-keeper (every 2 min) redeploys when a name changes. 0.0.2467 (b3377c49): each guardian's sockets on its own tunnel, wallet open 3312 ms.
+
+### P8 - round b26d805c160932a0 (start 21:46:30Z), page 0.0.2467, Beelink: winner with a 4 s cut + a walk-away
+- cut at tick 112, restored after 4 s; the winner went on to DELIVER at tick 1156: 1156 ticks at 7 of 7, the seats' replay DELIVERED with the page's own score 13636350.
+- walk-away closed its tab 1 s after "stake locked" - before the entry was posted: no entry at the seats; its stake and fee locks only expire back (block 155000).
+- FINAL 96000 at 7 of 7 by 22:00:06; settlement ACCEPTED 22:00:38 (fee lock only); winner wallet 98 sat at 22:00:41 (own stake returned).
+
+### P9 - round a7c5babe0450b90a (start 21:52:30Z), page 0.0.2467, Beelink: winner + a walk-away after its entry
+- walk-away: entry 04e01ef0 made, lock 21968747 seen by 7 of 7, tab closed 10 s after; at the start all 7 signed FORFEIT:0 at the door (0 ticks).
+- winner DELIVERED, 1103 ticks at 7 of 7; pending 192 shown 202 s after the run ("window closes 22:05:59 UTC").
+- FINAL by 22:06:05; settlement ACCEPTED: claimed the walk-away's stake 96000 -> qualifier 96000, fee locks 4000 -> signer nodes ("7 of 8 payout contracts stored" at one seat).
+- arrived: winner wallet 194 sat at 22:06:56.
+
+### P10 - round 725d097e41ceb1c3 (start 22:03:00Z), page 0.0.2467, Beelink: both players join the LOBBY's paid row (as PLAY does)
+- both picked the lobby's row (2:10 and 2:00 left), deposits paid, entries 578b4de5 / 480ff8ff, locks seen 7 of 7.
+- winner DELIVERED 2942100 (seats the same, 1202 x7), loser WRECKED (FAILED:90300, 676 x7).
+- load: Unity paused after each run (pauseMainLoop) - renderer 105% -> 33% CPU each while the page waits for FINAL.
+
+### S1 - round 05382c648476c061 (start 22:13:30Z), page 0.0.2467: reload MID-RUN (300 ticks sent)
+- the reloaded page refused by name: "this tab's stake in this round is already locked and committed to entry 243908a1…: no second deposit - the run cannot be resumed after a reload, and its payout and stake are collected after the window". No second deposit; the run counts what reached the seats (360-366 ticks) -> FAILED:0 at 7 of 7, final_sigs 7. DESIGN LIMIT: a mid-run reload loses the run.
+
+### Q series - solo paid winners on the Beelink, one live page at a time (page vs the seats' signed result)
+- Q1 025dbf85 match (DELIVERED 24756900) - live core sampled: practice flag 0 throughout, the truck took damage (hp 2939517), delivered at 1294.
+- Q2 d7727a9e match (10048500); Q3 29a87354 match (43287300); Q5 f8508cf7 match (11691750); Q6 b1b7196e match (14021700).
+- Q4 10d734af DIVERGED: page DELIVERED 42298200 at tick 1196, the seats FAILED 25415250 on the same 1196 ticks (replay truck at x 145.1 z -61.5, still crawling). Its client log is clean: no liquidation offered during the run ("[sim] ... not offered: a signed run is live"), no tapes, 4 samples at 0/300/600/900, three resumes before the start.
+- Q7 78e6e3ec: wrecked on the page; full core state at tick 8 identical to the replay, poses identical to the end (sampler and comparer work).
+- from Q7 on every run is sampled (whole core at its first tick, pose every 150 ms) so the next divergence shows where it starts.
+- Q9 235a6646 DIVERGED (page DELIVERED 23096850, seats FAILED 5538750) - SAMPLED: at tick 21 the page's whole core and the replay's differ in ONE word, the truck's z: 10.2 (page) against 17.0 (replay).
+- Q10-Q14: Q10 delivered; Q11-Q14 wrecked (the war near the bay deadly tonight - the planner found no delivering route from tick 0).
+- Q15 delivered on 0.0.2468.
+
+### ROOT CAUSE of "DELIVERED on the page, FAILED at all 7" (P3, Q4, Q9) and the fix (0.0.2468, 23:13Z)
+- SpawnMark re-seats a held truck (controls locked / cargo chooser open) on Unity's own bay mark (bay 13, z 10.200) at every terrain rebuild; a new round's world rebuilds the terrain at once, and the round's world can put the truck in bay 14 (z 17.000), 6.8 m from the mark - inside SpawnMark's 12 m. The teleport moved the core's truck in a write no transcript carries.
+- Fix: BlwpTeleport refuses while the session's run is live (jslib + the deployed framework).
+- B2 round c28c0c26 (start 23:31:30Z), a world chosen to start in bay z 17.0: at 23:31:30.224 the round's terrain rebuilt and SpawnMark asked to move the truck 6.80 m -> "teleport refused: a signed run is live"; again at 23:31:31.6 with the truck already driving (x -98.9) -> refused. Page core vs replay at tick 12: 0 of 2476 words differ (Q9 differed in the truck's z). Both ended at tick 221, WRECKED/FAILED 0; 221 ticks at the seats.
+- B6 round 36fa42d7 (start 23:43:30Z), bay z 17 again: "teleport refused" at 23:43:30.163 (the round's start); page core vs replay at tick 15: 0 differing words; poses identical to the end. Second live proof.
+- (B3/B4 were lost to a harness fault - their samplers read a stale tab on a reused port and the script closed their pages after the deposit: two 100 sat test entries walked away. B5 was refused by the one-paid-run-per-browser lock - its page opened in a Chrome still holding B2's paid run - the lock working.)
+
+### After the cases
+- 2f57f3d1 rolled to the 7 seats at 23:44-23:46Z: a receipt already stored byte for byte is not verified again. Live: the first take of new receipts still 170-337 ms per seat (real signature work), repeated takes 26-46 ms (before: 400-839 ms each, six repeats per close on seat 1).
+- 0.0.2469: Unity's console noise gated (1004 console calls in 30 s -> the gated kinds gone).
+- C1 round e387cbcf: solo, wrecked at the seats as on the page.
+
+### Join time (PRIORITIES 19:05) - resumed after the cases
+- lockBoth (f8f6e17a, 0.0.2470): the stake and fee locks in one transaction: 7.2 s -> 2.6-3.3 s.
+- warm the session at the click (35152f90, 0.0.2471): randomness from all nodes at once + kept per round (1.5 s -> 19-32 ms at the click), chain proof + POST /round started at the click (openRound in the session 1150-1422 ms -> 0-1 ms; chain REUSED). Stake locked -> join done: 4.95 s -> 2.0 s.
+- quotes kept per wallet state and asked together (9a1979ab, 0.0.2472): 'wallet is open' -> 'locking' 1.9 s -> 0.13 s.
+- After a wallet holds enough (paid join with deposit): quote 0.13 s + lock 3.3 s + entry/session 1.3 s = 4.8 s. A truly funded join (no deposit) is measured next (F1: a winner's wallet, then PLAY again in the same Chrome).
