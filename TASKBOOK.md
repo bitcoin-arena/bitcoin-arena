@@ -52378,3 +52378,15 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 - Cause: my roll of the 7 seats (11:07-11:09:42Z, the lnd-port cut) - each seat hosts its guardian, and the roll restarted the next node 20 s after the previous one answered /identity, before its guardian had rejoined; the federation stalled ~3.5 min, so deposits waited.
 - Fix: roll7.sh (scratchpad, and series/roll7.sh which the late-join publication jobs use) now waits after each restart until all 7 guardians answer their session count again, at least the count before the restart, then 5 s, before the next. Measured: all 7 guardians answer session_count in ~1 s each (1332). To be measured on the next roll.
 - THRESHOLD_LN cut (lnd-port.js and lnd-settings.js deleted, 422df575 + 6ce5d0fe; seats on 6ce5d0fe since 11:09Z): the gateway B -> LND C donation still settles - a page player wallet (0.0.2488) funded 20000 msat, paid recipient b's LNURL invoice (1000 msat, 9fbc191f) through gateway B: Success in 6.8 s, SETTLED on LND C at 11:27:27Z.
+
+### /wallet: a payment still in flight is answered as an error (playtest 11:12Z residue) - measured 11:50-11:55Z, no code changed
+- Method: a fresh /wallet test account (signup + 1000 sat faucet), a 1 sat HOLD invoice on LND C (addholdinvoice), paid through POST /api/pay; LND C held it until the settle. Nothing of a seat, guardian or federation touched.
+- Run 1, settled at +90 s: /api/pay answered HTTP 200 {"status":"succeeded"} after 90.24 s - the settle just beat the timeout. Not the failure.
+- Run 2, hash c09c0e43, settled at +120 s - the three readings:
+  1. at the timeout: HTTP 400 {"error": "payment is still in flight (TimeoutError)"} after 95.2 s;
+  2. the ledger then (+66 s and +100 s): send | pending | 1000 msat | fee reserve 5000 msat; /api/state lists the tx, detail empty;
+  3. after the settle (+120 s): LND C SETTLED; the ledger send | succeeded | fee 1000 msat | done 11:54:37Z; /api/state the same.
+- So the screen reads an HTTP 400 error for a payment that is still pending and then succeeds - the playtest's "failed" vs "succeeded".
+- The timeout is not PAY_TIMEOUT_S (60 s): node.pay reads LND's /v2/router/send stream with a socket timeout of PAY_TIMEOUT_S + 30 (wallet.py:178), and with no_inflight_updates LND sends nothing until the payment is final.
+- The writer: /home/daniel/tn4-wallet/wallet.py:421 (`raise WalletError("payment is still in flight ...")`), turned into HTTP 400 by do_POST (wallet.py ~697). Nothing in /tmp/btc-phase0 writes it. That tree belongs to another session - not edited.
+- Beside it: in both runs the HTLC needed ~61 s to reach LND C (LND a -> LND B -> LND C) before LND C held it.
