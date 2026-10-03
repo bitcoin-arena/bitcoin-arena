@@ -56,8 +56,9 @@ Do not spend a bond. Do not refound.
 2. UNDER THE RESULT: a summary of who won and who lost (names) and the score high-score list. Once results are in, what
    this player won or lost. A preliminary balance-change list is fine, updated while other drivers still reach the
    target or get wrecked.
-3. /dashboard TONIGHT (Daniel 22:10): one dashboard at btc-logistics-core.pages.dev/dashboard/ over all seven seats (each
-   seat's own /Dashboard is closed and stays).
+3. /dashboard TONIGHT (Daniel 22:10, corrected 22:15: "Dashboard is not unified, it is PER node. Individual stats per
+   NODE"): every node's own /Dashboard, as specified below (2026-10-01 15:44/15:45) - its own earnings by category, day /
+   month / year, active since, rounds checked and earned on each, settlements, federations. No combined page.
 
 # NOW  -  2026-10-03 21:24 (Daniel)
 
