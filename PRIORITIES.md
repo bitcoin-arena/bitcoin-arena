@@ -20,6 +20,13 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-10-03 07:52 (Daniel)
+
+HARD: The deadline is 09:30 Europe/Berlin today, not 07:00. Until then the only
+priority is the paid-round tests. Every case, every variant. The MacBook keeps
+the load small. Use it. At 09:30, stop and resume the priorities that were already
+open. Do not spend a bond. Do not refound. Do not publish a new series.
+
 # NOW  -  2026-10-02 21:55 (Daniel)
 
 HARD: Until 07:00 Europe/Berlin tomorrow, this is the only priority. Test the paid
