@@ -20,6 +20,34 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-10-03 21:40 (Daniel)
+
+Checked against TASKBOOK and the code. These are the only open items.
+
+1. If the series is still unconfirmed at 22:00 Europe/Berlin, post a new series.
+   New donation key set. 90 s rounds, back to back. First round 36 h after the post.
+   That publication has 12 h to confirm. Until then keep testing and do this list.
+   Do not stop the round set that is already running.
+2. The first live paid join on a key-set round. Seats verify the donation outputs,
+   GET /donations lists them, and both dev clients redeem and withdraw. The code is
+   in. The live round is not. It starts 2026-10-04 10:00Z.
+3. A funded paid join of an already-open round is still 3.5-4.7 s from PLAY to the
+   entry committed. Shown-loaded is under 1 s. The leftover is the lock's acceptance.
+   Do not call the 3 s bar done until a paid join of an open round is inside 3 s.
+4. A seat's start still holds its loop for seconds on a cold census. A restart
+   answers no join for that time. Move that read off the loop, or keep it warm.
+5. A live late join is not measured. First window is 2026-10-04 08:00Z.
+6. What a player sees after a mid-run reload is not shown by the harness. It needs
+   a real playthrough.
+
+Closed, do not redo: donations through LND C, the wallet in-flight line, /Dashboard,
+the guardian third of the fee, the 10-minute window and pending line, a winner paid,
+a nobody-won refund at settlement, a walk-away not refunded, socket retry, reload
+after lock, chained joins under 3 s, the session key kept across a reload, a mid-run
+resume, guardians that outlive a node restart.
+
+Do not spend a bond. Do not refound.
+
 # NOW  -  2026-10-03 21:24 (Daniel)
 
 HARD: If the series is still unconfirmed at 22:00 Europe/Berlin, post a new series.
