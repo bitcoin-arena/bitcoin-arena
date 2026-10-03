@@ -56,6 +56,8 @@ Do not spend a bond. Do not refound.
 2. UNDER THE RESULT: a summary of who won and who lost (names) and the score high-score list. Once results are in, what
    this player won or lost. A preliminary balance-change list is fine, updated while other drivers still reach the
    target or get wrecked.
+3. /dashboard TONIGHT (Daniel 22:10): one dashboard at btc-logistics-core.pages.dev/dashboard/ over all seven seats (each
+   seat's own /Dashboard is closed and stays).
 
 # NOW  -  2026-10-03 21:24 (Daniel)
 
