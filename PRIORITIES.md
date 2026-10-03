@@ -20,6 +20,13 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-10-03 11:55 (Daniel)
+
+HARD: Do not sit idle until the round is done. Keep working the other open
+priorities while that round runs. The 10-05 publication wait is not a stop.
+When the round finishes, come back to it. Do not spend a bond. Do not refound.
+Do not publish a new series.
+
 # NOW  -  2026-10-03 07:52 (Daniel)
 
 HARD: The deadline is 09:30 Europe/Berlin today, not 07:00. Until then the only
