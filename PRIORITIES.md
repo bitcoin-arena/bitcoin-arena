@@ -37,8 +37,19 @@ those two and keep going. Do not wait on them. Do not let anything else block th
 night either. Next, in order: the compact Console button above, then a real
 mid-run reload playthrough, then spectate after wrecked/finished, then the result
 summary (names, high score, this player's win or loss, a preliminary balance list),
-then each node's own /Dashboard. No combined page. Come back to the paid join and
-the late join when they are actually live. Do not spend a bond. Do not refound.
+then each node's own /Dashboard. No combined page. On that page the rounds are
+clickable: a row expands and shows which players were in and what each won or lost.
+A click on a player opens that player's replay in a new window
+(/replay?round=&entry=). Come back to the paid join and the late join when they
+are actually live. Do not spend a bond. Do not refound.
+
+# NOW  -  2026-10-03 22:25 (Daniel)
+
+On each node's own /Dashboard, the rounds in Rounds checked are clickable. A row
+expands and shows which players were in that round and what each won or lost.
+A click on a player opens that player's replay in a new window
+(/replay?round=&entry=). Do not stop the console playtest already in progress
+for this. Do it with the /Dashboard item. Do not spend a bond. Do not refound.
 
 # NOW  -  2026-10-03 21:40 (Daniel)
 
