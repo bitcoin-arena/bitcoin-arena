@@ -52622,3 +52622,12 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 
 ### The end card's hold cap: round close + 20 s (Daniel 2026-10-04, accepted)
 - index.html RESULT_HOLD_PAST_CLOSE_MS 10000 -> 20000: on 555342f8 the seats signed 9.3-11.3 s after the close and close + 10 s let go 0.35 s before the 7th signer. YOU and the net stay pending on the card (settled numbers are a later item on the lobby or a node's dashboard). Page only, display only; no Unity change.
+
+### The close + 20 s cap, measured (2026-10-03 22:52-22:56Z): page 0.0.2510 (f9244aff, core alias; Unity 0.0.2639 unchanged)
+- HARNESS: the MacBook measurement Chrome had exited (22:49:28Z, its ssh link dropped); chrome-up-mac.sh restarts it with rm -rf of its profile, and the page wallet in it went too (~190 sat + 96 pending, testnet). One deposit of 150 sat from LND A for this one run.
+- Paid round 52650809 (entry 73ff288b), continue off, the driver round the miner: DELIVERED at tick 2119, 22:54:35.48Z (card +104.09700). "the card holds until this run is signed by 5 or 22:56:11Z".
+- +1.73 / +4.28 / +7.27 / +10.25 s and every 15 s to +75 s: card up, lines = the seat's curl (state 0, nothing signed: "1 still driving / HIGH SCORE  - / YOU  PENDING / preliminary · 0 of 1 runs signed / you  pending").
+- +84.29 s: the seat's FIRST signed answer already had signedBy 5 (DELIVERED, 10409700). The page read the same at 22:55:59.798 and its hold let go on that read ("signed by 5"), 11.6 s before the + 20 s cap; Unity logged "DELIVERED you | HIGH SCORE  1. you 104.09700 | YOU  PENDING | preliminary · 1 of 1 runs signed | you  pending" and the lobby was up at +84.55 s (k-f) - the k-e1 shot at +84.29 s still shows the unsigned lines. So the signed names, high score and count were NOT seen on the card; the cap never came into play. Seat 1 still says signedBy 5 afterwards.
+- CAUSE: the hold's early release ("this run signed by 5") fires on the very read that brings the signed lines; any cap only bounds the unsigned case.
+- Seats, all 7: ticks 0..2118 no gap, 36 marks (last 2119), 0 refused, 0 equivocations. One stake, no second. Bonds 10 outputs, 542347 sat.
+- Screenshots, curls, the page's summary lines: docs/playthrough-2026-10-03/summary3/.
