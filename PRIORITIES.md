@@ -20,6 +20,15 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-10-03 22:18 (Daniel)
+
+HARD playtest. Absolute priority. Stop the current letter, fix this, then resume.
+
+The console with the consensus and federation logs covers the whole playfield.
+Clean that up tonight. Make it much more compact. A small button labeled Console
+opens it. Collapsed by default. Do not spend a bond. Do not refound. Do not stop
+the round set that is already running.
+
 # NOW  -  2026-10-03 21:40 (Daniel)
 
 Checked against TASKBOOK and the code. These are the only open items.
