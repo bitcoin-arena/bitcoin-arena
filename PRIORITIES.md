@@ -20,6 +20,10 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# STATUS  -  2026-10-04 (Daniel)
+
+Console: closed. Collapsed by default behind a small Console button, live on page 0.0.2514 (427bab76).
+
 # NOW  -  2026-10-03 22:18 (Daniel)
 
 HARD playtest. Absolute priority. Stop the current letter, fix this, then resume.
