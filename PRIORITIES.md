@@ -37,19 +37,18 @@ M4 today is the part that can be tested without mainnet. Do not post a bond.
 Do not spend a bond. Do not refound. Do not open mainnet. External review is
 not this wait. Do not edit multiplayer_p2p.md.
 
-1. Load test, in the repo only. Run tools/load-test.mjs at 100 players, then
-   at 1,000 if the machine holds it. Record join latency, receipt latency,
-   WebSocket buffer, SQLite write rate, and close-to-result lag. No money moves.
-2. Bond and arbitration transaction. The builder is already in the repo. Re-run
+The load test is out. Do not run tools/load-test.mjs. Do not record it.
+
+1. Bond and arbitration transaction. The builder is already in the repo. Re-run
    its tests and the regtest consensus checks. 5 of 7 allowed, 4 of 7 refused,
    a height above the tip non-final. Do not post or spend a live bond.
-3. Mobile, MF 17. Lobby, entry breakdown, and claim screen at phone width on
+2. Mobile, MF 17. Lobby, entry breakdown, and claim screen at phone width on
    the MacBook. Name what does not fit. A real touch phone only if one is in
    hand. Do not block on a phone that is not here.
-4. Error states, MF 18. Node unreachable, chain source disagreeing, budget
+3. Error states, MF 18. Node unreachable, chain source disagreeing, budget
    exhausted, claim window expired, committee pending. Each must show an error,
    not a hang. Measure each. No bond.
-5. Unattended flow, MF 19, free round only. A fresh page, join, play, result,
+4. Unattended flow, MF 19, free round only. A fresh page, join, play, result,
    play again, with no coaching. The paid "is paid and plays again" is the
    12:00 key-set join, not a second spend now.
 
