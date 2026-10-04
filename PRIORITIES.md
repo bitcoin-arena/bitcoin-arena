@@ -20,6 +20,22 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-10-04 08:54 (Daniel)
+
+HARD. The cargo factor C is not always 0.7. It is how full the truck is.
+
+Empty bed is 0. A full bed is 1. C is the bed fill, the same fraction the gauge
+shows: room used over the bed, from cargo.js roomFor, not a Unity float and not
+the BTC value. Set it in the core when the load is declared. Init is empty, 0,
+not 45875. submitLoad writes S_CARGO and T_CARGO to that fill. Heat stays the
+heat rule. Do not tie C to S_HEAT.
+
+The room used crosses in the load, so a replay sets the same C. An old load
+that carries no room stays at 0.7, so a stored run does not move. A new load
+carries the room and C is the fill. Do not retcon a round already published.
+Name the core hash change. Do not spend a bond. Do not refound. Do not stop
+the round set. Do not edit multiplayer_p2p.md.
+
 # NOW  -  2026-10-04 07:17 (Daniel)
 
 HARD. Stop the rounds-list cut. Measure the open Console panel with real paid-round
