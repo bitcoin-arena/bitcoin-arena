@@ -20,6 +20,20 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-10-04 09:01 (Daniel)
+
+AUTO 60% is in (3a5316a8). Finish the dynamic cargo factor, commit it, then
+continue this list. Do not stop. Do not wait for 10:00 or 12:00.
+
+Next, in order:
+1. Unattended flow, free round only. A fresh page, join, play, result, play
+   again, with no coaching.
+2. The GET /rounds cut. One listing held seat 1's loop 7.1 s. Cut that.
+   Measure before and after. The round set keeps running.
+
+Late join at 10:00 Europe/Berlin. First paid key-set join at 12:00. Not before.
+Do not spend a bond. Do not refound. Do not edit multiplayer_p2p.md.
+
 # NOW  -  2026-10-04 08:54 (Daniel)
 
 HARD. The cargo factor C is not always 0.7. It is how full the truck is.
