@@ -20,6 +20,18 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-10-04 07:15 (Daniel)
+
+The night list is done. Do not wait for 10:00 or 12:00. Do not edit multiplayer_p2p.md.
+
+A seat must keep answering while it lists rounds. Last night one GET /rounds held
+seat 1's loop 7.1 s and the seat answered nothing. Cut that. Measure before and
+after, on the live seats, with the round set still running. Do not spend a bond.
+Do not refound. Do not stop the round set.
+
+Come back to the live late join at 10:00 Europe/Berlin and the first paid join on
+a key-set round at 12:00. Until then this is the work.
+
 # STATUS  -  2026-10-04 (Daniel)
 
 Console: button under the HUD corner, collapsed by default; open panel capped under the button, off the throttle pad; live on page 0.0.2519. Placement under test, green: EditMode ConsoleSlotTests 28/28, node console-place 4/4. Open holes: paid-round panel with real content unmeasured because it would spend; real touch phones unmeasured, desktop Chrome only.
