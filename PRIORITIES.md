@@ -102,6 +102,8 @@ Console: button under the HUD corner, collapsed by default; open panel capped un
 
 Rules and configs: each core plays its own config - 2069b4c2 the founding config (the network id's), de2f263d its own (C the bed fill, par 1800); seats and client check the core+config pair; the founding config on de2f263d only for rounds made before 2026-10-04 13:00Z. A rule change is a new config under the same network id, by ruling, until governance exists. In the spec: multiplayer_p2p.md §18A.3 and §27A.7.8 (Daniel: no conflict, solve it in the spec); dates and hashes in FEDERATION.md "Rulings (Daniel 2026-10-04)".
 
+LATER (Daniel 2026-10-04 10:3x, screenshot of seat 1's /dashboard EARNINGS): "nicht wirklich lesbar" - the Notes column breaks words mid-word, headings and Hosts labels wrap, amounts mix precisions (1.046 sat beside 31.3 sat). Not started.
+
 # NOW  -  2026-10-03 22:18 (Daniel)
 
 HARD playtest. Absolute priority. Stop the current letter, fix this, then resume.
