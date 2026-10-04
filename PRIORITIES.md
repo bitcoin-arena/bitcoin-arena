@@ -100,6 +100,8 @@ a key-set round at 12:00. Until then this is the work.
 
 Console: button under the HUD corner, collapsed by default; open panel capped under the button, off the throttle pad; live on page 0.0.2519. Placement under test, green: EditMode ConsoleSlotTests 28/28, node console-place 4/4. Open holes: paid-round panel with real content unmeasured because it would spend; real touch phones unmeasured, desktop Chrome only.
 
+Rules and configs: each core plays its own config - 2069b4c2 the founding config (the network id's), de2f263d its own (C the bed fill, par 1800); seats and client check the core+config pair; the founding config on de2f263d only for rounds made before 2026-10-04 13:00Z. A rule change is a new config under the same network id, by ruling, until governance exists. Recorded in FEDERATION.md "Rulings (Daniel 2026-10-04)"; multiplayer_p2p.md §18A.3, §27A.6-8 not edited.
+
 # NOW  -  2026-10-03 22:18 (Daniel)
 
 HARD playtest. Absolute priority. Stop the current letter, fix this, then resume.
