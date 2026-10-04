@@ -20,6 +20,19 @@ HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute prior
 
 Top item first. Finish and deploy before starting the next.
 
+# NOW  -  2026-10-04 07:17 (Daniel)
+
+HARD. Stop the rounds-list cut. Measure the open Console panel with real paid-round
+content. A stake for that join is allowed. Do not spend a bond. Do not refound.
+Do not stop the round set. Do not edit multiplayer_p2p.md. Do not start M4.
+
+Open the panel on a real paid round, at 1280x720 and at 844x390. The panel must
+show the real lock lines, not filler. Record where it sits against the button,
+the throttle pad, and the score block. Then go back to the GET /rounds cut.
+
+M4 is mainnet. It is not this morning. Bonds stay off-chain. No external review
+has been asked. Do not open it.
+
 # NOW  -  2026-10-04 07:15 (Daniel)
 
 The night list is done. Do not wait for 10:00 or 12:00. Do not edit multiplayer_p2p.md.
