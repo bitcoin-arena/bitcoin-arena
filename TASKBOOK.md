@@ -52824,3 +52824,7 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 - Live, MacBook Chrome: free round 19332bfa, AUTO to 64% room, page core C 0.6416 / heat 0.098; seat A's stored load room 252308 = 0.6416 of the bed; both seats FAILED (missed) 2 of 2.
 - GET /rounds live after the cut: seat 7, 1502 rounds in 8943 ms, /identity probed 143 times, worst 293 ms, median 16 ms (before: 1580 rounds, /identity worst 7274 ms).
 - Key-set join 10:00Z: round 7ed69f97 (series 7c2ead5b, set 56cbb90c, core 2069b4c2) FAILED 7/7; donors got 1334 / 666 msat.
+
+### #63 LOAD moves with the bed, #64 one round clock (2026-10-04 11:36-12:03Z), page 0.0.2527 / Unity 0.0.2723
+- #63 (477b8009): the load is declared to the core on every bed change and LOAD prints the core's C. Free edbc8b85 (7e2123d1): AUTO gauge 63% LOAD x0.62665 = C 0.62665; one more crate 72% x0.71832 = C 0.71832. Paid a9467782 (2069b4c2): AUTO 68%, LOAD x0.70000 = C 0.70.
+- #64: before the fix (paid 1fa1a08d, MacBook vs Beelink Chrome) in-round clocks equal (11:37:54.6Z both 58 s left), pre-start 12-13 s apart (11:37:03.2Z 107 s vs 119 s: the lobby practice run from each page load). Fix 33a0dd47: the round's countdown from its contract start before it starts. After (paid 7ab607ee): 12:01:09.1Z, 110.9 s to start - "starts in 1:51" / "1:50".
