@@ -1,0 +1,12 @@
+factor 1.000 one : delivered  8/12  wrecked at x [41,15,78,20]  hp the tick before [2,3,4,1]
+factor 1.000 auto: delivered  9/12  wrecked at x [24,0,1]  hp the tick before [1,6,3]
+factor 0.750 one : delivered 10/12  wrecked at x [55,74]  hp the tick before [0,1]
+factor 0.750 auto: delivered  9/12  wrecked at x [69,30,-0]  hp the tick before [4,1,3]
+factor 0.600 one : delivered 10/12  wrecked at x [69]  hp the tick before [3]  other 3
+factor 0.600 auto: delivered  9/12  wrecked at x [70,54,1]  hp the tick before [2,1,1]
+factor 0.500 one : delivered 12/12  wrecked at x []  hp the tick before []
+factor 0.500 auto: delivered 11/12  wrecked at x [28]  hp the tick before [1]
+factor 0.400 one : delivered 11/12  wrecked at x []  hp the tick before []  other 3
+factor 0.400 auto: delivered 11/12  wrecked at x [15]  hp the tick before [4]
+factor 0.300 one : delivered 11/12  wrecked at x []  hp the tick before []  other 3
+factor 0.300 auto: delivered 12/12  wrecked at x []  hp the tick before []
