@@ -52817,3 +52817,10 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 - Page -> lobby 9.5 s; FREE + PLAY joined c336954f (de2f263d) and held it to its start: PLAY -> cargo bay 55.3 s (the round started 54 s later); AUTO (60%) shown and loaded; ROLL OUT -> driving 0.5 s; WRECKED at tick 723, 7.1 s; WASTED card with "copy game replay", the result summary (preliminary, 0 of 1 signed) and "joining next round · exit game".
 - PLAY AGAIN NEEDS NO INPUT: 18 s after the run ended the page entered the next free round f07fdc84 by itself ("joining next round in N seconds", exit game); left alone there it was MISSED at 4920, and the page went on into 4f57af98 - each round joined in turn, no hang, never back to the lobby without "exit game".
 - FAILS: the "joining next round · exit game" box covers the result summary's lines under it ("1 still driving", "YOU PENDING") (mf19live-r1-end); the result card lets go only after the next round is already joined (117 s after the run end, the round's close + 20 s).
+
+### Bed fill and heat live (2026-10-04 10:45-11:25Z): core 7e2123d1 / config f51759b6, Unity 0.0.2719, page 0.0.2526
+- Exposure weighted by heat (418efa1d; de2f263d kept frozen beside it); gauge and AUTO on the room fill (98dbecdf). Unity 0.0.2719 built on the MacBook (EditMode 27/27, PlayMode 50/50); bridge diff: BlwpSubmitLoad, BlwpNetStart, BlwpBedFill.
+- Seats on 28140804 (testnet4 roll 10:59-11:00Z, guardians adopted; free pair 10:58Z, first 7e2123d1 round 11:14:27Z).
+- Live, MacBook Chrome: free round 19332bfa, AUTO to 64% room, page core C 0.6416 / heat 0.098; seat A's stored load room 252308 = 0.6416 of the bed; both seats FAILED (missed) 2 of 2.
+- GET /rounds live after the cut: seat 7, 1502 rounds in 8943 ms, /identity probed 143 times, worst 293 ms, median 16 ms (before: 1580 rounds, /identity worst 7274 ms).
+- Key-set join 10:00Z: round 7ed69f97 (series 7c2ead5b, set 56cbb90c, core 2069b4c2) FAILED 7/7; donors got 1334 / 666 msat.
