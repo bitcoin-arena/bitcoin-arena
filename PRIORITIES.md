@@ -22,7 +22,7 @@ Top item first. Finish and deploy before starting the next.
 
 # STATUS  -  2026-10-04 (Daniel)
 
-Console: button under the HUD corner (ConsoleSlot), collapsed by default, live on page 0.0.2516 (8851db19). Open holes: the paid-round federation panel at phone size (never measured; by the numbers it runs below a 390 px screen), and real touch phones (only desktop Chrome at 844x390 measured).
+Console: button under the HUD corner (ConsoleSlot), collapsed by default; the open panel capped to the screen, under the button, off the throttle pad; live on page 0.0.2519. Open holes: the paid-round panel with real content (unmeasured: it would spend), and real touch phones (only desktop Chrome measured).
 
 # NOW  -  2026-10-03 22:18 (Daniel)
 
