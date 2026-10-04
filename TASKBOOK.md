@@ -52698,3 +52698,6 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 - FAILED is named by the signed word; HIGH SCORE skips the FAILED run's signed score; YOU and the net stay pending (settlement later); the stake from the existing lock, no deposit.
 - Seats, all 7: one entry 93b45bb7, ticks 0..937 no gap, 16 marks (last 938), 0 refused, 0 equivocations, one stake lock. One "stake locked"; wallet 198000 -> 100000 (lock) -> 98000 msat (the 2% donation). Bonds 10 outputs, 542347 sat. Federation 337ae01a at gw-a, gw-b and all 7 seats. blwp-tn4-node@1..7 active; series 30e048bc listed (298 ahead). docs/playthrough-2026-10-04/summary-wreck/.
 - Seen: the summary panel on WASTED overlaps the bottom-right SCORE box by ~110 px (v-e1); no control under it.
+
+### The SCORE box steps aside on the wreck - 77c92f27 (page 0.0.2513, Unity 0.0.2661), the check run named before the wreck (00:45Z)
+- PAID round aeef9f2ef2ea090fb4caf5cce8f40cdc1bc1187042d12ec0bd801dbc4c02d375 = series 30e048bc index 31 (start 00:46:30Z), entry 2481387c49c9471d6f0ea84d8a435931ced6160fd0753716c09ae79f72cc8639; no deposit (194 sat spendable, 96000 msat after the lock, accepted 1628 ms after the entry); continue off; practice off at ROLL OUT. EditMode 23/23, PlayMode 18/18.
