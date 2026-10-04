@@ -22,7 +22,7 @@ Top item first. Finish and deploy before starting the next.
 
 # STATUS  -  2026-10-04 (Daniel)
 
-Console: button under the HUD corner, collapsed by default; open panel capped to the screen, under the button, off the throttle pad; live on page 0.0.2519. Open holes: paid-round panel with real content unmeasured because it would spend; real touch phones unmeasured, only desktop Chrome measured.
+Console: button under the HUD corner, collapsed by default; open panel capped under the button, off the throttle pad; live on page 0.0.2519. Placement under test, green: EditMode ConsoleSlotTests 28/28, node console-place 4/4. Open holes: paid-round panel with real content unmeasured because it would spend; real touch phones unmeasured, desktop Chrome only.
 
 # NOW  -  2026-10-03 22:18 (Daniel)
 
