@@ -1,0 +1,18 @@
+error code: -18
+error message:
+Wallet file verification failed. Failed to load database path '/tmp/claude-1000/-tmp-btc-phase0/01b12b8a-6417-45b8-819a-08b59d36c93d/scratchpad/rt-bond/regtest/wallets/bondtest'. Path does not exist.
+recovery, honest         {"ok":true,"why":null}
+recovery, stranger       {"ok":false,"why":"mempool-script-verify-flag-failed (Invalid Schnorr signature)"}
+recovery, before maturity {"ok":false,"why":"mempool-script-verify-flag-failed (Locktime requirement not satisfied)"}
+slash, five of seven     {"ok":true,"why":null} | commits to the proof true
+slash, no commitment     {"ok":true,"why":null} | protocol says {"ok":false,"why":"that spend carries no proof commitment, so no slash it makes is auditable"}
+slash, four of seven     {"ok":false,"why":"mempool-script-verify-flag-failed (Script evaluated without error but finished with a false/empty top stack element)"}
+second node, same leaf    true | same output key true
+second node, accepted     {"ok":true,"why":null}
+VECTOR nodeKey   4f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa
+VECTOR outputKey fb0a797f025871162be6a1324da67c64234c10aacb309af30b7e7ab5450da51e
+VECTOR leafHash  29b15fdfb9cdfd0e23b8ccba647dee6c2e6ab711a2e6b2e24f404626b0df7e64
+VECTOR sighash   a5510d85b9795b6af07a3f875fc2f267cb0d2df72350ef60b8e0f1ac50fcd97e
+VECTOR control   c13c17367dba8ec085b7e251af2b45675dc87770a87c7e7a97b760b4acbec2c6687c93b7b71dabfcd38d5c8730f014627d44eb3e81ae649504a3a80b011dcac623
+broadcast                9f1e8940a33f1048 at height 104
+spent, seen by the census true

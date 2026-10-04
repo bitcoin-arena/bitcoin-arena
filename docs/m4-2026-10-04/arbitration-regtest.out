@@ -1,0 +1,8 @@
+{"step":"built","slashHeight":102,"amounts":{"players":"50000000","nodes":"37497000","developers":"12500000"},"fee":{"sats":"3000","fromNodes":"3000","fromDevelopers":"0"},"distribution":{"toPlayers":"50000000","toNodes":"37500000","toDevelopers":"12500000","toPool":"0"},"outputs":[{"pays":"commitment","value":"0"},{"pays":"players' escrow","value":"50000000"},{"pays":"nodes'","value":"37497000"},{"pays":"developers'","value":"12500000"}]}
+{"step":"5 of 7, slash_height = tip","allowed":true,"why":null}
+{"step":"4 of 7","builder":"4 of the 5 arbitration signatures the slash leaf needs","allowed":false,"why":"mempool-script-verify-flag-failed (Script evaluated without error but finished with a false/empty top stack element)"}
+{"step":"slash_height above the tip (nLockTime not reached)","allowed":false,"why":"non-final"}
+{"step":"an output moved after signing (1 sat from the escrow to the nodes)","allowed":false,"why":"mempool-script-verify-flag-failed (Invalid Schnorr signature)"}
+{"step":"mined","txid":"c6e564d45201c54368afa2ee5bdbfe64f234fc238a0c4bc4724f52b2c784d82e","confirmations":1,"locktime":102,"committedHeight":102,"committedProof":true,"hint":"blwp","bondSpent":true}
+{"step":"players' escrow spent by 5 of 7","escrowSats":"50000000","allowed":true,"why":null}
+{"step":"players' escrow spent by 4 of 7","allowed":false,"why":"mempool-script-verify-flag-failed (Script evaluated without error but finished with a false/empty top stack element)"}
