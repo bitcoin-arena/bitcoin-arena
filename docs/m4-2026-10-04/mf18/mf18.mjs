@@ -93,7 +93,7 @@ if (CASE === 'claim-expired') {
   await sleep(20000);
   closeMs = Date.now() + 15000;
   const nodes = [1, 2, 3, 4, 5, 6, 7].map((i) => `https://beelink.tail1723e2.ts.net/guardian-${i}`);
-  await ev(`localStorage.setItem('blwp.pending.${RID}.${EID}', ${JSON.stringify(JSON.stringify({ roundIdHex: RID, entryIdHex: EID, nodes }))}); 1`);
+  await ev(`localStorage.setItem('arena.pending.${RID}.${EID}', ${JSON.stringify(JSON.stringify({ roundIdHex: RID, entryIdHex: EID, nodes }))}); 1`);
   console.log(`+${at()} note in, window closes ${new Date(closeMs).toISOString().slice(11, 19)}`);
   let last = '';
   for (let i = 0; i < 90; i++) {
@@ -104,7 +104,7 @@ if (CASE === 'claim-expired') {
     await sleep(1000);
   }
   await shot('mf18-claim-expired-75s');
-  await ev(`localStorage.removeItem('blwp.pending.${RID}.${EID}'); 1`);
+  await ev(`localStorage.removeItem('arena.pending.${RID}.${EID}'); 1`);
   console.log('note removed', await ev(`Object.keys(localStorage).filter(k => k.includes('${EID}')).length`));
 }
 if (CASE === 'committee-pending') {
