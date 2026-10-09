@@ -2,8 +2,8 @@
 // tick the player rolled out (first non-zero throttle). Written to worlds.json for real.mjs.
 import { DatabaseSync } from 'node:sqlite';
 import { writeFileSync } from 'node:fs';
-import { decodeEntryContract } from '/tmp/btc-phase0/packages/protocol/src/contracts.js';
-import { seedWordForEntry } from '/tmp/btc-phase0/packages/protocol/src/seed.js';
+import { decodeEntryContract } from '/tmp/btc-phase0/packages/arena-protocol/src/contracts.js';
+import { seedWordForEntry } from '/tmp/btc-phase0/packages/arena-protocol/src/seed.js';
 const db = new DatabaseSync('/home/daniel/blwp-testnet4/node-1.db', { readOnly: true });
 const prefixes = ['ED48DC73', 'AEEF9F2E', 'F5037AF7', '3B16E292', 'A987D4E7', 'D9956F24', '52650809', '555342F8', '572ADCF6', '2B687E57', 'EB33434C', '9E45455E'];
 const out = [];

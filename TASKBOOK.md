@@ -14,7 +14,7 @@ DEPLOY 2026-09-29 (Daniel: option 2): THE PAGE AND A SECOND REGTEST PAIR AT bd13
               (unit blwp-series-nodes; log series.log)
   tunnels     blwp-series-tunnel-a/b (quick tunnels): medline-tender-vbulletin-greater, personalized-handle-pounds-greatly
   page        the 18:09 WebGL build (0.0.2294; no Unity script changed after it) with bd13ad66's template copied over
-              (blwp-client.js carries the new network ids); deploy-core.sh from bd13ad66, BLWP_2OF2_DIR = the pair
+              (arena-client.js carries the new network ids); deploy-core.sh from bd13ad66, ARENA_2OF2_DIR = the pair
   deployed    https://81a46577.btc-logistics-core.pages.dev; the alias serves the same daily.json and bundle
 
 Measured live (Beelink headless Chrome): the lobby lists the pair's free round; a phone run joined round b8db2879
@@ -64,7 +64,7 @@ spent, no maturity clock.
                         14 offers, 7 with an update, nothing refused
               runner  - findBond selects the 154172 bond for all seven, node 1 0c82db59:0 via 7f6b3e59
               bonds   - newest unspent bond height 154172 for every node key: no new bond
-  code        protocol/src/advert-update.js ("BLW" 'A' + bond outpoint + advert id, body in the witness); census takes
+  code        arena-protocol/src/advert-update.js ("BLW" 'A' + bond outpoint + advert id, body in the witness); census takes
               the newest update at or below census_height, checked against the bond's key; /guardian-bonds carries
               the update; the page proves it into its headers and must see it at or above its bond; round-2of2 off
               regtest stops instead of posting a bond; tools/testnet4-advert-update.mjs is the publish tool
@@ -273,15 +273,15 @@ LIVE AFTER THE FIX, one paid entry per line, both seats through their quick tunn
   after    a retry at tick 960                  "the first mark at tick 960 is after the start deadline"
   after    a retry at tick 30 (inside the line) "the player signed another first mark" - unchanged
 
-SUITES: blwp-node/first-mark 15/15 (1 new), lnd-settings 10/10 (6 new), paying-round-needs-gateways 7/7,
+SUITES: arena-node/first-mark 15/15 (1 new), lnd-settings 10/10 (6 new), paying-round-needs-gateways 7/7,
 hold-two-first 2/2, one-signer-node-refused 5/5, forfeit 2/2; protocol/first-mark 5/5, stopped 2/2,
-known-core 2/2; blwp-client/checkpoint-quorum 9/9 (1 new).
+known-core 2/2; arena-client/checkpoint-quorum 9/9 (1 new).
 
 RED, LISTED WITH CAUSE, NOT CHASED AND NOT CAUSED HERE: `equivocation` 0/8 and `five-of-seven` 0/5 are the
 same fixture family as the window-fixture red - equivocation dies in `Round.open` on "that round says a run
 is 9000 ticks and this core ends one at 10800", five-of-seven on the fee-lock door with 409 !== 201, both
 before any mark is sent. Measured against the commit before the §13B change and they fail identically.
-`blwp-client/ghost-field` is the same family again: `test/ghost-field.test.js:60` builds its round contract
+`arena-client/ghost-field` is the same family again: `test/ghost-field.test.js:60` builds its round contract
 with `blockTicks: 9000`, so every test that stands up a real daemon dies in `Round.open` - 16 passed and 6
 failed in the one run that got far enough, and all 6 are the daemon-backed subscribe/ghost tests. Its
 shipped-files test - the one a deploy rests on - passes on this tree. The file does not finish inside
@@ -307,9 +307,9 @@ the same stream the batches and the marks are numbered in.
 
   a player who has sent nothing when the hold appears gets 0, which is where its run starts anyway.
 
-  protocol/test/first-mark.test.js    5 / 5
-  protocol/test/stopped.test.js       2 / 2
-  blwp-node/test/first-mark.test.js  14 / 14
+  arena-protocol/test/first-mark.test.js    5 / 5
+  arena-protocol/test/stopped.test.js       2 / 2
+  arena-node/test/first-mark.test.js  14 / 14
 
 AND ONE SUITE IS RED FOR A REASON THAT IS NOT THIS: `stake-committed.test.js` fails 3 of 3 in 112 ms, 19 ms
 and 16 ms and then hangs. Measured cause, read off a single-test run: `400 !== 201` at `POST /round` - the
@@ -354,9 +354,9 @@ with `ticksForMs` against `startTimeMs` - that conversion is the same wall-deriv
 not a protocol quantity, so IT IS WRONG AND MUST BE REPLACED by the received-tick origin. 900, §13B, close,
 payout and the Daily pin are untouched.
 
-  protocol/test/first-mark.test.js    5 / 5
-  protocol/test/stopped.test.js       2 / 2
-  blwp-node/test/first-mark.test.js  14 / 14
+  arena-protocol/test/first-mark.test.js    5 / 5
+  arena-protocol/test/stopped.test.js       2 / 2
+  arena-node/test/first-mark.test.js  14 / 14
 
 A CLIENT-REPORTED ORIGIN WOULD HAND THE START DEADLINE TO THE PLAYER (2026-09-21).
 
@@ -385,9 +385,9 @@ So (b) is still the right origin and still needs a carrier, but the carrier cann
 tick" door. Nothing was built on this turn: no door, no node-side default, no conversion, and §15's
 late-start rule is left exactly as it is rather than quietly defanged.
 
-  protocol/test/first-mark.test.js    5 / 5
-  protocol/test/stopped.test.js       2 / 2
-  blwp-node/test/first-mark.test.js  14 / 14
+  arena-protocol/test/first-mark.test.js    5 / 5
+  arena-protocol/test/stopped.test.js       2 / 2
+  arena-node/test/first-mark.test.js  14 / 14
 
 (b) IS RIGHT AND NEEDS A NEW CARRIER: NEITHER THE ENTRY NOR THE CHECKPOINT HAS ROOM (2026-09-21).
 
@@ -419,9 +419,9 @@ WHAT IS ALREADY IN PLACE, and unchanged by this: the origin moves to HELD in `ro
 behaviour word for word, and §13B still VOIDs two first marks. What is NOT in place is the origin being
 expressed in the player's clock, which is exactly the carrier this entry is about.
 
-  protocol/test/first-mark.test.js    5 / 5
-  protocol/test/stopped.test.js       2 / 2
-  blwp-node/test/first-mark.test.js  14 / 14
+  arena-protocol/test/first-mark.test.js    5 / 5
+  arena-protocol/test/stopped.test.js       2 / 2
+  arena-node/test/first-mark.test.js  14 / 14
 
 900 untouched, §13B text untouched, close and payout untouched, the Daily still pinned at df66c6d1. No Unity
 was touched; if the field lands on the checkpoint the WebGL page becomes its sender and the pin still holds.
@@ -450,7 +450,7 @@ AND THE PROTOCOL ALREADY SAYS WHICH CLOCK IT WANTS. `firstMarkOutcome` refuses a
 
 so `joinTick` and the mark's tick are the SAME clock - the player's core clock - and `joinTick + 900` was
 always meant to be a window in the player's own ticks. What breaks it is that the client never fills it in:
-`blwp-client/src/join.js:761` declares `entryFor(round, { ..., joinTick = 0, ... })` and the page passes
+`arena-client/src/join.js:761` declares `entryFor(round, { ..., joinTick = 0, ... })` and the page passes
 none, so every paid entry says it joined at core tick 0 while its core is already past 4000.
 
 SO THE DECISION IS NOW WELL POSED, and it is one of two, both of which put the anchor where the mark's clock
@@ -488,7 +488,7 @@ exactly what was wanted:
 
   (the mixed compare it replaced forfeited two of the four: origin late by 106, held late by 218)
 
-AND IT WAS REVERTED, BECAUSE THE SUITES REFUSED IT: `blwp-node/test/first-mark.test.js` went 14/14 -> 4/14,
+AND IT WAS REVERTED, BECAUSE THE SUITES REFUSED IT: `arena-node/test/first-mark.test.js` went 14/14 -> 4/14,
 "A recorded no late start: not the case the test names". The suites are right and the reason matters more
 than the ten reds. ARRIVAL IS LOCAL. Two seats receive the same mark at different moments, so they would
 reach different verdicts from the same transcript - identical inputs, different results - and whether a
@@ -501,9 +501,9 @@ is the only tick the mark carries. Reconciling the two clocks has to happen in W
 client anchoring its tick to the round, or the origin being expressed in the player's own clock - and that is
 a protocol decision about the checkpoint, not a node-side patch.
 
-  protocol/test/first-mark.test.js    5 / 5
-  protocol/test/stopped.test.js       2 / 2
-  blwp-node/test/first-mark.test.js  14 / 14   (14 -> 4 under the arrival compare, 14 again after reverting)
+  arena-protocol/test/first-mark.test.js    5 / 5
+  arena-protocol/test/stopped.test.js       2 / 2
+  arena-node/test/first-mark.test.js  14 / 14   (14 -> 4 under the arrival compare, 14 again after reverting)
 
 §13B is untouched and still VOIDs two first marks on one entry; 900 is untouched; the close and payout paths
 are untouched; the Daily still runs its pinned checkout.
@@ -560,9 +560,9 @@ APPLIED TO THE TWO RUNS ALREADY MEASURED, through the real function:
 So the origin move lands run A and still misses run B by 106 ticks - the exact shortfall predicted from the
 measurement two letters ago. Per the letter: the new late-by is printed and nothing is widened to chase it.
 
-  protocol/test/first-mark.test.js   5 / 5
-  protocol/test/stopped.test.js      2 / 2
-  blwp-node/test/first-mark.test.js 14 / 14
+  arena-protocol/test/first-mark.test.js   5 / 5
+  arena-protocol/test/stopped.test.js      2 / 2
+  arena-node/test/first-mark.test.js 14 / 14
 
 NOT MEASURED LIVE, AND THIS IS THE REASON. The Daily's signer nodes do NOT run this worktree: the service
 `blwp-daily-signer-nodes` has `WorkingDirectory=/mnt/bitcoin/blwp-2of2/code`, a separate checkout pinned at
@@ -679,8 +679,8 @@ written: shipping an origin move that still forfeits would be a silent partial r
 allowed this turn to measure it live anyway.
 
 WHERE THE ORIGIN LIVES, for whoever makes the change: `firstMarkOutcome({ joinTick, deadlineTicks,
-firstMark })` in `protocol/src/first-mark.js:44`, `lastTick = joinTick + deadlineTicks` at :47, called from
-`blwp-node/src/round.js:651` and `:1802`, both passing `joined.joinTick` - the entry contract's own field,
+firstMark })` in `arena-protocol/src/first-mark.js:44`, `lastTick = joinTick + deadlineTicks` at :47, called from
+`arena-node/src/round.js:651` and `:1802`, both passing `joined.joinTick` - the entry contract's own field,
 which the browser sets to 0.
 
 THE FIRST MARK IS 72 SECONDS LATE, AND EVERY MARK AFTER IT IS ANOTHER FIRST (2026-09-21).
@@ -814,7 +814,7 @@ NWC wallet on this host; 127.0.0.1:18777 is the Daily launcher's own fake lnurlp
 ("BLWP local test donation recipient"), not a wallet.
 
 SO THE PLAYER'S WALLET WAS STOOD IN FOR, AND THE STAKE WENT THROUGH. The Daily's holds are on a real regtest
-lnd (BLWP_LND_RPC 127.0.0.1:30410, dir lnd-committee), and `lnd-alice` sits beside it, synced, one active
+lnd (ARENA_LND_RPC 127.0.0.1:30410, dir lnd-committee), and `lnd-alice` sits beside it, synced, one active
 channel. Alice paid the bolt11 the seat served:
 
     paying from alice: lnbcrt980n1p4tp20tpp5jnx6zdmuy...
@@ -1088,7 +1088,7 @@ WHAT IT IS NOT, measured rather than assumed:
 
 SHARE OF THE MISSING PATH. All four steps - entry posted, invoice fetched, stake paid, input to the core -
 sit behind one gate. It is not four independent holes: it is 1 cause and 4 consequences. The client HAS the
-code for the money doors (`/entry` and `/invoice` in `blwp-client/src/client.js`, `/stake` and `/handout` in
+code for the money doors (`/entry` and `/invoice` in `arena-client/src/client.js`, `/stake` and `/handout` in
 `join.js`), so this is not unwritten downstream work; the flow never reaches it.
 
 STILL OPEN, and deliberately not chased this turn: WHY the page names no node when the lobby itself read its
@@ -1464,7 +1464,7 @@ was changed:
 
 So it steered exactly one branch - "the federation's per-input/output cost exceeds the 2% fee, mint nothing" -
 and only on small rounds. On a legal federation that branch is UNREACHABLE: with base 0 every round measured
-mints, down to 10 sat. The 1000 is not invented either: `protocol/test/lock-settlement.test.js:201` keeps it
+mints, down to 10 sat. The 1000 is not invented either: `arena-protocol/test/lock-settlement.test.js:201` keeps it
 as REAL_RULE, "measured on fedimintd 0.12.0". It is that daemon's DEFAULT; §22A's `disable_base_fees` is an
 operator setting. The fixture was modelling a federation as it ships, which BLWP refuses until configured.
 
@@ -1737,8 +1737,8 @@ EVERY REMAINING RED, WITH ITS CAUSE:
      `lock-settlement` 2 of 15 that are not the 409, `five-of-seven` (over 180 s now that seven signer nodes
      drive whole 10800-tick runs), `signer-node-lock` (one test passes, then no output).
 
-HOW MANY FIXTURES STILL NAME 9000: **85 files, 93 occurrences** - 53 in blwp-node, 22 in blwp-client, 10 in
-protocol. 46 of them are blwp-node suites, and `test/pool-fixture.js` is a second shared one. Three of those
+HOW MANY FIXTURES STILL NAME 9000: **85 files, 93 occurrences** - 53 in arena-node, 22 in arena-client, 10 in
+protocol. 46 of them are arena-node suites, and `test/pool-fixture.js` is a second shared one. Three of those
 46 are proved red for it above (B); the rest are unmeasured, and the next sweep needs ruling A first because
 many of them also run on `lock-fixture`.
 
@@ -1792,7 +1792,7 @@ Read before writing anything, as ruled. §23.4 asks for two things: reconstructi
 one, now demonstrated 7/7) AND "the committee's threshold signature". §23.6 names the shape: "the claim key
 is a FROST (RFC 9591) BIP-340 key, which the federation checks like any other key."
 
-IT EXISTS. `blwp-node/src/forfeit.js` signs with real FROST:
+IT EXISTS. `arena-node/src/forfeit.js` signs with real FROST:
   - each seat holds `{ id, share }` and publishes hiding/binding nonce commitments;
   - `signShare340({ id, share, groupPublicKey: claimPk, nonces, message, commitments, curve })` produces that
     seat's BIP-340 signature share;
@@ -1889,7 +1889,7 @@ is a bound rather than a feature.
   §13   "The result window equals the objection window - same duration, a field on the contract. A seat that
          cannot retrieve the transcript in that window treats the entry as VOID."
 
-Already implemented against it: the objection window itself (`protocol/src/objection.js`), finality timing
+Already implemented against it: the objection window itself (`arena-protocol/src/objection.js`), finality timing
 (`finality.js`, `server.js:1042/1059`), §13C's no-quorum outcome (`payout.js:noQuorumOutcome`, a `no_quorum`
 table read by `finality.js` and `forfeit.js`), and the result window itself - `verify.js:#unretrievedPastWindow`
 is the spec sentence nearly verbatim: inside the window it answers null and the seat waits, past it the
@@ -1947,7 +1947,7 @@ MEASURED BEFORE, with `feeLockPays` on full contracts:
 `feeLockPays` reads `contract.nodes` and never looks at the slot counts, so the fee lock was sized for whoever
 the contract named and the settlement paid the same set. Seven shares out of a committee of two.
 
-AFTER: `sittingSeatsFitTheSlots` (protocol/src/contracts.js, beside `publicationRelaysAreValid`) is called in
+AFTER: `sittingSeatsFitTheSlots` (arena-protocol/src/contracts.js, beside `publicationRelaysAreValid`) is called in
 `Round.open` - the node's own open path - and throws before the contract is stored. The 2-of-2 naming seven
 seats is refused with "that round seats 7 signer nodes on 2/2 slots: 22A pays the seats the census seated, and
 a fee lock sized for more of them pays seats that never sat". The other three rows are unchanged.
@@ -1999,11 +1999,11 @@ volume. UNITS millisatoshis, floored, remainder by hash order.
 SO "THE FEDERATION'S FEES" HAS NO ARITHMETIC LEFT IN IT: the federation's own fee is ZERO by rule, and the
 only fee in the chapter is 22A's node fee, which is already implemented and green.
 
-    protocol/src/fee.js            16/16   gross volume, 2%, the 1%/1% split (the second pool taken as
+    arena-protocol/src/fee.js            16/16   gross volume, 2%, the 1%/1% split (the second pool taken as
                                            `fee - first` so two floors cannot lose a msat), per-seat floor,
                                            remainder in H(round_id ‖ node_pubkey) order, and a self-check
                                            that throws unless paid + unallocated === fee
-    protocol/src/lock-settlement.js 17/17  pays those seats from the fee locks
+    arena-protocol/src/lock-settlement.js 17/17  pays those seats from the fee locks
 
 And it is already visible on the live pair: the testnet4 hold invoices were 980000 msat against a 1000000
 msat stake - the 2% withheld because it is inclusive and travels in a fee lock, not in the stake hold.
@@ -2013,7 +2013,7 @@ that charges a base fee (`page-lock.js`), and nothing on the NODE did. A signer 
 into a round whose stakes were being shaved on every input and output - money the operator did not earn,
 which is the operator-must-not-profit rule arriving from the other side.
 
-`federationTakesNoBaseFee` in `blwp-node/src/stake-lock-signer-node.js`, called on POST /entry where the node
+`federationTakesNoBaseFee` in `arena-node/src/stake-lock-signer-node.js`, called on POST /entry where the node
 already reads the federation's fee rule, before `round.enter`:
 
     baseMsat 0      accepted, "that federation charges no base fee"
@@ -2093,7 +2093,7 @@ is needed by it", and §22: a gateway may refuse a deposit, never keep one. `gat
 written and proven against the live pair in the previous letter and then CALLED BY NOTHING, so a paying round
 would have opened with no gateways at all.
 
-THE CALL SITE. `lightningPreflight` (`blwp-node/src/preflight.js`) is the one gate the server consults on the
+THE CALL SITE. `lightningPreflight` (`arena-node/src/preflight.js`) is the one gate the server consults on the
 paying-round open path: `server.js` POST /round, inside `if (contract.stakeMsat > 0n && custody.reaches)`,
 before `round.open(contract)` - so before any invoice exists and before the round is advertised as payable.
 There is no second open path: `preflight` appears in server.js only there (and in its own option comment),
@@ -2196,7 +2196,7 @@ AFTER BOTH RESTARTS, measured with the live probe:
                       inbound  80000  outbound 116530
   gatewaysAreIndependent: YES - 2 usable
 
-`protocol/tools/measure-gateways.mjs` asks both nodes `getinfo` and `listchannels` and feeds exactly those
+`arena-protocol/tools/measure-gateways.mjs` asks both nodes `getinfo` and `listchannels` and feeds exactly those
 words to `gatewaysAreIndependent`. The suite's 19:5x numbers stay as a regression floor; this is the part that
 can see a stopped process. Run now: both enabled/active, 2 usable, YES.
 
@@ -2237,7 +2237,7 @@ both real, both over `dce6199b...`:
 So each gateway can now receive, and each has been paid for real rather than labelled. Full `getinfo`,
 `listchannels` and `pendingchannels` bodies from both nodes are in the run log.
 
-THE PREDICATE CAME AFTER THE PAYMENTS, not before. `protocol/src/gateways.js` counts the three facts that make
+THE PREDICATE CAME AFTER THE PAYMENTS, not before. `arena-protocol/src/gateways.js` counts the three facts that make
 a gateway usable - a distinct identity at its own rpc, synced with at least one ACTIVE channel, and
 remote_balance it can receive into. The host is deliberately not read: the ruling allows one machine. Its test
 is driven by the numbers above, including the state the pair was FOUND in (1 of 2 usable) and the dark-channel
@@ -2474,7 +2474,7 @@ from the page's own core (`unityInstance.Module.blwp.st.i32`), never PhysX.
   daniel-screens/miner-drive-stop.png is the stop; miner-drive-end.png is the delivering run.
 
 TWO INSTRUMENT FAULTS ON THE WAY, written down so the next drive does not repeat them:
-  1. `blwp.teleport` does not exist on the state's object - the core module is `window.BLWP` and the state is
+  1. `arena.teleport` does not exist on the state's object - the core module is `window.BLWP` and the state is
      `Module.blwp.st`. With the call failing silently the truck drove out of its bay along z 78.2 and stopped at
      x 159.73 against the FACADE side box at x 163. A real stop, but not the corridor, and it proved nothing
      about the 41 new boxes.
@@ -2811,16 +2811,16 @@ line 41's "bundle and modules parted at tick N". Stepped side by side over all e
 One cause - a stale recording - reported twice under two names. vectors+bundle 3/20 -> 23/23.
 
 WHAT ELSE THE SHIP TURNED UP, which the letter would have deployed broken:
-  - `bundle-fresh.test.js` held FOUR stale rows: blwp-client.js and blwp-curve.js, each in dist AND in the WebGL
+  - `bundle-fresh.test.js` held FOUR stale rows: arena-client.js and blwp-curve.js, each in dist AND in the WebGL
     template. The page would have served money scripts that are not the build of this tree. Both rebuilt, copied
-    to the template, all three now fresh. A stale blwp-client.js was pinned for a moment on the way and the pin
+    to the template, all three now fresh. A stale arena-client.js was pinned for a moment on the way and the pin
     was REVERTED rather than left listed - the registry keeps every hash it is given.
   - `BlwpLayout.cs` was checked against a fresh gen-unity-layout run: byte-identical. The 18-word trap did not
     repeat.
 
 WHAT SHIPPED, all three verified equal in dist, in the built page, and on the served URL:
   blwp-core.js    eb6ac50e9fb62974542698b2524fab1d0ddcd041ba13906a2180e06bfef6dd25
-  blwp-client.js  eb31500fb5f10f2b732a405a31605afb320a72934ec21c7387de0f03df167889
+  arena-client.js  eb31500fb5f10f2b732a405a31605afb320a72934ec21c7387de0f03df167889
   blwp-curve.js   c7d28f3bc222a0fe9d06c3e1c21f707a6a88ab6577dde486c11fd7a5916cf752
   core source     3fd9cda50f076d3a43fab5bcce349f7350a8f3afd982f3a4eee59c56dc4aa560  (known-cores, 31 listed)
 
@@ -4218,7 +4218,7 @@ this machine has not got. None can go green here, and none may be loosened.
 
 Everything for M2 and beyond is further down, under "The milestones", and
 none of it should be started while item 2 is open. M2 needs stage 3
-(`blwp-node`) before it can begin at all, and starting a lobby on top of
+(`arena-node`) before it can begin at all, and starting a lobby on top of
 a simulation that still disagrees with the game is work built on sand.
 
 **Governance code is tested to 100%, and it is the only thing here that
@@ -9718,7 +9718,7 @@ the covered bytes and the placement were ambiguous and Daniel decided them.
   placement        beside the object, a 64-byte suffix on the wire
   key              sessionPubkey from the Entry Contract the node stores
   curve            ed25519, per IMPLEMENTATION.md's session-key note
-  library          @noble/curves, in blwp-node only
+  library          @noble/curves, in arena-node only
 
 Measured:
 
@@ -9804,7 +9804,7 @@ receipting one checkpoint produce two distinct objects, which is what
 
 WHAT IS MISSING, and it is the larger half: nothing ISSUES a receipt. A node
 signs one with its own key, and this daemon has no key and no place to put
-one - grep for a node identity in blwp-node/src finds nothing. The identity
+one - grep for a node identity in arena-node/src finds nothing. The identity
 comes from the bond advertisement, M2.1 step 5b. Until that exists the node
 cannot sign, so there is no ingest, no store and no wire for receipts, and
 none was faked.
@@ -13471,11 +13471,11 @@ from the player's side. Measured before writing anything:
   what did not exist
     anything that BUILDS a checkpoint - `encodeCheckpoint` was called by
     tests and by nothing else - and Unity does not talk to a node at all: no
-    script mentions blwp-node, /play or /round.
+    script mentions arena-node, /play or /round.
 
 So the missing piece was exactly the client half, and that is this slice.
 
-WHERE IT LIVES, and why not in C#. `packages/blwp-client`, JS, using
+WHERE IT LIVES, and why not in C#. `packages/arena-client`, JS, using
 `@blwp/protocol` as the one encoder. Re-encoding a checkpoint in C# would put
 a money-bearing wire format into two implementations, which is the fault this
 project has removed twice this week - a second score formula and a second
@@ -13535,8 +13535,8 @@ MUTANTS, three, and the second one caught a hole in my own test:
 SUITES, each on its own:
   packages/core        80 / 80        determinism guard 19 files clean
   packages/protocol    78 / 78        money guard        7 files clean
-  packages/blwp-node   33 / 33
-  packages/blwp-client  4 / 4         new
+  packages/arena-node   33 / 33
+  packages/arena-client  4 / 4         new
   Unity  untouched - `git status` shows no changed file under unity-proto, so
   PlayMode stays 213 / 188 / 12 / 13 and EditMode 178 / 174 / 1 / 3 from the
   run at eebba50. Nothing was built and nothing was deployed.
@@ -13580,8 +13580,8 @@ NAMED AND OUT OF THIS SLICE, deliberately:
 SUITES after the fix, each on its own:
   packages/core        80 / 80    determinism guard 19 files clean
   packages/protocol    78 / 78    money guard        7 files clean
-  packages/blwp-node   33 / 33
-  packages/blwp-client  5 / 5
+  packages/arena-node   33 / 33
+  packages/arena-client  5 / 5
   Unity untouched - no changed file under unity-proto - so PlayMode stays
   213 / 188 / 12 / 13 and EditMode 178 / 174 / 1 / 3.
 
@@ -13597,7 +13597,7 @@ btc-logistics-war.pages.dev untouched at HTTP 200.
 THE DEPENDENCY THAT WAS NOT ONE. `receipt.js` and PRIORITIES both said
 receipts wait on step 5b, "because a node signs with its own key and the
 daemon has no identity yet". Measured, that was an accurate description of the
-state - `grep` for pubkey/secretKey/identity across `blwp-node/src` returned
+state - `grep` for pubkey/secretKey/identity across `arena-node/src` returned
 nothing - but not of the dependency. 5b is DISCOVERY: BOND_MARKER and the
 advertisement in the bond transaction's witness, so a stranger can find a
 node's address and key on chain. Issuing a receipt needs a keypair the node
@@ -13639,7 +13639,7 @@ MEASURED, before and after:
   the client's head moved on    the string 'stored'  ->  a receipt whose mark,
                                 key and signature it checked
 
-  suites   blwp-node   33 -> 34      blwp-client   5 -> 7
+  suites   arena-node   33 -> 34      arena-client   5 -> 7
            core        80 -> 80      protocol     78 -> 78   (both untouched)
 
 ONE THING FOUND BY RUNNING IT, not by reading: Node's WebSocket hands a binary
@@ -13719,7 +13719,7 @@ MEASURED ACROSS TWO REAL NODE PROCESSES, on two ports:
            mark, and a fresh client recovers both from node two with the
            gossiped one byte-identical to what node one issued.
 
-  suites   blwp-node   34 -> 37      blwp-client   7 -> 10
+  suites   arena-node   34 -> 37      arena-client   7 -> 10
            core        80 -> 80      protocol     78 -> 78   (both untouched)
            determinism guard 19 clean, money guard 7 clean
 
@@ -13792,8 +13792,8 @@ BEFORE AND AFTER, measured end to end:
            published, 1 receipt recovered - and the reconnected client's next
            batch (200 accepted) and next mark ('receipted') both land.
 
-  suites   blwp-client  10 -> 13
-           blwp-node    37 -> 37   core 80 -> 80   protocol 78 -> 78
+  suites   arena-client  10 -> 13
+           arena-node    37 -> 37   core 80 -> 80   protocol 78 -> 78
            all three untouched; determinism guard 19 clean, money guard 7 clean
 
 MUTANTS, five, each killing exactly one test:
@@ -13817,9 +13817,9 @@ MEASURED FIRST. The jslib exported 16 functions and every one was the core -
 init, step, read state, hash, score, ground, solids, restart, teleport,
 impact, params, liquidation, heat, frontline, surface, words - matched one for
 one by 16 DllImports. Nothing in `unity-proto/Assets/Scripts` mentioned
-blwp-node, /play, a round or a checkpoint. Step B was entirely new plumbing.
+arena-node, /play, a round or a checkpoint. Step B was entirely new plumbing.
 
-THE CLIENT IN THE PAGE. `packages/blwp-client/tools/bundle.js` is the same
+THE CLIENT IN THE PAGE. `packages/arena-client/tools/bundle.js` is the same
 smallest-possible bundler the core uses, for the reason that file records: a
 bundler in the trust path is a bad property for something that pins money.
 55.4 KB from 11 modules, and it carries NO crypto - signing and verifying are
@@ -13851,7 +13851,7 @@ THE CADENCE is the spec's, written as arithmetic rather than as two numbers:
 `IMPLEMENTATION.md` puts INPUT_BATCH at 10 Hz and CHECKPOINT at 1 Hz, the core
 runs at 60 ticks a second, so every 6 ticks and every 60.
 
-MEASURED END TO END, with nothing deployed: a real blwp-node on a real port,
+MEASURED END TO END, with nothing deployed: a real arena-node on a real port,
 the real built player served over HTTP, and a real browser pressing PLAY.
 
   before                       rounds 0  entries 0  batches 0  marks 0  receipts 0
@@ -13885,7 +13885,7 @@ the real built player served over HTTP, and a real browser pressing PLAY.
 TESTS. EditMode 178 -> 185 (7 new, `NetSessionTests`), 181 green, 1 red - the
 known CombatFx one. PlayMode 213 / 189 / 11 / 13, the known eleven, nothing
 new. core 80/80 with the determinism guard 19 clean, protocol 78/78 with the
-money guard 7 clean, blwp-node 37/37, blwp-client 13 -> 17.
+money guard 7 clean, arena-node 37/37, arena-client 13 -> 17.
 
 The session is OFF unless the page names a node and a round. No build that has
 shipped names either, so the daily is exactly the game it was. Nothing was
@@ -13932,10 +13932,10 @@ the twelfth mark, at tick 1320, chains onto the eleventh at 720 and came back
 receipted. No mark was taken while the socket was down, which is right - a
 commitment nobody can receipt is not evidence of anything.
 
-TESTS. blwp-client 17 -> 19, two new: everything in flight is answered when the
+TESTS. arena-client 17 -> 19, two new: everything in flight is answered when the
 socket goes and the owner is told; and a client that reconnects on the same
 round carries on, both chains read back and the next batch and mark accepted.
-blwp-node 37/37, core 80/80 with the determinism guard 19 clean, protocol 78/78
+arena-node 37/37, core 80/80 with the determinism guard 19 clean, protocol 78/78
 with the money guard 7 clean. PlayMode 213 / 189 green / 11 red / 13 skipped
 and EditMode 185 / 181 green / 1 red / 3 skipped, both unchanged - no C#
 changed in this piece, only the jslib and the client.
@@ -14031,7 +14031,7 @@ hang for three hours earlier today - a test waiting on an answer from a socket
 that had gone quiet, with no timeout on the runner.
 
 TESTS. core 80/80 with the determinism guard 19 clean, protocol 78/78 with the
-money guard 7 clean, blwp-node 37/37, blwp-client 19/19. No C# changed in this
+money guard 7 clean, arena-node 37/37, arena-client 19/19. No C# changed in this
 piece - the jslib and the node's server only - so PlayMode stays 213 / 189
 green / 11 red / 13 skipped and EditMode 185 / 181 green / 1 red / 3 skipped
 from the run at 7b4caea.
@@ -14109,7 +14109,7 @@ and therefore cannot be finalized as a win. Withholding is never an advantage.
 The counts - `dropped`, `marksSkipped`, `drops`, `tries` - are on the status
 line so a stall is visible rather than silent.
 
-TESTS. blwp-client 19 -> 22, three new in `backpressure.test.js`. blwp-node
+TESTS. arena-client 19 -> 22, three new in `backpressure.test.js`. arena-node
 37/37, core 80/80 with the determinism guard 19 clean, protocol 78/78 with the
 money guard 7 clean. No C# changed - the jslib, the client and the node's
 server only - so PlayMode stays 213 / 189 green / 11 red / 13 skipped and
@@ -14211,7 +14211,7 @@ MUTANTS, four, and the second found a test that was not testing:
   the numbers are not checked before a batch    1 red
   the ending is a player defeat                 3 red
 
-TESTS. blwp-client 22 -> 26, four new. blwp-node 37/37, core 80/80 with the
+TESTS. arena-client 22 -> 26, four new. arena-node 37/37, core 80/80 with the
 determinism guard 19 clean, protocol 78/78 with the money guard 7 clean. No C#
 changed - the client, its bundle and the template copy - so PlayMode stays
 213 / 189 green / 11 red / 13 skipped and EditMode 185 / 181 green / 1 red / 3
@@ -14302,10 +14302,10 @@ MUTANTS, three:
   the round door is not gated           2 red
   the entry door is not gated           1 red
 
-TESTS. blwp-node 37 -> 41: four new in `quota.test.js`, and the five existing
+TESTS. arena-node 37 -> 41: four new in `quota.test.js`, and the five existing
 `serve()` calls in the node's and the client's suites now say `funded: () =>
 true`, because they are rounds somebody paid for and a test that means to play
-one has to say so. blwp-client 26/26, core 80/80 with the determinism guard 19
+one has to say so. arena-client 26/26, core 80/80 with the determinism guard 19
 clean, protocol 78/78 with the money guard 7 clean. No C# changed - the node
 and its tests only - so PlayMode stays 213 / 189 green / 11 red / 13 skipped
 and EditMode 185 / 181 green / 1 red / 3 skipped from 7b4caea.
@@ -14394,7 +14394,7 @@ are byte-identical, so `encodeEntry`, the census leaf hash and `censusRoot` are
 exactly what they were.
 
 TESTS. protocol 78 -> 87, nine new. core 80/80 with the determinism guard 19
-clean, blwp-node 41/41, blwp-client 26/26, money guard 7 clean. No C# changed -
+clean, arena-node 41/41, arena-client 26/26, money guard 7 clean. No C# changed -
 protocol only - so PlayMode stays 213 / 189 green / 11 red / 13 skipped and
 EditMode 185 / 181 green / 1 red / 3 skipped from 7b4caea.
 
@@ -14457,7 +14457,7 @@ were read anywhere, every test in that file would reach the decoy:
   headers that do not link         not a chain, however many
   no chain at all                  no address. There is no fallback, because
                                    any fallback is the page's word again.
-  no file in blwp-client/src       names BLWP_NODE, window, globalThis or
+  no file in arena-client/src       names BLWP_NODE, window, globalThis or
                                    location
 
 MUTANTS, six, and one of them survived first: txid over the whole transaction
@@ -14474,8 +14474,8 @@ exported ones: `chain.js` and `transcript.js` each had a private `same`, which
 in one scope is a `const` redeclaration and would have thrown when the page
 loaded. Verified by adding a duplicate on purpose: exit 1, named both files.
 
-TESTS. protocol 87 -> 100, core 85/85 untouched, blwp-node 41/41,
-blwp-client 26 -> 32. Determinism guard 19 clean; money guard 7 -> 9 files,
+TESTS. protocol 87 -> 100, core 85/85 untouched, arena-node 41/41,
+arena-client 26 -> 32. Determinism guard 19 clean; money guard 7 -> 9 files,
 `chain.js` and `tx.js` added to it - a float literal where a txid is computed
 would be silent and total. No test-vector file changed at all this slice, so
 every money-bearing encoding is byte-identical. No C# changed, so PlayMode
@@ -14552,7 +14552,7 @@ an absent committee tolerated (1), any string an address (1), ws to any host
 The last one survived its first build because the extra push sat inside a try
 whose earlier line already threw; rebuilt, it is 1 red.
 
-TESTS. protocol 100 -> 101, blwp-client 32 -> 35, blwp-node 41/41, core 85/85.
+TESTS. protocol 100 -> 101, arena-client 32 -> 35, arena-node 41/41, core 85/85.
 Determinism guard 19 clean, money guard 9 clean. No test-vector file changed,
 so every money-bearing encoding is byte-identical. No C#; PlayMode and EditMode
 stand from 7b4caea. Nothing deployed; the daily stays 0.0.567.
@@ -14607,7 +14607,7 @@ ONE READER STILL. `BLWP_ADVERT` is read in exactly one place, `$blwpDiscovery`,
 used by both the gate and the door. The round id is a different input from a
 different place - the address bar - and is read in `net.open` only.
 
-TESTS. blwp-client 35 -> 37, protocol 101/101, blwp-node 41/41, core 85/85.
+TESTS. arena-client 35 -> 37, protocol 101/101, arena-node 41/41, core 85/85.
 Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
 No C#; PlayMode and EditMode stand from 7b4caea. The jslib is still source, not
 a built artefact - no Unity run this turn. Nothing deployed; daily 0.0.567.
@@ -14738,7 +14738,7 @@ Wiring waits for slice 2, where a bond transaction and its merkle proof are
 fetched and checked against these headers - otherwise the client would have a
 verified chain and still take the transaction on the page's word.
 
-TESTS. blwp-client 37 -> 44, protocol 101/101, blwp-node 41/41, core 85/85.
+TESTS. arena-client 37 -> 44, protocol 101/101, arena-node 41/41, core 85/85.
 Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
 No network in any test: every provider is a `node:http` server on 127.0.0.1.
 No C#, no Unity, nothing deployed; daily 0.0.567.
@@ -14794,7 +14794,7 @@ AFTER, the same header and the same claimed work:
                                 discarded, not obeyed, and the fabricated
                                 header is not in the answer
 
-WHAT LANDED. `targetOf` and `meetsTarget` in `protocol/src/chain.js`, and
+WHAT LANDED. `targetOf` and `meetsTarget` in `arena-protocol/src/chain.js`, and
 `chainWork` refuses a header that does not meet its target BEFORE adding its
 work. The byte order is the usual trap and is now written down: a block hash is
 stored reversed from the way it is read as a number, so the comparison is
@@ -14827,7 +14827,7 @@ easy headers is accepted - it simply carries almost no work and cannot outweigh
 a real chain. Enforcing a minimum, and the retarget schedule with it, is a
 network-parameter decision and sits with checkpoint-or-genesis.
 
-TESTS. protocol 101 -> 104, blwp-client 44 -> 46, blwp-node 41/41, core 85/85.
+TESTS. protocol 101 -> 104, arena-client 44 -> 46, arena-node 41/41, core 85/85.
 Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
 No C#, no Unity, nothing deployed.
 
@@ -14880,7 +14880,7 @@ abort mutant made the suite HANG rather than fail, because the test left a
 socket open: a hang is not a measurement, it is a test that cannot report, so
 the fixture destroys its connections rather than only closing the server.
 
-TESTS. blwp-client 46 -> 50, protocol 104/104, blwp-node 41/41, core 85/85.
+TESTS. arena-client 46 -> 50, protocol 104/104, arena-node 41/41, core 85/85.
 Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
 No network beyond 127.0.0.1. No C#, no Unity, nothing deployed; daily 0.0.567.
 
@@ -14909,7 +14909,7 @@ Before the target was checked, that same block proved his bond and his endpoint.
 Hanging it off an honest block does not help either: a chain carrying it is not
 a chain.
 
-WHAT LANDED. `blwp-client/src/bond.js`. `provenBond({chain, transaction, branch,
+WHAT LANDED. `arena-client/src/bond.js`. `provenBond({chain, transaction, branch,
 position})` re-checks the chain rather than taking it on the caller's word - one
 pass over headers already in hand, and the difference between "a block" and "80
 bytes somebody handed me" - computes the txid from the transaction, and finds
@@ -14959,7 +14959,7 @@ because there is nothing heavier to compare it with. That is
 checkpoint-or-genesis, and it accounts for essentially all of what is still
 missing.
 
-TESTS. blwp-client 50 -> 57, protocol 104/104, blwp-node 41/41, core 85/85.
+TESTS. arena-client 50 -> 57, protocol 104/104, arena-node 41/41, core 85/85.
 Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
 No network beyond 127.0.0.1. No C#, no Unity, nothing deployed; daily 0.0.567.
 
@@ -14987,7 +14987,7 @@ caller's argument, brought by the client.
   the honest chain          accepted, 3 headers, work 24135148547246749491129
   the fabricated header     still refused, unchanged from 969370c
 
-`BITCOIN_MAINNET_GENESIS` is in `protocol/src/chain.js`, hashing order, and the
+`BITCOIN_MAINNET_GENESIS` is in `arena-protocol/src/chain.js`, hashing order, and the
 test checks it displays as
 000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f. It is not a
 parameter and not a choice: that number IS mainnet, anyone can check it, it
@@ -15020,7 +15020,7 @@ path still takes `chains` from the page, so the door is not yet fed by
 `agreedChain`; and which block a deployment anchors on - genesis at 68.7 MB or
 a shipped checkpoint that must be kept fresh - is a constant nobody has chosen.
 
-TESTS. blwp-client 57 -> 59, protocol 104/104, blwp-node 41/41, core 85/85.
+TESTS. arena-client 57 -> 59, protocol 104/104, arena-node 41/41, core 85/85.
 Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
 No network beyond 127.0.0.1. No C#, no Unity, nothing deployed; daily 0.0.567.
 
@@ -15097,7 +15097,7 @@ ONE TEST FIXTURE FAULT FOUND AND FIXED, not a rule loosened: two tests said
 which takes precedence, so the override was silently ignored. They now offer
 the chain they mean to.
 
-TESTS. blwp-client 59 -> 62, protocol 104/104, blwp-node 41/41, core 85/85.
+TESTS. arena-client 59 -> 62, protocol 104/104, arena-node 41/41, core 85/85.
 Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
 No network beyond 127.0.0.1. No C#; the jslib is source, not a built artefact.
 Nothing deployed; daily 0.0.567.
@@ -15129,7 +15129,7 @@ The jslib no longer reads `BLWP_CHAIN.anchor` and the comment that said it
 should is gone.
 
 `BITCOIN_MAINNET_GENESIS_HEADER` - the eighty bytes, not only the hash - is in
-`protocol/src/chain.js` so a chain can START at Bitcoin's first block. Nothing
+`arena-protocol/src/chain.js` so a chain can START at Bitcoin's first block. Nothing
 about it is taken on trust: the test hashes it and gets
 000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f, and that is
 the only reason to believe either the header or the hash constant beside it.
@@ -15160,7 +15160,7 @@ supplied anchor first, so the fallback is unreachable and the mutation changes
 nothing observable. Same shape as the reach-ordering non-mutant recorded
 earlier.
 
-TESTS. blwp-client 62 -> 63, protocol 104/104, blwp-node 41/41, core 85/85.
+TESTS. arena-client 62 -> 63, protocol 104/104, arena-node 41/41, core 85/85.
 Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
 Bundle 120.3 -> 122.0 KB, still 17 modules. No network beyond 127.0.0.1. No C#;
 the jslib is source, not a built artefact. Nothing deployed; daily 0.0.567.
@@ -15218,7 +15218,7 @@ MUTANTS, four, all red: a supplied `least` used (1), a supplied `timeoutMs`
 used (1), the floor lowered to one (2), the floor not passed to `agreedChain`
 (2).
 
-TESTS. blwp-client 63 -> 65, protocol 104/104, blwp-node 41/41, core 85/85.
+TESTS. arena-client 63 -> 65, protocol 104/104, arena-node 41/41, core 85/85.
 Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
 Bundle 122.0 -> 123.6 KB, 17 modules. No network beyond 127.0.0.1. No C#, no
 Unity, nothing deployed; daily 0.0.567.
@@ -15275,7 +15275,7 @@ will not open on one provider" was untagged and started failing for the tag
 instead of the proof. It now declares a source, so the claim it makes -
 `provenBond` runs on the live path - is the claim it tests.
 
-TESTS. blwp-client 65 -> 67, protocol 104/104, blwp-node 41/41, core 85/85.
+TESTS. arena-client 65 -> 67, protocol 104/104, arena-node 41/41, core 85/85.
 Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
 Bundle 123.6 -> 125.2 KB, 17 modules. `agreedChain` is unchanged and
 headers.test.js untouched - the requirement is the door's, where the page
@@ -15322,7 +15322,7 @@ SEVEN CUTS, and each one existed because the cut before it was not enough:
   7ac843b  and so is the two-provider floor
   ecd5822  and two providers means two declared sources, not two calls
 
-COUNTS AT CLOSE. blwp-client 67/67, protocol 104/104, blwp-node 41/41, core
+COUNTS AT CLOSE. arena-client 67/67, protocol 104/104, arena-node 41/41, core
 85/85 - 297 tests, no red, none skipped. Determinism guard 19 files clean,
 money guard 9 files clean. Bundle 125.2 KB, 17 modules. PlayMode 213/189/11/13
 and EditMode 185/181/1/3 as last measured at 7b4caea; no C# has moved since.
@@ -15348,7 +15348,7 @@ WHAT THE CLIENT DID BEFORE, read out of the code rather than guessed:
   7            identical to 1
 
 A step function at ONE, where 13C puts the threshold at five. There was no
-count and no threshold anywhere in `blwp-client/src`; the only counter in the
+count and no threshold anywhere in `arena-client/src`; the only counter in the
 repo was `receiptCount` on the node, whose own comment says whether five is
 enough needs the other six daemons. So "the head moves on a verified receipt,
 not on a word" was true and thinner than it sounded: one receipt out of seven.
@@ -15393,7 +15393,7 @@ four counted as enough (1), receipts counted instead of signers (4), and
 recovered receipts not counting (1). The last one SURVIVED at first - nothing
 asserted that recovery feeds the count - and the test now says so.
 
-TESTS. blwp-client 67 -> 69, protocol 104/104, blwp-node 41/41, core 85/85.
+TESTS. arena-client 67 -> 69, protocol 104/104, arena-node 41/41, core 85/85.
 Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
 Bundle 125.2 -> 127.3 KB, 17 modules. No C#, no Unity, nothing deployed;
 daily 0.0.567.
@@ -15454,7 +15454,7 @@ adopting the OLDEST live mark (0 red at first - the walk-back test had only one
 live mark, so both directions gave the same answer). A three-mark case with two
 live was added and it is now 1 red.
 
-TESTS. blwp-client 69 -> 72, protocol 104/104, blwp-node 41/41, core 85/85.
+TESTS. arena-client 69 -> 72, protocol 104/104, arena-node 41/41, core 85/85.
 Determinism guard 19 clean, money guard 9 clean. No test-vector file changed.
 Bundle 127.3 -> 128.5 KB, 17 modules. No C#, no Unity, nothing deployed;
 daily 0.0.567.
@@ -15464,7 +15464,7 @@ are accounted for: NO_PREVIOUS at the start of a round, the mark path gated at
 five (5480b41), and the resume path gated at five (a668be7). Grepping every
 assignment is what found the second one AFTER the first had been called done.
 
-  blwp-client 72, protocol 104, blwp-node 41, core 85  -  302 green, none red,
+  arena-client 72, protocol 104, arena-node 41, core 85  -  302 green, none red,
   none skipped. Determinism guard 19 files clean, money guard 9 files clean.
   Bundle 128.5 KB, 17 modules. PlayMode 213/189/11/13 and EditMode 185/181/1/3
   stand from 7b4caea; no C# has moved.
@@ -15532,7 +15532,7 @@ the inputs being everything the node holds - 0 red at first, because the
 fixture had ONE batch and cutting at the committed head was the same as taking
 everything. A second batch was added and it is 1 red.
 
-TESTS. blwp-node 41 -> 49, blwp-client 72, protocol 104, core 85 - 310 green,
+TESTS. arena-node 41 -> 49, arena-client 72, protocol 104, core 85 - 310 green,
 none red, none skipped. Determinism guard 19 clean, money guard 9 clean. No
 test-vector file changed. No C#, no Unity, nothing deployed; daily 0.0.567.
 
@@ -15576,7 +15576,7 @@ WHAT LANDED. An `equivocations` table keyed (round, entry, tick); the refused
 mark is kept beside the stored one and the refusal is unchanged. `equivocation()`
 answers what this node holds, `GET /equivocation` publishes it - 200 with
 `x-equivocations` and `x-ticks-at`, 204 when there is none.
-`provesEquivocation(a, b, sessionPubkey, verify)` in `protocol/src/checkpoint.js`
+`provesEquivocation(a, b, sessionPubkey, verify)` in `arena-protocol/src/checkpoint.js`
 answers from the two records alone; `verify` is injected because this package
 carries no curve.
 
@@ -15609,7 +15609,7 @@ THE NO-CORE RULE STANDS, green by name: "the node does not step: nothing here
 imports the core". Nothing here replays anything; a proof that needed a replay
 would be the other clause.
 
-TESTS. blwp-node 49 -> 53, protocol 104, blwp-client 72, core 85 - 314 green,
+TESTS. arena-node 49 -> 53, protocol 104, arena-client 72, core 85 - 314 green,
 none red, none skipped. Determinism guard 19 clean, money guard 9 clean. No
 test-vector file changed. No C#, no Unity, nothing deployed; daily 0.0.567.
 
@@ -15688,7 +15688,7 @@ backtick inside the SQL template literal in `store.js` closed the string and
 every node suite went red at once with "missing ) after argument list". The
 same trap is already in this file from an earlier slice.
 
-TESTS. blwp-node 53 -> 57, protocol 104, blwp-client 72, core 85 - 318 green,
+TESTS. arena-node 53 -> 57, protocol 104, arena-client 72, core 85 - 318 green,
 none red, none skipped. Determinism guard 19 clean, money guard 9 clean. "The
 node does not step: nothing here imports the core" is green by name. No C#, no
 Unity rebuild, nothing deployed; daily 0.0.567.
@@ -15741,7 +15741,7 @@ the parent pairing dropped so only same-tick pairs survive (2), a refused mark
 that contradicts nothing published anyway (1), the foreign-receipt door removed
 (1).
 
-TESTS. blwp-node 57 -> 61, protocol 104, blwp-client 72, core 85 - 322 green,
+TESTS. arena-node 57 -> 61, protocol 104, arena-client 72, core 85 - 322 green,
 none red, none skipped. Determinism guard 19 clean, money guard 9 clean. "The
 node does not step: nothing here imports the core" green by name. No C#, no
 Unity rebuild, nothing deployed; daily 0.0.567.
@@ -15784,7 +15784,7 @@ MUTANTS, three, all red: the backwards-tick mark thrown away again (1), the
 head-path mark thrown away again (4), the keeper storing nothing at all (5).
 The eleven earlier mutants on this letter were re-run and stayed red.
 
-TESTS. blwp-node 61 -> 63, protocol 104, blwp-client 72, core 85 - 324 green,
+TESTS. arena-node 61 -> 63, protocol 104, arena-client 72, core 85 - 324 green,
 none red, none skipped. Determinism guard 19 clean, money guard 9 clean. No C#,
 no Unity, nothing deployed; daily 0.0.567.
 
@@ -15793,8 +15793,8 @@ no Unity, nothing deployed; daily 0.0.567.
 MEASURED, this turn, by running the suites and driving the doors:
 
   protocol      104 / 104 green
-  blwp-node      63 /  63 green
-  blwp-client    72 /  72 green
+  arena-node      63 /  63 green
+  arena-client    72 /  72 green
   core           85 /  85 green
                 324 green, none red, none skipped
   determinism guard   19 files clean
@@ -15828,7 +15828,7 @@ equivocation, and equivocation forfeits. Everything else that goes wrong is the
 infrastructure's fault and refunds."
 
 `noQuorumOutcome({ signatures, needed, equivocationProven })` in
-`protocol/src/payout.js`. Both inputs were already in the tree - the fork proof
+`arena-protocol/src/payout.js`. Both inputs were already in the tree - the fork proof
 a node publishes, and a count of committee signatures - and the output is the
 word `computePayoutTable` has consumed since before this slice. No daemon is
 invented and none is pretended at.
@@ -15876,7 +15876,7 @@ MUTANTS, four, all red: a fork not forfeiting so everything voids (1), anything
 truthy forfeiting (1), no quorum never noticed so the rule never applies (2), a
 short committee counted as agreement (2).
 
-TESTS. blwp-node 63 -> 66, protocol 104, blwp-client 72, core 85 - 327 green,
+TESTS. arena-node 63 -> 66, protocol 104, arena-client 72, core 85 - 327 green,
 none red, none skipped. Determinism guard 19 clean, money guard 9 clean. No
 float went near money: the decision is words and integer counts, and the table
 was already BigInt millisatoshi throughout. No C#, no Unity, nothing deployed.
@@ -15900,7 +15900,7 @@ table, the refund by HTLC expiry - two were in (the decision at 7775643, the
 exclusion since before this letter) and this is the third.
 
 WHAT LANDED. `holdSettlement({ roundId, entries, minScore })` in
-`protocol/src/payout.js`. Every entry gets exactly one of two answers, because
+`arena-protocol/src/payout.js`. Every entry gets exactly one of two answers, because
 a hold invoice has exactly two: SETTLE, release the preimage and take it, or
 CANCEL, let it expire back to the payer.
 
@@ -15939,7 +15939,7 @@ a FORFEIT hold refunded instead of spent (3), refunded msat counted as settled
 an input where it bites. That input is the cautious player above; with it the
 mutant is 1 red.
 
-TESTS. protocol 104 -> 108, blwp-node 66, blwp-client 72, core 85. Determinism
+TESTS. protocol 104 -> 108, arena-node 66, arena-client 72, core 85. Determinism
 guard 19 files clean, money guard 9 files clean - no float went near money and
 every figure here is BigInt millisatoshi. No C#, no jslib, no Unity.
 
@@ -15994,7 +15994,7 @@ against the fixed table until the no-finisher input existed - every other
 fixture balances by construction now - which is why that test was written
 rather than the check dropped.
 
-TESTS. protocol 109 -> 112, blwp-node 66, blwp-client 72, core 85. Money guard
+TESTS. protocol 109 -> 112, arena-node 66, arena-client 72, core 85. Money guard
 9 files clean, determinism guard 19 clean; every figure BigInt millisatoshi. No
 C#, no jslib, no Unity.
 
@@ -16086,7 +16086,7 @@ NODE'S OWN Ed25519 IN THE TEST, not a new dependency. `packages/protocol`
 declares almost none on purpose, and a test that added a curve to check a
 signature would have put one in the money path's own package.
 
-TESTS. protocol 112 -> 116, blwp-node 66, blwp-client 72, core 85. Money guard
+TESTS. protocol 112 -> 116, arena-node 66, arena-client 72, core 85. Money guard
 9 files clean, determinism guard 19 clean. The payout fixtures are untouched
 and still green: operator zero, settled + refunded = every stake, a pool with
 no qualifier refused in every shape.
@@ -16134,7 +16134,7 @@ stranger's signature blocking the round (1), an absent committee counting
 everybody (1), an unknown outcome byte decoding as undefined (1), four of seven
 called final (1).
 
-TESTS. protocol 116 -> 118, blwp-node 66, blwp-client 72, core 85. Money guard
+TESTS. protocol 116 -> 118, arena-node 66, arena-client 72, core 85. Money guard
 9 files clean, determinism guard 19 clean. The payout fixtures are untouched.
 
 WHAT THIS CUT STILL DOES NOT DO, said plainly: nothing verifies the signatures
@@ -16212,7 +16212,7 @@ suspending (1), the replay verdict ignored so any objection suspends (2), the
 window taken from the code rather than the contract (1), the window never
 closing (1).
 
-TESTS. protocol 118 -> 124, blwp-node 66, blwp-client 72, core 85. Money guard
+TESTS. protocol 118 -> 124, arena-node 66, arena-client 72, core 85. Money guard
 9 files clean, determinism guard 19 clean. No C#, no jslib, no Unity.
 
 STILL NOT DONE: the replay itself, the committee re-run a suspension waits for,
@@ -16264,7 +16264,7 @@ ONE FIXTURE WAS WRONG, not loosened: the shared objection was dated 5000 while
 the window opened at 10000, so it was an objection raised before the result was
 even provisional. It is dated inside the window now.
 
-TESTS. protocol 124 -> 126, blwp-node 66, blwp-client 72, core 85. Money guard
+TESTS. protocol 124 -> 126, arena-node 66, arena-client 72, core 85. Money guard
 9 files clean, determinism guard 19 clean. No C#, no Unity.
 
 ## M2.1 13C/23.2: the HTLC path, and two action words that were wrong
@@ -16337,7 +16337,7 @@ releasing shares, and the settlement signatures themselves. This says what may
 be done and what each thing requires; doing it is Lightning and a committee.
 
 TESTS. protocol 126 -> 125 (one test replaced four by covering them together),
-blwp-node 66, blwp-client 72, core 85. Money guard 9 files clean, determinism
+arena-node 66, arena-client 72, core 85. Money guard 9 files clean, determinism
 guard 19 clean. No C#, no Unity.
 
 ## M2.1 23.1: five of seven rebuild the stake preimage, four rebuild nothing
@@ -16389,7 +16389,7 @@ for the same reason it carries no curve, and a dishonest dealer would be caught
 at reconstruction rather than at handout. Named here rather than papered over,
 and it is the hole in this piece.
 
-TESTS. protocol 125 -> 131, blwp-node 66, blwp-client 72, core 85. Money guard
+TESTS. protocol 125 -> 131, arena-node 66, arena-client 72, core 85. Money guard
 9 files clean, determinism guard 19 clean. No Unity, no C#, no browser.
 
 ## M2.1 23.1: what a dishonest dealer can still do, counted
@@ -16447,7 +16447,7 @@ opened when the commitment is absent (2), and openStake reporting success
 without opening anything - written first as `back || new Uint8Array(32)`, which
 changes nothing because `back` is always truthy, then as `ok: true`.
 
-TESTS. protocol 131 -> 133, blwp-node 66, blwp-client 72, core 85. Money guard
+TESTS. protocol 131 -> 133, arena-node 66, arena-client 72, core 85. Money guard
 9 files clean, determinism guard 19 clean. No Unity, no C#.
 
 ## M2.1 23.1: a handout nobody can open is FORFEIT, not VOID
@@ -16493,7 +16493,7 @@ fraction stands: three mis-shared seats leave 0 of 21 subsets openable while
 every share passes its holder's check. The classification decides what happens
 AFTER that is discovered, which is at settlement.
 
-TESTS. protocol 133 -> 135, blwp-node 66, blwp-client 72, core 85. Money guard
+TESTS. protocol 133 -> 135, arena-node 66, arena-client 72, core 85. Money guard
 9 files clean, determinism guard 19 clean. No Unity, no C#, no floats.
 
 ## M2.1 23.2: what VOID does to the hold, measured against the other two fates
@@ -16536,7 +16536,7 @@ MUTANTS, four, all red: VOID settled like a loss (5), VOID made to wait for
 signatures before refunding (2), the house allowed to keep what the pool does
 not hand out (1), a void stake counted into the pool (4).
 
-TESTS. protocol 135 -> 136, blwp-node 66, blwp-client 72, core 85. Money guard
+TESTS. protocol 135 -> 136, arena-node 66, arena-client 72, core 85. Money guard
 9 files clean, determinism guard 19 clean. No Unity, no C#, no floats.
 
 ## M2.1 23.2: the hold as state, and where each of the three fates ends
@@ -16593,7 +16593,7 @@ ONE FAULT OF MINE, worth writing down because it cost a run: `packages/*/src`
 inside a block comment closes the comment at the `*/`, and the test file would
 not parse.
 
-TESTS. protocol 136 -> 138, blwp-node 66, blwp-client 72, core 85. Money guard
+TESTS. protocol 136 -> 138, arena-node 66, arena-client 72, core 85. Money guard
 9 files clean, determinism guard 19 clean. No Unity, no C#, no floats.
 
 ## M2.1 14: a FINAL result cannot be voided, and ENTRY_VOID is a real fate
@@ -16648,7 +16648,7 @@ entries while the amounts came from the table, matched BY INDEX. Two filters
 that could drift, with no test able to see it. The second filter is gone: the
 rows come from the table itself now, so the mutant cannot be written at all.
 
-TESTS. protocol 138, blwp-node 66 -> 68, blwp-client 72, core 85. Money guard 9
+TESTS. protocol 138, arena-node 66 -> 68, arena-client 72, core 85. Money guard 9
 files clean, determinism guard 19 clean. No Unity, no C#, no floats.
 
 STILL LISTED, NOT STARTED: issuing, settling or cancelling a real invoice; the
@@ -16658,8 +16658,8 @@ slashing. All three want the other six daemons or a Lightning endpoint.
 ## M2.1 23: the invoice path is daemon-blocked, and what it would take
 
 MEASURED BEFORE CLAIMING IT. Across all four packages: no Lightning
-dependency of any kind - `blwp-client` has `@noble/curves` and `ws` as dev
-deps, `blwp-node` has the same two, `core` and `protocol` have none but
+dependency of any kind - `arena-client` has `@noble/curves` and `ws` as dev
+deps, `arena-node` has the same two, `core` and `protocol` have none but
 `acorn`. No BOLT-11, no bech32, no invoice encoder, nothing that speaks to a
 node. Three files mention Lightning at all: two are comments and the third is
 `advert.js`'s `lightningCapabilities`, a u32 bitmask a node advertises - a
@@ -16753,7 +16753,7 @@ MUTANTS, five, all red: the payment hash not compared (1), the amount not
 compared (1), paying MORE than the entry staked allowed (1), the construction
 left out of the contract (4), any word accepted as a construction (1).
 
-TESTS. protocol 138 -> 140, blwp-node 68, blwp-client 72, core 85. Money guard
+TESTS. protocol 138 -> 140, arena-node 68, arena-client 72, core 85. Money guard
 9 files clean, determinism guard 19 clean. No Unity, no C#.
 
 WHAT IS LEFT ON ITEM 14, each named by what blocks it:
@@ -16875,7 +16875,7 @@ the package.
 
 ### Suites
 
-protocol 149/149 (was 140), blwp-node 70/70 (was 68), blwp-client 72/72,
+protocol 149/149 (was 140), arena-node 70/70 (was 68), arena-client 72/72,
 core 80/80, money guard 9 files clean, determinism guard 19 files clean.
 Unity untouched.
 
@@ -16939,7 +16939,7 @@ disconnect working as an escape hatch, in the operator's favour.
 
 ### What went in
 
-`Client.reconnect(where)` in `packages/blwp-client/src/client.js`: one in
+`Client.reconnect(where)` in `packages/arena-client/src/client.js`: one in
 flight whatever the drop rate (a second caller gets the first one's promise),
 retries with the same 1s/2s/4s/8s ladder so a two-second node restart does not
 end a session, and reads `ended` EVERY time round rather than once on the way
@@ -16962,7 +16962,7 @@ state `ended` - it does not pick one. The status line gained ` ENDED <word>`.
 
 ### Mutants: 9 planted, 9 killed, none retracted
 
-| mutant | blwp-client red |
+| mutant | arena-client red |
 |--------|----------------:|
 | reconnect ignores ended (the door) | 2 |
 | reconnect ignores ended (the loop) | 2 |
@@ -16984,7 +16984,7 @@ timer so the process can exit). Both then died red, at 2 and 1.
 
 ### Suites
 
-blwp-client 79/79 (was 72), blwp-node 70/70, protocol 149/149, core 80/80,
+arena-client 79/79 (was 72), arena-node 70/70, protocol 149/149, core 80/80,
 money guard 9 files clean, determinism guard 19 files clean. Unity untouched.
 
 ### What this closes
@@ -17055,7 +17055,7 @@ stubbed is Emscripten; nothing that matters is mocked.
 
 ### Mutants: 10 planted, 10 killed, none retracted
 
-| mutant | blwp-client red |
+| mutant | arena-client red |
 |--------|----------------:|
 | endRun leaves the word alone | 4 |
 | endRun tells nobody | 3 |
@@ -17078,7 +17078,7 @@ cannot be settled. A test for that window went in and the mutant then died at
 
 ### Suites
 
-protocol 149/149, blwp-node 70/70, blwp-client 88/88 (was 79; +5 state-word,
+protocol 149/149, arena-node 70/70, arena-client 88/88 (was 79; +5 state-word,
 +4 bridge), core 80/80, money guard 9 files clean, determinism guard 19 files
 clean.
 
@@ -17160,7 +17160,7 @@ Final, all three green:
 
 ### Suites
 
-protocol 149/149, blwp-node 70/70, blwp-client 88/88, core 80/80, money guard 9
+protocol 149/149, arena-node 70/70, arena-client 88/88, core 80/80, money guard 9
 files clean, determinism guard 19 files clean.
 
 Unity EditMode 189/185/1/3, `error CS` 0 - the one red is
@@ -17182,10 +17182,10 @@ gap on this door, and it is a build, not a rule.
 
 PlayMode shows the truck at rest under real physics and EditMode shows the
 wording. Neither is a browser, and the jslib and the C# only take effect in a
-WebGL build - so the door was driven on the built page: a real blwp-node, the
+WebGL build - so the door was driven on the built page: a real arena-node, the
 real player over HTTP, a real Chrome, the node taken away entirely.
 
-The harness is kept as `packages/blwp-client/tools/screen.mjs`. It builds a
+The harness is kept as `packages/arena-client/tools/screen.mjs`. It builds a
 bond into a block mined on top of Bitcoin's REAL genesis header, because
 `discover` anchors on genesis and refuses one the page supplies; serves the
 headers from two ports so the two-source floor is met by two origins rather
@@ -17264,7 +17264,7 @@ Photographs: `daniel-screens/2026-09-08-run-stopped-*.jpg`.
 
 ### Suites
 
-protocol 149/149, blwp-node 70/70, blwp-client 89/89, core 80/80, money guard
+protocol 149/149, arena-node 70/70, arena-client 89/89, core 80/80, money guard
 9 files clean, determinism guard 19 files clean.
 
 Unity EditMode 190/186/1/3 - the one red is
@@ -17307,7 +17307,7 @@ This package steps no simulation and the daemon imports no core.
 
 ### What went in
 
-`packages/protocol/src/slash.js`: `SlashProof` (type 0x0c, tag
+`packages/arena-protocol/src/slash.js`: `SlashProof` (type 0x0c, tag
 `BLWP/v1/SlashProof`, both the next free number rather than a reuse) carrying
 round, player, node, the canonical transcript hash, the accused result's id,
 and the bond outpoint; `slashProofId`; `slashCommitment`, which is what step 4
@@ -17374,7 +17374,7 @@ being able to.
 
 ### Suites
 
-protocol 160/160 (was 149), blwp-node 70/70, blwp-client 89/89, core 80/80,
+protocol 160/160 (was 149), arena-node 70/70, arena-client 89/89, core 80/80,
 money guard **10** files clean - `slash.js` was added to its list, because a
 bond is money and what that file decides is whether an output the node owns
 may be spent away from it - determinism guard 19 files clean. Unity untouched;
@@ -17477,7 +17477,7 @@ name like every other check here.
 
 ### Suites
 
-protocol 171/171 (was 160), blwp-node 70/70, blwp-client 89/89, core 80/80,
+protocol 171/171 (was 160), arena-node 70/70, arena-client 89/89, core 80/80,
 money guard 10 files clean, determinism guard 19 files clean. Unity untouched:
 EditMode 190/186/1/3 and PlayMode 216/192/11/13 stand from 8cc7fdd.
 
@@ -17594,7 +17594,7 @@ lives once in `slash.test.js` and adding row 5 touches that line and no other.
 
 ### Suites
 
-protocol 183/183 (was 171), blwp-node 70/70, blwp-client 89/89, core 80/80,
+protocol 183/183 (was 171), arena-node 70/70, arena-client 89/89, core 80/80,
 money guard 10 files clean, determinism guard 19 files clean. Unity untouched:
 EditMode 190/186/1/3 and PlayMode 216/192/11/13 stand from 8cc7fdd.
 
@@ -17648,7 +17648,7 @@ use should be checkably unused, not merely unchecked.
 Mutants: "the proof may name any entry" 1 red, "the proof may name any player"
 1 red. 17 planted on this row in total now, 17 killed, none retracted.
 
-protocol 184/184 (was 183). blwp-node, blwp-client, core and both guards
+protocol 184/184 (was 183). arena-node, arena-client, core and both guards
 unchanged and not re-run for theatre - no file outside `packages/protocol`
 moved. Unity untouched.
 
@@ -17737,7 +17737,7 @@ to pin, and a test that moves two of them together shows neither.
 
 ### Suites
 
-protocol 197/197 (was 184), blwp-node 70/70, blwp-client 89/89, core 80/80,
+protocol 197/197 (was 184), arena-node 70/70, arena-client 89/89, core 80/80,
 money guard 10 files clean, determinism guard 19 files clean. Unity untouched:
 EditMode 190/186/1/3 and PlayMode 216/192/11/13 stand from 8cc7fdd.
 
@@ -17832,7 +17832,7 @@ and the two mutants that move only one of them die at 1 apiece.
 
 ### Suites
 
-protocol 207/207 (was 197), blwp-node 70/70, blwp-client 89/89, core 80/80,
+protocol 207/207 (was 197), arena-node 70/70, arena-client 89/89, core 80/80,
 money guard 10 files clean, determinism guard 19 files clean. Unity untouched:
 EditMode 190/186/1/3 and PlayMode 216/192/11/13 stand from 8cc7fdd.
 
@@ -17941,7 +17941,7 @@ The assertion itself was not touched.
 
 ### Suites
 
-protocol 220/220 (was 207), blwp-node 70/70, blwp-client 89/89, core 80/80,
+protocol 220/220 (was 207), arena-node 70/70, arena-client 89/89, core 80/80,
 money guard 10 files clean, determinism guard 19 files clean. Unity untouched
 and not re-run: EditMode 190/186/1/3 and PlayMode 216/192/11/13 stand from
 8cc7fdd.
@@ -17972,7 +17972,7 @@ because these decide whether a bond is taken and who gets it.
                        from the objectionWindowMs entry above, then confirmed
                        by regenerating: 1 file changed, 4 insertions.
   round id derived in  one place. `roundId(contract)` in contracts.js, called
-                       from blwp-node/round.js:198, blwp-client/client.js:174
+                       from arena-node/round.js:198, arena-client/client.js:174
                        and :279, and the jslib at 276 and 278. No second
                        derivation anywhere.
   the contract grew    270 -> 275 bytes
@@ -18040,7 +18040,7 @@ own paid-against-staked throw - and it stays, uncounted.
 
 ### Suites
 
-protocol 228/228 (was 220), blwp-node 70/70, blwp-client 89/89, core 80/80,
+protocol 228/228 (was 220), arena-node 70/70, arena-client 89/89, core 80/80,
 money guard 10 files clean, determinism guard 19 files clean. Unity untouched
 and not re-run: EditMode 190/186/1/3 and PlayMode 216/192/11/13 stand from
 8cc7fdd.
@@ -18128,7 +18128,7 @@ player half, 25 excluded).
 
 ### Suites
 
-protocol 230/230 (was 228), blwp-node 70/70, blwp-client 89/89, core 80/80,
+protocol 230/230 (was 228), arena-node 70/70, arena-client 89/89, core 80/80,
 money guard 10 files clean, determinism guard 19 files clean. Unity untouched
 and not re-run.
 
@@ -18144,7 +18144,7 @@ qualifying node could claim any amount and no predicate contradicted it.
 
 ### What went in
 
-`packages/protocol/src/fee.js`, integer BigInt millisatoshi throughout and on
+`packages/arena-protocol/src/fee.js`, integer BigInt millisatoshi throughout and on
 the money guard, which is now 11 files.
 
   gross      the sum of stakes of financially ACTIVATED entries. Not a second
@@ -18259,9 +18259,9 @@ Nothing was patched to hide this, and the contract was not touched.
 
 ### Suites
 
-protocol 244/244 (was 230), blwp-node 70/70, blwp-client 89/89, core 80/80,
+protocol 244/244 (was 230), arena-node 70/70, arena-client 89/89, core 80/80,
 money guard 11 files clean (fee.js added), determinism guard 19 files clean.
-blwp-node, blwp-client, core and Unity did not move and were not touched.
+arena-node, arena-client, core and Unity did not move and were not touched.
 
 ## M2.1 22A: an entry's fee, checked against its own stake
 
@@ -18330,7 +18330,7 @@ rule. The spec's own worked example is one of the cases that agrees exactly.
 
 ### Suites
 
-protocol 249/249 (was 244), blwp-node 70/70, blwp-client 89/89, core 80/80,
+protocol 249/249 (was 244), arena-node 70/70, arena-client 89/89, core 80/80,
 money guard 11 files clean, determinism guard 19 files clean. Nothing outside
 `packages/protocol` moved; Unity untouched and not re-run.
 
@@ -18353,7 +18353,7 @@ each.
 
 ### What went in
 
-`packages/protocol/src/donation.js`, on the money guard, which is 12 files now.
+`packages/arena-protocol/src/donation.js`, on the money guard, which is 12 files now.
 
   the set stands      only when the shares sum to EXACTLY 10000 basis points.
                       Under anything else money is either left over with nobody
@@ -18427,7 +18427,7 @@ inventing a second protocol.
 
 ### Suites
 
-protocol 260/260 (was 249), blwp-node 70/70, blwp-client 89/89, core 80/80,
+protocol 260/260 (was 249), arena-node 70/70, arena-client 89/89, core 80/80,
 money guard 12 files clean, determinism guard 19 files clean. Nothing outside
 `packages/protocol` calls any of this - grep finds `splitDonation`,
 `donationSetStands`, `donationAfterFailures` and `donatedMsat` only in the file
@@ -18509,7 +18509,7 @@ hash, which has to exist before anything can carry it.
 
 ### Suites
 
-protocol 265/265 (was 260), blwp-node 70/70, blwp-client 89/89, core 80/80,
+protocol 265/265 (was 260), arena-node 70/70, arena-client 89/89, core 80/80,
 money guard 12 files clean, determinism guard 19 files clean. Nothing outside
 `packages/protocol` calls any of it. Unity untouched and not re-run.
 
@@ -18582,7 +18582,7 @@ either way, and the bytes say which payee.
 
 ### Suites
 
-protocol 270/270 (was 265), blwp-node 70/70, blwp-client 89/89, core 80/80,
+protocol 270/270 (was 265), arena-node 70/70, arena-client 89/89, core 80/80,
 money guard 12 files clean, determinism guard 19 files clean. Nothing outside
 `packages/protocol` moved; Unity untouched and not re-run.
 
@@ -18619,14 +18619,14 @@ Our own upper-typed set still round-trips: `encodeDonationSet` lowers it, and
 
 ### Suites
 
-protocol 271/271 (was 270), blwp-node 70/70, blwp-client 89/89, core 80/80,
+protocol 271/271 (was 270), arena-node 70/70, arena-client 89/89, core 80/80,
 money guard 12 files clean, determinism guard 19 files clean. Nothing outside
 `packages/protocol` moved; Unity untouched and not re-run.
 
 ### And a check worth recording as clean
 
 `grep` for `Rigidbody`, `PhysX`, `UnityEngine` or `Physics` across
-`packages/protocol/src` returns nothing. No engine value reaches any of this;
+`packages/arena-protocol/src` returns nothing. No engine value reaches any of this;
 it is protocol money law throughout.
 
 ### Still parked, unchanged
@@ -18695,7 +18695,7 @@ every other refusal in that encoder does. The mutant that restores the crash is
 
 ### Suites
 
-protocol 275/275 (was 271), blwp-node 70/70, blwp-client 89/89, core 80/80,
+protocol 275/275 (was 271), arena-node 70/70, arena-client 89/89, core 80/80,
 money guard 12 files clean, determinism guard 19 files clean. Every honest
 caller that already built a contract still builds one - all 22 sites updated
 and green. Unity untouched and not re-run; no C# or PhysX value is anywhere in
@@ -18731,7 +18731,7 @@ attestation because this package has no Lightning.
 Parked beside the other data-availability limits, not counted as a hole in the
 binding.
 
-  suites at this note   protocol 275/275, blwp-node 70/70, blwp-client 89/89,
+  suites at this note   protocol 275/275, arena-node 70/70, arena-client 89/89,
                         core 80/80, money guard 12 files clean, determinism
                         guard 19 files clean. No code moved for this note.
 
@@ -18841,7 +18841,7 @@ slice about checking a root.
 
 ### Suites
 
-protocol 283/283 (was 275), blwp-node 70/70, blwp-client 89/89, core 80/80,
+protocol 283/283 (was 275), arena-node 70/70, arena-client 89/89, core 80/80,
 money guard 12 files clean, determinism guard 19 files clean. JS protocol only:
 no Unity, no C# port, no PhysX, and no vector moved - the census leaf shape was
 not touched.
@@ -18920,7 +18920,7 @@ one silently dropped 2, and the three input refusals 1 each.
 
 ### Suites
 
-protocol 293/293 (was 283), blwp-node 70/70, blwp-client 89/89, core 80/80,
+protocol 293/293 (was 283), arena-node 70/70, arena-client 89/89, core 80/80,
 money guard 12 files clean, determinism guard 19 files clean. JS protocol only:
 no Unity, no C# port, no PhysX, no daemon, and no vector moved.
 
@@ -19003,7 +19003,7 @@ the unchecked list emptied 1.
 
 ### Suites
 
-protocol 303/303 (was 293), blwp-node 70/70, blwp-client 89/89, core 80/80,
+protocol 303/303 (was 293), arena-node 70/70, arena-client 89/89, core 80/80,
 money guard 12 files clean, determinism guard 19 files clean. JS protocol only:
 no Unity, no C# port, no PhysX, no daemon, no vector moved.
 
@@ -19087,7 +19087,7 @@ and naming nothing it cannot check (1).
 
 ### Suites
 
-protocol 313/313 (was 303), blwp-node 70/70, blwp-client 89/89, core 80/80,
+protocol 313/313 (was 303), arena-node 70/70, arena-client 89/89, core 80/80,
 money guard 12 files clean, determinism guard 19 files clean. The spec vectors
 did not move: `make-vectors.js` regenerates byte-identical output, because
 `advertId` is required to be present and is not encoded.
@@ -19182,7 +19182,7 @@ network accepts NO contract. Wrong in the safe direction, and loud.
   vectors           only contracts.json moved. census, sortition, payout,
                     checkpoint, receipt, advert, tagged, encoding all
                     byte-identical, so the break is contained to the contract.
-  construction      20 sites across protocol, blwp-node and blwp-client
+  construction      20 sites across protocol, arena-node and arena-client
   client bundle     rebuilt, 160.2 KB from 17 modules; `bundle.test.js` is the
                     guard that caught the stale one.
 
@@ -19206,7 +19206,7 @@ returning instead of refusing (1 each).
 
 ### Suites
 
-protocol 322/322 (was 313), blwp-node 70/70, blwp-client 89/89, core 80/80,
+protocol 322/322 (was 313), arena-node 70/70, arena-client 89/89, core 80/80,
 money guard 12 files clean, determinism guard 19 files clean.
 
 ### THE CHEAP COMBINED BREAK WAS DECLINED, ON RULING
@@ -19448,7 +19448,7 @@ paths and the curve. Nothing else about it is blocked on the marker.
 
 ### Suites
 
-protocol 331/331 (was 325), blwp-node 70/70, blwp-client 89/89, core 80/80,
+protocol 331/331 (was 325), arena-node 70/70, arena-client 89/89, core 80/80,
 money guard 12 files clean, determinism guard 19 files clean. No wire format
 moved: recognition reads outputs, it does not add a field, so no round id, no
 census root and no vector changed.
@@ -19501,7 +19501,7 @@ advertisement declares vout 1 as its bond:
   acceptAdvert says ok = true, endpoint wss://attacker.example
 
 A transaction with no bond in it at all, presented to a client as a bonded node
-with a reachable endpoint. `blwp-client/src/directory.js` is the caller, so
+with a reachable endpoint. `arena-client/src/directory.js` is the caller, so
 this is 25.1's own path: step 2 is "which nodes count? Bitcoin: bond outputs",
 step 4 reads the endpoint from that same transaction. A node with nothing at
 stake was answering step 2.
@@ -19520,13 +19520,13 @@ caught a stale one.
 
 The first two audits each found a live defect, so this one was done by
 enumeration rather than by memory. `grep -rn "bondVout\|bondSats\|bondTxid"`
-over `protocol/src`, `blwp-node/src` and `blwp-client/src` gives four places
+over `protocol/src`, `arena-node/src` and `arena-client/src` gives four places
 that touch a bond outpoint or its value:
 
   census.js  resolveCensus       recognises. Shape, named outpoint, and the
                                  amount off the output. Fixed two letters ago.
   chain.js   acceptAdvert        recognises. Fixed one letter ago; the door
-                                 `blwp-client/src/directory.js` walks through.
+                                 `arena-client/src/directory.js` walks through.
   slash.js   slashHolds* (x6)    binds each proof to the outpoint the accused
                                  node's own advertisement declared. Already in.
   slash.js   slashDistribution   takes `bondSats` as an argument.
@@ -19543,7 +19543,7 @@ a wrong distribution is detectable by everyone. Measured: a caller-supplied
 100000000000 on an output worth 60000 does distribute 100000000000, and that is
 the caller lying to itself about a number the proof already pins down.
 
-`blwp-client/src/bond.js` `provenBond` proves INCLUSION and never claims
+`arena-client/src/bond.js` `provenBond` proves INCLUSION and never claims
 recognition; its only in-tree consumer, `askForBond`, feeds `directory.js`,
 which runs `acceptAdvert` - so recognition happens before anything is used. It
 is exported from the bundle under a name that could invite a page author to
@@ -19551,7 +19551,7 @@ read `.ok` as "this is a bond". Recorded rather than renamed: a public export
 is not churned on a hunch, and no caller is wrong today.
 
 Nothing changed in this audit. Suites re-run to confirm: protocol 334/334,
-blwp-node 70/70, blwp-client 89/89, core 80/80, money guard 12 files clean,
+arena-node 70/70, arena-client 89/89, core 80/80, money guard 12 files clean,
 determinism guard 19 files clean.
 
 ### Fourth audit: an output worth nothing was a bond, and a zero floor threw
@@ -19653,7 +19653,7 @@ rather than fixed.
 
 ### Suites
 
-protocol 336/336 (was 335), blwp-node 70/70, blwp-client 89/89, core 80/80,
+protocol 336/336 (was 335), arena-node 70/70, arena-client 89/89, core 80/80,
 money guard 12 files clean, determinism guard 19 files clean. 3 mutants planted
 for this pass, 3 killed. Running total for the letter: 38 planted, 38 killed,
 none retracted. No wire format moved; no fix was needed in recognition, so the
@@ -19727,7 +19727,7 @@ harmless; it is not what decides which chain.
                                           ADVERTISEMENT path only.
   client      bond.js provenBond          re-checks chainWork for one bond
                                           proof. Client only.
-  blwp-node   (nothing)                   the node has no chain view at all.
+  arena-node   (nothing)                   the node has no chain view at all.
 
 ### Measured
 
@@ -19793,7 +19793,7 @@ a side path. Case 2 needs nothing.
 
 ### Suites, unchanged this pass
 
-protocol 336/336, blwp-node 70/70, blwp-client 89/89, core 80/80. No product
+protocol 336/336, arena-node 70/70, arena-client 89/89, core 80/80. No product
 code was written.
 
 ## M2.2 item 17, built: the census is a function of a chain
@@ -19900,7 +19900,7 @@ above exposed.
 ### Suites
 
 protocol 343/343 (was 337 before this letter's tests, 336 before the letter),
-blwp-node 70/70, blwp-client 89/89 (bundle rebuilt, 166.6 KB), core 80/80,
+arena-node 70/70, arena-client 89/89 (bundle rebuilt, 166.6 KB), core 80/80,
 money guard 12 files clean, determinism guard 19 files clean. The spec vectors
 did not move: the census vector's contract and entries are unchanged and only
 the way its depth rule is supplied changed.
@@ -19966,7 +19966,7 @@ So this is a decision, not a task. It is recorded here rather than parked
 silently, and it is the one thing about the chain view that this package
 cannot finish on its own.
 
-  protocol 343 -> 344. blwp-node 70/70, blwp-client 89/89, core 80/80, money
+  protocol 343 -> 344. arena-node 70/70, arena-client 89/89, core 80/80, money
   guard 12 files clean, determinism guard 19 files clean.
 
 ### Item 17 closed: both window boundaries, and the checkpoint left as a decision
@@ -20007,7 +20007,7 @@ this package's to settle. Nothing plausible has been written into the census
 package, and genesis is not a substitute: requiring a view to reach block 0 is
 requiring on the order of 900,000 headers.
 
-  protocol 345/345 (344 before this piece), blwp-node 70/70, blwp-client 89/89,
+  protocol 345/345 (344 before this piece), arena-node 70/70, arena-client 89/89,
   core 80/80, money guard 12 files clean, determinism guard 19 files clean.
   Spec vectors unmoved.
 
@@ -20065,7 +20065,7 @@ up empty rather than passing quietly.
 
 ### Suites
 
-protocol 347/347 (345 before this pass), blwp-node 70/70, blwp-client 89/89,
+protocol 347/347 (345 before this pass), arena-node 70/70, arena-client 89/89,
 core 80/80, money guard 12 files clean, determinism guard 19 files clean.
 Vectors unmoved. The checkpoint is still a decision and still not invented.
 
@@ -20117,8 +20117,8 @@ Two facts this letter settled and that stay settled:
 Closing state of item 17:
 
   protocol            347/347
-  blwp-node            70/70
-  blwp-client          89/89
+  arena-node            70/70
+  arena-client          89/89
   core                 80/80
   money guard          12 files clean
   determinism guard    19 files clean
@@ -20140,7 +20140,7 @@ player_inputs)`, and "Ghost snapshots are never inputs to this calculation."
 
   step(st, throttle, steer, brake, handbrake, practice)   sim.js:933
   one truck at one O_TRUCK block, TRUCK_WORDS = 13        state.js
-  grep -i ghost over blwp-node/src, blwp-client/src,
+  grep -i ghost over arena-node/src, arena-client/src,
     protocol/src                                          NOTHING
   the client has no notion of other players               4 modules, no roster
 
@@ -20220,7 +20220,7 @@ was broken.
 
 ### Suites
 
-protocol 353/353 (was 347), core 83/83 (was 80), blwp-node 70/70, blwp-client
+protocol 353/353 (was 347), core 83/83 (was 80), arena-node 70/70, arena-client
 89/89, money guard 12 files clean, determinism guard 19 files clean. No wire
 format that existed before moved: a new type byte and a new file, nothing
 else, so no round id, census root or vector changed.
@@ -20312,7 +20312,7 @@ would be a queue whose order nobody could print.
 
 ### Suites
 
-protocol 357/357 (was 353), core 83/83, blwp-node 71/71 (was 70), blwp-client
+protocol 357/357 (was 353), core 83/83, arena-node 71/71 (was 70), arena-client
 89/89, money guard 12 files clean, determinism guard 19 files clean. No wire
 format moved: `frames.js` reads type bytes that already existed.
 
@@ -20331,7 +20331,7 @@ every few seconds - O(N.K), never O(N^2)."
 ### Measured before any code
 
   grep -i "subscri|fanout|fan-out|interest|nearest|broadcast"
-  over blwp-node/src, blwp-client/src, protocol/src   ->  NOTHING
+  over arena-node/src, arena-client/src, protocol/src   ->  NOTHING
 
 Greenfield. No subscription, no budget, no fan-out anywhere.
 
@@ -20398,7 +20398,7 @@ comparator is a second place for a total order to drift, the reason
 
 ### Suites
 
-protocol 362/362 (was 357), core 83/83, blwp-node 71/71, blwp-client 89/89,
+protocol 362/362 (was 357), core 83/83, arena-node 71/71, arena-client 89/89,
 money guard 12 files clean, determinism guard 19 files clean. No wire format
 moved: selection reads positions and ranks that a ghost frame already carries.
 
@@ -20506,7 +20506,7 @@ CombatFxTests.RifleFireProducesAFlashAndATracer.
 
 ### JS suites, unchanged by this piece
 
-protocol 362/362, core 83/83, blwp-node 71/71, blwp-client 89/89, money guard
+protocol 362/362, core 83/83, arena-node 71/71, arena-client 89/89, money guard
 12 files clean, determinism guard 19 files clean.
 
 ### What piece 4 is not
@@ -20579,7 +20579,7 @@ New failures against the baseline: NONE, on both platforms. EditMode was
 re-measured rather than assumed, because `WorldSolids.cs` is runtime code the
 EditMode assembly compiles against.
 
-JS unchanged: protocol 362/362, core 83/83, blwp-node 71/71, blwp-client 89/89,
+JS unchanged: protocol 362/362, core 83/83, arena-node 71/71, arena-client 89/89,
 money guard 12 files clean, determinism guard 19 files clean.
 
 ## M2 late join: a run begins where the entry says it joined
@@ -20681,7 +20681,7 @@ than assuming it.
 
 ### Suites
 
-protocol 362 -> 367, core 83/83, blwp-node 71/71, blwp-client 89/89, money
+protocol 362 -> 367, core 83/83, arena-node 71/71, arena-client 89/89, money
 guard 12 files clean, determinism guard 19 files clean. PlayMode and EditMode
 not re-run: nothing in Unity moved - no spawn, no solid, no second scoring
 path - and `step` still takes one state and one player's five inputs.
@@ -20742,7 +20742,7 @@ protocol side: 11 for this letter, none retracted.
 
 ### Suites
 
-protocol 367/367, core 83/83, blwp-node 71/71, blwp-client 89 -> 95, money
+protocol 367/367, core 83/83, arena-node 71/71, arena-client 89 -> 95, money
 guard 12 files clean, determinism guard 19 files clean, client bundle rebuilt
 (172.5 KB). PlayMode and EditMode not re-run: nothing in Unity moved.
 
@@ -20768,7 +20768,7 @@ rather than assumed:
 Neither was investigated further and neither was folded into the letter as
 live work.
 
-Closing numbers: blwp-client 89 -> 95, protocol 367/367, core 83/83, blwp-node
+Closing numbers: arena-client 89 -> 95, protocol 367/367, core 83/83, arena-node
 71/71, 11 mutants planted and killed across the two halves, none retracted.
 PlayMode and EditMode were not required and were not re-run.
 
@@ -20863,9 +20863,9 @@ the board carrying an amount (1).
 
 ### Suites
 
-protocol 367 -> 372, core 83/83, blwp-node 71/71, blwp-client 95/95, money
+protocol 367 -> 372, core 83/83, arena-node 71/71, arena-client 95/95, money
 guard 12 files clean, determinism guard 19 files clean. Core untouched: no
-scoring path in the browser and `step` unchanged. blwp-node, blwp-client and
+scoring path in the browser and `step` unchanged. arena-node, arena-client and
 Unity unchanged this slice.
 
 NOT DEPLOYABLE: a board with no renderer changes no screen.
@@ -20937,7 +20937,7 @@ computed the same way everywhere.
 
 ### Suites
 
-protocol 372 -> 375, core 83/83, blwp-node 71/71, blwp-client 95/95, money
+protocol 372 -> 375, core 83/83, arena-node 71/71, arena-client 95/95, money
 guard 12 files clean, determinism guard 19 files clean. Core untouched; no
 Unity; the three parked 0.11 fields are unchanged.
 
@@ -21044,7 +21044,7 @@ to the final outcome (1) or the final score (1), a player with no final paid
 
 ### Suites
 
-protocol 377 -> 380, core 83/83, blwp-node 71/71, blwp-client 95/95, money
+protocol 377 -> 380, core 83/83, arena-node 71/71, arena-client 95/95, money
 guard 12 files clean, determinism guard 19 files clean.
 
 NOT DEPLOYABLE: still nothing on screen. The standings rebuild inside
@@ -21105,7 +21105,7 @@ and the claim moving a row rather than only the report (1).
 
 ### Suites
 
-protocol 380 -> 381, core 83/83, blwp-node 71/71, blwp-client 95/95, money
+protocol 380 -> 381, core 83/83, arena-node 71/71, arena-client 95/95, money
 guard 12 files clean, determinism guard 19 files clean. No curve added; nothing
 drawn; the standings rebuild untouched.
 
@@ -21164,7 +21164,7 @@ red on the ORDER as well as on the score.
 
 ### Suites
 
-protocol 381 -> 382, core 83/83, blwp-node 71/71, blwp-client 95/95, money
+protocol 381 -> 382, core 83/83, arena-node 71/71, arena-client 95/95, money
 guard 12 files clean, determinism guard 19 files clean.
 
 ### What is still open on 20
@@ -21240,7 +21240,7 @@ fixtures that could not tell two answers apart:
 
 ### Suites
 
-protocol 382 -> 384, core 83/83, blwp-node 71/71, blwp-client 95/95, money
+protocol 382 -> 384, core 83/83, arena-node 71/71, arena-client 95/95, money
 guard 12 files clean, determinism guard 19 files clean.
 
 `test/interest.test.js` went red on the change (5 tests): its `boardOf` builds
@@ -21328,7 +21328,7 @@ in the file that owns it and in the file that reads it. Y_LERP is unchanged at
 
 ### Suites
 
-protocol 384 -> 389, core 83/83 (unchanged), blwp-node 71/71, blwp-client
+protocol 384 -> 389, core 83/83 (unchanged), arena-node 71/71, arena-client
 95/95. Money guard 12 files clean; determinism guard 19 -> 20 files clean, the
 new core file picked up by the directory walk.
 
@@ -21374,7 +21374,7 @@ edit: 358834a4227fe601...
 
 ### What was checked and is NOT a hole
 
-  blwp-node        `seen_ms` / `receivedAtMs` are recorded and reported, never
+  arena-node        `seen_ms` / `receivedAtMs` are recorded and reported, never
                    compared against a tick delta. No tick-to-time conversion
                    exists in the node, so nothing there was silently using 60.
   BlwpNet.cs       TicksPerSecond = 60 drives BatchEvery and MarkEvery - how
@@ -21393,15 +21393,15 @@ from 389 to 392.
 
 ### Suites
 
-core 83/83 with the harness digest unchanged, protocol 392/392, blwp-node
-71/71, blwp-client 95/95, money guard 12 files clean, determinism guard 20
+core 83/83 with the harness digest unchanged, protocol 392/392, arena-node
+71/71, arena-client 95/95, money guard 12 files clean, determinism guard 20
 files clean.
 
 ## Item 22, slice 1: the daemon replays a finished run
 
 ### What the daemon did before, measured
 
-  imports of the core in blwp-node/src   0 files, 0 modules
+  imports of the core in arena-node/src   0 files, 0 modules
   step() call sites outside core         0 (one comment in protocol/ghost.js)
   init() call sites outside core         0, in the node AND in the client
   what it is instead                     round.js, 25 methods; store.js, 11
@@ -21415,7 +21415,7 @@ seven agreeing degraded to five of seven being told the same thing.
 
 ### The distinction the letter turns on
 
-client.js opened by saying blwp-node imports no core ON PURPOSE, "because a
+client.js opened by saying arena-node imports no core ON PURPOSE, "because a
 daemon that recomputed the state would be a second simulator and then two of
 them could disagree". That argument is against stepping LIVE, beside the
 player. Section 13 asks for the other thing: seven nodes replay a FINISHED run
@@ -21476,12 +21476,12 @@ sub-seed as H(round_randomness || pubkey || secret || join_tick). Three of the
 four are on signed objects the node holds; `secret` is the player's, and 0.10
 has no reveal message, no entry field and no clause saying it ever reaches a
 verifier. Writing that hash would settle a protocol question by implementing
-it. The fixture owns its 7 the way blwp-client's checkpoint test owns its
+it. The fixture owns its 7 the way arena-client's checkpoint test owns its
 core.init(7); nothing was written as a rule.
 
 ### Suites
 
-protocol 392/392, core 83/83, blwp-node 74 -> 79, blwp-client 95/95, money
+protocol 392/392, core 83/83, arena-node 74 -> 79, arena-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. (The node's baseline
 moved 71 -> 74 under another author's 043690d, which is untouched here.)
 
@@ -21527,7 +21527,7 @@ its own tables in its own worker.
 
 THE THRESHOLD IS NOT WRITTEN HERE. `slots` comes off the round contract -
 letter 16 moved it there so a caller could not shrink a committee - and
-`receiptsNeeded` (another author's, in protocol/src/genesis.js) turns it into
+`receiptsNeeded` (another author's, in arena-protocol/src/genesis.js) turns it into
 the count. Nothing in this file knows that seven means five.
 
 Until now a node could only count signatures over a number the player supplied.
@@ -21549,9 +21549,9 @@ boundary. The fixture now sends a joinTick-50 run through the worker.
 
 ### Suites
 
-protocol 392/392, core 83/83, blwp-node 79 -> 82, blwp-client 95/95, money
+protocol 392/392, core 83/83, arena-node 79 -> 82, arena-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. Files in
-blwp-node/src reaching the simulator: exactly replay.js.
+arena-node/src reaching the simulator: exactly replay.js.
 
 ## Item 22, slices 4 and 5: the queue an objection cannot be flooded out of, and the signature
 
@@ -21653,9 +21653,9 @@ the transcript hash actually WERE, only that every node produced the same ones
 
 ### Suites
 
-protocol 392/392, core 83/83, blwp-node 82 -> 89, blwp-client 95/95, money
+protocol 392/392, core 83/83, arena-node 82 -> 89, arena-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. Files in
-blwp-node/src reaching the simulator: exactly replay.js, still.
+arena-node/src reaching the simulator: exactly replay.js, still.
 
 ## Item 22, the four wiring holes: a closed round now replays itself
 
@@ -21666,9 +21666,9 @@ callers of `submit`, which is another way of saying the daemon did not do it.
 
 ### 1. The production trigger
 
-  file      packages/blwp-node/src/verify.js, class `Verifier`
+  file      packages/arena-node/src/verify.js, class `Verifier`
   function  `onRoundClosed(roundId)`
-  call site packages/blwp-node/src/server.js, the socket's `close <round>`
+  call site packages/arena-node/src/server.js, the socket's `close <round>`
             handler: `if (shut) verifier.onRoundClosed(id)`
 
 The close is the event section 13 waits for. The promises are deliberately not
@@ -21762,9 +21762,9 @@ unkillable mutant measures the fixture, not the code.
 
 ### Suites
 
-protocol 394/394, core 83/83, blwp-node 89 -> 94, blwp-client 95/95, money
+protocol 394/394, core 83/83, arena-node 89 -> 94, arena-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. Files in
-blwp-node/src reaching the simulator: exactly replay.js.
+arena-node/src reaching the simulator: exactly replay.js.
 
 ### Two reds found on the branch while closing this slice, both repaired
 
@@ -21774,24 +21774,24 @@ growing a field, and both were repaired rather than parked.
   1. THE CLIENT BUNDLE COULD NOT BUILD AT ALL, since 468b0d9:
 
        bundle: GENESIS_CONFIG_HASH is declared at the top level of both
-       protocol/src/genesis-ids.js and protocol/src/constants.js
+       arena-protocol/src/genesis-ids.js and arena-protocol/src/constants.js
 
      `constants.js` imported the name aliased and then re-DECLARED it with
      `export const GENESIS_CONFIG_HASH = GENESIS_CONFIG_HASH_ID`. The bundler
      flattens every module into one scope and refuses two top-level bindings
      of one name by design - it is the same rule that caught two private
      `same` helpers. Now re-exported (`export { GENESIS_CONFIG_HASH } from
-     './genesis-ids.js'`) instead of re-declared. `dist/blwp-client.js` was
+     './genesis-ids.js'`) instead of re-declared. `dist/arena-client.js` was
      therefore stale: 0 occurrences of `worldSecret` against the protocol's 2.
      Rebuilt: 174.2 KB from 18 modules, and the entry id the bundle computes
      matches the modules' again.
 
-  2. `blwp-client/test/late-join.test.js` had an entry with no `worldSecret`,
+  2. `arena-client/test/late-join.test.js` had an entry with no `worldSecret`,
      so four of its six tests died in the encoder ("expected 32 bytes, got
      nothing"). Field added to the fixture; nothing else touched, since a late
      join is about which TICK a run starts at.
 
-A note for the next sweep: `blwp-client`'s own `npm test` is
+A note for the next sweep: `arena-client`'s own `npm test` is
 `node tools/bundle.js && node --test test/*.test.js`. Running `node --test`
 alone skips the rebuild and tests a stale bundle - which is how a broken build
 sat behind a passing-looking suite.
@@ -21880,9 +21880,9 @@ names.
 
 ### Suites
 
-protocol 394/394, core 83/83, blwp-node 94 -> 97, blwp-client 95/95, money
+protocol 394/394, core 83/83, arena-node 94 -> 97, arena-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. Files in
-blwp-node/src reaching the simulator: exactly replay.js.
+arena-node/src reaching the simulator: exactly replay.js.
 
 ## Item 22: the hole in fetch, and the committee seed from a future beacon
 
@@ -21964,9 +21964,9 @@ grinding attack and a seed that looks as though it does.
 
 ### Suites
 
-protocol 394 -> 398, core 83/83, blwp-node 97/97, blwp-client 95/95, money
+protocol 394 -> 398, core 83/83, arena-node 97/97, arena-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. Files in
-blwp-node/src reaching the simulator: exactly replay.js. No Unity, no C#.
+arena-node/src reaching the simulator: exactly replay.js. No Unity, no C#.
 
 ## Item 22: the daemon uses the published hash and height
 
@@ -22032,9 +22032,9 @@ height is later M2. The leaderboard `signedBy` clash stays here.
 
 ### Suites
 
-protocol 398/398, core 83/83, blwp-node 97 -> 99, blwp-client 95/95, money
+protocol 398/398, core 83/83, arena-node 97 -> 99, arena-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. Files in
-blwp-node/src reaching the simulator: exactly replay.js. No Unity, no C#.
+arena-node/src reaching the simulator: exactly replay.js. No Unity, no C#.
 
 ## Item 23, slice 1: the advertisement signature
 
@@ -22093,9 +22093,9 @@ unreachable line rather than the check.
 
 ### Suites
 
-protocol 398/398, core 83/83, blwp-node 99 -> 104, blwp-client 95/95, money
+protocol 398/398, core 83/83, arena-node 99 -> 104, arena-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. Files in
-blwp-node/src reaching the simulator: still exactly replay.js. No Unity, no C#.
+arena-node/src reaching the simulator: still exactly replay.js. No Unity, no C#.
 
 ## Item 23, slice 2: the census took a body nobody had signed
 
@@ -22141,7 +22141,7 @@ and a real key carrying none.
 
 ### Suites
 
-protocol 398 -> 399, core 83/83, blwp-node 104 -> 105, blwp-client 95/95, money
+protocol 398 -> 399, core 83/83, arena-node 104 -> 105, arena-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. No Unity, no C#.
 
 ## Item 24: the bond output key is the taproot tweak, not filler
@@ -22223,7 +22223,7 @@ finds them named rather than discovering them with money in the output.
 
 ### Suites
 
-protocol 399 -> 405, core 83/83, blwp-node 105 -> 109, blwp-client 95/95, money
+protocol 399 -> 405, core 83/83, arena-node 105 -> 109, arena-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. No Unity, no C#, no
 bitcoind: this letter builds a key and posts nothing.
 
@@ -22244,7 +22244,7 @@ to hash an unspendable script.
 
 ### Measured by running them
 
-A stack machine in `blwp-node/test/bond-spend.test.js` executes exactly the six
+A stack machine in `arena-node/test/bond-spend.test.js` executes exactly the six
 opcodes these leaves use. It is a FIXTURE, not a consensus engine: it can show
 a program ends true for one witness and not another, which is the claim; it
 cannot show Bitcoin accepts the transaction, and nothing claims it does.
@@ -22287,7 +22287,7 @@ count.
 
 ### Suites
 
-protocol 405/405, core 83/83, blwp-node 109 -> 111, blwp-client 95/95, money
+protocol 405/405, core 83/83, arena-node 109 -> 111, arena-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. No bitcoind, no RPC, no
 Unity, no C#, no chain scan.
 
@@ -22334,7 +22334,7 @@ information and not derivable from what is on chain.
 
 ### Suites
 
-protocol 405 -> 408, core 83/83, blwp-node 111 -> 112, blwp-client 95/95, money
+protocol 405 -> 408, core 83/83, arena-node 111 -> 112, arena-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean.
 
 ## Item 24, slice 4: the internal key is derived, not chosen
@@ -22402,7 +22402,7 @@ written beside them.
 
 ### Suites
 
-protocol 408/408, core 83/83, blwp-node 112 -> 114, blwp-client 95/95, money
+protocol 408/408, core 83/83, arena-node 112 -> 114, arena-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean.
 
 ## Item 24, slice 5: the arbitration set is the network's, and the door recomputes
@@ -22466,8 +22466,8 @@ exact tree, so two nodes cannot read one number as two trees.
 
 ### One break of my own, found by the bundler
 
-  bundle: is32 is declared at the top level of both protocol/src/contracts.js
-  and protocol/src/bond-script.js
+  bundle: is32 is declared at the top level of both arena-protocol/src/contracts.js
+  and arena-protocol/src/bond-script.js
 
 The client bundle flattens every module into one scope. `bond-script.js` became
 reachable from it the moment `chain.js` imported it, and my local helper
@@ -22486,7 +22486,7 @@ recorded under item 23 - `node --test` alone does not rebuild.
 
 ### Suites
 
-protocol 408/408, core 83/83, blwp-node 114 -> 116, blwp-client 95/95, money
+protocol 408/408, core 83/83, arena-node 114 -> 116, arena-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. Bundle 198.5 KB from 19
 modules. No bitcoind, no witness assembly, no Unity.
 
@@ -22550,7 +22550,7 @@ Nothing else calls it.
 
 ### Suites
 
-protocol 408/408, core 83/83, blwp-node 116 -> 119, blwp-client 95/95, money
+protocol 408/408, core 83/83, arena-node 116 -> 119, arena-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. Bundle 198.8 KB.
 
 ## Item 24, slice 7: the last two doors that swallowed the option
@@ -22558,11 +22558,11 @@ guard 12 files clean, determinism guard 20 files clean. Bundle 198.8 KB.
 The fork was whether any live path still accepts a poster-chosen output key
 while holding what it takes to refuse. Two did, and one of them was mine:
 
-  blwp-node/src/advert.js:53   the advert door built in letter 23 - it checked
+  arena-node/src/advert.js:53   the advert door built in letter 23 - it checked
                                the signature and dropped the bond option, so a
                                caller with the network's set could not ask for
                                the output key to be rebuilt
-  blwp-client/src/directory.js the door a player walks through, same
+  arena-client/src/directory.js the door a player walks through, same
 
 Both forward it now. The daemon supplying a set is 26's, and that is fine - the
 fault was that the option could not be passed AT ALL, not that nobody passes it
@@ -22575,7 +22575,7 @@ rebuild, independently.
 
 ### Suites
 
-protocol 408/408, core 83/83, blwp-node 119 -> 120, blwp-client 95/95, money
+protocol 408/408, core 83/83, arena-node 119 -> 120, arena-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. Bundle 199.0 KB.
 
 ### What 24 leaves, each owned elsewhere
@@ -22636,7 +22636,7 @@ so a full derivation now checks what it read. Its `unchecked` is back to two.
 
 ### Suites
 
-protocol 408 -> 409, core 83/83, blwp-node 120/120, blwp-client 95/95, money
+protocol 408 -> 409, core 83/83, arena-node 120/120, arena-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. No Unity, no C#, no
 PlayMode: protocol bytes and chain state only.
 
@@ -22673,7 +22673,7 @@ so it is asked for rather than started.
 
 ### Suites
 
-protocol 409/409, core 83/83, blwp-node 120/120, blwp-client 95/95, money guard
+protocol 409/409, core 83/83, arena-node 120/120, arena-client 95/95, money guard
 12 files clean, determinism guard 20 files clean.
 
 ## Item 25, slice 2: a bond spends on a real node
@@ -22689,7 +22689,7 @@ the numbers were in - was that oracle. The two live nodes at /mnt/bitcoin
 SO THE PINNED BYTES IN `test/bond-spend.test.js` ARE "WHAT BITCOIND ACCEPTED",
 not "what BIP-341's own vectors say". Weaker about the code, stronger about the
 result, and written into the test's own header so nobody reads it as the other
-thing. `packages/blwp-node/tools/bond-regtest.mjs` re-runs the oracle.
+thing. `packages/arena-node/tools/bond-regtest.mjs` re-runs the oracle.
 
 ### testmempoolaccept, every case
 
@@ -22728,7 +22728,7 @@ to about what it is signing away.
 
 ### Suites
 
-protocol 409 -> 413, core 83/83, blwp-node 120/120, blwp-client 95/95, money
+protocol 409 -> 413, core 83/83, arena-node 120/120, arena-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean.
 
 ## Item 25, slice 3: the marker is the one the round's own network uses
@@ -22766,7 +22766,7 @@ where a translation gets forgotten.
 
 ### Suites
 
-protocol 413 -> 414, core 83/83, blwp-node 120/120, blwp-client 95/95, money
+protocol 413 -> 414, core 83/83, arena-node 120/120, arena-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean.
 
 ## Item 25, slice 4: a slash commits to the proof that justified it
@@ -22812,7 +22812,7 @@ reading from byte two would take thirty-two bytes spanning both.
 
 ### One intermittent failure, named rather than hidden
 
-A blwp-node run showed 119/120 once, with no test named in the output. Three
+A arena-node run showed 119/120 once, with no test named in the output. Three
 subsequent full runs were 120/120. It is not reproducible and I could not
 identify it; it is recorded here rather than smoothed over.
 
@@ -22824,7 +22824,7 @@ and mines its own coins.
 
 ### Suites
 
-protocol 414 -> 415, core 83/83, blwp-node 120/120, blwp-client 95/95, money
+protocol 414 -> 415, core 83/83, arena-node 120/120, arena-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. The regtest node is
 stopped; /mnt/bitcoin and /mnt/bitcoin/tn4 were not touched.
 
@@ -22857,10 +22857,10 @@ doors, eleven already done, this the last.
 Every `recognizeBond` call site now passes it - census.js:783 and
 chain.js:483, and there are no others.
 
-### The one-run 119/120 blwp-node flake, cause unknown
+### The one-run 119/120 arena-node flake, cause unknown
 
 Recorded and left listed. Six further full runs were clean, and neither of the
-two commits around it touched a blwp-node test file - only
+two commits around it touched a arena-node test file - only
 `tools/bond-regtest.mjs`, which the suite does not execute. I could not name
 the failing test and did not guess one. Nine files in that package bind real
 sockets or read the clock, which is the plausible class and not a measurement.
@@ -22868,7 +22868,7 @@ It is not on the bond-verification path.
 
 ### Suites
 
-protocol 415/415, core 83/83, blwp-node 120 -> 121, blwp-client 95/95, money
+protocol 415/415, core 83/83, arena-node 120 -> 121, arena-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean.
 
 ## Item 25 closed: the numbers
@@ -22887,8 +22887,8 @@ pairs:
 
   protocol       415/415
   core           83/83
-  blwp-node      121/121
-  blwp-client    95/95
+  arena-node      121/121
+  arena-client    95/95
   money guard    12 files clean
   determinism    20 files clean
 
@@ -22901,10 +22901,10 @@ blocked on a Round Contract field that would move every round id), the MuSig2
 key-path spend (needs a signing session), and a daemon caller for
 `bond-spend.js` (15's chain work).
 
-### The one-run 119/120 blwp-node flake
+### The one-run 119/120 arena-node flake
 
 Cause unknown, and left listed rather than smoothed over. Six later full runs
-were clean; neither commit around it touched a blwp-node test file - only
+were clean; neither commit around it touched a arena-node test file - only
 `tools/bond-regtest.mjs`, which the suite does not execute. The failing test was
 never named in the output and I did not guess one. Not on the bond-verification
 path.
@@ -22938,7 +22938,7 @@ caller built a list and got it wrong, and scanning instead would bury that.
                                                     refused by the floor
   a body naming a vout that does not exist          no candidate at all
   a taproot output that does not recompute          scanned, then refused:
-    (blwp-node, where a curve is injected)          "not the taproot tweak of
+    (arena-node, where a curve is injected)          "not the taproot tweak of
                                                     the keys and maturity it
                                                     declares"
 
@@ -22977,7 +22977,7 @@ number a later caller might trust cannot come back unnoticed.
 
 ### Suites
 
-protocol 418 -> 421, core 83/83, blwp-node 122/122, blwp-client 95/95, money
+protocol 418 -> 421, core 83/83, arena-node 122/122, arena-client 95/95, money
 guard 12 files clean, determinism guard 20 files clean. 721 tests, 0 red.
 
 Not in this slice, by ruling: 18 spawn/subscribe, 26-28, Lightning, deploy, and
@@ -23041,15 +23041,15 @@ bond excluded by name and read the chain as full of liars.
 ### Where the census tests live now
 
 A root needs a curve, so the tests that take one moved to the package that has
-one. `protocol/test/census-derive.test.js` and `census-chainview.test.js` are
-now `blwp-node/test/`, on real secp keys and real bond output keys - the old
+one. `arena-protocol/test/census-derive.test.js` and `census-chainview.test.js` are
+now `arena-node/test/`, on real secp keys and real bond output keys - the old
 fixtures left the builder's 0x77 filler in place, which was invisible while
 nothing recomputed it. Two composed-census tests moved out of
-`protocol/test/bond-recognition.test.js` the same way; recognition itself
-stayed, and needs no curve. `blwp-node/test/curve.js` is the shared injector.
-`protocol/test/census-template.test.js` is new and holds the refusals, measured
+`arena-protocol/test/bond-recognition.test.js` the same way; recognition itself
+stayed, and needs no curve. `arena-node/test/curve.js` is the shared injector.
+`arena-protocol/test/census-template.test.js` is new and holds the refusals, measured
 where no curve exists. Nothing was dropped in the move: protocol 421 -> 400 and
-blwp-node 122 -> 147 is 23 tests relocated plus 4 new refusal tests.
+arena-node 122 -> 147 is 23 tests relocated plus 4 new refusal tests.
 
 `commitCensus` deliberately does NOT carry this rule. It takes entries a caller
 assembled and already believes about `advertId`; a template stamp checked there
@@ -23058,7 +23058,7 @@ guarantee lives on the only path that runs all five steps.
 
 ### Suites
 
-core 83/83, protocol 400/400, blwp-node 147/147, blwp-client 95/95 - 725 tests,
+core 83/83, protocol 400/400, arena-node 147/147, arena-client 95/95 - 725 tests,
 0 red. Money guard 12 files clean, determinism guard 20 files clean, client
 bundle 201.1 KB from 19 modules, byte-identical.
 
@@ -23073,9 +23073,9 @@ bundle 201.1 KB from 19 modules, byte-identical.
    leaf, so it needs the curve and belongs wherever that is wired.
 
 2. `node_pubkey` CANNOT BE BOTH CURVES. Letter 23 verifies the advertisement
-   signature as ed25519 under `node_pubkey` (`blwp-node/src/advert.js:88`);
+   signature as ed25519 under `node_pubkey` (`arena-node/src/advert.js:88`);
    letter 24 feeds the same field into the secp256k1 taproot derivation as the
-   node's key (`protocol/src/chain.js:307` and `:311`). An ed25519 public key
+   node's key (`arena-protocol/src/chain.js:307` and `:311`). An ed25519 public key
    is not a valid secp x-only point, so no real node can satisfy both at once.
    It is invisible today only because no fixture does both: the advert tests
    sign with ed25519 over a filler output key, and the census fixtures use secp
@@ -23095,14 +23095,14 @@ fixture cannot lie about Bitcoin, which sounds like a virtue and is the
 opposite: nothing had ever asked a real node whether these rules survive real
 bytes.
 
-After: `blwp-node/tools/census-regtest.mjs` posts four bonds on an isolated
+After: `arena-node/tools/census-regtest.mjs` posts four bonds on an isolated
 regtest (own datadir under session scratch, port 29444, RPC 29443, cookie auth,
 own wallet, stopped when the numbers were taken - it shares nothing with the
 2-of-2 daemons or the mainnet/testnet4 nodes), spends one by a real 5-of-7
 slash, leaves one two blocks under the census, marks one for another network,
 and derives the census from the node's own blocks - header bytes included.
 
-`protocol/src/block.js` is new: `splitBlock` turns `getblock <hash> 0` into the
+`arena-protocol/src/block.js` is new: `splitBlock` turns `getblock <hash> 0` into the
 view the census already takes. `parseTransaction` refuses leftover bytes on
 purpose, so it cannot be pointed at the middle of a block; this walks the same
 structure to find each span, and the span is handed back to `parseTransaction`
@@ -23169,16 +23169,16 @@ so the two rules can be told apart at all.
 
 ### Suites
 
-core 83/83, protocol 404/404, blwp-node 152/152, blwp-client 95/95 - 734 tests,
+core 83/83, protocol 404/404, arena-node 152/152, arena-client 95/95 - 734 tests,
 0 red. Money guard 12 files clean, determinism guard 20 files clean, client
 bundle 201.1 KB from 19 modules, byte-identical.
 
-The 17 blocks are kept as `blwp-node/test/fixtures/regtest-census.json` and one
-of them as `protocol/test/fixtures/regtest-block.hex`, so the suite replays
+The 17 blocks are kept as `arena-node/test/fixtures/regtest-census.json` and one
+of them as `arena-protocol/test/fixtures/regtest-block.hex`, so the suite replays
 real bytes without a bitcoind. Regenerate with:
 
   bitcoind -regtest -datadir=DIR -port=29444 -rpcport=29443 -fallbackfee=0.0001 -daemon
-  RT=DIR DUMP=packages/blwp-node/test/fixtures/regtest-census.json \
+  RT=DIR DUMP=packages/arena-node/test/fixtures/regtest-census.json \
     node tools/census-regtest.mjs
 
 The root in the fixture is that run's own root - the node keys are random per
@@ -23217,12 +23217,12 @@ letter, and not M3 - they belong to M2 letters that already exist.
 
 Before: the GHOSTS frame existed and nothing made one. Measured at the start of
 this slice - `encodeGhost` and `interestSet` had no caller anywhere in
-`blwp-node/src` or `blwp-client/src`, so pieces 1 and 3 were a wire format and
+`arena-node/src` or `arena-client/src`, so pieces 1 and 3 were a wire format and
 a selection policy with nothing behind them. The frame could be CHECKED and
 could not be MADE, and `ghostBinds` says out loud that checking is the smaller
 half: "this cannot say the truck was AT x,z - only a replay says that".
 
-After: `blwp-node/src/ghosts.js` builds a frame for one entry at one tick, and
+After: `arena-node/src/ghosts.js` builds a frame for one entry at one tick, and
 the three truck words come out of `replay.js` - the daemon's only door to the
 simulator - which now takes a `pictures` option and reads x, z and heading
 inside the loop it was already running. `ghosts.js` itself never touches the
@@ -23249,7 +23249,7 @@ quietly rejects.
                                     same reason rather than "no such tick"
   a late entry (join tick 500)      photographed at the ticks it played; tick
                                     0 refused, which is letter 19's rule
-  blwp-node suite                   152 -> 158
+  arena-node suite                   152 -> 158
 
 ### Mutants: 7 planted, 7 killed, 1 retracted
 
@@ -23271,7 +23271,7 @@ stated.
 
 ### Suites
 
-core 83/83, protocol 404/404, blwp-node 158/158, blwp-client 95/95 - 740 tests,
+core 83/83, protocol 404/404, arena-node 158/158, arena-client 95/95 - 740 tests,
 0 red. Money guard 12 files clean, determinism guard 20 files clean, bundle
 201.1 KB byte-identical: nothing the client bundles changed.
 
@@ -23318,7 +23318,7 @@ failed dies.
   an entry with no published inputs         no picture, on the socket as in
                                             the library
   a tick past the published inputs          refused: 19 ok, 20 and 9999 not
-  blwp-node suite                           158 -> 165
+  arena-node suite                           158 -> 165
 
 Refusals by name: a watch with no round or entry, a round this node does not
 hold, an entry it does not hold, an entry from another round, and a second
@@ -23349,23 +23349,23 @@ RETRACTED, with reasons rather than counted:
 
 ### A hole in the client, found while checking consume
 
-`blwp-client/src/client.js` matches EVERY socket message to the next queued
+`arena-client/src/client.js` matches EVERY socket message to the next queued
 request in order. A pushed GHOSTS frame would be handed to whoever was waiting
 for an answer - so a client that publishes inputs and watches ghosts on one
 socket, which is the intended use, would read a picture as the answer to its
 publish. The daemon side is right and the browser side cannot consume a push
 yet. Not fixed here: slice 2 is socket facts by ruling. It is the next thing
-18 needs, and it is `blwp-client`, not Unity.
+18 needs, and it is `arena-client`, not Unity.
 
 ### Suites
 
-core 83/83, protocol 404/404, blwp-node 165/165, blwp-client 95/95 - 747 tests,
+core 83/83, protocol 404/404, arena-node 165/165, arena-client 95/95 - 747 tests,
 0 red. Money guard 12 files clean, determinism guard 20 clean, bundle 201.1 KB
 byte-identical.
 
 ## Item 18, slice 2b: the client consumes a push without stealing an answer
 
-Before: `blwp-client/src/client.js` handed EVERY socket message to the next
+Before: `arena-client/src/client.js` handed EVERY socket message to the next
 queued request. The node had just learned to push GHOSTS frames, and one
 socket carrying both is the intended use - a player publishes inputs and
 watches competitors - so a frame arriving while a batch was in flight WAS the
@@ -23415,7 +23415,7 @@ event.
   a receipt for a mark                 still read as the reply to that mark
   bytes claiming TYPE_GHOST and not
     decoding                           reach nobody; counted as bad, not shown
-  blwp-client suite                    95 -> 100
+  arena-client suite                    95 -> 100
 
 ### Mutants: 5 planted, 5 killed
 
@@ -23433,12 +23433,12 @@ instead of a hang - and the mutant dies properly.
 
 ### Suites
 
-core 83/83, protocol 404/404, blwp-node 165/165, blwp-client 100/100 - 752
+core 83/83, protocol 404/404, arena-node 165/165, arena-client 100/100 - 752
 tests, 0 red. Money guard 12 files clean, determinism guard 20 clean.
 
 THE BUNDLE GREW, and this one is earned: 201.1 KB from 19 modules -> 211.1 KB
 from 20, because the client now decodes ghosts and therefore ships
-`protocol/src/ghost.js`. Unlike the block splitter in slice 3, this is code
+`arena-protocol/src/ghost.js`. Unlike the block splitter in slice 3, this is code
 the browser actually runs.
 
 ### Still open on 18
@@ -23506,7 +23506,7 @@ the count is what turned it into the two real findings above.
 
 ### Suites
 
-core 83/83, protocol 404/404, blwp-node 166/166, blwp-client 101/101 - 754
+core 83/83, protocol 404/404, arena-node 166/166, arena-client 101/101 - 754
 tests, 0 red. Money guard 12 files clean, determinism guard 20 clean. Bundle
 212.0 KB from 20 modules.
 
@@ -23577,7 +23577,7 @@ the interest set on the socket, and 5 more through the browser client.
 
 ### Suites
 
-core 83/83, protocol 404/404, blwp-node 166/166, blwp-client 102/102 - 755
+core 83/83, protocol 404/404, arena-node 166/166, arena-client 102/102 - 755
 tests, 0 red. Money guard 12 files clean, determinism guard 20 clean.
 
 ## Item 26, slice 1: a short census is refused by name
@@ -23664,7 +23664,7 @@ a network.
 
 ### Suites
 
-core 83/83, protocol 404 -> 411, blwp-node 166/166, blwp-client 102/102 - 762
+core 83/83, protocol 404 -> 411, arena-node 166/166, arena-client 102/102 - 762
 tests, 0 red. Money guard 12 files clean, determinism guard 20 clean, bundle
 212.0 KB unchanged.
 
@@ -23676,7 +23676,7 @@ again at the start of this slice - not one file under any `src/` called
 `selectCommittee`. A node could serve rounds without ever asking Bitcoin who
 was bonded, which is the whole of why 15 closed with "not deployable".
 
-After: `blwp-node/src/roster.js` is that caller, and the ONLY one. It fetches a
+After: `arena-node/src/roster.js` is that caller, and the ONLY one. It fetches a
 chain view, hands it to `deriveCensus` with the curve the census requires, and
 hands what comes back to `selectCommittee`. `GET /committee?round=&role=` is
 the door a node actually walks: 200 with the seated keys, or 409 with the
@@ -23717,7 +23717,7 @@ reason there is no committee.
   the minimum applied                  read off genesis in the test too, so a
                                        different genesis would change the
                                        fixture rather than hide a mismatch
-  blwp-node suite                      166 -> 175
+  arena-node suite                      166 -> 175
 
 ### Mutants: 7 planted, 7 killed
 
@@ -23741,7 +23741,7 @@ to fill the third is to seat what the census refused.
 
 ### Suites
 
-core 83/83, protocol 411/411, blwp-node 175/175, blwp-client 102/102 - 771
+core 83/83, protocol 411/411, arena-node 175/175, arena-client 102/102 - 771
 tests, 0 red. Money guard 12 files clean, determinism guard 20 clean, bundle
 212.0 KB unchanged. No Unity, no C#, no genesis byte touched.
 
@@ -23794,7 +23794,7 @@ fail.
 
 ### Suites
 
-core 83/83, protocol 411/411, blwp-node 176/176, blwp-client 102/102 - 772
+core 83/83, protocol 411/411, arena-node 176/176, arena-client 102/102 - 772
 tests, 0 red. Money guard 12 files clean, determinism guard 20 clean.
 
 ### The hole this letter still has
@@ -23869,7 +23869,7 @@ signatures over one body are two ways of saying it.
 
 ### Suites
 
-core 83/83, protocol 416/416, blwp-node 176 -> 181, blwp-client 102/102 - 782
+core 83/83, protocol 416/416, arena-node 176 -> 181, arena-client 102/102 - 782
 tests, 0 red. Money guard 12 files clean, determinism guard 20 clean, bundle
 212.0 KB unchanged. No Unity, no C#, no genesis byte touched.
 
@@ -23925,7 +23925,7 @@ never rewritten to what the chain says, never accepted on overlap.
                                               the chain census, and each seats
                                               exactly those two - which step 1
                                               made possible at all
-  blwp-node                                   181 -> 187
+  arena-node                                   181 -> 187
 
 ### Mutants: 6 planted, 6 killed, 1 retracted
 
@@ -23959,7 +23959,7 @@ blocks and real bonds.
 
 ### Suites
 
-core 83/83, protocol 416/416, blwp-node 187/187, blwp-client 102/102 - 788
+core 83/83, protocol 416/416, arena-node 187/187, arena-client 102/102 - 788
 tests, 0 red. Money guard 12 files clean, determinism guard 20 clean, bundle
 212.0 KB unchanged. No Unity, no C#, no genesis byte, no deploy.
 
@@ -23973,8 +23973,8 @@ refused), and one key (a node's identity IS its bond key, every node signature
 BIP-340 under it, and the seated set the only list receipts and verdicts
 trust).
 
-Suites at the close: core 83/83, protocol 416/416, blwp-node 187/187,
-blwp-client 102/102 - 788 tests, 0 red. Money guard 12 files clean,
+Suites at the close: core 83/83, protocol 416/416, arena-node 187/187,
+arena-client 102/102 - 788 tests, 0 red. Money guard 12 files clean,
 determinism guard 20 clean.
 
 The M2 remainders that came up alongside stay on their own letters and were
@@ -24033,7 +24033,7 @@ round id and belongs with slice 2's field work.
   no beacon at all               refused by name, no committee
   no seed passed to the lottery  refused: "drawn on the seed its beacon
                                  produced, not on one a contract names"
-  blwp-node                      187 -> 193
+  arena-node                      187 -> 193
 
 ### Mutants: 5 planted, 5 killed
 
@@ -24052,7 +24052,7 @@ measuring the difference.
 
 ### Suites
 
-core 83/83, protocol 416/416, blwp-node 193/193, blwp-client 102/102 - 794
+core 83/83, protocol 416/416, arena-node 193/193, arena-client 102/102 - 794
 tests, 0 red. Money guard 12 files clean, determinism guard 20 clean, bundle
 212.0 KB unchanged. No Unity, no C#, no genesis byte, no deploy.
 
@@ -24094,7 +24094,7 @@ Bitcoin block after committee_time" and a height cannot answer that.
                                  (an entry names its round, so it moved too)
   fixtures carrying a contract   39 files updated; every round id in the tree
                                  moved, and the golden vector regenerated
-  blwp-node                      193 -> 195
+  arena-node                      193 -> 195
 
 ### Mutants: 6 planted, 6 killed
 
@@ -24117,7 +24117,7 @@ Written down rather than implied: `entry_open_time == committee_time` and
 
 ### Suites
 
-core 83/83, protocol 416/416, blwp-node 195/195, blwp-client 102/102 - 796
+core 83/83, protocol 416/416, arena-node 195/195, arena-client 102/102 - 796
 tests, 0 red. Money guard 12 files clean, determinism guard 20 clean. The
 client bundle rebuilt at 212.7 KB (it encodes the contract, so its bytes moved
 with the field). No Unity, no C#, no genesis byte, no deploy.
@@ -24166,7 +24166,7 @@ client that draws no lobby cannot skip it.
                                      could actually enter
   the golden vector                  unmoved: its round already started well
                                      past the window
-  blwp-node                          195 -> 198
+  arena-node                          195 -> 198
 
 ### Mutants: 7 planted, 7 killed
 
@@ -24201,7 +24201,7 @@ client that draws no lobby cannot skip it.
 
 ### Suites
 
-core 83/83, protocol 416/416, blwp-node 198/198, blwp-client 102/102 - 799
+core 83/83, protocol 416/416, arena-node 198/198, arena-client 102/102 - 799
 tests, 0 red. Money guard 12 files clean, determinism guard 20 clean. Bundle
 215.3 KB (the client encodes contracts, so the window rule ships with it). No
 Unity, no C#, no genesis byte, no deploy.
@@ -24232,7 +24232,7 @@ attack with an extra step.
                                                  sender wrote. The check is for
                                                  a contract OBJECT, the only
                                                  place one could still appear
-  blwp-node                                      198 -> 199
+  arena-node                                      198 -> 199
 
 THE FIELD IS NOT ENCODED, and that is the stronger answer rather than the
 lazier one: encoding it would move every round id again and would CREATE the
@@ -24254,7 +24254,7 @@ contract's claim about it is not.
 
 ### Suites
 
-core 83/83, protocol 416/416, blwp-node 199/199, blwp-client 102/102 - 800
+core 83/83, protocol 416/416, arena-node 199/199, arena-client 102/102 - 800
 tests, 0 red. Money guard 12 files clean, determinism guard 20 clean, bundle
 215.3 KB unchanged. No Unity, no C#, no genesis byte, no deploy.
 
@@ -24297,8 +24297,8 @@ only disagree) and is enforced at the door instead; and there is no second
 randomness source anywhere - no drand, no height fallback, no census_height
 substitute.
 
-Suites at the close: core 83/83, protocol 416/416, blwp-node 199/199,
-blwp-client 102/102 - 800 tests, 0 red. Money guard 12 files clean,
+Suites at the close: core 83/83, protocol 416/416, arena-node 199/199,
+arena-client 102/102 - 800 tests, 0 red. Money guard 12 files clean,
 determinism guard 20 clean.
 
 ## Item 27, the two rulings recorded
@@ -24341,7 +24341,7 @@ last hop missing in three places at once.
 After this slice, the JS half:
 
   the template's shipped client            223,678 bytes, byte-identical to
-                                           dist/blwp-client.js, and a test
+                                           dist/arena-client.js, and a test
                                            compares them so a stale copy cannot
                                            come back quietly
   page watch calls                         0 -> 1, in `net.opened` right after
@@ -24360,7 +24360,7 @@ After this slice, the JS half:
                                            stated for a renderer
   publishing while pictures arrive         1 batch, 1 own answer, 0 held
 
-`watchGhosts` lives in `packages/blwp-client/src/ghost-field.js` and the jslib
+`watchGhosts` lives in `packages/arena-client/src/ghost-field.js` and the jslib
 only says WHEN to ask. Nothing in it imports the core: a ghost is a picture,
 never an input, and the page hands the queue to a renderer and to nothing else.
 
@@ -24374,7 +24374,7 @@ never an input, and the page hands the queue to a renderer and to nothing else.
 
 ### Suites
 
-core 83/83, protocol 416/416, blwp-node 199/199, blwp-client 102 -> 108 - 806
+core 83/83, protocol 416/416, arena-node 199/199, arena-client 102 -> 108 - 806
 tests, 0 red. Money guard 12 files clean, determinism guard 20 clean. Bundle
 218.4 KB from 21 modules. NO UNITY BUILD, no C# touched, no PlayMode or
 EditMode run this slice - the C# half is slice 2.
@@ -24445,14 +24445,14 @@ rather than absorbed into "the usual ten".
 
 ### JS suites, unchanged by this slice
 
-core 83/83, protocol 416/416, blwp-node 199/199, blwp-client 108/108 - 806
+core 83/83, protocol 416/416, arena-node 199/199, arena-client 108/108 - 806
 tests, 0 red.
 
 ## Item 28, slice 3: two nodes, one page, the other truck on screen
 
 The pictures Unity draws in this slice are not numbers invented in C#. They are
 the exact twelve ints `BlwpNextGhost` hands across, captured from a REAL
-two-node run by `blwp-client/test/two-nodes-play.test.js` and kept as
+two-node run by `arena-client/test/two-nodes-play.test.js` and kept as
 `unity-proto/Assets/Tests/Fixtures/two-node-ghosts.txt`: two daemons, two
 identities, one contract naming both seats, a page that subscribed, and the
 other player's transcript replayed by the node through `replay.js`.
@@ -24501,7 +24501,7 @@ passed in every run. EditMode is unchanged with the new runtime file in place -
 measured, not assumed, because `GhostField.cs` is in the assembly EditMode
 references.
 
-  JS: core 83/83, protocol 416/416, blwp-node 199/199, blwp-client 108 -> 109
+  JS: core 83/83, protocol 416/416, arena-node 199/199, arena-client 108 -> 109
   - 807 tests, 0 red.
 
 ### The hole this slice does not close, named
@@ -24531,8 +24531,8 @@ was used:
                                         asks, in the player
   GhostField, GhostTruck, WorldSolids   present in webgl.data (IL2CPP
                                         metadata), beside BlwpNet
-  the page's blwp-client.js             byte-identical to
-                                        packages/blwp-client/dist
+  the page's arena-client.js             byte-identical to
+                                        packages/arena-client/dist
 
 So all three statements are in the player, not PlayMode-only.
 
@@ -24559,8 +24559,8 @@ the broken one.
   the bundler, run by hand      reproduces the build's file exactly, so this is
                                 the bundler and not the Unity build
   core suite on that bundle     83 -> 75 passed, 8 failed
-  blwp-client on it             109 -> 93 passed, 16 failed
-  after the fix                 core 84/84, blwp-client 109/109
+  arena-client on it             109 -> 93 passed, 16 failed
+  after the fix                 core 84/84, arena-client 109/109
 
 Both bundlers had the rule; both are fixed to a single-line form
 (`\{[^{}]*\}`). The WebGL player built earlier this turn was built FROM the
@@ -24576,12 +24576,12 @@ is the honest reading of "the build found it".
 
   the WebGL template's `blwp-core.js` is byte-identical to
   `packages/core/dist/blwp-core.js`, the same guard the template's
-  `blwp-client.js` already had - which is how the stale client was caught last
+  `arena-client.js` already had - which is how the stale client was caught last
   slice and how a stale core will be caught next time.
 
 ### Suites
 
-core 83 -> 84, protocol 416/416, blwp-node 199/199, blwp-client 109/109 - 808
+core 83 -> 84, protocol 416/416, arena-node 199/199, arena-client 109/109 - 808
 tests, 0 red. Money guard 12 files clean, determinism guard 20 clean. No Unity
 tests re-run this turn: no C# changed, and the PlayMode/EditMode counts stand
 at 229/205/11/13 and 190/186/1/3 from the on-screen slice.
@@ -24607,7 +24607,7 @@ fix is not the suite, it is a build: run it again and see what SyncCore writes.
     after it            git status on packages/ and the WebGL template: EMPTY
 
 The rebuild reproduced the committed `dist/blwp-core.js` and
-`dist/blwp-client.js` byte for byte, so the bundler is now the same function
+`dist/arena-client.js` byte for byte, so the bundler is now the same function
 twice and the build no longer edits the tree behind the commit.
 
 ### The artefact, measured before anything was copied or deployed
@@ -24618,9 +24618,9 @@ twice and the build no longer edits the tree behind the commit.
       TICK_DT               14 uses, 1 declaration
       UNITS                 25 uses, 1 declaration
       ARMOUR_MASK            5 uses, 1 declaration
-    built blwp-client.js    223,678 bytes   md5 d0545265c66053226b8edb3ff878ba96
+    built arena-client.js    223,678 bytes   md5 d0545265c66053226b8edb3ff878ba96
       watchGhosts            2      onGhost 5
-    byte-identical to packages/core/dist and packages/blwp-client/dist, and to
+    byte-identical to packages/core/dist and packages/arena-client/dist, and to
     the WebGL template's own two copies - all four md5s agree.
 
 `BlwpNextGhost` is not in the page's client and is not supposed to be: it is
@@ -24644,14 +24644,14 @@ The third line is the deployed page's own bytes, fetched back over HTTPS.
 
 ### Deployed
 
-`unity-proto/build/webgl` held the 00:39 tree: a 151,399-byte `blwp-client.js`
+`unity-proto/build/webgl` held the 00:39 tree: a 151,399-byte `arena-client.js`
 with ZERO occurrences of `watchGhosts`, and a core from before letter 21's
 `tick.js`. That is what `deploy-core.sh` publishes, so it was replaced with the
 22:44 build before deploying.
 
     btc-logistics-core.pages.dev    200, index 11,975 bytes
       /blwp-core.js                 200, 227,592, md5 cecf6b18...
-      /blwp-client.js               200, 223,678, md5 d0545265...
+      /arena-client.js               200, 223,678, md5 d0545265...
       /Build/webgl2.framework...    BlwpNextGhost 3, watchGhosts 1, net.ghosts 3
     btc-logistics-war.pages.dev     200, its own page - md5 611ad3d4 against the
                                     core page's 74fd3e48, and its client is the
@@ -24668,7 +24668,7 @@ on this page - Playwright, Chromium and Puppeteer stay out.
 
 ### The two-daemon path, re-run against the deployed core
 
-`packages/blwp-client/test/two-nodes-play.test.js` loads
+`packages/arena-client/test/two-nodes-play.test.js` loads
 `packages/core/dist/blwp-core.js`, which is byte for byte the file the daily
 now serves (md5 cecf6b18), so this run drives the deployed core.
 
@@ -24778,7 +24778,7 @@ Rebuilt and deployed after the wiring fix.
     after the build    git status on packages/ and the template: EMPTY again
     page blwp-core.js  227,592 b, md5 cecf6b18, HALF_X 1 declaration,
                        3600 ticks OK, hash 88c39534...891883 == golden
-    page blwp-client   223,678 b, md5 d0545265, watchGhosts 2
+    page arena-client   223,678 b, md5 d0545265, watchGhosts 2
     player data        GhostField 1, GhostTruck 1, BuildGhostBody 1,
                        FitTruckBody 1  - the wiring is IN the build
     framework          BlwpNextGhost 3, watchGhosts 1, net.ghosts 3
@@ -24823,7 +24823,7 @@ whether a session exists at all.
     &bond=<url>        where the bond proof is asked for.
     &advert=<128 hex|url>
 
-Measured in `packages/blwp-client/test/join.test.js` against two real daemons
+Measured in `packages/arena-client/test/join.test.js` against two real daemons
 holding one round, and against a node that answers 200 with a well-formed
 contract that is not the one asked for:
 
@@ -24864,7 +24864,7 @@ start".
 
 ### Suites
 
-blwp-client 109 -> 116, core 84/84, protocol 416/416, blwp-node 199/199.
+arena-client 109 -> 116, core 84/84, protocol 416/416, arena-node 199/199.
 Money guard 12 files clean, determinism guard 20 clean.
 
 ### The drawn pose, read out of the shipping player
@@ -24894,12 +24894,12 @@ does not differ is that y is the surface plus the local truck's own offset.
     page client     md5 efe99f86, joinFromQuery present
     page index      13,868 b, carries joinFromQuery, sessionStorage, BLWP_ENTRY
     live            btc-logistics-core.pages.dev 200, the deployed index carries
-                    joinFromQuery, and the live blwp-client.js is efe99f86
+                    joinFromQuery, and the live arena-client.js is efe99f86
     war             200, untouched. No freeze.
 
 ### Suites
 
-    core 84/84   blwp-client 116/116   protocol 416/416   blwp-node 199/199
+    core 84/84   arena-client 116/116   protocol 416/416   arena-node 199/199
     money guard 12 clean, determinism guard 20 clean
     PlayMode  234 total, 209 passed, 12 failed, 13 skipped
     EditMode  190 total, 186 passed,  1 failed,  3 skipped
@@ -24990,7 +24990,7 @@ mined block, so it links and it is work:
 
 ### Suites
 
-    core 84/84   protocol 416/416   blwp-node 199 -> 201   blwp-client 116 -> 118
+    core 84/84   protocol 416/416   arena-node 199 -> 201   arena-client 116 -> 118
     money guard 12 clean, determinism guard 20 clean
     PlayMode 234/209/12/13 and EditMode 190/186/1/3 stand: no C# changed.
 
@@ -25000,7 +25000,7 @@ The daily is https and the daemons are http on a tailnet. An https page asking
 for `http://127.0.0.1` is a mixed-content request and a browser may block it -
 which looks exactly like a provider that never answered. The tool prints that
 warning with the way out: serve the built page over http from the same machine
-(`BLWP_PAGE=http://host:8000`), or put the daemons behind https. Nothing in the
+(`ARENA_PAGE=http://host:8000`), or put the daemons behind https. Nothing in the
 protocol changes either way; it is where the page is served from.
 
 ### And the page is served from the same machine, so nothing is mixed content
@@ -25016,7 +25016,7 @@ the deployed ones; only where they are fetched from changes. The daemons stay a
 different origin - a different port - which is what their CORS header is for.
 
     page  /                                200  13,868 b  text/html
-          /blwp-client.js                  200 233,311 b  application/javascript
+          /arena-client.js                  200 233,311 b  application/javascript
           /blwp-core.js                    200 227,592 b  application/javascript
           Build/webgl4.wasm.unityweb       200            application/wasm
           Build/webgl4.framework.js.unityweb 200          application/javascript
@@ -25032,7 +25032,7 @@ start a wasm module served as text/plain.
       &node=http://127.0.0.1:18100,http://127.0.0.1:18101
       &bond=http://127.0.0.1:18100/bond&advert=f3f9c854...c7eb9d3c
 
-One scheme, one machine, two tabs. `BLWP_PAGE` still names the daily instead
+One scheme, one machine, two tabs. `ARENA_PAGE` still names the daily instead
 for anyone who wants the deployed origin, and the mixed-content warning still
 prints when that combination is chosen.
 
@@ -25073,7 +25073,7 @@ Deltas at close: page path tick 89 delta 0 0 0; shipping player ticks 59 and
 119 delta x 0.000000 z 0.000000 heading 0.000000; solids 37 -> 37, colliders 0,
 rigidbodies 0.
 
-    core 84/84   protocol 416/416   blwp-node 201/201   blwp-client 118/118
+    core 84/84   protocol 416/416   arena-node 201/201   arena-client 118/118
     money guard 12 clean, determinism guard 20 clean
     PlayMode 234 / 209 passed / 12 failed / 13 skipped
     EditMode 190 / 186 passed /  1 failed /  3 skipped
@@ -25121,8 +25121,8 @@ are handed a share from a second polynomial.
     with the polynomial published     3 of 7 refused at handout, seats 5, 6, 7
     honest dealer                     0 of 7 refused, 21 of 21 subsets open P
 
-Measured twice: in `protocol/test/shares.test.js` over Z_n, and in
-`blwp-node/test/shares-feldman.test.js` over real secp256k1. Before this, that
+Measured twice: in `arena-protocol/test/shares.test.js` over Z_n, and in
+`arena-node/test/shares-feldman.test.js` over real secp256k1. Before this, that
 handout reached settlement and 0 of the 21 five-subsets could open the
 committed preimage - a stake nobody could ever settle, dealt by the player who
 staked it. Now the entry never becomes an entry.
@@ -25135,7 +25135,7 @@ compressed and not x-only, because g^s = product only holds up to the sign and
 the sign is part of what is being checked. `packages/protocol` still carries no
 curve: `pointFromScalar` and `combinePoints` are injected the way `deriveCensus`
 already takes `tweakPoint` and `combine`, and the daemon's copies live beside
-them in `blwp-node/src/curve.js`.
+them in `arena-node/src/curve.js`.
 
 THE SHARING FIELD IS NOW n, secp256k1's order, and it could not stay 2^521 - 1:
 Feldman's exponents have to be scalars of the group its commitments live in.
@@ -25181,7 +25181,7 @@ to each settlement-committee member" is still not done - that needs a key
 agreement nobody has chosen - and it is a named remainder of this letter, not
 a thing this slice quietly skipped.
 
-    core 84/84   protocol 416 -> 420   blwp-node 201 -> 207   blwp-client 118/118
+    core 84/84   protocol 416 -> 420   arena-node 201 -> 207   arena-client 118/118
     money guard 12 clean, determinism guard 20 clean
     No Unity ran and no C# changed: PlayMode 234/209/12/13 and EditMode
     190/186/1/3 stand from item 28.
@@ -25212,7 +25212,7 @@ Two more mutants, both dead:
     the door ignores the polynomial          5 tests red
     the door ignores the hash commitment     2 tests red
 
-    core 84/84   protocol 420 -> 421   blwp-node 207/207   blwp-client 118/118
+    core 84/84   protocol 420 -> 421   arena-node 207/207   arena-client 118/118
     money guard 12 clean, determinism guard 20 clean
 
 ### Is 29 finished? NO, and the reason is the fault letter 28 just taught
@@ -25220,7 +25220,7 @@ Two more mutants, both dead:
 The rule is in and measured. NOTHING CALLS IT.
 
     grep for splitSecret / shareOpensTo / checkHandout / shareIsConsistent
-    outside packages/protocol/src/shares.js and the two test files:
+    outside packages/arena-protocol/src/shares.js and the two test files:
       packages/*/src        0 callers
       packages/*/tools      0 callers
       the jslib             0 callers
@@ -25320,7 +25320,7 @@ exported once from `shares.js` and imported by the wire.
 
 ### Suites
 
-    core 84/84   protocol 421/421   blwp-node 207 -> 211   blwp-client 118/118
+    core 84/84   protocol 421/421   arena-node 207 -> 211   arena-client 118/118
     money guard 12 clean, determinism guard 20 clean
     No C# moved: PlayMode 234/209/12/13 and EditMode 190/186/1/3 stand.
 
@@ -25348,7 +25348,7 @@ node already enforced the new frame.
                       vssSharesRef 3 times and NO_SHARES twice
     page core         md5 cecf6b18 unchanged, 3600 ticks to the golden hash
     live              btc-logistics-core.pages.dev 200; the served
-                      blwp-client.js is md5 1d9970f7 and carries vssSharesRef
+                      arena-client.js is md5 1d9970f7 and carries vssSharesRef
     war               200, untouched. No freeze.
 
 AND THE LIVE BYTES WERE DRIVEN, not compared. The deployed file was fetched
@@ -25480,7 +25480,7 @@ for somebody to discover.
 
 ### Suites
 
-    core 84/84   protocol 421 -> 430   blwp-node 211/211   blwp-client 118/118
+    core 84/84   protocol 421 -> 430   arena-node 211/211   arena-client 118/118
     money guard 12 clean, determinism guard 20 clean. No C# moved.
 
 Still to come on this letter: an isolated regtest bitcoind feeding this rule,
@@ -25569,7 +25569,7 @@ and indistinguishable from a typo in a config.
 ### What runs with no daemon at all
 
 A suite that needs bitcoind is a suite nobody runs, so the rules are measured
-against a fake node in `blwp-node/test/chain-rpc.test.js`: the window ends at
+against a fake node in `arena-node/test/chain-rpc.test.js`: the window ends at
 the tip and is asked for height by height, the block count is read ONCE and
 then walked so a chain growing mid-read cannot produce a hole, a chain shorter
 than the window is served whole rather than padded, a window of nothing or of
@@ -25577,7 +25577,7 @@ more than 2016 is refused, an answer that is not 80 bytes is refused by height,
 and what the reader returns is what the rule judges - the same height 112 the
 selection fixture picks.
 
-    core 84/84   protocol 431/431   blwp-node 211 -> 218   blwp-client 118/118
+    core 84/84   protocol 431/431   arena-node 211 -> 218   arena-client 118/118
     money guard 12 clean, determinism guard 20 clean. No C# moved.
 
 Next on this letter, in order: the 0xbe constant leaves `round-2of2.mjs`, then
@@ -25649,7 +25649,7 @@ because with no beacon a node cannot replay another player's run and the page
 is shown nobody. That is the honest consequence of removing the stub, and it is
 how the test found it.
 
-    core 84/84   protocol 431/431   blwp-node 218 -> 221   blwp-client 118/118
+    core 84/84   protocol 431/431   arena-node 218 -> 221   arena-client 118/118
     money guard 12 clean, determinism guard 20 clean. No C# moved.
 
 ## Item 32, slice 4: POST /round seats the committee the chain names
@@ -25721,7 +25721,7 @@ read from - `census-regtest.mjs` already posts real bonds there - and that is a
 letter's worth of work, not a line. Until then a node still refuses a beacon at
 or before committee_time (27), and derives its own when it has a view.
 
-    core 84/84   protocol 431/431   blwp-node 221 -> 225   blwp-client 118/118
+    core 84/84   protocol 431/431   arena-node 221 -> 225   arena-client 118/118
     money guard 12 clean, determinism guard 20 clean. No C# moved.
 
 ## Item 32, slice 5: one chain, and the roster asks it
@@ -25800,7 +25800,7 @@ check looks exactly like one that made it. A node with no chain view still
 refuses `POST /round` by name, and 27's rule is asked FIRST - it needs no chain,
 so a beacon the creator could have held is refused even by a node that has none.
 
-    core 84/84   protocol 431 -> 432   blwp-node 225 -> 227   blwp-client 118/118
+    core 84/84   protocol 431 -> 432   arena-node 225 -> 227   arena-client 118/118
     money guard 12 clean, determinism guard 20 clean. No C# moved.
 
 Both regtest daemons were stopped when the measurements were done.
@@ -25837,7 +25837,7 @@ chain asked twice, since two runs build two chains and naming different blocks
 is correct. A new case takes the old one's place: a header source that is not
 the chain the bonds are on is refused.
 
-    core 84/84   protocol 432/432   blwp-node 227/227   blwp-client 118/118
+    core 84/84   protocol 432/432   arena-node 227/227   arena-client 118/118
     money guard 12 clean, determinism guard 20 clean
 
 ### Item 32, the audit after it was marked done: the closing door asked less
@@ -25871,7 +25871,7 @@ A node with no view is left as it was on both doors: it has no chain to ask,
 27's rule has already run, and refusing there would refuse every node that
 closes without one.
 
-    core 84/84   protocol 432/432   blwp-node 227 -> 228   blwp-client 118/118
+    core 84/84   protocol 432/432   arena-node 227 -> 228   arena-client 118/118
     money guard 12 clean, determinism guard 20 clean. No C# moved.
 
 CORE VERSUS THE OLD C# ENGINE DOES NOT APPLY TO THIS LETTER, and saying so is
@@ -25939,7 +25939,7 @@ reported as unchecked rather than assumed"). That assertion is turned the right
 way up rather than deleted: a full run is accepted, one tick more is refused,
 and the end is counted from the entry's own join tick.
 
-    core 84/84   protocol 432/432   blwp-node 228 -> 232   blwp-client 118/118
+    core 84/84   protocol 432/432   arena-node 228 -> 232   arena-client 118/118
     money guard 12 clean, determinism guard 20 clean. No C# moved, no Unity ran.
 
 ### Item 31 close-out: the doors counted
@@ -26016,7 +26016,7 @@ this does not, and does not pretend to.
 
 ### M3 STEP 2 — THE INJECTED CUSTODY PORT, AND WHAT THE FOUR OUTCOMES DO
 
-`blwp-node/src/custody.js`. The port has the four operations Daniel named -
+`arena-node/src/custody.js`. The port has the four operations Daniel named -
 `createHeld`, `look`, `settle`, `cancel` - and it is injected exactly the way
 `sign`, the curve, `chainFor` and `randomnessFor` are: the protocol decides,
 the transport is handed in. The suite uses a fake port that keeps a call log
@@ -26092,7 +26092,7 @@ is not this step.
 
 ### M3 STEP 3 — KILL THE CUSTODIAN AND SEE WHO GOT PAID
 
-`blwp-node/tools/custody-crash.mjs`. Not a unit test: a child process with a
+`arena-node/tools/custody-crash.mjs`. Not a unit test: a child process with a
 file-backed store and a Lightning port that appends to a log before it does
 anything, killed with SIGKILL, and then read.
 
@@ -26157,7 +26157,7 @@ threshold signature and the act it authorises, and nothing here addresses that.
 
 ### M3 STEP 4 — THE SAME RULES AGAINST `lnd v0.21.3-beta`
 
-`blwp-node/src/lnd-port.js` is the transport; `blwp-node/tools/custody-lnd.mjs`
+`arena-node/src/lnd-port.js` is the transport; `arena-node/tools/custody-lnd.mjs`
 starts an isolated regtest of its own - own bitcoind datadir, non-default ports
 (29643/29644, zmq on 29745/29746, lnd on 29650 and 29660), cookie auth - runs
 one round on it, and stops every process when the numbers are in. No mainnet or
@@ -26226,7 +26226,7 @@ imported `sha256bytes` from `core/src/sha256.js` for a stake commitment, and
 
 for exactly the reason its own comment predicted - "one more import, in one
 more place, for one good reason". A hash is not a simulation, so `sha256` is
-named in `protocol/src/hash.js` and the node takes it from there.
+named in `arena-protocol/src/hash.js` and the node takes it from there.
 
 MUTATION, 20 mutants against 18 tests (14 custody, 4 port): 18 killed, the same
 2 retracted as equivalent. The three new ones all died: settling with no
@@ -26251,7 +26251,7 @@ found six times. Fixed here.
 
 THE NAME COLLISION FIRST. `Verifier.settleRound` is section 13's replay and
 gather and moves nothing; the money word is now `Custody.settleHeldInvoices`.
-Under `blwp-node/src` the two are distinct words, and a close that reads like
+Under `arena-node/src` the two are distinct words, and a close that reads like
 it pays no longer only replays.
 
     server.js:211   custody.settleHeldInvoices(...)     the money
@@ -26336,7 +26336,7 @@ Printed before a line of this item is written, the way the hold-invoice
 baseline was - and this time the caller count is the FIRST thing measured, not
 the thing that was assumed.
 
-THE ARITHMETIC IS ALL THERE AND NOTHING RUNS IT. `packages/protocol/src/shares.js`,
+THE ARITHMETIC IS ALL THERE AND NOTHING RUNS IT. `packages/arena-protocol/src/shares.js`,
 callers outside its own file and its own tests:
 
     splitSecret         who cuts the polynomial            0
@@ -26370,7 +26370,7 @@ from five of seven, added on top of this, would change nothing: one node
 settles alone and so does a passer-by. Encrypting one share to each seat is not
 a refinement of this item, it is the item.
 
-NOBODY DEALS EITHER. `blwp-client/src/join.js:213` sets
+NOBODY DEALS EITHER. `arena-client/src/join.js:213` sets
 `stakeCommitment: random(32)` - a commitment to nothing, not `sha256(P)` - and
 `vssSharesRef: NO_SHARES`. Letter 29 wrote that "the page is not a dealer,
 which arrives with the hold invoice". It has arrived.
@@ -26385,7 +26385,7 @@ stakeCommitment. All three are false today - 7, opens, opens.
 
 ### M3.3-9 STEP 2 — ONE SHARE, ONE SEAT, AND NOBODY ELSE
 
-`packages/protocol/src/seal.js` is the missing half of 23.1 step 2 - "encrypts
+`packages/arena-protocol/src/seal.js` is the missing half of 23.1 step 2 - "encrypts
 one share to each settlement-committee member" - and `handout.js` now carries
 envelopes instead of scalars.
 
@@ -26446,7 +26446,7 @@ AND THE OPENED SHARE IS NEVER WRITTEN DOWN. Only the sealed handout goes to
 disk and the share is re-opened from it when needed, so a stolen database is a
 pile of envelopes. The `holds` table gained nothing.
 
-Suites: blwp-node 258 -> 264, core 84, protocol 432, blwp-client 118, all green.
+Suites: arena-node 258 -> 264, core 84, protocol 432, arena-client 118, all green.
 
 ### M3.3-9 STEP 2b — THE PAGE DEALS
 
@@ -26483,11 +26483,11 @@ and the WebGL template's copy was re-synced, because a template that ships a
 different client from the one the suites measure is a page running a different
 program.
 
-Suites: blwp-client 118 -> 120, blwp-node 264, core 84, protocol 432, all green.
+Suites: arena-client 118 -> 120, arena-node 264, core 84, protocol 432, all green.
 
 ### M3.3-9 STEPS 3 AND 4 — FIVE SEATS, OR THE STAKE STAYS IN FLIGHT
 
-`packages/blwp-node/src/preimage.js` is what asks. Seven daemons, seven real
+`packages/arena-node/src/preimage.js` is what asks. Seven daemons, seven real
 identities, one player dealing to all of them, and every seat replaying the run
 through its own doors - because a node hands out its share only for a run IT
 signed a result for, and a committee where six seats never replayed is a
@@ -26546,7 +26546,7 @@ core's outcome word, on the fake port here and on real lnd in
 `tools/custody-lnd.mjs` - re-run at this HEAD, one stake settled, one cancelled,
 one refunded by the timelock with nobody acting, every process stopped.
 
-Suites: blwp-node 264 -> 269, core 84, protocol 432, blwp-client 120, all green.
+Suites: arena-node 264 -> 269, core 84, protocol 432, arena-client 120, all green.
 
 ### M3.3-9 MUTATION — 13 MUTANTS, 12 KILLED, 1 RETRACTED
 
@@ -26585,7 +26585,7 @@ answer, and `reconstruct` refuses - "those shares do not open that stake ...
 not the committed preimage". No Lightning call, the hold expires, the player is
 refunded. The cheat gains nothing.
 
-Suites: blwp-node 269 -> 272, core 84, protocol 432, blwp-client 120, all green.
+Suites: arena-node 269 -> 272, core 84, protocol 432, arena-client 120, all green.
 
 ### M3.3-10 STEP 1 — WHO CAN MOVE THE POOL TODAY, AND THE VECTORS TO MEASURE AGAINST
 
@@ -26634,7 +26634,7 @@ numbers, and then the BIP-340 variant is measured the only way that matters:
 
 ### M3.3-10 STEP 2 — THE RFC'S OWN NUMBERS, THEN THE ONE BITCOIN CHECKS
 
-`packages/protocol/src/frost.js` is RFC 9591 with the curve injected, and every
+`packages/arena-protocol/src/frost.js` is RFC 9591 with the curve injected, and every
 number below is the RFC's rather than this implementation's opinion of itself.
 Appendix E.5, FROST(secp256k1, SHA-256), reproduced byte for byte:
 
@@ -26753,7 +26753,7 @@ accepts. A key-path spend signed by the committee is those four meeting.
 
 ### M3.3-13 STEPS 3 TO 5 — THE POOL IS A KEY, AND CONSENSUS TOOK THE SPEND
 
-`packages/protocol/src/pool.js`. The pool is ONE P2TR output whose key is the
+`packages/arena-protocol/src/pool.js`. The pool is ONE P2TR output whose key is the
 committee's FROST group key, and there is deliberately no script path: 23.5
 says EVERY operation needs the threshold, and a leaf - a recovery path, a
 timeout, an operator's key - would make that sentence false.
@@ -26851,7 +26851,7 @@ spend from is worse than not seating them.
 THAT IS A HOLE AND IT GOES ON THE LIST, not into this letter: the page needs a
 secp256k1 it can trust before it can join a round that pays.
 
-Suites: blwp-client 120, core 84, protocol 440, blwp-node 301, all green. The
+Suites: arena-client 120, core 84, protocol 440, arena-node 301, all green. The
 bundle changed - 278.7 KB - and the template's copy was re-synced.
 
 ### M3.3-8b STEPS 2 TO 4 — A WINNER PAID, AND WHO HAD TO AGREE ON THE WAY
@@ -26970,7 +26970,7 @@ milestone is dismantling everywhere else.
 That is not a hole this letter can quietly leave inside itself, so it is on
 PRIORITIES as its own line.
 
-Suites: blwp-node 319 -> 321, core 84, protocol 440, blwp-client 120, all green.
+Suites: arena-node 319 -> 321, core 84, protocol 440, arena-client 120, all green.
 No client bytes changed, so the daily still serves
 dc68bd7aa23a141968bb0a8b59fff109.
 
@@ -27038,8 +27038,8 @@ tick past the end of a run, a head before any input went out.
 
 Measured at HEAD c389097 with none of this letter's work applied:
 
-    core 88/88   protocol 440/440   blwp-client 123/123
-    blwp-node 303 of 321, EIGHTEEN RED
+    core 88/88   protocol 440/440   arena-client 123/123
+    arena-node 303 of 321, EIGHTEEN RED
 
 They are the verify / result / settlement family, and the cause is
 `20c3950 feat: park each player at a different loading bay from their seed`,
@@ -27077,7 +27077,7 @@ tick's, one batch behind, and it moves.
 WHAT WAS STILL BROKEN, AND IT WAS THE URL. `round-2of2.mjs` printed
 `node=http://100.74.66.98:8090`, and the page is https - which a browser
 refuses as mixed content. That is Daniel's 07:40 screenshot, and it is why a
-socket that works from a script never came up in a tab. `BLWP_WSS_<port>`
+socket that works from a script never came up in a tab. `ARENA_WSS_<port>`
 already named where each daemon is reachable from outside, because the socket
 endpoint hit this first; the same origin serves its http doors, so the URL is
 built from it:
@@ -27234,7 +27234,7 @@ WHAT IS STILL NOT PROVEN HERE, and it is the only link left: `BlwpNextGhost` in
 That is where letter 28's bug lived, and it is where 36 goes next if
 SwissClaw's two Chromes still show a truck in the bay.
 
-Suites: blwp-client 123 -> 125, core 88/88, protocol 440/440, blwp-node 333
+Suites: arena-client 123 -> 125, core 88/88, protocol 440/440, arena-node 333
 with the same 18 spawn-bay hash pins on their own letter. The bundle changed
 (280.4 KB) and the WebGL template's copy was re-synced.
 
@@ -27289,7 +27289,7 @@ whether the component is enabled in the player is a Unity fact. If SwissClaw's
 two Chromes still show a truck in the bay, the chip will now say `none drawn`
 and that is the answer.
 
-Suites: blwp-client 125 -> 128, core 88/88, protocol 440/440, blwp-node 333
+Suites: arena-client 125 -> 128, core 88/88, protocol 440/440, arena-node 333
 with the same 18 spawn-bay hash pins on their own letter. Bundle 281.7 KB,
 template copy re-synced.
 
@@ -27364,8 +27364,8 @@ a truck that starts somewhere else and drives away from it. `stalled` on the
 chip separates the two answers: `none drawn` means the renderer never ran, no
 `none drawn` with no truck on screen means it ran and the truck is elsewhere.
 
-Suites: blwp-client 128 -> 129, jslib clean after the mutants. core 88/88,
-protocol 440/440, blwp-node 333 with the same 18 spawn-bay hash pins.
+Suites: arena-client 128 -> 129, jslib clean after the mutants. core 88/88,
+protocol 440/440, arena-node 333 with the same 18 spawn-bay hash pins.
 
 AND THE CHIP NAMES THE PLACE. `stalled` separates a renderer that never ran
 from one that did; it says nothing about a renderer that ran and drew the
@@ -27385,7 +27385,7 @@ which differs only when two trucks share the newest tick; which of two right
 answers gets named is not a fact anybody reads, so the test pins the TICK of
 the named pose and leaves the tie free.
 
-THE DAILY WAS RED AND IT WAS NOT A DAEMON FAULT (1a16061). 18 of blwp-node's
+THE DAILY WAS RED AND IT WAS NOT A DAEMON FAULT (1a16061). 18 of arena-node's
 333 were failing and the note on letter 36 called them "spawn-bay hash pins".
 They are not hashes. 20c3950 parks a player at the door their own seed names,
 and four fixture files - verify, verdict, reconstruct, custody-daemon - still
@@ -27427,7 +27427,7 @@ whole-suite runs where the node keys differ every time. It asks sixteen hashes
 now and requires the draw to MOVE with them, which is the claim it was making
 and which a selection ignoring the beacon still fails.
 
-Suites after: blwp-node 315/333 -> 333/333, blwp-client 129/129, core 88/88,
+Suites after: arena-node 315/333 -> 333/333, arena-client 129/129, core 88/88,
 protocol 440/440.
 
 WHERE THE TRUCK IS DRAWN (beeb20f). 36's last unmeasured step. `two-tabs.test.js`
@@ -27481,7 +27481,7 @@ local truck (-100.40, 10.20), other truck (-99.44, 17.00), 6.9 m apart - one of
 A test that demanded the two be close would be demanding the bays go away.
 
 DEPLOYED 15:59: btc-logistics-core.pages.dev, the chip of 3d0eb63 live. The
-served index.html and blwp-client.js are byte-for-byte the built ones
+served index.html and arena-client.js are byte-for-byte the built ones
 (62bcef8b855fab8fc9f34ba5546206cc, 4cfc3b5e4c9508e4595c5cb220e9039c).
 
 ## M3.3 item 17: what a payout signature costs today, measured before anything is written
@@ -27605,7 +27605,7 @@ WHAT IS NOT HERE, NAMED RATHER THAN ABSORBED:
   - The shares are still DEALT. A dealerless DKG is its own letter and this one
     does not pretend to be it.
 
-Suites: blwp-node 333 -> 354, blwp-client 129/129, core 88/88, protocol 440/440.
+Suites: arena-node 333 -> 354, arena-client 129/129, core 88/88, protocol 440/440.
 
 ## M2.36, after the 16:08 two-Chrome close-out: two faults, both named and both fixed
 
@@ -27655,10 +27655,10 @@ resyncing on every refusal instead of once; ending without ever resyncing;
 building a batch while the numbers are being re-read; a recovered run still
 reporting a refusal; a chip with no line for it.
 
-Suites: blwp-client 129 -> 133, blwp-node 354/354, core 88/88, protocol 440/440.
+Suites: arena-client 129 -> 133, arena-node 354/354, core 88/88, protocol 440/440.
 Bundle 282.9 -> 286.6 KB. Deployed to btc-logistics-core: the served
 index.html carries no tokens, /Build/webgl5.loader.js answers 200, and the
-served blwp-client.js contains the new line.
+served arena-client.js contains the new line.
 
 ## M2.36, the 17:05 split: the two trucks were in two different worlds
 
@@ -27751,14 +27751,14 @@ end of the walk now, and `SnapToPicture` puts it exactly on the words.
 
 Suites: PlayMode 237 - 213 pass, 11 red, 13 skipped, and the eleven are the
 documented set (ten reach the retired C# army, one needs a graphics device).
-EditMode 190 - 186 pass, 1 red (the same C# army), 3 skipped. blwp-client
-135/135, blwp-node 354/354, core 88/88, protocol 440/440.
+EditMode 190 - 186 pass, 1 red (the same C# army), 3 skipped. arena-client
+135/135, arena-node 354/354, core 88/88, protocol 440/440.
 
 DEPLOYED: a real WebGL build, because the seed path is C# and jslib and a
 template copy does not carry those. The stale `webgl5.*` set from the 01:00
 build was removed - the page names `webgl.*` and two sets in one Build folder
 is a loader nobody can name. Live checks: the page points at
-Build/webgl.loader.js (200), carries BLWP_NODES, the served blwp-client.js
+Build/webgl.loader.js (200), carries BLWP_NODES, the served arena-client.js
 carries `worldSeedFor`, and the served framework defines `BlwpRoundSeed`.
 
 ## M2.36: what a live round reads of `CoreDrivenTruck.seed`, printed
@@ -27823,7 +27823,7 @@ set (ten reach the retired C# army, one needs a graphics device) and the twelfth
 is `PostOfficeTests.TheGogglesAnimate`, one of the three named rotating load
 flakes: run alone, PostOfficeTests is 11 of 11 green. EditMode 193 - 189 pass,
 1 red (`RifleFireProducesAFlashAndATracer`, the same C# army), 3 skipped.
-blwp-client 138/138. Deployed: the served `webgl.data.unityweb` is
+arena-client 138/138. Deployed: the served `webgl.data.unityweb` is
 8832f4a9f62342a0f9704d844e6785d0, byte for byte the build that carries the rule.
 
 ## M2.36: the two-Chrome look, for whoever runs it
@@ -27834,7 +27834,7 @@ look either confirms it or names which claim is false.
 STAND THE ROUND UP, then open the printed URL in TWO local Chrome windows -
 real WebGL, not headless, not browser-act:
 
-    node packages/blwp-node/tools/round-2of2.mjs
+    node packages/arena-node/tools/round-2of2.mjs
 
 It prints one URL of the shape
 `https://<page>/?round=<id>&node=<A>,<B>&bond=<A>/bond&advert=<hex>`. Both
@@ -27995,7 +27995,7 @@ DISPLAY :0, WebGL 2.0 in each, unique user-data-dir /tmp/blwp-chrome-p1 and p2,
 CDP 9331/9332. Not browser-act, not stealth/headless, not VNC :99.
 
 Round stood with round-2of2.mjs:
-  BLWP_BIND=100.74.66.98 BLWP_PORT_A=8090 BLWP_PORT_B=8091
+  ARENA_BIND=100.74.66.98 ARENA_PORT_A=8090 ARENA_PORT_B=8091
   Funnel GET https://beelink.tail1723e2.ts.net/blwp-a/identity 200 32 bytes
   (local :8090/:8091 identity 200 32 too; finedining already listening on :3001)
 
@@ -28140,7 +28140,7 @@ earned 288 and has not arrived.
 
 All nine golden vectors regenerated: the world changed, so they had to.
 
-SUITES: core 88/88. blwp-node 369/369. protocol 440/440. blwp-client 138/138.
+SUITES: core 88/88. arena-node 369/369. protocol 440/440. arena-client 138/138.
 determinism guard 20 files clean. PlayMode 237 - 213 pass, 11 red, 13 skipped,
 and the eleven are the documented set (ten reach the retired C# army that (e)
 does not build, one needs a graphics device). EditMode 193 - 189 pass, 1 red
@@ -28346,7 +28346,7 @@ the shells are seated on the round's own relief, which is why two move.
 
 Vectors regenerated: the simulated world deliberately changed, so
 `liquidation`'s hash moved and four vector files with it. Suites after:
-core 88/88, guard 21 files clean, blwp-node 372/372, blwp-client 139/139,
+core 88/88, guard 21 files clean, arena-node 372/372, arena-client 139/139,
 protocol 440/440.
 
 ## 2026-09-09  letter 40 - the bed travels, not the wanted level
@@ -28390,10 +28390,10 @@ list now - `setHeat` (40), `setGround` (36), `setSolids` (39). They stay in
 
 `CargoBay.Heat` stays as the yard's preview gauge and decides nothing once a
 round starts; its three constants (20000 sats, 25 BTC, 0.45) are pinned against
-the core's by `blwp-node/test/replay-heat.test.js`.
+the core's by `arena-node/test/replay-heat.test.js`.
 
 Suites after: core 89/89, guard 21 files clean, protocol 441/441,
-blwp-node 380/380, blwp-client 143/143.
+arena-node 380/380, arena-client 143/143.
 
 ## 2026-09-09  M3.3 item 18 - the daemon asks the chain and pays the winner
 
@@ -28439,7 +28439,7 @@ pays it when it returns, so nothing is lost - but a seat that never returns
 strands the round, and a takeover needs a clock.
 
 Suites after: core 89/89, guard 21 files clean, protocol 441/441,
-blwp-node 386/386, blwp-client 143/143.
+arena-node 386/386, arena-client 143/143.
 
 ## 2026-09-09  the Daily carries 39 and 40
 
@@ -28530,7 +28530,7 @@ window is only open before a block is mined, so that probe moved to the instant
 after the broadcast with `takeoverBlocks: 1`.
 
 Suites after: core 89/89, guard 21 files clean, protocol 441/441,
-blwp-node 390/390, blwp-client 143/143.
+arena-node 390/390, arena-client 143/143.
 
 ## 2026-09-09  M3.3 item 15 - the page deals its own stake
 
@@ -28550,7 +28550,7 @@ So the guard at `index.html:308` cannot fire and the missing curve was 0% of
 WHAT WAS ACTUALLY OPEN, and it is worse than a refusal because it is silent:
 `entryFor` was called with no `stake`, so `stakeCommitment` was `random(32)`
 rather than `sha256(P)` and `vssSharesRef` was 32 zero bytes. `stakeFor` had
-ZERO CALLERS - compiled into the shipped bundle at blwp-client.js:6806 and run
+ZERO CALLERS - compiled into the shipped bundle at arena-client.js:6806 and run
 by nothing. `round.js:309` accepts those zeros on purpose ("32 zero bytes means
 the entry publishes no shares, which is every entry in M2"), so a player was
 seated at a paying round with a commitment nobody holds a preimage for, and
@@ -28590,7 +28590,7 @@ implying a funded one, and a paying round whose settlement committee it cannot
 learn is refused by name instead of seated.
 
 Suites after: core 89/89, guard 21 files clean, protocol 441/441,
-blwp-node 390/390, blwp-client 148/148.
+arena-node 390/390, arena-client 148/148.
 
 ## 2026-09-09  item 15 follow-up - four holes on the player's side of the glass
 
@@ -28643,7 +28643,7 @@ Four holes came out of it, all inside 15's own "never seated silently".
 WHAT WAS CLEAN: no path in C# or the jslib reads a host or PhysX value for
 stake, committee or entry - the entry lives entirely in the page's JS and the
 bridge treats `BLWP_ENTRY` as opaque. No drift either: dist == template ==
-build == LIVE for blwp-core.js, blwp-client.js and blwp-curve.js, and the built
+build == LIVE for blwp-core.js, arena-client.js and blwp-curve.js, and the built
 page is byte-identical to the served one.
 
 TWO PINS CHANGED AND NEITHER WAS LOOSENED. One asserted the page contains the
@@ -28659,7 +28659,7 @@ be REFUSED from another. That is enforcement, not what a paying round needs to
 sit, and it is named here rather than made into a letter.
 
 Suites after: core 89/89, guard 21 files clean, protocol 441/441,
-blwp-node 390/390, blwp-client 152/152.
+arena-node 390/390, arena-client 152/152.
 
 ## 2026-09-09  item 15, second follow-up - the acceptance count was a number, not a decision
 
@@ -28703,13 +28703,13 @@ ONE PIN CHANGED AND IT WAS NOT LOOSENED: it asserted the page contains the
 string "/handout", which only proved a URL was written down; it asserts now
 that the page calls `postHandout` and branches on the answer.
 
-A NOTE ON THE DEPLOY: the first fetch of `blwp-client.js` from the Daily after
+A NOTE ON THE DEPLOY: the first fetch of `arena-client.js` from the Daily after
 this deploy differed from `dist`, and the deployment URL matched immediately -
 an edge cache, not a bad deploy. It agreed twelve seconds later. `/Build/*` is
 `max-age=0, must-revalidate`, so a browser revalidates.
 
 Suites after: core 89/89, guard 21 files clean, protocol 441/441,
-blwp-node 390/390, blwp-client 154/154.
+arena-node 390/390, arena-client 154/154.
 
 ## 2026-09-10  M3.3 item 14 - the share-count pin, before any code
 
@@ -28751,7 +28751,7 @@ and matched the COMMENT that says a dealerless DKG is its own letter - a
 sentence caught by its own regex. It is a call site now, the same distinction
 the pool watcher's pin makes.
 
-Suites with the pin in: blwp-node 392/392.
+Suites with the pin in: arena-node 392/392.
 
 ## 2026-09-10  M3.3 item 14 - the committee makes its own key
 
@@ -28827,8 +28827,8 @@ WHAT IS NOT DONE AND IS NOT NEEDED YET: resharing when a committee rotates. A
 new committee is a new epoch and runs a new DKG, which mints a new pool address
 - moving an existing pool to it is a protocol question nothing depends on.
 
-Suites: core 89/89, guard 21 files clean, protocol 444/444, blwp-node 401/401,
-blwp-client 154/154.
+Suites: core 89/89, guard 21 files clean, protocol 444/444, arena-node 401/401,
+arena-client 154/154.
 
 ## 2026-09-10  M3.3 item 20 - the entry door, and the check the fee rule could not make
 
@@ -28884,13 +28884,13 @@ Nothing downstream moved: both regtests still print "Every number came out as
 claimed", and the page's own sequence from letter 15 still seats through the
 tightened door.
 
-Suites: core 89/89, guard 21 files clean, protocol 444/444, blwp-node 406/406,
-blwp-client 154/154. No client bundle changed, so the Daily was not redeployed.
+Suites: core 89/89, guard 21 files clean, protocol 444/444, arena-node 406/406,
+arena-client 154/154. No client bundle changed, so the Daily was not redeployed.
 
 ## 2026-09-10  M3.2 item 5 - the client asks what it owes, and checks the answer
 
 THE PIN BEFORE: enter 3 methods, play 6, pay 0, and `invoice`/`bolt11`/
-`paymentHash` in blwp-client/src only inside comments - 0 files named one in
+`paymentHash` in arena-client/src only inside comments - 0 files named one in
 code. `invoiceMatchesEntry` had 0 callers on the player's side, while
 `server.js` said at its own door that the rule "lives on their side too".
 
@@ -28938,7 +28938,7 @@ NOT PLAYER-FACING. The method is in the served bundle - checked on the live file
 twice, behind twice, rebuilt and verified both times - and nothing on screen
 changed.
 
-Suites: core 89/89, protocol 444/444, blwp-node 406/406, blwp-client 162/162,
+Suites: core 89/89, protocol 444/444, arena-node 406/406, arena-client 162/162,
 guard 21 files clean. PlayMode and EditMode were not in this letter: no C#
 changed, and Unity ran only as a WebGL build.
 
@@ -28946,8 +28946,8 @@ changed, and Unity ran only as a WebGL build.
 
     methods that move a satoshi                  0 -> 1 (payStake)
     requests reaching the wallet on a bad quote  0, counted
-    blwp-client                                  162 -> 172
-    core / protocol / blwp-node                  89 / 444 / 406, unmoved
+    arena-client                                  162 -> 172
+    core / protocol / arena-node                  89 / 444 / 406, unmoved
 
 THE SAFETY PROPERTY IS A SIGNATURE, NOT A CHECK. `payStake` takes an ENTRY.
 There is no argument that could carry an arbitrary bolt11, so no caller - page,
@@ -28989,7 +28989,7 @@ it is sent, so the filter can name it.
 TWO COLLISIONS THIS REPO ALREADY KNEW ABOUT caught the first draft: `subtle` is
 declared at the top level of `seal.js` too, and `tools/bundle.js` refuses two
 private names that collide (the same guard the `fromHex` duplicate tripped); and
-`discovery.test.js` refuses any `globalThis.` in blwp-client/src - a client that
+`discovery.test.js` refuses any `globalThis.` in arena-client/src - a client that
 reads anything off the page is a client that can be told where to send things -
 so the crypto and the socket are reached the way `fetch` and `WebSocket` already
 are in the neighbouring file.
@@ -29007,8 +29007,8 @@ decides is in `@blwp/client` - the lesson `roundPays` and `postHandout` already
 paid for, and the only way these counts are measured rather than grepped.
 
     the page          1 paste field, 1 amount, 1 total, 1 call, 0 bolt11
-    blwp-client       172 -> 177
-    core / protocol / blwp-node   89 / 444 / 406, unmoved
+    arena-client       172 -> 177
+    core / protocol / arena-node   89 / 444 / 406, unmoved
 
 WHERE THE CONNECTION LIVES: `sessionStorage`, the same home as the player key.
 Per tab, so two tabs are two players and neither spends from the other's wallet;
@@ -29057,8 +29057,8 @@ PlayMode and EditMode were not in this letter: no C# and no jslib changed.
     "budget" on the served Daily      0 -> 1 (rendered) and 1 (asked)
     invented URI budget field         1 -> 0, deleted
     wallet methods the client calls   1 -> 3, all read-only
-    blwp-client                       177 -> 184
-    core / protocol / blwp-node       89 / 444 / 406, unmoved
+    arena-client                       177 -> 184
+    core / protocol / arena-node       89 / 444 / 406, unmoved
 
 HALF THIS LETTER WAS DELETING SOMETHING I WROTE. `parseConnection` carried
 `budget: url.searchParams.get('budget')` with the comment "carried for DISPLAY
@@ -29179,13 +29179,13 @@ charges on top and 6b says inclusive.
 
 M3.2 ITEM 6b, THE OBJECT AND THE KEY. 27A.4's DonationSet exists.
 
-    packages/protocol/src/authority.js          new
-    packages/protocol/test/donation-authority.test.js    12 tests, stub curve
-    packages/blwp-node/test/donation-rotation.test.js     3 tests, real BIP-340
+    packages/arena-protocol/src/authority.js          new
+    packages/arena-protocol/test/donation-authority.test.js    12 tests, stub curve
+    packages/arena-node/test/donation-rotation.test.js     3 tests, real BIP-340
 
     protocol      444 -> 456
-    blwp-node     406 -> 409
-    blwp-client   184, core 89
+    arena-node     406 -> 409
+    arena-client   184, core 89
     money guard   19 -> 20 files clean   (authority.js is on the list: its
                                           serial is the ordering a theft is
                                           undone by)
@@ -29215,7 +29215,7 @@ of arrival, and the refusal says which serial died. That is where 27A.4's "both
 lost" row already puts the network - "the set freezes at its last published
 serial" - and a frozen set is a bounded failure where paying a thief is not.
 
-THE ROTATION, ON REAL KEYS. blwp-node/test/donation-rotation.test.js signs with
+THE ROTATION, ON REAL KEYS. arena-node/test/donation-rotation.test.js signs with
 @noble's BIP-340, the same curve the daemon signs adverts and payout tables
 with, because "the recovery key revokes the authority" is a sentence about a
 signature and a stub cannot speak it.
@@ -29266,7 +29266,7 @@ lnbc, fetch( and WebSocket in both donation files. Nothing in packages/core.
 The shipped bundle grew 1387 bytes - the two new type bytes and the comment
 that says why they are two - and the template's copy is the bundle again.
 Deployed for that reason alone: btc-logistics-core.pages.dev serves
-blwp-client.js md5 4a6805b9a72afa6d50130f0647c97a56, the repo's byte for byte,
+arena-client.js md5 4a6805b9a72afa6d50130f0647c97a56, the repo's byte for byte,
 HTTP 200. Nothing the page DOES changed in this letter.
 
 STILL NOT BUILT HERE: publication. 27A.4 says a set is "published like an
@@ -29284,7 +29284,7 @@ less the other two (22A)" - on a free seat of the 2-of-2 round.
 
 THE CAUSE, measured, and it was not the free seat:
 
-    daemon          node packages/blwp-node/tools/round-2of2.mjs, cwd /tmp/btc-phase0,
+    daemon          node packages/arena-node/tools/round-2of2.mjs, cwd /tmp/btc-phase0,
                     importing the worktree's source directly
     the fault       started between two 6e edit batches: `feeMatchesEntry` already
                     ran `netStakeMsat` (which asks for the donation) and
@@ -29355,8 +29355,8 @@ MUTANTS, 6 of 6 killed:
 SUITES (each chunk under timeout 180 + --test-timeout=120000)
 
     protocol      456 -> 463   (inclusive.test.js, 7)
-    blwp-node     409 -> 410   (the free-round ghost)
-    blwp-client   184 -> 184
+    arena-node     409 -> 410   (the free-round ghost)
+    arena-client   184 -> 184
     core          89
     money guard 20 files clean, determinism guard 21 files clean
 
@@ -29364,7 +29364,7 @@ NOT LOOKED AT IN TWO CHROMES. The running 2-of-2 daemon (started 11:19:59)
 runs d16c9cd's coerced code until it is restarted.
 
 ON THE DAILY (2026-09-10): deployment 5b8dd7c3.btc-logistics-core.pages.dev,
-alias btc-logistics-core.pages.dev serves blwp-client.js md5 ae41dc8b - the
+alias btc-logistics-core.pages.dev serves arena-client.js md5 ae41dc8b - the
 committed bundle, byte for byte - and the served page calls `owedLine` 1 time.
 The first check read the old 4a6805b9: a cached copy, gone on a re-fetch, and
 /index.html answers 308 to /. btc-logistics-war untouched.
@@ -29406,7 +29406,7 @@ MUTANTS, 5 of 5 killed: the peer's reserve counted as inbound (1 red), mainnet
 refusal removed (1), a free round made to need a channel (1), one seat counted
 for all (3), the gross held instead of the net (3).
 
-SUITES  blwp-node 410 -> 416 (preflight.test.js, 6). Protocol 463, blwp-client
+SUITES  arena-node 410 -> 416 (preflight.test.js, 6). Protocol 463, arena-client
 184, core 89 not touched. No bundle changed; the Daily was not redeployed.
 
 DECISION NEEDED, and it is the operator's money on a real network: inbound
@@ -29449,7 +29449,7 @@ the admin macaroon (1), askLnd's testnet4 check removed (1).
 Three test daemons that hold stakes (custody-daemon x6, session-pay,
 wallet-nwc) are handed a READY preflight - setup, no assertion touched.
 
-SUITES  blwp-node 416 -> 422, blwp-client 184, protocol 463 and core 89 not
+SUITES  arena-node 416 -> 422, arena-client 184, protocol 463 and core 89 not
 touched. No bundle changed. Nothing opened, paid or signed on the node.
 
 
@@ -29490,7 +29490,7 @@ THE FIX: the bundler turns an aliased import into `var heatForLoad = heat;` wher
 the import stood (sim.js is the only alias in the core). Two bundle tests: every
 aliased import is declared in the bundle, and a load through the BUILT bundle
 heats and hashes exactly as the modules do. Against the committed bundle: 2 red.
-Rebuilt: green. Core 89 -> 91, determinism guard 21 clean, blwp-client 184
+Rebuilt: green. Core 89 -> 91, determinism guard 21 clean, arena-client 184
 (the template must ship the built bundle byte for byte: md5 4a337755).
 
 THE SECOND DRIVE, on the fixed Daily (core md5 4a337755 served, ede64f9).
@@ -29541,8 +29541,8 @@ PINNED (ghost-field.test.js, 9 -> 13): the measured burst -> others 1, "other
 at -100,24 m"; a dead seat arriving after the live one is replaced by its next
 picture; two players stay two; a real client and daemon refuse this player's
 pre-reload seat (run to 199) as self and name the other at 59. HEAD's
-ghost-field.js: 3 red; HEAD's client.js: 1 red. blwp-client 184 -> 188.
-Deployed: blwp-client.js md5 5b31d4b3 served.
+ghost-field.js: 3 red; HEAD's client.js: 1 red. arena-client 184 -> 188.
+Deployed: arena-client.js md5 5b31d4b3 served.
 
 AFTER, two real Chromes reloaded with the cache disabled (step 3), both tabs
 rolled out and driving together (screens 2026-09-10-1240-reload-p{1,2}.png):
@@ -29619,12 +29619,12 @@ WHAT THE FILE ALSO NEEDED, found by making it hang and tracing it:
     Whole file, no --test-force-exit: 5/5, exits in 3 s.
 
 SUITES
-    blwp-client  188 -> 189
+    arena-client  188 -> 189
     EditMode     193: 189 pass, 1 red, 3 skipped (CombatFxTests.RifleFire-
                  ProducesAFlashAndATracer - the documented C# army)
     PlayMode     238: 214 pass, 11 red, 13 skipped (the documented eleven by
                  name; one test more than the 237 on record, and it passes)
-    protocol 463, blwp-node 422, core 91 - not touched by this letter
+    protocol 463, arena-node 422, core 91 - not touched by this letter
     WebGL build  Succeeded, 20 MB, 0 errors; the framework carries the fix
 DEPLOYED 57f9e6c7: index 6b82a757, client 5b31d4b3, core 4a337755, loader
 d5fd7455, framework ee46d84f, wasm 541bba77, data 9f246918 - all seven served
@@ -29688,7 +29688,7 @@ Screens 2026-09-10-1422-seats-after-{,watcher-}p{1,2}.png: each tab shows only
 its own truck - no extra red trucks where the before frames had three and two
 to three; chips "2 players in this round".
 
-SUITES: blwp-client 189 -> 196 (six page tests for the rule plus one through a
+SUITES: arena-client 189 -> 196 (six page tests for the rule plus one through a
 real daemon's subscribe burst; on the old rule the six fail, four on the rule
 and two on the missing counter). PlayMode 239: 215 pass, 11 red, 13 skipped -
 GhostFieldTests.ARetiredSeatLeavesNoTruckBehind passed, the eleven reds the
@@ -29776,7 +29776,7 @@ roll-out:
 
 Asked again with both tabs still driving: A / B store 9 / 9 and 10 / 10.
 
-blwp-client 198/198 (76 + 75 + 47). No C# changed, so Unity was not rerun: the
+arena-client 198/198 (76 + 75 + 47). No C# changed, so Unity was not rerun: the
 last counts stand - PlayMode 239 (215 pass, 11 documented red, 13 skipped),
 EditMode 193 (189 pass, 1 documented red, 3 skipped).
 
@@ -29867,9 +29867,9 @@ Two real daemons (`checkpoint-quorum.test.js`):
                                                       the same bytes; end 180/180,
                                                       checkpoints 2/2
 
-Rigs that sent checkpoints over no inputs now publish them first (blwp-node
+Rigs that sent checkpoints over no inputs now publish them first (arena-node
 equivocation and no-quorum; 12 client checkpoint tests; one backpressure test);
-no assertion weakened. blwp-node 422/422 (131 + 88 + 118 + 85), blwp-client
+no assertion weakened. arena-node 422/422 (131 + 88 + 118 + 85), arena-client
 200/200 (78 + 75 + 47). No C#.
 
 DEPLOYED: client 838aeff0 (bundle md5 4a45e5e6, served on the alias). The 2-of-2
@@ -29936,8 +29936,8 @@ to an operator with devtools, not to a player.
 
 The four earlier two-daemon tests pass unchanged and still mean the same: in
 them every wait ends in milliseconds, far inside 10 s. Tests after the tool
-change: client files using standUpRound 17/17, blwp-node seating 4/4; nothing
-red (last full runs: blwp-client 201/201, blwp-node 422/422).
+change: client files using standUpRound 17/17, arena-node seating 4/4; nothing
+red (last full runs: arena-client 201/201, arena-node 422/422).
 
 ### An honest next checkpoint no longer becomes a fork proof because a peer was down (cut (c) still OPEN on the funnel map)
 
@@ -29972,7 +29972,7 @@ the chain head - which A kept as a fork proof. It now pins that the link is not
 sent and A holds no proof. The other three earlier two-daemon tests pass
 unchanged, meaning the same.
 
-blwp-client 202/202 (two-daemon file 6 + 74 + 75 + 47); blwp-node 422/422
+arena-client 202/202 (two-daemon file 6 + 74 + 75 + 47); arena-node 422/422
 (131 + 88 + 118 + 85); all under timeout 180 with --test-timeout=120000.
 
 STILL TRUE, NOT THIS FIX: the status words reach `NetSession.Status` and no HUD
@@ -30008,8 +30008,8 @@ list arriving late -> inputs refused 1, closed 0, "error no such entry".
 
 Tests: checkpoint-quorum 7/7 - the new one pins the table above; two earlier
 expectations changed because they pinned the mix-up (test 5 asserted "inputs
-refused" for a stopped B; test 6 counted the down B in `refused`). blwp-client
-203/203 (7 + 74 + 75 + 47); blwp-node 422/422 (131 + 88 + 118 + 85).
+refused" for a stopped B; test 6 counted the down B in `refused`). arena-client
+203/203 (7 + 74 + 75 + 47); arena-node 422/422 (131 + 88 + 118 + 85).
 
 ### MEASURED, NOT FIXED: the client's own socket closing mid-batch counts as the node refusing, and two such drops end an honest run VOID
 
@@ -30060,7 +30060,7 @@ carries its own index, so a misplaced tick shows:
        (wrong batch head)                                      one resync, run goes on
 
 A node that keeps refusing still ends the run VOID by name (refused-batch.test.js,
-unchanged and green). blwp-client 206/206 (81 + 78 + 47); blwp-node 422/422
+unchanged and green). arena-client 206/206 (81 + 78 + 47); arena-node 422/422
 (131 + 88 + 118 + 85). No C#.
 
 ### A checkpoint that wakes after the player's own link went is skipped, not refused and not half-sent - (c) now BLOCKED only on the funnel map
@@ -30090,7 +30090,7 @@ THE FOLLOW-UP, answered:
   literal); markNow no longer reaches it.
 - The Daily does not show interrupted vs refused to a player: the words reach
   `NetSession.Status` and no HUD draws them - the later status-words item.
-- Red tests: none. blwp-client 207/207 (quorum 8 + 74 + 78 + 47), blwp-node
+- Red tests: none. arena-client 207/207 (quorum 8 + 74 + 78 + 47), arena-node
   422/422 (131 + 88 + 118 + 85); refused-batch.test.js unchanged and green.
 - Deployable: the live Daily bundle carries every one of these, and the page's
   reconnect is the same `onDrop -> reconnect` the measurements wire. But no
@@ -30222,8 +30222,8 @@ Now in the tree:
   the newest committee it holds a share of); a seat or key passed in wins.
 - `serve()`'s default pool curve carries `tweakPoint` - without it a daemon
   started with no curve of its own could not name the pool output at all.
-- `src/main.js` takes chain access from BLWP_BITCOIND_URL and
-  BLWP_BITCOIND_COOKIE, both or neither, and derives from that one RPC the
+- `src/main.js` takes chain access from ARENA_BITCOIND_URL and
+  ARENA_BITCOIND_COOKIE, both or neither, and derives from that one RPC the
   pool watch, send and look (`chainSpendOver`, in `pool-watch.js` - the one
   file the output guard allows to ask the chain), and each round's beacon
   (read before start for every queued payout round; others on first miss).
@@ -30251,7 +30251,7 @@ WHAT STOPS 1, 2 AND 4: a payout that must be signed again needs five of seven
 seats, and a main.js daemon knows no other seat's address. The store keeps
 only seated pubkeys (`seats` is round_id + pubkey); `peers` is a serve()
 option that main.js does not pass. H2 (6 of 6 other rows stay PAYOUT_QUEUED)
-is untouched and still listed by the harness. blwp-node 422/422.
+is untouched and still listed by the harness. arena-node 422/422.
 
 ### A main.js restart with only the two chain settings reaches the other seats and finishes every kill point
 
@@ -30276,8 +30276,8 @@ Found on the way, each measured: a census view stopping at the census height -
 "no block in this view is after this round's committee time"; one stopping at the
 beacon - "the block that seeds this round is 1 deep and this round asks for 6".
 
-Kill points, restarted as the real src/main.js with BLWP_BITCOIND_URL and
-BLWP_BITCOIND_COOKIE only; winner owed 980 sats:
+Kill points, restarted as the real src/main.js with ARENA_BITCOIND_URL and
+ARENA_BITCOIND_COOKIE only; winner owed 980 sats:
 
     point  what main.js did                                  spends winner row   bytes
     1      read 6 seat addresses off the census, 5 signed;   1      980    PAID  -
@@ -30291,7 +30291,7 @@ BLWP_BITCOIND_COOKIE only; winner owed 980 sats:
            no second payment (was: 1 of 5 seats)
 
 Still open, next on this item: H2 - 6 of 6 other seats stay PAYOUT_QUEUED while
-the chain carries the payment. blwp-node 422/422 (131 + 88 + 118 + 85).
+the chain carries the payment. arena-node 422/422 (131 + 88 + 118 + 85).
 
 ### H2: every seat's payout row now matches the chain at all four kill points
 
@@ -30319,7 +30319,7 @@ only, winner owed 980 sats, then every running seat's next sweep:
 
 Before (76ea398): 6 of 6 other seats stayed PAYOUT_QUEUED at every point, the
 returning asker included. Every harness run now ends "no problems".
-blwp-node 422/422 (131 + 88 + 118 + 85). No debt in this fixture (paid in full),
+arena-node 422/422 (131 + 88 + 118 + 85). No debt in this fixture (paid in full),
 so a debt surviving a restart is still unmeasured.
 
 ### A debt survives the kill: a table the spend cannot pay in full reads PAID_IN_PART on every seat at all four kill points
@@ -30355,7 +30355,7 @@ printed nothing for one.
 Pin: payout-pay "a node that died mid-send on a table it cannot pay in full
 comes back PAID_IN_PART, debt intact". Mutant reconcile-writes-PAID: killed
 (23/24). The paid-in-full fixture, re-run at points 1-4: 7 of 7 PAID, one spend,
-winner 980, "no problems" each time. blwp-node 423/423.
+winner 980, "no problems" each time. arena-node 423/423.
 
 FOUND, AND IT IS NOT THIS LETTER'S TO DECIDE: THE OWED SATS DO NOT STAY IN THE
 POOL. The spend on the chain is 900 sats in, 336 out to 1 output, fee 564 - the
@@ -30395,13 +30395,13 @@ middle of". At point 1 the next close makes the act once (CANCELLED, SETTLED);
 at both points bob gained exactly 98000 msat - one forfeited net stake, no
 second settle - and the delivered stake is CANCELLED at lnd. "no problems" x2.
 
-`src/main.js` reads BLWP_LNCLI, BLWP_LND_DIR, BLWP_LND_RPC, BLWP_LND_NETWORK,
+`src/main.js` reads ARENA_LNCLI, ARENA_LND_DIR, ARENA_LND_RPC, ARENA_LND_NETWORK,
 all four or none (exit 2, naming the missing ones), network testnet4 or regtest
 (`PLAYABLE`; mainnet exit 2), and hands `serve()` an `lndPort` over them. On
 testnet4 it also passes `lndPreflight`; on regtest none, because `askLnd` knows
 only testnet4 - so a regtest main.js reconciles and settles but opens no paying
 round (the gate fails closed). Pin: test/main-settings.test.js, 1/3 before and
-3/3 after. blwp-node 426/426.
+3/3 after. arena-node 426/426.
 
 Found on the way, the harness's own: a zmq port on bitcoind's p2p+1 stops
 bitcoind at start ("Unable to bind"), and a run that threw printed "no
@@ -30420,7 +30420,7 @@ settings are read; `src/main.js` calls it. Pinned by test/lnd-settings.test.js
 "Testnet4" refused; regtest gets a port and no preflight, testnet4 both) beside
 test/main-settings.test.js (3/3). The regtest harness re-run through the
 helper: point 1 HELD then SETTLED on the next close, point 2 SETTLED, 98000 msat
-moved once each, "no problems" x2. blwp-node 430/430.
+moved once each, "no problems" x2. arena-node 430/430.
 
 THE DAILY'S LAUNCHERS SHARE ONE LND BETWEEN TWO DAEMONS, and that is why they
 are not wired. `run-2of2.mjs` and `round-2of2.mjs` start A and B in one process
@@ -30462,7 +30462,7 @@ SETTLED and CANCELED are refused; "connection refused" still throws. Mutant
 After, on the real lnd, both kill points: the second daemon holds each entry
 "HELD, the same invoice" (2 of 2 entries), and the rest of the run is
 unchanged - point 1 HELD then SETTLED on the next close, point 2 SETTLED, bob
-gains exactly 98000 msat once, "no problems" x2. blwp-node 432/432.
+gains exactly 98000 msat once, "no problems" x2. arena-node 432/432.
 
 NOT YET: "seen by >=5" as a recorded STAKE_COMMITTED, and which daemon's hold
 settles or cancels - both daemons now hold the same invoice, and 23.4's five of
@@ -30502,14 +30502,14 @@ pays, "the stake is not paid and held: 0 of 98000 msat, Lightning says HELD";
 after, "HELD, 98000 msat" - lnd's ACCEPTED with amt_paid_msat. The rest of the
 run unchanged, "no problems".
 
-THE FALLOUT WAS FIXTURES, AND EVERY ONE WAS THE GATE: 26 blwp-node and 38
-blwp-client tests played a 100000-msat round with no stake paid, and each
+THE FALLOUT WAS FIXTURES, AND EVERY ONE WAS THE GATE: 26 arena-node and 38
+arena-client tests played a 100000-msat round with no stake paid, and each
 failure read one of the two refusals above (sampled per group; no ordering
 failure). They are about marks, ghosts and verdicts, not payment, so they
 state the premise the way they already state `assumeSeated`:
 `assumeStakeSeen(round, entry)` in test/seating.js, after the seat. custody-
 daemon's fake port now reports its holds paid in full. Nothing in src/ writes
-`stake_seen` except `seenPaid`. blwp-node 434/434, blwp-client 207/207.
+`stake_seen` except `seenPaid`. arena-node 434/434, arena-client 207/207.
 
 THE DAILY: its rounds are free (M3.3-19), and a free round passes without
 Lightning - unchanged. A PAYING round on a daemon with no Lightning can no
@@ -30520,14 +30520,14 @@ longer be played, which is the rule: nobody's stake is held there.
 The page pays from a button (`payTheStake`, WebGL index.html) and nothing
 stops the player driving first, so ticks go out before the HTLC is accepted.
 The client treats a refused batch as a disagreement: resync once, and a second
-refusal ends the run. Measured, test/stake-wait.test.js (blwp-client), before:
+refusal ends the run. Measured, test/stake-wait.test.js (arena-client), before:
 
     the node refuses this run's inputs at tick 0: error the stake is not paid
     and held: 0 of 98000 msat, Lightning says HELD - and it still refused after
     resyncing ...                                                -> VOID
 
 So 1c0f9ed made a late payer lose the round. Now the wait has a word of its
-own, `STAKE_NOT_SEEN` in protocol/src/constants.js, which the node puts on the
+own, `STAKE_NOT_SEEN` in arena-protocol/src/constants.js, which the node puts on the
 gate's refusal and the client matches - neither side reads the other's prose.
 On the client's own drain the ticks stay held and are sent again on the next
 drain (`stakeWaits`, not `refusals`, no resync); on a peer feed the feed stops
@@ -30537,7 +30537,7 @@ when the hold is full - that rule is unchanged.
 After: 60 ticks driven unpaid -> not ended, 0 refusals, 0 taken, 60 held; the
 port reports paid -> the next drain publishes all 60. refused-batch 4/4
 unchanged (a node that keeps refusing for a real reason still ends the run).
-blwp-node 434/434, blwp-client 208/208.
+arena-node 434/434, arena-client 208/208.
 
 ### A hold invoice is paid long before the wallet says so: the page asks the node
 
@@ -30570,7 +30570,7 @@ Now:
 After: the silent wallet -> ok, paid, held, 98000 msat, 1 request, 1 log
 entry. A silent wallet with a node that never sees it -> still "did not answer
 in 400 ms". The honest path (a wallet that answers with a preimage) unchanged.
-stake-committed 3/3. blwp-node 435/435, blwp-client 210/210. Bundle rebuilt,
+stake-committed 3/3. arena-node 435/435, arena-client 210/210. Bundle rebuilt,
 template copy equal.
 
 ### The hold's refund timelock is lnd's default, and sizing it is a ruling
@@ -30586,7 +30586,7 @@ real-lnd run (custody-lnd.mjs) measured it: the void HTLC expired at height
 offers `addholdinvoice --cltv_expiry_delta`, so passing a value is mechanical.
 
 WHY NOTHING WAS CHANGED. The old blocker - no tick rate - is gone:
-`protocol/src/tick.js` converts `blockTicks` to milliseconds exactly, and the
+`arena-protocol/src/tick.js` converts `blockTicks` to milliseconds exactly, and the
 contract carries `startTimeMs`, `entryCloseMs` and `objectionWindowMs`. But
 two things remain a choice, not a derivation:
   - a CLTV counts BLOCKS, which can come faster than ten minutes; the spec's
@@ -30598,7 +30598,7 @@ constant to invent in the money path. Named in PRIORITIES as a ruling.
 
 ### Where a loser's settled stake goes, and why the pool never receives it
 
-Measured: nothing in `blwp-node/src` or `protocol/src` sends a settled
+Measured: nothing in `arena-node/src` or `protocol/src` sends a settled
 stake anywhere after `settleinvoice`. A grep for sendcoins, sendtoaddress,
 sweep and any pool funding finds no code; every pool output ever spent
 (payout-regtest, payout-committee-regtest, settle-regtest,
@@ -30685,7 +30685,7 @@ copy of 70d35e1, so not this change. Given the fields, it dies inside the
 settle, the store says SETTLE_REQUESTED, the restart reconciles 1 -> SETTLED,
 2 settle calls in the whole log, 0 repeated.
 
-Suites, foreground: blwp-node 439/439, blwp-client 210/210. One run under load
+Suites, foreground: arena-node 439/439, arena-client 210/210. One run under load
 (lnd harness and both suites at once) failed bond-key "the internal key is the
 MuSig2 aggregate" once; alone it passed 13/13 twice, and the quiet rerun of the
 whole node suite is 439/439.
@@ -30696,7 +30696,7 @@ whole node suite is 439/439.
 the held HTLC." Each node already answered `GET /stake` from its own Lightning;
 the page asked only the node it joined, and printed something else.
 
-MEASURED FIRST (blwp-client test/stake-seen.test.js, red 0/4 on 6557aad):
+MEASURED FIRST (arena-client test/stake-seen.test.js, red 0/4 on 6557aad):
 - the seat-time line, for an invoice nobody has paid: " · stake held". The
   node's seat-time `x-hold` word is HELD for lnd's OPEN as well as ACCEPTED,
   and `stakeLine` printed it - page-stake.test.js pinned exactly that string.
@@ -30737,7 +30737,7 @@ wallet-nwc tests threw "this.stakeSeen is not a function". Renamed
 A round whose seats can never reach T keeps polling (every 2 s) until the run
 ends or the client closes - the line keeps saying how many did not answer.
 
-Suites, foreground: blwp-client 215/215 (+5), blwp-node 439/439 (no node
+Suites, foreground: arena-client 215/215 (+5), arena-node 439/439 (no node
 change). Bundle rebuilt, template copy equal; not deployed - the Daily's
 daemons are down.
 
@@ -30758,7 +30758,7 @@ chip's 500 ms paint starts it from the seat of a paying round (not committed,
 run not ended, client not closed), and the payment starts it whatever
 `payStake` answered. After: a watch started at 0 of 2 before anybody paid
 reaches 2 of 2, committed, when the stake lands; the second start is the same
-promise. blwp-client 217/217.
+promise. arena-client 217/217.
 
 CORE AGAINST THE OLD ENGINE, in numbers: 6557aad..1838c9d and this change touch
 0 files under packages/core, unity-proto/Assets/Scripts,
@@ -30783,7 +30783,7 @@ a closed client could count again.
 Now the rule is in the client: committed, ended or closed, `watchStake` hands
 back the last count and asks no node; the closed flag is no longer reset. After:
 0 more polls and 0 more requests after committed, 0 requests from a closed
-client. blwp-client 218/218.
+client. arena-client 218/218.
 
 Engines: 0 files changed under packages/core, unity-proto/Assets/Scripts,
 unity-proto/Assets/Plugins and test-vectors from 6557aad through this change;
@@ -30804,7 +30804,7 @@ Now: while the joined node issued no hold AND no seat has seen the stake, the
 line keeps " · stake dealt, unpaid (this node reaches no Lightning, so it
 holds no stakes)". Once any seat has seen it - a hold issued later and paid -
 the count is the line. A held seat's zero is still a count ("seen by 0 of 2").
-blwp-client 219/219.
+arena-client 219/219.
 
 Engines: 0 files changed under packages/core, unity-proto/Assets/Scripts,
 unity-proto/Assets/Plugins and test-vectors from 6557aad through this change;
@@ -30929,7 +30929,7 @@ to the round's GAME committee endpoints from the census advertisements
 (`endpointsOf`, now one rule shared with the payout path). The results gather
 asks the same peers. The client forwards nothing.
 
-Unit (blwp-node test/receipt-carry.test.js), red 3/3 before, green 3/3 after:
+Unit (arena-node test/receipt-carry.test.js), red 3/3 before, green 3/3 after:
 two daemons that each receipted the run themselves both replay it (FAILED) and
 hold 2 receipts per checkpoint; a down peer is named, a forged and a stranger's
 receipt add nothing and a daemon with only those stays at "the first has 1";
@@ -30970,14 +30970,14 @@ WHAT THE CLOSE THEN DID - found, NOT fixed here:
 Next code holes, by the same rule (census endpoints of the round being
 closed): the preimage opening and the payout table have no peers at a close;
 and finality should not depend on the order the committee closes in.
-blwp-node 443/443, blwp-client 219/219.
+arena-node 443/443, arena-client 219/219.
 
 ### M3.3-24 done: at a close the preimage ask and the payout gather reach the other settlement seat
 
 Code (2afa399): `Preimages.open` and `Payouts.gather` ask `peersOf(round)` - a
 list the operator gave wins, else `settlementPeers()`: the round's SETTLEMENT
 committee endpoints off the census, through the `endpointsOf` rule the receipt
-pull uses. blwp-node test/close-peers.test.js red 0/3 before, green 3/3 after:
+pull uses. arena-node test/close-peers.test.js red 0/3 before, green 3/3 after:
 the preimage ask reaches the census peer and its refusal carries that seat's
 own words; the payout gather asks the census peer; a given list still wins; a
 daemon seated from a census names the other seat for both.
@@ -31017,7 +31017,7 @@ FOUND, NOT FIXED:
 - [code] M3.3-25 unchanged: A (first to close) holds P2 "1 of 2 agree", so it
   neither settles, nor releases its share, nor reaches 2 of 2 on the table.
 
-blwp-node 446/446, blwp-client 219/219, core 91/91, golden vectors 8/8
+arena-node 446/446, arena-client 219/219, core 91/91, golden vectors 8/8
 (0 engine files touched).
 
 ### M3.3-25 measured first: the first daemon to close is short, whichever it is
@@ -31102,7 +31102,7 @@ before play - `Client.at` refused after 9 ms, "only 1 of 2 providers gave a
 chain", while each daemon's /headers, asked straight after, answered 200 with
 240 bytes (3 headers) in 2 ms. The AB rerun alone passed. The same refusal
 stopped an earlier run (rehearsal-3). It is the client's chain agreement, not
-the close. blwp-node 451/451, blwp-client 219/219, core 91/91, golden vectors
+the close. arena-node 451/451, arena-client 219/219, core 91/91, golden vectors
 8/8 (0 engine files touched).
 
 ### M3.3-26 (item 23 folded in) measured first: a stake opens at 5, whatever it was dealt at
@@ -31129,7 +31129,7 @@ posted at `postHandout`'s default 5 (on a 2-of-2).
 ### M3.3-26 after: one threshold, the round's - P2's stake SETTLES in both close orders
 
 The rule is one function, `receiptsNeeded(settlementSlots)`, moved to
-`protocol/src/threshold.js` (genesis.js re-exports it) so the client bundle
+`arena-protocol/src/threshold.js` (genesis.js re-exports it) so the client bundle
 carries it without genesis.js reaching into the engine. The door
 (`POST /handout`) refuses a handout whose `needed` is not the round's, by
 name; the settle's `open()` asks the round's number, never the handout's; the
@@ -31223,7 +31223,7 @@ pool DKG (`new Dkg`, default SHARES_NEEDED), `payWithCommittee` (default) and
 `enoughToSign` (hard 5) - so a 2-of-2 round's pool would ask 5 signers of 2
 (M3.3-28 on PRIORITIES). The rehearsal's payout stops earlier, at "this node
 reaches no chain". No core or Unity engine file was touched, so there is no
-engine comparison to redo. blwp-node 454/454, blwp-client 225/225, core
+engine comparison to redo. arena-node 454/454, arena-client 225/225, core
 91/91, golden vectors 8/8.
 
 ### M3.3-26, checked a third time: the slot count in the settle survived every test
@@ -31255,7 +31255,7 @@ beyond that baseline):
     stakeSeenNeeded (= settlementSlots)     "committed counts against the
                                             same rule" fails
 
-blwp-node 455/455, blwp-client 225/225, core 91/91, golden vectors 8/8 (no
+arena-node 455/455, arena-client 225/225, core 91/91, golden vectors 8/8 (no
 core or engine file touched this turn).
 
 ### M3.3-27: the Client.at flake is a dead kept-alive socket, reused after a held event loop
@@ -31307,7 +31307,7 @@ next read resets (3 of 3); a shorter keep-alive (2 s held 3 s, 1 s held 2.5 s)
 does not reset. Asked once more after the reset: 5 of 5 answered on the
 second attempt.
 
-THE FIX (`blwp-client/src/reread.js`): a READ whose connection was already
+THE FIX (`arena-client/src/reread.js`): a READ whose connection was already
 gone - ECONNRESET, EPIPE, UND_ERR_SOCKET - is asked once more, and only once.
 Never a write (a round, an entry, a handout posted twice is a second act),
 never a refused connection (a server that is down is down), never an HTTP
@@ -31342,7 +31342,7 @@ condition - the held probe did. Against a before rate of 3 in 8, two clean
 runs are weak, so the before batch is repeated as it was (four pairs side by
 side) before M3.3-27 is closed.
 
-blwp-node 455/455, blwp-client 230/230 (+5: stale-socket 2, reread 3), core
+arena-node 455/455, arena-client 230/230 (+5: stale-socket 2, reread 3), core
 91/91, golden vectors 8/8 (0 core or engine files touched).
 
 A DIFFERENT HOLE, SEEN IN THE SAME RUNS, NOT THIS LETTER: the second daemon to
@@ -31509,7 +31509,7 @@ first was final at its close, asked, and was the one refused; its watch was
 still running (its table was short) and asked again. In the six HELD runs the
 first closer's gather was answered before the second stored its result.
 
-blwp-node 457/457 (+2: second-closer 800 ms and same moment), blwp-client
+arena-node 457/457 (+2: second-closer 800 ms and same moment), arena-client
 230/230, core 91/91, golden vectors 8/8, 0 core or engine files touched.
 
 THE WATCH'S SECOND ASK, SEEN. The harness prints its stamps once both daemons
@@ -31622,7 +31622,7 @@ chain-only rule's window, 13 blocks here.
     m30-after-2-BA   the same, mirrored.
     VOID rows HELD after lnd cancelled and the chain passed the expiry: 0 of 4
     (2 runs x 2 daemons). Second closer HELD after lnd settled: 0 (M3.3-29
-    holds). blwp-node 459/459, blwp-client 230/230, core 91/91, vectors 8/8.
+    holds). arena-node 459/459, arena-client 230/230, core 91/91, vectors 8/8.
 
 M3.3-30 AFTER, four pairs AB and BA side by side (m30-after-2..5), the harness
 mining past the HTLC's expiry:
@@ -31647,7 +31647,7 @@ daemon would never have expired a row. New pin: a daemon given only a
 `poolCall` stub (answers getblockcount, refuses anything else) expires the
 hold once that height is past the expiry. Tree green; mutant red, "the
 launcher's own bitcoind is past the expiry and the row still says HELD".
-blwp-node 460/460, blwp-client 230/230, core 91/91, vectors 8/8.
+arena-node 460/460, arena-client 230/230, core 91/91, vectors 8/8.
 
 ### M3.3-30, the unpaid invoice: it runs out on the daemon's own clock and number
 
@@ -31683,7 +31683,7 @@ answer the node cannot get - left alone.
     paid-never-seen fail. Mutant, the clock alone with no paid check: only
     paid-never-seen fails - the guard is pinned.
 
-blwp-node 464/464 (+4), blwp-client 230/230, core 91/91, golden vectors 8/8,
+arena-node 464/464 (+4), arena-client 230/230, core 91/91, golden vectors 8/8,
 0 core or Unity files. The rehearsals follow.
 
 THE REHEARSAL WITH THE UNPAID EXPIRY IN (m30b-1..4, AB and BA side by side):
@@ -31722,7 +31722,7 @@ M3.3-30, checked again.
    while lnd still holds its HTLC until the timeout; the money goes back
    either way.
 
-blwp-node 465/465 (+1), blwp-client 230/230, core 91/91, vectors 8/8.
+arena-node 465/465 (+1), arena-client 230/230, core 91/91, vectors 8/8.
 
 ### M3.3-28: the pool's signing threshold follows the committee - measured first
 
@@ -31803,7 +31803,7 @@ disk, before it is sent: one spend in blocks, the one written before the
 kill, byte for byte; the winner 980 sats; every seat's row PAID, the killed
 seat's too.
 
-blwp-node 469/469 (+4), blwp-client 230/230, core 91/91, golden vectors 8/8,
+arena-node 469/469 (+4), arena-client 230/230, core 91/91, golden vectors 8/8,
 0 core or Unity files.
 
 settle-crash-regtest.mjs, the other kill points (seven seats, unchanged path):
@@ -31847,7 +31847,7 @@ the hold is issued after the entry is stored. Input batches stay gated on the
 stake being seen paid.
 
 M3.3-31 AFTER. `src/funding.js`: `operatorFunding({ named })` and
-`fundingFromEnv(env)` (BLWP_FUNDED_ROUNDS, BLWP_FUNDED_ROUNDS_FILE - read on
+`fundingFromEnv(env)` (ARENA_FUNDED_ROUNDS, ARENA_FUNDED_ROUNDS_FILE - read on
 every ask, so a round is named without a restart). `serve` hands `funded` what
 it may know of the node: whether it holds a round, whether it reaches
 Lightning. `main.js` passes `fundingFromEnv(process.env)`. `standUpRound`'s
@@ -31865,7 +31865,7 @@ lnd.
       no Lightning             an entry into a named paying round is not funded
       main.js, its own process (port 18902):
                                unnamed paying round 402; named via
-                               BLWP_FUNDED_ROUNDS - 201, and with no lnd its
+                               ARENA_FUNDED_ROUNDS - 201, and with no lnd its
                                entry 402
     Before (a stand-in that funds nothing, today's launcher): named round 402,
     no-Lightning branch wrong, main.js named round 402 - red. After: green.
@@ -31882,14 +31882,14 @@ lnd.
       -98000 msat, the operator +98000; VOID rows HELD 0, second closer
       HELD 0 - the same money as before.
 
-blwp-node 473/473 (+4), blwp-client 230/230, core 91/91, golden vectors 8/8,
+arena-node 473/473 (+4), arena-client 230/230, core 91/91, golden vectors 8/8,
 0 core or Unity files.
 
 M3.3-31 IS DONE.
 
 M3.3-31, checked again.
 
-1. THE FILE SETTING HAD NO TEST. BLWP_FUNDED_ROUNDS_FILE is in `main.js`'s
+1. THE FILE SETTING HAD NO TEST. ARENA_FUNDED_ROUNDS_FILE is in `main.js`'s
    header and in `fundingFromEnv`, and nothing exercised it - a mutant that
    ignored the file passed every test. New pin: a daemon on the file setting
    refuses a round the file does not name (402); the round's id is appended
@@ -31911,15 +31911,15 @@ M3.3-31, checked again.
    list of main.js's settings is its own header, which names both. Noted, not
    changed: package.json's `start` runs main.js with no port, so 8080.
 
-blwp-node 474/474 (+1), blwp-client 230/230, core 91/91, golden vectors 8/8.
+arena-node 474/474 (+1), arena-client 230/230, core 91/91, golden vectors 8/8.
 
 ### M3.3-32: settlement waits for the objection window - measured first
 
 THE RULE, 13A: a result the threshold signed is PROVISIONALLY_FINAL; "it
 becomes FINAL when the window closes without a valid objection", and "taking a
 player's stake requires a final result, an elapsed objection window, and a
-threshold quorum". `protocol/src/objection.js` had `finality()` and
-`objectionHolds()`; no file in `blwp-node/src` imported either. The daemon
+threshold quorum". `arena-protocol/src/objection.js` had `finality()` and
+`objectionHolds()`; no file in `arena-node/src` imported either. The daemon
 took the gather's quorum as final: `settleTheStakes` settled and cancelled,
 `mayRelease` handed out shares, the payout queued - all at the close.
 
@@ -32016,7 +32016,7 @@ OPEN, NOTED, NOT CHANGED:
     vectors.test.js does. No core file is in this diff; the golden vectors
     are vectors.test.js, 8 of 8.
 
-blwp-node 478/478 (+4), blwp-client 230/230, core 91/91, golden vectors 8/8,
+arena-node 478/478 (+4), arena-client 230/230, core 91/91, golden vectors 8/8,
 protocol 464/464, 0 core or Unity files.
 
 M3.3-32 IS DONE.
@@ -32060,7 +32060,7 @@ stake - a VOID run's hold stays HELD until the chain sweep moves it (M3.3-30),
 so its round is replayed on each start until then. One replay per entry, the
 same work as a close.
 
-blwp-node 479/479 (+1), blwp-client 230/230, core 91/91, golden vectors 8/8,
+arena-node 479/479 (+1), arena-client 230/230, core 91/91, golden vectors 8/8,
 0 core or Unity files.
 
 M3.3-33 IS DONE.
@@ -32102,7 +32102,7 @@ the pool that pays the winner, so the operator does not keep it and the
 winner is not paid from a side purse.
 
 THE CURRENT PATH, measured on b100863:
-  - blwp-node/src: no file sends anything TO the pool output. pool-watch.js,
+  - arena-node/src: no file sends anything TO the pool output. pool-watch.js,
     pool-signing.js and payout.js only find and spend it. Only harness tools
     fund one (payout-committee-regtest.mjs, labelled STAND-IN).
   - lnd-port.js: four acts - createHeld, look, settle, cancel. No payment and
@@ -32136,7 +32136,7 @@ WHY STEP 2 STOPS. Three facts, each measured above:
      shared lnd that is a payment only that lnd's operator can make - single
      custody again, and a winner's invoice the client cannot ask its wallet
      for today (it only pays).
-Nothing was built; blwp-node 479/479, blwp-client 230/230, protocol 464/464,
+Nothing was built; arena-node 479/479, arena-client 230/230, protocol 464/464,
 core 91/91 unchanged.
 
 CORRECTION to the recommendation given with this: paying the winner from the
@@ -32176,7 +32176,7 @@ node learnt when it saw the stake paid.
     Mutants: the door says what /stake says (HELD) - fails; the door names no
     window end - fails. Restored 6 of 6.
 
-blwp-node 480/480 (+1), blwp-client 230/230, protocol 464/464, core 91/91.
+arena-node 480/480 (+1), arena-client 230/230, protocol 464/464, core 91/91.
 `/stake` is left as it is: it answers the 23.1 step 5 question it was built
 for. The page does not read `/settlement` yet - that is the client half.
 
@@ -32227,7 +32227,7 @@ dist and the template are left as they were - 233 of 233 - and the new code
 is in src only. Shipping it is `node tools/bundle.js` and one copy into
 unity-proto/Assets/WebGLTemplates/BtcLogistics/: Daniel's OK.
 
-blwp-node 480/480, blwp-client 233/233 (+3), protocol 464/464, core 91/91.
+arena-node 480/480, arena-client 233/233 (+3), protocol 464/464, core 91/91.
 
 ### The winner paid by the daemons' own 2-of-2 pool, inside the real-lnd rehearsal
 
@@ -32282,7 +32282,7 @@ FOUND ON THE WAY, NEXT: in both runs the seat that did not send keeps its row
 PAYOUT_QUEUED - "1 of 2 seats committed to this spend" - after the chain
 carried the payment. The payout's twin of M3.3-29's second closer.
 
-blwp-node 481/481 (+1), blwp-client 233/233, protocol 464/464, core 91/91.
+arena-node 481/481 (+1), arena-client 233/233, protocol 464/464, core 91/91.
 
 ### The seat that did not send the payout ends PAID
 
@@ -32320,7 +32320,7 @@ REHEARSAL, real lnd and bitcoind, --pool --stake-msat=1000000:
     BA   both rows PAID, each "paid by 2 of 2 seats"; the winner's key 980
          sats - one payment, not two; the rest the same
 
-blwp-node 482/482 (+1), blwp-client 233/233, protocol 464/464, core 91/91.
+arena-node 482/482 (+1), arena-client 233/233, protocol 464/464, core 91/91.
 
 THE POOL IS A FEDERATION (Daniel 2026-09-11 09:26). Everything above pays the
 winner from a pool the harness funded; the settled stake still sits in bob's
@@ -32334,7 +32334,7 @@ gateway on bob's lnd; one measurement - does a stake paid into the federation
 stay held until the objection window closes, or settle at once into bob's
 channel. No custom module before the number.
 
-THE SETUP, `packages/blwp-node/tools/federation-hold-probe.sh` (reproducible;
+THE SETUP, `packages/arena-node/tools/federation-hold-probe.sh` (reproducible;
 `FEDIMINT_BIN` names the builds, nothing installed or put on PATH):
   - fedimintd, gatewayd, fedimint-cli, gateway-cli 0.12.0 from the GitHub
     release, in the scratch directory. They are self-extracting bundles that
@@ -32409,7 +32409,7 @@ A DECISION IT RAISES: 0.12.0 will not run a 2-guardian federation, so the
 rehearsal's two seats cannot be a Fedimint federation; 4 is the smallest
 (threshold 3).
 
-blwp-node 482/482, blwp-client 233/233, protocol 464/464, core 91/91 -
+arena-node 482/482, arena-client 233/233, protocol 464/464, core 91/91 -
 unchanged; no src file changed.
 
 ### The 4-guardian floor, and where 0.12.0 releases the secret
@@ -32558,7 +32558,7 @@ THE HOLD PATCH, VERSION 2 - THE SECRET IS NOT RELEASED UNTIL THE WINDOW HAS
 CLOSED. Funded-at is this guardian's own clock in ms when it processes the
 funding (a guardian that processes it late only holds longer); the endpoint
 releases at funded-at + FM_LNV2_INCOMING_HOLD_SECS x 1000 by the same clock.
-Release build 214 s. The patch: packages/blwp-node/tools/fedimint-lnv2-hold.patch
+Release build 214 s. The patch: packages/arena-node/tools/fedimint-lnv2-hold.patch
 (against the v0.12.0 tag; applies cleanly to a pristine tree).
     unpatched, hold 0     INSIDE WINDOW (pay +10 s): bob channel 1001000 -
                           settled; invoice SETTLED | payinvoice 4359 ms |
@@ -32580,9 +32580,9 @@ guardian - and not tied to the round's result being FINAL. A cancel for a
 DELIVERED stake is not in it either. Probe runs: 0 ports left bound each time.
 
 THE TEMPLATE COPY, now that the hold probe passes (Daniel's condition): the
-client bundle rebuilt (`tools/bundle.js`), dist/blwp-client.js (432807 bytes)
+client bundle rebuilt (`tools/bundle.js`), dist/arena-client.js (432807 bytes)
 copied into unity-proto/Assets/WebGLTemplates/BtcLogistics/; blwp-curve.js and
-blwp-core.js already equalled their dist and were not touched. blwp-client
+blwp-core.js already equalled their dist and were not touched. arena-client
 233/233, the two template-equals-dist tests included. Nothing deployed.
 
 ### Routing round stakes through the federation - what LNv2 decides first (source)
@@ -32689,7 +32689,7 @@ Daniel (2026-09-11): decision 1 is (a) invoice first; decision 2 is yes
 the invoice-first join, then measure that path, then the pool-side hold.
 
 STEP 1, THE JOIN:
-  blwp-node  lnd-port `decode({ request })` (`decodepayreq`, read only);
+  arena-node  lnd-port `decode({ request })` (`decodepayreq`, read only);
              serve option `federation` ({ receive({ amountMsat }) -> { request }});
              door `GET /federation-invoice?round=`: 409 without a federation or
              for a free round, 404 for an unknown round, 503 if the port cannot
@@ -32697,7 +32697,7 @@ STEP 1, THE JOIN:
              donation), reads hash and amount off the invoice itself, 502 for
              any other amount. `/entry` then takes the gateway's hold invoice
              up (lnd-port, unchanged) and `invoiceMatchesEntry` checks it.
-  blwp-client `federationStakeFor(round, { nodes })` in client.js - not
+  arena-client `federationStakeFor(round, { nodes })` in client.js - not
              join.js: session-pay.test.js pins client.js as the one file that
              quotes a player, and it failed ('join.js' named an invoice) until
              the ask moved. join.js is back to its committed text.
@@ -32745,11 +32745,11 @@ rehearsal's bitcoind, four guardians, the gateway - were stopped by hand):
   EXPIRED past the HTLC height while lnd says SETTLED (HELD AFTER LND SETTLED 6).
   Those are steps 3 and 4's to fix; they are reported, not hidden.
 
-THE SUITES (this tree, run two at a time): blwp-node 485/485 (+3),
-blwp-client 236/236 (+3), protocol 464/464, core 91/91; Unity not touched.
+THE SUITES (this tree, run two at a time): arena-node 485/485 (+3),
+arena-client 236/236 (+3), protocol 464/464, core 91/91; Unity not touched.
 In an earlier 4-way parallel run two timing tests fell (second-closer 800 ms;
 the restart test cancelled at 135 s) and passed alone (2/2, 6/6);
-blwp-client once failed headers.test.js "0 of 4 providers" and passed alone
+arena-client once failed headers.test.js "0 of 4 providers" and passed alone
 15/15 twice.
 
 ## 13:13 - NO CENTRAL PAYMENT ENDPOINT: where each Lightning act stands (2026-09-11)
@@ -32810,7 +32810,7 @@ node; the settle and the spend of settled money must not. (FEDERATION.md,
 a024628, predates this pick.) Measured before any FROST, threshold node or
 Fedimint work.
 
-  bash packages/blwp-node/tools/remote-signer-probe.sh     (149 s, run 2; run 1 145 s)
+  bash packages/arena-node/tools/remote-signer-probe.sh     (149 s, run 2; run 1 145 s)
 
 Own regtest, ports 30301-30312. Bob's lnd v0.21.3 is WATCH-ONLY
 (--remotesigner.enable, InitWallet watch_only over REST - `lncli
@@ -32846,8 +32846,8 @@ THE INVOICE'S SIGNATURE, read off the BOLT11 request: 65 bytes, recovery id 1,
 THE ANSWER: NO. The two-seat committee cannot answer this signer 2 of 2 for
 either act, as the tree stands:
   - invoice create needs an ECDSA signature by the node key. The committee's
-    only signature is FROST over BIP340 Schnorr (protocol/src/frost-bip340.js);
-    there is no ECDSA anywhere in blwp-node/src or protocol/src.
+    only signature is FROST over BIP340 Schnorr (arena-protocol/src/frost-bip340.js);
+    there is no ECDSA anywhere in arena-node/src or protocol/src.
   - settle needs a MuSig2 partial signature, in a session with alice, over the
     channel's funding key (family 0). The committee has no MuSig2, and a
     FROST group acting as one MuSig2 signer is not a procedure this tree or
@@ -32901,7 +32901,7 @@ shape: an off-chain payment for an on-chain HTLC under ONE hash - is a
 recognised procedure that asks nothing of lnd but a hold invoice and an
 on-chain send. MEASURED ONLY; not a pick, not wired into the daemons.
 
-  bash packages/blwp-node/tools/swap-into-pool-probe.sh [stake-sats=980] [claim-fee=200]
+  bash packages/arena-node/tools/swap-into-pool-probe.sh [stake-sats=980] [claim-fee=200]
   (tools/swap-into-pool.mjs builds the output, the claim and the refund)
 
 The swap output (P2TR, internal key BIP-341's NUMS point - NO key path):
@@ -32942,7 +32942,7 @@ WHAT THIS SHOWS:
 WHAT IT DOES NOT SHOW (the next pieces, if chosen):
   - A harness committee (trusted dealer) and a harness-supplied secret; the
     daemons' pool-signing signs only key-path payouts it rebuilt, and nothing
-    in blwp-node yet claims a script path or asks the operator to lock.
+    in arena-node yet claims a script path or asks the operator to lock.
   - The timing rule: the refund height must fall before alice's HTLC expires,
     with the committee's claim inside that gap - else a claim after the HTLC
     expiry takes bob's coins while alice is refunded. Not measured.
@@ -32957,7 +32957,7 @@ any src change, the hole the first run named - the operator's refund height
 must fall before alice's HTLC times out, with the committee's claim in
 between - measured in the same tool, one scenario per run:
 
-  bash packages/blwp-node/tools/swap-into-pool-probe.sh <normal|late-before-timeout|far-refund|bob-refunds>
+  bash packages/arena-node/tools/swap-into-pool-probe.sh <normal|late-before-timeout|far-refund|bob-refunds>
 
 Alice's hold invoice has the daemons' own shape (addholdinvoice --expiry 3600,
 no --cltv_expiry, as src/lnd-port.js). Four runs side by side (PORT_OFF 0/20/
@@ -33028,7 +33028,7 @@ guardians, threshold 3 (Fedimint's rule: total - (total-1)/3,
 fedimint-core peer_id.rs:82-102); one gateway on bob's lnd; own regtest.
 
   FEDIMINT_BIN=<released builds> LOCK_BIN=<blwp-stake-lock> \
-    bash packages/blwp-node/tools/stake-lock-step1.sh [2000000] [980000] [144]
+    bash packages/arena-node/tools/stake-lock-step1.sh [2000000] [980000] [144]
 
 WHY NEW CLIENT CODE: stock `lnv2 send` always names the gateway as claim_pk
 and fedimint-cli has no way to name another; the guardians insert an
@@ -33081,7 +33081,7 @@ released fedimintd 0.12.0, unpatched; four guardians, threshold 3; one
 gateway; the 2-of-2 committee key from step 1's key ceremony.
 
   FEDIMINT_BIN=<released builds> LOCK_BIN=<blwp-stake-lock> \
-    bash packages/blwp-node/tools/stake-lock-step2.sh
+    bash packages/arena-node/tools/stake-lock-step2.sh
 
 What the source says (lnv2-server lib.rs:466-497): a lock spent with
 Cancel(sig) needs a BIP-340 signature by claim_pk over the contract id, no
@@ -33141,7 +33141,7 @@ decided). Stock released fedimintd 0.12.0, unpatched; four guardians,
 threshold 3; one gateway; the 2-of-2 committee key.
 
   FEDIMINT_BIN=<released builds> LOCK_BIN=<blwp-stake-lock> \
-    bash packages/blwp-node/tools/stake-lock-step3.sh
+    bash packages/arena-node/tools/stake-lock-step3.sh
 
 What the source says:
   - one BIP-340 signature PER INPUT over the txid, each under that input's key;
@@ -33209,7 +33209,7 @@ expiry refused". Stock released fedimintd 0.12.0, unpatched; four
 guardians, threshold 3; one gateway; the 2-of-2 committee key.
 
   FEDIMINT_BIN=<released builds> LOCK_BIN=<blwp-stake-lock> \
-    bash packages/blwp-node/tools/stake-lock-step4.sh
+    bash packages/arena-node/tools/stake-lock-step4.sh
 
 What the source says: Refund passes only when the lock's expiration is at
 or below the guardians' block count, and the transaction must be signed by
@@ -33261,7 +33261,7 @@ four guardians; off by default, so steps 1-4 are unchanged); the 2-of-2
 committee key from this repo's ceremony.
 
   FEDIMINT_BIN=<released builds> LOCK_BIN=<blwp-stake-lock> \
-    bash packages/blwp-node/tools/stake-lock-step5.sh
+    bash packages/arena-node/tools/stake-lock-step5.sh
 
 Which gateway carried each payment is read off lnd, not assumed: the
 deposit invoice's payee node (bob = A, carol = B), and the lnd holding the
@@ -33312,7 +33312,7 @@ B (carol's lnd); the 2-of-2 committee key. Guardian 3 was stopped BEFORE any
 money moved, so all six paths ran on three of four. No refusals (steps 1-5).
 
   FEDIMINT_BIN=<released builds> LOCK_BIN=<blwp-stake-lock> \
-    bash packages/blwp-node/tools/stake-lock-step6.sh
+    bash packages/arena-node/tools/stake-lock-step6.sh
 
 MEASURED, one run (367 s, nothing left running):
   setup         230 s; threshold 3 of 4; gateways [30180, 30170]
@@ -33369,7 +33369,7 @@ FEDERATION.md step 7, the last of the 7. Stock released fedimintd 0.12.0,
 unpatched; four guardians, threshold 3; two gateways; the 2-of-2 committee.
 
   FEDIMINT_BIN=<released builds> LOCK_BIN=<blwp-stake-lock> \
-    bash packages/blwp-node/tools/stake-lock-step7.sh
+    bash packages/arena-node/tools/stake-lock-step7.sh
 
 A. NO MACAROON HAS A PATH (source, not a submission): a stake lock is removed
    only at process_input (lnv2-server lib.rs:468) - inside a Transaction whose
@@ -33465,7 +33465,7 @@ INVENTORY - what v4.6.2 touches, against what is actually coded here:
   federation_id,        named as future contract fields; not in the encoding.
   stake_expiry_blocks   Adding them is building. NOT TOUCHED.
 
-CHANGED: packages/protocol/src/constants.js - the §23.6 comment only.
+CHANGED: packages/arena-protocol/src/constants.js - the §23.6 comment only.
 MEASURED: protocol 464/464 before and after (comment-only, no behaviour).
 No JS behaviour changed; no Unity. The built custody is still the
 hold-invoice path; conforming it to the stake lock is the parked wiring
@@ -33482,7 +33482,7 @@ SPECIAL, 2nd pass (stale v4.6.2 quotes in code and tests)
   committee-seed.test.js       fallback beacon. FIXED - comments only; the
                                refusal of a foreign fallback (and of a drand
                                rule) stays and still passes.
-  blwp-client dist + WebGL     carried the old constants.js §23.6 comment.
+  arena-client dist + WebGL     carried the old constants.js §23.6 comment.
   template copy                Only that comment hunk applied to both (copies
                                still byte-equal). A full rebuild would also
                                bundle federationStakeFor from src - code, not
@@ -33499,7 +33499,7 @@ SPECIAL, 2nd pass (stale v4.6.2 quotes in code and tests)
                                every committee seed and world. NOT CHANGED -
                                needs Daniel's ruling (tag + height encoding).
 MEASURED: protocol 464/464 (default discovery; 463 over test/*.test.js),
-blwp-node committee-seed 7/7, blwp-client bundle 5/5. git diff: every
+arena-node committee-seed 7/7, arena-client bundle 5/5. git diff: every
 changed line is a comment. No daemons running; no Unity build.
 
 M3 STAKE-LOCK WIRING, SLICE 1: THE v4.6.2 CONTRACT FIELDS (Daniel: contract
@@ -33621,7 +33621,7 @@ M3 SLICE 6: THE CLAIM KEY'S ATTESTATION (§23.1 step 0, v4.6.2, F3), PROTOCOL
                    (a stranger, a repeat, another round's signature: nothing),
                    threshold = receiptsNeeded(settlementSlots) - never a
                    caller's number; verify injected (authority.js pattern).
-  test             in blwp-node/test (protocol carries no curve): real BIP-340
+  test             in arena-node/test (protocol carries no curve): real BIP-340
                    keys - 5 of 7 yes, 4 no; F3's own-key seat gets 1; 2 of 2.
   MEASURED: node claim-key 4/4 (node 491); protocol unchanged 472 then.
 
@@ -33670,7 +33670,7 @@ M3 SLICE 8: THE CREATOR CANNOT NAME HIS OWN FEDERATION (§5A.1, §23.6, v4.6.2, 
 
 M3 F2: THE REFUND/PAYOUT KEY FROM THE PLAYER'S SEED (§24, v4.6.2)
   MEASURED BEFORE   page: tabIdentity kept ONE random secret per tab in
-                    sessionStorage ('blwp.player') and its x-only point was
+                    sessionStorage ('arena.player') and its x-only point was
                     player_pubkey for EVERY round - no seed, no backup, no
                     fingerprint, locks linkable across rounds; entryFor took
                     any 32 bytes as playerPubkey and any dealt stake. Daemon:
@@ -33678,9 +33678,9 @@ M3 F2: THE REFUND/PAYOUT KEY FROM THE PLAYER'S SEED (§24, v4.6.2)
                     (refund_pk = 0x02||player_pubkey) exists, not called.
                     The payout already goes to player_pubkey on the path that
                     ships, so F2 bites now, not only under the stake lock.
-                    Not copied: §294's "browser key blwp.player.v1 + backup
+                    Not copied: §294's "browser key arena.player.v1 + backup
                     download" - the pre-v4.6.2 rule §24 replaced.
-  THE RULE          protocol/src/player-key.js (not packages/core: key
+  THE RULE          arena-protocol/src/player-key.js (not packages/core: key
                     derivation is not simulation). secret = first
                     taggedHash('BLWP/v1/PlayerKey', seed||round_id||c), c=0..,
                     with 0<s<n; player key = x-only(s.G); refund key =
@@ -33689,12 +33689,12 @@ M3 F2: THE REFUND/PAYOUT KEY FROM THE PLAYER'S SEED (§24, v4.6.2)
                     xxxx-xxxx-xxxx-xxxx. The spec names the parts, not the
                     hash - tagged hash chosen, like every derivation here.
   PAGE              join.js tabSeed (32-byte seed per tab,
-                    'blwp.player.seed') + playerFor(round, {seed, curve});
+                    'arena.player.seed') + playerFor(round, {seed, curve});
                     entryFor derives the key itself and REFUSES a given
                     playerPubkey that is not it, or a stake whose handout names
                     another key. index.html: #blwp-refund shows the
                     fingerprint, the round id and a <details> seed backup.
-  OUTSIDE THE PAGE  node packages/blwp-node/tools/refund-key.mjs <seed> <round>
+  OUTSIDE THE PAGE  node packages/arena-node/tools/refund-key.mjs <seed> <round>
                     prints player key, refund key, fingerprint (noble BIP-340,
                     the page's own pointX); test runs it as a subprocess and
                     compares with the page's seat.
@@ -33759,11 +33759,11 @@ M3 F2 REMAINDER, PIECE 1: A PAYING ROUND ON AN UNKNOWN CORE IS REFUSED (§5, F2 
   CORE HASH         core/tools/hash-core.js (sorted-source sha256), now also
                     an exported coreHashHex(); measured this tree:
                     f33aa45c61db5f531fbf1b714c2da0fde031d84a14d7a9fde665a142d4828f3c
-  LIST              protocol/src/known-cores.js GENERATED by
-                    protocol/tools/known-cores.js from coreHashHex (keeps prior
+  LIST              arena-protocol/src/known-cores.js GENERATED by
+                    arena-protocol/tools/known-cores.js from coreHashHex (keeps prior
                     entries, adds the current); known-core.test.js recomputes
                     the hash and fails until a changed core is listed.
-                    protocol/src/known-core.js coreIsKnownGood.
+                    arena-protocol/src/known-core.js coreIsKnownGood.
   REFUSAL           join.js stakeFor (always - dealing a stake is paying) and
                     entryFor (roundPays only). No override, no flag, no query
                     parameter. Free rounds unchanged.
@@ -33786,23 +33786,23 @@ M3 F2 REMAINDER, PIECE 1: A PAYING ROUND ON AN UNKNOWN CORE IS REFUSED (§5, F2 
   dist. Noted, not F2: contractIsForThisBuild (network + config) has 0 callers.
 
 M3 F2 REMAINDER, PIECE 2: THE SERVED CLIENT CHECKED AGAINST A LIST OUTSIDE IT (§24, F2 clause 2)
-  LIST              blwp-client/known-good-clients.json, generated by
-                    blwp-client/tools/known-clients.js - outside the bundle it
+  LIST              arena-client/known-good-clients.json, generated by
+                    arena-client/tools/known-clients.js - outside the bundle it
                     pins (inside, it would change the hash it pins). Pinned from
                     the build outputs Unity copies byte for byte (no {{{ }}}
                     macros in them; template copies = build outputs, measured):
-                      blwp-client.js  a87ae8617e67625698b57361ebb20db898183cb0618d85416d4de22c7944892c
+                      arena-client.js  a87ae8617e67625698b57361ebb20db898183cb0618d85416d4de22c7944892c
                       blwp-curve.js   2492e155b859766f3502f09c7b4e8b16bbe841cde08aea5213b077f1a445c105
                       blwp-core.js    f4f71ab9773701f8a321fe40d98163d8b704ae22780b879165c27a846297c203
                     index.html NOT pinned: Unity writes it at build time; a
                     completed WebGL build pins it (later deploy pin, not this).
-  TOOL              node packages/blwp-node/tools/client-hash.mjs <URL | dir>:
+  TOOL              node packages/arena-node/tools/client-hash.mjs <URL | dir>:
                     per file match / MISMATCH / missing from the repo list,
                     index.html "not pinned"; exit 0 only if all pinned match.
   MEASURED          rebuilt bundle byte-identical to the committed one; tool on
                     the template dir: 3 match, index.html not pinned, exit 0.
                     Tool on the OLD WebGL build (unity-proto/build/webgl):
-                    blwp-client.js MISMATCH (a5c966b5..., pre-F2), curve and
+                    arena-client.js MISMATCH (a5c966b5..., pre-F2), curve and
                     core match, exit 1 - it catches a real stale page.
   TEST              client-hash.test.js: list = rebuilt bundle and template;
                     tool over HTTP on the served template: 3 match, not pinned,
@@ -33854,7 +33854,7 @@ M3, FEDERATION CONDITION: FROST AND DKG BIT-MATCHED VS ZCASH FOUNDATION frost-se
                     (Schnorr over A0); ours carries none. The vectors give no
                     PoK nonce, so it is verifiable, not reproducible. Not
                     added here - reported.
-  TEST              blwp-node/test/zf-frost-tr.test.js: pinned sha256; signing
+  TEST              arena-node/test/zf-frost-tr.test.js: pinned sha256; signing
                     byte for byte (+ BIP-340 verifies); DKG byte for byte.
   MUTANTS           1 TR_CONTEXT back to RFC's -> signing red (and the pin test,
                     which checks the context string). 2 poolShare ignores the
@@ -33864,7 +33864,7 @@ M3, FEDERATION CONDITION: FROST AND DKG BIT-MATCHED VS ZCASH FOUNDATION frost-se
   Noted, not this item: contractIsForThisBuild has 0 callers.
 
 M3, FROST/DKG SLICE STILL OPEN: MEASURED ROGUE-KEY ATTACK ON A 2-OF-2 DKG (no proof of knowledge)
-  TEST              blwp-node/test/dkg-rogue.test.js (records today's facts and
+  TEST              arena-node/test/dkg-rogue.test.js (records today's facts and
                     asserts them; flips to "refused" when the proof lands).
                     Construction: the dishonest seat takes the honest A0 it was
                     sent, publishes A0' = X - A0_honest for a key X it owns
@@ -33926,10 +33926,10 @@ M3, FROST/DKG SLICE: ROUND-1 PROOF OF KNOWLEDGE - THE ROGUE DKG DEAL IS REFUSED
                     attacker's, pool output spendable alone. AFTER: honest still
                     sends A0 first (window unchanged, now useless), rogue POST
                     409 "seat 2's proof of knowledge does not verify", finish()
-                    1 of 2, no key, no output. protocol/test/dkg.test.js: shape
+                    1 of 2, no key, no output. arena-protocol/test/dkg.test.js: shape
                     fixture carries a proof; its positive line is now "the proof
                     check needs a curve" (protocol has none) - the accepted case
-                    is in blwp-node/test/dkg.test.js with a curve. Honest 7-seat
+                    is in arena-node/test/dkg.test.js with a curve. Honest 7-seat
                     daemon DKG and 5-of-7 signing green.
   MUTANT            proofHolds returns ok -> both dkg-rogue tests red and every
                     fact back to the attack. Restored (cmp).
@@ -33940,7 +33940,7 @@ M3, FROST/DKG SLICE: ROUND-1 PROOF OF KNOWLEDGE - THE ROGUE DKG DEAL IS REFUSED
   proof required, that window no longer lets a seat choose the key.
 
 M3, FROST/DKG SLICE: AGREEMENT - EVERY SEAT MUST HAVE COMBINED THE SAME CONTRIBUTION SET
-  MEASURED BEFORE   blwp-node/test/dkg-equivocation.test.js, 5 of 7: six honest
+  MEASURED BEFORE   arena-node/test/dkg-equivocation.test.js, 5 of 7: six honest
                     daemons deal and exchange; the seventh seat (off-daemon)
                     deals TWO contributions, both with valid proofs of knowledge
                     and valid shares for every seat, posts one to honest seats
@@ -33998,7 +33998,7 @@ M3, FROST/DKG LETTER CLOSED (close review, HEAD 3011a6e)
                     node test-count drop when four suites run at once.
 
 M3, FROST/DKG REOPENED: MEASURED - ONE GARBAGE SIGNATURE SHARE ON A 5-OF-7 PAYOUT
-  TEST              blwp-node/test/pool-bad-share.test.js: seven daemons (the
+  TEST              arena-node/test/pool-bad-share.test.js: seven daemons (the
                     pool-committee setup), one queued payout; seat 2 - always
                     among the lowest five - answers /pool/share with a random
                     scalar. The fake chain rejects an invalid witness signature
@@ -34057,7 +34057,7 @@ M3, FROST/DKG: FIXED - THE COMMITTEE NAMES A BAD SHARE AND DOES NOT QUEUE AN INV
                     client 246/246. Unity not run.
 
 M3, P2 (PUBLICATION IS A CONDITION OF FINALITY, v4.6.2 §13A): MEASURED BEFORE
-  TEST              blwp-node/test/publication-finality.test.js; the contract
+  TEST              arena-node/test/publication-finality.test.js; the contract
                     names one relay that answers and logs every request. The
                     objection-window fixtures moved, unchanged, to
                     test/window-fixture.js (objection-window 6/6 still green).
@@ -34072,7 +34072,7 @@ M3, P2 (PUBLICATION IS A CONDITION OF FINALITY, v4.6.2 §13A): MEASURED BEFORE
                     transcript to themselves still reach FINAL and move money.
 
 M3, P2: FIXED - A RESULT IS FINAL ONLY ONCE ITS TRANSCRIPT IS POSTED WHERE ANYONE CAN REPLAY IT
-  CHANGE            protocol/src/posting.js: a seat's signed TranscriptPosting
+  CHANGE            arena-protocol/src/posting.js: a seat's signed TranscriptPosting
                     (round, player, transcript hash, seat; type 0x18) and
                     transcriptIsPublished - distinct SEATED settlement seats,
                     same round/player/hash, verified, against the round's own
@@ -34140,7 +34140,7 @@ M3, P2: FIXED - A RESULT IS FINAL ONLY ONCE ITS TRANSCRIPT IS POSTED WHERE ANYON
                     client 246/246. Unity not in scope (nothing it renders changed).
 
 M3, P2 FINDING (b): A PAYING ROUND NAMING NO PUBLICATION RELAY - MEASURED BEFORE
-  TEST              blwp-node/test/seat-relay.test.js: two daemons, a paying
+  TEST              arena-node/test/seat-relay.test.js: two daemons, a paying
                     round (100000 msat stakes, 3000 ms window) whose contract
                     names publication_relays [].
   FACTS             /round 201 on both; both players seated, quoted, paid and
@@ -34194,7 +34194,7 @@ M3, P2 FINDING (b): FIXED - A NODE THAT HOLDS STAKES TAKES NONE INTO A ROUND NAM
                     can land a tick later; B named none (null). It now waits
                     until every seat names a window end for every run, still a
                     second inside the window; its assertions are unchanged.
-  FOUND, NOT THIS   blwp-client wallet-nwc "a third key opened an envelope it
+  FOUND, NOT THIS   arena-client wallet-nwc "a third key opened an envelope it
                     was not sealed to" failed once in 1 of 5 lone runs: NIP-04
                     is AES-CBC with no MAC, so a stranger's key passes the
                     padding check about 1 in 256 and the assertion expects a
@@ -34207,7 +34207,7 @@ M3, NO-RELAY DOOR, THE OTHER TWO PATHS - MEASURED BEFORE
                     into a round from what is stored: /invoice (Custody.hold,
                     the only caller of createHeld besides /entry) and
                     /federation-invoice (federation.receive).
-  TEST              blwp-node/test/seat-relay.test.js, two MEASURED tests: a
+  TEST              arena-node/test/seat-relay.test.js, two MEASURED tests: a
                     paying round naming no relay and an entry kept in the store
                     as before the rule (round.open / round.enter, no hold yet).
   FACTS             /invoice: 200, 1 hold asked of Lightning, hold row HELD.
@@ -34249,7 +34249,7 @@ M3, 13A COMMITTEE RE-RUN OF A SUSPENDED RESULT - MEASURED BEFORE
                     outcome is authoritative; the contradicted signers are
                     slashed; if the re-run cannot reach 5-of-7, §13C applies
                     (after the result window - the parked contract field).
-  TEST              blwp-node/test/rerun.test.js: seven seats (the holder and
+  TEST              arena-node/test/rerun.test.js: seven seats (the holder and
                     six keys), five sign a result with the score rewritten, the
                     holder's own replay contradicts it, an objection is filed
                     inside an 800 ms window.
@@ -34313,14 +34313,14 @@ M3, SLASH PROOF AGAINST A CONTRADICTED SIGNER (REPLAY_CONTRADICTS) - MEASURED BE
                     proof (transcript + receipts + replay); step 2: it is
                     mechanically checkable. protocol slash.js has the proof and
                     slashHolds. Steps 3 and 5 are the arbitration set.
-  TEST              blwp-node/test/slash-filing.test.js on the re-run fixture
+  TEST              arena-node/test/slash-filing.test.js on the re-run fixture
                     (f522ad6): seven seats, five sign a rewritten score, the
                     holder's replay contradicts it, an objection holds, the
                     holder and four seats re-run.
   FACTS             the run is FINAL on the re-run; 5 seats signed the
                     contradicted result; slash proofs filed by the node: 0 (no
                     store); GET /slash-proofs: 404 (no door). No file in
-                    blwp-node/src calls encodeSlashProof or slashHolds.
+                    arena-node/src calls encodeSlashProof or slashHolds.
 
 M3, SLASH PROOF: THE NODE FILES REPLAY_CONTRADICTS AGAINST EVERY SEAT THE RE-RUN CONTRADICTED
   CHANGE            protocol slash.js: the published form of a proof -
@@ -34360,7 +34360,7 @@ M3, SLASH PROOF: THE NODE FILES REPLAY_CONTRADICTS AGAINST EVERY SEAT THE RE-RUN
 M3, NIP-04: A KEY THE ENVELOPE WAS NOT SEALED TO - MEASURED BEFORE
   LINE              PRIORITIES: "client wallet-nwc's 'a third key opened an
                     envelope' flakes about 1 in 256 (NIP-04 has no MAC)".
-  TEST              blwp-client/test/nip04-stranger.test.js: one envelope
+  TEST              arena-client/test/nip04-stranger.test.js: one envelope
                     ("pay_invoice") sealed between two fixed keys, opened with
                     4096 stranger keys; every key and the iv from sha256 of a
                     counter, so the count is exact and repeatable.
@@ -34375,7 +34375,7 @@ M3, NIP-04: A KEY THE ENVELOPE WAS NOT SEALED TO - MEASURED BEFORE
                     request (NIP-01) - it trusts the relay's authors filter.
 
 M3, NIP-04: FIXED - A KEY THE ENVELOPE WAS NOT SEALED TO OPENS NOTHING
-  CHANGE            blwp-client nwc.js nip04Decrypt decodes the plaintext
+  CHANGE            arena-client nwc.js nip04Decrypt decodes the plaintext
                     strictly (TextDecoder fatal): a NIP-04 message is text, so
                     bytes that are not UTF-8 are refused ("that answer is not
                     text, so it was not sealed to this key"), not replaced.
@@ -34396,7 +34396,7 @@ M3, NIP-04: FIXED - A KEY THE ENVELOPE WAS NOT SEALED TO OPENS NOTHING
 
 M3, NIP-04 ON THE PAGE: THE SHIPPED BUNDLE STILL HAS THE OLD DECRYPT - MEASURED
   WHY               967cf30 fixed src/nwc.js. The page runs
-                    blwp-client/dist/blwp-client.js (tools/bundle.js,
+                    arena-client/dist/arena-client.js (tools/bundle.js,
                     concatenated source) and the WebGL template ships a byte copy;
                     neither was rebuilt - the suites were run without the bundle
                     step, and the template/pin checks compare the two stale files.
@@ -34405,17 +34405,17 @@ M3, NIP-04 ON THE PAGE: THE SHIPPED BUNDLE STILL HAS THE OLD DECRYPT - MEASURED
                     the same 4096 deterministic stranger keys.
   FACTS             dist: 15 of 4096 opened; template: 15 of 4096 opened; both
                     sha256 a87ae8617e676256..., the hash pinned for
-                    blwp-client.js in known-good-clients.json - the known-good
+                    arena-client.js in known-good-clients.json - the known-good
                     list vouches for the flawed decrypt. client-hash.mjs on the
-                    template: blwp-client.js  match  a87ae8617e67625698b57361ebb20db898183cb0618d85416d4de22c7944892c|blwp-curve.js   match  2492e155b859766f3502f09c7b4e8b16bbe841cde08aea5213b077f1a445c105|blwp
+                    template: arena-client.js  match  a87ae8617e67625698b57361ebb20db898183cb0618d85416d4de22c7944892c|blwp-curve.js   match  2492e155b859766f3502f09c7b4e8b16bbe841cde08aea5213b077f1a445c105|blwp
 
 M3, NIP-04 ON THE PAGE: FIXED - THE PAGE SHIPS THE STRICT DECRYPT, AND A STALE BUNDLE IS NOW A RED TEST
-  CHANGE            dist/blwp-client.js rebuilt (tools/bundle.js) and copied
+  CHANGE            dist/arena-client.js rebuilt (tools/bundle.js) and copied
                     into the WebGL template; known-good-clients.json gains its
                     hash fe7dd77bc88d1f21... (known-clients.js; by its policy the
                     earlier a87ae861... stays listed - see RULE). The three
-                    bundlers take BLWP_BUNDLE_OUT, and blwp-client
-                    bundle-fresh.test.js builds blwp-client.js, blwp-curve.js and
+                    bundlers take ARENA_BUNDLE_OUT, and arena-client
+                    bundle-fresh.test.js builds arena-client.js, blwp-curve.js and
                     blwp-core.js from this tree and requires dist AND the template
                     to be those bytes.
   FACTS (after)     shipped bundle and template: 0 of 4096 strangers opened
@@ -34455,7 +34455,7 @@ M3, WHAT IS STILL MISSING TO "M3 IS DONE WHEN" - MEASURED INVENTORY (before choo
   MISSING, NOT PARKED (7)
     W1 page         the player's client funds and makes the stake lock (deposit
                     via a gateway, lock, redeem forfeit/refund, withdraw): 0 lock
-                    code in blwp-client/src; join.js:657-659 writes zero
+                    code in arena-client/src; join.js:657-659 writes zero
                     stake/fee lock outpoints and a zero claim-key ref.
     W2 seat sees    a seat reads the entry's lock from the federation and runs
                     lockMatchesEntry before STAKE_COMMITTED: 0 callers in node
@@ -34487,7 +34487,7 @@ M3, WHAT IS STILL MISSING TO "M3 IS DONE WHEN" - MEASURED INVENTORY (before choo
 M3 W2, A SEAT VERIFIES THE PLAYER'S STAKE LOCK (§23.1 step 5) - MEASURED BEFORE
   SLICE             W2 of the inventory (d7e0d4a): 1 of the 12 still missing,
                     1 of the 7 not parked.
-  TEST              blwp-node/test/seat-lock.test.js: one seat (no Lightning) of
+  TEST              arena-node/test/seat-lock.test.js: one seat (no Lightning) of
                     a paying FEDERATION round naming a federation and a relay;
                     a player's stake dealt, handed out and seated, the entry
                     naming its stake_lock_outpoint; a counting federation port
@@ -34503,7 +34503,7 @@ M3 W2, A SEAT VERIFIES THE PLAYER'S STAKE LOCK (§23.1 step 5) - MEASURED BEFORE
                     a real federation can be asked.
 
 M3 W2: FIXED - A SEAT VERIFIES THE PLAYER'S STAKE LOCK AND ONLY THEN COUNTS THE STAKE
-  CHANGE            blwp-node stake-lock-seat.js verifyStakeLock and POST
+  CHANGE            arena-node stake-lock-seat.js verifyStakeLock and POST
                     /lock?entry=: the player hands the seat the contract it
                     locked (JSON); the seat asks the federation port what it holds
                     at the entry's stake_lock_outpoint (contract id, blocks left,
@@ -34515,7 +34515,7 @@ M3 W2: FIXED - A SEAT VERIFIES THE PLAYER'S STAKE LOCK AND ONLY THEN COUNTS THE 
                     putStakeSeen - the record the play gate already reads. A round
                     naming no federation takes no lock. stake-lock-port.js: the
                     real port, running blwp-stake-lock (status, id); main.js takes
-                    BLWP_STAKE_LOCK_BIN + BLWP_FEDERATION_CLIENT_DIR, both or
+                    ARENA_STAKE_LOCK_BIN + ARENA_FEDERATION_CLIENT_DIR, both or
                     neither. blwp-stake-lock: --point for Point(stake_point)
                     (§23.1 step 4, F1; it built Hash only) and an id mode (no
                     client); rebuilt in the v0.12.0 workspace, 2m35s.
@@ -34560,7 +34560,7 @@ M3 W3, THE CLAIM KEY A LOCK MAY NAME (§23.1 step 0, F3) - MEASURED BEFORE
                     1 of the 7 not parked; before W1 because a lock must name an
                     attested claim_pk ("a client MUST refuse to lock to a key
                     without them").
-  TEST              blwp-client/test/claim-key-attest.test.js: a paying round
+  TEST              arena-client/test/claim-key-attest.test.js: a paying round
                     naming a federation, two seat daemons, each knowing the
                     committee's claim key.
   FACTS             GET /claim-key on a seat: 404 (no seat serves a signed
@@ -34569,12 +34569,12 @@ M3 W3, THE CLAIM KEY A LOCK MAY NAME (§23.1 step 0, F3) - MEASURED BEFORE
                     bytes; claimKeyIsAttested callers: node src 0, client src 0.
 
 M3 W3: FIXED - A LOCK CAN ONLY NAME A CLAIM KEY THE ROUND'S SEATS ATTESTED
-  CHANGE            blwp-node GET /claim-key?round=: a SEATED node signs
+  CHANGE            arena-node GET /claim-key?round=: a SEATED node signs
                     (round_id, claim_pk, its key) - protocol claim-key.js's
                     attestation, then a BIP-340 signature over its id - with
                     claim_pk from one lookup shared with /lock (claimKeyFor, else
                     the seat's DKG committee key); an unseated node 409, a seat
-                    with no key 409. blwp-client join.js attestedClaimKey asks every
+                    with no key 409. arena-client join.js attestedClaimKey asks every
                     node the page holds, groups the answers by key and counts them
                     with claimKeyIsAttested over the round's settlement seats at
                     its threshold; roundLocks = a paying round naming a federation;
@@ -34616,9 +34616,9 @@ M3 W1a, THE LOCK CLIENT - MEASURED BEFORE
   (1) OUTPOINTS     non-zero stake_lock_outpoint writers on the shipping path:
                     0 - the one client line, join.js:719, writes zeros.
   (2) WHO LOCKS     code of ours that asks a federation to lock: only
-                    blwp-node/tools/stake-lock (native, the rehearsal's); wasm
+                    arena-node/tools/stake-lock (native, the rehearsal's); wasm
                     crates of ours: 0.
-  (3) ZERO OUTPOINT blwp-node/test/lock-client.test.js: a seat of a paying
+  (3) ZERO OUTPOINT arena-node/test/lock-client.test.js: a seat of a paying
                     federation round, an entry naming zeros, a lock handed over -
                     POST /lock 409 "that entry names no stake lock outpoint",
                     stake not committed, /stake 409, federation asked 0.
@@ -34634,7 +34634,7 @@ M3 W1a, THE LOCK CLIENT - MEASURED BEFORE
                     seatedWithLock takes the entry's outpoint.
 
 M3 W1a: THE LOCK CLIENT BUILDS FOR WASM AND LOCKS - AFTER
-  CRATE             packages/blwp-client/lock-client (blwp-lock-client): the
+  CRATE             packages/arena-client/lock-client (blwp-lock-client): the
                     stock fedimint 0.12.0 client crates (client, mintv2, lnv2),
                     wasm-bindgen; LockClient join(invite) on an in-memory
                     database, receive(msat, gateway) + awaitReceive (Claimed),
@@ -34642,7 +34642,7 @@ M3 W1a: THE LOCK CLIENT BUILDS FOR WASM AND LOCKS - AFTER
                     OutgoingContract, payment_image Point(stake_point), funded by
                     the stock builder, then what the guardians stored at its
                     outpoint. Built in the v0.12.0 workspace (symlink + member).
-                    blwp-client/src/lock-result.js reads its answer into the
+                    arena-client/src/lock-result.js reads its answer into the
                     entry's outpoint and the seat's contract (not bundled: W1b).
   (4) TOOLCHAIN     into scratch: wasm32-unknown-unknown (2 s), wasm-bindgen-cli
                     0.2.106, the lockfile's (63 s); clang + llvm-ar unpacked from
@@ -34701,7 +34701,7 @@ M3 W1b: THE PAGE MAKES THE PLAYER'S STAKE LOCK
   SLICE             W1b (PRIORITIES): the joining page drives the W1a lock
                     client, so the entry it writes names a real stake-lock
                     outpoint the seats verify and commit.
-  HOW MEASURED      packages/blwp-client/tools/page-lock-regtest.sh: stock
+  HOW MEASURED      packages/arena-client/tools/page-lock-regtest.sh: stock
                     fedimintd 0.12.0 (4 guardians, 3 of 4, one gateway, regtest,
                     up in 136-142 s); per run the Daily's own 2-of-2 round
                     (standUpRound: bonded seats, census, published round) naming
@@ -34870,7 +34870,7 @@ M3 W5a: THE PLAYER'S REFUND AND WITHDRAW
                     lock expires, the player's key takes it back - from a later
                     session holding only the seed, then the ecash out over a
                     gateway the federation lists. Player side only; no forfeit.
-  HOW MEASURED      packages/blwp-node/tools/w5a-regtest.sh (foreground): stock
+  HOW MEASURED      packages/arena-node/tools/w5a-regtest.sh (foreground): stock
                     fedimintd 0.12.0, 4 guardians, one gateway, regtest; the
                     Daily's 2-of-2 round naming it, the seats making their own
                     claim key (nothing injected); two players, one even-y key
@@ -34909,7 +34909,7 @@ M3 W5a: THE PLAYER'S REFUND AND WITHDRAW
                     reads std::time - "time not implemented on this platform"
                     on wasm32-unknown-unknown. Stock 0.12's browser client has
                     no LNv2; the native client withdrew fine (rehearsal step 5).
-  THE PATCH         packages/blwp-client/lock-client/fedimint-lnv2-send-expiry.patch:
+  THE PATCH         packages/arena-client/lock-client/fedimint-lnv2-send-expiry.patch:
                     that one check, as invoice.would_expire(duration_since_epoch())
                     - fedimint's own clock (JS Date on wasm). The rest of send is
                     stock. Checked as tools/fedimint-lnv2-hold.patch is: patch -p1
@@ -34960,7 +34960,7 @@ M3 W5b, THE SEATS' FORFEIT AND THE PAGE'S REDEEM - MEASURED BEFORE
                     objectionWindowMs.
 
 M3 W5b PIECE 1: THE SEATS FORFEIT A QUALIFIER'S LOCK, AND ONLY A QUALIFIER'S
-  BUILT             blwp-node/src/forfeit.js: a seat rebuilds the forfeit's
+  BUILT             arena-node/src/forfeit.js: a seat rebuilds the forfeit's
                     message - the lock's contract id - from the lock IT verified
                     (the federation port hashes it), and signs only when its own
                     finality says FINAL (window closed) and its own result
@@ -35010,7 +35010,7 @@ M3 W5b PIECE 2: THE PAGE REDEEMS THE FORFEIT FROM THE SEED, AND W5b ON REGTEST
                     and lock secret -> the seats' findLock -> forfeitOf -> a fresh
                     tab wallet -> redeem). Pins: bundle 91014e2c.., glue
                     e59e1950.., wasm f61d4074...
-  HOW MEASURED      packages/blwp-node/tools/w5b-regtest.sh (foreground): stock
+  HOW MEASURED      packages/arena-node/tools/w5b-regtest.sh (foreground): stock
                     fedimintd 0.12.0, 4 guardians, one gateway, a FRESH regtest
                     federation; the Daily's 2-of-2 round naming it, the seats
                     making the claim key themselves (nothing injected), a 20 s
@@ -35116,7 +35116,7 @@ M3.3-34, THE LOBBY, FREE PLAY WITH NO MONEY, AND WHO A TAB IS (Daniel 07:45 / 07
                                     free open round (the next), and a fresh lobby
                                     shows it with Join
   FINAL RUN         built page with the guard and identity (e84e1757 bundle),
-                    packages/blwp-client/tools/lobby-regtest.sh, fresh regtest,
+                    packages/arena-client/tools/lobby-regtest.sh, fresh regtest,
                     no Lightning in the environment, two headless Chromes:
                     stood up        29 s; first round 85181b49.., stake 0, beacon 117
                     lobby tab 1     1 row, free, open, "closes in 2:55", Join; no
@@ -35655,11 +35655,11 @@ M3.3-34 DEPLOYED TO THE DAILY PAGE (2026-09-12) - AND WHY A PLAYER CANNOT USE IT
                     btc-logistics-core --branch main`. btc-logistics-war untouched;
                     not an M-freeze.
   BEFORE            btc-logistics-core.pages.dev: index 200, 32,991 bytes, no name
-                    exchange; blwp-client.js 411,800 bytes md5 01b13442 (the
+                    exchange; arena-client.js 411,800 bytes md5 01b13442 (the
                     2026-09-10 build, unity-proto/build/webgl).
   AFTER             deployment 1ad5a069.btc-logistics-core.pages.dev, and the alias
                     the same at once: index 200, 57,579 bytes, exchangeNames present;
-                    blwp-client.js 526,555 bytes md5 16e111fd = HEAD's dist (pinned
+                    arena-client.js 526,555 bytes md5 16e111fd = HEAD's dist (pinned
                     83485bfa... sha256); Build/*.wasm.unityweb served application/wasm.
                     Headless Chrome on the deployment: Unity loaded in 3.2 s, 0 page
                     exceptions, 0 failed requests; the page's generatedName of key
@@ -35685,7 +35685,7 @@ M3.3-34 DEPLOYED TO THE DAILY PAGE (2026-09-12) - AND WHY A PLAYER CANNOT USE IT
 M3.3-34 THE DAILY'S 2-OF-2 RUNS AGAIN, ON 18080/18081, WITH THE ROUND OPENER (2026-09-12)
   PORTS             measured with ss: 18080-18089 free on every address; 8080 is
                     signal-cli (127.0.0.1). Named pair 18080 (A) / 18081 (B) kept:
-                    the only other user of 1808x is blwp-client two-tabs.test.js,
+                    the only other user of 1808x is arena-client two-tabs.test.js,
                     on 127.0.0.1; the seats bind the tailnet address 100.74.66.98,
                     and the client suite run WITH the seats up passed two-tabs 5/5.
   LAUNCHER          tools/run-2of2.mjs is now the Daily's: standUpRound (bonded
@@ -35731,7 +35731,7 @@ M3.3-34 REMAINING HOST ACTION (root, operator): THE FUNNEL PATHS TO THE DAILY SE
                         sudo tailscale serve --bg --set-path /blwp-b http://100.74.66.98:18081
                     Gate: both identity URLs 200. Then restart run-2of2.mjs with
                     BLWP_WSS_18080=wss://beelink.tail1723e2.ts.net/blwp-a and
-                    BLWP_WSS_18081=wss://beelink.tail1723e2.ts.net/blwp-b if it runs
+                    ARENA_WSS_18081=wss://beelink.tail1723e2.ts.net/blwp-b if it runs
                     with any other public address, so its bonds and lobby link name
                     the funnel. Not a coding step; nothing in the game remaps it.
 
@@ -35767,7 +35767,7 @@ M3.3-34 THE DEPLOYED DAILY LOBBY LISTS A JOINABLE 2-OF-2 ROUND (no root; 2026-09
                                 0 errors
   LIMITS            the tunnel hosts are Cloudflare's quick-tunnel names: they change
                     when cloudflared restarts, and then the launcher must restart
-                    with the new BLWP_WSS_* so bonds and link match. Quick tunnels
+                    with the new ARENA_WSS_* so bonds and link match. Quick tunnels
                     carry no uptime promise. Tunnels, launcher and the Daily's
                     regtest bitcoind run detached (setsid), not as system services:
                     a reboot stops them. The durable route stays the funnel map.
@@ -35805,7 +35805,7 @@ M3.3-34 THE DAILY'S BARE ROOT SHOWS THE LIVE 2-OF-2 LOBBY (2026-09-12)
                               page's fetches to B
                     B back    (SIGUSR2) 2 of 2, Join; 0 errors
   LIMIT             the tunnel names change when cloudflared restarts; then the
-                    launcher is restarted with the new BLWP_WSS_* and its new
+                    launcher is restarted with the new ARENA_WSS_* and its new
                     daily.json deployed with the page. The durable route is still
                     the root funnel map (above).
   COUNTS            foreground, one file per node --test under timeout 180,
@@ -35945,7 +35945,7 @@ M3.3-34 THE DAILY'S SEATS CLOSE EACH ROUND AT ITS END - A LIVE WALK-AWAY IS FORF
                     already over. run-2of2.mjs turns it on for both seats.
   LIVE              launcher restarted 14:30:57Z (closed the 84 rounds already over
                     in its store at start); page 22333c33 with its new daily.json.
-                    tools/daily-close-look.mjs (blwp-client), headless Chrome on the
+                    tools/daily-close-look.mjs (arena-client), headless Chrome on the
                     bare root: P joined round 63d2c841 and drove (PLAY, AUTO, depart,
                     throttle, 160 s); W joined, was held by BOTH seats, and its tab
                     closed before any mark. Nobody sent `close`.
@@ -36082,7 +36082,7 @@ M3.3-34 THE DAILY'S CLOSE: RETRIES SURVIVE A RESTART AND OUTLAST THE WINDOW (202
                     HOLDING row for a signed run loads as SIGNED.
                     close-order.test.js's never-final test now asserts back-off
                     instead of a stop at the window - the ruling changed what it
-                    guards. run-2of2 BLWP_START_B_DOWN / round-2of2 bDownAtStart for
+                    guards. run-2of2 ARENA_START_B_DOWN / round-2of2 bDownAtStart for
                     the live restart look.
   IN-PROCESS AFTER  close-retry.test.js 3/3, receipt-carry.test.js 3/3 unchanged:
                     past the window (800 ms, cap 400 ms): HOLDING, attempts 5 in the
@@ -36210,7 +36210,7 @@ M3.3-34 THE 2-OF-2 SIGNED LOBBY LISTING, MEASURED ON THE LIVE DAILY PAGE (2026-0
                     not deployed" - the live look waited on the seats' public route
                     (the root funnel paths, still 502).
   ALREADY LIVE      no new deploy: btc-logistics-core.pages.dev serves the build of
-                    5836750 (abfbdc4 is its ancestor). /blwp-client.js 527752 B,
+                    5836750 (abfbdc4 is its ancestor). /arena-client.js 527752 B,
                     sha cee239e1 = HEAD's dist and template bundle; / (58582 B) =
                     the local webgl-lobby build and carries abfbdc4's page lines
                     (fetchLobby with the signature verify, rows from seatsAgree /
@@ -36252,7 +36252,7 @@ M3.3-34 LATE START AT THE CLOSE: FORFEIT 0, SIGNED BY BOTH SEATS, FINAL 2 OF 2 (
   BEFORE            first-mark.test.js / outage.test.js as they were: late at both
                     seats, and B down caught up late - FORFEIT recorded at the door
                     at both seats, results [], finality null (13/13 green on that).
-  CHANGE            blwp-node verify.js: #neverStarted no longer excludes a late
+  CHANGE            arena-node verify.js: #neverStarted no longer excludes a late
                     start (its only mark was refused, never receipted - it never
                     started); the hold rule no longer exempts it, so it waits while a
                     seat is unreachable like no mark. server.js: the retry filter and
@@ -36326,7 +36326,7 @@ M3.3-34 LATE START AT THE CLOSE - RECORDED DONE (2026-09-12)
                     both; one transcript per run, entryVoid false, nothing HOLDING;
                     public /results 2 signatures per run at each seat. Stake 0: no
                     lock, nothing refunded.
-  TESTS             blwp-node 570/570 across 98 files (1-48 278/278, 49-98
+  TESTS             arena-node 570/570 across 98 files (1-48 278/278, 49-98
                     292/292), per-file, foreground; no reds. Earlier in the step
                     protocol 501/501, client 286/286; EditMode, PlayMode not run.
   PARKED            the guard case's leftover - seat B holding an on-time first
@@ -36351,7 +36351,7 @@ M3.3-34 ONE SEAT REFUSED: §13C'S VOID AFTER THE RESULT WINDOW (2026-09-12)
                     excluded from the pool and from the payout table". §23.2:
                     VOID = do nothing. §14: VOID only from PROVISIONAL. Protocol
                     payout.js noQuorumOutcome / settlementAction already said so;
-                    nothing in blwp-node called it.
+                    nothing in arena-node called it.
   BEFORE            refused-probe (scratchpad, first-mark's lock-round fixture), B
                     up and refusing every mark of the run: A 1 receipt, the offer
                     to B "refused"; at the close both HOLDING - 3 attempts at 2 s,
@@ -36359,7 +36359,7 @@ M3.3-34 ONE SEAT REFUSED: §13C'S VOID AFTER THE RESULT WINDOW (2026-09-12)
                     2 committee members" / "no checkpoints for that entry"; no
                     result, finality null, no Void, forfeit 409 at both, lock
                     held: a hold for ever, nothing ever decided.
-  CHANGE            blwp-node only. store: refused_first_marks, no_quorum. round:
+  CHANGE            arena-node only. store: refused_first_marks, no_quorum. round:
                     putRefusedFirstMark (kept only for the player's own signed,
                     on-time first mark of an entry seated here, this seat holding
                     none), refusedFirstMark, putNoQuorum, noQuorum. server: the
@@ -36513,7 +36513,7 @@ M3.3-34 ONE SEAT REFUSED, THE DIRECT PATH: A FIRST MARK THAT REACHED ONLY THE SE
                     FORFEIT/0 at the close, FINAL 2 of 2, public /results 2 - the
                     seat's own refusal (§13C: the operator side's fault) turned
                     into the player's forfeit.
-  CHANGE            blwp-node only. round.onTimeFirstMark: one check of the
+  CHANGE            arena-node only. round.onTimeFirstMark: one check of the
                     player's own signed, on-time first mark of an entry seated here
                     (putRefusedFirstMark now uses it). server /play: a first mark
                     refused for the stake not seen is kept; GET /refused-first-mark
@@ -36544,7 +36544,7 @@ M3 ENTRY_VOID: TWO FIRST MARKS ARE THE PLAYER'S EQUIVOCATION, NOT AN OUTAGE (202
                     start; after the window ENTRY_VOID at A and B and the forfeit
                     door 200 at both - the lock handed back to the player at once,
                     a refund for the player's own split start.
-  CHANGE            blwp-node only. round.equivocation also pairs the first mark a
+  CHANGE            arena-node only. round.equivocation also pairs the first mark a
                     seat holds with a DIFFERENT late first mark it refused (one
                     parent, two chains: the proof provesEquivocation checks, and
                     /equivocation serves it). server decideOutage: no ENTRY_VOID
@@ -36665,7 +36665,7 @@ M3 ENTRY_VOID: TWO FIRST MARKS AFTER AN OUTAGE-VOID ARE FORFEIT, NO REFUND (2026
                     forfeitOf SIGNED, kept at both; B recorded ENTRY_VOID from A's
                     evidence. The player REDEEMED 975360 msat before expiry (block
                     314 of 464); the lock gone.
-  CHANGE            blwp-node. round.twoFirstMarks: a proof here, or a late first
+  CHANGE            arena-node. round.twoFirstMarks: a proof here, or a late first
                     mark kept for FORFEIT that is not the on-time mark voided or
                     held. forfeit.js: an ENTRY_VOID entry with two first marks (or a
                     no-quorum FORFEIT) is refused. verify #noQuorum: a Void with
@@ -36889,7 +36889,7 @@ M3.3-34: A SEAT THAT STAYS DOWN PAST THE HOLD'S EXPIRY NO LONGER HANDS BACK A TW
                     listed, not this measurement), namely whether the two-first-marks
                     stake comes back because no-quorum never lands: before, 98000 of
                     98000 msat back; after, 0.
-  CHANGE            blwp-node. round.provenTwoFirstMarks: two different first marks
+  CHANGE            arena-node. round.provenTwoFirstMarks: two different first marks
                     of the entry, both signed by its session key, checked from this
                     seat's own store. preimage mayRelease releases on that proof
                     (§13B: no quorum, no replay, no window); open() keeps each
@@ -36993,7 +36993,7 @@ M3.3-34 ON 5 OF 7: TWO FIRST MARKS FORFEIT AT EVERY SEAT, NO REFUND (2026-09-13,
                     change added in it was the 2 pulls on 404s, now gone. After: 2 of
                     2 runs of 49-102 clean. Not shown to be fixed: named, watched.
                     bundle-fresh failed once only when node --test ran from the repo
-                    root by mistake; from blwp-client 2/2.
+                    root by mistake; from arena-client 2/2.
   COUNTS            foreground, timeout 180, --test-timeout=120000: node 586/586 over
                     102 files (1-48 283/283; 49-102 303/303 twice; five-of-seven 3/3,
                     hold-two-first 2/2, first-mark 14/14); core 91/91; protocol
@@ -37644,8 +37644,8 @@ M3.2 ITEM 6e, MEASURED BEFORE ANY CHANGE (2026-09-13; scratch 6e-measure.mjs, no
                     fee-lock ruling. Donations: the player's own wallet pays each
                     recipient's LNURL at entry, never through the federation; default
                     0, a second confirmation above 5%.
-  ENTRY PATHS       donationMsat is 0 on every entry this repo writes: blwp-client
-                    join.js:784 (0n), page-lock.js:94 (0n), blwp-node preflight.js:83
+  ENTRY PATHS       donationMsat is 0 on every entry this repo writes: arena-client
+                    join.js:784 (0n), page-lock.js:94 (0n), arena-node preflight.js:83
                     and :96 (0n). splitDonation, donationAfterFailures, donatedMsat:
                     no caller outside donation.js; no LNURL is paid anywhere.
   MIXED ROUND       100000 msat stakes, fee 2000: A (900) donates 2000, B (800) and C
@@ -37750,7 +37750,7 @@ M3.2 ITEM 6e, COMMIT 1: 22A PICK A IN computePayoutTable (rulings 2026-09-13)
                     outcomes, 1660 with a pool, up to 3 paying ranks): the encoded
                     table byte-identical before and after, 2000 of 2000. Production
                     writes donationMsat 0, so every live table is one of these.
-  THE PAGE BUNDLE   carries payout.js, so it was rebuilt: dist/blwp-client.js and the
+  THE PAGE BUNDLE   carries payout.js, so it was rebuilt: dist/arena-client.js and the
                     WebGL template's copy (bundle-fresh: "all three fresh in dist and
                     the template"), known-good-clients.json gained the new client hash
                     ae35b979... - earlier hashes stay listed, so the live page's
@@ -37845,7 +37845,7 @@ M3.2 ITEM 6e, COMMIT 3a (THE SET AND THE SEATS), STOPPED BEFORE CODE ON THE SIGN
                     derivable (genesis-ids.js)". Wrong: the DERIVABLE keys there are the
                     arbitration set (taggedHash('BLWP/v1/TestArbitration', chain:i)).
                     The donation authority and recovery keys were generated by
-                    protocol/tools/make-genesis.mjs as Ed25519 and written to
+                    arena-protocol/tools/make-genesis.mjs as Ed25519 and written to
                     /mnt/bitcoin/blwp-genesis (mode 600, 2026-09-08).
   MEASURED          the four files there (regtest/testnet4 x authority/recovery, 48
                     bytes each) are Ed25519 PKCS#8, and each derives exactly the public
@@ -37855,7 +37855,7 @@ M3.2 ITEM 6e, COMMIT 3a (THE SET AND THE SEATS), STOPPED BEFORE CODE ON THE SIGN
                     ("signature by donation_authority_pubkey") names none; no node or
                     client source checks a DonationSet today (0 call sites outside
                     authority.js). The only test that signs sets for real
-                    (blwp-node donation-rotation.test.js) uses BIP-340 with keys of its
+                    (arena-node donation-rotation.test.js) uses BIP-340 with keys of its
                     own. Under BIP-340 nobody can sign for the regtest or testnet4
                     authority (they are Ed25519 keys); under Ed25519 the keys on disk
                     sign. Choosing BIP-340 means new genesis donation keys, which moves
@@ -37867,7 +37867,7 @@ M3.2 ITEM 6e, COMMIT 3a: A ROUND NAMES A SIGNED DONATION SET AND ITS SEATS SERVE
                     67 files named donationSetId b32(0xd0) - 11 launchers (the 2-of-2
                     among them) and 56 test fixtures - no set's id, so no round named a
                     set anybody could pay; no bech32 or LNURL decoding existed.
-  SIGNED ONCE       protocol/tools/sign-donation-set.mjs reads the Ed25519 donation
+  SIGNED ONCE       arena-protocol/tools/sign-donation-set.mjs reads the Ed25519 donation
                     authority keys make-genesis wrote (/mnt/bitcoin/blwp-genesis),
                     refuses one whose public key is not genesis's, signs one set per
                     test network (serial 1, valid from 0), checks its own signature and
@@ -38040,7 +38040,7 @@ M3.2 ITEM 6e: THE 56 PLACEHOLDER FIXTURES NAME THE REAL SIGNED DONATION SET (202
                     helpers), client 17, launchers 0.
   CODE              each names idOfDonationSet(TEST_DONATION_SET_REGTEST.recipients), the
                     signed regtest set (7b128a1b..., 6667/3333 bps) production launchers
-                    name, imported from protocol/src/test-donation-sets.js. No assertion
+                    name, imported from arena-protocol/src/test-donation-sets.js. No assertion
                     touched except the one below.
   AFTER             grep 'donationSetId: b32(0xd0)': node 39 -> 0, client 17 -> 0, 56 -> 0.
   ONE FIXTURE RED, CAUSE MEASURED, NOT LOOSENED  committee-seed.test.js "two beacons
@@ -38075,7 +38075,7 @@ M3.2 ITEM 6e: THE LEFTOVER PLACEHOLDER SET IDS NAME THE REAL SIGNED SET (2026-09
                     hash in reach (beacon.test.js, the committee seed) is computed from
                     roundId b32(6), not a contract's id, so it could not move.
   AFTER             node 0, client 0, protocol 2 - the two below, held.
-  HELD FOR A RULING - A FORK  protocol/test/vectors.test.js and protocol/test/engine-check.js
+  HELD FOR A RULING - A FORK  arena-protocol/test/vectors.test.js and arena-protocol/test/engine-check.js
                     build the ONE golden contract that test-vectors/protocol/contracts.json
                     pins (encoding hex and round_id; the entry vector hashes that
                     round_id), written by tools/make-vectors.js; engine-check.js prints
@@ -38116,7 +38116,7 @@ M3.2 ITEM 6e: IS AMOUNTS FINISHED? NOT ON THE PLAYER'S SCREEN (2026-09-13; read 
                     Client, not the page on a screen): 1334 SETTLED, 666 NO_ROUTE (ruled
                     kept); 5% donor 3334 + 1666 SETTLED.
   HOLES, EACH MEASURED
-    1 NOT DEPLOYED  btc-logistics-core serves blwp-client.js sha256 cee239e1..., 0
+    1 NOT DEPLOYED  btc-logistics-core serves arena-client.js sha256 cee239e1..., 0
                     occurrences of payDonation; HEAD's bundle is f332e13e.... The last core
                     deploy (943407de) predates the donation prompt (8a0a981). On the live
                     page a 2% donor is never asked.
@@ -38190,13 +38190,13 @@ M3.2 ITEM 6e, HOLE 2 CLOSED: A RELOAD DOES NOT PAY THE DONATION TWICE (2026-09-1
   SUITES            core 91/91, protocol 512/512, client 304/304 (+4, bundle fresh,
                     39f59133 added to known-good), node 613/613 (six chunks 101+93+128+
                     103+106+61; five-of-seven 21/21 last measured, not rerun: it imports
-                    nothing from blwp-client).
+                    nothing from arena-client).
   STILL OPEN        hole 3 (the result on screen), then deploy, then loopback - parked
                     behind this commit, not started.
 
 M3.2 ITEM 6e, HOLE 3 CLOSED: THE PAGE SHOWS EACH DONATION SHARE PAID, UNPAID OR OUTCOME UNKNOWN (2026-09-13)
   BEFORE (measured: the shipped paintWallet, pulled out of index.html and run on a stubbed
-                    DOM with dist/blwp-client.js as BLWPCLIENT, after real payDonation loads)
+                    DOM with dist/arena-client.js as BLWPCLIENT, after real payDonation loads)
                     the page kept { state, paidMsat, unpaid } on window and painted none of
                     it: 0 of 2 shares shown, donation text "" - in every case.
   CODE              donation-pay.js: donationPaidState(set, said) - one row per owed share
@@ -38221,7 +38221,7 @@ M3.2 ITEM 6e, HOLE 3 CLOSED: THE PAGE SHOWS EACH DONATION SHARE PAID, UNPAID OR 
                     unknown). Before any donation: ""; while paying: "paying …".
   SUITES            core 91/91, protocol 512/512, client 305/305 (+1; bundle 747a0f28 added
                     to known-good, template = dist), node 613/613 (six chunks 592;
-                    five-of-seven 21/21 last measured - imports nothing from blwp-client).
+                    five-of-seven 21/21 last measured - imports nothing from arena-client).
   NOT MEASURED      a real browser: whether the wallet panel and a line this long are
                     readable on a phone over the game. And the line appears once
                     payDonation has answered - on a reload that is after the new seat is
@@ -38239,7 +38239,7 @@ M3.2 ITEM 6e: THE DONATION PAYMENT IS LIVE ON THE DAILY PAGE, AND WHAT A PLAYER 
                     webgl-howto, BuildWebGL at 5eb64e3 - no Unity change since, so no
                     rebuild and build.txt untouched) + today's template page and bundles,
                     loader filled by fill-template.mjs, --check clean. wrangler uploaded 2
-                    of 28 files (index.html, blwp-client.js). Both URLs: blwp-client.js
+                    of 28 files (index.html, arena-client.js). Both URLs: arena-client.js
                     sha256 747a0f28... (on known-good), #blwp-donation in the page.
                     Bare page starts Unity: 8effcead 4 s, previous 001d3b67 3 s (headless).
   THE ROUND         donation-live-launch.mjs: a paid local round (stake 100000 msat, a
@@ -38347,7 +38347,7 @@ M3.2 ITEM 6e: THREE PLAYER-FACING HOLES FROM THE DAILY-PAGE CHECK, CLOSED AND ME
                     stake, 334 msat dropped); after a reload "nothing paid this session"
                     beside "1334 msat paid" - spendLog was page memory.
     CODE            nwc.js spendLog({ storage }) keeps the log in the tab (sessionStorage,
-                    blwp.spend.log), one entry per payment hash, each with its kind; payStake
+                    arena.spend.log), one entry per payment hash, each with its kind; payStake
                     records 'stake', payDonation 'donation'. spentLine: stakes-only logs read
                     exactly as before ("250 sat over 3 stakes in 2 rounds" untouched); with a
                     donation share the total is exact and the share is named.
@@ -38379,13 +38379,13 @@ M3.2 ITEM 6e: THREE PLAYER-FACING HOLES FROM THE DAILY-PAGE CHECK, CLOSED AND ME
                     line as before, shown 12 s after paying. Reload: re-seated 14 s, line 1
                     s later, identical; 0 prompts, 0 pay asks, 0 invoices.
   DEPLOYED          btc-logistics-core ce2be35c (alias serves it): webgl-howto's Unity
-                    output + this page + blwp-client.js 84ad83e6 (added to known-good);
+                    output + this page + arena-client.js 84ad83e6 (added to known-good);
                     2 of 28 files uploaded; daily.json unchanged; btc-logistics-war untouched.
                     Condition as before: Chrome 151 headless with localNetworkAccess and
                     loopbackNetwork granted to the live origin.
   SUITES            core 91/91, protocol 512/512, client 307/307 (+2), node 592/592 (six
                     chunks; five-of-seven 21/21 last measured - imports nothing from
-                    blwp-client). No assertion changed.
+                    arena-client). No assertion changed.
   NOTES, NOT THIS PASS
                     the why line after a reload still reads "no entry id to ask about:
                     setRound was never called and none was given"; the round chip says
@@ -38825,7 +38825,7 @@ M3 W4: A LOSER'S STAKE LOCK IS CLAIMED INTO THE ROUND'S ONE SETTLEMENT (Daniel 2
                     contract per qualifier owed a share (winnings: row less its own net),
                     refund_pk = the key its own lock names; the guardians' LNv2 fees pro rata
                     to what each is owed; inputs by outpoint, payouts by key, nonce from the
-                    round id. blwp-node settlement.js - from the seat's own record, each
+                    round id. arena-node settlement.js - from the seat's own record, each
                     loser's P opened by the share conversation and checked against its lock's
                     point, the txid rebuilt by the stock client, FROST-signed with the peers
                     (/settle-commit, /settle-share, /settle-signature), intent on disk before
@@ -38970,7 +38970,7 @@ M3 W4 PICK (b): FEE LOCKS ARE ONLY CREATED WHEN THEY CAN PAY A SEAT (Daniel 2026
                     W4 at 100 sat unchanged: the loser's 98000 into the pool, the winner paid
                     96000; no fee lock claimed.
   FOUND ON THE WAY  the page bundle refused the gate: "hex is declared at the top level of
-                    both protocol/src/fee.js and protocol/src/payout-spend.js" - one scope for
+                    both arena-protocol/src/fee.js and arena-protocol/src/payout-spend.js" - one scope for
                     every module; payout-spend's private helper is now hexOf.
   SUITES            protocol 528/528 (+4), client 318/318 (+2; bundle 368d1781 and the new lock
                     client 0f7dbbd5 / 91b4e496 added to known-good), node 621/621 (six chunks
@@ -39530,7 +39530,7 @@ M3 W4 6d: NOTHING SPENT BEFORE THE PLAYER WITHDRAWS (2026-09-14, ef88b4d; tests,
                               tab 0; a third tab: both "no longer in the federation", final
                     index.html static check: no interval function calls a spending function; the one
                     collectAndWithdraw call is inside BLWP_WITHDRAW.
-                    blwp-client 328/328 (page-lock 23/23). wallet-nwc's paint test now drives BLWP_OWED
+                    arena-client 328/328 (page-lock 23/23). wallet-nwc's paint test now drives BLWP_OWED
                     (the collected-payout paint it asserted is gone from the page).
   RESIDUAL (named)  a pasted invoice larger than the withdrawable after fees fails AFTER the collect -
                     the money is then in the tab and the page says "withdraw it before you close the
@@ -39553,7 +39553,7 @@ M3 W4 6d: THE PASTED INVOICE, AND THE LIVE DRIVER ON WHAT THE PAGE LOOKS AT (202
   MEASURED (sim)    pasted for 1958000, no rule: federation 0 contracts, tab 1958000, "the withdraw
                     ended Failure"; ruled: federation 2 contracts, tab 0, wallet asked lockStatus +
                     withdrawableMsat only; already in the tab: 1958000 refused unmoved (1957000
-                    payable), 1957000 paid, tab 0. blwp-client 328/328, page-lock 23/23.
+                    payable), 1957000 paid, tab 0. arena-client 328/328, page-lock 23/23.
   CONSEQUENCE       a player with no connected wallet can no longer take the federation's money out by
                     pasting an invoice; it stays in the federation under their key. A Lightning address
                     (LNURL-pay, asked for the exact sum after the collect) would give them a way - not
@@ -39604,7 +39604,7 @@ M3 W4 6d: THE LIVE DRIVER CLOSES THE WINNER'S TAB, AND THE FEDERATION STILL HOLD
                     in the tab's sessionStorage (lockStoreFor), which a new tab does not have. During the
                     ~5 min Withdraw the screen showed no progress, no "do not close this tab", and the
                     withdraw line still read the paste refusal; the Withdraw button stayed offered.
-  TESTS             blwp-client 328/328 (page-lock 23/23; page-lock + wallet-nwc 48/48).
+  TESTS             arena-client 328/328 (page-lock 23/23; page-lock + wallet-nwc 48/48).
   NOT DONE          the Withdraw paying alice live (the driver's wait must cover ~330 s); the hole above;
                     run B (the refused player on screen); the Daily (0.0.1247) still has run 15's hole.
 
@@ -39655,7 +39655,7 @@ M3 W4 6d: LIVE, A REFUSED PLAYER'S OWN TAB WITHDRAWS ITS STAKE BACK BY ITS OWN K
                     come back (by the player's key) and was withdrawn; the line says it the wrong way.
   WORDING FIXED     lookOwed marks a lock gone after its expiry how: 'refund'; the line reads "Stake 980000
                     msat: no longer in the federation - back to your key after its expiry" (was "No stake
-                    back: no lock of yours is left ..."). blwp-client 330/330.
+                    back: no lock of yours is left ..."). arena-client 330/330.
 
 M3 W4 6d: A WITHDRAWAL CLAIMED ON ANOTHER DEVICE BY THE SEED (Option A, Daniel ~23:08, 2026-09-14)
   CASE              alice plays on her desktop, forgets to withdraw, and plays on her iPhone 2 h later.
@@ -39723,9 +39723,9 @@ M3 W4 6d: ON THE DAILY - build 0.0.1265 (2026-09-14 23:57)
                     (the output passed as -buildOutput: the project's default is a macOS path and the
                     first attempt failed "Permission denied" writing /Users/...). The built page carries
                     the template at HEAD (vault, one tab per round, newest open round, /settled scan, KEY
-                    import, the Withdraw guard, the lobby's withdraw block); its blwp-client.js is dist.
+                    import, the Withdraw guard, the lobby's withdraw block); its arena-client.js is dist.
   DEPLOY            ./deploy-core.sh -> https://14086895.btc-logistics-core.pages.dev
-  CHECKED           blwp-client.js md5 9f04a9d946f1b6a4111c6071bd43a5ef locally, at the unique URL and
+  CHECKED           arena-client.js md5 9f04a9d946f1b6a4111c6071bd43a5ef locally, at the unique URL and
                     at btc-logistics-core.pages.dev; both index.html name 0.0.1265.
   GATES MET         (Daniel 23:34) Unity compile, EditMode at HEAD 194/198 (the red CombatFx test was
                     red before), the live runs A4 / B1 / C2 of the page's Withdraw, a refused player's
@@ -39737,7 +39737,7 @@ M3 W6: A SEAT KILLED INSIDE A LOCK SETTLEMENT RECOVERS TO THE RIGHT STATE ON RES
   PREMISE CORRECTED identical settlement bytes sent again are ACCEPTED (stake-lock-step3.sh c1), so a
                     resubmit of the same txid is not the failure. The failure is a restart that cannot
                     rebuild the signed bytes.
-  TEST              blwp-node/test/lock-settlement.test.js, "W6 ...": two seats on store files, each
+  TEST              arena-node/test/lock-settlement.test.js, "W6 ...": two seats on store files, each
                     reaching the federation through a port that dies with the seat - after the guardians
                     answered (a) or before the settlement went (b); both seats started again on their
                     files and ports; (c) the plan rebuilt differs (the federation's fee rule 1000 -> 1500
@@ -39768,7 +39768,7 @@ M3 W6: A SEAT KILLED INSIDE A LOCK SETTLEMENT RECOVERS TO THE RIGHT STATE ON RES
                     in nor out - not settled here, not submitted again: 0 of 1 payout contract(s) ...",
                     0 new submissions.
   COUNTS            lock-settlement 15/15 (the six W6 cases in two runs of 3, the other 9 in one).
-  ALSO FOUND        blwp-node client-hash 2 red: the known-good list lacked the blwp-client.js the Daily
+  ALSO FOUND        arena-node client-hash 2 red: the known-good list lacked the arena-client.js the Daily
                     serves (it had not been re-pinned since c6fca4c, 09-12, through several bundle commits
                     of 09-14, mine among them); pinned with tools/known-clients.js - client-hash 3/3.
                     Two long node --test runs of one shell at once were SIGTERMed (143); the long runs now
@@ -39789,11 +39789,11 @@ M3 W6: A SEAT KILLED INSIDE A LOCK SETTLEMENT RECOVERS TO THE RIGHT STATE ON RES
                     payout contract(s) of 26a3b88918e9 stored, 3 of 3 claimed lock(s) gone".
                     THE REAL GUARDIANS ANSWER AS THE TEST PORT COPIES THEM: the claimed locks gone and the
                     payout contracts at (txid, i) stored, read with blwp-stake-lock --mode status.
-  SUITES            blwp-node 641/641: six chunks 605 (without lock-settlement and, for chunk 2's cap,
+  SUITES            arena-node 641/641: six chunks 605 (without lock-settlement and, for chunk 2's cap,
                     forfeit + frost-bip340 11/11 and five-of-seven run on their own), lock-settlement
                     15/15, five-of-seven 21/21 (11, then name groups of 3, 5 and 2 - the file runs past
                     175 s alone, as before this letter). Each long run in its own systemd unit.
-  CORRECTED (W7, 2026-09-15) blwp-node was 630/630, not 641: chunk 2's cap left no summary and its 111
+  CORRECTED (W7, 2026-09-15) arena-node was 630/630, not 641: chunk 2's cap left no summary and its 111
                     passes were counted by hand; 11 of them were five-of-seven tests that finished before
                     the cap, counted again in five-of-seven's own 21. The W6 commit (8209db6) says 641.
 
@@ -39816,7 +39816,7 @@ M3 W7: A PAYING FEDERATION ROUND NAMES ITS FEDERATION, AND THAT IS CHECKED (2026
                     advert writes guardianOf: [], so it would refuse every federation).
                     The eight hold-invoice launchers say THRESHOLD_LN (018f70e); contractFor's default and
                     84 test-fixture lines that named FEDERATION with a zero id say THRESHOLD_LN; the
-                    fixture lock port carries TEST_FEDERATION_ID (protocol/src/test-federation.js) and the
+                    fixture lock port carries TEST_FEDERATION_ID (arena-protocol/src/test-federation.js) and the
                     tests and five probes on it name it; lock-client-regtest and seat-lock-regtest name the
                     real federation by their invite (federationIdOf); the golden vector names the test
                     federation - its round and entry ids changed (348764bb -> 58540aef, f2290933 ->
@@ -39832,7 +39832,7 @@ M3 W7: A PAYING FEDERATION ROUND NAMES ITS FEDERATION, AND THAT IS CHECKED (2026
                     refuses the zero id, decode refuses a named round's bytes with the id zeroed, a free
                     and a THRESHOLD_LN round encode. Client (page-lock.test.js): lockStake refuses a named
                     round with expiry 12 or no relay and the lock client is never joined.
-  SUITES            protocol 532/532; blwp-client 332/332; blwp-node 632/632 - six chunks 596 (114, 113,
+  SUITES            protocol 532/532; arena-client 332/332; arena-node 632/632 - six chunks 596 (114, 113,
                     81, 133, 101, 54), lock-settlement 15/15 (3, 3, 9), five-of-seven 21/21 (3, 4, 5, 2, 5, 2).
   FOUND ON THE WAY  (mine) an import heuristic left TEST_FEDERATION_ID unimported in 5 files; a proximity
                     relabel turned one real lock round (wallet-nwc, .fill(0xfe)) into THRESHOLD_LN - a check
@@ -39862,7 +39862,7 @@ M3 W7: A PAYING FEDERATION ROUND NAMES ITS FEDERATION, AND THAT IS CHECKED (2026
                     FEDERATION and names no federation_id ...", the hold still HELD, 0 settled, 0 cancelled. A seat
                     on such a store stays up and moves no money. 1/1.
   ON THE DAILY      build 0.0.1271 (7ecca75, the page as of W7 - no page file changed since) deployed to
-                    btc-logistics-core (ff12ab8e); its blwp-client.js is dist, pinned (0e7b886e...), carries
+                    btc-logistics-core (ff12ab8e); its arena-client.js is dist, pinned (0e7b886e...), carries
                     federationIsNamed; the unique URL and the alias serve md5 8734a11b... and 0.0.1271.
   TOOLS             seat-lock-regtest.sh: my W7 edit put an apostrophe inside "\${WASM_PKG:?...}" - bash read on to
                     line 38 and died ("INVOICE: unbound variable") before the federation; fixed, run again live.
@@ -39959,7 +39959,7 @@ M3 - THE NODE FEE TO THE SITTING SEATS (Daniel 07:42) AND THE FEDERATION'S BASE 
                     without a fee lock 409, refunded 980000 by its own key after expiry, withdrew 970148 (961392).
                     driver exit 0.
   SUITES            protocol 530/530 (+1, the gate's seats test). client 332/332: 328 in the full run and the 4
-                    tests bound to the WebGL template's copy, 30/30 once the new bundle (dist blwp-client.js, md5
+                    tests bound to the WebGL template's copy, 30/30 once the new bundle (dist arena-client.js, md5
                     7c4981ff...) was copied into the template and pinned (known-good-clients.json). node 632/633 in
                     one run, 633/633 with the fix below: six chunks 597 (114, 113, 75, 133, 103, 59 - W7's 596 and the
                     legacy test since), lock-settlement 15/15 (3, 3, 9), five-of-seven 21/21 (3, 4, 5, 2, 5, 2); the
@@ -39976,7 +39976,7 @@ M3 - THE NODE FEE TO THE SITTING SEATS (Daniel 07:42) AND THE FEDERATION'S BASE 
 M3 - THE SEATS ARE A NETWORK, THE TRUCK GAME IS ONE CORE ON IT (Daniel 08:03): MEASURED BEFORE ANY CODE
   RULING            seats replay a named core (sim_wasm_hash); they embed no truck, cargo or map; a later game is a
                     new core + client on the same nodes and federation; structure M3 so swapping the core is easy.
-  THE DOOR          blwp-node imports the core in ONE file, replay.js: init, step, submitLoad, submitLiquidation,
+  THE DOOR          arena-node imports the core in ONE file, replay.js: init, step, submitLoad, submitLiquidation,
                     runScore (core/src/sim.js), hash and the truck's state words O_TRUCK, T_X, T_Z, T_HEADING, O_SCORE,
                     S_STATE, S_HEAT (state.js) for the ghost picture, RUN_LIVE, RUN_DELIVERED, BLOCK_TICKS (gate.js).
                     The contract names simCoreHash; nothing picks the core by it - there is one, imported.
@@ -40034,7 +40034,7 @@ M3 - THE SEATS ARE A NETWORK, THE TRUCK GAME IS ONE CORE ON IT (Daniel 08:03): M
                     field.
   R1 STEP A         (09:10-09:26) THE SEAM MOVES, NOTHING ELSE DOES. core/src/adapter.js - the truck as a seat
                     replays it, one object CORE: RUN_TICKS, INPUT_WORDS, start, eventsOf (loads then liquidations,
-                    each before its tick), step, stateHash, result (outcome/score/heat), picture. blwp-node/src/
+                    each before its tick), step, stateHash, result (outcome/score/heat), picture. arena-node/src/
                     cores.js - the seats' one door to cores: TRUCK = { hash (hash-core, computed), url, adapter,
                     configs: the genesis config }; coreForRound returns the truck for every round (step B picks by
                     the round's hashes). replay.js imports no core: replay and RunInProgress take the core and refuse
@@ -40237,7 +40237,7 @@ M3 - THE PAGE COUNTS THE GUARDIANS ITSELF (Daniel 07:33; the "own slice" above) 
                     140 s; the seat's tool 4 of 4 keys equal to fedimint-cli config's, threshold 3, id equal to
                     info's, fee rule 0/0; the page's wasm client joined by the invite in 546 ms and named the same
                     four keys per peer, threshold 3, the same id - "THE PAGE READS THE SAME GUARDIANS", exit 0.
-  G3 THE COUNT      blwp-client/src/guardians.js bondedGuardians: the keys and threshold from the page's own
+  G3 THE COUNT      arena-client/src/guardians.js bondedGuardians: the keys and threshold from the page's own
                     guardians(), the round's federation must be the one the page joined; each offered bond proven
                     into a block of a mined chain (acceptAdvert over every header), at least the round's
                     census_confirmations deep, its advertisement signed by the node it names (the page's verify);
@@ -40352,7 +40352,7 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     rpc 30401, p2p 30402, the flags of its last start; height 8041), blwp-daily-tunnel-a / -b
                     (cloudflared 2026.9.1 quick tunnels to 100.74.66.98:18080 / :18081 - new names
                     southwest-holding-discovered-prozac / interviews-package-constitute-webshots), blwp-daily-seats
-                    (tools/run-2of2.mjs from the worktree at e9fb4f6's parent, BLWP_WSS_* the new tunnels): "up",
+                    (tools/run-2of2.mjs from the worktree at e9fb4f6's parent, ARENA_WSS_* the new tunnels): "up",
                     2 of 2, and daily.json rewritten 12:59:02 naming exactly the two new seats.
   SEAT PAYLOADS     each seat's own /rounds through its tunnel, 200: one round e63cd4ffdd8eac2f, phase open,
                     stakeMsat 0, free, wallet none, seatedHere true, needed 2 of seats 2, 0 seated, signed by
@@ -40384,7 +40384,7 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     pushing 1,000,000 (the next try "channels cannot be created before the wallet is fully
                     synced" - waited for both synced). Active: committee inbound 976,530 sat (996,530 less a
                     20,000 reserve); the preflight asks 2 x 98,000 msat for a 100 sat round.
-  LAUNCHER (B)      run-2of2.mjs BLWP_PAID_STAKE_MSAT=100000 with the four BLWP_LND* settings: keepOpen keeps a free
+  LAUNCHER (B)      run-2of2.mjs ARENA_PAID_STAKE_MSAT=100000 with the four BLWP_LND* settings: keepOpen keeps a free
                     round and a THRESHOLD_LN round open (966d2fb; funding rule 7493b5c, launcher-funded 7/7).
                     First 6 tries refused by seat A "that node is not synced to its chain" - each try mines to
                     publish, and lnd's default block polling is about a minute; both lnds now poll every second
@@ -40527,7 +40527,7 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     (13:58:56Z); plain Daily 0 (14:00:59Z). A restart did not wipe or reset a round; it left the
                     rounds unjoinable until Cloudflare issued a tunnel name (about 5 min).
   PLAIN DAILY BACK  (Daniel 16:04: wrangler login succeeded - device grant, pages:write; deploy with it, do not
-                    wait for cloudflare.env) deploy-core.sh with BLWP_BUILD_DIR=/mnt/bitcoin/blwp-2of2/page, 16:05:31:
+                    wait for cloudflare.env) deploy-core.sh with ARENA_BUILD_DIR=/mnt/bitcoin/blwp-2of2/page, 16:05:31:
                     both seats /rounds 200, 4 rounds, 4 open -> https://52f0eaf3.btc-logistics-core.pages.dev. /daily.json
                     on it and on the alias: beast-specialized-protein-loved / interstate-incidence-youth-exceptional,
                     advert 6b2fff10, equal to the on-disk file (recorded as the keeper's last deploy). PLAIN DAILY, no
@@ -40820,7 +40820,7 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
   LISTED, NOT HERE  the signer nodes' own server texts can still say seat and are passed through verbatim on a refusal
                     (e.g. "404 this seat holds no signed donation set", "not seated on that round") - node code running on
                     the Daily's seats; changing it is a node release and a seat restart, not this client/page/Unity pass.
-                    Rough count (pattern scan, not exact): 88 non-comment lines in packages/blwp-node/src put "seat" into
+                    Rough count (pattern scan, not exact): 88 non-comment lines in packages/arena-node/src put "seat" into
                     a reason or error - e.g. verify.js "this seat holds the entry ENTRY_VOID", "this seat has already
                     signed this run", "N seat(s) that were up refused the player's on-time first mark".
   COUNTS            client 346/346. EditMode 206: 202 pass, 1 red (the listed CombatFxTests.RifleFire), 3 skipped -
@@ -40843,11 +40843,11 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     SIGNED (18:31Z): entry 3ee9373f DELIVERED score 559, 2 of 2 on both signer nodes (7291d680, de4dd194),
                     no no-quorum.
   CLOSE-OUT CHECK   (Daniel 19:5x "anything still player-visible?") The shipped client bundle
-                    (unity-proto/.../blwp-client.js 48286859) still carries 33 string literals with seat - the scanner
+                    (unity-proto/.../arena-client.js 48286859) still carries 33 string literals with seat - the scanner
                     of player-copy.test.js run over the bundle; blwp-core.js 0. They are bundled PROTOCOL and signer-node
-                    code, not packages/blwp-client/src (which the copy test scans and passes): protocol shares.js, dkg.js,
+                    code, not packages/arena-client/src (which the copy test scans and passes): protocol shares.js, dkg.js,
                     handout.js, lock-settlement.js, claim-key.js, posting.js, seal.js, rerun.js, entry-void.js,
-                    payout-spend.js; blwp-node payout.js, verify.js, payout-table.js, forfeit.js, pool-signing.js,
+                    payout-spend.js; arena-node payout.js, verify.js, payout-table.js, forfeit.js, pool-signing.js,
                     roster.js, settlement.js (attribution by a substring match; the exact count is the bundle's 33).
                     e.g. "N of M seats refused their share: ...", "seat N was handed a share that is not on the
                     polynomial ...", "this node is not one of the seats that handout was dealt to". Thrown on a failed
@@ -41400,7 +41400,7 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                             /rounds answered in 0.11-0.24 s, cf-cache DYNAMIC - not the node or the tunnel.
   THE FIX           CLOCK   with a core, Remaining = (9000 - S_ELAPSED) x 1092/65536 s: 0:00 is the MISSED tick.
                     WINDOW  standUpRound({ entryWindowMs }), 30 min by default; run-2of2.mjs names 150 000 ms
-                            (BLWP_ENTRY_WINDOW_MS overrides): "closes in" at most 3:30, a new id every run's length.
+                            (ARENA_ENTRY_WINDOW_MS overrides): "closes in" at most 3:30, a new id every run's length.
                     JOINED  distinct playerPubkey of the round's entries; playing = those with ticks.
                     REFRESH paint every 1000 ms, never two at once; the row's line made when Unity reads it.
   TESTS             lobby-players.test.js 2/2 (both fail on the old count: 3 entries of one key read 3 joined).
@@ -41474,11 +41474,11 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
 ## M3 GATEWAYS PARKED AS A PATCH (Daniel 2026-09-16 17:59 / 18:10: stop M3 for the tank playtest; no stash)
 
   PATCH             /home/daniel/.claude/projects/-tmp-btc-phase0/m3-park/m3-gateways-2026-09-16.patch (sha256 2f3c4ac1...)
-                    23 files, 347+ / 39-: blwp-client (dist, known-good list, 3 tests), blwp-node (10 tests + lock-fixture),
+                    23 files, 347+ / 39-: arena-client (dist, known-good list, 3 tests), arena-node (10 tests + lock-fixture),
                     protocol (contracts.js gateway rule, 3 tests, make-vectors), test-vectors/protocol/contracts.json,
-                    WebGL template blwp-client.js. `git apply --check` clean against 9a4eef7.
+                    WebGL template arena-client.js. `git apply --check` clean against 9a4eef7.
   UNTRACKED         /home/daniel/.claude/projects/-tmp-btc-phase0/m3-park/testnet4-gateways.js (sha256 6032aa91...), goes to
-                    packages/protocol/src/. A scratchpad copy of both sits beside it under /tmp (emptied at boot).
+                    packages/arena-protocol/src/. A scratchpad copy of both sits beside it under /tmp (emptied at boot).
   RESTORE           from that patch file only: `git apply <patch>` and copy the untracked file back.
   RESUME PLAN       (Daniel 17:59) one commit for the whole gateway change incl. round-2of2.mjs passing TESTNET4_GATEWAYS on
                     paying rounds; full protocol/client/node suites green in a clean worktree incl. five-of-seven g2-g4;
@@ -42032,7 +42032,7 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
 
   HOW               ChartHud logs every other player's dot and id-label box, GATE's label and line, the last-price tag, and what
                     each id shares area with; the probe (two headless Chromes on a local 2-of-2 with a 25-minute round,
-                    BLWP_ENTRY_WINDOW_MS=1500000, the Daily untouched) drives B from its bay to the gate along the window's top
+                    ARENA_ENTRY_WINDOW_MS=1500000, the Daily untouched) drives B from its bay to the gate along the window's top
                     while A stays parked, then A to the top edge; drawn pixels (not #131722 within 24) are counted in each overlap.
   BEFORE (0.0.1461, instrumented, layout unchanged)  id drawn right of its dot.
                     B at the gate above the window's top (x 103.1 m, z 80.4 m): id 865,501.5 61.7x20.3 on GATE's label 145.4 px²
@@ -42394,7 +42394,7 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (Daniel
                     13/13 exact; GATE > pinned at the right edge 13/13; chart top right above the buttons; whole dollars;
                     HIGH / LOW central. Spectate (second browser): the candle plateaus stand in the world; 0 chart lines.
   HOLES             while the model list is loading, the HIGH / LOW line shares its row with the "Models loaded" header;
-                    heat pin still the listed red; blwp-node suites not run on this core; full EditMode / PlayMode chain not
+                    heat pin still the listed red; arena-node suites not run on this core; full EditMode / PlayMode chain not
                     re-run after L1 / HIGH-LOW (filtered 28/28 and 19/19 only).
 
 HULL-DOWN HYSTERESIS (2026-09-17, 434fd6c; WAR_TACTICS.md §4.1)
@@ -42480,7 +42480,7 @@ and a debug label over the truck. Screen daniel-screens/ghosts-two-tabs-1915.jpg
                    - The view GROWS now (only blocks above the ones it holds), and every call on that path is bitcoind's
                      RPC, awaited. A tool that gave only a cli keeps the cli.
   CAUSE 2          the page sent a batch only on every sixth tick AND only with the last one answered, so a round trip
-                   over 100 ms cost a whole slot. Through a proxy holding each chunk (packages/blwp-client/tools/
+                   over 100 ms cost a whole slot. Through a proxy holding each chunk (packages/arena-client/tools/
                    measure-ghost-lag.mjs, a real daemon, the page's cadence):
                        delay each way    pictures/s   gap ms (median)   age on arrival ms (median)
                        0 ms              10.0 -> 10.0    100 -> 100        8 -> 10
@@ -42531,7 +42531,7 @@ GHOSTS LIVE AGAIN - DEPLOYED (2026-09-17 20:10; the 19:15 letter's close-out)
                     remaining 300-600 ms stalls are the close / finality path, not measured to a cause yet.
 
 THE GHOSTS' LEFTOVER LAG, MEASURED FROM OUTSIDE (2026-09-17 21:05; the 19:15 letter's remainder)
-  PROBE             packages/blwp-client/tools/measure-daily-ghost.mjs [--minutes=10]. Three streams at once, nothing in
+  PROBE             packages/arena-client/tools/measure-daily-ghost.mjs [--minutes=10]. Three streams at once, nothing in
                     the core and no src change: a stake-0 DRIVER seat in the Daily's free round recording a tick every
                     1/60 s and draining every sixth (the shipped BatchEvery and drain rule, truck parked); a second
                     stake-0 WATCHER seat subscribed, recording every picture of the driver with its arrival time (a
@@ -42561,7 +42561,7 @@ THE GHOSTS' LEFTOVER LAG, MEASURED FROM OUTSIDE (2026-09-17 21:05; the 19:15 let
 
 WHICH PHASE HOLDS THE SIGNER NODES' LOOP (2026-09-17 21:28; the 19:15 letter, step 1's target)
   INSTRUMENT       src/slow.js: every phase of the close, the payout, the custody settle and the ghost push is timed
-                   where the work is and logs its own name over BLWP_SLOW_MS (default 100 ms), with the SYNCHRONOUS
+                   where the work is and logs its own name over ARENA_SLOW_MS (default 100 ms), with the SYNCHRONOUS
                    stretch reported apart from the whole call - a socket waits behind the first, not the second. No rule
                    reads it. Live on the Daily from 21:17 (release 0e912b0).
   ON THE LOOP      the named phases, 21:17 to 21:28, both nodes in one process:
@@ -42763,7 +42763,7 @@ does not appear reliably - sometimes missing, then at the wrong position")
 THE PLAYER-FACING GATE THAT CLOSES 19:15 (2026-09-18 03:55)
   THE BUILD       btc-logistics-core.pages.dev serves 0.0.1525, built from 9f49bc0 (release fa5333a). The page's client
                   bundle is byte-identical to dist and its core to the template's, and no commit since that build
-                  touches packages/blwp-client/src, unity-proto/Assets, packages/core/src or packages/protocol/src -
+                  touches packages/arena-client/src, unity-proto/Assets, packages/core/src or packages/arena-protocol/src -
                   everything since is signer-node code (live on both nodes), the probe tool and documents. So the Daily
                   a player opens IS the current build, and a two-tab check on it is a check of HEAD's player half.
   WHAT DANIEL RUNS  two browsers side by side on that page, both joined to the same free round:
@@ -42876,7 +42876,7 @@ THE OVERLAY WAS DRAWING NOTHING IN A PLAYER, AND THE DOORS KEEP THE TRUCKS APART
                       twice (the drone's distance, the crater's ring) and written it down both times. `LabelEye()`
                       now takes the first enabled rendering camera, which is what the theatre does.
                       The text itself was never wrong: `<name>` then `<age>ms` and arrows, client ghost-label suite
-                      4/4, and the deployed blwp-client.js is byte-identical to dist and to the built one.
+                      4/4, and the deployed arena-client.js is byte-identical to dist and to the built one.
   THE DOORS           from the chase camera in the view a player drives in - 11 m behind the truck, fov 59:
                         doors framed                3 of 24   (the player's own and the two beside it, +-6.8 m)
                         doors with a label on screen 1 of 24   (the player's own)
@@ -42933,7 +42933,7 @@ THE HOLE-CHECK ON 19:15, AND THE ONE IT FOUND (2026-09-18 07:05)
                       the second round, the overlay in the player build, the rim marker, one label per truck, the
                       same clock at the rim as on the hull. Name any hole with a number.
   THE SEVEN, WITH     two tabs: 24 of 24 doors cue, 3 of 24 in the lens, wire p50 22 ms, drawn pose 38 ms at land.
-  THEIR NUMBERS       two lines: client ghost-label suite 4/4, deployed blwp-client.js byte-identical to dist and to
+  THEIR NUMBERS       two lines: client ghost-label suite 4/4, deployed arena-client.js byte-identical to dist and to
                       the built one. Second round: first picture drawn 38-80 ms, eight rounds, 0 leftover poses, 0
                       retired for silence, 0 pictures of a round the pair had left. Overlay in the player: the world
                       Bootstrap builds has 1 camera and 0 tagged MainCamera, so Camera.main is null and LabelEye is
@@ -43185,7 +43185,7 @@ THE CHAIN IS REUSED ON PLAY AGAIN, AND WHAT STILL STOPS A SECOND ROUND HERE (202
 
 Daily 0.0.1613, MacBook headless Chrome over CDP, one seat joined from the lobby, every window started from a
 standstill and read off the PAGE'S OWN core (`unityInstance.Module.blwp.st.i32`, T_VX/T_VZ, heading in 1/65536 turns,
-O_SCORE+S_STATE for the run word). Tool: packages/blwp-client/tools/measure-desktop-pads.mjs.
+O_SCORE+S_STATE for the run word). Tool: packages/arena-client/tools/measure-desktop-pads.mjs.
 
   devicePixelRatio 1   nothing held 0.00 m/s | UP pad held with the mouse 10.86 m/s | keyboard W 13.55 m/s
   devicePixelRatio 2   nothing held 0.00 m/s | UP pad held with the mouse  6.36 m/s   (canvas 2560x1600)
@@ -43796,7 +43796,7 @@ Seeds 1-5 x 3600, 27 of 39 rows pass. None of these is silent:
                                                         same machinery, 1.9 points short
    8  O1  3.87 m (bar >= 6 m)                          mean push on objective lanes minus the rest; same machinery
    9  O4  not built                                    a CLIENT test (the page drawing objective markers), not this
-                                                        probe; depends on writing it in packages/blwp-client
+                                                        probe; depends on writing it in packages/arena-client
   10  B2  34 of 341 windows (bar 0)                    squad windows with no halted team and no mover; measured
                                                         INDEPENDENT of B3 (failing windows 60.6% out-of-band against
                                                         83.1% for passing ones); cause unmeasured
@@ -44094,7 +44094,7 @@ THE FIVE THIS TURN ASKED ABOUT, with their causes as already measured:
   O1   two rows, 6 and 11 of 12 seeds. Both are the §4.10 cadence measured end to end; samples are full now
        (45802-101522 pushed team-ticks at five minutes), so the empty denominator was a reporting fault only.
   O4   12 of 12, and not this probe's to answer: it asks whether the CLIENT draws the markers, and that test is not
-       written in packages/blwp-client. It is the only red on the table that no core change can turn green.
+       written in packages/arena-client. It is the only red on the table that no core change can turn green.
   B4   10 of 12 seeds. Measured independent of B3 (83.2% of missed follow windows out of band against 81.2% of
        followed ones) and inherits how often the push is asked at all - the same cadence as A11a/A11b.
 
@@ -44154,7 +44154,7 @@ wait too and is not one of the twelve. That leaves SEVEN ROWS AND 58 SEED-FAILUR
   row    share of Y   seeds        what it is, as already measured
   A11b   12 of 12  20.7%   13 of 13 short windows had NO give step at all - the SAME §4.10 cadence just listed, seen
                            through a 60 s window instead of a lane's rest
-  O4     12 of 12  20.7%   the CLIENT drawing objective markers; the test is not written in packages/blwp-client. The
+  O4     12 of 12  20.7%   the CLIENT drawing objective markers; the test is not written in packages/arena-client. The
                            only red on the table no core change can turn green, and the only one with no doctrine
                            question attached
   B2     12 of 12  20.7%   the halt half of §11.2, all 18 failures and none the movement half. Its one lever was
@@ -44186,7 +44186,7 @@ is both unblocked and unanswered.
 
 ### O4 measured: the page does not draw the core's objective markers (2026-09-19 10:3x)
 
-The test exists now - packages/blwp-client/test/objective-markers.test.js - and it asks the PAGE, not a stand-in: it
+The test exists now - packages/arena-client/test/objective-markers.test.js - and it asks the PAGE, not a stand-in: it
 reads the three markers out of the core the page is running (chart.js `chartView`, CH_OBJ, five words each: kind,
 point t, price, holder, on-screen) and then asks the HUD what it drew.
 
@@ -44236,7 +44236,7 @@ MEASURED WITHOUT DEPLOYING: the page was built (0.0.1659), served from this box 
 MacBook's browser, and the test was pointed at that. The Daily is untouched at 0.0.1617 because A9 is still red.
 
 Suites: EditMode ChartHudTests + ChartPlacementTests 13/13 with the draw in, errorCS 0; webgl build exit 0;
-blwp-client objective-markers 1/1. No second hole surfaced on these markers - none was unplaced, none collided with
+arena-client objective-markers 1/1. No second hole surfaced on these markers - none was unplaced, none collided with
 the chrome, and the holder's colour is the core's word, not a guess.
 
 ### A2's fidget row: the fix is one line, measured both ways, and HELD on a ruling (2026-09-19)
@@ -44892,7 +44892,7 @@ free round" - is an HTML overlay sitting on top of the canvas, and it covered th
 that is not the canvas is now hidden before the shot (tools/measure-cab-headline-clean.mjs). A HUD measured through
 the page's chrome is measuring the chrome.
 
-Probes kept: packages/blwp-client/tools/measure-cab-headline.mjs (drives out of the bay into the cab) and
+Probes kept: packages/arena-client/tools/measure-cab-headline.mjs (drives out of the bay into the cab) and
 measure-cab-headline-clean.mjs (hides the page chrome and captures the canvas alone).
 
 ### CORRECTION and completion of the cab headline item (2026-09-19)
@@ -44976,7 +44976,7 @@ assuming a slope.
 SO THE PROBE CLOSES: the road stays clear. Measured on flat ground and on the steepest climb this world offers, no
 driving surface reaches the headline, the smallest clearance being 20 rows under the drawn row. Nothing was restyled,
 no font rule, layout or assertion was touched, and the decision needed no font edit.
-Probe kept: packages/blwp-client/tools/measure-cab-climb.mjs.
+Probe kept: packages/arena-client/tools/measure-cab-climb.mjs.
 
 ### THE FIVE WAITS, RULED (2026-09-19, Daniel's delegation)
 
@@ -45365,7 +45365,7 @@ measured cause with a listed next probe. The seven reds left all have holders an
   O1 mean push    diagnosed - RIDGE's 16 m ceiling is 51.9% of the shortfall
   B4              diagnosed - the infantry's following is 2 of the 7 misses, the rest the push moving under the squad
   B2              closed as measured
-  O4              green in its own client suite (blwp-client objective-markers 1/1), printed red here on purpose
+  O4              green in its own client suite (arena-client objective-markers 1/1), printed red here on purpose
     because this probe cannot run a client test.
 So no red on this table blocks the deploy.
 
@@ -45375,7 +45375,7 @@ Run as the first act of M3, chunked because the settlement suites are heavy inte
 that talk to real daemons over localhost).
 
   protocol   533 / 533 after the core listing, 4 chunks (139, 122, 123, 149). Before it, 532 of 533.
-  blwp-node  chunk 1 (files 1-20)   125 / 125 after the client pin listing; 122 / 125 before it
+  arena-node  chunk 1 (files 1-20)   125 / 125 after the client pin listing; 122 / 125 before it
              files 21-26            41 / 41
              files 27-32            23 / 23
              files 33-36            34 tests, 33 pass, 1 FAIL - first-mark.test.js
@@ -45438,7 +45438,7 @@ final pass was interrupted (the script records it per file: "interrupted 0" on a
 real result and none is a killed run misread as a failure.
 
   protocol                533 / 533, four chunks
-  blwp-node files 1-20    125 / 125
+  arena-node files 1-20    125 / 125
              21-26         41 / 41
              27-32         23 / 23
              33-36         34 tests, 33 pass, 1 fail   first-mark
@@ -45477,7 +45477,7 @@ THE FIXTURE AND THE RUN. window-fixture.js's WINNER is not a stored input log: f
 `init(seedWordForEntry(entry, RANDOMNESS))` and 1320 steps of `wordsAt(t)`. The seed depends only on the round
 randomness, the player's key, the world secret and joinTick - all fixed - and `wordsAt` is a pure function of the
 tick, so the drive replays against the core alone, with no daemons, no HTTP and no settlement.
-Probe kept: packages/blwp-node/tools/measure-winner-drive.mjs (exit 0 while it delivers 367, 1 once it does not).
+Probe kept: packages/arena-node/tools/measure-winner-drive.mjs (exit 0 while it delivers 367, 1 once it does not).
 
 BOTH ENDS CONFIRMED BEFORE BISECTING, as required:
   HEAD (4168604)   WRECKED, score 0,   truck x -67.57 z 72.18, hp 0,     wrecked at tick 192
@@ -45739,7 +45739,7 @@ twice for an invoice nobody will pay.
 
 ## bundle-fresh on blwp-curve.js: the bundler writes its own cwd into the bundle (2026-09-21, ruled listed)
 
-    packages/blwp-client/dist/blwp-curve.js                        2492e155b859
+    packages/arena-client/dist/blwp-curve.js                        2492e155b859
     unity-proto/.../BtcLogistics/blwp-curve.js                     2492e155b859
     a fresh build of the same source                               c7d28f3bc222
 
@@ -45747,8 +45747,8 @@ twice for an invoice nobody will pay.
     code lines differing with `// ` lines stripped:    0
 
 The two shipped copies agree with each other and differ from a fresh build only in lines like
-`// src/page-curve.js` against `// packages/blwp-client/src/page-curve.js`: the bundler records the
-directory it was invoked from, and the committed copies were built from inside `packages/blwp-client`
+`// src/page-curve.js` against `// packages/arena-client/src/page-curve.js`: the bundler records the
+directory it was invoked from, and the committed copies were built from inside `packages/arena-client`
 while the test builds from the repo root. It is also why those two files show as modified in `git status`
 after anything rebuilds them.
 
@@ -45756,7 +45756,7 @@ RULED (Daniel 2026-09-21): leave it red and listed. It is not a money-path hole 
 the winnings letter. Do not commit the two generated files to green a comment - they are on the
 do-not-commit list - and do not rewrite the bundler on this letter; repo-relative paths are a later item.
 
-The other two scripts a page serves that decide money ARE the build of this source: `blwp-client.js` was
+The other two scripts a page serves that decide money ARE the build of this source: `arena-client.js` was
 genuinely stale (missing `lightningAddressEndpoint`), was rebuilt into dist and the template, and is
 deployed - btc-logistics-core serves 2cd63d767dd3. `blwp-core.js` was already fresh.
 
@@ -45846,7 +45846,7 @@ SUITES AT THIS HEAD (node --test, timeout 180, --test-timeout=120000, chunked):
 THE BUNDLE RED IS MINE, NOT THIS LETTER'S, AND IT IS NEW. Re-pinning the network ids at `9a78ecf1` moved a
 constant that is bundled into the page's money script, and the shipped bundle was never rebuilt:
 
-    blwp-client.js  shipped 2cd63d767dd3  fresh bcd3be5110bd  STALE
+    arena-client.js  shipped 2cd63d767dd3  fresh bcd3be5110bd  STALE
     blwp-curve.js   shipped c7d28f3bc222  fresh c7d28f3bc222  FRESH   (the cwd-comment red is GONE)
     blwp-core.js    shipped 37e77ce20ec8  fresh 37e77ce20ec8  FRESH
     old regtest id b07c4a09 in the shipped bundle: 1
@@ -45904,7 +45904,7 @@ A round committee has a known victim set and a guardian federation does not; the
 guardian-bond rule only and does not reach §5A.3.
 
 SUITES. Spec-only, so none are owed. The two reds on the branch were re-confirmed and both belong to
-other letters: bundle-fresh 1/2 (`blwp-client.js` still carries the pre-re-pin network id; depends on the
+other letters: bundle-fresh 1/2 (`arena-client.js` still carries the pre-re-pin network id; depends on the
 live pin moving to HEAD) and ghost-live 10/11 (a loaded run draws identical to an unloaded one; depends on
 the core). No PlayMode or EditMode run is owed - no C# exists in this range.
 
@@ -45953,7 +45953,7 @@ WHAT IS MERELY WORK, ONCE A AND B ARE ANSWERED:
 
 ## The advertisement witness, field by field, and why no field cut reaches 80 (2026-09-21)
 
-`node packages/protocol/tools/advert-layout.mjs` - measured by encoding the prefix 1..n and diffing, not
+`node packages/arena-protocol/tools/advert-layout.mjs` - measured by encoding the prefix 1..n and diffing, not
 by reading the struct:
 
     field                             bytes  running  on-chain?
@@ -46037,7 +46037,7 @@ advertisement.
 
 SUITES: protocol census-scan + census-resolve + census-minimum + census-root + census-template 51/51;
 protocol tx + chain + bond-recognition + bond-script + bond-spend 47/47; protocol advert-witness 3/3 (new);
-blwp-node census-chainview + census-derive + census-realblocks + bond-key + bond-spend 45/45.
+arena-node census-chainview + census-derive + census-realblocks + bond-key + bond-spend 45/45.
 
 STILL OPEN, AND IT IS NOT POLICY: the bond cannot be broadcast on testnet4 because that wallet is
 encrypted - `sendtoaddress` answers error -13, "Please enter the wallet passphrase with walletpassphrase
@@ -46065,7 +46065,7 @@ Measured on the live regtest, so the Daily pays nothing for the change:
 
 At testnet4's measured 723.3 s a block, six confirmations is about 72 minutes per launcher start.
 
-SUITES: protocol advert-witness + tx + chain + census-scan + census-resolve 60/60; blwp-node
+SUITES: protocol advert-witness + tx + chain + census-scan + census-resolve 60/60; arena-node
 census-realblocks + census-chainview + bond-key + roster 46/46.
 
 ## Has a census bond confirmed on testnet4? No - and the blocker is the wallet, not the chain (2026-09-21)
@@ -46097,7 +46097,7 @@ The order is: unlock -> fund (50000 sat bond + fee, from 682182) -> broadcast ->
 (~72 min at 723.3 s a block) -> census sees it live. Everything after the unlock is built and measured.
 
 SUITES ON THIS PATH: protocol advert-witness + census-scan + census-resolve + tx + chain 60/60;
-blwp-node census-realblocks + census-chainview + bond-key + roster 46/46. The two listed reds are
+arena-node census-realblocks + census-chainview + bond-key + roster 46/46. The two listed reds are
 unchanged and belong to other letters: bundle-fresh 1/2, ghost-live 10/11. No Unity, no C# - this item
 has touched neither, so no PlayMode or EditMode run is owed.
 
@@ -46129,7 +46129,7 @@ The operator must not profit from a technical freeze. Burning is the only recipi
 paying the remaining guardians would pay the witnesses of the very abandonment, and paying the census
 would make a freeze worth something to somebody who runs the network.
 
-AND THE RULE IS NOW CODE, not only a paragraph: `packages/protocol/src/federation-slash.js` -
+AND THE RULE IS NOW CODE, not only a paragraph: `packages/arena-protocol/src/federation-slash.js` -
 `exposureCap`, `reserveFits`, `slashSplit`, `abandonmentProofNeeds`. Each of the three ways this gets got
 wrong turns the suite red, proven by breaking the module and running it:
 
@@ -46154,7 +46154,7 @@ SUITES: protocol federation-slash 7/7 (new), with genesis + advert-witness + cen
 
 ## The three halt rules, as code that goes red (2026-09-21, corrected to bc05268f)
 
-`packages/protocol/src/federation-slash.js` - `exposureCap`, `reserveFits`, `slashSplit`,
+`packages/arena-protocol/src/federation-slash.js` - `exposureCap`, `reserveFits`, `slashSplit`,
 `abandonmentProofNeeds`. Each way this gets got wrong turns the suite red, proven by putting the old rule
 back and running it:
 
@@ -46234,8 +46234,8 @@ AND THE CLOCKS FOLLOWED HEAD: `drain_blocks` is 4032 (four weeks), not 2016. `MA
 late-claim tail test moved with it.
 
 SUITES: protocol slash-distribution + protocol 40/40; protocol federation-slash + genesis +
-advert-witness + census-resolve 30/30; blwp-node custody + round + winnings-door 56/56; blwp-node server +
-entry-fee-door with blwp-client page-stake + session-pay 28/28.
+advert-witness + census-resolve 30/30; arena-node custody + round + winnings-door 56/56; arena-node server +
+entry-fee-door with arena-client page-stake + session-pay 28/28.
 
 STILL BURNING, AND NAMED RATHER THAN QUIETLY FIXED: two burns in `slash.js` are structural, not chosen by
 a contract - `hand()` burns when there is nobody at all to pay, and an excluded member's share is burned
@@ -46272,7 +46272,7 @@ departure. Naming it here because the letter was described as a one-day cycle an
 one - whether that matters is a ruling, not a number.
 
 SUITES: protocol federation-slash + slash-distribution + protocol + genesis + advert-witness 58/58;
-blwp-node custody + round + server + winnings-door 61/61; blwp-client page-stake + session-pay +
+arena-node custody + round + server + winnings-door 61/61; arena-client page-stake + session-pay +
 backpressure 38/38.
 
 ## The network id did not commit to the federation clocks (2026-09-21)
@@ -46304,8 +46304,8 @@ id in their signed bodies, so they were re-signed by the same two authority keys
 endpoint moved, and the published vectors are byte-identical - regenerating them changed nothing.
 
 SUITES: protocol genesis + federation-slash 15/15, slash-distribution + protocol + advert-witness +
-census-resolve + donation 84/84; blwp-node custody + round + donation-set-door + bond-key + advert 72/72;
-blwp-client page-stake + session-pay + backpressure 38/38.
+census-resolve + donation 84/84; arena-node custody + round + donation-set-door + bond-key + advert 72/72;
+arena-client page-stake + session-pay + backpressure 38/38.
 
 STILL TRUE AND NAMED: nothing calls federation-slash.js but its own test. The clocks, the cap and the
 liquidation split are law that goes red when changed, not a running system - no node path opens a claim
@@ -46334,8 +46334,8 @@ Closed. The board carries a plain sentence; the numbers live here.
     the drain alone                                        144 blocks   24 h
 
 SUITES AT THE CLOSE: protocol genesis + federation-slash 15/15, and slash-distribution + protocol +
-advert-witness + census-resolve + donation 84/84; blwp-node custody + round + donation-set-door +
-bond-key + advert 72/72; blwp-client page-stake + session-pay + backpressure 38/38. PlayMode and EditMode
+advert-witness + census-resolve + donation 84/84; arena-node custody + round + donation-set-door +
+bond-key + advert 72/72; arena-client page-stake + session-pay + backpressure 38/38. PlayMode and EditMode
 not run and not owed - no C# or Unity asset in this item.
 
 THE TWO REMAINDERS ARE NOW THEIR OWN BOARD ITEMS, not parked inside this one: a node path for
@@ -46351,7 +46351,7 @@ ONLY - `FEDERATION.md` +4, `multiplayer_p2p.md` +88, no code, no C#. In the page
     backupVerified / verifySeed / seedPhrase / phraseVerified: 0 files
     §24B on PRIORITIES.md: 0
 
-So there was no gate to keep. `packages/blwp-client/src/backup-gate.js` is it, as pure functions the page
+So there was no gate to keep. `packages/arena-client/src/backup-gate.js` is it, as pure functions the page
 will call: `verifyPhrase`, `verifyAndRecord`, `isVerified`, `mayDeposit`, `mayPayStake`,
 `mayStartFreeRound`, `mayJoin`, `backupLine`.
 
@@ -46389,7 +46389,7 @@ refresh". Measured:
 
     tabSeed({ storage: window.sessionStorage })   mints a FRESH 32 bytes when it finds none
     sessionStorage                                per tab, dies with the tab
-    blwp.backup.verified                          localStorage, outlives every tab, bound to nothing
+    arena.backup.verified                          localStorage, outlives every tab, bound to nothing
 
 So: verify the phrase in one tab, open a second, and `tabSeed` mints a wallet nobody has ever written
 down - while the flag still said verified. `mayDeposit` and `mayPayStake` would both have opened for it.
@@ -46404,7 +46404,7 @@ rather than matching - which fails 1 of 10; bound, 10 of 10.
     a different seed, free mayJoin({paying:false}) still true
     no seed at all         unverified; digestOf(undefined) null, digestOf(8 bytes) null
 
-SUITE: blwp-client backup-gate 10/10.
+SUITE: arena-client backup-gate 10/10.
 
 ## The seed is 24 real BIP-39 words now (2026-09-21)
 
@@ -46438,7 +46438,7 @@ MEASURED:
 The checksum is why the last word matters: without it a mistyped word gives a different VALID seed and
 the player restores an empty wallet with no error anywhere.
 
-SUITES: blwp-client bip39 6/6, backup-gate 10/10 (unchanged by this).
+SUITES: arena-client bip39 6/6, backup-gate 10/10 (unchanged by this).
 
 ## §24B on screen: four facts seen, three blocked, and the local node came up fine (2026-09-21)
 
@@ -46511,7 +46511,7 @@ before it posts its bonds, and carry them in each signer node's advertisement. T
 federation wiring - the live item's own letter - and it is not started inside this one.
 
 WHAT THIS DOES NOT BLOCK, and was measured last turn on this same harness: the free round does not ask
-for the phrase. `blwp-money-why` stayed empty and `blwp.backup.verified` stayed null when the free row was
+for the phrase. `blwp-money-why` stayed empty and `arena.backup.verified` stayed null when the free row was
 clicked - the gate is not what stops that join. It stops for "no session yet: the page has named no node",
 which is the playable-client letter's symptom and is recorded there, not here.
 
@@ -46526,7 +46526,7 @@ refusals are gone from the code rather than left exported and unused - `mayDepos
 exporting them. The tests that asserted the gate went too: a test holding down a withdrawn rule is a rule
 somebody wires back up by accident. backup-gate is 8 tests now, not 10.
 
-MEASURED ON SCREEN, fresh profile, `blwp.backup.verified` null:
+MEASURED ON SCREEN, fresh profile, `arena.backup.verified` null:
 
     warning shown   true
     box             1280 x 62 px, 17px bold, 2px #ff9d2e border on #3a2000
@@ -46577,8 +46577,8 @@ DAILY URL, reported separately as asked: the alias serves the new page (CTA pres
 network-id split - page `66f5caba`, live signer nodes pinned at `595f0df3` with `b07c4a09`. A finding,
 not a pin to move.
 
-SUITES AT HEAD: blwp-client 38/38 (backup-gate, bip39, bundle, bundle-fresh, page-stake, session-pay);
-protocol 73/73; blwp-node 74/74; core 142/142. No C# changed - `git diff --name-only HEAD -- "*.cs"` is
+SUITES AT HEAD: arena-client 38/38 (backup-gate, bip39, bundle, bundle-fresh, page-stake, session-pay);
+protocol 73/73; arena-node 74/74; core 142/142. No C# changed - `git diff --name-only HEAD -- "*.cs"` is
 empty - so PlayMode and EditMode are not owed and no Unity build was started.
 
 ## The bond can name the federation it guards, and the gate accepts it (2026-09-21)
@@ -46608,7 +46608,7 @@ fixed. What remains for step 1 is running it: a federation up, and the round act
 with no `createHeld` on the path.
 
 THE REST OF THE LETTER, measured at HEAD: one load-bearing line of law -
-`packages/protocol/src/constants.js:518`, `CUSTODY = ['THRESHOLD_LN', 'FEDERATION']` - and the cascade,
+`packages/arena-protocol/src/constants.js:518`, `CUSTODY = ['THRESHOLD_LN', 'FEDERATION']` - and the cascade,
 116 THRESHOLD_LN fixture sites across 96 test files and 14 tool call-sites, plus ~1400 lines of
 hold-invoice machinery (`custody.js` 863, `lnd-port.js` 174, `lnd-settings.js` 94, `preflight.js` 283)
 that exists only for it. The spec already says it is withdrawn.
@@ -46669,11 +46669,11 @@ federation with a vetted gateway.
 
 ## The page a player is served had fallen off its own known-good list (2026-09-21)
 
-Found by running blwp-node's suite after the guardianOf commit, not by looking for it. Three reds in
+Found by running arena-node's suite after the guardianOf commit, not by looking for it. Three reds in
 `client-hash.test.js`, and they are not the listed `blwp-curve.js` one - that one now matches. The tool,
 run over HTTP against the served template, said:
 
-    blwp-client.js  MISMATCH  de9e2822945fcf5863ad2356139331988b7360424574d2ed0e3971358f7d34da
+    arena-client.js  MISMATCH  de9e2822945fcf5863ad2356139331988b7360424574d2ed0e3971358f7d34da
     blwp-curve.js   match     c7d28f3bc222a0fe9d06c3e1c21f707a6a88ab6577dde486c11fd7a5916cf752
     blwp-core.js    MISMATCH  37e77ce20ec8d0951b684ffb48fd1e7d0c1aa76383d0c2d6d2f4a9fa461da9e6
 
@@ -46681,18 +46681,18 @@ run over HTTP against the served template, said:
 money scripts the page serves were not on it, so the page the daily URL serves could not have entered one.
 
 MINE, and from a letter I called closed. `known-good-clients.json` was last written at `df66c6d1` - the
-commit the live checkout is pinned at. `dist/blwp-client.js` has moved twice since, both mine (`af1aaf7f`
+commit the live checkout is pinned at. `dist/arena-client.js` has moved twice since, both mine (`af1aaf7f`
 the BURN withdrawal and the backup gate, `c2437401` the §24B lobby warning), and `dist/blwp-core.js` at
 `fea4a2f6`. I regenerated the bundles and did not re-pin them.
 
-Not a hand-edit: `packages/blwp-client/tools/known-clients.js` writes the list, appends rather than
+Not a hand-edit: `packages/arena-client/tools/known-clients.js` writes the list, appends rather than
 replaces, and the template was already byte-identical to every dist - so the page ships what the source
 built, and only the list was behind.
 
-    before  blwp-client.js 89 pinned, blwp-core.js 28, curve 2, lock client 8, lock wasm 8
-    after   blwp-client.js 90 pinned, blwp-core.js 29, the other three untouched ("already listed")
+    before  arena-client.js 89 pinned, blwp-core.js 28, curve 2, lock client 8, lock wasm 8
+    after   arena-client.js 90 pinned, blwp-core.js 29, the other three untouched ("already listed")
     client-hash.test.js  3 pass 0 fail (was 0 pass 3 fail)
-    blwp-node chunk 1/121 files  125 pass 0 fail (was 122 pass 3 fail)
+    arena-node chunk 1/121 files  125 pass 0 fail (was 122 pass 3 fail)
 
 ## A third bonded operator opens a paying FEDERATION round (2026-09-21)
 
@@ -46924,7 +46924,7 @@ The outcome is the simulation's: the winner's run DELIVERED and qualified, the l
 4 under a minimum of 1, and nothing in the client or the test decided either. `reachesLightning` stayed
 null on all seven throughout.
 
-## blwp-node, the package finished file by file under the 180 s cap (2026-09-21)
+## arena-node, the package finished file by file under the 180 s cap (2026-09-21)
 
     signer-node-committee 6/0   signer-node-relay 5/0   slash-filing 3/0
     stake-committed 3/0         stake-lock-port 3/0
@@ -47018,7 +47018,7 @@ assert at line 143 is OUTSIDE that guard, so when it throws the daemon stays lis
 own `finally { await s.close(); }` cannot help, because `s` is never assigned when the fixture throws. Not
 a fifth test: the file has 5 tests, 4 fail and 1 passes.
 
-UNCOMMITTED, DELIBERATELY: `packages/blwp-node/tools/w5b.mjs` carries 29 added lines from the forfeit
+UNCOMMITTED, DELIBERATELY: `packages/arena-node/tools/w5b.mjs` carries 29 added lines from the forfeit
 enquiry - the per-node `kept` detail (node id, whether the signature matches, `madeMs`), the "each node
 asked for the forfeit" round of direct `/forfeit` calls, and the five-seconds-later re-look. Measurement
 prints only; no rule and no settle logic. Left out of this docs commit.
@@ -47079,11 +47079,11 @@ index (`custody: CUSTODY[r.u8()]`), so index 0 stays THRESHOLD_LN and index 1 st
 no reserved slot, no renumber.
 
 PILE 1 - DEAD LABELS (comments only, nothing branches):
-    packages/protocol/src/contracts.js:589      a comment
-    packages/protocol/src/constants.js:495      a doc comment
-    packages/blwp-node/src/server.js:1793       a comment
-    packages/blwp-node/tools/run-2of2.mjs:54    a comment
-    packages/blwp-node/tools/round-2of2.mjs:132 a comment
+    packages/arena-protocol/src/contracts.js:589      a comment
+    packages/arena-protocol/src/constants.js:495      a doc comment
+    packages/arena-node/src/server.js:1793       a comment
+    packages/arena-node/tools/run-2of2.mjs:54    a comment
+    packages/arena-node/tools/round-2of2.mjs:132 a comment
   NO NODE SOURCE LOGIC BRANCHES ON THRESHOLD_LN. The only load-bearing line in src is the enum itself.
 
 PILE 2 - DECODE-ONLY HISTORY: the enum entry at `constants.js:518`, index 0. Kept, by §23.6: "the value
@@ -47151,7 +47151,7 @@ loosened and no fixture was migrated to make a red go away.
 
 Nothing anywhere asserted the custody byte mapping - `grep custodyByte|CUSTODY[` across both test packages
 returned zero. That is the hole that would let the withdrawn label be tidied out of the array and
-silently renumber FEDERATION from byte 1 to byte 0. `packages/protocol/test/custody-byte.test.js` closes
+silently renumber FEDERATION from byte 1 to byte 0. `packages/arena-protocol/test/custody-byte.test.js` closes
 it, 3 pass / 0 fail:
 
     FACTS (the custody byte)          {"at0":"THRESHOLD_LN","at1":"FEDERATION","threshold":0,"federation":1}
@@ -47288,7 +47288,7 @@ STEP 6, SUITES, BEFORE AND AFTER:
     federation-slash.test.js     12 pass / 0 fail            ->  12 pass / 0 fail
     protocol, chunk 1 of 2       292 pass / 0 fail           ->  292 pass / 0 fail
     protocol, chunk 2 of 2       283 pass / 0 fail           ->  296 pass / 0 fail (the rewritten suite)
-    blwp-node, files 1-20        125 pass / 0 fail           ->  125 pass / 0 fail
+    arena-node, files 1-20        125 pass / 0 fail           ->  125 pass / 0 fail
 
 Nothing was loosened. The suite was rewritten because its premise - that the committee is paid - is the
 withdrawn rule; every assertion in it is stricter than before, including the sum, the seats at zero, the
@@ -47326,13 +47326,13 @@ choice. The empty-eligible throw stays: the spec names no recipient, so it refus
     slash-distribution   9 pass / 0 fail
     federation-slash    12 pass / 0 fail
     protocol chunk 2    296 pass / 0 fail   (the chunk holding protocol.test.js)
-    blwp-node 1-20      125 pass / 0 fail
+    arena-node 1-20      125 pass / 0 fail
 
 GREP, js and md, excluding dist/ and TASKBOOK history: five hits, and every one says what the rule is
 NOT - two of my own comments in `slash.js`, the header of `slash-distribution.test.js`, the note in
 PRIORITIES, and an unrelated line in `verdict.js` about tally ids ("would put every honest committee at
 one of seven"). No source emits "half burned" at all; the one bundle hit is
-`unity-proto/.../blwp-client.js`, generated output that is stale until the next build and NOT hand-edited.
+`unity-proto/.../arena-client.js`, generated output that is stale until the next build and NOT hand-edited.
 
 ## The gap between a filed slash and a paid one, both paths (2026-09-22)
 
@@ -47357,11 +47357,11 @@ WHAT A NODE ALREADY HAS, and `slash-filing.test.js` (3 pass / 0 fail) proves it 
 WHAT IS MISSING BEFORE ONE SAT MOVES:
 
     1. THE SLASHED BOND'S VALUE. The proof names the OUTPOINT, never the amount, and `bondSats` does
-       not appear anywhere in `blwp-node/src`. `slashDistribution` takes it as an argument that nobody
+       not appear anywhere in `arena-node/src`. `slashDistribution` takes it as an argument that nobody
        supplies. It is obtainable - the census entry for that outpoint carries it - but nothing reads it.
     2. THE CENSUS AT THE SLASHING HEIGHT. A node derives its census at the round's `census_height`. The
        rule pays "the active census nodes AT THE SLASHING HEIGHT". Nothing computes a slashing height at
-       all: grep `slashingHeight|slashedAt|slashing height` over protocol/src and blwp-node/src returns
+       all: grep `slashingHeight|slashedAt|slashing height` over protocol/src and arena-node/src returns
        only comments quoting the spec. The set that must be paid is derived nowhere.
     3. WHO THE AFFECTED PLAYERS ARE. `affectedPlayers` exists only as a parameter of
        `slashDistribution` and in its tests. No function decides which players of a round were harmed.
@@ -47484,9 +47484,9 @@ CAUSES, which the board listed by name only:
 
 So `two-titles` is still 1 pass / 1 fail, on a different and better-understood assertion than before.
 
-## Six unlisted reds in blwp-client, and a claim of mine that was wrong (2026-09-22)
+## Six unlisted reds in arena-client, and a claim of mine that was wrong (2026-09-22)
 
-Swept `blwp-client`, which nothing on the board covered: 54 suites. `donation-pay.test.js` was
+Swept `arena-client`, which nothing on the board covered: 54 suites. `donation-pay.test.js` was
 14 pass / 6 fail and appears nowhere in any red list.
 
 AND IT CONTRADICTS WHAT I WROTE ON THE BOARD LAST TURN. I said "35 `blockTicks: 9000` literals remain
@@ -47513,7 +47513,7 @@ That is coverage restored, not an assertion loosened: no expectation changed.
 
 ## The stale run length was in the client too, in three more suites (2026-09-22)
 
-Found by sweeping `blwp-client`, which no red list covered. All three carried `blockTicks: 9000` and all
+Found by sweeping `arena-client`, which no red list covered. All three carried `blockTicks: 9000` and all
 three now take `BLOCK_TICKS` from the core. The node's refusal was right in every case.
 
     donation-pay.test.js      14 pass / 6 fail  ->  20 pass / 0 fail   (one of the six was the literal;
@@ -47527,16 +47527,16 @@ three now take `BLOCK_TICKS` from the core. The node's refusal was right in ever
 
 WHERE THE LITERAL STILL LIVES, counted rather than claimed this time:
 
-    packages/blwp-node/test     0 files   - that package is fully migrated
-    packages/blwp-client/test  16 files, 21 lines
-    packages/protocol/test     10 files, 12 lines
+    packages/arena-node/test     0 files   - that package is fully migrated
+    packages/arena-client/test  16 files, 21 lines
+    packages/arena-protocol/test     10 files, 12 lines
 
 The protocol ones cannot cause this red: those suites encode and decode contracts, they never POST one to
 a node, so nothing refuses them. The client ones only bite when the suite drives a real node. That is why
 the count alone says nothing about how many reds are left - which is the mistake I made when I wrote
 "none of them is red for it" after checking three.
 
-## The blwp-client sweep, finished: 54 suites, and what was hiding in them (2026-09-22)
+## The arena-client sweep, finished: 54 suites, and what was hiding in them (2026-09-22)
 
 No red list covered this package. Run in chunks under the 180 s cap, and every red re-run ALONE.
 
@@ -47659,7 +47659,7 @@ expects one settle carrying the loser's own commitment and preimage. The entry's
 
 WHAT THIS IS NOT: not contention - it fails identically run alone, and it failed identically at
 `1e9628cd` before any of this letter's work, so it is not from anything done here. Not the run length -
-`blwp-node` carries no `blockTicks: 9000` any more. Not a flake - `lock-settlement`'s flake moved between
+`arena-node` carries no `blockTicks: 9000` any more. Not a flake - `lock-settlement`'s flake moved between
 tests and then passed; this one is the same two tests and the same two hashes every time.
 
 WHERE IT SITS: this is the HOLD path - `custody.settle`, payment hashes and preimages - which is the
@@ -47749,8 +47749,8 @@ So the default was the MacBook's forwarded port, from a ruling the next day repl
 which is where this runs - the two playtest Chromes are 9351 and 9352, and both were sitting idle at
 about:blank. Opened the Daily on 9351 and the suite went green at once:
 
-    BLWP_CDP_PORT=9351   1 pass / 0 fail, 18.2 s
-    default now 9351     1 pass / 0 fail          (BLWP_CDP_PORT still overrides)
+    ARENA_CDP_PORT=9351   1 pass / 0 fail, 18.2 s
+    default now 9351     1 pass / 0 fail          (ARENA_CDP_PORT still overrides)
 
 Nothing was deployed and nothing was rebuilt to get this: one idle tab was navigated to the Daily.
 
@@ -47778,7 +47778,7 @@ lobby lists nothing ... two different networks, so no round is joinable there."
 
 THE NETWORK IDS DO STILL DIFFER, checked rather than assumed:
 
-    deployed page   https://btc-logistics-core.pages.dev/blwp-client.js -> NETWORK_ID_REGTEST 66f5caba
+    deployed page   https://btc-logistics-core.pages.dev/arena-client.js -> NETWORK_ID_REGTEST 66f5caba
     local dist      the same, 66f5caba
     live checkout   /mnt/bitcoin/blwp-2of2/code at 595f0df3 -> b07c4a09     (the pin has NOT moved)
 
@@ -47864,7 +47864,7 @@ is narrower and elsewhere. Not fixed here - the fix is still the pin or a rebuil
 `bundle-fresh` is red and the board says the rebuild "must go with the pin move, in one step, never
 before". ONE REASON SOMETIMES GIVEN FOR THAT - that a rebuild would ship a new network id - is wrong, and
 this is the evidence. The RULE STANDS: the rebuild waits because THE DEPLOY TRAVELS WITH THE PIN.
-Built with the bundler's OWN compare mode (`BLWP_BUNDLE_OUT`), so `dist/` was never written:
+Built with the bundler's OWN compare mode (`ARENA_BUNDLE_OUT`), so `dist/` was never written:
 
     fresh build vs committed bundle    42 differing lines
     of those, non-comment              6
@@ -47894,7 +47894,7 @@ Authorised by HARD 08:25. Checked first that the target contains the work: `78c5
     /mnt/bitcoin/blwp-2of2/code   595f0df3 -> 02eefc04
     that checkout's NETWORK_ID_REGTEST   b07c4a09 -> 66f5caba
     blwp-daily-signer-nodes       restarted, active, MainPID cwd
-                                  /mnt/bitcoin/blwp-2of2/code/packages/blwp-node
+                                  /mnt/bitcoin/blwp-2of2/code/packages/arena-node
 
 BEFORE, node de4dd194444f: 3 rounds - b99244ee free, 0ac57b18 paid, d945baeb free.
 AFTER: 5 rounds, both tunnels 200 (A sensitivity-ensures-emotions-casa, B flight-costa-nails-watched).
@@ -47993,7 +47993,7 @@ WHAT MOVED, and none of it quietly:
 
 ## Rulings 1-3: the slashing height, who was affected, several slashed nodes (2026-09-22)
 
-All three from §5A.3 as ruled, read back by `protocol/test/slash-rulings.test.js`, 6 pass / 0 fail.
+All three from §5A.3 as ruled, read back by `arena-protocol/test/slash-rulings.test.js`, 6 pass / 0 fail.
 
 RULING 1 - `slashHeightIsValid({ slashHeight, censusHeight, tipHeight })`. Valid iff
 `censusHeight <= slashHeight <= tipHeight`, and the refusals name WHICH bound, because "invalid height"
@@ -48030,15 +48030,15 @@ is paid from both bonds, not once out of a pot.
 
 WHAT A CORE CHANGE DRAGS WITH IT, all deliberate steps the tests named:
   - `packages/core/dist/blwp-core.js` rebuilt, and copied to the WebGL template so the two match;
-  - the new core hash listed with `protocol/tools/known-cores.js` - `f253dc6d...`, 33 listed. The test
+  - the new core hash listed with `arena-protocol/tools/known-cores.js` - `f253dc6d...`, 33 listed. The test
     says it plainly: "a change to the core turns this red until the new core is deliberately listed";
   - `known-good-clients.json` re-pinned with the generator - `blwp-core.js` `2e1aaf15...` added, the
     other four already listed.
 
     protocol   293 pass / 0 fail and 290 pass / 0 fail
-    blwp-node  files 1-20, 125 pass / 0 fail
+    arena-node  files 1-20, 125 pass / 0 fail
 
-## The run-length straggler, swept out of blwp-client (2026-09-22)
+## The run-length straggler, swept out of arena-client (2026-09-22)
 
 Found while verifying the core change, not by looking for it: `finish-at-delivered` failed four times
 over with "that round says a run is 9000 ticks and this core ends one at 10800". My earlier client sweep
@@ -48121,7 +48121,7 @@ NOTHING ELSE IS HIDING. The two reds this sweep found - `finish-at-delivered` an
 found only because the groups were small enough to finish. Both are fixed. The first was the run-length
 straggler; the second was mine, from §24B, and had been red since `c2437401`.
 
-## blwp-node swept in small groups too, and it hid nothing (2026-09-22)
+## arena-node swept in small groups too, and it hid nothing (2026-09-22)
 
 The ranges earlier chunks never finished - 37-58, 79-98, 104-109 - re-run small enough to print a
 summary:
@@ -48145,7 +48145,7 @@ result, not as an absence.
 ## The recorder: a node can now say what a filed slash owes (2026-09-22)
 
 The gap print listed eight things between a filed proof and a paid one. Three were rulings and are made;
-this is the node path over the four that are arithmetic. `blwp-node/src/slash-owing.js`, tested by
+this is the node path over the four that are arithmetic. `arena-node/src/slash-owing.js`, tested by
 `slash-owing.test.js`, 6 pass / 0 fail.
 
     bondSats 100000  ->  toPlayers 50000   toNodes 37500   toDevelopers 12500
@@ -48178,7 +48178,7 @@ should not be the first time money moves.
 
 ## The slashing door, and the two things it found (2026-09-22)
 
-`GET /slash-owing?round=&entry=&height=` in `blwp-node/src/server.js`, beside `/slash-proofs`. It
+`GET /slash-owing?round=&entry=&height=` in `arena-node/src/server.js`, beside `/slash-proofs`. It
 answers what §5A.3 owes for every proof this node filed for a run, out of the census at a height the
 CALLER names. Measured over the re-run fixture's five real filed proofs (`slash-filing.test.js`):
 
@@ -48324,7 +48324,7 @@ entry's own fee preimage" - both were checking `66687aad...`, which is nobody's 
 
 WHY IT IS NOT LANDED. `second-closer` is green today at 2/0 and goes red on "A never took the node fees
 it served for" - the correct complaint, because an entry with no F has no fee anyone can take. It
-builds its own entry at line 145, and **69 fixtures across blwp-node, blwp-client and protocol build a
+builds its own entry at line 145, and **69 fixtures across arena-node, arena-client and protocol build a
 paying entry with `feePreimage: new Uint8Array(32)`**. That is a sweep of its own, each suite re-run
 chunked, not a line inside the federation letter. The tree is left at HEAD - measured back to
 second-closer 2/0 and objection-window 5/2 - and the refusal patch is kept out of it.
@@ -48361,7 +48361,7 @@ Two assertions stop being vacuous: custody.test.js:305 "keyed on the entry's OWN
 custody-daemon.test.js:158 "quoted against the entry's own fee preimage" were both checking
 `66687aad...`, which is nobody's own.
 
-33 suite groups swept green across blwp-node, blwp-client and protocol, each run alone or in small
+33 suite groups swept green across arena-node, arena-client and protocol, each run alone or in small
 groups under `timeout 180`: five-of-seven 21/21, pool x4, server, round, quota, verify, verdict,
 close-order, no-quorum, equivocation, canonical, receipt-carry, lobby x3, reconstruct, replay x2,
 run-length, signer-node-committee, entry-fee-door, expiry x3, hold-two-first, federation-invoice,
@@ -48481,7 +48481,7 @@ before saying done, not after being asked.
 
 ## The rebuilt core bundle fell off the known-good list, twice over (2026-09-22)
 
-§24 F2 refuses a client that is not on `blwp-client/known-good-clients.json`. Rebuilding
+§24 F2 refuses a client that is not on `arena-client/known-good-clients.json`. Rebuilding
 `core/dist/blwp-core.js` for ruling 4 therefore took the page's own core off the list - the exact trap
 the board records from `1e9628cd`, where two of three money scripts fell off the same way and "the page
 served could enter no paying round".
@@ -48489,15 +48489,15 @@ served could enter no paying round".
 Caught by `client-hash` 3/0 -> 2/1: "the list pins the scripts the rebuilt bundle and the template
 carry". It needed TWO fixes, not one:
 
-    1. the list        node packages/blwp-client/tools/known-clients.js
+    1. the list        node packages/arena-client/tools/known-clients.js
                        blwp-core.js aea2a2bc... added; the other four already listed
     2. the template    unity-proto/Assets/WebGLTemplates/BtcLogistics/blwp-core.js was 2e1aaf15...
                        against a built aea2a2bc..., because the template keeps its OWN byte-identical
                        copy and the test asserts identity. Synced from dist.
 
-client-hash back to 3/0. bundle-fresh is 1/1 again, red on `blwp-client.js` alone - "dist is not the
+client-hash back to 3/0. bundle-fresh is 1/1 again, red on `arena-client.js` alone - "dist is not the
 build of this source" and "the WebGL template is not the build of this source" - which is its recorded
-baseline, with blwp-curve.js and blwp-core.js fresh. blwp-client bundle 5/5.
+baseline, with blwp-curve.js and blwp-core.js fresh. arena-client bundle 5/5.
 
 AND THE UNITY BATCHMODE RUN DELETES FILES. `Assets/AddressableAssetsData/link.xml` and its .meta came
 back deleted from the editor run and were restored by hand. Worth knowing before committing after any
@@ -48740,7 +48740,7 @@ the board contradicted itself in three places at once:
     line 852   "bundle-fresh 1/1 see below - waits on the fleet pin"
 
 `02eefc04` IS NOT HEAD, so the dependency is unmet and the move cleared nothing here. Confirmed by
-running it: `bundle-fresh` 1/1, red on `blwp-client.js`.
+running it: `bundle-fresh` 1/1, red on `arena-client.js`.
 
 WHY IT CANNOT BE CLEARED BY REBUILDING. A rebuild and page deploy now would ship a page built from HEAD
 - carrying rulings 4 and 5 and `CORE_HASH` 7db2e423 - against nodes at `02eefc04` that have neither.
@@ -48847,7 +48847,7 @@ and the slice-2 node files already sitting in this working tree.
 
 ### Step 1 - the decoder commit (RULED 2026-09-23)
 
-Product change: `protocol/src/constants.js` and `protocol/src/contracts.js` only. `CUSTODY` is
+Product change: `arena-protocol/src/constants.js` and `arena-protocol/src/contracts.js` only. `CUSTODY` is
 `[undefined, 'FEDERATION']`: byte 0 stays empty, FEDERATION stays byte 1, the name THRESHOLD_LN is gone.
 Encoding it throws (`THRESHOLD_LN is not a custody this network has: the one value is FEDERATION`);
 decoding a record carrying byte 0 throws (`custody byte 0 is not a custody of this network ...`), as a bad
@@ -48855,7 +48855,7 @@ length does. No decode-only label. The 17 slice-2 deletions stay out; hold-invoi
 
 Split (113 files: the 96 that name THRESHOLD_LN, and 17 that reach it only through a fixture):
 
-- GROUP A, assert the throw: `protocol/test/custody-byte.test.js`; the two custody cases of
+- GROUP A, assert the throw: `arena-protocol/test/custody-byte.test.js`; the two custody cases of
   `protocol.test.js`; the federation-named case that opened a THRESHOLD_LN round (a byte-0 post is now 400).
   Same treatment for the withdrawn-custody cases in signer-node-lock, guardians-bonded, page-lock test 24.
 - GROUP B, moved to FEDERATION naming TEST_FEDERATION_ID. `window-fixture.js` and `pool-fixture.js`
@@ -48870,14 +48870,14 @@ Split (113 files: the 96 that name THRESHOLD_LN, and 17 that reach it only throu
 
 Skipped - the hold path (reason: "slice 2: the subject is the hold path ..."):
 
-    blwp-node   custody 35, custody-daemon 9, preflight 13, winnings-door 9, launcher-funded 7,
+    arena-node   custody 35, custody-daemon 9, preflight 13, winnings-door 9, launcher-funded 7,
                 paying-round-needs-gateways 7, entry-fee-door 6, federation-invoice 5, unpaid-expiry 4,
                 void-expiry 3, stake-committed 3, close-order 3, settle-threshold 2, second-closer 2,
                 hold-two-first 2, payout-second-signer-node 1                      (whole files)
                 five-of-seven: the 11 "5 of 7, a hold" tests (10 stake-lock tests run)
                 objection-window tests 1-4; publication-finality tests 6-7;
                 signer-node-relay tests 1, 2, 4; reconstruct tests 4-5 (the two Custody tests)
-    blwp-client wallet-nwc 26, stake-seen 9, page-stake 9, session-pay 8, settlement-seen 3,
+    arena-client wallet-nwc 26, stake-seen 9, page-stake 9, session-pay 8, settlement-seen 3,
                 stake-wait 1                                                        (whole files)
                 donation-pay tests 9-12 and 15 (its hold round: HELD/SETTLED, returned stake, spent)
 
@@ -48903,15 +48903,15 @@ claim-key-own and lock-settlement are not baseline: they failed only when two su
 now." The Daily's launcher opened its paying kind as THRESHOLD_LN on the free pair - which no longer encodes
 since 6e371394 - so at HEAD a paying Daily round could not be opened at all.
 
-`run-2of2.mjs`: BLWP_PAID_STAKE_MSAT now opens FEDERATION rounds on a committee of their own, SEVEN signer
-nodes (BLWP_PAID_PORTS; the ruled 5-of-7 - §23.6 needs the federation's threshold in distinct bonded
+`run-2of2.mjs`: ARENA_PAID_STAKE_MSAT now opens FEDERATION rounds on a committee of their own, SEVEN signer
+nodes (ARENA_PAID_PORTS; the ruled 5-of-7 - §23.6 needs the federation's threshold in distinct bonded
 operators, fedimintd's smallest federation is 3-of-4, and `receiptsNeeded` defines only 2 and 7). The first
 threshold-many advertise one guardian key each, read with the federation id and threshold through the lock
-port a signer node verifies with (BLWP_STAKE_LOCK_BIN, BLWP_FEDERATION_CLIENT_DIR, BLWP_FEDERATION_INVITE or
+port a signer node verifies with (ARENA_STAKE_LOCK_BIN, ARENA_FEDERATION_CLIENT_DIR, ARENA_FEDERATION_INVITE or
 _FILE). The free round keeps its 2-of-2 on A and B, unchanged. `daily.json` lists both committees' nodes
 and the federation's invite, so the lobby shows both kinds (`dailyLobbySearch` already takes both). Refused
 by name, before anything is created, without the federation or with anything but seven ports of its own
-(`daily-paid-federation.test.js`). RPCAUTH / RPCWALLET / BLWP_RECIPIENT_PORT let it run on a probe chain
+(`daily-paid-federation.test.js`). RPCAUTH / RPCWALLET / ARENA_RECIPIENT_PORT let it run on a probe chain
 beside the live Daily.
 
 MEASURED against the regtest federation running here (probe chain rpc 30101, federation 423e010e,
@@ -49030,7 +49030,7 @@ intended difficulty change moved, and retuning to meet them is what the ruling f
   node forfeit.test 2: expects "DELIVERED with score 5"; the run's score moved with the scoring band.
 
 Still red and pre-existing, same test and cause: five-of-seven (timeout), ghost-live 9, replay-solids 2,
-discovery 18, world-seed-bridge (timeout), bundle-fresh (blwp-client.js, and blwp-curve.js - stale already
+discovery 18, world-seed-bridge (timeout), bundle-fresh (arena-client.js, and blwp-curve.js - stale already
 at 6e371394; 087b707f's added core staleness is gone). A new network id widens the page-and-nodes gap the
 fleet pin already has (02eefc04 carries 66f5caba): nothing is deployed and the pin is not moved.
 
@@ -49214,14 +49214,14 @@ Full suite (244 files, one per node --test, 180 s cap): the baseline reds - ghos
 
 ## The page asks a winner once where to send the winnings (RULED Daniel 2026-09-23: the accepted sequence)
 
-THE PAGE (packages/blwp-client/src/winnings.js, index.html, blwp.jslib): on the existing BLWP_RUN_OVER hook, and only when
-the page's own core says DELIVERED at or above the contract's min_score, `blwp.winnings.asked.<round>.<entry>` is written
+THE PAGE (packages/arena-client/src/winnings.js, index.html, blwp.jslib): on the existing BLWP_RUN_OVER hook, and only when
+the page's own core says DELIVERED at or above the contract's min_score, `arena.winnings.asked.<round>.<entry>` is written
 and then ONE window.prompt ("Where should your winnings be sent? Lightning address (name@host)"). The bridge hands the hook
 the run (round, entry, the core's word and score, min_score, the round's nodes) and ONE narrow call that signs the
 address's UTF-8 bytes with the session key and nothing else: no score, no payout, no round id; the key stays in the
 closure. It checks the name@host shape itself (the shipped bundle waits for the pin, so the bridge calls no new bundle
 export - ghost-field 6 measured that); the full Lightning-address check is the page's before it signs and every door's
-after. An accepted address is kept as `blwp.winnings.addr.<round>.<entry>` (address, signature, the round's nodes, who
+after. An accepted address is kept as `arena.winnings.addr.<round>.<entry>` (address, signature, the round's nodes, who
 answered 201) and POSTed to every signer node on the round's node list, not the gateways. Every load re-posts the same
 bytes only to the nodes that did not answer 201, until all have. Empty, cancelled or not an address: nothing kept,
 nothing posted. THE DOOR: the first address stands - the same bytes again 201 and nothing changes, another address 409.
@@ -49429,7 +49429,7 @@ that lacks it, 7 of 7 after a late mark that lands in time, and the stopped resu
 
 ## THRESHOLD_LN, the enum slice's first cut: hold-window.js deleted (RULED Daniel 2026-09-24: "First files, and only these")
 
-SEARCHED FIRST, every package and tool, for an import or a use of `protocol/src/hold-window.js`'s exports
+SEARCHED FIRST, every package and tool, for an import or a use of `arena-protocol/src/hold-window.js`'s exports
 (SETTLE_SAFETY_BLOCKS, MAX_PAYABLE_CLTV_BLOCKS, ROUTE_CLTV_BLOCKS, askableCltvBlocks, TICKS_PER_SECOND, CLOSE_SECONDS,
 finalSeconds, HOLD_MARGIN, cltvBlocksFor, holdCoversRound): its own test the only importer; TICKS_PER_SECOND elsewhere
 only in comments (core/src/tick.js, core/dist/blwp-core.js, the template's copy). Nothing live. Deleted: hold-window.js
@@ -49452,7 +49452,7 @@ the DKG pool files, the regtest tools, comments naming THRESHOLD_LN, the pinned 
 ## THRESHOLD_LN, the enum slice's second cut: no label in the byte-0 throw (RULED Daniel 2026-09-24)
 
 SEARCHED FIRST, every package, tool, test, dist/ and the template copy, for the suffix text and for custodyOrRefuse: only
-protocol/src/contracts.js. Neither dist/ nor the WebGL template carries the text; no node, client or tool code branches
+arena-protocol/src/contracts.js. Neither dist/ nor the WebGL template carries the text; no node, client or tool code branches
 on custody byte 0 (round.js:47 names it in a comment only); every test matched the sentence before the suffix.
 
 THE CUT: custodyOrRefuse throws one sentence for every byte but FEDERATION's - "custody byte N is not a custody of this
@@ -49505,7 +49505,7 @@ SEARCHED FIRST: outside the node files the third cut took, two comparisons again
 both real branches - contracts.js federationIsNamed (called from encodeRoundContract BEFORE the custody byte, so an
 in-memory non-FEDERATION object skipped the federation_id question and died at custodyByte instead), and join.js
 roundLocks (its callers, page-lock.js x10, lobby.js, join.js x4, all hand it a paying round's contract; on anything that
-decodes the comparison is true and the federation_id decides). The pinned bundle (dist/blwp-client.js, the template
+decodes the comparison is true and the federation_id decides). The pinned bundle (dist/arena-client.js, the template
 copy) still carries both: pinned, not rebuilt; bundle-fresh stays red with one more source difference.
 
 THE CUT, three steps in order: encodeRoundContract asks custodyByte(c.custody) first, so anything but FEDERATION still
@@ -49513,7 +49513,7 @@ throws "... is not a custody this network has", never the federation_id message;
 branch (no stake: ok; a stake: a non-zero federation_id); roundLocks is roundPays plus a non-zero federation_id. The
 decode path, custodyOrRefuse, CUSTODY's hole at 0, custodyFieldsAreValid and every refusal message stay.
 
-MEASURED - SOURCE-LEVEL, NOT A BEHAVIOUR TEST: no-custody-branch.test.js now reads protocol/src and blwp-client/src
+MEASURED - SOURCE-LEVEL, NOT A BEHAVIOUR TEST: no-custody-branch.test.js now reads protocol/src and arena-client/src
 beside the node's src: 2 comparisons on b710cb5e (contracts.js:616, join.js:267), 0 after. The reorder is guarded by
 behaviour: with step 1 removed, protocol.test's withdrawn-custody case (line 501) goes red; with it, that case,
 signer-node-lock:131 and guardians-bonded:161 pass unchanged.
@@ -49561,7 +49561,7 @@ its template copy.
 
 ## FEDERATION: a lock's expiry is checked against the lock's own height, not the verifier's tip + 144 (RULED Daniel 2026-09-24, c4a0eff6 ruling A, option (a))
 
-SEARCHED FIRST: the check was protocol/src/stake-lock.js lockMatchesEntry - refused when expiration < height + 144,
+SEARCHED FIRST: the check was arena-protocol/src/stake-lock.js lockMatchesEntry - refused when expiration < height + 144,
 where height is the federation block count at verification (stake-lock-signer-node.js passes st.blockCount, stake lock
 and fee lock alike). The page built its locks at count + 144 + LOCK_EXPIRY_MARGIN_BLOCKS (6, W1a's number) only to
 survive that off-by-the-wait. The stock federation has no lock height: lnv2 process_output stores
@@ -49585,7 +49585,7 @@ Next slice, named not done: c4a0eff6 ruling B, the beacon hash itself is the ran
 
 ## FEDERATION: round_randomness is the beacon block's hash itself, no height term (RULED Daniel 2026-09-24, c4a0eff6 ruling B)
 
-SEARCHED FIRST: no computation ever mixed in a height. committeeSeedFrom (protocol/src/beacon.js) hashes
+SEARCHED FIRST: no computation ever mixed in a height. committeeSeedFrom (arena-protocol/src/beacon.js) hashes
 root || root || round_id || round_randomness under TAG.committeeSeed; committeeSeedFromBeacon hands it the block hash
 alone; playerSubSeed / seedWordForEntry (seed.js) take the same bytes for the world. beaconFromChain takes
 blockHashOf(header) = hash256 of the raw 80-byte header, internal order, never reversed, and beacon-source.js hands those
@@ -50081,16 +50081,16 @@ THE RULING: this cut may rebuild the pinned client bundle and the template copy 
 do-not-rebuild pin lifted for this cut only); decoding a byte-0 contract must throw the source's sentence, and the bundle
 text must not contain THRESHOLD_LN. The fleet pin is not moved: the Daily's signer nodes stay on 02eefc04, no byte-0 round
 is posted live, the service is not restarted - the live refusal probe is not part of this cut.
-RED FIRST (blwp-client/test/withdrawn-custody-bundle.test.js, today's bundle, 0/2): the source refused one fixture contract
+RED FIRST (arena-client/test/withdrawn-custody-bundle.test.js, today's bundle, 0/2): the source refused one fixture contract
 with its custody byte at 0 - "custody byte 0 is not a custody of this network: the one value is FEDERATION" - and dist and
 the WebGL template's copy both decoded it as { custody: 'THRESHOLD_LN' } (their CUSTODY still read ['THRESHOLD_LN',
 'FEDERATION']); both texts named THRESHOLD_LN.
-THE CUT: seven comment lines in four bundled sources named it (protocol constants.js; blwp-client join.js, client.js,
-ghost-field.js) - reworded to "the withdrawn Lightning custody", no code changed; dist/blwp-client.js rebuilt
-(tools/bundle.js) and copied to unity-proto/Assets/WebGLTemplates/BtcLogistics/blwp-client.js; its hash appended to
+THE CUT: seven comment lines in four bundled sources named it (protocol constants.js; arena-client join.js, client.js,
+ghost-field.js) - reworded to "the withdrawn Lightning custody", no code changed; dist/arena-client.js rebuilt
+(tools/bundle.js) and copied to unity-proto/Assets/WebGLTemplates/BtcLogistics/arena-client.js; its hash appended to
 known-good-clients.json by tools/known-clients.js (the earlier hashes stay listed).
 GREEN: withdrawn-custody-bundle 2/2 - both copies throw the source's sentence, neither text names THRESHOLD_LN.
-bundle-fresh stays red, now only for blwp-curve.js (not this cut's pin); blwp-client.js is the build of this source.
+bundle-fresh stays red, now only for blwp-curve.js (not this cut's pin); arena-client.js is the build of this source.
 Full suite (254 files, 1683 pass): the baseline reds only (ghost-live 9, replay-solids 2, bundle-fresh 1 - curve only -
 discovery 18, pool-outpoint's one skip) and objective-markers' live-Chrome timeout.
 Next, named: cut 6b - the hold vocabulary out of protocol payout.js (the red 2 of this letter).
@@ -50100,11 +50100,11 @@ Next, named: cut 6b - the hold vocabulary out of protocol payout.js (the red 2 o
 THE RULING: delete the hold vocabulary from payout.js; lock-settlement.js takes settle-or-refund from a federation-only
 function with the same outputs; update preimage.js, /share, lnd-port.js, lnd-settings.js, the four regtest tools and the
 comments that name THRESHOLD_LN. No decode-only label; an old round that names it stays invalid. The fleet pin not moved.
-RED FIRST (protocol/test/no-hold-vocabulary.test.js, 0/4 on 16dbfa06): payout.js exported SETTLE, CANCEL, NOTHING, ACTIONS,
+RED FIRST (arena-protocol/test/no-hold-vocabulary.test.js, 0/4 on 16dbfa06): payout.js exported SETTLE, CANCEL, NOTHING, ACTIONS,
 actionByte, actionOf, settlementAction, holdSettlement, HELD, SETTLED, CANCELLED, EXPIRED, holdAfter, invoiceMatchesEntry;
-lock-settlement.js, slash.js and blwp-node preimage.js imported them; 13 files under src/ and tools/ named THRESHOLD_LN;
+lock-settlement.js, slash.js and arena-node preimage.js imported them; 13 files under src/ and tools/ named THRESHOLD_LN;
 there was no lock-action.js.
-THE CUT. protocol/src/lock-action.js: CLAIM (a loser's lock claimed into the settlement), RETURN (a qualifier's lock
+THE CUT. arena-protocol/src/lock-action.js: CLAIM (a loser's lock claimed into the settlement), RETURN (a qualifier's lock
 forfeited back to its refund key), EXPIRE (VOID: nobody acts, the lock refunds at expiry) - LOCK_ACTIONS in the byte order
 SETTLE/CANCEL/NOTHING had, so the settlement record (slash.js, 5A.3 row 4) encodes the same bytes; lockAction and
 lockActions are 23.2's table and the pool split, the same rules and outputs as settlementAction and holdSettlement.
@@ -50118,7 +50118,7 @@ TESTS: hold.test.js deleted (it tested only the deleted vocabulary and state mac
 inclusive, shares, slash-settlement, slash-conflict, no-quorum moved to the lock names, assertions unchanged - except
 inclusive's invoice check and no-quorum's holdAfter line, deleted with that code; reconstruct's refusal text now "would
 let anyone claim a lock that has to go back to its player".
-THE BUNDLE: payout.js is in the page's bundle, so dist/blwp-client.js and the WebGL template copy were rebuilt again under
+THE BUNDLE: payout.js is in the page's bundle, so dist/arena-client.js and the WebGL template copy were rebuilt again under
 this item's lifted pin (not deployed); its hash appended to known-good-clients.json (one new hash). It names no hold
 function and no THRESHOLD_LN; withdrawn-custody-bundle stays 2/2.
 GREEN: no-hold-vocabulary 4/4, inclusive 7/7, shares 15/15, slash-settlement 13/13, slash-conflict 10/10, slash-rulings 6/6,
@@ -50136,7 +50136,7 @@ not moved, nothing posted live, the service not restarted.
 THE RULING: "Cut the on-chain pool payout and those four tools now ... Payouts wiring, settleAllQueued, reconcile,
 pool-watch, and pool-signing, but only if nothing else uses them ... Do not relabel them FEDERATION." The fleet pin not
 moved. (Cut 6b had moved the four tools to FEDERATION: wrong - no federation round is paid that way; they are deleted.)
-RED FIRST (blwp-node/test/no-pool-payout.test.js, 0/3 on d81c2941): a daemon served /payout (200) and had /pool/commit and
+RED FIRST (arena-node/test/no-pool-payout.test.js, 0/3 on d81c2941): a daemon served /payout (200) and had /pool/commit and
 /pool/share doors (404 from inside the door, "this node holds no such round"); server.js built Payouts, PoolSigning and
 PoolWatch and ran payouts.reconcile() and payouts.settleAllQueued() at every start it could spend; main.js read a census
 for every PAYOUT_QUEUED round and handed the node chainSpendOver; pool-signing.js, pool-watch.js and payout-regtest,
@@ -50165,9 +50165,9 @@ Next, named: rebuild blwp-curve.js (separate commit).
 THE RULING: the lifted bundle pin covers rebuilding blwp-curve.js - bundle freshness, not a fleet move; rebuild it from its
 source into dist and the WebGL template, append its hash to the known-good list, show bundle-fresh green for it.
 MEASURED: a plain rebuild left bundle-fresh red. esbuild writes each module's path, relative to its working directory,
-into the bundle: the committed curve was built from the repository root ("// packages/blwp-client/src/page-curve.js"),
-bundle-fresh builds from packages/blwp-client ("// src/page-curve.js"), and a worktree whose node_modules is a symlink
-wrote a path through it ("// ../../../../../../../btc-phase0/packages/blwp-client/node_modules/..."): three bundles of one
+into the bundle: the committed curve was built from the repository root ("// packages/arena-client/src/page-curve.js"),
+bundle-fresh builds from packages/arena-client ("// src/page-curve.js"), and a worktree whose node_modules is a symlink
+wrote a path through it ("// ../../../../../../../btc-phase0/packages/arena-client/node_modules/..."): three bundles of one
 source, and no committed one fresh everywhere.
 THE CUT: tools/bundle-curve.js runs esbuild from the package directory with --preserve-symlinks (no source changed); the
 worktree and the main checkout then build the same bytes (sha256 2492e155...), which is dist/blwp-curve.js and the
@@ -50189,8 +50189,8 @@ THE CLASSIFICATION (by what each calls and what its invoice is):
   closed-claim.mjs, closed-line.mjs, outage.mjs, settle-live-regtest.mjs   federation-gateway: stake locks on a real
                               federation; lookupinvoice of an ordinary addinvoice withdrawal - kept
   stake-lock-step5.sh, stake-lock-step6.sh   federation-gateway: withdrawal to an ordinary addinvoice, no hold call - kept
-  blwp-client winnings-page-probe.mjs        federation-gateway: looks up a sent winning's ordinary invoice - kept
-RED FIRST (blwp-node/test/no-hold-store.test.js, 0/4): round.js defined putHold, hold, holdsOf, holdsInState (and dropHold)
+  arena-client winnings-page-probe.mjs        federation-gateway: looks up a sent winning's ordinary invoice - kept
+RED FIRST (arena-node/test/no-hold-store.test.js, 0/4): round.js defined putHold, hold, holdsOf, holdsInState (and dropHold)
 over `holds`, and nothing in src/ wrote one; server.js read round.hold() into the settle log (hold=-); the three
 hold-invoice tools called the hold commands; a new store created `holds`.
 THE CUT: the hold methods deleted; the settle log line prints no hold=; store.js no longer creates `holds` (a store from
@@ -50205,7 +50205,7 @@ new store - has no caller in src, tests or tools: the same dead hold-invoice rec
 ## THRESHOLD_LN: the §23.5 fee's hold store is deleted (RULED Daniel 2026-09-25; code commit ae116c10)
 
 THE RULING: the fee hold store is the same dead hold-invoice record as cut 2b's; it does not stay so an old round can
-decode. The pin before any delete (blwp-node/test/no-fee-hold-store.test.js) read 1 red, 2 red, 3 green, 4 green; after
+decode. The pin before any delete (arena-node/test/no-fee-hold-store.test.js) read 1 red, 2 red, 3 green, 4 green; after
 the delete, 4/4.
 THE CUT: putFeeHold, feeHold and feeHoldsOf are gone from round.js; a new store creates no fee_holds table (store.js);
 an old store keeps its table and row, unread; nothing outside round.js calls the three methods (assertion 4 scans every
@@ -50219,7 +50219,7 @@ pass): the known reds only (ghost-live 9, replay-solids 2, discovery 18, objecti
 THE RULING: POST /round refuses a paying round whose federation charges a base fee - the rule /entry already enforced -
 and does not open, store or list it; federationTakesNoBaseFee is called before round.open(contract), with the entry
 refusal's own sentence and 409.
-RED FIRST (blwp-node/test/round-open-base-fee.test.js; the lock fixture's port, two distinct live gateways naming the
+RED FIRST (arena-node/test/round-open-base-fee.test.js; the lock fixture's port, two distinct live gateways naming the
 round's federation, only the fee rule changed; the round moved to the present so /rounds would list it): case 1 (base fee
 1000 msat) 201, case 2 the round stored and listed, case 5 no guard call before round.open - red; case 3 (base fee 0) 201
 and listed, case 4 (no fee rule known) 201 - green.
@@ -50243,7 +50243,7 @@ the stake, named before its edit.
 MEASURED BEFORE (a scratch probe): the federation checks sat inside `if (contract.stakeMsat > 0n && stakeLocks)`, so with no
 lock port a named paying round was 201, stored and listed - under the fixture's funding and the launcher's operatorFunding -
 and every entry into it 402 ("this node stores nothing for an entry nobody has funded").
-RED FIRST (blwp-node/test/round-open-no-lock-port.test.js): 1 (no lock port, launcher funding: 409 with the sentence), 2 (not
+RED FIRST (arena-node/test/round-open-no-lock-port.test.js): 1 (no lock port, launcher funding: 409 with the sentence), 2 (not
 stored, not listed) and 6 (the refusal sits before round.open in POST /round) red; 3 (a free round opens and lists, the
 Daily launcher's rule), 4 (lock port, zero base fee: 201) and 5 (unreadable fee rule: 503) green. After: 6/6.
 THE CUT: server.js - `if (contract.stakeMsat > 0n && !stakeLocks) return text(res, 409, REACHES_NO_FEDERATION)` before the
@@ -50277,7 +50277,7 @@ MEASURED BEFORE (a probe on guardians-bonded's fixture with the round's clock in
 4 guardians bonded, threshold 3) and none bonded (0 of 2) were 409 with the round STORED and LISTED - guardiansBonded ran
 after round.open; bonded (2 of 2) 201, stored, listed, 2 signer nodes; a federation other than the round names the gateway
 409, nothing stored.
-RED FIRST (blwp-node/test/round-open-unbonded.test.js, the same fixture): 2 (under threshold not stored, not listed), 3 (none
+RED FIRST (arena-node/test/round-open-unbonded.test.js, the same fixture): 2 (under threshold not stored, not listed), 3 (none
 bonded: 409, the sentence, not stored, not listed) and 6 (the source asks guardiansBonded before round.open) red; 1 (409 with
 the sentence and "2 of that federation's 4 guardians ... threshold is 3"), 4 (bonded 201 stored listed, 2 signer nodes) and 5
 (other federation: gateway 409, nothing stored) green. After: 6/6.
@@ -50373,7 +50373,7 @@ uncommitted.
 THE CHECK FIRST (RULED Daniel 2026-09-25): items 8-11 had no record in TASKBOOK or PRIORITIES under the rehearsal's own
 words; the W-slices covered part of 9 (the page redeems a payout into its wallet on its own, 38990) and part of 10
 (`GET /settled?since=`, 39596). Item 12 (reshare) stays parked until 8-11 are measured.
-HOW MEASURED: packages/blwp-node/tools/rehearsal-8-regtest.sh + rehearsal-8.mjs, one clean run on a fresh regtest: stock
+HOW MEASURED: packages/arena-node/tools/rehearsal-8-regtest.sh + rehearsal-8.mjs, one clean run on a fresh regtest: stock
 fedimintd 0.12.0, 4 guardians 3 of 4, two gateways (SECOND_GATEWAY=1), seven bonded signer nodes on the chain (four bond
 one guardian each). One player's stake made by page-lock.js's own lockStake; every Lightning payment the player's lnd
 makes during it counted (lncli listpayments before and after).
@@ -50442,7 +50442,7 @@ verifyStakeLock's checks refused is not measured. That is the next thing to meas
 THE HARNESS FIXED FOR THE NEXT RUN (not remeasured): rehearsal-8.mjs now records each signer node's /lock answer text
 (said[].why) and counts the seats' verification in its verdict.
 GREEN: page-lock 29/29, bundle-fresh 2/2, bundle 5/5, withdrawn-custody-bundle 2/2, client-hash 3/3 (the rebuilt
-blwp-client.js pinned by tools/known-clients.js, 5d121e3a...). Full suite (254 files, 1617 pass): the listed reds, and
+arena-client.js pinned by tools/known-clients.js, 5d121e3a...). Full suite (254 files, 1617 pass): the listed reds, and
 the known ghost-live 9, replay-solids 2, discovery 18, objective-markers' timeout only (client-hash, red in that run
 before the pin, 3/3 after it).
 
@@ -50491,7 +50491,7 @@ NOT PATCHED (RULED): the timer, the Withdraw path, the pool send and the settlem
 
 ## FEDERATION REHEARSAL ITEM 9 (b): TWO ROUNDS STAKED FROM THE ONE PLAYER WALLET AFTER ONE DEPOSIT - GREEN (2026-09-25)
 
-HOW MEASURED (RULED Daniel 2026-09-25: staked, not played - no win, no gate driver): packages/blwp-node/tools/
+HOW MEASURED (RULED Daniel 2026-09-25: staked, not played - no win, no gate driver): packages/arena-node/tools/
 rehearsal-9b-regtest.sh + rehearsal-9b.mjs, one fresh regtest - stock fedimintd 0.12.0, 4 guardians 3 of 4, two gateways,
 seven bonded signer nodes. One Lightning deposit into the player wallet, sized as twice the one-round top-up item 8's
 wallet was credited (2 x 1009152 msat), through the wallet's own depositFor/receive once (fundPlayerWallet's one-round
@@ -50522,7 +50522,7 @@ answered by name, nothing spent. The page's Withdraw press calls it once, after 
 nothing else calls it. page-lock's timer guard now counts withdrawPlayerWallet as a spend and pins its one call inside the
 press. page-lock 30/30 (one new test: the withdraw spends the wallet the stakes left, its whole balance to the player's
 invoice; an empty wallet spends nothing). The stand-in lock client now keeps its balance after a lock as the real
-database does. Bundle and template rebuilt; the new blwp-client.js pinned (97019adf...; an intermediate build, never
+database does. Bundle and template rebuilt; the new arena-client.js pinned (97019adf...; an intermediate build, never
 shipped, left off the list). No payout contract added; item 9 (a) stays red by design.
 HOW MEASURED: rehearsal-9c-regtest.sh + rehearsal-9c.mjs, one fresh regtest - stock fedimintd 0.12.0, 4 guardians 3 of 4,
 two gateways (A on 30170, B on 30180), seven bonded signer nodes; the 9 (b) shape exactly, then the page's timer call
@@ -50546,8 +50546,8 @@ ones lockStake and the withdraw open); only one ever spent here. The page's own 
 database would spend the same notes.
 GREEN (item 9 (c)): page-lock 30/30, bundle-fresh 2/2, client-hash 3/3. Full suite (254 files, 1619 pass): the listed
 reds and the known ghost-live 9, replay-solids 2, discovery 18, objective-markers' timeout - and round.test 8, which the
-UNCOMMITTED replay page caused (it sat in blwp-node/src, where the guard allows a core to be stepped only in replay.js);
-that page moved to blwp-node/pages/ in its own slice, round.test 12/12.
+UNCOMMITTED replay page caused (it sat in arena-node/src, where the guard allows a core to be stepped only in replay.js);
+that page moved to arena-node/pages/ in its own slice, round.test 12/12.
 
 ## THE ARRIVAL CARD: THE CORE'S SCORE IS THE PRODUCT OF E, T AND C, AND THE CARD PRINTS THEM - CLOSED (2026-09-26)
 
@@ -50803,10 +50803,10 @@ RULED (Daniel 2026-09-26 13:28). The copied replay link must keep working, alway
 - Keep a round, its entry, transcript, randomness and core at least 7 days, across restarts.
 
 THE CORES (fleet 47872b4a, the same change here).
-- The node serves a round whose core it no longer runs from BLWP_REPLAY_CORES_DIR/<hash>.js, and writes its own core
+- The node serves a round whose core it no longer runs from ARENA_REPLAY_CORES_DIR/<hash>.js, and writes its own core
   there when it starts. The Daily's directory is /mnt/bitcoin/blwp-2of2/replay-cores, outside the checkout.
 - tools/archive-replay-cores.mjs finds each core's commit by hash-core's rule and bundles it. bundle-replay.js takes
-  BLWP_REPLAY_SRC and guards its exports.
+  ARENA_REPLAY_SRC and guards its exports.
 - replay.html replays an older core without factors, landmarks or map solids.
 - The stores name 15 cores. 14 are archived, each from the commit whose core/src hashes to it: 5f3b5176 .. 44107ead.
   f33aa45c (rounds of 2026-09-12..13, older than the 7 days) predates the replay adapter and is not.
@@ -50818,11 +50818,11 @@ THE CORES (fleet 47872b4a, the same change here).
   - replay.test 9/9 on the fleet and here; server.test 5/5 here.
 
 THE STABLE NAME (in code, not yet on).
-- /replay/nodes answers 'stable' from BLWP_REPLAY_PUBLIC. The page copies from it when there is any (deployed,
+- /replay/nodes answers 'stable' from ARENA_REPLAY_PUBLIC. The page copies from it when there is any (deployed,
   a202af9c).
 - BLOCKED: Funnel serves only / -> localhost:3001, and adding /blwp-a and /blwp-b needs root: `sudo tailscale set
   --operator=daniel` once, or the two `sudo tailscale funnel --bg --set-path` commands.
-- BLWP_REPLAY_PUBLIC stays unset until those paths exist. The measure still owed: a link copied after that plays after
+- ARENA_REPLAY_PUBLIC stays unset until those paths exist. The measure still owed: a link copied after that plays after
   the quick tunnel restarts.
 
 ## ITEM 5, THE CUT BEFORE CODE (2026-09-26, not yet agreed): fleet pin, guardians, the first paying testnet4 round
@@ -50838,7 +50838,7 @@ FLEET PIN
     from edccc29d, which only records that copied replay cores are kept.
   - Spot check on 38d7299b's page with the kept core 44107ead, round 7e05b113 entry 287a4f8f: no page error, the page
     leaves tick 0, the result line reads "DELIVERED / score 0.65100 · 00:24.3107", core step DELIVERED first at tick 1459.
-  - It carries the kept replay cores (BLWP_REPLAY_CORES_DIR) and /replay/nodes' stable bases, and on top of those the
+  - It carries the kept replay cores (ARENA_REPLAY_CORES_DIR) and /replay/nodes' stable bases, and on top of those the
     closed-round refusal, the copy-replay card, the replay clock and the ROLL OUT camera.
   - core/src has not changed since edccc29d: hash-core.js gives d15c39bb on 38d7299b too.
   - The paying round names core d15c39bb with the genesis config.
@@ -50884,7 +50884,7 @@ FLEET PIN
   core has none of). Its rounds: 2026-09-12 12:59 through 2026-09-13 11:39 UTC, node a 573 rounds of which 12 have
   entries, node b 533 rounds of which 11 have entries. Their replays already fail on the live Daily (core 44107ead); the
   pin does not add that miss. Not a clean archive and not fixed: no bundler change, no game change.
-- The copied replay link: on 38d7299b it names the nodes' stable bases through BLWP_REPLAY_PUBLIC. The reach parameter
+- The copied replay link: on 38d7299b it names the nodes' stable bases through ARENA_REPLAY_PUBLIC. The reach parameter
   is not on phase0; it is unshipped fleet work.
 - Only /blwp-a and /blwp-b exist on Funnel, which covers the free pair. The seven paying nodes have no stable base yet,
   so a replay of a paying round would name its quick-tunnel endpoints until each has one.
@@ -50927,11 +50927,11 @@ GUARDIANS
   (/guardian-1 to /guardian-4), chosen by the node, not the operator. The zero-config node-as-guardian and the
   stock-wallet pick below stand.
 - THE NODE STARTS ITS GUARDIAN (2026-09-26 23:00-23:50, spec e7f71f5f §23A.2), measured live on the Beelink:
-  - Code: blwp-node/src/guardian.js; main.js starts it before serve() and stops it on SIGINT/SIGTERM; server.js carries
+  - Code: arena-node/src/guardian.js; main.js starts it before serve() and stops it on SIGINT/SIGTERM; server.js carries
     /guardian to it (upgrade dispatcher: /play as before, /guardian piped to the guardian's local API, anything else
     400) and answers GET /guardian with {guardian, endpoint}. test/guardian.test.js 4/4.
   - Nothing is guardian config. The chain from the node's own bitcoind (getblockchaininfo.chain); bitcoind URL and
-    cookie are the node's BLWP_BITCOIND_URL/COOKIE; data beside the store (<store>.guardian/, admin password made there,
+    cookie are the node's ARENA_BITCOIND_URL/COOKIE; data beside the store (<store>.guardian/, admin password made there,
     mode 600); local ports node+1000 api, +2000 p2p, +3000 ui, +4000 metrics; FM_API_URL is the node's own Funnel path
     (the handler that proxies to the node's port, read from tailscale funnel status) + /guardian; base fees off; iroh
     off; the stock wallet module (walletv2 off). fedimintd is found on the node's PATH like any tool it runs; with no
@@ -50987,7 +50987,7 @@ GUARDIANS
 - ITEM 5 STATUS (2026-09-27, read-only on e042e442; signet refused by Daniel, no patch, no chain change):
   paying round NOT STARTED - chain remains testnet4; signet refused; Funnel has the four /guardian-N paths to the testnet4 nodes but the public ingress answered 0 of 6; blocked on no stock gateway joining a testnet4 federation (Fedimint 0.12 labels testnet4 regtest; gateway lib.rs:1057).
   HOLD (2026-09-27): the first paying testnet4 round waits on Daniel to hand over one thing - a stock gateway that can join the existing 3-of-4 testnet4 federation d3756588...; until it arrives no gateway is started, nothing is probed, no coin moves, Fedimint is not patched, the chain stays testnet4, and item 5 stays open.
-  - Code facts at e042e442: testnet4 federationNominal 4 (protocol/src/genesis.js:183); testnet4 network id the
+  - Code facts at e042e442: testnet4 federationNominal 4 (arena-protocol/src/genesis.js:183); testnet4 network id the
     re-pinned 26b9162e... (genesis-ids.js:49); one guardian key per node (tools/run-2of2.mjs:138, i < fed.keys.length).
 - THE TESTNET4 GUARDIANS, RULED (2026-09-26):
   - Count: 2 guardians, 2 of 2, federation_min 2 (multiplayer_p2p.md §23A.1 table: the testnet column; §23A: "the
@@ -51219,7 +51219,7 @@ testnet4 in fedimint-server-core/src/bitcoin_rpc.rs (mainnet, testnet3, signet, 
 AROUND IT:
 - gw-a was stopped 15:51:59 to free LND-a (LND takes one HTLC interceptor) and, being a transient unit, lost its
   definition. Recreated with the command, PATH and HOME its unit showed:
-  tailnet-exec /bin/bash .../gw/packages/blwp-node/tools/testnet4-gateway.sh /mnt/bitcoin/lnd-testnet4
+  tailnet-exec /bin/bash .../gw/packages/arena-node/tools/testnet4-gateway.sh /mnt/bitcoin/lnd-testnet4
   127.0.0.1:11009 31270 /home/daniel/blwp-testnet4/gw-a, PATH=.../01b12b8a.../fmpath:/usr/bin:/bin,
   HOME=.../3702e750.../fm/home. Listening on 31270 (gatewayd pid 378690). Its log is ~/blwp-testnet4/gw-a.log, the
   file whose first line is its own first start (2026-09-27T06:24:28Z "Starting gatewayd").
@@ -51324,7 +51324,7 @@ DONATION_DOWN=1, locks by the page's own lock client, nothing listening for the 
           held contracts spent; FAILED player's lock held (150 blocks); /forfeit 409.
 
 HOLE 3's proof, the round-id refusal on the private regtest that holds the series file (series-regtest.mjs, bitcoind
-30601, two main.js with BLWP_SERIES_FILE): the genuine round i 201 x2, its id the hash; a moved window, index 960, a round
+30601, two main.js with ARENA_SERIES_FILE): the genuine round i 201 x2, its id the hash; a moved window, index 960, a round
 of a series not held - 409 by name; the same store without the series refuses an entry, a lock and a settlement commit
 naming it. With the chain view on, the genuine round passes the series door and meets the chain's bond door.
 KNOWN GAPS, RULED to stay (Daniel 2026-09-30): testnet4 runs pin 061193a1 - a paying no-qualifier walk-away there still
@@ -51395,7 +51395,7 @@ Before (testnet4, pin 061193a1): round 5eaa0966's census still held extra bond r
 seated node 7 (fefa1945) and node 4 (a63a3cd4) twice in the game pool and node 2 (f4bfe620) twice in settlement; the page's
 join was refused before any invoice: "0 of the 5 signer nodes needed to open this stake took the handout ... two signer
 nodes of that handout are one key". 5eaa0966 left as it is; no deposit into it.
-Now (protocol/src/sortition.js selectCommittee): a node key is drawn at most once - all its bonds for the role one entry,
+Now (arena-protocol/src/sortition.js selectCommittee): a node key is drawn at most once - all its bonds for the role one entry,
 their sats summed into its weight, its ticket drawn on its lowest outpoint; an outpoint excluded for a re-draw excludes its
 key; fewer keys than seats gives each key once (the census minimum still refuses a census too small - roster.test pins the
 smaller honest committee). GET /rounds names what a committee was drawn from (eligibleEntries, eligibleKeys).
@@ -51418,14 +51418,14 @@ Why the nodes listed only 5eaa0966: series 3cfbe516 (publication 3029fc6f in 154
 d15c39bb and config bbae68dc - both HEAD's) names testnet4's network id before 04c5ecec made genesis_series_start a genesis
 parameter: 26b9162e..., where every node now is bf876cb1... . No unit held it; loaded, the 72 h lead a network nobody knows
 gets and the 2026-10-01 grid refused it and the node exited.
-Now (protocol/src/old-series.js, one named exception): networkOf and the donation authority take the old id as testnet4;
+Now (arena-protocol/src/old-series.js, one named exception): networkOf and the donation authority take the old id as testnet4;
 the series clock is testnet4's (24 h lead) for it; the grid is waived for series 3cfbe516 alone; the node holds testnet4's
 old signed donation set (7b128a1b, as at 04c5ecec^); POST /round refuses any round naming the old id that is not a round of
 this series. Any other series under the old id is still refused (off the grid).
 MEASURED: old-series.test 2/2 (its id, 24 h lead taken, testnet4 genesis and keys, its donation set; another series of the
 old id refused); protocol contract-network, donation-authority, donation, genesis, series-round, test-donation-sets,
 protocol 88/88; node series-doors, donation-set-door 5/5, series-ahead, donation-rotation 7/7; bundle-fresh, client-hash.
-A node process (main.js, BLWP_SERIES_FILE = the template, BLWP_DONATION_NETWORK=testnet4, no chain): starts, "3cfbe516:
+A node process (main.js, ARENA_SERIES_FILE = the template, ARENA_DONATION_NETWORK=testnet4, no chain): starts, "3cfbe516:
 510 round(s) written" (indices 450-959), /rounds lists them paying 10000 sat, entry open; the template posted as a plain
 round is refused 409 "only series 3cfbe516 is taken under it". Full suite to follow the pin move (deadline 12:00Z).
 
@@ -51552,7 +51552,7 @@ posted); and 8172fffd covers 24 h, not 72 - series k=2 and k=3 can be posted onl
 THE GAP 2026-09-30 19:52Z - 2026-10-02 00:00Z, CLOSED BY THE 16:31 RULE ("until tomorrow, 10000 sat. Then 100 sat"): the paying
 runner (blwp-tn4-paid, attached, entry window 6 h) keeps opening one-off paid rounds - last opened 3798dcb3 at 12:38Z - at
 10000 sat; a systemd timer (runner-100-switch, 2026-10-01 00:00:00 UTC) restarts it from runner-attach.env with
-BLWP_PAID_STAKE_MSAT=100000, so its rounds are 100 sat from tomorrow until series 8172fffd plays. The lobby's newest series
+ARENA_PAID_STAKE_MSAT=100000, so its rounds are 100 sat from tomorrow until series 8172fffd plays. The lobby's newest series
 now wins only when its row is JOINABLE (open and assigned; a node assigns a series round 2 h before its start) - an open,
 unassigned 8172fffd row on 2026-10-01 would otherwise have hidden the runner's joinable round. lobby 12/12; live page
 (deploy a088b366) 15:5xZ: FREE and PAID 10000 sats, joinable. Series k=2, k=3: series-waiter posts them when postable.
@@ -51565,7 +51565,7 @@ joinable until 23:45:40Z), every node answering: the rounds overlap, no gap afte
 is published at about 19:45Z, before 1ea2d054's close. The 00:00Z timer (runner-100-switch) still restarts it at 100 sat.
 The runner now logs to its journal (journalctl --user -u blwp-tn4-paid), not paid.log.
 SETTINGS HISTORY (Daniel 2026-09-30 16:15; the accepted sequence): an append-only ledger per federation in the tab's
-vault, blwp.ledger.<federation id>, written from page-lock.js - a deposit row once fundPlayerWallet's receive is claimed
+vault, arena.ledger.<federation id>, written from page-lock.js - a deposit row once fundPlayerWallet's receive is claimed
 (amount, credited, invoice hash), a stake row when saveLock keeps the lock (round, player, amount; markLockCommitted adds
 the entry), a withdrawal row when withdrawPlayerWallet or collectAndWithdraw succeeds; stakes kept by saveLock before it
 existed are read in once. Settings shows, under the balance line, "Federation <LockClient.federationIdOf(invite)>" and the
@@ -51643,7 +51643,7 @@ amount." in red, both at the press and from the wallet's answer; no msat, no lib
 DEPOSIT-RELOAD-PAID (Daniel 2026-09-30 go: one real deposit, Custom 100 sat from Settings, paid from LND-a through
 gateway B, one reload while it is being claimed; the tab's player wallet, not a round; 94a56ba9 untouched).
 Holes closed first: (a) a deposit paid just before a reload had no history row - every invoice is now kept under
-blwp.deposit.pending.<fed> until it ends, and the reopened wallet (warmPlayerWallet -> resumeDeposits) waits on each kept
+arena.deposit.pending.<fed> until it ends, and the reopened wallet (warmPlayerWallet -> resumeDeposits) waits on each kept
 operation and writes its row once (by invoice hash); (b) the Confirmed/Pending boxes read BLWP_WALLET_BALANCE and nothing
 ever set it ("–" for every player) - the warmed wallet now sets it (balanceMsat) at open, every 10 s, after a claim and
 after a withdrawal.
@@ -51678,16 +51678,16 @@ cannot be invoiced. Nothing was paid; the modal was closed (join refused); the r
 REST-FLOOR LIVE (0808e1cc, deploy 7350daac; tab seed 1405e2d3, round 41dcfe88). The modal opened as the rest: "This round
 needs 2 more sat for fees. The smallest Lightning deposit is 5 sat. Pay 5 sat to join.", invoice lntb50n (5 sat). LND-a
 paid it, SUCCEEDED 04:45:36.7Z. The wallet then held 104448 msat, need 100310: funded; the modal was gone at 04:45:41.0Z
-(4.3 s after the payment). Stake lock: join "joined", blwp.lock.saved for 41dcfe88, history deposit 100000 / deposit 5000
+(4.3 s after the payment). Stake lock: join "joined", arena.lock.saved for 41dcfe88, history deposit 100000 / deposit 5000
 / stake 98000 (41dcfe88); balance 6 sat. NOT SEEN: the green line - the sampler (100 ms, page busy claiming) caught no
 frame between "Waiting ..." and the close, so neither it nor the 2.5 s close is measured.
 PHRASE KEPT (Daniel 2026-10-01, replaces the tab-only rule of 2026-09-30): blwpSeedKeeper in the boot script keeps every
-phrase a tab holds in localStorage (blwp.seeds) with a 4 s heartbeat per held phrase; a tab with none takes a kept phrase
+phrase a tab holds in localStorage (arena.seeds) with a 4 s heartbeat per held phrase; a tab with none takes a kept phrase
 no live tab holds (12 s), so a browser opened again gets it back and two open tabs stay two players. seed-keeper.test.js
 (restart, crash, two tabs, reload, import); join.test's guard allows localStorage in vault() and the keeper only.
 PHRASE-KEPT LIVE (147a2dba, deploy 049d1ebf, Beelink Chrome from scratchpad/blwp-browser, one profile): the funded tab
 reloaded on the new page kept 1405e2d3; with it open, window A got 67385177 and window B 0ceedbec (two tabs, two
-players); blwp.seeds held all three. The browser was then stopped (whole process), started again, its restored tabs
+players); arena.seeds held all three. The browser was then stopped (whole process), started again, its restored tabs
 closed, and a fresh window opened 05:15Z: phrase 1405e2d3, balance 6 sat, its 3 history rows - the wallet came back.
 PAID-90S-ONLY (Daniel 2026-10-01 05:2xZ: "We want always 90 second rounds in Testnet like before"; "no paid row till
 then"; "90 seconds as soon as it's valid"): the one-off runner blwp-tn4-paid stopped and disabled (unlinked) - no more
@@ -51788,7 +51788,7 @@ VERIFIED ON A REAL DEVICE (Daniel 2026-10-01 ~07:1xZ: "Deposit and withdrawal ve
 Done"): live 01012273 (deploy 810684d0). Left open, named: one tab per wallet (Web Locks) - two clients on one wallet's
 storage double-spent a note in the test browser (8192 msat of seed 1405e2d3 lost there).
 ONE TAB PER PHRASE (Daniel 2026-10-01: "Fix that problem"): the phrase keeper takes the browser's exclusive Web Lock
-'blwp.phrase.<16 hex>' for the tab's phrase (at start, and for a phrase minted or imported later) and holds it while the
+'arena.phrase.<16 hex>' for the tab's phrase (at start, and for a phrase minted or imported later) and holds it while the
 tab lives. A tab whose phrase another tab holds - duplicated, or restored beside its original - drops the phrase, takes a
 new tab id and reloads as its own player (a free kept phrase, or a new one). seed-keeper.test.js: a duplicate with copied
 session storage is moved off the phrase.
@@ -51797,9 +51797,9 @@ sat); tab B given a copy of A's session storage (phrase and tab id, as a duplica
 phrase's lock held, dropped it and came back on its own phrase ec2984cf with a new tab id; A kept 1405e2d3 and its 102 sat.
 DEPLOY-DAS-0917 (Daniel 2026-10-01 09:17: rebuild, then deploy; not the old directory): Unity 6000.0.82f1 WebGL build of
 fc02939b (BuildWebGL.Run) into scratchpad/webgl-0917 -> 0.0.2413, Build/webgl-0917.*; its page files equal the template
-(blwp-client, lock client 2-file, core, curve). Deployed that directory to btc-logistics-core (deploy 80443d2f; the kept
+(arena-client, lock client 2-file, core, curve). Deployed that directory to btc-logistics-core (deploy 80443d2f; the kept
 page copy /mnt/bitcoin/blwp-2of2-s/page now this build). Measured: build.txt 0.0.2413 on the deploy URL and the alias;
-index carries the tab lock (blwp.phrase. x8); daily.json has testnet; loader webgl-0917. Beelink Chrome on the alias:
+index carries the tab lock (arena.phrase. x8); daily.json has testnet; loader webgl-0917. Beelink Chrome on the alias:
 title "build 0.0.2413"; tab A phrase 1405e2d3 (102 sat); a copy of its session reloaded moved to 99b85f40; A kept
 1405e2d3 and 102 sat. Daily pin, bonds, federation and series untouched.
 RESTORE ON 0.0.2413 (letter after DEPLOY-DAS-0917): the copied-session run was not a Chrome restore (a script wrote tab A's
@@ -51808,7 +51808,7 @@ session storage into a new tab and reloaded). Measured now, live alias, Beelink 
   took 1405e2d3 (102 sat), the only client.
 - that tab (3C63C4A2, 1405e2d3) - clean browser stop, restart --restore-last-session, a fresh tab opened at once: RESTORED
   13ABAA72 came back on 1405e2d3 with its own tab id 69a87656... (the same tab, load type back_forward), 102 sat; FRESH
-  4C2049BB took 67385177 (0 sat). navigator.locks.query(): blwp.phrase.1405e2d3 held by one client only, 67385177 by the
+  4C2049BB took 67385177 (0 sat). navigator.locks.query(): arena.phrase.1405e2d3 held by one client only, 67385177 by the
   other. No second wallet client on 1405e2d3.
 - not producible here: a restored tab BESIDE a still-open tab on the same phrase (Reopen-closed-tab / Ctrl+Shift+T has no
   DevTools command in headless Chrome); it reaches the page the same way as the copied session - the phrase in session
@@ -51836,12 +51836,12 @@ spec says"; "test fee payments and donations properly"; spec 3d12dea4):
   msat to the winner, 2000 msat fee split 1000/1000 to 2 signer nodes.
 WINDOW-10-SPEC, POINTS 1-4 (Daniel 2026-10-01: "Accepted ... Go. Build that plan"; re-run window opens at the previous
 window's close, E+600, never at the objection's arrival or block). E = the round's end from its contract (roundEndMs).
-1. protocol/src/contracts.js: objectionWindowMs must be exactly 600000n, else invalid (MAX_OBJECTION_WINDOW_MS withdrawn;
-   OBJECTION_WINDOW_MS + FINAL_TOLERANCE_MS 5000 in constants.js, windowsOf() in protocol/src/window.js). Node refuses open
+1. arena-protocol/src/contracts.js: objectionWindowMs must be exactly 600000n, else invalid (MAX_OBJECTION_WINDOW_MS withdrawn;
+   OBJECTION_WINDOW_MS + FINAL_TOLERANCE_MS 5000 in constants.js, windowsOf() in arena-protocol/src/window.js). Node refuses open
    (POST /round 400), list (/rounds skips a held one), entry (Round.enter); the page's fetchRound refuses list and join.
    Measured (window-10.test 1): 0/599999/600001 -> 400 "objection window is N ms: ... exactly 600000ms", 600000 -> 201,
    a pre-rule round in the store not listed, enter refused by name. Client page-lock.test: same three refused by fetchRound.
-2. FINAL is a signed record (protocol/src/final-sig.js, TYPE 0x1a: round, entry, run, signer, signed-at). A seat signs from
+2. FINAL is a signed record (arena-protocol/src/final-sig.js, TYPE 0x1a: round, entry, run, signer, signed-at). A seat signs from
    its own E+605 s, holding PROVISIONALLY_FINAL, transcript posted, no valid objection received in time; GET /final-sig signs
    fresh, POST /final-sig takes one; each watch gathers the peers' (gatherFinal). Counted only if signed within 5 s of the
    receiver's clock, at/after E+605, by a committee seat; one refused for its time is kept as evidence (final_sig_evidence).
@@ -51885,7 +51885,7 @@ the paid round - the 2026-10-02 00:00Z paid round does not hold this item, and i
 (2) the series pair (/mnt/bitcoin/blwp-2of2-s/code) moved b9ce39f1 -> 5f0f88dd, blwp-series-nodes restarted, its node
 lists its rounds again; the 600 s wall window and the FINAL path apply to the free series there. The Daily pin a535ec62 is
 an explicit exception, untouched.
-THE FREE ROUND, TRIED: the testnet4 units fund no free round (BLWP_FUND_FREE_ROUNDS unset: 402); set for the run in a
+THE FREE ROUND, TRIED: the testnet4 units fund no free round (ARENA_FUND_FREE_ROUNDS unset: 402); set for the run in a
 drop-in, then removed (the units restarted as before). With it set, POST /round answered 409 on all seven: six "no chain
 view for that round" (each node reads a 2107-block census view, ~11 s alone, minutes with seven after a restart), node 7
 "there is no publication transaction to read" - a round that is not of a series must have its own testnet4 publication
@@ -51910,7 +51910,7 @@ a free round is not posted on the chain in advance and is still multiplayer):
   measured again unloaded.
 ITEM 1, THE LIVE FINAL GATE (Daniel 2026-10-01 (a), then FREE-MP-1531: a free round is not posted on the chain): free round
 5590a88f42ca322fb55da35b759ebaf90d76a817f74f10b5822cfee7530ec32f on the 7 testnet4 nodes (no publication - roster.js now
-takes a free round without one; BLWP_FUND_FREE_ROUNDS set for it, removed after), one walk-away entry 8e6278ae (FORFEIT 0,
+takes a free round without one; ARENA_FUND_FREE_ROUNDS set for it, removed after), one walk-away entry 8e6278ae (FORFEIT 0,
 agreed 7 of 7). Start 15:15:00Z, end 15:18:29.949Z, window closed 15:28:29.949Z, final_after 15:28:34.949Z. Measured
 15:31Z off each seat's store: every seat holds all 7 FINAL signatures, signed 15:28:35.666Z .. 15:28:38.075Z (the first
 0.72 s after final_after), each received 37 .. 186 ms after it was signed (inside the 5 s tolerance), 0 refused as
@@ -51936,10 +51936,10 @@ constant. It must be part of the round announcement"; "There may be no gaps betw
 - The fork instant: 2026-10-03 00:00Z, series k=2's start on the testnet4 grid (the first grid slot 24 h out). Paid:
   series k=2 re-made at 4920 on the new core (dry run: series 7f0f3ce5773af302, census 154668, publication a5b8a903, 477
   sat) to replace e321c036 (10800, published 13:51Z, not started); series-waiter-82.sh posts k=3, 4, ... each day at 82 s.
-  Free: the opener names 4920 for rounds starting from the instant (BLWP_RUN82_FROM_MS), keeps 8 rounds ahead and resumes
+  Free: the opener names 4920 for rounds starting from the instant (ARENA_RUN82_FROM_MS), keeps 8 rounds ahead and resumes
   its grid from the rounds the pair already holds, so a restart skips no slot.
 82/90 LIVE (2026-10-01): page 0.0.2433 deployed (dc38f17d; core bundle with runTicks, plugin and Unity run clock from the
-contract). Free: the series pair on cabe9849 with BLWP_RUN82_FROM_MS 16:01:00Z - the first 82 s free round announced
+contract). Free: the series pair on cabe9849 with ARENA_RUN82_FROM_MS 16:01:00Z - the first 82 s free round announced
 16:01:34Z (blockTicks 4920, runMs 81979), every later one 90 s apart; the restart left one off-grid round 20 s after the
 last (an overlap, no slot lost). Played live (Beelink Chrome): free round c9d1f78d joined 16:37:10Z, the page's core
 restarted for it at runTicks 4920 (the contract's); the round was over at 16:39:25.973Z = start + 15 + 15 + 81.979 s, both
@@ -51966,8 +51966,8 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
   round 400 -> 409 by name ("replaced from index 360 by its 82 s tail: not announced, entered, locked or settled"), POST
   /entry -> 409 by name.
 - Free pair as separate processes (user units): blwp-series-node@a / @b (node-a.env, node-b.env), blwp-series-clock (one
-  regtest block every 10 s), and blwp-series-nodes (the opener, a real unit now, BLWP_ATTACH=1, BLWP_PUBLISH_AHEAD=1,
-  BLWP_ROUNDS_AHEAD=10, BLWP_RUN82_FROM_MS). Each round is posted as soon as it is drafted; a node answers 202 for a round
+  regtest block every 10 s), and blwp-series-nodes (the opener, a real unit now, ARENA_ATTACH=1, ARENA_PUBLISH_AHEAD=1,
+  ARENA_ROUNDS_AHEAD=10, ARENA_RUN82_FROM_MS). Each round is posted as soon as it is drafted; a node answers 202 for a round
   whose beacon is not yet on the chain and assigns it when it is. The migration left a free gap 17:39-17:48Z (the old
   opener unit was transient and had to be written as a file).
 - Free restart measured (2026-10-01): held 17:50:27 ... 17:59:27 (7 rounds), opener stopped 17:50:53 for 163 s - the nodes
@@ -51985,7 +51985,7 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
      per committee draw - 78ccd683: a verdict on fixed bytes is kept (verify-kept.js); 50749de9: the draw kept per round;
   3. the pair's nodes run as their own units since 17:47Z and lost the peers the 2-of-2 launcher handed them; the census
      adverts name tunnel names that moved, so neither node asked the other for its FINAL signature (node b served it in
-     6 ms) - 50749de9: main.js takes BLWP_PEERS, node-a.env/node-b.env name each other (backups *.pre-peers), and a run
+     6 ms) - 50749de9: main.js takes ARENA_PEERS, node-a.env/node-b.env name each other (backups *.pre-peers), and a run
      still short asks the DKG peers too.
 - Measured after (pair on 50749de9, 21:50Z): every one of the 54 held entries signed FINAL 2 of 2 at both nodes; CPU 56 %
   each; /identity 0.8 ms. Node tests green (window-10, close-retry, held-final-ask, five-of-seven, first-mark, outage,
@@ -52021,7 +52021,7 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
   publication is confirmed. Its 2026-10-03 rounds need the beacon 6 deep (tip 154734) before a node draws their committee.
 - Free row, measured live and fixed (8e9a3497, b47831cd): (1) a chain view read before the beacon was kept for good;
   (2) the rounds awaiting their beacon lived in memory, every restart forgot them; (3) with a 90 s lead the beacon is 6 deep
-  ~95 s after committee_time on the 10 s clock - after entry closed (opener BLWP_COMMITTEE_LEAD_MS=180000 now); (4) an
+  ~95 s after committee_time on the 10 s clock - after entry closed (opener ARENA_COMMITTEE_LEAD_MS=180000 now); (4) an
   opener restarted 5.6 h of 10 s blocks after bonding named a census with 0 game nodes (census kept inside the nodes'
   2016-block window); (5) each round re-read 400 beacon headers on every ask (one shared, extended window now). After:
   free rounds 993e6416, 53bc2a6a, b9534093 joinable (assigned, entry open) 22 s, 57 s, 58 s before their start.
@@ -52113,7 +52113,7 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
   127.0.0.1:18779, public through Funnel (tailscale funnel --set-path /lnurlp): https://beelink.tail1723e2.ts.net/lnurlp/
   blwp-donate-a mints invoices on LND a (beelink-testnet4, 11009), blwp-donate-b on LND b (11010); description hash = SHA-256
   of the metadata.
-- The set: protocol/tools/sign-testnet4-donation-set.mjs signs, with testnet4's donation authority (checked against the key
+- The set: arena-protocol/tools/sign-testnet4-donation-set.mjs signs, with testnet4's donation authority (checked against the key
   genesis names), serial 2, valid_from 154777, shares 6667 / 3333 - src/testnet4-donation-set.js, set id 79b7f62a... .
 - The protocol change (27A.4, the upgrade path Daniel named): a round names its set by id (22A, it cannot change after
   entry); the set in force at a round's census height is the highest validly signed serial whose valid_from that height
@@ -52144,7 +52144,7 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 ## ORDER-2116 item 1 step 4: the payment made invalid by the test fault (round d239c730, 2026-10-02 09:10Z, page 0.0.2439)
 - Winner d91b8d7e DELIVERED, score 15416100; every seat signed DELIVERED 192000 msat (the page's run and the replay agree
   on 0.0.2439); the page showed "192 sat, window closes 09:23:59 UTC" at 09:14:23Z.
-- Armed (09:10:59Z) seats 1-4 for d91b8d7e through paid/dissent-entry.txt (BLWP_TEST_DISSENT_FILE, off by default); the
+- Armed (09:10:59Z) seats 1-4 for d91b8d7e through paid/dissent-entry.txt (ARENA_TEST_DISSENT_FILE, off by default); the
   objection POSTed to all 7 at 09:18:09Z (end + 250 s), 201 at each. Seats 1-4 SUSPENDED ("a valid objection reached this
   seat at 09:18:09.820Z, before 09:24:04.949Z"), seats 5-7 PROVISIONALLY_FINAL 192000 (their replay agrees). Each armed seat
   signed its re-run with score 15416101 (the fault); no re-run reached 5.
@@ -52284,7 +52284,7 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 
 ### The run's session key kept across a reload (Daniel 2026-10-03, "Page. Keep the run's signing key across a reload") - 9adcbd2e, page 0.0.2479
 - The hole (R4, round 241f32fa): a reload 1 s after the page began posting its entry left that entry (3e3a13f4) at one seat with no stake seen, signed FORFEIT:0 there; the reloaded page made a second entry under a new session key.
-- The page now keeps, per round, in the tab's sessionStorage: the session key (Ed25519, PKCS#8, `blwp.session.key.<round>`) and the entry it built (`blwp.entry.<round>`, taken back only with the same stake lock). A reload re-sends the same entry under the same key - the same entry id. Seats unchanged: an unconfirmed stake is not void, and all holders of an entry still sign the same record.
+- The page now keeps, per round, in the tab's sessionStorage: the session key (Ed25519, PKCS#8, `blwp.session.key.<round>`) and the entry it built (`arena.entry.<round>`, taken back only with the same stake lock). A reload re-sends the same entry under the same key - the same entry id. Seats unchanged: an unconfirmed stake is not void, and all holders of an entry still sign the same record.
 - Measured live on the Beelink (harness RELOAD_SEND: the tab reloads N ms after the page logs "joining round", i.e. while the entry is being sent):
   - R6, round 06fafb59 (start 03:18:00Z), reload 0.8 s into sending: session key 56b52002 before and after, world secret f5d78076 the same, entry 9f04ee2f the same; page logs "stake lock kept from before the reload", "the entry of this round kept from before the reload"; no second deposit. The seats hold exactly two entries: 9f04ee2f (lock f909a7ae, stake seen 7 of 7, 811 ticks at 7 of 7, FAILED:26832750, 7 FINAL signatures) and the winner eb03a0b8 (lock b8b5d553, seen 7 of 7, 1235 ticks at 7 of 7, DELIVERED:40452300, 7 FINAL signatures). No stray entry, no FORFEIT. Settlement ACCEPTED at 7 of 7 (03:30:17Z, 8 of 8 payout contracts, 3 of 3 claimed locks gone); the winner's line FINAL:192000 at all 7, its wallet 194 sat.
   - R7, round bb172454 (start 03:28:30Z), reload 0.4 s into sending: session key aaa6c5a5 the same, world secret 1c69a260 the same, entry 0faf2261 the same; no second deposit. The seats hold exactly two entries: 0faf2261 (lock e88b0088, seen 7 of 7, 527 ticks at 7 of 7, FAILED:960750) and e746d788 (lock d96f4c83, seen 7 of 7, 428 ticks at 7 of 7, FAILED:690900). No stray entry, no FORFEIT. Settlement ACCEPTED at 7 of 7 (03:40:44Z, 7 of 7 payout contracts, 2 of 2 claimed locks gone).
@@ -52404,7 +52404,7 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 
 ### Guardians outlive their nodes (option 2, 2bf80e3c) - switched and measured 12:47-13:09Z
 - Why: the restart with the guardian wait still held one deposit 168.8 s. Guardian logs: each guardian restarted mid-session replays the session ("Recovering from an in-session-shutdown", units 4733 -> 10164 -> 11546 for guardians 1, 3, 7), and the federation orders new transactions late meanwhile; session 1347 ran 12:29:35-12:37:10Z. peer 6 = guardian-7 (consensus.json endpoints in order), which was NOT down when the gateway's request to it timed out. No gateway setting helps.
-- Built: BLWP_GUARDIAN_KEEP=1 (drop-in ~/.config/systemd/user/blwp-tn4-node@.service.d/guardian-keep.conf, the 7 seats only): the node starts its guardian - nothing typed - as unit blwp-tn4-guardian-<port>; a node that starts while it runs adopts it; closing the node stops nothing.
+- Built: ARENA_GUARDIAN_KEEP=1 (drop-in ~/.config/systemd/user/blwp-tn4-node@.service.d/guardian-keep.conf, the 7 seats only): the node starts its guardian - nothing typed - as unit blwp-tn4-guardian-<port>; a node that starts while it runs adopts it; closing the node stops nothing.
 - roll7.sh rewritten: an adopting node goes on at once; a restarted guardian is waited for in its own local log (a completed session or its metadata round to all 7 peers). The first version asked every guardian through its public address and stopped at node 3 (12:49-12:59Z): the Funnel relay 185.40.234.210 dropped every connection from this machine (all paths: /, /lnurlp, /gateway-b, /wallet, the guardians), while the players' Cloudflare routes answered for all 7 guardians and /lnurlp.
 - The switch (13:01:44-13:03:21Z): nodes 1-3 adopted (switched before), 4-7 restarted their guardians a last time (back in consensus after 10-17 s). Deposits through gateway B: 6 of 7 in 2.3-5.6 s, one 115.9 s during the last guardian restarts; 0 guardian timeouts at gateway B.
 - Now 7 fedimintd, each in its own unit (cgroup blwp-tn4-guardian-312x1), none inside a node.
@@ -52431,7 +52431,7 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 ### A reload in a chained round keeps it (2026-10-03, the hole after e7fc8908) - page 0.0.2492
 - Hole: BLWP_RUN_OVER's second call put the lobby's address back after the chained join had set round=, so a reload in a chained round landed in the lobby. Fix 1 (0.0.2490): the run-end handler leaves the address alone while a newer join for another round is in progress.
 - Measured on 0.0.2490 (Beelink Chrome, 13:58Z): in chained round 5fe6efa8 the address named it (round= same as BLWP_JOIN.round). A reload 10 s into that join, 84 s before its start, was REFUSED: "already locked and committed to entry c87868b3… the run cannot be resumed after a reload" - the lock was committed to the entry, and the kept entry and session key (0.0.2479, PAID-NIGHT-2155) were only used for an uncommitted lock.
-- Fix 2: keptLockUse(kept, { entry, beforeStart }) reuses a committed lock when the tab kept the very entry it was committed to (blwp.entry.<round> + round id + the kept session key's public half, the entry as the bridge sends it) and the round has not started. A started round still stops (mid-run reload stays a ruling for Daniel). 0.0.2491 still refused: page-lock.js imported `entryId as entryIdOf`, and the bundle strips imports, so the alias was undefined there and its try/catch answered "staked" (measured in the tab: the same inputs gave the matching id 43ae364c through BLWPCLIENT.entryId, "staked" through keptLockUse). 0.0.2492 imports entryId by its own name.
+- Fix 2: keptLockUse(kept, { entry, beforeStart }) reuses a committed lock when the tab kept the very entry it was committed to (arena.entry.<round> + round id + the kept session key's public half, the entry as the bridge sends it) and the round has not started. A started round still stops (mid-run reload stays a ruling for Daniel). 0.0.2491 still refused: page-lock.js imported `entryId as entryIdOf`, and the bundle strips imports, so the alias was undefined there and its try/catch answered "staked" (measured in the tab: the same inputs gave the matching id 43ae364c through BLWPCLIENT.entryId, "staked" through keptLockUse). 0.0.2492 imports entryId by its own name.
 - Measured on 0.0.2492 (d4e842cc, Beelink Chrome, 14:12Z): chained round 31cbb091 loaded in 2296 ms; the address named it; reload at 14:12:23 -> "the lock is committed to the entry this tab kept, and the round has not started: the same entry is sent again", "stake lock kept from before the reload", "the entry of this round kept", "the session key of this round kept", joining the same round. No deposit asked. Seats: ONE entry 3acb7026 (joined 14:12:15, before the reload), stake seen by 7 of 7, ticks 4920 at all 7 (the harness's drive injector is not reinstalled by a reload, so the truck stood: MISSED). The page then chained on into 259c7aa5 (925 ms).
 - Tests: page-lock 55/55 (new: committed lock reused before the start only with its own entry), bundle 5/5, join 12/12, deposit-reload 4/4, two-tabs 5/5.
 
@@ -52465,7 +52465,7 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 - Not live yet: the seats run the detached tn4 tree (2bf80e3c); it moves with the page (slice 3) and the key set.
 
 ### Donations in the federation: the dev client, its two instances, and the set of keys (Daniel 2026-10-03)
-- packages/blwp-donor: one secp256k1 key (node:crypto; checked against noble). `once`/`loop`: asks every seat GET /donations?key=, merges by outpoint, groups by federation ("in which federation the funds are"), joins each federation with its own wallet (secret from the dev key + federation id; state in wallet-<fed>.json) through the page's own wasm lock client run in Node, redeems each payout contract by `refund` under the dev key (a contract no longer held = spent, final), then withdraws the largest payable amount (withdrawableMsat) to an invoice from the dev's own LND (lncli addinvoice) once >= minWithdrawMsat. Invites from donor.json and the testnet federation invite in daily.json. `status` lists per federation.
+- packages/arena-donor: one secp256k1 key (node:crypto; checked against noble). `once`/`loop`: asks every seat GET /donations?key=, merges by outpoint, groups by federation ("in which federation the funds are"), joins each federation with its own wallet (secret from the dev key + federation id; state in wallet-<fed>.json) through the page's own wasm lock client run in Node, redeems each payout contract by `refund` under the dev key (a contract no longer held = spent, final), then withdraws the largest payable amount (withdrawableMsat) to an invoice from the dev's own LND (lncli addinvoice) once >= minWithdrawMsat. Invites from donor.json and the testnet federation invite in daily.json. `status` lists per federation.
 - Two instances (keys 0600, never in the repo): /home/daniel/blwp-testnet4/donor-a "dev a" 02baf4f2…0e4, donor-b "dev b" 02ed57f5…c9d; both withdraw to LND C (Daniel: "use lnd-c as a basis"). A first pass ran: the wasm loads in Node; the seats answer 404 (they run the pre-slice-2 tree).
 - testnet4 donation set of keys, serial 3, valid_from 154965, id 56cbb90c…, dev a 6667 / dev b 3333, signed by testnet4's donation authority (tools/sign-testnet4-key-donation-set.mjs -> src/testnet4-donation-set-keys.js). Not loaded by any node yet: a node holding it refuses every new round naming another set (in force from 154965), so it is loaded with the migration series.
 - Tests: donor 5/5 (new), donation-keys 10/10.
@@ -52584,7 +52584,7 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 
 ### The run-loss fixed, and spectate measured (2026-10-03 21:44-21:58Z)
 - CAUSE (read from the stuck tab of round 8bed315a after its end): drops 2, tries 1, batchesSent 0, batchesInterrupted 0, no publish in flight, no socket, state 'ready'. The socket dropped 9 s before the start; the reconnect's NEW socket closed while it was resuming; that close's onDrop got the reconnect already in flight back (one in flight) and started nothing; the resume answered from the CLOSED words; the reconnect set 'ready' with this.sock null. Nothing ever closed again, so nothing reconnected, and every drain stopped at "no socket".
-- FIX bc248969 (packages/blwp-client/src/client.js reconnect): after resume and re-watch, a socket that is no longer open throws and the loop goes round again. Test test/drop-before-start.test.js against a real node: red before (drops 2, tries 1, ready with no socket, node 0 of 120 ticks), green after (tries 2, open, 120 of 120, in place). own-socket-drop, connect-first, backpressure, refused-batch, late-join, checkpoint-quorum, bundle(-fresh), client-hash, known-core green; blwp-client folder 407/410 - the three known reds (discovery 18, objective-markers, bridge 1). Bundle rebuilt, known-good-clients.json regenerated, page 0.0.2506 (fe3ee782, alias verified serving the fixed client).
+- FIX bc248969 (packages/arena-client/src/client.js reconnect): after resume and re-watch, a socket that is no longer open throws and the loop goes round again. Test test/drop-before-start.test.js against a real node: red before (drops 2, tries 1, ready with no socket, node 0 of 120 ticks), green after (tries 2, open, 120 of 120, in place). own-socket-drop, connect-first, backpressure, refused-batch, late-join, checkpoint-quorum, bundle(-fresh), client-hash, known-core green; arena-client folder 407/410 - the three known reds (discovery 18, objective-markers, bridge 1). Bundle rebuilt, known-good-clients.json regenerated, page 0.0.2506 (fe3ee782, alias verified serving the fixed client).
 - SPECTATE PLAYTHROUGH, page 0.0.2506, Unity 8c636858 (build 0.0.2629), MacBook Chrome 1280x720 on the core alias, continue off: paid round d7eec65e, lock accepted 1221 ms after the entry. AUTO, ROLL OUT, the driver (real arrow keys) round the miner: DELIVERED at tick 1412 (x 168.7, z -4.7), "[blwp] spectate: the run is over, the camera rises over 169,-5" 62 ms before "run ended FINISHED: the core said DELIVERED at tick 1412".
 - Timed from the end (pt/end.mjs, one connection): +0.76 s the switch, chase view behind the truck over the card (e-a); +1.72 s rising (e-b); +3.57 s top-down over the drop-off bay (e-c); ArrowRight +3.5..+4.7 s: the bay slides to the left edge (e-d, pan); 4 wheel notches in at +5.0 s: the corner coin twice the size (e-e, zoom); a 260 px mouse drag left at +5.9 s: the map follows it (e-f, drag pan); +7.52 s still spectating (e-g). The timer (0:59 left, block 969.770), DELIVERED/SCORE and the result controls "copy game replay" and "fold" stand in every frame. With continue off the lobby returns at the card's 8 s (e-h).
 - Seats, all 7: entry 0169bbcf, ticks 0..1411 no gap, 24 marks (last 1412), 0 refused, 0 equivocations, one stake lock. No second stake: wallet 296000 msat after = 298000 less the round's 2000 msat donation (the stake not settled back yet). Bonds 10 outputs, 542347 sat.
@@ -52643,7 +52643,7 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 - Screenshots, curls, the page's summary lines: docs/playthrough-2026-10-03/summary4/.
 
 ### Each node's own /dashboard: the rounds are clickable (2026-10-03 23:10-23:20Z), 596f007d
-- dashboardHtml (packages/blwp-node/src/dashboard.js) only: a ▸ before the round id, the whole row the toggle; opened, a row reads this node's own api/round-result (relative, as dashboard.json) once per page view and draws one sub-row per player - name or the key's first 8, outcome or "not signed yet", score in the lobby's units, signedBy, stake, the seats' result and netMsat as signed sat (green > 0, red < 0), and a replay link (replay?round=&entry=) in a new window. Open rows stay open across the 60 s refresh. No endpoint, rule, dashboard.json or stake math change. Test: dashboard.test.js against a real node with a round and an entry (the served page carries the toggle, the relative fetch and the replay link; api/round-result answers every drawn field) - 3/3.
+- dashboardHtml (packages/arena-node/src/dashboard.js) only: a ▸ before the round id, the whole row the toggle; opened, a row reads this node's own api/round-result (relative, as dashboard.json) once per page view and draws one sub-row per player - name or the key's first 8, outcome or "not signed yet", score in the lobby's units, signedBy, stake, the seats' result and netMsat as signed sat (green > 0, red < 0), and a replay link (replay?round=&entry=) in a new window. Open rows stay open across the 60 s refresh. No endpoint, rule, dashboard.json or stake math change. Test: dashboard.test.js against a real node with a round and an entry (the served page carries the toggle, the relative fetch and the replay link; api/round-result answers every drawn field) - 3/3.
 - SEATS MOVED to 596f007d, roll-measure c4: adopted 7/7, every seat up in 3-4 s; 10 /identity misses at 3 s (9 in the roll, 1 after it, seat 6); longest holds 307 / 304 / 277 / 152 / 155 / 159 / 237 ms (seats 1-7). The round set ran on.
 - MEASURED, seat 1 (https://beelink.tail1723e2.ts.net/guardian-1/dashboard) in the MacBook Chrome 1280x720, mouse clicks: collapsed table as before with the ▸ (d-1). Round d9956f24 opened (d-2): "3465b7e9 | DELIVERED | 98.63700 | 7 | 100 sat | won | -4 sat | replay" = the curl at 23:18:39 (player 3465b7e9..., DELIVERED, 9863700, signedBy 7, stakeMsat 100000, result won, netMsat -4000; its settlement was accepted between 23:17 and 23:18, the collapsed row still showed "-" from the 30 s-kept dashboard.json). Round 2b687e57 opened (d-3): "f390ddb0 | DELIVERED | 140.64750 | 7 | 100 sat | won | -4 sat | replay" = its curl (14064750, signedBy 7, won, -4000). "won" and the net draw red: the colour follows the net's sign (the fee and the donation make a won run -4 sat here).
 - The replay link of 2b687e57, clicked: a new window, replay?round=2b687e57...&entry=3ab6ee55... - "BLWP game replay", DELIVERED, score 140.64750 · 00:26.0936 (d-4).
@@ -52657,7 +52657,7 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 - THE LND HALF FAILS ON THE SEATS: hosts.lnd = error "[lncli] could not load global options: could not read profile file /root/.lncli/profiles.json ... permission denied". The seats run under tailnet-exec = `unshare -rm` (the Funnel workaround): inside it the user is root, lncli takes its home from the user (/root), not from HOME (56d33bed's HOME fix changed nothing), and --profile= / LNCLI_PROFILE= still open the file. lncli cannot run inside the seats' namespace. Until this is decided nodes 1 and 2 say "this node hosts LND (not read: ...)".
 
 ### What a node hosts - the LND over REST, accepted reads (2026-10-03 23:38-23:44Z), d0f30798
-- hosts.js reads the LND over its loopback REST API with its read-only macaroon and tls.cert (GET /v1/getinfo, /v1/balance/channels, /v1/payments; POST /v1/switch for the forwarding history) - lncli cannot run in the seats' unshare -rm namespace. Drop-ins: node 1 BLWP_HOSTS_LND=/mnt/bitcoin/lnd-testnet4,https://127.0.0.1:8180; node 2 /mnt/bitcoin/lnd-testnet4-b,https://127.0.0.1:8181 (gateways unchanged). Tests 7/7; a dry run inside unshare -r read both LNDs, no macaroon in the figures.
+- hosts.js reads the LND over its loopback REST API with its read-only macaroon and tls.cert (GET /v1/getinfo, /v1/balance/channels, /v1/payments; POST /v1/switch for the forwarding history) - lncli cannot run in the seats' unshare -rm namespace. Drop-ins: node 1 ARENA_HOSTS_LND=/mnt/bitcoin/lnd-testnet4,https://127.0.0.1:8180; node 2 /mnt/bitcoin/lnd-testnet4-b,https://127.0.0.1:8181 (gateways unchanged). Tests 7/7; a dry run inside unshare -r read both LNDs, no macaroon in the figures.
 - ROLL c7: adopted 7/7, every seat up in 3-4 s, 9 misses; longest holds 663 / 473 / 377 / 153 / 152 / 274 / 282 ms (seat 1's top: one /dashboard.json build 1556 ms - the 233-round dashboard computation, kept 30 s; then the series writer and committee chain checks, not the reader). Seats 1 and 2 log "hosts: LND https://127.0.0.1:8180|8181, gateway gw-a|gw-b".
 - LIVE COMPARE at 23:43:18.960Z (seats 1-3 /dashboard.json against lncli and the gateways' /v1/balances + /v1/info): ALL MATCH. Node 1: LND beelink-testnet4 0274e261..., 1 channel, local 1082086628 / remote 459114372 msat; gw-a Running, e-cash 248999936, Lightning 1082086628, inbound 459114372, on-chain 20446. Node 2: LND beelink-testnet4-b 025f17c2..., 3 channels, 722117053 / 1332143947; gw-b Running, 224296960, 722117053, 1332143947, 69116. Notes on 1 and 2: "this node hosts LND ...; its Lightning costs are the fees its own payments paid" / "this node hosts gateway gw-a|gw-b; gateway costs are 0: the gateway is what charges, the node pays it nothing". Node 3: hosts null, "this node holds no Lightning channel" / "this node pays no gateway". No password or macaroon in any dashboard.json.
 - SCREENSHOTS (MacBook Chrome, guardian-1/2/3/dashboard): node 1 Hosts card (beelink-testnet4, gw-a, routing 0 sat / 0 forwards, fees its payments paid 7 sat / 7 payments, gw-a payments out 0 ok / 2 failed) and today's Lightning costs -7 sat (LND 1's fees on tonight's deposits), profit 33 sat; node 2 Hosts card (beelink-testnet4-b, gw-b, routing 7 sat / 7 forwards, gw-b payments in 348 ok, fees 411.2 sat); node 3 no Hosts card, both notes.
@@ -52779,9 +52779,9 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 - 844x390 (taken at the start, cargo panel up; pp-02): button x 683-745, y 222-244; panel x 465-745, y 248-376, capped 128 px, scrolling (201 in 128). Inside the screen, left of the throttle pad (x 752+). BUT IT COVERS THE CARGO BAY'S RIGHT HALF - the HUNTED bar, the LOAD x0.70 read-out and the right part of the NOTHING LOADED / ROLL OUT control (x 465-745 of it). With the console open a phone player cannot see or press the whole roll-out control.
 
 ### M4 item 1 - the bond and the arbitration transaction, re-run (2026-10-04 05:35-05:45Z; Daniel 5843e285). No live bond posted or spent.
-- Tests: blwp-node arbitration-tx, bond-spend, bond; protocol bond-spend, bond-script - 21/21.
+- Tests: arena-node arbitration-tx, bond-spend, bond; protocol bond-spend, bond-script - 21/21.
 - A PRIVATE regtest bitcoind (scratchpad datadir, ports 19443/19444, never testnet4), tools/arbitration-regtest.mjs: built (slash height 102; players 50000000, nodes 37497000, developers 12500000 sat; the 3000 sat fee off the nodes); 5 of 7 at slash_height = tip ALLOWED; 4 of 7 REFUSED ("false/empty top stack element"); slash_height above the tip REFUSED "non-final"; an output moved after signing REFUSED ("Invalid Schnorr signature"); mined with nLockTime 102 = the committed height, the proof committed, the bond spent; the players' escrow spent by 5 of 7 ALLOWED, by 4 of 7 REFUSED.
-- tools/bond-regtest.mjs on its own fresh regtest: recovery honest allowed, by a stranger and before maturity refused; slash 5 of 7 allowed and committing to the proof; 4 of 7 refused; a slash with no commitment is valid Bitcoin and refused by the protocol by name; a second node's bond on the same leaf accepted; broadcast at height 104, the spend seen by the census. Its node key, output key, leaf hash and sighash are the bytes pinned in protocol/test/bond-spend.test.js; the control block is recomputed there (controlBlockFor), not pinned. Both bitcoinds stopped. docs/m4-2026-10-04/.
+- tools/bond-regtest.mjs on its own fresh regtest: recovery honest allowed, by a stranger and before maturity refused; slash 5 of 7 allowed and committing to the proof; 4 of 7 refused; a slash with no commitment is valid Bitcoin and refused by the protocol by name; a second node's bond on the same leaf accepted; broadcast at height 104, the spend seen by the census. Its node key, output key, leaf hash and sighash are the bytes pinned in arena-protocol/test/bond-spend.test.js; the control block is recomputed there (controlBlockFor), not pinned. Both bitcoinds stopped. docs/m4-2026-10-04/.
 
 ### M4 item 2 - Mobile, MF 17 (2026-10-04 05:26-05:29Z), page 0.0.2519, the MacBook Chrome as a phone (iPhone user agent, touch, mobile metrics, held by one DevTools session; no real phone here). No money moved.
 - LOBBY, portrait 390x844 (mf17-01): DOES NOT FIT - (1) the "no backup" banner (y 8-86) covers the title "BTC LOGISTICS WAR"; (2) the heading is cut: "ROUNDS · JOIN NEEDS 2 OF 2 SIGNER NC"; (3) both round rows drop their joined count and round id ("FREE · closes 0:48 · 2 of 2 signer nodes"); (4) the Console button sits on the title frame. The how-to pager, the wallet chips, the rows and PLAY / SPECTATE fit and are tappable.
