@@ -115,3 +115,4 @@ test('one player alone is not played (Daniel 2026-10-09: "there must be 2 before
     assert.deepEqual(only(r), ['VOID 0']);
   } finally { await w.close(); }
 });
+
