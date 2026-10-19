@@ -22,7 +22,7 @@ const HASHY = new Set(['.toml', '.yml', '.yaml', '.service', '.example', '.ps1',
 const nameOnly = (t) => t.replace(/\bRULED,?\s+Daniel\s+(?=\d{4}-\d{2}-\d{2})/g, 'RULED ').replace(/\bDaniel(?:'s)?\s+(?=\d{4}-\d{2}-\d{2})/g, '')
   .replace(/\bDaniel's\b/g, "the owner's").replace(/\bDaniel\b/g, 'the owner');
 // JSON: the doc site's data and the pin list's description - string values only
-const JSON_SCRUBBED = /^(deploy\/doc-site\/.*\.json|packages\/arena-client\/known-good-clients\.json|packages\/[^/]+\/package\.json)$/;
+const JSON_SCRUBBED = /^(src\/website\/docs\/.*\.json|packages\/arena-client\/known-good-clients\.json|packages\/[^/]+\/package\.json)$/;
 
 // THE TEXT RULES, applied to comment or document text only. A removed reference leaves a mark (\u0001); only marked spots are tidied,
 // so a comment's own "vault()" or "a, b" stays as it was.
