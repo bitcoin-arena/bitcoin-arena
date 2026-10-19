@@ -11,7 +11,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { randomBytes } from 'node:crypto';
 import { playerFor, entryFor } from '../../arena-client/src/join.js';
 import { hiddenMove, moveCommitment, revealMove } from '../../arena-client/src/head-to-head.js';
-import { submitPick } from '../../arena-client/src/market.js';
+import { submitPick } from '../../btc-updown/page/market.js';
 import { pageCurve } from '../../arena-client/src/page-curve.js';
 import { decodeRoundContract } from '../../arena-protocol/src/contracts.js';
 import { fromHex, toHex } from '../../arena-protocol/src/hash.js';
