@@ -666,10 +666,10 @@ public class HudLayoutTests
     [Test]
     public void TheModelListAndHighLowNeverShareTheCentreColumnWhileModelsLoad()
     {
-        // LIVE 0.0.1497 (probe screenshot on-12.png, 1280x656 with pads): HIGH / LOW (Daniel 12:55, central, the run-stopped
+        // LIVE 0.0.1497 (probe screenshot on-12.png, 1280x656 with pads): HIGH / LOW (the owner 12:55, central, the run-stopped
         // row) and the "Loading models" list both stood in the headline gap under the block clock and were painted on each
         // other. HIGH / LOW stays central; the list starts under it, rows tightened to stay above the pads and the chart.
-        // THE PLAQUE ITSELF IS GONE (Daniel 2026-09-19 13:10, remove-world-high-low-1310.png): nothing draws those words
+        // THE PLAQUE ITSELF IS GONE (2026-09-19 13:10, remove-world-high-low-1310.png): nothing draws those words
         // any more. HighLowBox and HighLowYieldsToModelList stay as the geometry of the row the model list must not run
         // into, and this walks that row - one box fewer on the screen cannot make the list fit worse.
         // Where eleven rows cannot fit under it, HIGH / LOW yields while the list is up (HighLowYieldsToModelList) - named
@@ -864,7 +864,7 @@ public class HudLayoutTests
 
     /// <summary>
     /// THE SAME COLUMN WITH THE DIAGNOSTICS PANEL UP, which is the state
-    /// Daniel drives in.
+    /// the owner drives in.
     ///
     /// `HealthBox` switches its top between the block board and the
     /// diagnostics box, and the danger meter, the practice switch and the SIM

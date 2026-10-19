@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * DEPOSITS THROUGH ANY LISTED GATEWAY, MEASURED LIVE (kanban #319, §23.1 / 23.6) - the page's own functions without a browser:
+ * DEPOSITS THROUGH ANY LISTED GATEWAY, MEASURED LIVE (§23.1 / 23.6) - the page's own functions without a browser:
  * a player wallet in the round's federation reads the gateways the guardians list (federationGateways), then
  *   1. a deposit through NAMED (one gateway, first in the order) - its invoice paid by the payer lnd, its end awaited;
  *   2. the same with DOWN_CMD run first (it makes NAMED unreachable): invoiceThroughGateways passes it over after 10 s

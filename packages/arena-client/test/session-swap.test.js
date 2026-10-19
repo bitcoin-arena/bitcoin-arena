@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: LicenseRef-Bitcoin-Arena-1.0
 // Copyright (c) 2026 The Bitcoin Arena authors. See LICENSE.
-// A JOIN OF ANOTHER ROUND CLOSES THE SESSION ON THE ONE BEFORE (Daniel 2026-09-18 18:00).
+// A JOIN OF ANOTHER ROUND CLOSES THE SESSION ON THE ONE BEFORE (2026-09-18 18:00).
 //
 // Measured in two real browsers: pressing PLAY again joined the next round at the page's level - both tabs on one
 // round id, each with a client and a ghost field - while the bridge kept the session of the round before, because
 // that client had never said it was `over`. It sat in "opening", `net.where` went on naming the FIRST round three and
 // a half minutes later, and it kept publishing into a run that had already ended: 902 ticks of it. Neither tab was in
-// the second round at all, which is why neither was ever shown the other, and that is Daniel's 12:02 shot.
+// the second round at all, which is why neither was ever shown the other, and that is the owner's 12:02 shot.
 //
 // `blwp.jslib` is the one file these suites cannot import - it is Emscripten glue, not a module - so what is checked
 // here is the same thing the ghost rules check: that the rule is written in it, and that every BLWPCLIENT function it

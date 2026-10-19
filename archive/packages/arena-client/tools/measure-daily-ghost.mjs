@@ -1,5 +1,5 @@
 // WHAT A PLAYER'S GHOST ACTUALLY DOES ON THE DAILY, AND WHETHER THE SIGNER NODES' LEFTOVER STALLS MOVE IT
-// (Daniel 2026-09-17 19:15, the ghost letter's remainder: live nodes are median 14 ms and p90 21 ms, with a max of
+// (2026-09-17 19:15, the ghost letter's remainder: live nodes are median 14 ms and p90 21 ms, with a max of
 // 552 ms and two stalls over 300 ms a minute, attributed to the close / finality path).
 //
 //     node tools/measure-daily-ghost.mjs [--minutes=10] [--daily=/mnt/bitcoin/blwp-2of2]
@@ -37,7 +37,7 @@ const MINUTES = Number(arg('minutes', 10));
 const DAILY = arg('daily', process.env.ARENA_2OF2_DIR || '/mnt/bitcoin/blwp-2of2');
 const STALL_MS = 300;                      // the leftover stalls this letter is about
 const RETIRE_MS = SILENT_MS;               // a truck with no picture for this long is taken away (ghost-field.js)
-const FELT_MS = 600;                       // the top of what Daniel reported feeling: "300-600 ms"
+const FELT_MS = 600;                       // the top of what the owner reported feeling: "300-600 ms"
 
 const require = createRequire(import.meta.url);
 const core = require('../../nextblock/dist/blwp-core.js');
@@ -153,14 +153,14 @@ async function freeRound(until) {
 const until = Date.now() + MINUTES * 60000;
 const pings = NODES.map((n) => ({ node: n, held: pinger(n, until) }));
 const log = logTail(until);
-// THE TWO CLOCKS A PAIR OF TABS HAS (Daniel 2026-09-18 04:05: print the overlay age beside the wire lag). The driver
+// THE TWO CLOCKS A PAIR OF TABS HAS (2026-09-18 04:05: print the overlay age beside the wire lag). The driver
 // stamps the tick it has just recorded, exactly as blwp.jslib does on every batch slot; the watcher reads those stamps
 // back over the same channel, exactly as the overlay does. One browser, two tabs.
 const driverClock = tickClock({ Channel: BroadcastChannel, name: 'blwp-daily-ghost' });
 const watcherClock = tickClock({ Channel: BroadcastChannel, name: 'blwp-daily-ghost' });
 const overlayAges = [];         // what the label would print
 const wireLags = [];            // now, less the moment the driver recorded that very tick
-// AND WHERE THE DRAWN TRUCK ACTUALLY SITS (Daniel 2026-09-18 04:30). `GhostTruck` walks from the pose it is standing on
+// AND WHERE THE DRAWN TRUCK ACTUALLY SITS (2026-09-18 04:30). `GhostTruck` walks from the pose it is standing on
 // to each new picture over one picture interval (PictureSeconds 0.1 s) and the label is re-read every 0.1 s, so the eye
 // is behind the number. The drawn truck is on the PREVIOUS picture when a new one lands and reaches the new one an
 // interval later: its age is the age of the pose it is standing on, which is this picture's age plus the gap it has not
@@ -181,12 +181,12 @@ const EASE_MS = csOf('GhostTruck.cs', /PictureSeconds = ([0-9.]+)f/, 0);
 const LABEL_REFRESH_MS = csOf('GhostField.cs', /labelsReadAt < ([0-9.]+)f/);
 const easedAges = [];
 const acrossInterval = [];
-// AND WHERE THE HULL IS POINTING (Daniel 2026-09-18 05:45). The place binds in the landing frame; the facing was still
+// AND WHERE THE HULL IS POINTING (2026-09-18 05:45). The place binds in the landing frame; the facing was still
 // walked from the pose before it over one ease, so at land the hull still pointed the way the PREVIOUS picture said -
 // which is the whole-interval term the place has just lost. Measured the same way and against the same land-frame
 // clock, and decided by the shipped C# rather than by a number typed here.
 const facingAges = [];
-// AND THE FIRST PICTURE OF A NEW ROUND, DRAWN (Daniel's report: after PLAY the other truck missing, then in the wrong
+// AND THE FIRST PICTURE OF A NEW ROUND, DRAWN (the owner's report: after PLAY the other truck missing, then in the wrong
 // place). The wire says when it arrived; this says how old the pose the hull stands in is at that frame.
 const firstDrawn = [];
 const behind = [];              // how many ticks the pictured pose trails the driver's own tick, per picture
@@ -217,7 +217,7 @@ while (Date.now() < until - 20000) {
   session++;
   const here = session;
   const mine = toHex(driver.eid);
-  // THE SECOND ROUND, ON THE WIRE (Daniel 2026-09-17 19:15: "in the second round the ghost does not appear reliably -
+  // THE SECOND ROUND, ON THE WIRE (2026-09-17 19:15: "in the second round the ghost does not appear reliably -
   // sometimes missing, then at the wrong position"). For every round after the first: when the first picture of this
   // round's driver arrived, measured from the driver's first published tick, and how far behind the driver that
   // picture was. A picture that names an entry of a round this pair has left is counted apart - that is the "wrong
@@ -259,7 +259,7 @@ while (Date.now() < until - 20000) {
       // AND THE FIRST PICTURE OF THIS ROUND, DRAWN: the hull was made this frame, so the place it stands in is this
       // picture's own. Recorded apart so PLAY-again is a number on screen and not only on the wire.
       if (began.pictures === 1 && drawnAge !== null) firstDrawn.push({ session: here, age: drawnAge });
-      // AND HOW FAR BEHIND THE DRIVER THE PICTURE ITSELF IS, ALL ROUND LONG (Daniel 2026-09-18 10:42: "position is
+      // AND HOW FAR BEHIND THE DRIVER THE PICTURE ITSELF IS, ALL ROUND LONG (2026-09-18 10:42: "position is
       // only correct at the start; the longer the other truck drives, the more the ghost is in the wrong place").
       // The first picture of a round was already measured at 1-4 ticks; this asks whether that grows. A tick is
       // 1/60 s, so the metres are the other truck's speed times this.
@@ -288,7 +288,7 @@ while (Date.now() < until - 20000) {
       tick++;
       // The page's own cadence, and its stamp with it: the newest recorded tick and the clock at that moment.
       if (tick % 6 === 0) { driverClock.post(mine, tick - 1); driver.client.drain(); }
-      // AND THE WATCHER'S FIELD IS DRAINED THE WAY UNITY DRAINS IT - every frame (Daniel 2026-09-18 11:45). Without
+      // AND THE WATCHER'S FIELD IS DRAINED THE WAY UNITY DRAINS IT - every frame (2026-09-18 11:45). Without
       // this the field's own silence rule never ran here at all, so this probe reported "retired for silence 0"
       // whether the rule took a truck away or not, and that number said nothing about the page.
       field.drain(24);

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: LicenseRef-Bitcoin-Arena-1.0
 // Copyright (c) 2026 The Bitcoin Arena authors. See LICENSE.
-// THE ORDER BOOK'S LEDGER AND ITS SETTLEMENT (kanban #278, comment 1127; Daniel 2026-10-09: "(a)"). A pure function of the
+// THE ORDER BOOK'S LEDGER AND ITS SETTLEMENT (comment 1127; 2026-10-09: "(a)"). A pure function of the
 // certified batches, so every seat that holds the same batches holds the same positions and builds the same settlement.
 //
 // An order is an entry: its STAKE LOCK holds its budget less its fee (N), its FEE LOCK the fee (F). A lock moves whole, so
@@ -14,7 +14,7 @@
 //                       (F x cost / N), what its sells owe out of the sets they closed, and their fees
 //   resolution:         every winning share is paid out of the pool of all collateral (pro rata, the msat left in id
 //                       order); each claimed entry gets its winnings, less its sells' debt and fee, plus the rest of N and
-//                       of F it did not spend (Daniel: "(a)" - a cancelled or partly filled order's rest comes back here,
+//                       of F it did not spend (the owner: "(a)" - a cancelled or partly filled order's rest comes back here,
 //                       as a seller's proceeds do); the fees due go to the nodes and the donation.
 import { clearBatch, YES, NO } from './order-book.js';
 
@@ -87,7 +87,7 @@ export function bookLedger({ batches, feeBps }) {
   }
   // THE FEE A BUY OWES: its fee lock's share of what its fills spent, F x cost / N - the same over one batch or many
   for (const p of positions.values()) p.buyFee = p.N === 0n ? 0n : (p.F * p.cost) / p.N;
-  // WHAT STANDS, PRICED (kanban #448, Daniel 2026-10-17: "a real desktop view with complete order book bids ask, chart, depth"): each
+  // WHAT STANDS, PRICED (2026-10-17: "a real desktop view with complete order book bids ask, chart, depth"): each
   // resting buy's outcome, limit and the rest of its budget, each resting sell's outcome, price and unsold shares - the book a page
   // draws, no id and no entry named
   const levels = { buys: [...buys.values()].map((o) => ({ outcome: o.outcome, price: o.price, netMsat: o.net, expiryMs: o.expiryMs || 0n })),
@@ -105,7 +105,7 @@ export const positionFilled = (p) => !!p && (p.cost > 0n || p.sellDebt > 0n || p
  * sum of the locks claimed, to the msat.
  */
 //
-// A SCALAR MARKET'S BOOK (kanban #362, §0A.7e "Left: an order book for scalar sides"): `scalar` { value, bounds { low, high } } in
+// A SCALAR MARKET'S BOOK (§0A.7e "Left: an order book for scalar sides"): `scalar` { value, bounds { low, high } } in
 // place of an outcome. A LONG share (0) is worth (V - low) / (high - low) of a sat at the clamped value V and a SHORT share (1) the
 // rest, so the pool is split between the two sides by where V lies - LONG's part floored, SHORT the remainder - and each side's
 // part pro rata by its shares, the msat left one each in entry order; a side holding no share hands its part to the other.

@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: LicenseRef-Bitcoin-Arena-1.0
 // Copyright (c) 2026 The Bitcoin Arena authors. See LICENSE.
-// THE ASSAULT IN THE WORDS A PLAYER WOULD SEE (Daniel 2026-09-20 16:22 / 16:26).
+// THE ASSAULT IN THE WORDS A PLAYER WOULD SEE (2026-09-20 16:22 / 16:26).
 //
 // `measure-assault.mjs` already measures WAR_TACTICS §4.12 against its §0.1 rows - declared-then-happens, the
 // lulls, the win/fail split, the push. This asks a different and much smaller question, and only because the
 // letter asks it: over a whole block, WHAT WOULD THE BANNER AND THE DESKTOP LOG HAVE SAID, and when? It prints
-// the same three moments `AssaultWatch` turns into words, with the block clock on each, so the lines Daniel
+// the same three moments `AssaultWatch` turns into words, with the block clock on each, so the lines the owner
 // reads on screen can be checked against the core that produced them rather than against a screenshot.
 //
 // It also counts the attacking side's tanks within 6 m of the target lane, which is the "tanks push that lane"

@@ -1,4 +1,4 @@
-// WHAT A SPECTATOR ACTUALLY SEES ON THE SHIPPED BUILD (Daniel 2026-09-18 20:00, the sky billboard).
+// WHAT A SPECTATOR ACTUALLY SEES ON THE SHIPPED BUILD (2026-09-18 20:00, the sky billboard).
 // Attaches to the MacBook's browser, opens the daily page, presses SPECTATE, and photographs it.
 import WebSocket from 'ws';
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));

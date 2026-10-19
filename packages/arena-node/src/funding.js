@@ -8,7 +8,7 @@
 // launched daemon refused EVERY round and every entry with 402 and held no
 // stake: a round for sats existed only where a harness passed `() => true`.
 //
-// The rule (Daniel's pick):
+// The rule (the owner's pick):
 //   a ROUND is funded when the operator NAMED it and it asks a stake - named in
 //     ARENA_FUNDED_ROUNDS (ids, comma or space) or ARENA_FUNDED_ROUNDS_FILE (one
 //     id per line, read on every ask, so a round can be named without a
@@ -39,7 +39,7 @@ export function operatorFunding({ named = () => [] } = {}) {
     try {
       if (kind === 'round')
         return BigInt(contract.stakeMsat) > 0n && isNamed(toHex(roundId(contract)));
-      // A GRID SERIES POSTED TO POST /series (kanban #293): funded when the operator names its series id, as a round by its id
+      // A GRID SERIES POSTED TO POST /series: funded when the operator names its series id, as a round by its id
       if (kind === 'series')
         return BigInt(contract.stakeMsat) > 0n && contract.seriesIdBytes instanceof Uint8Array && isNamed(toHex(contract.seriesIdBytes));
       if (kind === 'entry') {
@@ -63,7 +63,7 @@ export function operatorFunding({ named = () => [] } = {}) {
 }
 
 /**
- * THE DAILY'S LAUNCHER WITH A FREE ROUND AND A PAYING ONE BESIDE IT (Daniel
+ * THE DAILY'S LAUNCHER WITH A FREE ROUND AND A PAYING ONE BESIDE IT (the owner
  * 2026-09-15 12:54: always one free round and one 2-of-2 round, both at once).
  * A free round and an entry into a free round this node holds are funded, as
  * the launcher's `() => true` had them - they hold nothing. Anything else is

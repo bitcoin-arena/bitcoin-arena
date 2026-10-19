@@ -129,7 +129,7 @@ public class GhostFieldTests
     [UnityTest]
     public IEnumerator ANewRoundsWatchClearsEveryTruckOfTheLastRound()
     {
-        // Daniel 2026-09-17 17:12: "after the next round suddenly 3 ghosts in the game". The page sends one clear record
+        // 2026-09-17 17:12: "after the next round suddenly 3 ghosts in the game". The page sends one clear record
         // (tick -2) when it starts watching a new round; every truck of the last one goes, and the new round's draw.
         var field = Field(
             new GhostPicture("aaaaaaaa", 3 * ONE, 4 * ONE, 0, 100),
@@ -144,7 +144,7 @@ public class GhostFieldTests
         Assert.AreEqual(1, field.GetComponentsInChildren<GhostTruck>(true).Length);
         Assert.IsTrue(field.Pictures.ContainsKey("dddddddd") && field.Pictures.Count == 1);
 
-        // AND THE NEW ROUND'S TRUCK STANDS AND POINTS AT ITS FIRST PICTURE IN THE FRAME IT WAS DRAWN (Daniel
+        // AND THE NEW ROUND'S TRUCK STANDS AND POINTS AT ITS FIRST PICTURE IN THE FRAME IT WAS DRAWN (the owner
         // 2026-09-18 05:45). That is the half of "after PLAY the other truck is missing, then in the wrong place" the
         // wire cannot answer: the wire says when the first picture arrived, this says the pose the hull is in when it
         // does. The trucks above stood at 3, 5 and 7 m facing zero; this one is 9 m away and a quarter turn round, so a
@@ -228,15 +228,15 @@ public class GhostFieldTests
     }
 
     /// <summary>
-    /// THE DEBUG LABEL OVER A GHOST (Daniel 2026-09-17 19:15): the page's line for each truck - entry, name, then the age
+    /// THE DEBUG LABEL OVER A GHOST (2026-09-17 19:15): the page's line for each truck - entry, name, then the age
     /// and arrows - lands on the truck of that entry, two lines, and a line that is not one is dropped.
     /// </summary>
     [Test]
     public void TheDebugLabelNamesTheTruckAndSaysItsAgeAndMove()
     {
-        var labels = GhostField.ParseLabels("aaaaaaaa\tDaniel\t20ms \u2191\u2192\nbbbbbbbb\tOther\t~140ms\nbroken line");
+        var labels = GhostField.ParseLabels("aaaaaaaa\tAlice\t20ms \u2191\u2192\nbbbbbbbb\tOther\t~140ms\nbroken line");
         Assert.AreEqual(2, labels.Count, "a line that is not entry, name and age was kept");
-        Assert.AreEqual("Daniel", labels["aaaaaaaa"][0]);
+        Assert.AreEqual("Alice", labels["aaaaaaaa"][0]);
         Assert.AreEqual("20ms \u2191\u2192", labels["aaaaaaaa"][1]);
         Assert.AreEqual("~140ms", labels["bbbbbbbb"][1]);
         Assert.AreEqual(0, GhostField.ParseLabels("").Count);

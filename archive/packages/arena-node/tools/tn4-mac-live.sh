@@ -1,5 +1,5 @@
 #!/opt/homebrew/bin/bash
-# A LIVE TESTNET4 FEDERATION ON THE MACBOOK, FOR THE STAKE LOCK'S ACCEPTANCE TIME (kanban #192, Daniel 2026-10-06 10:13):
+# A LIVE TESTNET4 FEDERATION ON THE MACBOOK, FOR THE STAKE LOCK'S ACCEPTANCE TIME (2026-10-06 10:13):
 # seven guardians (each its seat's), founded on testnet4 against the MacBook's own testnet4 bitcoind (synced from public
 # peers, 127.0.0.1:48342), every port on 127.0.0.1 - the measured path (the lock client to the guardians, the guardians to
 # each other) never leaves the MacBook, no Tailscale in it. No gateway, no LND: the client is funded by an on-chain peg-in.

@@ -1,5 +1,5 @@
 #!/bin/bash
-# THE ENGINE AS A PUBLIC SOURCE TREE (kanban #208, option A of comment 889): writes <out> from <commit> - Bitcoin Arena's
+# THE ENGINE AS A PUBLIC SOURCE TREE (option A of comment 889): writes <out> from <commit> - Bitcoin Arena's
 # packages, the page template the engine serves, and the spec - with no git history, no Unity project (its Asset Store
 # packs may not be published, and nextblock's Unity client stays private), no committed node_modules symlinks, no Unity
 # licence file, and the operator's private names replaced. It PUBLISHES NOTHING: it only writes a directory, so the tree
@@ -72,7 +72,7 @@ earns what, a guide to programming and signing a game, and how to run a node. Th
 
 MIT licence: see `LICENSE`.
 EOF
-# THE LICENCE (Daniel 2026-10-08, kanban #208: george-prime/bitcoin-arena, MIT)
+# THE LICENCE (2026-10-08,: george-prime/bitcoin-arena, MIT)
 cat > "$OUT/LICENSE" <<'LICENSE_END'
 MIT License
 

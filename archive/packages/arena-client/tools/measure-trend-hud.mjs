@@ -1,4 +1,4 @@
-// §4.14 ON THE PAGE: what the core's trend word says against the candles the chart is drawing (Daniel 12:55).
+// §4.14 ON THE PAGE: what the core's trend word says against the candles the chart is drawing (the owner 12:55).
 // The shot shows six green candles climbing into GATE and the HUD saying SIDEWAYS with six grey dots. chart.js
 // computes CH_DOTS from the tape itself but takes CH_TREND/CH_STRENGTH from the market STATE word, so the two can
 // disagree - this reads both, plus the last six candle bodies, and applies §4.14's own rule to them.

@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: LicenseRef-Bitcoin-Arena-1.0
 // Copyright (c) 2026 The Bitcoin Arena authors. See LICENSE.
-// A PERMANENT NAME ON THE OPERATOR'S OWN workers.dev (kanban #471, Daniel 2026-10-18: "Implement workers dev tunnel"). For a node that
+// A PERMANENT NAME ON THE OPERATOR'S OWN workers.dev (2026-10-18: "Implement workers dev tunnel"). For a node that
 // cannot open a port and has no domain: its quick Cloudflare tunnel (a random name, new at every restart) sits behind a Worker on the
 // operator's own free Cloudflare account, https://arena-node-<id>.<their subdomain>.workers.dev - a name that never changes. The
 // Worker forwards every request (websockets too) to the tunnel; when the tunnel's name changes, the node uploads the Worker again with
 // the new one (the workers keeper, bin/workers-keeper.mjs), which takes effect at once. The traffic and the account are the operator's
-// (Daniel: we do not carry nodes' traffic). The installer acts with an API token the operator makes from Cloudflare's
+// (the owner: we do not carry nodes' traffic). The installer acts with an API token the operator makes from Cloudflare's
 // "Edit Cloudflare Workers" template; it is kept 0600 in the node's home.
 const API = 'https://api.cloudflare.com/client/v4';
 export const TOKEN_PAGE = 'https://dash.cloudflare.com/profile/api-tokens';
@@ -28,7 +28,7 @@ async function cf(token, path, { method = 'GET', body = null, headers = {}, fetc
 /** The Worker: every request to the tunnel `target`, as it came; a redirect to the tunnel's own name turned back into the Worker's. */
 export function forwarderScript(target) {
   if (!/^https:\/\/[a-z0-9-]+\.trycloudflare\.com$/.test(target)) throw new Error('the Worker forwards only to a quick tunnel');
-  return `// The Arena node's permanent address (kanban #471), written by the node: it forwards to its quick tunnel, which it updates here.
+  return `// The Arena node's permanent address, written by the node: it forwards to its quick tunnel, which it updates here.
 const TARGET = ${JSON.stringify(target)};
 export default {
   async fetch(request) {

@@ -62,7 +62,7 @@ export const isRefund = (outcome) => REFUNDS.includes(outcome);
  */
 // A FREE ROUND IS THREE ZEROS, NOT THREE MISSING FIELDS. Every entry the door
 // takes is decoded from signed bytes, so its three amounts are BigInt whether
-// the round asks 0 or 100000; the free round Daniel photographed refused at
+// the round asks 0 or 100000; the free round the owner photographed refused at
 // 11:15 was a daemon started between two edits, when the fee rule already
 // asked for the donation and the door did not yet pass it. Coercing a missing
 // or numeric amount to BigInt here would hide exactly that kind of wiring
@@ -145,7 +145,7 @@ export function remainderOrder(roundId, entries) {
 export const isQualifier = (e, minScore = 0) => e.outcome === DELIVERED && e.score >= minScore;
 
 /**
- * TOP-N PRIZE SPLITS (kanban #362 feature 3; manifest.js PAYOUT_RULE.TOP_SPLIT). A replayed game's manifest may pay its
+ * TOP-N PRIZE SPLITS (feature 3; manifest.js PAYOUT_RULE.TOP_SPLIT). A replayed game's manifest may pay its
  * pot by fixed shares over its top places instead of §18A's curve - [10000] winner takes all, [5000, 3000, 2000] the
  * classic 50/30/20. The shares are basis points of the pot: 1 to PAYOUT_SHARES_MAX of them, each a whole number of at
  * least 1, none above the place before it (a lower place is never paid more than a higher one), together exactly
@@ -239,7 +239,7 @@ export function computePayoutTable({ roundId, entries, minScore = 0, payoutShare
   // and every hold expired - one 2% donor, and the pool got 0 of the loser's
   // 98000 msat.
   //
-  // A TOP SPLIT (kanban #362) IS THE SAME ARITHMETIC WITH ITS SHARES FOR THE CURVE: place i's weight is its share in bps
+  // A TOP SPLIT IS THE SAME ARITHMETIC WITH ITS SHARES FOR THE CURVE: place i's weight is its share in bps
   // times its own net stake, so 22A's pick A holds for it unchanged (no double reward for donating; with every net equal
   // the net cancels and the pot is split exactly by the shares), the floors and the leftover go exactly as above, and the
   // pot is spent exactly.

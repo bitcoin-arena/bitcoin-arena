@@ -1,9 +1,9 @@
-// TWO TABS, ONE LIVE ROUND, THEN THE NEXT ONE (Daniel 2026-09-18 12:02: "after 2nd round Truck 1 cannot see Truck 2.
+// TWO TABS, ONE LIVE ROUND, THEN THE NEXT ONE (2026-09-18 12:02: "after 2nd round Truck 1 cannot see Truck 2.
 // Age 6736ms").
 //
 // The earlier round-boundary probe drove one truck and watched with another, and rebuilt the watcher each round; it
 // never missed. This is the pair a player has: BOTH tabs drive and BOTH watch each other, and both press PLAY again
-// for the second round. At 6.7 seconds into round two - the age in Daniel's shot - each tab is asked, in numbers:
+// for the second round. At 6.7 seconds into round two - the age in the owner's shot - each tab is asked, in numbers:
 //   - is the other truck in my field at all
 //   - how long after this round's first tick its first picture arrived
 //   - how old that picture is
@@ -24,7 +24,7 @@ import { toHex, fromHex } from '../../arena-protocol/src/hash.js';
 const arg = (k, d) => { const a = process.argv.find((x) => x.startsWith(`--${k}=`)); return a ? a.slice(k.length + 3) : d; };
 const DAILY = arg('daily', process.env.ARENA_2OF2_DIR || '/mnt/bitcoin/blwp-2of2');
 const ROUNDS = Number(arg('rounds', 2));
-const ASK_AT_MS = Number(arg('askAt', 6700));          // the age in Daniel's shot
+const ASK_AT_MS = Number(arg('askAt', 6700));          // the age in the owner's shot
 const require = createRequire(import.meta.url);
 const core = require('../../nextblock/dist/blwp-core.js');
 const verify = (s, m, k) => { try { return schnorr.verify(s, m, k); } catch { return false; } };

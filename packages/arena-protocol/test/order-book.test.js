@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: LicenseRef-Bitcoin-Arena-1.0
 // Copyright (c) 2026 The Bitcoin Arena authors. See LICENSE.
-// THE MARKET ORDER BOOK (kanban #278): signed limit orders, one uniform price per batch, fees due at resolution.
+// THE MARKET ORDER BOOK: signed limit orders, one uniform price per batch, fees due at resolution.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { generateKeyPairSync, createPublicKey, sign, verify as edVerify } from 'node:crypto';
@@ -17,7 +17,7 @@ function conserves(orders, fills, res) {
   assert.equal(sum(res.rows.map((r) => r.paidMsat)), res.voided ? sum(fills.map((f) => f.costMsat + f.feeMsat)) : res.poolMsat, 'the pool was not paid whole');
 }
 
-test('Daniel\'s example: 1 sat on Up - 0.01 sat fee, due when it fills; 0.99 sat buys the odds', () => {
+test('the owner\'s example: 1 sat on Up - 0.01 sat fee, due when it fills; 0.99 sat buys the odds', () => {
   const orders = [o('a', YES, 74000, 1), o('b', NO, 27000, 1)];
   const b = clearBatch({ orders, feeBps: FEE });
   const [yes, no] = b.fills;

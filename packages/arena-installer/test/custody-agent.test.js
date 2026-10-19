@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: LicenseRef-Bitcoin-Arena-1.0
 // Copyright (c) 2026 The Bitcoin Arena authors. See LICENSE.
-// THE CUSTODY AGENT (kanban #471 slice 5 part 4, custody-agent.js; Daniel 2026-10-18: "It should happen automatically"): nothing before a
+// THE CUSTODY AGENT (custody-agent.js; 2026-10-18: "It should happen automatically"): nothing before a
 // founding; once fedimintd wrote the invite, guardian_of[] is published in an advertisement update of the node's bond (signed by its key,
 // paid from its wallet), then the gateway joins the federation, then the peg-in goes to the gateway's address - each once.
 import { test } from 'node:test';
@@ -107,7 +107,7 @@ test('the custody agent: waits for the founding, then guardian_of, the gateway\'
   assert.equal((await agent.tick()).did, 'ring-channel');
   assert.deepEqual(lndCalls.slice(-2), [['connect', '03' + '22'.repeat(32), '192.0.2.7:9735'], ['open', '03' + '22'.repeat(32), 150000]]);
   assert.match((await agent.tick()).idle, /custody is set up.*ring channel open/, 'one ring channel, once');
-  // A NODE JOINS between this node and its next (Daniel: "When a node joins an existing federation it needs incoming liquidity too"):
+  // A NODE JOINS between this node and its next (the owner: "When a node joins an existing federation it needs incoming liquidity too"):
   // this node's channel moves to the newcomer - only after the newcomer opened its own channel (its outbound), so ff.. is never without inbound
   open = open.map((x) => (x.peer === '03' + '22'.repeat(32) ? { ...x, active: true, channelPoint: 'ab'.repeat(32) + ':0' } : x));
   const joiner = { node: 'fe'.repeat(32), lightningPubkey: '02' + '33'.repeat(32), lightningAddr: '192.0.2.9:9735', outboundSats: 0 };

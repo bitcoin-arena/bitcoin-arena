@@ -2,7 +2,7 @@
 // Copyright (c) 2026 The Bitcoin Arena authors. See LICENSE.
 // THE PICTURE HAS TO KEEP UP WITH THE TRUCK THAT IS DRIVING.
 //
-// Letter 28 got a ghost drawn. Daniel, 09:44: two tabs see the other truck at
+// Letter 28 got a ghost drawn. the owner, 09:44: two tabs see the other truck at
 // spawn and then it does not follow - frames land rarely, it stutters, it is
 // not realtime. Measured before this file existed, one frame of one watcher:
 //
@@ -304,7 +304,7 @@ test('a load is applied once however many slices a watcher asks for', () => {
 });
 
 test('a truck already far into its run does not stop the node: each picture replays at most STEP_BUDGET ticks, and the pictures catch up', () => {
-  // Daniel 2026-09-17 17:05 / 17:12: ghosts a minute late. Measured on the Daily's signer-node process: 18.7 s and 20.0 s
+  // 2026-09-17 17:05 / 17:12: ghosts a minute late. Measured on the Daily's signer-node process: 18.7 s and 20.0 s
   // with no answer within one minute - the first picture of a truck replayed its whole run on the shared event loop.
   const TICKS = 6000;
   const { round, rid, eid, ghosts } = driving(TICKS);

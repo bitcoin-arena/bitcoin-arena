@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: LicenseRef-Bitcoin-Arena-1.0
 // Copyright (c) 2026 The Bitcoin Arena authors. See LICENSE.
-// THE LOBBY'S "Withdrawal available" LINE SAYS ONLY WHAT IS IN NO BALANCE CHIP (kanban #106, Daniel 2026-10-04 13:39:
+// THE LOBBY'S "Withdrawal available" LINE SAYS ONLY WHAT IS IN NO BALANCE CHIP (2026-10-04 13:39:
 // "Withdrawal available: 98 sat - press Withdraw in the wallet panel" while those 98 sat were already inside the confirmed
 // 506 sat). index.html's withdrawAvailable - what the page hands Unity's DailyLobby.WithdrawNotice - runs under the page's
 // name (page-script.js). Measured: the owed amount of the last look (collected into the player wallet by WINNINGS-AUTO, shown
@@ -23,7 +23,7 @@ const available = (window) => pageFunction(PAGE, ['window'], SRC, 'return withdr
 const withdrawNotice = (w) => !w || !w.available ? '' : w.elsewhere ? 'Withdrawal available - open in another tab of this browser'
   : (BigInt(w.msat) > 0n ? `Withdrawal available: ${BigInt(w.msat) / 1000n} sat - press Withdraw in the wallet panel` : '');
 
-test('Daniel\'s state: 98,000 msat owed at the last look, already collected into the player wallet, round wallet empty - nothing available, no lobby line', () => {
+test('the owner\'s state: 98,000 msat owed at the last look, already collected into the player wallet, round wallet empty - nothing available, no lobby line', () => {
   const w = available({ BLWP_OWED: { owedMsat: 98000n }, BLWP_WITHDRAWABLE: 0n, BLWP_ELSEWHERE: null });
   assert.deepEqual(w, { available: false, msat: '0', elsewhere: false });
   assert.equal(withdrawNotice(w), '');

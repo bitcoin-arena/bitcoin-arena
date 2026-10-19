@@ -351,7 +351,7 @@ public class RunScore : MonoBehaviour
 
     void OnDelivered(long _)
     {
-        // THE CARD'S THREE FACTORS ARE THE CORE'S (Daniel's playtest 2026-09-25 18:29: DELIVERED at tick 4596, SCORE +137,
+        // THE CARD'S THREE FACTORS ARE THE CORE'S (the owner's playtest 2026-09-25 18:29: DELIVERED at tick 4596, SCORE +137,
         // and the card read "load 0.85 x danger 1.00 x speed 1.50 x 1000" - 1275). Those were Unity's own meters: danger
         // was Clamp01 of the raw exposure METRES (anything past 1 m printed 1.00), speed Unity's wall-clock cap, load
         // Unity's bed. The score is the core's (Projected), so its factors are read from the same words at the same moment
@@ -368,7 +368,7 @@ public class RunScore : MonoBehaviour
             LastTime = TimeFactor;
             LastCargo = CargoFactor;
         }
-        // THE SCORE IS THE CORE'S OWN WORD (the arrival card, Daniel 2026-09-25: "S on the card is the S_DELIVERED integer
+        // THE SCORE IS THE CORE'S OWN WORD (the arrival card, 2026-09-25: "S on the card is the S_DELIVERED integer
         // as-is"): measured, S_EXPOSURE, S_ELAPSED, S_CARGO and S_DELIVERED do not move after DELIVERED (72 runs, 600 ticks
         // each, throttle, idle and steering), so the words read here are the delivery tick's.
         LastScore = Blwp.BlwpCore.Available ? Blwp.BlwpCore.DeliveredScore : Projected;
@@ -405,7 +405,7 @@ public static class CoreScoreFactors
     public const int TicksMax = 7200;                     // score.js T_TICKS_MAX (T = 0.25 at 120 s)
     const float One = 65536f;                             // Q16.16
 
-    // THE FACTORS ON THE CORE'S GRID (Daniel 2026-09-25: "Their product is the score, so the core's score is that product"):
+    // THE FACTORS ON THE CORE'S GRID (2026-09-25: "Their product is the score, so the core's score is that product"):
     // score.js forms each factor as an integer count of 1e-5 - exposure5, time5, cargo5 - rounded once, half up, and the
     // score as their product in 1e-5 points. These are the same integer rules, so the card prints the core's factors
     // exactly and does not round a factor of its own; nothing here scores.

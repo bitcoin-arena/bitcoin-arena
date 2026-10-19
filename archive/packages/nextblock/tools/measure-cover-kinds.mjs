@@ -1,6 +1,6 @@
 // THE CLOSE-OUT NUMBER FOR §11.3: claims REACHED, split by kind.
 //
-// Daniel 2026-09-19: "Occupancy 89.8% on lips alone is not evidence the named kinds are used." §0's row counts a
+// 2026-09-19: "Occupancy 89.8% on lips alone is not evidence the named kinds are used." §0's row counts a
 // man on any place, so one kind of place can carry it while the two the section is named for are never stood in.
 // This tool refuses to add the kinds together. For each of the three (wreck, crater, candle lip) it counts the
 // man-ticks on which a claim of that kind is HELD and, of those, the ones on which its holder is within the row's

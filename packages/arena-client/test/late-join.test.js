@@ -18,7 +18,7 @@
 // an entry id is the hash of its bytes, so a node that returns somebody else's
 // entry, or the same one with a friendlier join tick, does not hash to what
 // was asked for.
-// A FREE ROUND (RULED Daniel 2026-09-25): nothing this file asserts depends on the stake, and a paying round opens only
+// A FREE ROUND (RULED 2026-09-25): nothing this file asserts depends on the stake, and a paying round opens only
 // on a signer node that reaches a federation now.
 import { TEST_FEDERATION_ID } from '../../arena-protocol/src/test-federation.js';
 import { TRUCK_CORE_HASH, TRUCK_V3_CONFIG_HASH } from '../../nextblock/plugin/nextblock.js';
@@ -69,7 +69,7 @@ const entryFor = (rid, joinTick) => ({
   roundId: rid, playerPubkey: b32(5), sessionPubkey,
   stakeCommitment: b32(7), stakeMsat: 0n, feeMsat: 0n, donationMsat: 0n, joinTick,
   // The world secret the entry carries so a node can derive the world it
-  // replays (Daniel, e942580). Nothing in this file uses it - a late join is
+  // replays (the owner, e942580). Nothing in this file uses it - a late join is
   // about which TICK a run starts at - but an entry without one no longer
   // encodes, and an entry that does not encode has no id to be late with.
   worldSecret: b32(0x5c), vssSharesRef: new Uint8Array(32), stakePoint: new Uint8Array(33), feePreimage: new Uint8Array(32), stakeLockOutpoint: { txid: new Uint8Array(32), outIdx: 0n }, feeLockOutpoint: { txid: new Uint8Array(32), outIdx: 0n }, claimKeyAttestationRef: new Uint8Array(32),
@@ -249,7 +249,7 @@ test('a transcript that does not begin at the entry\'s join tick is refused on r
   // answered those would be a second node rather than a lying one.
 });
 
-test('a series round taking entries for hours is no late join: offered until its own entry close (Daniel 2026-10-14: Tick Tock "join until 0:00")', async () => {
+test('a series round taking entries for hours is no late join: offered until its own entry close (2026-10-14: Tick Tock "join until 0:00")', async () => {
   const { isLateJoinRound, entryOpenUntilMs, lateJoinTick, LATE_JOIN_WINDOW_MS } = await import('../src/late-join.js');
   assert.equal(LATE_JOIN_WINDOW_MS, (await import('../../arena-protocol/src/series.js')).LATE_JOIN_MS, 'the page\'s late-join window is the series\'');
   const start = 1791949075500n;

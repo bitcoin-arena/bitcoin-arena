@@ -1,4 +1,4 @@
-// DOES A WATCHER WHOSE OWN RUN HAS FINISHED STILL GET PICTURES? (Daniel 2026-09-18 20:00, SPECTATE.)
+// DOES A WATCHER WHOSE OWN RUN HAS FINISHED STILL GET PICTURES? (2026-09-18 20:00, SPECTATE.)
 //
 // `finish()` no longer closes the socket, so the line to the node stays up after a run ends - but an open socket is
 // not proof that anything still comes down it. A player who presses SPECTATE after their own run wants the other

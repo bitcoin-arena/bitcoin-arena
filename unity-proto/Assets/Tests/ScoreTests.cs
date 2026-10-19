@@ -314,7 +314,7 @@ public class ScoreTests
     ///
     /// This test used to require the opposite - that the meter be to the RIGHT
     /// of the whole left column - because the meter lived under the wanted
-    /// stars in the top right corner. Daniel asked for condition and danger
+    /// stars in the top right corner. the owner asked for condition and danger
     /// stacked on 2026-09-06: they are the two numbers a driver reads about
     /// the run he is in, and they were at opposite ends of the screen. The
     /// requirement is reversed rather than relaxed, and it is checked at the

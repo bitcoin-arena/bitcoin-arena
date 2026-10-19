@@ -1,4 +1,4 @@
-// WHAT THE TWO TESTNET4 GATEWAYS HOLD RIGHT NOW (M3 inbound liquidity, Daniel 2026-09-20).
+// WHAT THE TWO TESTNET4 GATEWAYS HOLD RIGHT NOW (M3 inbound liquidity, 2026-09-20).
 //
 // WHY A LIVE READ AND NOT ONLY THE SUITE. `gateways.test.js` pins the numbers the pair reported on 2026-09-20
 // after a real invoice was paid each way. That is a regression floor and it is worth having, but it is a

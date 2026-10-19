@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: LicenseRef-Bitcoin-Arena-1.0
 // Copyright (c) 2026 The Bitcoin Arena authors. See LICENSE.
-// THE PRICE SOURCES AN ATTESTOR READS (kanban #236, Daniel 2026-10-09: "A on the Beelink (Coinbase, Kraken, Bitstamp); B on the
+// THE PRICE SOURCES AN ATTESTOR READS (2026-10-09: "A on the Beelink (Coinbase, Kraken, Bitstamp); B on the
 // MacBook (Coinbase, Kraken, Bitstamp); C on the Beelink (Gemini, Coinbase, Kraken)"): public BTC/USD tickers, each read to
 // whole cents - a decimal string cut at the cent, never a float.
 export const SOURCES = Object.freeze({

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# THE DAILY'S KEEPER (Daniel 2026-09-15, 12:54: always one free round and one paying 2-of-2 open).
+# THE DAILY'S KEEPER (2026-09-15, 12:54: always one free round and one paying 2-of-2 open).
 #
 # The signer nodes are reached through two Cloudflare quick tunnels, and a quick tunnel gets a new public
 # name every time it restarts; the signer nodes bond under those names, and daily.json - deployed beside
@@ -13,7 +13,7 @@
 #      when daily.json differs from the one last deployed from here.
 # Durable public names (an account tunnel) stay parked; this covers the gap.
 #
-# ITS DEPLOYS NEED CLOUDFLARE AUTH THAT NEEDS NO BROWSER (Daniel 2026-09-15: a Pages-only API token,
+# ITS DEPLOYS NEED CLOUDFLARE AUTH THAT NEEDS NO BROWSER (2026-09-15: a Pages-only API token,
 # for the keeper alone). Measured before: wrangler's OAuth login lapsed - "Not logged in ... the
 # environment is non-interactive" - and a tunnel restart then left the Daily naming dead signer nodes with
 # nothing able to deploy. The unit reads $ARENA_2OF2_DIR/cloudflare.env, owned by this user, mode 600:
@@ -25,7 +25,7 @@
 #   Client IP filter / TTL: optional
 # With CLOUDFLARE_ACCOUNT_ID set, wrangler pages deploy needs no user or membership scope.
 # THE FILE IS READ ON EVERY PASS, so a token dropped in is used within 30 s with no restart - and
-# only from a file this user owns with mode 600. WITHOUT IT THE KEEPER DOES NOT DEPLOY (Daniel
+# only from a file this user owns with mode 600. WITHOUT IT THE KEEPER DOES NOT DEPLOY (the owner
 # 2026-09-15): wrangler's browser login lapses and cannot be renewed unattended - measured, it
 # failed every 30 s - so the keeper says once why it holds and keeps the signer nodes on the tunnels'
 # names. Nothing here prints the token.

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// THE TEST UP/DOWN MARKET'S ATTESTOR KEYS AS FILES (kanban #236): A.pkcs8, B.pkcs8, C.pkcs8 (mode 600) and attestors.txt (the
+// THE TEST UP/DOWN MARKET'S ATTESTOR KEYS AS FILES: A.pkcs8, B.pkcs8, C.pkcs8 (mode 600) and attestors.txt (the
 // market's attestor keys, hex, comma-separated) in <dir>, for the three daemon units. Test keys: regtest only.
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';

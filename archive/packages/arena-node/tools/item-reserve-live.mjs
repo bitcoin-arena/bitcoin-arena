@@ -1,4 +1,4 @@
-// item-reserve-live.mjs (kanban #397 slice 5): one larger truck bought for real on testnet4 from Tick Tock v4 - the version that requires
+// item-reserve-live.mjs: one larger truck bought for real on testnet4 from Tick Tock v4 - the version that requires
 // protocol 11 - so 20 % of its list price is paid to the payment federation's 5-of-7 reserve key; then every seat's GET /reserves and
 // GET /items is read, to see the same reserve row and the same total on each. A fresh wasm wallet, funded over Lightning from
 // lnd-testnet4, pays purchaseOutputsReserves with the lock client's paySubmit; the buyer's layout-12 record is handed to one seat,

@@ -1,11 +1,11 @@
-// TWO REAL BROWSERS ON THE DAILY, EACH LOOKING FOR THE OTHER'S TRUCK (Daniel 2026-09-17 19:15, the two-tab gate).
+// TWO REAL BROWSERS ON THE DAILY, EACH LOOKING FOR THE OTHER'S TRUCK (2026-09-17 19:15, the two-tab gate).
 //
 // Every other measurement on this letter was made with node clients: they carry the same @blwp/client, the same
 // watch, the same stamps, and they proved the wire and the label's arithmetic. What they cannot do is BE a browser -
 // no jslib, no C#, no camera. This drives two headless Chromes at the deployed page instead, presses the page's own
 // PLAY in each, and asks each tab what it holds of the other one.
 //
-// IT IS NOT DANIEL'S SHOT AND CANNOT BE. Headless swiftshader draws about eleven frames a second where a player has
+// IT IS NOT THE OWNER'S SHOT AND CANNOT BE. Headless swiftshader draws about eleven frames a second where a player has
 // sixty (measured by `screen.mjs` on this same host), and the age over a truck is partly how long the page waited for
 // a frame. So an age here is the number THIS MACHINE shows, not the number a player sees, and a large one is not a
 // failure of the ghost path. What this can say, and what a node client never could, is whether the two tabs are shown
@@ -42,7 +42,7 @@ async function browser(name, port) {
   const trouble = [];
   proc.stderr.on('data', (b) => {
     const s = String(b);
-    // THE FAILURE DANIEL ASKED FOR BY NAME: a second WebGL context that will not start says so here.
+    // THE FAILURE THE OWNER ASKED FOR BY NAME: a second WebGL context that will not start says so here.
     if (/context lost|Out of memory|GPU process|SwiftShader|WebGL|crash/i.test(s)) trouble.push(s.trim().slice(0, 200));
   });
 

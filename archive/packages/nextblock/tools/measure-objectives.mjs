@@ -1,5 +1,5 @@
 // WAR_TACTICS.md §4.11 OBJECTIVES: the core's three objective lanes against the chart's HIGH, LOW and OPEN, read from the
-// state and the core's own chart view only (kanban #29, step 1 - nothing here changes a rule).
+// state and the core's own chart view only (step 1 - nothing here changes a rule).
 //
 //     node tools/measure-objectives.mjs [--core=DIR/src] [--seeds=1,2,3,4,5] [--ticks=3600]
 //

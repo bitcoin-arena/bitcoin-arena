@@ -1,7 +1,7 @@
-// DO TWO TABS THAT PRESS PLAY A LITTLE APART LAND IN THE SAME ROUND? (Daniel 2026-09-17 19:15, the two-tab gate.)
+// DO TWO TABS THAT PRESS PLAY A LITTLE APART LAND IN THE SAME ROUND? (2026-09-17 19:15, the two-tab gate.)
 //
 // Every ghost number on this letter was measured with BOTH seats pinned to one round id: the probe reads the lobby
-// once and hands the same round to the driver and the watcher. A player does not do that. Daniel opens one tab, presses
+// once and hands the same round to the driver and the watcher. A player does not do that. the owner opens one tab, presses
 // PLAY, then opens the second and presses PLAY - seconds or a minute later - and each tab picks a round out of its own
 // lobby listing. If the first tab's round stops being joinable in between, the second tab joins the NEXT one, the two
 // are in different rounds, and neither is ever shown the other: no ghost, no label, no rim marker, and nothing in the

@@ -1,4 +1,4 @@
-// A PAID PICK THROUGH THE PAGE ITSELF (kanban #206, Daniel 2026-10-07 23:23, decision A): on the MacBook, two players in two
+// A PAID PICK THROUGH THE PAGE ITSELF (2026-10-07 23:23, decision A): on the MacBook, two players in two
 // browser profiles, each on the page's own chain - the lobby's market row (a round of the published series), PLAY, the pick
 // sheet, the deposit invoice the page shows (paid from alice's lnd: the player's own wallet), the one lock transaction with the
 // fee and the donation, the pick handed to the seats - then the attestors' outcome (2 of 3, posted to the seven seats), the

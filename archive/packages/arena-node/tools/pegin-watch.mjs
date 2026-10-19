@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// THE PEG-IN WATCHER, WHICH CHECKS BEFORE IT WAITS (Daniel 2026-09-29 12:25, PEGIN-WATCH-1225; the rule is
+// THE PEG-IN WATCHER, WHICH CHECKS BEFORE IT WAITS (2026-09-29 12:25, PEGIN-WATCH-1225; the rule is
 // src/pegin-check.js). Every tick it reads: the gateway's client config for the federation (gateway-cli cfg
 // client-config), the running federation's config (a separate outside client, fedimint-cli config), the address the
 // peg-in transaction paid (off the chain), whether the gateway's current client derived that address (ecash

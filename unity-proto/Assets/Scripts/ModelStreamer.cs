@@ -108,7 +108,7 @@ public class ModelStreamer : MonoBehaviour
             Items.Add(new Item { label = "Truck", key = TruckKey });
 
         // THE STRIKE SET COMES EARLY NOW, and the reason is a photograph:
-        // Daniel's iPhone showed a liquidation with stacked primitives for the
+        // the owner's iPhone showed a liquidation with stacked primitives for the
         // cloud and the plain olive airframe, because the models a strike
         // needs were at the BACK of the queue behind 22.3 MB of scenery.
         // Measured, in bundle megabytes as downloaded:

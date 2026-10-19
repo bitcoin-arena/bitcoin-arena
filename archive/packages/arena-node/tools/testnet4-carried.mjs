@@ -1,4 +1,4 @@
-// THE SEVEN TESTNET4 BONDS, AS THE ARENA SEATS WILL COUNT THEM (kanban #209 step 4, after testnet4-reaffirm.mjs --publish):
+// THE SEVEN TESTNET4 BONDS, AS THE ARENA SEATS WILL COUNT THEM (after testnet4-reaffirm.mjs --publish):
 // this tree's census derived from testnet4's own blocks for a round of testnet4's Arena network id at the tip - as roster.js
 // derives it (the BIP-340 verify for updates and re-affirmations) - and each seat's bond read on chain: unspent, at its
 // funding height, re-affirmed and updated. Reads only; nothing is built or sent.

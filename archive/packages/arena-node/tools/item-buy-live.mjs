@@ -1,4 +1,4 @@
-// item-buy-live.mjs (kanban #369): the larger truck bought for real on testnet4 with the PAGE'S OWN purchase code (arena-client
+// item-buy-live.mjs: the larger truck bought for real on testnet4 with the PAGE'S OWN purchase code (arena-client
 // item-buy.js buyItem) - the manifest the seats host (GET /games: nextblock v3, which sells it), a fresh wasm wallet in the
 // federation funded over Lightning from lnd-testnet4, the buyer the ITEMS KEY of a player seed (itemsKeyFor), and the record handed
 // to a seat, which hands it on; then GET /items asked of every seat.

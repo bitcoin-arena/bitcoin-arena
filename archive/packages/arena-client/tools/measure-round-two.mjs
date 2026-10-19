@@ -1,4 +1,4 @@
-// WHAT A WATCHER HOLDS WHEN THE ROUND TURNS OVER (Daniel 2026-09-18 12:02: "after 2nd round Truck 1 cannot see
+// WHAT A WATCHER HOLDS WHEN THE ROUND TURNS OVER (2026-09-18 12:02: "after 2nd round Truck 1 cannot see
 // Truck 2. Age 6736ms on young-hawk-9551").
 //
 // The four counts asked for, per round, measured on the Daily with real seats and the page's own client:
@@ -8,7 +8,7 @@
 //     is counted here is whether a round got a new field at all
 //   - pictures that name an entry of a round this pair has left
 //
-// AND THE CASE THAT MATTERS: a watcher that keeps its field across the boundary. Daniel's Truck 1 was looking at a
+// AND THE CASE THAT MATTERS: a watcher that keeps its field across the boundary. the owner's Truck 1 was looking at a
 // truck whose newest picture was 6.7 s old and climbing - since 0.0.1591 a silence no longer retires it, so if
 // nothing else takes it away it stands for ever. Both are driven here: a watcher rebuilt for the new round the way a
 // player pressing PLAY gets one, and a watcher that is not.
@@ -83,7 +83,7 @@ async function seated(named, roundIdHex) {
 const until = Date.now() + 14 * 60000;
 say('# the Daily: what a watcher holds when the round turns over');
 
-// THE WATCHER THAT STAYS. Made once, on the first round, and never rebuilt - the case Daniel photographed.
+// THE WATCHER THAT STAYS. Made once, on the first round, and never rebuilt - the case the owner photographed.
 let sticky = null;
 let stickyField = null;
 let stickyRound = null;

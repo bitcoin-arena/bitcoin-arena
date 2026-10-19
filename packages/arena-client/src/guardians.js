@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: LicenseRef-Bitcoin-Arena-1.0
 // Copyright (c) 2026 The Bitcoin Arena authors. See LICENSE.
-// THE PAGE COUNTS THE FEDERATION'S BONDED GUARDIANS ITSELF (§23.6, P3; Daniel
+// THE PAGE COUNTS THE FEDERATION'S BONDED GUARDIANS ITSELF (§23.6, P3; the owner
 // 2026-09-15 07:33: "every guardian / node must have its own bond or it may not
 // take part. federationIsBonded stays on").
 //
@@ -99,7 +99,7 @@ export async function bondedGuardians({ guardians, round, chain, offers, verify,
       refused.push(`bond ${i}: the advertisement for ${toHex(seen.nodePubkey).slice(0, 16)} is not signed by the node it names`);
       continue;
     }
-    // THE NEWEST ADVERTISEMENT, NOT THE FIRST (§5A.2; Daniel 2026-09-28): an update offered beside the bond is proved
+    // THE NEWEST ADVERTISEMENT, NOT THE FIRST (§5A.2; 2026-09-28): an update offered beside the bond is proved
     // into this page's own headers, must name this bond, carry the bond's own node key and be signed by it, and sit at
     // or above the bond - then its guardian keys are the ones counted. An update that fails any of that is refused by
     // name and the bond's own advertisement stands. (A node can omit a newer update; it cannot forge one.)

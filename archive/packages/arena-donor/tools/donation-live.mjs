@@ -1,4 +1,4 @@
-// LIVE ON TESTNET4 (Daniel 2026-10-03): the new wasm's lockWithDonations, then each dev client's redeem, then a withdraw to LND C.
+// LIVE ON TESTNET4 (2026-10-03): the new wasm's lockWithDonations, then each dev client's redeem, then a withdraw to LND C.
 import { readFileSync, copyFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';

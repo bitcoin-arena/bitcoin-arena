@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: LicenseRef-Bitcoin-Arena-1.0
 // Copyright (c) 2026 The Bitcoin Arena authors. See LICENSE.
-// THE ARRIVAL CARD'S FACTORS ARE THE CORE'S (Daniel's playtest 2026-09-25 18:29). The shot: DELIVERED at tick 4596,
+// THE ARRIVAL CARD'S FACTORS ARE THE CORE'S (the owner's playtest 2026-09-25 18:29). The shot: DELIVERED at tick 4596,
 // SCORE +137, and the card read "load 0.85 x danger 1.00 x speed 1.50 x 1000" - 1275. The card now prints factors formed
 // from the core's three score words by Unity's CoreScoreFactors (unity-proto/Assets/Scripts/Cargo/RunScore.cs). This file
 // holds that C# to the core: its constants are score.js's, and its E x T x C x 1000 is scoreOf's score.
@@ -19,7 +19,7 @@ const constant = (name) => {
   assert.ok(m, `RunScore.cs names no ${name}`);
   return Number(m[1]);
 };
-// THE C# FACTORS, as written there (Daniel 2026-09-25: the core's score is the product of its factors): each an integer
+// THE C# FACTORS, as written there (2026-09-25: the core's score is the product of its factors): each an integer
 // count of 1e-5, rounded once half up - DivRound(n, d) = (2n + d) / (2d) - exactly score.js's exposure5, time5, cargo5.
 const SCALE = constant('FactorScale');
 const divRound = (n, d) => Math.floor((2 * n + d) / (2 * d));
@@ -45,7 +45,7 @@ test('the 18:29 shot: the card reads load 0.70000 x danger 0.23091 x speed 0.848
     atReference: then.scoreOf(then.EXPOSURE_REFERENCE, ticks, cargo) };
   console.log('  FACTS (18:29):', JSON.stringify(facts));
   assert.deepEqual(facts, { score: 13715869, card: ['0.70000', '0.23091', '0.84856'], atReference: 59399200 });
-  // AND THE SAME WORDS TODAY (T sinks from 20 s, par 1800, Daniel 09:17): the C# card and the core still agree, at the new T.
+  // AND THE SAME WORDS TODAY (T sinks from 20 s, par 1800, the owner 09:17): the C# card and the core still agree, at the new T.
   assert.deepEqual([C5(cargo), E5(exposure), T5(ticks)], [cargo5(cargo), exposure5(exposure), time5(ticks)]);
   assert.equal(divRound(C5(cargo) * E5(exposure) * T5(ticks), 1e7), scoreOf(exposure, ticks, cargo));
 });

@@ -13,7 +13,7 @@
 #   ANGLE/Vulkan 1280x800     61.4 ticks/s      <- keeps the round's time
 #
 # A run measured on SwiftShader therefore never reaches the end of its own block: the node closes the round
-# first and the client ends it VOID. That is how the first drive for Daniel's 16:21 timer letter "measured"
+# first and the client ends it VOID. That is how the first drive for the owner's 16:21 timer letter "measured"
 # a fix it had not exercised at all - the lobby came back by the CLIENT's word at core tick 5004 of 10800,
 # which is the path that already worked.
 #

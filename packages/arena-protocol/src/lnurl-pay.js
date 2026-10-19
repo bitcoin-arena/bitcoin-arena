@@ -11,7 +11,7 @@
  * metadata string" (LUD-06, MUST). These are the decisions; the fetching and
  * the paying are the client's.
  *
- * The comment is the player's public key as hex (§22A, Daniel 2026-09-08), and
+ * The comment is the player's public key as hex (§22A, 2026-09-08), and
  * it is left out when the endpoint takes fewer than 64 characters (LUD-12).
  */
 import { decodeBolt11 } from './bolt11.js';
@@ -26,7 +26,7 @@ export const COMMENT_KEY_CHARS = 64;
  *
  * `name@host` means `https://host/.well-known/lnurlp/name`, and nothing else: no redirect is followed
  * here, no scheme is guessed, and a host with a path or a port dressed into it is refused rather than
- * normalised. It is where a player's winnings are sent when they have no NWC wallet connected (Daniel
+ * normalised. It is where a player's winnings are sent when they have no NWC wallet connected (the owner
  * 2026-09-21 13:54), so it is checked the way an address that money leaves for should be.
  *
  * `.onion` is allowed over http, because that is what LUD-16 says and a Tor host cannot hold a

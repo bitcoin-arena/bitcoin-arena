@@ -5,7 +5,7 @@ using NUnit.Framework;
 using L = Blwp.Layout;
 
 /// <summary>
-/// AN ASSAULT MUST BE PERCEPTIBLE (Daniel 2026-09-20 16:22, 16:26).
+/// AN ASSAULT MUST BE PERCEPTIBLE (2026-09-20 16:22, 16:26).
 ///
 /// The core's half was measured first, over eight seeds and a whole block each: 21 assaults declared, two to
 /// eight events a block, both sides, ending both ways; 17 of the 21 had armour within 6 m of the target lane at
@@ -28,7 +28,7 @@ public class AssaultsAreVisibleTests
     }
     static readonly DateTime NOON = new DateTime(2026, 9, 20, 13, 0, 0);
 
-    /// <summary>The declaration: Daniel's own banner, and a sound with it.</summary>
+    /// <summary>The declaration: the owner's own banner, and a sound with it.</summary>
     [Test]
     public void ADeclaredAssaultRaisesItsBannerAndAsksForASound()
     {

@@ -1,4 +1,4 @@
-// EACH TESTNET4 SEAT'S GET /bond AND GET /headers, WRITTEN FROM THE CHAIN (kanban #295). A seat serves its attach-proof
+// EACH TESTNET4 SEAT'S GET /bond AND GET /headers, WRITTEN FROM THE CHAIN. A seat serves its attach-proof
 // directory (main.js ARENA_ATTACH_PROOF_DIR): bond.json - its bond transaction, the merkle branch and its position - and
 // headers.bin - the headers from testnet4's anchor (154000) up. After the re-bond each seat's bond is a template-2 bond of
 // this network (no re-affirmation, no update beside it), in a block the old headers.bin (to 155872) did not reach. This

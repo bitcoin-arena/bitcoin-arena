@@ -1,5 +1,5 @@
 // HOW MUCH ROOM COVER HAS - the X side of WAR_TACTICS.md §0's "wrecks and craters are used" row (§11.3),
-// measured on the tree that is deployed today, and the answer to Daniel's own question: how many of today's
+// measured on the tree that is deployed today, and the answer to the owner's own question: how many of today's
 // deaths happen where a place would have existed.
 //
 // WRITTEN WHEN §11.3 WAS A DECLARED GAP - no TAC_COVER word, no places, no claims - so "is anyone on a place" was

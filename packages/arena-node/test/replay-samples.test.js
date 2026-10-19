@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: LicenseRef-Bitcoin-Arena-1.0
 // Copyright (c) 2026 The Bitcoin Arena authors. See LICENSE.
-// THE LIVE PRICE ON THE SIGNER NODES (Daniel 2026-09-17 16:01): price samples ride the batch beside their ticks, the node
+// THE LIVE PRICE ON THE SIGNER NODES (2026-09-17 16:01): price samples ride the batch beside their ticks, the node
 // stores and serves them, and a replay reaches the state of the page that fought on the moving chart.
 import { TEST_FEDERATION_ID } from '../../arena-protocol/src/test-federation.js';
 import { TRUCK_CORE_HASH, TRUCK_V3_CONFIG_HASH } from '../../nextblock/plugin/nextblock.js';
@@ -53,7 +53,7 @@ const wordsAt = () => [45875, 6000, 0, 0, 0];
 // Three live BTCUSD prices in the tape's unit (256 a dollar), one every 300 ticks, as CoreDrivenTruck submits them.
 const SAMPLES = [[300, Math.round(76727.4 * 256)], [600, Math.round(76811.9 * 256)], [900, Math.round(76502.2 * 256)]];
 
-// The live tape a page fetched at the start (Daniel 16:44): 64 prices 5 s apart, handed over at tick 0.
+// The live tape a page fetched at the start (the owner 16:44): 64 prices 5 s apart, handed over at tick 0.
 const TAPE = Array.from({ length: 64 }, (_, i) => Math.round((76690 + 11 * Math.sin(i / 4) + i * 0.3) * 256));
 
 /** The player's own run: the page hands its core the live tape and each price before the tick it belongs to. */
@@ -88,7 +88,7 @@ function stored(ticks, { chunk = 100, samples = SAMPLES, tape = null } = {}) {
 }
 
 /**
- * THE CHART MOVES ON THE SIGNER NODES TOO (Daniel 2026-09-17 16:01: "no new candles coming in" - nothing had ever
+ * THE CHART MOVES ON THE SIGNER NODES TOO (2026-09-17 16:01: "no new candles coming in" - nothing had ever
  * submitted a price sample). A sample moves the tape, the candles, the seam and the market the army reads, so it is in
  * the batch beside its tick, the node stores it, the transcript carries it and the replay reaches the player's state.
  */

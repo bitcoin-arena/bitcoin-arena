@@ -41,7 +41,7 @@ const contract = () => ({
 const entryFor = (rid, joinTick = 0) => ({
   roundId: rid, playerPubkey: b32(5), sessionPubkey: b32(6), stakeCommitment: b32(7),
   stakeMsat: 100000n, feeMsat: entryFeeMsat(100000n), donationMsat: 0n, joinTick,
-  // Daniel put the world secret on the Entry Contract (e942580) so a node can
+  // the owner put the world secret on the Entry Contract (e942580) so a node can
   // derive the world it replays. These fixtures still hand `replay` a
   // `seedWord` directly, which is the fixture owning its own number; what the
   // entry carries here is only what the encoder now requires.

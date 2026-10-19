@@ -217,7 +217,7 @@ export async function agreedChain(providers, { least = 2, timeoutMs = 10000, ask
   for (const a of good) if (a.work > best.work) best = a;
   const inBest = new Set(best.hashes);
 
-  // A SPLIT AT THE TIP IS NOT A FORK TO REFUSE (Daniel's testnet4, measured 2026-10-14 ~10:00Z: the MacBook's bitcoind and the
+  // A SPLIT AT THE TIP IS NOT A FORK TO REFUSE (the owner's testnet4, measured 2026-10-14 ~10:00Z: the MacBook's bitcoind and the
   // Beelink's stood at one height and one chainwork on two branches six blocks long - testnet4's minimum-difficulty blocks tie
   // often - and every committee this client built from all 14 seats' headers was refused, "providers 0 and 1 do not agree").
   // A provider whose chain leaves the most-work one only in its last TIP_SPLIT_BLOCKS blocks still agrees on everything below,
@@ -258,7 +258,7 @@ export async function agreedChain(providers, { least = 2, timeoutMs = 10000, ask
 }
 
 /**
- * THE CHAIN FROM A FEW SOURCES, NOT FROM EVERY SEAT (kanban #376, Daniel 2026-10-16 ~10:58Z: "Lower the amount of concurrent
+ * THE CHAIN FROM A FEW SOURCES, NOT FROM EVERY SEAT (2026-10-16 ~10:58Z: "Lower the amount of concurrent
  * connections and network load"; measured 11:29Z on preview UI 153, Unity's PLAY tapped: "no chain: only 0 of 14 providers gave a
  * chain ... provider 0: no answer in 10000 ms" two seconds before the round's start). Every PLAY read /headers from all 14 seats at
  * once - 218800 bytes each, about 3 MB; curl from the MacBook took 1.6-5.3 s for the fourteen together, and a busy tab took more

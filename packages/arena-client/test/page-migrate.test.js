@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: LicenseRef-Bitcoin-Arena-1.0
 // Copyright (c) 2026 The Bitcoin Arena authors. See LICENSE.
-// THE NOTES FOLLOW THE SUCCESSOR (§23A.6 step 3, kanban #325): a wallet in a DRAINING federation moves everything it can
+// THE NOTES FOLLOW THE SUCCESSOR (§23A.6 step 3): a wallet in a DRAINING federation moves everything it can
 // send to the successor named by the verified record - in chunks, each a stock send paying the successor's receive invoice,
 // no press; nothing moves on an OPEN record, a record naming no successor, or a wallet that is not the successor's; a failed
 // chunk is tried again and then the move stops with the notes where they were.
@@ -79,7 +79,7 @@ test('dust stays: a wallet holding no more than the dust line moves nothing', as
   assert.equal(out.moved, 0n); assert.equal(out.state, 'moved');
 });
 
-// DANIEL 2026-10-13 ~12:00Z: "When a federation is draining the client has automatically to move it to a safe federation" -
+// THE OWNER 2026-10-13 ~12:00Z: "When a federation is draining the client has automatically to move it to a safe federation" -
 // the target is its OPEN successor, else the lowest-load OPEN known federation; a CRITICAL federation empties the same way
 test('out of a DRAINING or CRITICAL federation: into its OPEN successor, else the lowest-load OPEN one; never into itself', async () => {
   const { safeFederation } = await import('../src/federations.js');

@@ -1,4 +1,4 @@
-// SAME INTEGERS, EVERY CORE VERSION (kanban #328, spec §0A.6): one fixed set of runs per core a node holds - nextblock's
+// SAME INTEGERS, EVERY CORE VERSION (spec §0A.6): one fixed set of runs per core a node holds - nextblock's
 // current core, the three frozen ones and the pre-fork name, and the two test cores (counter, tally) - replayed by a tree's
 // replay worker, one line of JSON per run. Run once with today's tree and once with the sandbox's; compare run for run.
 //

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// ONE NODE'S FIRST BOND ON TESTNET4 (kanban #326, Daniel 2026-10-15: "a 15th testnet4 node with a 50,000 sat bond" - the seat
+// ONE NODE'S FIRST BOND ON TESTNET4 (2026-10-15: "a 15th testnet4 node with a 50,000 sat bond" - the seat
 // §23A.6 draws into federation B's successor beside B1-B6, seated first). The node's key is read from its own store (created
 // here if the store is new, as the node would at its first start), and its first template-2 bond is posted with the
 // advertisement named below: its own operator, guardian-capable with its public guardian endpoint, guarding nothing yet.
@@ -7,8 +7,8 @@
 //
 //   BITCOIN_CLI=<bitcoin-cli> BTC_DATADIR=<dir> WALLET=<wallet> STORE=<node store> ENDPOINT=wss://... GUARDIAN_ENDPOINT=wss://.../guardian \
 //   OPERATOR=<id> [BOND_SATS=50000] [FUND_BTC=0.00056] [PROTOCOLS=1,2,3,4,5,6,7] [HOSTED=<hex,hex,..>] [ROLES=game,verify,settlement] node tools/testnet4-bond-node.mjs [--publish]
-// ROLES=relay: a node no committee of any live round is drawn from (kanban #326, the throwaway federation T of the testnet4 slash
-// and liquidation, Daniel 2026-10-15 option 1) - it counts in the census, guards its federation, and is never a signer node.
+// ROLES=relay: a node no committee of any live round is drawn from (the throwaway federation T of the testnet4 slash
+// and liquidation, 2026-10-15 option 1) - it counts in the census, guards its federation, and is never a signer node.
 import { execFileSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { regtest } from './regtest-bond.mjs';

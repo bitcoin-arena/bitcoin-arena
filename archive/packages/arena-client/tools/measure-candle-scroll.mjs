@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Do the world candles keep scrolling from the cab, or do they move once and freeze?
 //
-// Daniel 2026-09-17 16:42 (HARD, still open): "at round start from the cab, candles move LEFT then freeze; miner-ward
+// 2026-09-17 16:42 (HARD, still open): "at round start from the cab, candles move LEFT then freeze; miner-ward
 // scroll is otherwise correct."
 //
 // The ribbon is drawn at the core's own `candleShift` (sim.js `candleView` -> CV_SHIFT), so this asks the page's core

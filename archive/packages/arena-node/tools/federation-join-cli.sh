@@ -1,5 +1,5 @@
 #!/bin/bash
-# JOIN A FEDERATION THROUGH fedimint-cli (kanban #348): ARENA_STAKE_LOCK_JOIN_BIN for a seat whose lock tool predates
+# JOIN A FEDERATION THROUGH fedimint-cli: ARENA_STAKE_LOCK_JOIN_BIN for a seat whose lock tool predates
 # `--mode join` - here the stock CLI's join reaches the guardians at their public addresses. Called as the tool is:
 #   federation-join-cli.sh --mode join --data-dir <dir> --invite <invite>
 # and answers as the tool does: one JSON line {"mode":"join","federation_id":...} (read back with the lock tool's own

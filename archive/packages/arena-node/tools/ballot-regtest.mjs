@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // ONE WHOLE GOVERNANCE CYCLE ON A PRIVATE REGTEST (spec §27A.7.4: "regtest runs 1 / 6 / 1 blocks and two operators can drive a
-// whole governance cycle through to activation in under a minute"; kanban #329). Never testnet4, nothing paid, no bond anywhere
+// whole governance cycle through to activation in under a minute"). Never testnet4, nothing paid, no bond anywhere
 // but this chain's own.
 //
 //   BITCOIN_BIN=<dir with bitcoind, bitcoin-cli> WORK=<empty dir> [RPCPORT=29411] [SEAT_PORT=29421] node tools/ballot-regtest.mjs
@@ -18,7 +18,7 @@
 //      naming the old one (taken, before and after) or the new one (refused)
 //   5  a forward proposal on the repeal's short schedule (refused), then the repeal f51759b6 -> 2170f250 (the genesis bytes) on
 //      regtest's 0 / 6 / 0, voted YES by seats 1 and 2, activated; GET /config and the rounds again
-//   6  (the hole of kanban #329 comment 2255) a proposal whose config_hash is not the hash of the config it carries, with its
+//   6  (the hole of comment 2255) a proposal whose config_hash is not the hash of the config it carries, with its
 //      deposit: refused by every seat by name; then a REORG under the decided repeal - its first voting block invalidated and
 //      the chain mined on in EMPTY blocks (generateblock [], so its votes stay out): every seat takes the outcome back, counts
 //      it again (FAILED) and GET /config goes back to f51759b6; then a reorg under its PUBLICATION: every seat forgets it

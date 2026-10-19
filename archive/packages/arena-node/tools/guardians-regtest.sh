@@ -1,5 +1,5 @@
 #!/bin/bash
-# THE FEDERATION'S GUARDIANS, READ OFF ITS OWN CONFIG (M3; Daniel 2026-09-15 07:33: every guardian
+# THE FEDERATION'S GUARDIANS, READ OFF ITS OWN CONFIG (M3; 2026-09-15 07:33: every guardian
 # has its own bond, federationIsBonded stays on). On stock fedimintd 0.12.0 - 4 guardians, 3 of 4,
 # base fee 0, rehearsal step 1's setup - `blwp-stake-lock --mode guardians` is set beside what the
 # stock client itself reads from the same config (`fedimint-cli config` and `info`): the same four

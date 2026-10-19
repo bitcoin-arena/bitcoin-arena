@@ -1,4 +1,4 @@
-// THE THREE THINGS THE 18:56 / 18:59 LETTER ASKS FOR, IN A REAL PLAYER (Daniel 2026-09-20).
+// THE THREE THINGS THE 18:56 / 18:59 LETTER ASKS FOR, IN A REAL PLAYER (2026-09-20).
 //
 //   1. the centre line still reaches the gate and still DELIVERS
 //   2. driving into a gold coin stack stops the truck instead of passing through it

@@ -1,9 +1,9 @@
-// CAN A PLAYER SEE THE TANKS PUSH THE LANE? (Daniel 2026-09-20, the second half of the 16:22 letter.)
+// CAN A PLAYER SEE THE TANKS PUSH THE LANE? (2026-09-20, the second half of the 16:22 letter.)
 //
 // The core half is already measured and is not re-measured here: over eight seeds, 21 declared assaults, the
 // attacking side's armour on the target lane advanced 14.56 m toward the enemy against 0.29 m for the same
 // side's tanks off it (`measure-assault.mjs`, `measure-assault-clock.mjs`). What that cannot say is whether any
-// of it reaches a player, which is the whole complaint: "assaults are not perceptible. Daniel cannot see them."
+// of it reaches a player, which is the whole complaint: "assaults are not perceptible. the owner cannot see them."
 //
 // So this watches ONE live assault in a real GPU-Chrome player and asks three things, in the order that decides
 // what - if anything - is still wrong:

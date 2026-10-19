@@ -35,7 +35,7 @@ import * as tactics from '../src/rules/tactics.js';
 import * as solids from '../src/rules/solids.js';
 
 /**
- * KEEPS LIVE ARMOUR OUT OF TOUCH WITH THE TRUCK, for a test that measures something else (Daniel 2026-09-16 17:06:
+ * KEEPS LIVE ARMOUR OUT OF TOUCH WITH THE TRUCK, for a test that measures something else (2026-09-16 17:06:
  * "Touch truck-tank = truck dies"). With nothing holding tanks off it, a truck pinned in the battle is rolled into and
  * written off by contact - measured, first touch at 95-1932 ticks wherever it stood on the field - which hides the
  * fire, the heat and the flag these tests exist for. Pinned the way `parkedUnderFire` pins the air: a live tank
@@ -447,7 +447,7 @@ test('a hill costs the core what it costs Unity', async () => {
     //
     // `physx-hills.json` was recorded when every bay mouth stood open from the ground to the lintel, so a truck
     // could sit at x -120 on bay 0's lane - inside the shell - and drive out through the back of the building.
-    // That hole is what Daniel photographed on 2026-09-20 18:59 and it is closed now, so -120 is inside a wall
+    // That hole is what the owner photographed on 2026-09-20 18:59 and it is closed now, so -120 is inside a wall
     // and the truck cannot move at all. The ASSERTIONS below are untouched: they compare core against the
     // recording at x -110 .. 110 by world x, and both sides are sampled the same way. Only the run-up moved, to
     // the first metre east of the wall face at POST_X -114.40 that fits the truck's own 6.35 m length.
@@ -684,7 +684,7 @@ const parkedUnderFire = (seed, ticks) => {
     // untouched at 90 s to written off at 20. West of the chart the line still runs: at x -78, z 0 all three are hit
     // and alive at 10 s (hp 89.7 / 43.5 / 88.7) and all three are written off inside 90 s. Two metres further west,
     // at -80, nothing reaches the truck at all on any seed - that is the edge of the guns, not a tuning knob.
-    // RE-MEASURED 2026-10-07 when §4.11's objectives became the chart's HIGH, LOW and OPEN (kanban #29): HIGH or LOW can
+    // RE-MEASURED 2026-10-07 when §4.11's objectives became the chart's HIGH, LOW and OPEN: HIGH or LOW can
     // stand on the west lanes now, where the oldest candles are, and the fight there moved. The edge of the guns came in
     // to -78.5 (nothing reaches the truck from there west on any seed), and at -78 seed 20260901 ended 90 s at 2.13 hp.
     // By the same two criteria, -77.5, -77 and -76.5 pass; -77.5 keeps the most room to the candle face at -75.8: hit and
@@ -714,7 +714,7 @@ test('incoming fire costs the truck condition', () => {
   }
 });
 
-test('a nuke kills every unit in its blast, armour and men, either side (Daniel 2026-09-19 15:55)', async () => {
+test('a nuke kills every unit in its blast, armour and men, either side (2026-09-19 15:55)', async () => {
   const { submitLiquidation } = await import('../src/sim.js');
   const Q = 65536, RADIUS = 16;                       // the smallest crater a load can dig
   let inBlast = 0, lived = 0, strikes = 0;
@@ -898,7 +898,7 @@ test('armour blocks the truck and infantry does not', () => {
 });
 
 /**
- * RETIRED (Daniel 2026-09-19, ruled): "the army closes at the pace the C# army closes".
+ * RETIRED (2026-09-19, ruled): "the army closes at the pace the C# army closes".
  *
  * It measured the opening approach - both armies walking in from the back edge at the recorded C# pace - and that
  * approach is gone on purpose: a tank is now put ON its post when it spawns, the way a rifleman already was. The C#
@@ -944,7 +944,7 @@ test('replacements keep both armies in contact for the whole round', async () =>
   // zero). The core's runs with the price tape, and comparing a fight offset by
   // twenty-seven metres against a symmetric one is not a comparison.
   st.tape.fill(st.tape[0]);
-  // AND THE TREND MUST BE READ OFF THE FLAT TAPE, or the fight is not symmetric either (Daniel, 2026-09-20).
+  // AND THE TREND MUST BE READ OFF THE FLAT TAPE, or the fight is not symmetric either (the owner, 2026-09-20).
   // Flattening the tape alone does not neutralise §4.14: `init` already read MK_TREND off the SEEDED tape, and
   // this fixture steps with no market tick, so `readMarket` never runs again and the trend stays whatever it was
   // born as - measured here, DOWN at strength 2 for all 90 s of the run. That favours the bears the whole way: a
@@ -1564,7 +1564,7 @@ test('a hunted load is written off sooner than an empty one', () => {
  * minute, sampled once a second.
  *
  * The counterpart of `survives`, and it reads the rule heat STATES: the reach. How long the truck
- * lasts is a different question, and since the flank ring (Daniel 2026-09-16) armour stands 28 m off
+ * lasts is a different question, and since the flank ring (2026-09-16) armour stands 28 m off
  * and `outranksTheFoe` hands the shot to any nearer tank, so survival time no longer follows the
  * reach at all.
  */
@@ -1611,7 +1611,7 @@ test('and it tells further and further behind the line', () => {
   // And it tells further behind the line: at the seam and thirty metres deeper, a full bed puts more
   // guns on the truck than an empty one does.
   //
-  // MOVED ON PURPOSE (Daniel 2026-09-16). 4,10,4,7 -> 7,10,7,9 when the truck's ring gave way at a tank's pace
+  // MOVED ON PURPOSE (2026-09-16). 4,10,4,7 -> 7,10,7,9 when the truck's ring gave way at a tank's pace
   // (15:36); -> 6,10,3,7 when the ring went and a touch became a write-off (17:00 / 17:06); -> 4,6,3,6 with
   // WAR_TACTICS.md (18:20): armour holds seeded team slots on lines 14 and 26 m off the seam, so fewer tanks are
   // near any one parked truck. Measured on eight seeds (0x5eed1234 and 1-7), armour kept out of contact by
@@ -1624,7 +1624,7 @@ test('and it tells further and further behind the line', () => {
   // post; WAR_TACTICS.md re-ruled 20:30). Eight seeds: behind the line a full bed has more tanks on the truck on all
   // eight (hot 4-6 against cold 2-5); at the seam on six, the same on two (seeds 1 and 4: 5-5, 3-3).
   // -> 4,6,4,6 with the post held until the bound arrives, stops inside 1.5 m and columns off the half-line budget
-  // (Daniel 21:20). Eight seeds: a full bed has more tanks on the truck on all eight at the seam (hot 5-6 against cold
+  // (the owner 21:20). Eight seeds: a full bed has more tanks on the truck on all eight at the seam (hot 5-6 against cold
   // 3-4) and on all eight behind the line (hot 4-6 against cold 2-4).
   // -> 5,6,3,6 with the hull-down emplacements in the surface (rules/emplacements.js). Eight seeds: a full bed has more
   // tanks on the truck on all eight at the seam (hot 4-6 against cold 3-5) and on all eight behind it (hot 4-6, cold 2-4).
@@ -1639,7 +1639,7 @@ test('and it tells further and further behind the line', () => {
   // all eight (hot 4-6, cold 2-3).
   // -> 4,6,2,6 with the held crests (§4.1 hysteresis, 2026-09-17). Eight seeds: at the seam a full bed has more tanks on
   // the truck on seven (hot 4-6, cold 3-5), the same on one (seed 4: 4-4); behind it on all eight (hot 4-6, cold 2-3).
-  // RETIRED (Daniel 2026-09-19, ruled) - the four-count snapshot, not the reach rules above it.
+  // RETIRED (2026-09-19, ruled) - the four-count snapshot, not the reach rules above it.
   //
   // With the armour deployed on its posts at spawn, the guns are spread along their lanes instead of bunched where
   // the walk-in left them, and this probe point no longer shows the widening at all: measured on the same eight seeds
@@ -1650,7 +1650,7 @@ test('and it tells further and further behind the line', () => {
 });
 
 /**
- * A TANK IS THE END OF THE RUN (Daniel 2026-09-16 17:06: "Touch truck-tank = truck dies", and 17:00: "Tanks must NOT
+ * A TANK IS THE END OF THE RUN (2026-09-16 17:06: "Touch truck-tank = truck dies", and 17:00: "Tanks must NOT
  * react to the truck except by shooting. No dodge. No being pushed"). Before, a crash was priced by speed - a write-off
  * only from 4 m/s - and a ring moved armour off the truck: 0 of 24 slow drive-ins touched a tank with the ring, and
  * without it 17 of 24 touched and 22 of 24 trucks lived.
@@ -1702,7 +1702,7 @@ test('an untold core hunts exactly as the recordings do', () => {
   // Zero is the default and the recordings were taken at it, so a core nobody
   // has spoken to must be bit-identical to one told an empty bed.
   const quiet = init(0x5eed1234);
-  // AN EMPTY BED IS ROOM 0 (Daniel 2026-10-04 08:54: C is the bed fill, init empty): a load that carries no room is a
+  // AN EMPTY BED IS ROOM 0 (2026-10-04 08:54: C is the bed fill, init empty): a load that carries no room is a
   // stored one, and keeps 0.7 - that is not an empty bed.
   const told = init(0x5eed1234);
   submitLoad(told, 0, 0, 0);
@@ -1777,7 +1777,7 @@ test('heat multiplies the shell and the arithmetic is the C#s', () => {
 
 /** Drive east at full throttle for a while and hand back the state. */
 // A BED 0.7 FULL, declared as a load of no fee (heat 0, where the recordings were taken): 0.7 of the 6 m bed, so C is
-// the 45875 every one of these drives was measured at before C became the bed fill (Daniel 2026-10-04 08:54).
+// the 45875 every one of these drives was measured at before C became the bed fill (2026-10-04 08:54).
 const BED_07 = 275250;
 function driven(ticks, practice = 1) {
   const st = init(0x5eed1234);

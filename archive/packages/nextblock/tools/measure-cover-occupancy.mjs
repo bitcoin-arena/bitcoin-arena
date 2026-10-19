@@ -1,7 +1,7 @@
 // WHY THE §11.3 OCCUPANCY ROW MOVES, split three ways, on the §11.3 test's own drive (seeds 1 and 2, 900 ticks of
 // warm-up, then 2400 with a nuke every 30 s) so the numbers sit beside the assertion they explain.
 //
-// Daniel 2026-09-19, after §4.14's live trend took the row from 73.5% to 60.5%: "occupancy split by halted vs
+// 2026-09-19, after §4.14's live trend took the row from 73.5% to 60.5%: "occupancy split by halted vs
 // rushing, and by lip / wreck / crater. If the drop is halted men frozen off-cover because walk=0, that is still
 // 11.3." It is not: the tool measures that first and the two groups reach their places at the same rate.
 //

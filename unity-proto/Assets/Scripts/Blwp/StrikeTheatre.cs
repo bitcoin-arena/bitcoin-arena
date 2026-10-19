@@ -712,7 +712,7 @@ namespace Blwp
                 return;
             }
 
-            // THE ANCHOR IS RE-READ FROM THE CORE, EVERY FRAME (Daniel 2026-09-16).
+            // THE ANCHOR IS RE-READ FROM THE CORE, EVERY FRAME (2026-09-16).
             //
             // `_cloudAt` is taken at the bomb run, and the bowl is dug 384 ticks
             // after the blast - so the height in it is the ground as it stood
@@ -732,7 +732,7 @@ namespace Blwp
             // seconds, nothing left by `Gone`.
             if (_mushroom != null && _mushroomModel != null)
             {
-                // IT GOES OUT, IT DOES NOT SHRINK. Daniel, 17:45 on the
+                // IT GOES OUT, IT DOES NOT SHRINK. the owner, 17:45 on the
                 // phone: "when the liquidation mesh expires it must vanish,
                 // not scale down". It used to be multiplied by a fade that ran
                 // to a 5% floor, so a 55 m cloud became a three-metre bud
@@ -776,7 +776,7 @@ namespace Blwp
                     _skirt3.localPosition = _skirtRestPos;
                 }
 
-                // AND THE WHOLE CLOUD STANDS ON ITS LOWEST POINT (Daniel 2026-09-16).
+                // AND THE WHOLE CLOUD STANDS ON ITS LOWEST POINT (2026-09-16).
                 //
                 // `_cloudAt` is the impact point on the ground, and putting the
                 // transform there put the model's ORIGIN there - which is its
@@ -849,7 +849,7 @@ namespace Blwp
                                       + $"-> lowest point now {floor:F2}, "
                                       + $"stem foot {_stemFoot:F2} = {(_stemFoot - floor):F2} m proud of the floor");
 
-                            // THE CORE'S OWN CLOCK, BECAUSE THE PAGE'S IS NOT IT (Daniel 2026-09-16).
+                            // THE CORE'S OWN CLOCK, BECAUSE THE PAGE'S IS NOT IT (2026-09-16).
                             //
                             // The bowl is dug 384 ticks after the core consumes the liquidation, and the
                             // cloud's clock starts at the IMPACT - the bomb run sits between the two and has
@@ -913,7 +913,7 @@ namespace Blwp
                     {
                         var sb = _skirtR.bounds;
 
-                        // AND IT RIDES THE PARENT (Daniel 2026-09-16). It used to
+                        // AND IT RIDES THE PARENT (2026-09-16). It used to
                         // lift ITSELF onto the highest of five `Ground()`
                         // samples, on the reasoning that a wide disc must clear
                         // the tallest ground beneath it. That rule was measured
@@ -931,7 +931,7 @@ namespace Blwp
                         // whole hierarchy moves as one.
                         _skirtUnderside = sb.min.y;   // measured, not assumed
 
-                        // WHAT THE SKIRT IS STANDING ON, AND WHICH GROUND THAT IS (Daniel 2026-09-16).
+                        // WHAT THE SKIRT IS STANDING ON, AND WHICH GROUND THAT IS (2026-09-16).
                         //
                         // The stem and the crater floor are already reported by the `[cloud] stem footing`
                         // line above; this is the smallest print that adds the rest. The skirt no longer
@@ -1374,7 +1374,7 @@ namespace Blwp
                                                  : (terrain != null ? terrain.SampleSurface(x, z) : 0f));
 
         /// <summary>
-        /// THE CORE'S SURFACE, AND NOTHING LAID ON TOP OF IT (Daniel 2026-09-16).
+        /// THE CORE'S SURFACE, AND NOTHING LAID ON TOP OF IT (2026-09-16).
         ///
         /// `Ground` above answers with the ROAD DECK wherever there is one:
         /// `RoadNetwork.SurfaceHeight` returns the ribbon's own chord plus

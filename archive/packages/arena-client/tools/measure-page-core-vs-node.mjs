@@ -1,4 +1,4 @@
-// THE PAGE'S OWN CORE AGAINST THE ADVERTISED NODE'S REPLAY, AT THE SAME TICK (Daniel 2026-09-18 14:00).
+// THE PAGE'S OWN CORE AGAINST THE ADVERTISED NODE'S REPLAY, AT THE SAME TICK (2026-09-18 14:00).
 //
 // Both tabs take their endpoint from the same signed advert, so they sit on one signer: split signers are not why one
 // tab cannot see the other. What is left to test is whether a player's own truck and the ghost of that player in the

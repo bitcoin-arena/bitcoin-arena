@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Do the flying pads answer a MOUSE in spectate?
 //
-// Daniel 2026-09-18 21:52 (photographed, HARD playtest): "I can press it with the mouse but it won't do anything ...
+// 2026-09-18 21:52 (photographed, HARD playtest): "I can press it with the mouse but it won't do anything ...
 // and only on spectate". The pad was drawn HELD under his pointer and the camera stood still.
 //
 // This opens the deployed page, presses SPECTATE at the rectangle the splash itself publishes (window.BLWP_UNITY_LOBBY),

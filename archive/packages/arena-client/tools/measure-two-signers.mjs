@@ -1,4 +1,4 @@
-// WHICH SIGNER EACH TAB IS ON, AND WHAT THAT SIGNER HOLDS OF THE OTHER TRUCK (Daniel 2026-09-18 13:45).
+// WHICH SIGNER EACH TAB IS ON, AND WHAT THAT SIGNER HOLDS OF THE OTHER TRUCK (2026-09-18 13:45).
 //
 // Measured before this tool existed, for one entry at one moment: one signer held 8986 ticks of that run and the
 // other held 0. A watcher is pictured by the signer it is subscribed to, so a tab on the empty signer can only be

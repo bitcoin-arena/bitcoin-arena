@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# LIVE CHROME PLAYTESTS RUN ON DANIEL'S MACBOOK, NOT ON THIS BOX (Daniel 2026-09-18 19:05, HARD).
+# LIVE CHROME PLAYTESTS RUN ON THE OWNER'S MACBOOK, NOT ON THIS BOX (2026-09-18 19:05, HARD).
 #
 # Beelink carries bitcoind, the signer daemons and every build; two headless WebGL players on top of that drew under
 # one frame a second, and measurements taken there kept catching the starved tab rather than the game - a chain read
 # that answers in 0.52 s to curl took 8.7 s inside such a tab, past the client's ten second budget. The Mac has a
 # Metal GPU and no SwiftShader, so a page there runs at a player's speed.
 #
-# RETIRED BY RULING (Daniel 2026-09-20 15:12): "Live Chrome playtests run on the Beelink only. Do not use
+# RETIRED BY RULING (2026-09-20 15:12): "Live Chrome playtests run on the Beelink only. Do not use
 # the MacBook." This script IS the MacBook path, so its 9341/9342 are left alone - they are what it talks
 # to - but nothing should be driven through it any more. The Beelink's two playtest Chromes are 9351 and
 # 9352, and every probe and suite defaults to those now.

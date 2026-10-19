@@ -1,4 +1,4 @@
-// WAR_TACTICS.md §0's rows for §4.11 OBJECTIVES, read from the state only (kanban #29), on a moving chart (one sample every
+// WAR_TACTICS.md §0's rows for §4.11 OBJECTIVES, read from the state only, on a moving chart (one sample every
 // 300 ticks, a whole-basis-point walk around the open hashed from (seed, sample)).
 //
 //     node tools/measure-objective-rows.mjs [--core=DIR/src] [--seeds=1,2,3,4,5] [--ticks=3600]

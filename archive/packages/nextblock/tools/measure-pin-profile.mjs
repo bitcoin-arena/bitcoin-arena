@@ -2,7 +2,7 @@
 // each side pinned on 10-70% of ticks and the core reads 96.0% / 95.6%, so before any behaviour changes again we
 // need to know whether the overage is the THRESHOLD, the DURATION or the FIRE DENSITY.
 //
-// It also settles hole 2, which is a reading question rather than a rule question. Daniel 2026-09-20: the covering
+// It also settles hole 2, which is a reading question rather than a rule question. 2026-09-20: the covering
 // team is the one on the ground, so a pinned team must LOOK HALTED to its neighbour even when its clock would have
 // it rushing. `halted[f] = (raw && !(f > 0 && halted[f-1])) || pinned` already does that, and this counts the
 // ticks where a pinned team is NOT halted to its neighbour - which should be nil.

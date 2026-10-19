@@ -191,7 +191,7 @@ public class DeliveryGate : MonoBehaviour
         MissedAt = Time.unscaledTime;
 
         bay.Clear();
-        // INSIDE A LIVE ROUND A MISSED BLOCK ENDS THE RUN WHERE IT STANDS (Daniel 2026-09-15): the
+        // INSIDE A LIVE ROUND A MISSED BLOCK ENDS THE RUN WHERE IT STANDS (2026-09-15): the
         // page finishes it off the core's word; a teleport would be a core write in no transcript.
         if (!BackToTheBay(Blwp.BlwpNet.RoundSeed)) return;
         if (truck != null) truck.Respawn();
@@ -300,7 +300,7 @@ public class DeliveryGate : MonoBehaviour
         // at the inside of a wall. Ninety-five is clear of the leading face at
         // 108, and the whole run home is over the fighting with the post
         // office ahead.
-        // INSIDE A LIVE ROUND THE RUN IS OVER HERE (Daniel 2026-09-15 16:14): no fly home, no bay.
+        // INSIDE A LIVE ROUND THE RUN IS OVER HERE (2026-09-15 16:14): no fly home, no bay.
         bool home = BackToTheBay(Blwp.BlwpNet.RoundSeed);
         var chase = home ? FindFirstObjectByType<ChaseCamera>() : null;
         var post = FindFirstObjectByType<PostOffice>();
@@ -328,7 +328,7 @@ public class DeliveryGate : MonoBehaviour
     /// never restarts the core on roll-out, so the old way round - the bed cleared, the truck
     /// teleported to the bay - put the player back at the ramp in a core that still said
     /// DELIVERED: the next load driven to the miner could never deliver, the cargo stayed on
-    /// the bed and nothing ended (Daniel 16:14: BANKED 198, then a trip that never finished).
+    /// the bed and nothing ended (the owner 16:14: BANKED 198, then a trip that never finished).
     /// And the teleport is a write into the core that is in no transcript, so the replay parks
     /// the truck at the tunnel's back wall while the page draws it at the bay. In a round the
     /// cargo comes off and the page ends the run; nothing is moved.

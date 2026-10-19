@@ -1,4 +1,4 @@
-// THE DRAWN GHOST AGAINST THE OTHER PAGE'S OWN CORE, IN THE BROWSER (Daniel 2026-09-18 14:20).
+// THE DRAWN GHOST AGAINST THE OTHER PAGE'S OWN CORE, IN THE BROWSER (2026-09-18 14:20).
 //
 // Every earlier attempt at this used a node client as a stand-in for the page's core, and every large number it
 // produced turned out to be the stand-in rather than the game. So this reads the PAGE's own core: `Module.blwp.st.i32`
@@ -11,7 +11,7 @@
 // no jslib, no C#, no camera. This drives two headless Chromes at the deployed page instead, presses the page's own
 // PLAY in each, and asks each tab what it holds of the other one.
 //
-// IT IS NOT DANIEL'S SHOT AND CANNOT BE. Headless swiftshader draws about eleven frames a second where a player has
+// IT IS NOT THE OWNER'S SHOT AND CANNOT BE. Headless swiftshader draws about eleven frames a second where a player has
 // sixty (measured by `screen.mjs` on this same host), and the age over a truck is partly how long the page waited for
 // a frame. So an age here is the number THIS MACHINE shows, not the number a player sees, and a large one is not a
 // failure of the ghost path. What this can say, and what a node client never could, is whether the two tabs are shown
@@ -41,7 +41,7 @@ mkdirSync(OUT, { recursive: true });
 
 /** One headless Chrome, and the few CDP calls this needs. */
 async function browser(name, port) {
-  // ATTACH, WHEN THE BROWSER IS SOMEBODY ELSE'S (Daniel 2026-09-18 19:05, HARD): live Chrome playtests run on the
+  // ATTACH, WHEN THE BROWSER IS SOMEBODY ELSE'S (2026-09-18 19:05, HARD): live Chrome playtests run on the
   // MacBook, whose pages draw at a player's speed, and this box only drives them over a forwarded CDP port. Spawning
   // is kept for the fallback the HARD names - if the Mac is unreachable, the playtest runs here.
   if (ATTACH) {
@@ -65,7 +65,7 @@ async function browser(name, port) {
   const trouble = [];
   proc.stderr.on('data', (b) => {
     const s = String(b);
-    // THE FAILURE DANIEL ASKED FOR BY NAME: a second WebGL context that will not start says so here.
+    // THE FAILURE THE OWNER ASKED FOR BY NAME: a second WebGL context that will not start says so here.
     if (/context lost|Out of memory|GPU process|SwiftShader|WebGL|crash/i.test(s)) trouble.push(s.trim().slice(0, 200));
   });
 
@@ -119,7 +119,7 @@ async function wire(name, proc, target, trouble) {
   });
   await send('Runtime.enable');
   await send('Page.enable');
-  // THE BROWSER'S OWN ACCOUNT OF EVERY CALL (Daniel 2026-09-18 22:4x): "Failed to fetch" is the one string JavaScript
+  // THE BROWSER'S OWN ACCOUNT OF EVERY CALL (2026-09-18 22:4x): "Failed to fetch" is the one string JavaScript
   // has for a dozen refusals - a reset connection, a dead tunnel, a CORS rejection, a DNS failure - so the page can
   // name the request and never the reason. The Network domain carries the reason: errorText, blockedReason,
   // corsErrorStatus, the status where there was one, and the timestamps that say how long the call waited before it
@@ -341,7 +341,7 @@ try {
       + `if(!n) return 'no net'; return 'net yes, client ' + (n.client?'yes':'NO') + ', ghosts ' + (n.ghosts?'yes':'NO')`
       + ` + ', state ' + String(n.state||'') + ', error ' + String(n.error||'');})()`)}`);
   }
-  // ROUND TWO, PRESSED IN THE PAGE (Daniel 2026-09-18 12:02: "after 2nd round Truck 1 cannot see Truck 2, age
+  // ROUND TWO, PRESSED IN THE PAGE (2026-09-18 12:02: "after 2nd round Truck 1 cannot see Truck 2, age
   // 6736ms"). The page returns to its lobby when a run is over and its own PLAY joins the next round without a
   // reload, which is exactly what a player does; a node client cannot press it.
   const ROUND = `(function(){var n=window.unityInstance&&window.unityInstance.Module&&window.unityInstance.Module.blwpNet;`

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * THE TWO-GATEWAY GATE, ON A REAL FEDERATION (§23.6; RULED Daniel 2026-09-23).
+ * THE TWO-GATEWAY GATE, ON A REAL FEDERATION (§23.6; RULED 2026-09-23).
  *
  *   PROBE=<federation-hold-probe dir, SECOND_GATEWAY=1 SETUP_ONLY=1> LOCK_BIN=<blwp-stake-lock with --mode gateways> \
  *   WASM_PKG=<dir with blwp_lock_client.js> INVITE=<invite> GW_A=<url> GW_B=<url> \

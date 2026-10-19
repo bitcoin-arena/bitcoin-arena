@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 
 /// <summary>
-/// THE LOBBY'S HOW-TO ART IS IMPORTED WHOLE (M3.3-34, Daniel 2026-09-13 08:58).
+/// THE LOBBY'S HOW-TO ART IS IMPORTED WHOLE (M3.3-34, 2026-09-13 08:58).
 ///
 /// It is a picture with words on it, drawn small on a phone at 2-3x. Unity's
 /// defaults would round 1280x720 to a power of two and build mipmaps for a
@@ -14,7 +14,7 @@ using UnityEngine;
 public class LobbyArtImport : AssetPostprocessor
 {
     public const string File = "lobby-how-to-1-2-3-4.jpg";
-    /// <summary>Daniel's four panels and their whole (2026-09-14 07:55): PNG, white knocked out.</summary>
+    /// <summary>the owner's four panels and their whole (2026-09-14 07:55): PNG, white knocked out.</summary>
     public const string Panels = "/lobby-howto";
 
     void OnPreprocessTexture()

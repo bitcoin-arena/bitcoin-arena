@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-// A NOSTR WALLET CONNECT SERVICE IN FRONT OF A REGTEST LND (kanban #277, for measuring NWC deposits end to end): it announces
+// A NOSTR WALLET CONNECT SERVICE IN FRONT OF A REGTEST LND (for measuring NWC deposits end to end): it announces
 // itself (kind 13194, NIP-44), takes pay_invoice / get_balance / get_info requests for its one app key over the relay, and
 // pays with `lncli payinvoice` - a real Lightning payment, on a private regtest (or, LND_NETWORK=testnet4, a test LND: the
-// zap measurement of kanban #362 item 14). Prints its connection link.
+// zap measurement of). Prints its connection link.
 //   LNCLI=<lncli> LND_DIR=<alice's dir> LND_RPC=127.0.0.1:<port> RELAY=wss://relay.bitcoin-arena.io node tools/nwc-test-wallet.mjs
 import { execFile } from 'node:child_process';
 import { generateSecretKey, getPublicKey, finalizeEvent } from 'nostr-tools/pure';

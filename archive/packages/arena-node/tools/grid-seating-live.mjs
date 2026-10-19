@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * A PUBLISHED RPS GRID'S SEATING, READ LIVE (kanban #345): for every round of the grid file, at its start (+2 s), each seat
+ * A PUBLISHED RPS GRID'S SEATING, READ LIVE: for every round of the grid file, at its start (+2 s), each seat
  * is asked by GET /seating-batch whether it holds both roles' certificates; at the end one line per minute of starts and a
  * total: rounds certified on every seat at their start, on at least 5, on none.
  *

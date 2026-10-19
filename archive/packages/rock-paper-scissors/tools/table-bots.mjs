@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// TABLES WITHOUT A BROWSER (kanban #293, Daniel 2026-10-10: "Test that feature and protocol change without chrome and OpenGL
+// TABLES WITHOUT A BROWSER (2026-10-10: "Test that feature and protocol change without chrome and OpenGL
 // as much as possible"): N players in one node process against the seats - each seats itself with the client's own seatAt
 // (read out of client/index.html, as the page runs it), enters a hidden move as the page does (entryFor, moveCommitment,
 // submitPick), reveals after the close, and keeps a pair at its table. Free rounds (the demo seats); a full table sends the

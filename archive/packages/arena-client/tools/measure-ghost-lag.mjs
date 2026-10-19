@@ -1,4 +1,4 @@
-// HOW OLD ANOTHER PLAYER'S TRUCK IS WHEN IT REACHES MY PAGE (Daniel 2026-09-17 19:15: "updates only every 300-600 ms").
+// HOW OLD ANOTHER PLAYER'S TRUCK IS WHEN IT REACHES MY PAGE (2026-09-17 19:15: "updates only every 300-600 ms").
 //
 //     node tools/measure-ghost-lag.mjs [--seconds=10] [--delay=0,40,80] [--node-ms=0]
 //

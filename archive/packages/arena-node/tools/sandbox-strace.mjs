@@ -1,4 +1,4 @@
-// THE SANDBOX UNDER STRACE (kanban #328, spec §0A.6): a core loaded and a run replayed, with each phase marked in the
+// THE SANDBOX UNDER STRACE (spec §0A.6): a core loaded and a run replayed, with each phase marked in the
 // system-call trace by a stat of a path that does not exist (/__arena_mark_<phase>), so the trace can be cut by phase.
 //
 //   strace -f -tt -e trace=network,openat,open,newfstatat,statx -o trace.txt node tools/sandbox-strace.mjs [--ticks N]

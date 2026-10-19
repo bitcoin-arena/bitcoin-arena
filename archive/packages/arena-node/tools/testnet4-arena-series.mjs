@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * THE FIRST BITCOIN ARENA SERIES ON TESTNET4 (kanban #209 step 6; spec 0A.9): the last BLWP series' contract carried onto
+ * THE FIRST BITCOIN ARENA SERIES ON TESTNET4 (spec 0A.9): the last BLWP series' contract carried onto
  * the Arena layout - the same core and config, seats, federation, relays, stake (100 sat, 8172fffd's), run and rank - under
  * testnet4's Arena network id, naming nextblock's game id and the donation key set in force (re-signed under the Arena id),
  * its census derived from testnet4's own blocks as the seats derive it (roster.js: the BIP-340 verify for re-affirmations
@@ -64,7 +64,7 @@ let k = env.SERIES_K !== undefined ? Number(env.SERIES_K) : Number((tipMtp - g) 
 if (env.SERIES_K === undefined) while (startOf(k) - censusLeadMs > tipMtp || startOf(k) - committeeLeadMs <= tipMtp + 3600000n) {
   if (startOf(k) - committeeLeadMs <= tipMtp + 3600000n) k++; else break;
 }
-// SERIES_CENSUS_AT_TIP=1 (Daniel 2026-10-11 ~06:30Z: "mach es früher als 36, so früh wie möglich. Du hast mein Go"):
+// SERIES_CENSUS_AT_TIP=1 (2026-10-11 ~06:30Z: "mach es früher als 36, so früh wie möglich. Du hast mein Go"):
 // the census is the tip at publication, not the block at start - 36 h - so a series is published as soon as its
 // committee_time is an hour ahead, not 12 h later. The seats hold only the 24 h committee lead (seriesLeadIsValid); the
 // 36 h cut was the publisher's own, chosen so the beacon sits above the census (still true: committee_time >= tip + 1 h).
@@ -82,10 +82,10 @@ if (cut > tipMtp && !dryAtTip) {
 let H = tip; if (!dryAtTip && !atTip) while (mtpOf(H) > cut) H--;
 
 // 3. THE ARENA CONTRACT: the BLWP series' fields, on testnet4's Arena id, nextblock, the key set in force
-// SERIES_GAME=updown (kanban #293): the Bitcoin Up or Down market on testnet4 (game 672415c8) - no core, no config, no score;
+// SERIES_GAME=updown: the Bitcoin Up or Down market on testnet4 (game 672415c8) - no core, no config, no score;
 // the same seats, federation, relays and stake as Tick Tock's
 const UPDOWN = env.SERIES_GAME === 'updown';
-// SERIES_PROTOCOL_VERSION=2 (2026.0.2, kanban #348/#293; RULED Daniel 2026-10-13: versions run in parallel, a game or market needs
+// SERIES_PROTOCOL_VERSION=2 (2026.0.2RULED 2026-10-13: versions run in parallel, a game or market needs
 // its version): the round that names no draw - protocol_version 2, no node list - of the v2 game or market. SERIES_FEDERATION_ID
 // names another federation than the base series' (federation B's own series).
 const V2 = env.SERIES_PROTOCOL_VERSION === '2';
@@ -118,7 +118,7 @@ const census = deriveCensus(view, { contract: decodeRoundContract(encodeRoundCon
   resolve: (e) => { const raw = byTxid.get(toHex(e.txid)); return raw ? { transaction: raw } : null; },
   verifyUpdate: (sig, msg, key) => { try { return schnorr.verify(sig, msg, key); } catch { return false; } } });
 if (!census.ok) throw new Error(`no census at ${H}: ${census.why}`);
-// THE SEATS WILL TAKE ITS PAID ROUNDS (kanban #209, 2026-10-09): §23.6 refuses a paying round on a federation whose
+// THE SEATS WILL TAKE ITS PAID ROUNDS (2026-10-09): §23.6 refuses a paying round on a federation whose
 // guardians are not bonded census nodes - series ab069055 was published with 0 of 7 and every seat refused every paid
 // round. ARENA_FEDERATION_READ_DIR names the federation's client directory; its guardians are counted in this census as
 // the seats count them (server.js guardiansBonded), and below its threshold nothing is published.
@@ -143,7 +143,7 @@ say({ step: 'series', id: toHex(id), k, census: H, censusRoot: toHex(census.root
   donationSet: toHex(template.donationSetId).slice(0, 16), nodes: template.nodes.length, tip, tipMtp: new Date(Number(tipMtp)).toISOString() });
 
 // 4. THE PUBLICATION: ONE WALLET OUTPUT, NEVER A BOND OR A MARKER
-// SERIES_MINCONF=0 (kanban #293): an unconfirmed output may pay too - a second series spending the first's change confirms with it
+// SERIES_MINCONF=0: an unconfirmed output may pay too - a second series spending the first's change confirms with it
 const utxos = JSON.parse(wallet('listunspent', String(env.SERIES_MINCONF ?? '1'))).filter((u) => u.spendable && u.solvable
   && ![50000, 1670, 330, 3000].includes(Math.round(u.amount * 1e8)) && u.amount * 1e8 >= 5000).sort((a, b) => a.amount - b.amount);
 if (!utxos.length) throw new Error('no confirmed non-bond output of at least 5000 sat in the wallet');

@@ -1,5 +1,5 @@
 #!/bin/bash
-# THE STAKE-LOCK TOOL'S TWO NEW MODES ON A REGTEST FEDERATION (kanban #397, Daniel 2026-10-17 decision A: "Add the two receive-and-claim
+# THE STAKE-LOCK TOOL'S TWO NEW MODES ON A REGTEST FEDERATION (2026-10-17 decision A: "Add the two receive-and-claim
 # modes to the stake-lock tool ... the two tool additions tested on the MacBook against the regtest probe federation"):
 #   receive-to-key   an invoice of the federation's gateway whose incoming contract only a given key can claim, its preimage a seed's hash
 #   claim-incoming   that contract, once funded, claimed into one pre-expired output to the key - signed by the claim key alone

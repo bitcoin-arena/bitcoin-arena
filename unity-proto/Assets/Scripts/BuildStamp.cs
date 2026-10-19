@@ -11,7 +11,7 @@ using UnityEngine;
 /// the loading screen turns that from an argument into a glance.
 ///
 /// The value is written by `BuildWebGL.Run` into `Resources/build.txt` at
-/// build time: `0.0.<commits on this branch>`, the shape Daniel asked for on
+/// build time: `0.0.<commits on this branch>`, the shape the owner asked for on
 /// 2026-09-07. It goes up by one per commit, which a hash does not, and
 /// `git rev-list --count` maps it back. The same number is put on the player
 /// version, so the LOADING screen and the SPLASH cannot drift apart.

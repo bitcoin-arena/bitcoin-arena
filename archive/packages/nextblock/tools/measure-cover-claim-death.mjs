@@ -1,4 +1,4 @@
-// WHY A COVER CLAIM DIES, and whether the chart's scroll is what kills it (Daniel 2026-09-19, ruling (b)).
+// WHY A COVER CLAIM DIES, and whether the chart's scroll is what kills it (2026-09-19, ruling (b)).
 //
 // A candle-lip place id is `CRATER_PLACE_MAX + c` where c is the chart SLOT, not the candle body. The layout is
 // rebuilt from the tape every tick, so if the tape moves, slot c holds a different body and the man's claim silently
@@ -28,7 +28,7 @@ const squadWord = (side, k) => L.O_SQUADS + (side < 0 ? k : SQUADS_PER_SIDE + k)
 
 const deaths = {}, lives = {}, sameId8 = {}, moved8 = {}, n8 = {}, leftAtDeath = {}, closed = {};
 for (const k of KINDS) { deaths[k] = {}; for (const c of CAUSES) deaths[k][c] = 0; lives[k] = []; sameId8[k] = 0; moved8[k] = []; n8[k] = 0; leftAtDeath[k] = []; closed[k] = []; }
-// WHAT THE CANDIDATE RULE WOULD MOVE (Daniel 2026-09-19): "a held claim lasts until he arrives or the place is
+// WHAT THE CANDIDATE RULE WOULD MOVE (2026-09-19): "a held claim lasts until he arrives or the place is
 // gone, still keyed from the post". That spares exactly the claims the CLAMP and a passing TANK end today, so this
 // records, for those, how far the man still had to walk and how fast he was closing - the two numbers that say
 // whether more time would have put him in the hole or only kept him walking.

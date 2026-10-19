@@ -135,7 +135,7 @@ public class ChartHudTests
         for (int s = 0; s < 2; s++) if (w[L.CH_ASSAULT + s * L.CH_ASSAULT_WORDS] != L.ASSAULT_IDLE) running++;
         Assert.Greater(running, 0, "the fixture holds a running assault");
         Assert.AreEqual(running, loud.Banners.Count);
-        // THE BANNER CARRIES NO OBJECTIVE NAME (Daniel 2026-09-17 09:17, "only LOW and HIGH" - RIDGE / HOLLOW / GAP are
+        // THE BANNER CARRIES NO OBJECTIVE NAME (2026-09-17 09:17, "only LOW and HIGH" - RIDGE / HOLLOW / GAP are
         // off the HUD; and 2026-09-19 12:55, which asked for the banner itself). It says who is attacking, and the
         // lane is already drawn as the tinted column under the candles, which the next line still counts.
         StringAssert.IsMatch("^(BULLS|BEARS) (ASSAULT|CONSOLIDATE)$", loud.Banners[0]);
@@ -296,7 +296,7 @@ public class ChartHudTests
     [Test]
     public void TheDollarFitsInsideThePanel()
     {
-        // Daniel's screenshots, in their own pixels. 09:13: panel 795 px wide, "$78,515.00" 183 px wide; the axis was 20% of
+        // the owner's screenshots, in their own pixels. 09:13: panel 795 px wide, "$78,515.00" 183 px wide; the axis was 20% of
         // the panel (159 px) and the tag ran 31 px past the panel. 09:17: panel 434 px, the text 100 px, axis 86.8 px.
         foreach (var (pw, tw) in new[] { (795f, 183f), (434f, 100f) })
         {

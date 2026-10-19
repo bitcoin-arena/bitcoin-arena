@@ -1,4 +1,4 @@
-# What these two files are  —  HARD (Daniel 2026-09-05)
+# What these two files are  —  HARD (2026-09-05)
 
 PRIORITIES.md = milestones and status. Short. Readable.
 TASKBOOK.md   = measurements, comments, done tests, letter notes.
@@ -6,7 +6,7 @@ TASKBOOK.md   = measurements, comments, done tests, letter notes.
 Do not put probe numbers, commit essays, or test dumps in this file.
 Put them in TASKBOOK.md.
 
-# HARD (Daniel 2026-09-05)
+# HARD (2026-09-05)
 
 Every step, every fix: git commit AND git push origin
 phase0-deterministic-core. PRIORITIES, TASKBOOK, models, screens, code.
@@ -14,13 +14,13 @@ Nothing stays local. Claude commits as claude after each measured change.
 
 # Working order
 
-HARD (Daniel 2026-09-16 14:30): a playtest bug Daniel reports has absolute priority. Stop the current letter, measure, fix, then resume the old task.
+HARD (2026-09-16 14:30): a playtest bug the owner reports has absolute priority. Stop the current letter, measure, fix, then resume the old task.
 
 
 
 Top item first. Finish and deploy before starting the next.
 
-# NOW  -  2026-10-04 09:01 (Daniel)
+# NOW  -  2026-10-04 09:01 (the owner)
 
 AUTO 60% is in (3a5316a8). Finish the dynamic cargo factor, commit it, then
 continue this list. Do not stop. Do not wait for 10:00 or 12:00.
@@ -34,7 +34,7 @@ Next, in order:
 Late join at 10:00 Europe/Berlin. First paid key-set join at 12:00. Not before.
 Do not spend a bond. Do not refound. Do not edit multiplayer_p2p.md.
 
-# NOW  -  2026-10-04 08:54 (Daniel)
+# NOW  -  2026-10-04 08:54 (the owner)
 
 HARD. The cargo factor C is not always 0.7. It is how full the truck is.
 
@@ -50,7 +50,7 @@ carries the room and C is the fill. Do not retcon a round already published.
 Name the core hash change. Do not spend a bond. Do not refound. Do not stop
 the round set. Do not edit multiplayer_p2p.md.
 
-# NOW  -  2026-10-04 07:17 (Daniel)
+# NOW  -  2026-10-04 07:17 (the owner)
 
 HARD. Stop the rounds-list cut. Measure the open Console panel with real paid-round
 content. A stake for that join is allowed. Do not spend a bond. Do not refound.
@@ -61,7 +61,7 @@ show the real lock lines, not filler. Record where it sits against the button,
 the throttle pad, and the score block. Then the M4 tests below. The GET /rounds
 cut waits until those are measured.
 
-# NOW  -  2026-10-04 07:19 (Daniel)
+# NOW  -  2026-10-04 07:19 (the owner)
 
 M4 today is the part that can be tested without mainnet. Do not post a bond.
 Do not spend a bond. Do not refound. Do not open mainnet. External review is
@@ -84,7 +84,7 @@ The load test is out. Do not run tools/load-test.mjs. Do not record it.
 
 After that, the GET /rounds cut. Late join at 10:00. Paid key-set join at 12:00.
 
-# NOW  -  2026-10-04 07:15 (Daniel)
+# NOW  -  2026-10-04 07:15 (the owner)
 
 The night list is done. Do not wait for 10:00 or 12:00. Do not edit multiplayer_p2p.md.
 
@@ -96,15 +96,15 @@ Do not refound. Do not stop the round set.
 Come back to the live late join at 10:00 Europe/Berlin and the first paid join on
 a key-set round at 12:00. Until then this is the work.
 
-# STATUS  -  2026-10-04 (Daniel)
+# STATUS  -  2026-10-04 (the owner)
 
 Console: button under the HUD corner, collapsed by default; open panel capped under the button, off the throttle pad; live on page 0.0.2519. Placement under test, green: EditMode ConsoleSlotTests 28/28, node console-place 4/4. Open holes: paid-round panel with real content unmeasured because it would spend; real touch phones unmeasured, desktop Chrome only.
 
-Rules and configs: each core plays its own config - 2069b4c2 the founding config (the network id's), de2f263d its own (C the bed fill, par 1800); seats and client check the core+config pair; the founding config on de2f263d only for rounds made before 2026-10-04 13:00Z. A rule change is a new config under the same network id, by ruling, until governance exists. In the spec: multiplayer_p2p.md §18A.3 and §27A.7.8 (Daniel: no conflict, solve it in the spec); dates and hashes in FEDERATION.md "Rulings (Daniel 2026-10-04)".
+Rules and configs: each core plays its own config - 2069b4c2 the founding config (the network id's), de2f263d its own (C the bed fill, par 1800); seats and client check the core+config pair; the founding config on de2f263d only for rounds made before 2026-10-04 13:00Z. A rule change is a new config under the same network id, by ruling, until governance exists. In the spec: multiplayer_p2p.md §18A.3 and §27A.7.8 (the owner: no conflict, solve it in the spec); dates and hashes in FEDERATION.md "Rulings (2026-10-04)".
 
-LATER (Daniel 2026-10-04 10:3x, screenshot of seat 1's /dashboard EARNINGS): "nicht wirklich lesbar" - the Notes column breaks words mid-word, headings and Hosts labels wrap, amounts mix precisions (1.046 sat beside 31.3 sat). Not started.
+LATER (2026-10-04 10:3x, screenshot of seat 1's /dashboard EARNINGS): "nicht wirklich lesbar" - the Notes column breaks words mid-word, headings and Hosts labels wrap, amounts mix precisions (1.046 sat beside 31.3 sat). Not started.
 
-# NOW  -  2026-10-03 22:18 (Daniel)
+# NOW  -  2026-10-03 22:18 (the owner)
 
 HARD playtest. Absolute priority. Stop the current letter, fix this, then resume.
 
@@ -113,7 +113,7 @@ Clean that up tonight. Make it much more compact. A small button labeled Console
 opens it. Collapsed by default. Do not spend a bond. Do not refound. Do not stop
 the round set that is already running.
 
-# NOW  -  2026-10-03 22:20 (Daniel)
+# NOW  -  2026-10-03 22:20 (the owner)
 
 HARD: Do not block. If the first live paid join on a key-set round is not live yet
 (donations, seats, redeem), and if a live late join cannot be measured yet, leave
@@ -127,7 +127,7 @@ A click on a player opens that player's replay in a new window
 (/replay?round=&entry=). Come back to the paid join and the late join when they
 are actually live. Do not spend a bond. Do not refound.
 
-# NOW  -  2026-10-03 22:25 (Daniel)
+# NOW  -  2026-10-03 22:25 (the owner)
 
 On each node's own /Dashboard, the rounds in Rounds checked are clickable. A row
 expands and shows which players were in that round and what each won or lost.
@@ -135,7 +135,7 @@ A click on a player opens that player's replay in a new window
 (/replay?round=&entry=). Do not stop the console playtest already in progress
 for this. Do it with the /Dashboard item. Do not spend a bond. Do not refound.
 
-# NOW  -  2026-10-03 22:50 (Daniel)
+# NOW  -  2026-10-03 22:50 (the owner)
 
 Assign each live gateway to an existing signer node, as one package with its LND.
 Node 1 hosts gateway A and LND 1 (gw-a, 31270, LND beelink-testnet4 on 11009).
@@ -150,7 +150,7 @@ keep those two notes, because they host neither. Do not stop the console playtes
 already in progress for this. Do it with the /Dashboard item. Do not spend a bond.
 Do not refound. Do not stop the round set.
 
-# NOW  -  2026-10-03 21:40 (Daniel)
+# NOW  -  2026-10-03 21:40 (the owner)
 
 Checked against TASKBOOK and the code. These are the only open items.
 
@@ -178,7 +178,7 @@ resume, guardians that outlive a node restart.
 
 Do not spend a bond. Do not refound.
 
-# NEXT  -  2026-10-03 22:05 (Daniel): after the 21:40 list, also tonight
+# NEXT  -  2026-10-03 22:05 (the owner): after the 21:40 list, also tonight
 
 1. A REAL SPECTATE MODE after WRECKED / FINISHED. Today the player still sees the truck and can do nothing. Instead the
    player roams freely while the round runs to its end: the camera slowly leaves the 3D view for a more top-down view of
@@ -186,11 +186,11 @@ Do not spend a bond. Do not refound.
 2. UNDER THE RESULT: a summary of who won and who lost (names) and the score high-score list. Once results are in, what
    this player won or lost. A preliminary balance-change list is fine, updated while other drivers still reach the
    target or get wrecked.
-3. /dashboard TONIGHT (Daniel 22:10, corrected 22:15: "Dashboard is not unified, it is PER node. Individual stats per
+3. /dashboard TONIGHT (the owner 22:10, corrected 22:15: "Dashboard is not unified, it is PER node. Individual stats per
    NODE"): every node's own /Dashboard, as specified below (2026-10-01 15:44/15:45) - its own earnings by category, day /
    month / year, active since, rounds checked and earned on each, settlements, federations. No combined page.
 
-# NOW  -  2026-10-03 21:24 (Daniel)
+# NOW  -  2026-10-03 21:24 (the owner)
 
 HARD: If the series is still unconfirmed at 22:00 Europe/Berlin, post a new series.
 It uses the new donation version set. Rounds are 90 seconds, back to back. The
@@ -199,28 +199,28 @@ confirm. Until 22:00, and while that publication confirms, keep testing everythi
 and do the open priorities. Do not stop the round set that is already running.
 Do not spend a bond. Do not refound.
 
-# NOW  -  2026-10-03 18:19 (Daniel)
+# NOW  -  2026-10-03 18:19 (the owner)
 
 HARD: Today the first priority is donations. Finish them. Then continue the open
 priorities and the tests. The round set keeps running in the background. Do not
 stop it for the donations. Do not spend a bond. Do not refound. Do not publish a
 new series.
 
-# NOW  -  2026-10-03 11:55 (Daniel)
+# NOW  -  2026-10-03 11:55 (the owner)
 
 HARD: Do not sit idle until the round is done. Keep working the other open
 priorities while that round runs. The 10-05 publication wait is not a stop.
 When the round finishes, come back to it. Do not spend a bond. Do not refound.
 Do not publish a new series.
 
-# NOW  -  2026-10-03 07:52 (Daniel)
+# NOW  -  2026-10-03 07:52 (the owner)
 
 HARD: The deadline is 09:30 Europe/Berlin today, not 07:00. Until then the only
 priority is the paid-round tests. Every case, every variant. The MacBook keeps
 the load small. Use it. At 09:30, stop and resume the priorities that were already
 open. Do not spend a bond. Do not refound. Do not publish a new series.
 
-# NOW  -  2026-10-02 21:55 (Daniel)
+# NOW  -  2026-10-02 21:55 (the owner)
 
 HARD: Until 07:00 Europe/Berlin tomorrow, this is the only priority. Test the paid
 rounds as thoroughly as possible. Every case, every variant. The MacBook is
@@ -228,7 +228,7 @@ available so the load stays small. Use it. When the paid-round tests are done,
 resume the priorities that were already open. Do not spend a bond. Do not refound.
 Do not publish a new series.
 
-# NOW  -  2026-10-02 19:05 (Daniel)
+# NOW  -  2026-10-02 19:05 (the owner)
 
 HARD: The node pass is enough for now. The only priority is the join. From the
 Join click to the round actually loaded: 2 to 3 seconds at most. This assumes a
@@ -237,7 +237,7 @@ that clock, paid and free. Cut whatever is between the click and the loaded roun
 Do not stop until a paid join of an open round is inside 3 seconds. Do not spend a
 bond. Do not refound. Do not publish a new series.
 
-# NOW  -  2026-10-02 16:41 (Daniel)
+# NOW  -  2026-10-02 16:41 (the owner)
 
 HARD: Until 22:00 Europe/Berlin today, this is the only priority. Optimize the
 node software for CPU, memory, and performance. When a pass is done, look again.
@@ -245,17 +245,17 @@ Do not stop until you can say the nodes are perfectly optimized. Measure before
 and after. Every measurement names CPU, memory, and load. Not one of them alone.
 Do not spend a bond. Do not refound. Do not publish a new series.
 
-# NOW  -  2026-10-02 16:41 (Daniel)
+# NOW  -  2026-10-02 16:41 (the owner)
 
-# NOW  -  2026-10-02 16:30 (Daniel)
+# NOW  -  2026-10-02 16:30 (the owner)
 
-HARD: Playtest. Daniel still cannot join a game. The lobby shows FREE d097076d
+HARD: Playtest. the owner still cannot join a game. The lobby shows FREE d097076d
 (closes 0:33, 2 of 2) and PAID 100 sats 475e5be5 (closes 2:36). PLAY says it joins
 d097076d. The red line is "Not joined PAID · 100 sats round dfdd8351: socket error
 (18 tries)." That is a third round. Fix the join. A socket error must not sit on
 the lobby after the round it names is gone. Do not spend a bond. Do not refound.
 
-# NOW  -  2026-10-02 13:56 (Daniel)
+# NOW  -  2026-10-02 13:56 (the owner)
 
 HARD: Until 17:00 Europe/Berlin today, this is the only priority. Do not start the
 other letters until 17:00.
@@ -268,15 +268,15 @@ result, refund, win. Do not call a variant done on one success.
 The join takes too long. Cut that time. PLAY to a committed entry is the clock.
 Measure it before and after. Same priority, until 17:00.
 
-# NOW  -  2026-10-02 12:13 (Daniel)
+# NOW  -  2026-10-02 12:13 (the owner)
 
-HARD: Playtest. Daniel cannot join the paid round. The 100 sats were locked and
+HARD: Playtest. the owner cannot join the paid round. The 100 sats were locked and
 seen by 5 of 7 nodes. The lobby shows PAID 100 sats round f3310e0a, closes 1:45,
 and "PLAY joins round f3310e0a - 7 of 5 signer nodes agree". The red line is
 "Not joined PAID · 100 sats round 3fe0d7d1: socket error." That is a different
 round. Fix the join. Do not lose the locked stake. Do not spend a bond. Do not refound.
 
-# NOW  -  2026-10-02 11:55 (Daniel)
+# NOW  -  2026-10-02 11:55 (the owner)
 
 HARD: Do this beside the LND C channel wait. Do not stop that wait. Do not touch
 the third LND or its channel.
@@ -286,26 +286,26 @@ Winnings show as pending in the balances immediately after the result. If the
 payment becomes invalid, the pending line disappears. The measured rounds that
 stayed PROVISIONALLY_FINAL are not done.
 
-# NOW  -  2026-10-02 11:34 (Daniel)
+# NOW  -  2026-10-02 11:34 (the owner)
 
 HARD: Set up a third LND. LND B is gateway B's own node, so a donation paid through
 gateway B asks that node to pay itself. Open channels for the third LND. Then try the
 donations again, to a real LNURL that this third node can receive. Do not spend a bond.
 Do not refound. Do not touch mainnet.
 
-# NOW  -  2026-10-02 08:22 (Daniel)
+# NOW  -  2026-10-02 08:22 (the owner)
 
 HARD: Next, after the settlement check that is already running. The donation set
 on testnet4 must use real LNURL addresses. Not a placeholder. Not an address nothing
 reachable can pay. Use the local testnet4 LNDs. Prove a donation arrives at one of them.
 
-# NOW  -  2026-10-01 21:19 (Daniel)
+# NOW  -  2026-10-01 21:19 (the owner)
 
 HARD: Keep checking the 82/90 fork in parallel, and keep working the list below.
 Do not stop the watch on 7f0f3ce5 and 93d7cb2b. When that fork is confirmed and
 ready, interrupt everything else until those rounds are tested. Then resume the list.
 
-# NOW  -  2026-10-01 21:16 (Daniel)
+# NOW  -  2026-10-01 21:16 (the owner)
 
 HARD: Order. Do these before starting new work on the 82/90 fork and the both-rows
 item. The confirmation watch above runs beside this list, and preempts it the
@@ -323,7 +323,7 @@ moment a publication confirms.
    next round starting itself are 4aa2d3e4 and 73105484. Do not redo those.
 4. Only after that: the 82/90 hard fork, and both rows at once.
 
-# NOW  -  2026-10-01 16:51 (Daniel)
+# NOW  -  2026-10-01 16:51 (the owner)
 
 HARD: This is an error. Live rounds run up to 180 s, because block ticks are 10800.
 82 s is only in the docs. That is wrong.
@@ -335,7 +335,7 @@ The round length is part of the contract, not a fixed constant. It is part of th
 round announcement. A node refuses a round whose announced length is not the one
 it runs.
 
-# NOW  -  2026-10-01 15:25 (Daniel)
+# NOW  -  2026-10-01 15:25 (the owner)
 
 HARD: The nodes always serve both at once. Testnet4 rounds and free rounds.
 Not one or the other. A player opening the page sees a free row and a paid
@@ -350,10 +350,10 @@ A free round is 90 seconds gross, the same as a paid round. Not a longer clock.
 The run inside it is at most 82 seconds, the same as paid. Measure a free round's
 start to the next free round's start: 90 seconds.
 
-HARD (Daniel 2026-10-01 17:46): The 10-minute objection window and the pending line
+HARD (2026-10-01 17:46): The 10-minute objection window and the pending line
 come before /Dashboard. Not the other way around. Finish that live proof first.
 
-HARD (Daniel 2026-10-01 15:44, updated 15:45): After the window and the pending line,
+HARD (2026-10-01 15:44, updated 15:45): After the window and the pending line,
 not before. Every node serves /Dashboard. An interactive page with charts.
 
 A node earns from the 2% node fee. The fee splits three ways, equal: 2/3 % to the
@@ -368,7 +368,7 @@ any, Lightning costs, gateway costs, and absolute profit. Also: since when the n
 rounds it checked and what it earned on each, which settlements it made, and which
 federations it is in.
 
-# NOW  -  2026-10-01 09:31 (Daniel)
+# NOW  -  2026-10-01 09:31 (the owner)
 
 HARD: The objection window is exactly 10 minutes. Not counted in blocks. Not 10 to 30.
 
@@ -376,7 +376,7 @@ The winnings show as pending in the balances immediately after the result. If th
 payment becomes invalid, the pending line disappears. Do not wait for the window to
 close before the pending line appears.
 
-# FINISHED  -  2026-10-01 08:14 (Daniel)
+# FINISHED  -  2026-10-01 08:14 (the owner)
 
 STATUS: finished. Lock client rebuilt (notes from 1 msat), live at 321e025f (deploy 85c3abe0): a 100 sat
 invoice credited exactly 100000 msat (measured 06:25Z). Tabs 100, 200, 500, 1000 sat.
@@ -389,7 +389,7 @@ Rebuild the Rust toolchain and the wasm. Do not leave the 101 sat version.
 down to 1 msat. The wallet client must not round to 512 msat. A 100 sat invoice
 credits 100 sat.
 
-# FINISHED  -  2026-09-30 21:07 (Daniel)
+# FINISHED  -  2026-09-30 21:07 (the owner)
 
 STATUS: finished. Live at 288193a9 (deploy 52d50dcd): a reload of the deposit URL lands on the lobby.
 A payment made just before the reload is credited and gets its history row (one real 100 sat deposit).
@@ -399,9 +399,9 @@ HARD (corrected 2026-09-30 21:10): Reloading the deposit page redirects to the n
 Core page. Do not stay on the deposit screen. Do not show the status box or the loading
 screen over the QR. A reload of that URL lands on the lobby he plays from.
 
-# FINISHED  -  2026-09-30 20:53 (Daniel)
+# FINISHED  -  2026-09-30 20:53 (the owner)
 
-STATUS: live at c48e8957 (deploy 38c0d343). REPLACED 2026-10-01 (Daniel, option 2): "N rounds" funds N rounds -
+STATUS: live at c48e8957 (deploy 38c0d343). REPLACED 2026-10-01 (the owner, option 2): "N rounds" funds N rounds -
 N x one round's locks in whole 512 msat e-cash notes plus the stake check's reserve (100 sat round: 1 round 100.352 sat,
 10 rounds 985.088 sat); every invoice in whole notes; Settings sized with the donation as PLAY is. A paid deposit still
 short shows the green line, then in the same modal "This round needs N more sat for fees. Pay the rest to join." -
@@ -424,7 +424,7 @@ fixed 10000. A 100 sat round is 100, 200, 500, 1000.
 
 The same tabs are under Settings, for deposit and for withdrawal.
 
-# NOW  -  2026-09-30 16:31 (Daniel)
+# NOW  -  2026-09-30 16:31 (the owner)
 
 HARD: General rule. Until tomorrow, accept the rounds of the series already posted. Those are
 10000 sats. Post a new 72-hour series for tomorrow, 100 sats a round. Same federation, same peg-ins,
@@ -432,7 +432,7 @@ same gateways, same nodes. Only the rounds are new. Do not spend a bond. Do not 
 Once that new series is active, its rounds are the ones. Until then, the old series rounds stand.
 So: until tomorrow, 10000 sat. Then 100 sat.
 
-# NOW  -  2026-09-30 16:15 (Daniel)
+# NOW  -  2026-09-30 16:15 (the owner)
 
 HARD: After the 19:00 deploy, not before. Do not stop that deploy for this.
 
@@ -440,9 +440,9 @@ Settings, under the balances, shows a transaction history. Every deposit, every 
 and every deduction for a game stake. A stake row names the round. Clicking it opens that
 round's replay in a new window. The panel also shows the federation id that holds his funds.
 
-# NOW  -  2026-09-30 16:07 (Daniel)
+# NOW  -  2026-09-30 16:07 (the owner)
 
-HARD: Deploy everything so Daniel can test on testnet himself by 19:00 Europe/Berlin.
+HARD: Deploy everything so the owner can test on testnet himself by 19:00 Europe/Berlin.
 The page he opens always shows both: a free round and a live paid testnet round of series
 3cfbe516. The nodes serve both. Do not hide one to show the other. Do not point the testnet
 row at Daily /blwp-a.
@@ -453,7 +453,7 @@ the Core UI and the nodes that serve it, same commit, before 19:00. Put the URL 
 Do not spend a bond. Do not refound. Do not publish a new series. Gateway B only.
 Do not move the Daily pin for a Daily-only deploy. The page he tests is the testnet lobby.
 
-# NOW  -  2026-09-30 15:23 (Daniel)
+# NOW  -  2026-09-30 15:23 (the owner)
 
 HARD: The user-facing money path is instant, like a Lightning payment. Measured today
 on game 1: PLAY to deposit invoice was about 7 minutes, the lobby only showed a paying
@@ -470,14 +470,14 @@ round whose start was at least 20 minutes away, and withdraw was 5-10 minutes.
 Do not change the objection window. It stays counted in blocks. Do not spend a bond.
 Do not refound. Do not publish a new series. Gateway B only, the one that holds e-cash.
 
-# NOW  -  2026-09-30 14:30 (Daniel)
+# NOW  -  2026-09-30 14:30 (the owner)
 
 HARD: A deposit goes only to a gateway that holds e-cash. Gateway B holds the peg-in.
 Gateway A does not. Do not pick a gateway at random. If the chosen gateway has 0 msat
 in 337ae01a, that attempt is a miss, not a retry on the same empty gateway.
 Pay through gateway B. Do not spend a bond. Do not refound.
 
-# NOW  -  2026-09-30 14:23 (Daniel)
+# NOW  -  2026-09-30 14:23 (the owner)
 
 HARD: After the testnet UI is deployed, not before. Do not stop the 17:00 tests or the lobby deploy for this.
 
@@ -485,7 +485,7 @@ The player key persists in localStorage. A new tab is not a new wallet. The name
 Settings gets a restore: the player writes the 24 words and gets that same key back. A phone that dropped
 the tab comes back as the same player, not glad-puma with a new number.
 
-# NOW  -  2026-09-30 14:18 (Daniel)
+# NOW  -  2026-09-30 14:18 (the owner)
 
 HARD: The page always shows both lobbies, free and testnet. The nodes serve both.
 A phone opening the Core UI sees a free row and a paid testnet row of series 3cfbe516.
@@ -493,7 +493,7 @@ Do not hide one to show the other. Do not point the testnet row at Daily /blwp-a
 Deploy the Core UI so this is true. Do not move the Daily pin. Do not publish a new series.
 Do not spend a bond. Do not refound. Do not stop the 17:00 tests.
 
-# NOW  -  2026-09-30 14:11 (Daniel)
+# NOW  -  2026-09-30 14:11 (the owner)
 
 HARD: Both tests done by 17:00 Europe/Berlin. Series 3cfbe516, beacon 154268, gateway B.
 Do not publish a new series. Do not deposit into 5eaa0966. Do not spend a bond. Do not refound.
@@ -505,7 +505,7 @@ Do not move the Daily pin. Do not wait idle.
 
 fbd8294e is not this test. That run was FAILED and the stake only refunds at expiry.
 
-# NOW  -  2026-09-30 09:39 (Daniel)
+# NOW  -  2026-09-30 09:39 (the owner)
 
 HARD: After the paid testnet4 round is finished and tested, fix these two. Not before.
 Do not stop the 14:00 deposit for them.
@@ -517,7 +517,7 @@ Do not stop the 14:00 deposit for them.
    The next round starts by itself. The player is already joined. They see the mempool
    loading screen, loading into the truck. No lobby. No second tap.
 
-# NOW  -  2026-09-30 08:55 (Daniel)
+# NOW  -  2026-09-30 08:55 (the owner)
 
 HARD: Pick B. The current code accepts series 3cfbe516d93ddf4b from the old network id
 beside bf876cb1. A named exception to the network identity and to the lead and grid rules.
@@ -525,7 +525,7 @@ beside bf876cb1. A named exception to the network identity and to the lead and g
 crash a node that loads it. Beacon 154268 still counts. Do not take A. Do not take C.
 Do not publish a new series. Do not refound. Do not spend a bond.
 
-# NOW  -  2026-09-30 08:50 (Daniel)
+# NOW  -  2026-09-30 08:50 (the owner)
 
 HARD: Only the 72-hour series and the old beacon count. It is already done.
 Series 3cfbe516d93ddf4b. Publication 3029fc6fca6adf20 confirmed in block 154237.
@@ -534,14 +534,14 @@ Do not wait for another beacon. Do not publish another round. 5eaa0966 does not 
 The peg-in is already in gateway B. The paying deposit uses a round of this series.
 The node listing one open round is the bug. Fix the list. Do not refound. Do not spend a bond.
 
-# NOW  -  2026-09-30 08:44 (Daniel)
+# NOW  -  2026-09-30 08:44 (the owner)
 
 HARD: The 72-hour series is what counts. Series 3cfbe516d93ddf4b, publication 3029fc6fca6adf20
 confirmed in block 154237, committee time 2026-09-28 21:52 Europe/Zurich, beacon 154268.
 The node listing one open round is the bug. The paying path uses this series, not a one-off
 publication such as 5eaa0966. Do not publish a new series. Do not refound. Do not spend a bond.
 
-# NOW  -  2026-09-30 08:18 (Daniel)
+# NOW  -  2026-09-30 08:18 (the owner)
 
 HARD: A paid testnet4 round by 14:00 Europe/Berlin. The peg-in is already in gateway B.
 Finish the one-key-one-seat suite, commit, push, move the testnet4 pin onto that commit.
@@ -550,7 +550,7 @@ into that new round only, through gateway B. Do not spend a bond. Do not post a 
 Do not refound. Do not stop the paying runner. Do not move the Daily pin.
 The beacon must be 6 deep before the round is named. A reorg resets that count. Do not wait idle.
 
-# NOW  -  2026-09-29 17:33 (Daniel)
+# NOW  -  2026-09-29 17:33 (the owner)
 
 HARD: Until peg-in 425279e9 has 100 confirmations and gateway B is credited, do everything
 that can be done today and tomorrow. Do not wait idle on the peg-in.
@@ -565,7 +565,7 @@ Do today and tomorrow, none of it waiting on the peg-in:
    settlement whose round_id is not that hash. genesis_series_start is a genesis parameter.
    Section 15 walk-away at the door is FORFEIT, score 0, never ENTRY_VOID, never a refund.
    Do not add the 22A minimum-service field. Adding it would move every round id.
-   DONE 2026-09-30 (abf53207, accepted by Daniel): door FORFEIT score 0; walker lock claimed 75/25 (sitting signer nodes /
+   DONE 2026-09-30 (abf53207, accepted by the owner): door FORFEIT score 0; walker lock claimed 75/25 (sitting signer nodes /
    donation set); unaddressed qualifiers the same claim; a FAILED player keeps expiry; a donation recipient that does not
    answer is held under the committee key and retried to that same recipient; series round id = H(series id, index), a
    bad id refused; no 22A field; patched fork only. Gaps outside this close: testnet4 pin stays 061193a1; series stays
@@ -577,13 +577,13 @@ Do today and tomorrow, none of it waiting on the peg-in:
 
 When the peg-in credits, the armed retry and the paying deposit continue. That wait is not a stop.
 
-HARD (Daniel 2026-09-29 17:46): Deploy the UI and the regtest nodes only when everything worked on
+HARD (2026-09-29 17:46): Deploy the UI and the regtest nodes only when everything worked on
 today is finished. Not before. That deploy is the page he plays and the regtest nodes that serve it,
 together, same commit. Do not deploy a page against nodes that do not have the work. Do not move the
 Daily pin for this. Do not touch the peg-in, the paying runner, or the seven testnet4 guardians for
 this deploy.
 
-HARD (Daniel 2026-09-29 22:00, phone, build 0.0.2302). Playtest stops the letter. Measure on a phone width.
+HARD (2026-09-29 22:00, phone, build 0.0.2302). Playtest stops the letter. Measure on a phone width.
 
 1. CORRECTED 2026-09-29 22:09. The countdown comes immediately, during the result screen, WASTED,
    or the timeout screen. It does not wait 8 seconds. "joining next round in N seconds" and "exit game"
@@ -612,7 +612,7 @@ HARD (Daniel 2026-09-29 22:00, phone, build 0.0.2302). Playtest stops the letter
     truck carries a limited amount of BTC. The limit comes from how much BTC a real block moves, not a
     liked round number. Name the limit and why.
 
-HARD (Daniel 2026-09-29 21:48, the BTC change, and the phone orders from 21:01 through 22:00).
+HARD (2026-09-29 21:48, the BTC change, and the phone orders from 21:01 through 22:00).
 This is the same list as the 22:00 block. It is not optional and it is not waiting on the peg-in.
 
 BTC, not sat fees. We transport BTC to the miners. Each parcel is one transaction, sized in BTC.
@@ -629,7 +629,7 @@ federation wallet; countdown immediately during result, WASTED, or timeout; card
 visible; no lobby during joining next round; exit game does not overlap; one clock; free rounds
 are 90 s too.
 
-# NOW  -  2026-09-25 21:41 (Daniel)
+# NOW  -  2026-09-25 21:41 (the owner)
 
 Playtest bug stops the current letter. Top item first. Finish and deploy before the next.
 The section below is the record, not the order, until this list is done.
@@ -640,7 +640,7 @@ The section below is the record, not the order, until this list is done.
 2. CLOSED 2026-09-26: the finish straight to the miner is free, a truck at speed does not stop or crawl, collisions
    are marked in color, and both buildings read from outside. Playtest 07:18: the side boxes of the straight came out
    (26 boxes mirrored off the drawn tunnel) and the coin stacks are solid where they are drawn - measured live.
-3. CLOSED 2026-09-26 13:24 (Daniel's phone approval): the result screen - nothing overlaps, it stays up 8 s at full
+3. CLOSED 2026-09-26 13:24 (the owner's phone approval): the result screen - nothing overlaps, it stays up 8 s at full
    strength, "copy game replay" copies one https link, and a phone off this machine opened the copied link and the
    run played.
 4. CLOSED 2026-09-26: the core's score is the product of E, T and C, and the arrival card prints them, live on
@@ -651,7 +651,7 @@ The section below is the record, not the order, until this list is done.
    runner stays up. No bond is posted or spent. Stock v0.12.1 does not map testnet4. That fact is closed.
    The path is the patched fork. TASKBOOK 3dbb3337.
    THRESHOLD_LN deletion continues beside that, not in front of it.
-   HARD (Daniel 2026-09-27 10:04, replaces 2026-09-26 22:54's 3 of 4): testnet is 7 nodes and 7 guardians, one
+   HARD (2026-09-27 10:04, replaces 2026-09-26 22:54's 3 of 4): testnet is 7 nodes and 7 guardians, one
    each, stock threshold 5 of 7. One node is one guardian. A node starts its own guardian with zero config - no
    second binary, no FM_API_URL typed, no invite pasted - and its endpoint is the node's own public address:
    wss://beelink.tail1723e2.ts.net/guardian-1..7 -> 127.0.0.1:31221..31281. The Daily's 2-of-2 is not this federation. The UI offers no
@@ -659,17 +659,17 @@ The section below is the record, not the order, until this list is done.
 
 # NOW  -  M3: what is left
 
-HARD (Daniel 2026-09-23 10:19): **Introduce FEDERATION in parallel.** Do not wait until THRESHOLD_LN is gone.
+HARD (2026-09-23 10:19): **Introduce FEDERATION in parallel.** Do not wait until THRESHOLD_LN is gone.
 New paying rounds are FEDERATION now. The deletion of the old path continues beside that, not in front of it.
 THIS IS THE LIVE ITEM.
 
-HARD (Daniel 2026-09-22 22:59): **Dispose of THRESHOLD_LN completely, including old rounds.**
+HARD (2026-09-22 22:59): **Dispose of THRESHOLD_LN completely, including old rounds.**
 The value does not stay so old rounds can decode. A round that names it is invalid, past rounds included.
 Delete the enum, the hold-invoice path, and the threshold branch. No decode-only label.
 
 ## WHAT THIS BRANCH IS WAITING ON (2026-09-22) - one list, so it is not read off six places
 
-THE FLEET PIN MOVE IS DONE (Daniel 2026-09-22): **the fleet runs `02eefc04`**, off `595f0df3`. That commit's subject names `78c501ac` because that is what it recorded; the pin the fleet runs is `02eefc04`. WHAT THE MOVE TO `02eefc04` UNBLOCKED, node-side only - **unblocked, NOT
+THE FLEET PIN MOVE IS DONE (2026-09-22): **the fleet runs `02eefc04`**, off `595f0df3`. That commit's subject names `78c501ac` because that is what it recorded; the pin the fleet runs is `02eefc04`. WHAT THE MOVE TO `02eefc04` UNBLOCKED, node-side only - **unblocked, NOT
 done**: the `/round` refusal of THRESHOLD_LN, which cannot be separated from retiring `custody.js` on
 that pin (the Daily's paid rounds really are THRESHOLD_LN - `7d577647b2d8` decoded: custody
 THRESHOLD_LN, stakeMsat 100000). The move removed the block that made the work unstartable; **the work
@@ -771,7 +771,7 @@ predates them.** The cause is the pin, not an unset ruling.
      too, in the other direction. Stable across every sample, and therefore the subject:
      declared-then-happens 5.3 -> 7.5 -> 6.1%, lulls 70.3 -> 76.9 -> 77.5%.
 
-     RULED (Daniel 2026-09-22) AND WRITTEN (`f9602b0e`, `fe9cba34`): **the hold cadence stays 21:20 and
+     RULED (2026-09-22) AND WRITTEN (`f9602b0e`, `fe9cba34`): **the hold cadence stays 21:20 and
      the 600-tick row is the side that yields.** §4.12's declared-to-happens row now reads its push gain
      within **1800 ticks** - the assault's own maximum life - where it read 600, because a new direction
      needs two confirmed readings, 10 s, which was the whole of a 600-tick budget. **THE BAR DOES NOT
@@ -882,10 +882,10 @@ byte mapping is guarded meanwhile. Nothing here is blocked on a decision; it is 
   page has named no node" - the core drives but `BLWP_ROUND` stays false. Measured here only to show the
   backup warning is not what stops it.
 
-DONE (2026-09-21, closed out at `7d119eac`) - HARD (Daniel 2026-09-21 13:25, clarified 13:33 / 13:54):
+DONE (2026-09-21, closed out at `7d119eac`) - HARD (2026-09-21 13:25, clarified 13:33 / 13:54):
 **winnings are always sent. There is no Collect.**
 Paying the stake stays a normal hold invoice — any wallet can pay it, **without NWC**. The page shows
-the bolt11. **Payout also works without NWC** (Daniel 13:54: "ohne NWC geht nix" is about *Auszahlen*).
+the bolt11. **Payout also works without NWC** (the owner 13:54: "ohne NWC geht nix" is about *Auszahlen*).
 If NWC is connected, `make_invoice` as now. If not, a Lightning address on the tab (once, not Collect);
 the node LNURL-pays that address the owed msat. Do not refuse a paid join because NWC is missing.
 Measure: hold invoice paid from any wallet, no NWC, DELIVERED, winner balance rises; a second path
@@ -944,7 +944,7 @@ by itself. Measurements in TASKBOOK.md.
 
 M3: **a round can be played for real testnet sats** - the federation holds the money, the fee is taken and
 paid out, and the payout actually moves. W1-W7 are done, and so is every item the inventory's "M3 is done
-when" named that Daniel has not parked.
+when" named that the owner has not parked.
 
   OF THAT ONE SENTENCE, TWO THIRDS ARE NOW MEASURED AND THE FIRST IS NOT:
   - the fee is taken and paid out            DONE 2026-09-21, its own hold at entry
@@ -1031,7 +1031,7 @@ Nothing spends, and the last test asserts the owing's whole shape to keep it tha
     definition") and THROWS if a caller hands one in. Both are right about their own height: the spend
     happens in the slashing transaction, which is signed AFTER `slash_height` is fixed. The accused is
     taken out of the census before the split, no recipient is invented, and the guard - which protects a
-    census read after the spend - is untouched. **DANIEL: this is a reading, not a ruling.** If §5A.3
+    census read after the spend - is untouched. **THE OWNER: this is a reading, not a ruling.** If §5A.3
     means the slashed node keeps a census share at that height, this is the line to change.
 
   Measured after both: bond 100000000 -> players 50000000 to the one harmed player, nodes 37500000 to
@@ -1106,7 +1106,7 @@ compute - one HTLC carrying two players' fees, claimable by the world. After: **
   hold-path retirement, which follows the pin. Measured: the cause was the zeroed F, the fix touches
   neither the custody enum nor THRESHOLD_LN, and both lines are corrected above.
 
-  (AND MY OWN CLAIM THAT PRIORITIES LINE 61 NAMED THE WRONG COMMIT WAS WRONG, Daniel 2026-09-22: the
+  (AND MY OWN CLAIM THAT PRIORITIES LINE 61 NAMED THE WRONG COMMIT WAS WRONG, 2026-09-22: the
   fleet runs `02eefc04`. `02eefc04`'s subject mentions `78c501ac` because that is what the commit
   recorded, which I read as the pin itself. The line was right and is left standing.)
 
@@ -1148,7 +1148,7 @@ the dead exclusion argument on `hand()` now say the same thing the code does. Nu
   tests, so no node runs this from this branch. It goes red when changed; it does not pay anybody yet.
   That is the standing "give the federation's money law a node path" item above, not a gap in this rule.
 
-§24B (Daniel 2026-09-21, spec `1add4655`, gate overridden 20:01): **a wallet with no backup is warned,
+§24B (2026-09-21, spec `1add4655`, gate overridden 20:01): **a wallet with no backup is warned,
 never refused.** The seed is 24 real BIP-39 words the player can restore anywhere; Settings holds exactly
 the name, the donation as six fixed choices, and the seed with Backup. Until every word has been typed
 back once in order, the lobby carries a large warning with its own Backup button - measured on screen at
@@ -1171,7 +1171,7 @@ are deleted from the source and are `undefined` in the bundle the daily URL serv
   (money-why empty, flag null): the page falls into practice with "no session yet: the page has named no
   node", which belongs to the playable-client letter. Numbers and screenshots in TASKBOOK.md.
 
-HARD (Daniel 2026-09-21 17:08): **there is no THRESHOLD_LN. Only federation and guardians.** Spec
+HARD (2026-09-21 17:08): **there is no THRESHOLD_LN. Only federation and guardians.** Spec
 changed (`c7b74585`). A round naming any other custody is invalid. Guardians are no longer parked:
 testnet on the 2-of-2 that runs, seated by its two bonded operators. The federation holds the money.
 [OVERRIDDEN 2026-09-26 22:54, then 2026-09-27 10:04: testnet is 7 nodes, 7 guardians, 5 of 7 - item 5 above.]
@@ -1704,7 +1704,7 @@ THEN 16:11: **world candles must cover the whole playable field, out to the mine
 
 THEN 16:20: **remove HIGH, LOW, and OPEN from the HUD chart.** They do not belong there. Overrides 13:10 / 09:17. Do not restyle the headline. YOU and GATE stay.
 
-THEN 16:22 / 16:26: **assaults are not perceptible, and the logic must actually run.** Daniel sees no banners. Add a **small desktop-only debug log under the HUD** with clock times, e.g. `[13:00:00] Bulls attack high` / `[13:00:43] Bulls attack high failed`. Not on phone. Do not overlap the $ price. Do not restyle the headline. Prove the core assault clock fires, tanks push that lane, and the log lines match. Banners still required. Same as 12:55 / 15:55.
+THEN 16:22 / 16:26: **assaults are not perceptible, and the logic must actually run.** the owner sees no banners. Add a **small desktop-only debug log under the HUD** with clock times, e.g. `[13:00:00] Bulls attack high` / `[13:00:43] Bulls attack high failed`. Not on phone. Do not overlap the $ price. Do not restyle the headline. Prove the core assault clock fires, tanks push that lane, and the log lines match. Banners still required. Same as 12:55 / 15:55.
 
 # PREVIOUS  -  2026-09-20 16:05
 
@@ -2008,7 +2008,7 @@ LISTED, each its own thing and none of them B:
    field, out to that entrance. Shot `daniel-screens/candles-stop-before-miner-1611.jpg`. Absolute priority. Then 2.
 1. **91 files write `blockTicks: 9000`** against cores that end at 10800 - 21 client tests, the node suite, four
    harness tools. Mechanical, one constant a file, and the reason 6 daemon-backed ghost-field rows are refused.
-2. **The candle bodies read as flat slabs from above** rather than a chart standing on the ground. Daniel's eye,
+2. **The candle bodies read as flat slabs from above** rather than a chart standing on the ground. the owner's eye,
    not a measurement. Parked behind 16:11.
 3. **The miner's coin stands beside the approach lane** at about x 159; a truck that drifts off the lane meets it.
 4. ~~The drawn miner is bigger than either engine's collision.~~ **BOXED, except the ceiling the truck must pass
@@ -2021,7 +2021,7 @@ LISTED, each its own thing and none of them B:
    solid stands within 6 m of the centre line at truck height. Numbers in TASKBOOK.
 
 
-THE FIVE WAITS ARE RULED (2026-09-19), on Daniel's delegation - *"lies die war tactics specs und beantworte dir
+THE FIVE WAITS ARE RULED (2026-09-19), on the owner's delegation - *"lies die war tactics specs und beantworte dir
 die Fragen, am besten was einem dynamischen Krieg entspricht"* / *"Entscheide"*. Every one of the five went against
 the ROW, not against the rule, and no doctrine number moved: not the 27 m pitch, not the 46 m gun, not the
 14/26/30 m depths, not §2.6's 12-20 s leg, not §4.3's 20 s cool-down, not §3's respawn entry, not §11.1's standoff,
@@ -2060,7 +2060,7 @@ ruling makes a red go green it says so, so nobody reads a greener table as the a
      nothing obliged a change inside it and the row demanded one every 10 s while naming a 12-20 s leg in its own
      middle column. Restated to 20 s, where the guarantee is arithmetic again. The cadence does NOT go back: at
      6-10 s it moved the tanks the spec calls hold. GREEN: 0 of 30.
-  5. A11a's crossing bar - the ROW, and §4.10 stays as written (Daniel's own 2026-09-19 ruling). Asking a team of
+  5. A11a's crossing bar - the ROW, and §4.10 stays as written (the owner's own 2026-09-19 ruling). Asking a team of
      EACH side to cross every 60 s is exactly what §4.10 forbids when a side is three hulls down, and a front that
      oscillates symmetrically for ever is §0.1's own disease - the homeostatic war - written as a test. A beaten side
      must be allowed to stay beaten; that is what ground changing hands means. Restated: some side crossed in every
@@ -2082,7 +2082,7 @@ WHAT WENT IN
   the core's three markers every frame and drew none of them, and now draws them under §4.11's own names.
 
 WHAT THE 11 REDS HANG ON
-- Daniel's five waits, above: A9, H1's respawn entry, B3's two numbers, A4a's quiet-window bar, A11a's crossing bar.
+- the owner's five waits, above: A9, H1's respawn entry, B3's two numbers, A4a's quiet-window bar, A11a's crossing bar.
 - Ruled and staying red by that ruling: A13b and O1's lane row. Both go green if the two 20:30 gates come off, and
   the gates stay on, so they are explained rather than fixable.
 - Diagnosed this pass and red by measurement: A11b's residual, O1's mean push, B4.
@@ -2138,7 +2138,7 @@ source, infantry number or doctrine constant moved. Rows passing 35 -> 37 of 44.
 WHAT BLOCKS A SHIP, ruled into §0: a red blocks only when it has NO holder. The seven reds left all have one -
 A11b, A13b and O1's lane row explained-not-fixable under the 20:30 gates; O1's mean push and B4 diagnosed by
 measurement; B2 closed as measured; O4 green in its own client suite - so none of them blocks.
-Then the army to the Daily, then M3 without asking (Daniel 2026-09-18 23:47 HARD).
+Then the army to the Daily, then M3 without asking (2026-09-18 23:47 HARD).
 
 SUITES, each on its own run: rules 47/48 - the one red is `incoming fire costs the truck condition`, listed with its
 cause, its 15 s window a fixture whose own comment is stale against HEAD, and nothing it asserts touched - tactics
@@ -2180,14 +2180,14 @@ whatever follows, because a three-minute round that dies at two and a half is wo
 STILL OPEN ON THE CANDLES, seen in the same top-down that proved the roads clear (0.0.1734,
 daniel-screens/roads-clear-of-candles-0.0.1734-crop.png): from above the bodies read as flat coloured slabs lying
 on the grass rather than as a chart standing on the ground. The roads no longer cross them and the ramps are no
-longer buried - that half is measured and done - but Daniel's "still mixed with terrain" may be this, and it is a
+longer buried - that half is measured and done - but the owner's "still mixed with terrain" may be this, and it is a
 look question I cannot settle by measuring. Listed for his eye rather than guessed at.
 
-DANIEL'S PLAYTEST CHAIN OF 2026-09-19 12:55-13:10 IS CLOSED. All nine items are done and were LIVE on the Daily at
+THE OWNER'S PLAYTEST CHAIN OF 2026-09-19 12:55-13:10 IS CLOSED. All nine items are done and were LIVE on the Daily at
 0.0.1723 (08a117ac) WHEN THIS WAS WRITTEN - the Daily has since moved to 0.0.1739 and the LIVE LETTER at the top of
 this file is the only current statement of what is serving - alias and unique URL both serving it then, the built core byte-identical to packages/core/dist,
 2d48a05a listed in known-cores and known-good-clients, signer nodes restarted, btc-logistics-war untouched. Items 1
-to 9 below, in Daniel's order, each with what was measured.
+to 9 below, in the owner's order, each with what was measured.
 
 ON TOP THEN (2026-09-19, SUPERSEDED - kept for the order it named, not as a current claim; §11.3 and §11.4 are
 closed and §11.5 is written with two open holes, see the top of this file): §11.3 cover, then §11.4 posture in the
@@ -2205,7 +2205,7 @@ can stand inside a drawn power cable (x 53.8 .. 66.2, |z| 22 .. 34, on the groun
 and the truck's 3.26 m body passes about 0.56 m through mass_behind_tunnel, whose underside hangs 2.7 m over the
 whole approach lane from x 64.4 to the door at 90.4. Both predate the refit; no collision box moved in this letter.
 Holder: the miner model's geometry and rules/map.js, and closing it means moving or rescaling the building, which
-Daniel's pick rules out.
+the owner's pick rules out.
 
   1. DONE, live at 0.0.1715 already: the truck died 1/4 inside a tank because contact was a 3 m circle. The core
      carries the hull's rectangle now (§1.2), 1.8 m x 3.6 m half-extents in the hull's own frame.
@@ -2282,7 +2282,7 @@ Protocol 533/533, arena-node green so far but for ONE unlisted red - first-mark.
 to be the A2 fix, and the only test in its file whose run has to deliver. Listed with its numbers in TASKBOOK.
 
 WHAT THE EARLIER LETTER SAID, kept for the record: A9 no longer blocks, and at that time the army still did not ship. A9 is green (1.71% at full strength against a 5% bar, 2.88%
-on the one-gun floor), so the item Daniel named as the blocker is closed - but B3 is a red §0 doctrine row and the
+on the one-gun floor), so the item the owner named as the blocker is closed - but B3 is a red §0 doctrine row and the
 standing rule is that nothing ships while one is red. I did not deploy. What is also NOT claimed: the army did not
 get better on this pass. A9 went green because the row was corrected to read as §4.1 already words it, and the
 measured army is the same army that was measured yesterday. The Daily stays 0.0.1617.
@@ -2299,7 +2299,7 @@ of 4, which is a three-seed run against a five-seed row, not a regression.
 CANDLES: closed by measurement. The 16:42 report (candles move left then freeze at round start) does not reproduce on
 0.0.1617 - from the cab the core's shift slides and wraps 0.03 -> 5.58 m across 5400 ticks, and the drawn band changes
 17354 to 307820 pixels between consecutive frames. The cab price headline is CLOSED, and closed as NOT BROKEN
-(HARD Daniel 2026-09-19 08:42): do not restyle it, do not measure it again, do not open a HUD letter for it. It was
+(HARD 2026-09-19 08:42): do not restyle it, do not measure it again, do not open a HUD letter for it. It was
 measured once on the flat and once on a climb - the road is clear in every frame, and the price drawn in the cab is
 the core's own tape price to the dollar, so the client holds no number of its own. Numbers in TASKBOOK; nothing in
 the HUD was changed and nothing is to be changed.
@@ -2318,7 +2318,7 @@ probe: a squad's centre sits more than 12 m off its own anchor on 25.9% of squad
 outside 2-12 m on 24.3%. The first question is whether that drift is §11.3's cover claims, §12.1's follow, or
 casualties collapsing a side onto one surviving squad.
 
-A9 IS RULED, so: ship the army to the Daily, ping Daniel, and start M3 without asking (Daniel 2026-09-18 23:47
+A9 IS RULED, so: ship the army to the Daily, ping the owner, and start M3 without asking (2026-09-18 23:47
 HARD). The remaining reds are listed above with holders and none blocks the ship. His eyes on drop-off / result /
 SPECTATE stay deferred until the army is finished.
 
@@ -2331,9 +2331,9 @@ SHIPPED on the Daily, three playtest letters, numbers and causes in TASKBOOK:
   desktop the pad lit up under the pointer and nothing moved.
 - 0.0.1613 (19:30 / 20:00 / 20:04): the result holds the screen 5 s before the lobby, spectate keeps the line to the
   nodes, and a broken connection names itself in English on the HUD instead of a sky billboard.
-- Eyes still needed from Daniel: drive into the drop-off, read the result, then press SPECTATE.
+- Eyes still needed from the owner: drive into the drop-off, read the result, then press SPECTATE.
 
-PARKED mid-measurement (2026-09-18 12:02, Daniel HARD): ghost position still does not line up with what is seen. Plus 2nd round: Truck 1 cannot see Truck 2, age 6736ms. Shots ghosts-round2-1200-a.jpg / -b.jpg.
+PARKED mid-measurement (2026-09-18 12:02, the owner HARD): ghost position still does not line up with what is seen. Plus 2nd round: Truck 1 cannot see Truck 2, age 6736ms. Shots ghosts-round2-1200-a.jpg / -b.jpg.
 - Shipped 0.0.1595: a truck of a round that is OVER leaves the screen; a live round still keeps its trucks through any
   stall. Measured: a watcher that kept its field carried 1 truck of the round it had left into each new round and got
   no picture of the new one (first picture NEVER, superseded 0).
@@ -2382,7 +2382,7 @@ draws, so it looks like a lobby with nothing to join. Player-facing for any shar
 also what made several probes this morning measure an empty lobby and read it as a regression. Not this item's to
 fix.
 
-DONE (2026-09-18 10:42, Daniel HARD playtest) on 0.0.1591, all four:
+DONE (2026-09-18 10:42, the owner HARD playtest) on 0.0.1591, all four:
 - Hills: a ghost lies on the same four contact points as the local truck. Still no rigidbody and no collider.
 - Tanks: one world. A page that fell behind jumps the debt in one frame instead of dropping it.
 - Drift: it was retirement, not drift. A 3 s silence leaves the truck standing with its age climbing; on the Daily,
@@ -2391,7 +2391,7 @@ DONE (2026-09-18 10:42, Daniel HARD playtest) on 0.0.1591, all four:
   left over 100 ms is the signer nodes stalling on the host they share, not a second vanish.
 Shots daniel-screens/ghosts-physics-1042-a.jpg and -b.jpg. Numbers in TASKBOOK.
 
-DONE (2026-09-17 19:15, Daniel HARD): ghost lag. The drawn pose is 38 ms old at the frame a picture lands (was 322),
+DONE (2026-09-17 19:15, the owner HARD): ghost lag. The drawn pose is 38 ms old at the frame a picture lands (was 322),
 facing with it; the two-line debug draws in a player; an off-screen truck is named at the rim; a new round's truck is
 drawn at its first picture. The Daily could not open a round at all until 0.0.1586 - a 2338-word core in a build
 expecting 2386 - which is why two tabs saw nothing.
@@ -2404,7 +2404,7 @@ moves the front when a tape is fed, but a SIM round with nothing submitted has a
 
 NEXT, after 12:02: candle fixes (ORDER below). Not started.
 
-ORDER (Daniel 2026-09-17 17:34 HARD): ghosts -> candle fixes -> WAR_TACTICS army logic already started -> only then M3.
+ORDER (2026-09-17 17:34 HARD): ghosts -> candle fixes -> WAR_TACTICS army logic already started -> only then M3.
 
 LIVE (2026-09-18 11:55): Daily 0.0.1591 (9424dc92), signer nodes on the ghost release. Both ghost letters are closed
 above; what a player has now, in one line each:
@@ -2446,21 +2446,21 @@ LIVE (2026-09-17 18:05): Daily 0.0.1517 (b7339523), signer nodes on 2939d35.
   - Of 282 remaining z fidgets, the hold reversed on 98 and moved one way on 178; the tank is a mean 6.55 m from its hold.
   - Cause: tanks in transit chasing a seam-moving line, not crest choice.
 
-NOW (2026-09-17 17:34, Daniel HARD order):
+NOW (2026-09-17 17:34, the owner HARD order):
 1. Finish ghost realtime (60s lag, leftover ghosts after next round).
 2. THEN candle fixes (live tape, start-left shove, Fable ribbon/spec, HUD 30% smaller, spectate HUD).
 3. THEN WAR_TACTICS army logic (the work already started).
 4. ONLY THEN M3.
 
-NOW (2026-09-17 17:12, Daniel HARD): ghosts. 1) 60s+ delay looks like wrong position - must be REALTIME. 2) After the next round: 3 ghosts, no updates at all, not even delayed, totally out of sync.
+NOW (2026-09-17 17:12, the owner HARD): ghosts. 1) 60s+ delay looks like wrong position - must be REALTIME. 2) After the next round: 3 ghosts, no updates at all, not even delayed, totally out of sync.
 
-NOW (2026-09-17 17:05, Daniel HARD): ghosts are wrong. Two tabs: you see a ghost at start, then motion does not match. Ghost is at a completely different place than the player who creates it. Ghost stutters, not instant. Reproduce: 2 browsers side-by-side. Browser 2 drives its truck exactly in front of truck 1 then toward the field. Browser 1 will not see that. 100% repro.
+NOW (2026-09-17 17:05, the owner HARD): ghosts are wrong. Two tabs: you see a ghost at start, then motion does not match. Ghost is at a completely different place than the player who creates it. Ghost stutters, not instant. Reproduce: 2 browsers side-by-side. Browser 2 drives its truck exactly in front of truck 1 then toward the field. Browser 1 will not see that. 100% repro.
 
-NOW (2026-09-17 16:42, Daniel HARD): at round start from the cab, candles move LEFT then freeze; miner-ward scroll is otherwise correct.
+NOW (2026-09-17 16:42, the owner HARD): at round start from the cab, candles move LEFT then freeze; miner-ward scroll is otherwise correct.
 
-NOW (2026-09-17 16:38, Daniel HARD): HUD back on spectate.
+NOW (2026-09-17 16:38, the owner HARD): HUD back on spectate.
 
-NOW (2026-09-17 16:01, Daniel HARD): 1) Fable spec ea4c99f/a7324f1 - no glow, wick is 0.5 m ridge of ground, nothing above 1 m, nothing passed through. 2) Desktop HUD 30% smaller, position stays. 3) No candle movement HUD or world - live price samples not arriving. Wire the feed. Shot daniel-screens/hud-desktop-1601.jpg.
+NOW (2026-09-17 16:01, the owner HARD): 1) Fable spec ea4c99f/a7324f1 - no glow, wick is 0.5 m ridge of ground, nothing above 1 m, nothing passed through. 2) Desktop HUD 30% smaller, position stays. 3) No candle movement HUD or world - live price samples not arriving. Wire the feed. Shot daniel-screens/hud-desktop-1601.jpg.
 
 LIVE (2026-09-17 15:25): Daily 0.0.1497 (2376ab8c), signer nodes on 44c72d7 (the same core).
 - Shipped: world candles are a moving raised ribbon on one surface. Staircase; 1 m, 25% ramps, no walls. Scroll 0.576 m/s, nothing jumps on a sample tick. Berms withdrawn (passability). HUD from 0.0.1482 kept. Glow and wicks are blended light (additive washed the view white in 0.0.1496).
@@ -2477,42 +2477,42 @@ LIVE (2026-09-17 15:25): Daily 0.0.1497 (2376ab8c), signer nodes on 44c72d7 (the
   - Where 11 rows don't fit under HIGH/LOW (390x844, 640x480, 733x293), HIGH/LOW yields while models load.
   - A failure kept on screen keeps only its failed rows there, so HIGH/LOW comes back.
 
-NOW (2026-09-17 13:51, Daniel HARD): Fable PLAYTEST FIX 492f128 — candles are a raised ribbon not islands. H 1 m, bodies touching (full slot), 25% ramps 4 m on every free edge, no walls, no corridors, no solids. Implement. One wash.
+NOW (2026-09-17 13:51, the owner HARD): Fable PLAYTEST FIX 492f128 — candles are a raised ribbon not islands. H 1 m, bodies touching (full slot), 25% ramps 4 m on every free edge, no walls, no corridors, no solids. Implement. One wash.
 
-NOW (2026-09-17 13:49, Daniel HARD): candle scroll is in the spec and not in the build. Implement 0.65 m/s, 3.3 m/sample, no jump.
+NOW (2026-09-17 13:49, the owner HARD): candle scroll is in the spec and not in the build. Implement 0.65 m/s, 3.3 m/sample, no jump.
 
-NOW (2026-09-17 13:42, Daniel HARD PRIO): implement Fable's latest §4.15. Concrete: 1) client draws surfaceAt only, never the raw mempool grid. 2) candle open = previous close (continuous staircase, no gaps). 3) look: 2 m matte slab, glow 2-6 m 30% alpha, wick 9 m light, TV green/red, seam 0.5 m white, no roads in the band. 4) numbers: scroll 0.65 m/s, 3.3 m/sample, body 3.7 m, corridor 2.8 m, slot 6.5 m. Commits 236eefc, 4cfc8c3, ad8c1ba. One wash, no extra build. Ping when live.
+NOW (2026-09-17 13:42, the owner HARD PRIO): implement Fable's latest §4.15. Concrete: 1) client draws surfaceAt only, never the raw mempool grid. 2) candle open = previous close (continuous staircase, no gaps). 3) look: 2 m matte slab, glow 2-6 m 30% alpha, wick 9 m light, TV green/red, seam 0.5 m white, no roads in the band. 4) numbers: scroll 0.65 m/s, 3.3 m/sample, body 3.7 m, corridor 2.8 m, slot 6.5 m. Commits 236eefc, 4cfc8c3, ad8c1ba. One wash, no extra build. Ping when live.
 
-NOW (2026-09-17 13:07, Daniel HARD): no extra Unity build. One wash: HUD layout + world candles + signers on the same core, one deploy.
+NOW (2026-09-17 13:07, the owner HARD): no extra Unity build. One wash: HUD layout + world candles + signers on the same core, one deploy.
 
-NOW (2026-09-17 12:58, Daniel HARD): order: 1) HUD first (top-right desktop, mobile above pads, no decimals, HIGH/LOW central). 2) THEN world candles + signer nodes on the SAME core. Deploy HUD first if it can ship alone; candles after. Ping when each is live.
+NOW (2026-09-17 12:58, the owner HARD): order: 1) HUD first (top-right desktop, mobile above pads, no decimals, HIGH/LOW central). 2) THEN world candles + signer nodes on the SAME core. Deploy HUD first if it can ship alone; candles after. Ping when each is live.
 
-NOW (2026-09-17 12:55, Daniel HARD): ship in the next hours. World candles on Daily (0.0.1476+), signer nodes on the SAME core (not the flat one), HUD top-right / mobile above pads, integers only, HIGH/LOW central not on the chart. Deploy. Ping Daniel when live.
+NOW (2026-09-17 12:55, the owner HARD): ship in the next hours. World candles on Daily (0.0.1476+), signer nodes on the SAME core (not the flat one), HUD top-right / mobile above pads, integers only, HIGH/LOW central not on the chart. Deploy. Ping the owner when live.
 
-NOW (2026-09-17 12:40, Daniel HARD): mobile HUD directly above left/right controls; no decimals on the chart. Shot daniel-screens/hud-mobile-1240.jpg.
+NOW (2026-09-17 12:40, the owner HARD): mobile HUD directly above left/right controls; no decimals on the chart. Shot daniel-screens/hud-mobile-1240.jpg.
 
-NOW (2026-09-17 12:35, Daniel HARD FAIL): HUD is center over the truck. Must be top-right above the buttons. Screenshot in daniel-screens/hud-not-top-right-1235.jpg.
+NOW (2026-09-17 12:35, the owner HARD FAIL): HUD is center over the truck. Must be top-right above the buttons. Screenshot in daniel-screens/hud-not-top-right-1235.jpg.
 
-NOW (2026-09-17 09:40, Daniel HARD): world-candle spec changed §4.15 - seam ±45 m (was ±61), band |z|<=54, pancake relief x0.15 inside, 40% cone outside. Static smaller chart, not dynamic flattening. Build that.
+NOW (2026-09-17 09:40, the owner HARD): world-candle spec changed §4.15 - seam ±45 m (was ±61), band |z|<=54, pancake relief x0.15 inside, 40% cone outside. Static smaller chart, not dynamic flattening. Build that.
 
 WORLD CANDLES §4.15 slice (a) at 5654dd6 (seam ±45 m, band 54, pancake, cone): core layer, x-face walls, renderer in code (not deployed). Spawn B, wick w1, seam remap, GATE pin (G1), hull ease, wick drawn; HUD: no RIDGE/HOLLOW/GAP, chart top right on desktop (T1), off in spectate. Not deployable: signer nodes on the flat core. Candle walls fixed (trucks drove through on berms). Half-lock turn and seam banks green; heat pin listed with measured cause ([3,4,2,6], not re-pinned). Roads on the ground under the candles. Desktop: chart above the buttons. Numbers in TASKBOOK.md.
 
-LIVE (2026-09-17 ~13:25, Daniel 12:55 / 13:07): world candles on the Daily, signer nodes on the same core (b2939d2), page 0.0.1482 with the HUD (desktop top right above the buttons, phone upright above the drive pads, whole dollars, HIGH/LOW central, no RIDGE/HOLLOW/GAP, no Tab hint). Numbers in TASKBOOK.md.
+LIVE (2026-09-17 ~13:25, the owner 12:55 / 13:07): world candles on the Daily, signer nodes on the same core (b2939d2), page 0.0.1482 with the HUD (desktop top right above the buttons, phone upright above the drive pads, whole dollars, HIGH/LOW central, no RIDGE/HOLLOW/GAP, no Tab hint). Numbers in TASKBOOK.md.
 
-NOW (2026-09-17 09:17, Daniel HARD): the chart marks only HIGH and LOW. RIDGE/GAP/HOLLOW and the BULLS/BEARS ASSAULT banners go central on the screen, not on the chart. Plus everything of 09:13. No separate Unity build - ships with world candles.
+NOW (2026-09-17 09:17, the owner HARD): the chart marks only HIGH and LOW. RIDGE/GAP/HOLLOW and the BULLS/BEARS ASSAULT banners go central on the screen, not on the chart. Plus everything of 09:13. No separate Unity build - ships with world candles.
 CODE DONE (09:13 + 09:17), not live yet: ships with the world-candles build. Numbers in TASKBOOK.md.
 
-NOW (2026-09-17 09:13, Daniel HARD): HUD too full. Remove RIDGE/GAP/HOLLOW. LOW collides with time labels. Remove Tab: ROUND. Dollar amount must fit. No separate Unity build — fix ChartHud and deploy with world candles.
+NOW (2026-09-17 09:13, the owner HARD): HUD too full. Remove RIDGE/GAP/HOLLOW. LOW collides with time labels. Remove Tab: ROUND. Dollar amount must fit. No separate Unity build — fix ChartHud and deploy with world candles.
 
-NOW (2026-09-17 08:31, Daniel HARD): HUD chart under SIM ON/OFF, 20% larger, do not cover the right steering arrow.
+NOW (2026-09-17 08:31, the owner HARD): HUD chart under SIM ON/OFF, 20% larger, do not cover the right steering arrow.
 
-NOW (2026-09-17 08:04, Daniel HARD): order inside WAR_TACTICS build: 1) HUD §0.3 (TradingView, truck on the chart). 2) THEN world candles §4.15 (terrain in the world). Candles in the world come after the HUD. Then the rest of WAR_TACTICS. Before M3.
-NOW (2026-09-16 22:46, Daniel HARD): WAR_TACTICS.md including the new HUD (§0.3 TradingView chart with the truck on it) MUST be implemented with the rest of the war spec. Not optional. Before M3. Ping when live on Daily.
-NOW (2026-09-16 19:53, Daniel HARD): Spec AND WAR_TACTICS.md changed. BUILD both before M3. Priority. Implement WAR_TACTICS.md (armour + infantry + air + front) and the updated game spec. Ping when live on Daily. war-tactics session stays open.
-NOW (2026-09-16 18:20, Daniel HARD): army doctrine is WAR_TACTICS.md (was TANK_TACTICS.md; armour part A, infantry part B). Source of truth. Implement it. Ping when live on Daily.
-NOW (2026-09-16 18:06, Daniel HARD):
-1. TANKS need a REAL MOVEMENT STRATEGY in the CORE (deterministic, no live LLM). Doctrine, all of it: FRONTAGE = side by side, not one metre of road; ECHELON = depth, not bumper-to-bumper; OVERWATCH = one holds fire while another moves; BOUNDING OVERWATCH = leapfrog, not all run at once; HULL-DOWN = turret over crest, hull hidden. STOP seam-camping and wiggle-to-death. Also if they fit this game: KILL ZONE (several hulls cover the same stretch of road from different angles), SHOOT-AND-SCOOT (fire then relocate to new hull-down, not flee the truck), REVERSE SLOPE (sit behind the crest), STAGGERED COLUMN when moving on the road, CROSSFIRE from both sides of the road, 2-tank fire teams. Not: sidescrape, smoke, kiting away from the truck. ASSIGNMENT (Daniel 18:15): not Math.random. Round seed + tank id hashes the same on every signer node. Pair tanks into 2-tank teams by sorted id. Each team: one OVERWATCH, one BOUNDING, swap on a seeded tick schedule. Slots on the frontage hashed from seed so they do not pick the same metre. Default hold = hull-down/overwatch on a kill-zone stretch of road; when relocating = staggered column then bounding overwatch; after a shot = shoot-and-scoot to the next hashed slot, not away from the truck. Keep tank-tank 12 m / no clip-ram. Truck exception: shoot, ignore, touch=death. 12 m is not vs the truck.
-Ping Daniel when live on Daily.
+NOW (2026-09-17 08:04, the owner HARD): order inside WAR_TACTICS build: 1) HUD §0.3 (TradingView, truck on the chart). 2) THEN world candles §4.15 (terrain in the world). Candles in the world come after the HUD. Then the rest of WAR_TACTICS. Before M3.
+NOW (2026-09-16 22:46, the owner HARD): WAR_TACTICS.md including the new HUD (§0.3 TradingView chart with the truck on it) MUST be implemented with the rest of the war spec. Not optional. Before M3. Ping when live on Daily.
+NOW (2026-09-16 19:53, the owner HARD): Spec AND WAR_TACTICS.md changed. BUILD both before M3. Priority. Implement WAR_TACTICS.md (armour + infantry + air + front) and the updated game spec. Ping when live on Daily. war-tactics session stays open.
+NOW (2026-09-16 18:20, the owner HARD): army doctrine is WAR_TACTICS.md (was TANK_TACTICS.md; armour part A, infantry part B). Source of truth. Implement it. Ping when live on Daily.
+NOW (2026-09-16 18:06, the owner HARD):
+1. TANKS need a REAL MOVEMENT STRATEGY in the CORE (deterministic, no live LLM). Doctrine, all of it: FRONTAGE = side by side, not one metre of road; ECHELON = depth, not bumper-to-bumper; OVERWATCH = one holds fire while another moves; BOUNDING OVERWATCH = leapfrog, not all run at once; HULL-DOWN = turret over crest, hull hidden. STOP seam-camping and wiggle-to-death. Also if they fit this game: KILL ZONE (several hulls cover the same stretch of road from different angles), SHOOT-AND-SCOOT (fire then relocate to new hull-down, not flee the truck), REVERSE SLOPE (sit behind the crest), STAGGERED COLUMN when moving on the road, CROSSFIRE from both sides of the road, 2-tank fire teams. Not: sidescrape, smoke, kiting away from the truck. ASSIGNMENT (the owner 18:15): not Math.random. Round seed + tank id hashes the same on every signer node. Pair tanks into 2-tank teams by sorted id. Each team: one OVERWATCH, one BOUNDING, swap on a seeded tick schedule. Slots on the frontage hashed from seed so they do not pick the same metre. Default hold = hull-down/overwatch on a kill-zone stretch of road; when relocating = staggered column then bounding overwatch; after a shot = shoot-and-scoot to the next hashed slot, not away from the truck. Keep tank-tank 12 m / no clip-ram. Truck exception: shoot, ignore, touch=death. 12 m is not vs the truck.
+Ping the owner when live on Daily.
 M3 waits.
 LISTED (2026-09-16 22:45, HEAD 8fb47e2): reds, cause, dependency - EditMode 1 (rifle flash, pre-existing); PlayMode 12 (listed since 13:xx, none new); node fixture drives moved by the tank doctrine (re-pick in the working tree, held out of the tactics commits); §0 A9 (opening drive-in), A11/A13b/assault/trend push gap (20:30 hold cadence), O1 (supply §3), trend UP losses (air §12.3, parked), O4 (client markers). Numbers in TASKBOOK.md.
 DONE (2026-09-17 08:31 playtest): the HUD chart sits under SIM ON/OFF, clear of the steering arrows, 20% larger on
@@ -2560,38 +2560,38 @@ remaining gap is the authored skirt hanging below the foot, so it waits on an as
 an investigation.
 
 LIVE: M3 - THE SEVEN UNPARKED ITEMS OF THE INVENTORY ARE DONE (W1-W7). WHAT IS LEFT FOR "M3 IS
-DONE WHEN" WAITS ON RULINGS (Daniel): which guardians - and with it federationIsBonded (P3): no
+DONE WHEN" WAITS ON RULINGS (the owner): which guardians - and with it federationIsBonded (P3): no
 census lists a guardian today, so it would refuse every federation -; inbound and >= 2 independent
 gateways; the federation's fees; the fee locks' claim hash and 22A node slots; the result window
 (a contract field). A round for testnet sats needs the first two.
-RULED (Daniel 07:33): every guardian / node must have its own bond or it may not take part.
+RULED (the owner 07:33): every guardian / node must have its own bond or it may not take part.
 federationIsBonded stays on: threshold of distinct bonded census nodes advertising guardian_of[].
-RULED (Daniel 11:09): inbound gateways for M3 = the two live testnet4 LND nodes with incoming liquidity (same host is fine). Named pick A. No fake labelled gateways.
-RULED (Daniel 08:23): which guardians = census nodes that posted a bond. If more bonded
+RULED (the owner 11:09): inbound gateways for M3 = the two live testnet4 LND nodes with incoming liquidity (same host is fine). Named pick A. No fake labelled gateways.
+RULED (the owner 08:23): which guardians = census nodes that posted a bond. If more bonded
 nodes exist than the round needs (2 for 2-of-2, 5 for 5-of-7), pick that many
 deterministically each round from the bonded set. No hand-pick.
-RULED (Daniel 07:42): 22A node fee goes to the sitting seats of this round, even if there are only two.
-RULED (Daniel 07:44): Fedimint base fee is 0 (`disable_base_fees`). 22A stays 2% to those sitting seats.
-RULED (Daniel 07:49): result window equals the objection window (same contract field duration).
-RULED (Daniel 07:51): inbound / >=2 independent gateways PARKED. Continue M3 as far as it goes.
-  SUPERSEDED (Daniel 2026-09-16): NOW item 1 unparks inbound and >=2 independent gateways. Guardians and federationIsBonded stay parked.
-No blocker that waits on Daniel. A paying testnet round still needs those gateways later.
-RULED (Daniel 08:03): the truck game is one use of the federated consensus network, not the
+RULED (the owner 07:42): 22A node fee goes to the sitting seats of this round, even if there are only two.
+RULED (the owner 07:44): Fedimint base fee is 0 (`disable_base_fees`). 22A stays 2% to those sitting seats.
+RULED (the owner 07:49): result window equals the objection window (same contract field duration).
+RULED (the owner 07:51): inbound / >=2 independent gateways PARKED. Continue M3 as far as it goes.
+  SUPERSEDED (2026-09-16): NOW item 1 unparks inbound and >=2 independent gateways. Guardians and federationIsBonded stay parked.
+No blocker that waits on the owner. A paying testnet round still needs those gateways later.
+RULED (the owner 08:03): the truck game is one use of the federated consensus network, not the
 network. M3 keeps game logic out of the seats as far as it will go: seats replay a named core
 (`sim_wasm_hash`), they do not embed the truck. A later game is a new core + client, same nodes
 and federation - a hard fork or a second title, not a rewrite of the seats.
-RULED (Daniel 08:07): not only swappable - several games at once, and several rule sets at once.
+RULED (the owner 08:07): not only swappable - several games at once, and several rule sets at once.
 Each round names its core and its rules; seats replay what that round names. Two titles and two
 configs can run on the same nodes in the same window.
-RULED (Daniel 12:54): ALWAYS one no-money (FREE) round open AND one 2-of-2 round on our
+RULED (the owner 12:54): ALWAYS one no-money (FREE) round open AND one 2-of-2 round on our
 regtest/testnet. Both at once. The Daily lobby must not be empty of rounds.
-RULED (Daniel 16:22): player-facing word is Signer Node, not seat. HUD/lobby: 2 of 2
+RULED (the owner 16:22): player-facing word is Signer Node, not seat. HUD/lobby: 2 of 2
 signer nodes, open signer node. Seat is unclear. Do player-facing copy first.
-RULED (Daniel 20:32): migrate seat in CODE too - variables, types, function names, comments
+RULED (the owner 20:32): migrate seat in CODE too - variables, types, function names, comments
 that mean the signing machine become signerNode / signerNodes. Player place stays joined /
 free round. Wire fields that are in a hashed contract: only with a protocol version; else
 rename. No leftover `seat` in new or touched code.
-OPTIONAL (Daniel 17:22): after current M3 work, do not start yet. Two play modes, lobby tabs:
+OPTIONAL (the owner 17:22): after current M3 work, do not start yet. Two play modes, lobby tabs:
 Mempool histogram (today) and Bid/Ask depth. Bid/Ask = freeze snapshot at round open, hash in
 the contract, both signer nodes build that world for the round (~2 min); next round a new freeze.
 Each tab lists one FREE and one PAID. Canyons are driveable: the road is a bridge over the spread.
@@ -2631,16 +2631,16 @@ BUILT UNDER THE RULINGS (2026-09-15, numbers: TASKBOOK):
   taking them off the wire is a hard fork (round ids, vectors, stored rounds, §6) - with the next
   protocol version.
 - 11:57 the lobby how-to on a portrait phone is one panel per page, four pages, arrows beside
-  (Daniel, option B; 561478d, Daily 0.0.1304): panel 1 at 375x667 111 -> 162 px. Landscape and
+  (the owner, option B; 561478d, Daily 0.0.1304): panel 1 at 375x667 111 -> 162 px. Landscape and
   desktop unchanged.
 - 12:54 the Daily's bare root lists rounds again: its 2-of-2 seats are up (regtest bitcoind, two new
   tunnels, run-2of2.mjs) and every deploy carries their daily.json or refuses (e9fb4f6). Beside the
   free round a paying 2-of-2 round, THRESHOLD_LN on the committee's regtest Lightning, same seats and
-  core (Daniel: option B; 966d2fb): the lobby lists FREE and PAID, PLAY enabled. PLAY picks a free
+  core (the owner: option B; 966d2fb): the lobby lists FREE and PAID, PLAY enabled. PLAY picks a free
   round first (2016608); a dropped socket no longer ends a free run (c9d6320, Daily 0.0.1318); a free
   join played to its close is signed 2 of 2. The seats run as persistent user services with a keeper
   that follows tunnel renames (670e15f); after the switch the plain Daily lists FREE and paying 2-of-2
-  again (deploy 52f0eaf3, Daniel's wrangler login). Open: the keeper's own Pages token (cloudflare.env)
+  again (deploy 52f0eaf3, the owner's wrangler login). Open: the keeper's own Pages token (cloudflare.env)
   for unattended redeploys after a rename.
 - 16:08/16:22 the Daily lists one FREE round and one paying round, marked PAID · 100 sats, PLAY on
   the free one; its lobby says signer nodes, never seat (Daily c294cde8). A crashed player's run is
@@ -2721,7 +2721,7 @@ still holding 978000 + 980000, tab 0, paste refused - then the page's own Withdr
 alice 1930649 msat, SETTLED, tab 1951232 -> 0, in 414 s; a third tab: nothing left.
 DONE (2f5a170, simulation): while a Withdraw runs the page says "do not close this tab" with
 its step, offers no second Withdraw, and the browser asks before closing it.
-RULED (Daniel ~22:48): a Withdraw this long must survive the tab. (1) The round's session is
+RULED (the owner ~22:48): a Withdraw this long must survive the tab. (1) The round's session is
 persisted, so the next start has the same key and wallet. (2) A withdrawal can be claimed
 later. (3) Unity checks after start and tells the player a withdrawal is available. The
 spec (multiplayer_p2p.md §24) says so.
@@ -2735,7 +2735,7 @@ tab reached 0); one tab at a time holds a round's wallet (browser lock). (2) the
 the newest round not yet final, so an older one is claimed after. (3) the lobby view carries
 the withdrawal; Unity's lobby shows "Withdrawal available: N sat" (C#, not yet compiled).
 arena-client 330/330. Spec §24 says so.
-RULED A (Daniel ~23:08): cross-device - alice's withdrawal on her iPhone 2 h later - by her
+RULED A (the owner ~23:08): cross-device - alice's withdrawal on her iPhone 2 h later - by her
 seed backup; the nodes store nothing new. BUILT (simulation): the seats list what they
 settled since a time with the keys it pays and its locks' refund keys (GET /settled); the
 page, on lobby start, derives its key per round and matches locally (asks nothing per
@@ -2746,16 +2746,16 @@ in 36 ms and looked; its Withdraw collected and was cut off before the pay-out; 
 reopened 1930649 msat from the browser's storage, Unity's lobby drew "Withdrawal available:
 1930 sat - press Withdraw in the wallet panel", and the Withdraw paid alice 1930649, SETTLED.
 EditMode at HEAD 194/198 (the one red is CombatFx, red before). Numbers: TASKBOOK.
-Duration of the Withdraw: M5, not this letter (Daniel 23:34).
+Duration of the Withdraw: M5, not this letter (the owner 23:34).
 DONE, ON THE DAILY (2026-09-14 23:57): build 0.0.1265 (38baa2d) deployed to
 btc-logistics-core (14086895); the unique URL and the alias serve its arena-client.js
 (md5 9f04a9d9...) and 0.0.1265. The hole of 0.0.1247 is closed there. W4 / 6d IS CLOSED.
 Still named: the Daily's seats are unreachable (daily.json's dead tunnels), so no round
 is played there yet; a lock refused at the door comes back only on the device that made
 it; a done round's wallet database stays in the browser.
-RULED (Daniel 23:34): (1) deploy to Daily only when that is finished - not 0.0.1247 while
+RULED (the owner 23:34): (1) deploy to Daily only when that is finished - not 0.0.1247 while
 the hole remains. (2) Withdraw time (414 s live) is OK; shorten it in M5, not now.
-RULED (Daniel 23:36): when this run is through, continue M3 immediately. No pause, no ask.
+RULED (the owner 23:36): when this run is through, continue M3 immediately. No pause, no ask.
 Built so far, on the Daily as 0.0.1239 (e00d2ac3): the collect, the three named holes
 closed, the fee-lock door (TASKBOOK). Free rounds mint no fee lock.
 NOTE: the Daily's daily.json names quick tunnels that no longer resolve - no seats reachable.
@@ -2763,7 +2763,7 @@ Closed: (1) no second deposit on reload (0.0.1237); (2) pick (a), the fee-lock d
 live, 1000 sat: a player with no fee lock 409 at both seats, not counted, the others
 settle 978000 / 18000 / 18000; the page's chip says why (0.0.1239); (3) a stake
 already back is final (0.0.1238).
-DECIDED (Daniel 07:22): a loser loses the stake. How-to art: done (16174f67).
+DECIDED (the owner 07:22): a loser loses the stake. How-to art: done (16174f67).
 
 DONE: M3.2 item 6e - amounts (closed 2026-09-13, round 5 live). commit 1: 22A pick A in computePayoutTable
 (rank weight x net stake within the paying ranks, §18A.6 leftover) - a 2% donor
@@ -2835,7 +2835,7 @@ before the press; hold 96000 at +4.4 s, committed +12.5 s, 1334 paid +24.0 s,
 6e IS CLOSED. Loopback recipients parked with
 W4/6d; fee collector W4 (ruled).
 
-DONE: M3.3-34 lobby how-to strip (Daniel 08:58) - the 1-2-3-4 art is in the
+DONE: M3.3-34 lobby how-to strip (the owner 08:58) - the 1-2-3-4 art is in the
 player build's Unity lobby, whole and on screen on iPhone and Android, upright
 and sideways, and desktop (live 001d3b67; TASKBOOK). Art now under
 Assets/Art/Resources/ so the lobby can load it.
@@ -2864,7 +2864,7 @@ refund is asked - the proof now spreads when it forms, all seven hold it, none
 sign: player 0, no committee refund (before: 98000 msat back). A genuine
 outage-VOID still refunds 98000 msat. Ruled limit (path 2, seat 4 down) unchanged.
 
-DONE: PLAY in the lobby no longer shows the loading screen again (Daniel 07:11):
+DONE: PLAY in the lobby no longer shows the loading screen again (the owner 07:11):
 the seat is taken in the running page, no reload; the round starts 1 s after
 PLAY (measured on a local 2-of-2, TASKBOOK). Deployed to btc-logistics-core.
 
@@ -2873,7 +2873,7 @@ DONE: M3.3-34 ENTRY_VOID (2026-09-13) - an entry that must VOID does VOID on 5 o
 msat, pool 0; lock: refund at once); the ruled-limit lock pays no refund (player
 98000 at expiry, pool 0). core 91/91, protocol 501/501, client 286/286, node
 604/604 (TASKBOOK).
-(Earlier, Daniel 22:16/22:12/22:34: the lobby letter, then ENTRY_VOID.)
+(Earlier, the owner 22:16/22:12/22:34: the lobby letter, then ENTRY_VOID.)
   DONE (Unity lobby, TASKBOOK, live on btc-logistics-core): the lobby is
   Unity's title screen, no HTML overlay - who you are with NAME and KEY, the
   rounds with their seats' word, PLAY joins the picked 2-of-2 round and starts
@@ -3151,7 +3151,7 @@ PREVIOUS LIVE: M3 - A ROUND FOR TESTNET SATS ("M3 is done when"). M3.3-19 is
 closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
 (below, under 6e), so the live work is the finish line itself.
 
-  CUSTODY IS DECIDED (Daniel 2026-09-11 14:19) - FEDERATION.md, spec v4.6.2
+  CUSTODY IS DECIDED (2026-09-11 14:19) - FEDERATION.md, spec v4.6.2
   §23. A stake waits as a STAKE LOCK inside the federation: stock Fedimint
   0.12.0 LNv2 OutgoingContract, claim_pk = the round's settlement FROST key,
   refund_pk = the player, expiry in federation blocks. Lightning only at the
@@ -3233,7 +3233,7 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   CODE CONSEQUENCES: the daemon's timestamp receipts go, a publication tx
   and its height check come; settlement seats fetch+post transcripts
   before W; the client checks federation guardians against the census.
-  RESOLVED IN SPEC (15:10, Daniel "alles dokumentieren und lösen"): §7
+  RESOLVED IN SPEC (15:10, the owner "alles dokumentieren und lösen"): §7
   entry fields (stake_point, fee_preimage, lock outpoints, claim key
   attestation), §23.1 steps 0-5, §24 refund key, §5A.3 seventh offence,
   §35A rows. The rehearsal's step 1 now locks to a POINT image and the
@@ -3337,7 +3337,7 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   paid keeps its watch asking, and the chain answers PAID.
     code, DONE    the page's copy of the client bundle (the WebGL template)
                   equals dist again and carries the settlement-wait words -
-                  copied once the hold probe passed, as Daniel set. Not
+                  copied once the hold probe passed, as the owner set. Not
                   deployed; the Daily is untouched.
     remainder     a SUSPENDED run's committee re-run (13A): DONE for 5 of 7
                   (live letter); short of it, parked on the result window.
@@ -3381,7 +3381,7 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
                   did not move (1000000 sat throughout); the receiver got
                   990 sat of the gateway's ecash. Two runs, the same. Holding
                   it is the next named piece (`tools/federation-hold-probe.sh`).
-    DECIDED       (Daniel 2026-09-11) any test-net Fedimint federation is 4
+    DECIDED       (2026-09-11) any test-net Fedimint federation is 4
                   guardians, threshold 3 (0.12.0 forms no 2; 1 is single
                   custody). The rehearsal's 2 seats stay the committee that
                   signs the 2-of-2 pool payout - not a federation. 5-of-7
@@ -3444,7 +3444,7 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   synced at 151773, one active channel, 396530 sat ours and 0 usable inbound.
   A hold is received money, so 2 seats at 100 sat need 196000 msat of inbound
   (98 sat each, the net of the fee) and the node offers 0 - NOT READY.
-  DECISION NEEDED (Daniel): inbound liquidity on that node - a channel opened
+  DECISION NEEDED (the owner): inbound liquidity on that node - a channel opened
   TO it, or funds pushed across the existing one. Nothing here moves its money.
   AND A DAEMON THAT HOLDS STAKES NOW REFUSES TO OPEN A PAYING ROUND UNTIL THAT
   PREFLIGHT SAYS READY: measured on the real node, 100000 msat -> 503 with the
@@ -3471,10 +3471,10 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   spend lands and every seat's row matches it - PAID paid in full, and
   PAID_IN_PART with the debt intact when rows are under the floor (the
   restarted seat used to drop the debt and write PAID).
-  RULING NEEDED (Daniel): the owed sats leave as miner fee (900 in, 336 out,
+  RULING NEEDED (the owner): the owed sats leave as miner fee (900 in, 336 out,
   564 fee), against item 16's own rule. Keeping them means a change output to
   the pool, and that needs a fee rate nobody has set.
-  DECIDED (Daniel 2026-09-11 09:26 / 13:13): V1 pool is FEDERATION
+  DECIDED (2026-09-11 09:26 / 13:13): V1 pool is FEDERATION
   (Fedimint-class). Never single custody. AND no central payment endpoint:
   a single lnd gateway is forbidden. Invoice/hold/settle/pay need the same
   quorum (5 of 7, or 2 of 2). Round Contract names FEDERATION (§23.6).
@@ -3493,7 +3493,7 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   sat (98 and 329 refused, 330 taken), so at this stake neither the hop into
   an on-chain pool nor the payout out of it can be a transaction at all.
   §23.2 pays a qualifier by "Lightning payment from the pool wallet".
-  RULING NEEDED (Daniel): htlc_cltv_days. §23.1 sizes a hold's CLTV "in days,
+  RULING NEEDED (the owner): htlc_cltv_days. §23.1 sizes a hold's CLTV "in days,
   comfortably beyond round + objection window + result window + claim
   window"; the spec makes it a round-contract field. Today lnd picks its own:
   83 blocks measured (~14 h at 10 min), not days. The round's span is now
@@ -3533,7 +3533,7 @@ closed. The 22A weighting ruling, 6b's amounts and 6d each wait on a decision
   AND THE DAILY'S TWO DAEMONS ARE DOWN (2026-09-10 ~19:30): nothing listens
   on 8080/8081/8090/8091 but signal-cli on 127.0.0.1:8080. Not restarted
   from here.
-  CUT (c) - THE DAILY TWO-CHROME LOOK ON ROUND f10ec0ec - IS BLOCKED on Daniel
+  CUT (c) - THE DAILY TWO-CHROME LOOK ON ROUND f10ec0ec - IS BLOCKED on the owner
   mapping, as root, /blwp-a -> 100.74.66.98:8090 and /blwp-b -> :8091 on the
   funnel (serve config needs root here; / stays the finedining app). All of
   (c) that can be measured without it is in and pinned - checkpoints and inputs
@@ -3592,11 +3592,11 @@ the fee or the donation (23.5's separate entry-time commitment).
   Three host doors into the simulated world are off the browser bundle now:
   `setGround` (36), `setSolids` (39), `setHeat` (40).
 
-  NOT LOOKED AT IN TWO CHROMES. Daniel 17:05: "Claude fixes 36 without a WebGL
+  NOT LOOKED AT IN TWO CHROMES. the owner 17:05: "Claude fixes 36 without a WebGL
   test after. Then M3 immediately." Claude's own proof is the suites and
-  `ghost-live.test.js`; a pair of eyes on the Daily is Daniel's or SwissClaw's.
+  `ghost-live.test.js`; a pair of eyes on the Daily is the owner's or SwissClaw's.
 
-M3 IS THE LIVE WORK, starting now and with no wait, on Daniel's standing word
+M3 IS THE LIVE WORK, starting now and with no wait, on the owner's standing word
 (21:26, 12:58, 18:26).
 
 M3.3 ITEMS 18 AND 19 ARE CLOSED. 18: a closed round pays its winner with nobody
@@ -3656,10 +3656,10 @@ is M3.2 item 5.
 
 30 stays queued behind M3.
 2-of-2 on one machine is in: two daemons, two identities, one bitcoind/LND,
-threshold 2 when the contract has 2 slots (Daniel 11:49).
-Daniel 10:18: everything that was set aside is M2, not later.
+threshold 2 when the contract has 2 slots (the owner 11:49).
+the owner 10:18: everything that was set aside is M2, not later.
 
-HARD (Daniel 2026-09-14 07:55): howto art is transparent on dark. Signal
+HARD (2026-09-14 07:55): howto art is transparent on dark. Signal
 whites the bg; the PNGs in Assets/Art/Resources/lobby-howto*.png have white
 knocked out. Lobby + loading. Desktop may split; mobile 1-2 top, 3-4 bottom.
 Must stay readable.
@@ -3670,7 +3670,7 @@ msat claimed, the winner paid 96000 (the real guardians' 1000 msat per input and
 output); before, the lock went back to the loser at expiry (TASKBOOK). OPEN in W4:
 the daemon path on a real federation, the page's redeem of the payout (6d); fee
 locks stay with F5.
-DONE (how-to, live 16174f67, build 0.0.1228): Daniel's four panels on the loading
+DONE (how-to, live 16174f67, build 0.0.1228): the owner's four panels on the loading
 screen and in the lobby - a phone 1-2 over 3-4, a desktop one row, each panel
 whole at its own shape, on 7 devices x 2 screens (TASKBOOK). The tiles he sent
 were cut at half height (sliver above 3 and 4 in a row, measured); each panel is
@@ -3703,115 +3703,115 @@ on its own - 978000 payout and 980000 stake back, neither left in the federation
 both locks, the seats settle, the real tab shows "No payout · No stake back" and
 never touches its wallet (TASKBOOK). OPEN: the three holes at the top.
 
-HARD (Daniel 2026-09-14 07:22): a loser loses the stake. The lock is claimed
+HARD (2026-09-14 07:22): a loser loses the stake. The lock is claimed
 into the pool. Winners are paid from that. W4 is unparked.
 
-HARD (Daniel 2026-09-11 14:19): V1 custody is the STAKE LOCK in FEDERATION.md
+HARD (2026-09-11 14:19): V1 custody is the STAKE LOCK in FEDERATION.md
 and spec v4.6.2 §23. No single node is needed and no single node can take
 money: no gateway, lnd or patched fedimintd holds a round's stake. Only
 recognised, tested parts; no Lightning multisig node of our own.
 
-HARD (Daniel 2026-09-13 08:58): put the one 1-2-3-4 how-to infographic in
+HARD (2026-09-13 08:58): put the one 1-2-3-4 how-to infographic in
 the Unity lobby. Asset Assets/Art/lobby-how-to-1-2-3-4.jpg. Then M3.
 
-HARD (Daniel 2026-09-13 07:11): after PLAY the loading screen must not
+HARD (2026-09-13 07:11): after PLAY the loading screen must not
 come back. PLAY starts the round. Same letter M3.3-34.
 
-HARD (Daniel 2026-09-12 22:34): when M3.3-34 lobby is done, continue M3
+HARD (2026-09-12 22:34): when M3.3-34 lobby is done, continue M3
 immediately. Do not wait.
 
-HARD (Daniel 2026-09-12 22:16): lobby and all its elements fully visible in
+HARD (2026-09-12 22:16): lobby and all its elements fully visible in
 Unity on iOS and Android. Same letter M3.3-34.
 
-HARD (Daniel 2026-09-12 22:12): lobby replaces the splash in Unity. PLAY
+HARD (2026-09-12 22:12): lobby replaces the splash in Unity. PLAY
 starts the round. Spectate is always on. Same letter M3.3-34.
 
-HARD (Daniel 2026-09-12 22:11): the lobby UI is in Unity, not HTML. Same
+HARD (2026-09-12 22:11): the lobby UI is in Unity, not HTML. Same
 letter M3.3-34. Do this now.
 
-HARD (Daniel 2026-09-12 09:04): lobby supports 2-of-2 consensus. Two seats,
+HARD (2026-09-12 09:04): lobby supports 2-of-2 consensus. Two seats,
 threshold 2. Same letter M3.3-34.
 
-HARD (Daniel 2026-09-12 08:41): lobby includes identity. Generated
+HARD (2026-09-12 08:41): lobby includes identity. Generated
 public/private key, a username, and overwriting that username with a custom
 one. Same letter as the round list (M3.3-34).
 
-HARD (Daniel 2026-09-12 07:48): everything the lobby needs in the NODE is
+HARD (2026-09-12 07:48): everything the lobby needs in the NODE is
 in this letter too: rounds to join, who is waiting, free/no-Lightning, seat
 without a wallet.
 
-HARD (Daniel 2026-09-12 07:45): lobby is M3, not last. Stake 0 / no Lightning
+HARD (2026-09-12 07:45): lobby is M3, not last. Stake 0 / no Lightning
 must work in backend and frontend so the game plays with no money and no
 wallet. Do this now.
 
-HARD (Daniel 2026-09-11 18:15): Fable's security fixes are spec. Interrupt.
+HARD (2026-09-11 18:15): Fable's security fixes are spec. Interrupt.
 Bring already-coded parts into line with FEDERATION.md + multiplayer_p2p.md
 v4.6.2 (F1–F9, grinding/publication, Bitcoin beacon). Do not rewrite what
 is not built. Then continue M3.
 
-HARD (Daniel 2026-09-11 13:13): no central payment endpoint. A single lnd
+HARD (2026-09-11 13:13): no central payment endpoint. A single lnd
 gateway is forbidden. Invoice, hold, settle and pay need the same quorum
 as the mint (5 of 7 / 2 of 2) — not one operator's node.
 
-HARD (Daniel 2026-09-11 09:26): V1 pool is FEDERATION (Fedimint-class).
+HARD (2026-09-11 09:26): V1 pool is FEDERATION (Fedimint-class).
 No operator bridge. Never single custody. Lightning in front of it is not
 one person's gateway. The 7 movers each round are the settlement committee
 (§5A.6–5A.9).
 
-HARD (Daniel 2026-09-08 11:56): everything needed for playable M2 on
+HARD (2026-09-08 11:56): everything needed for playable M2 on
 regtest/testnet4 is M2, not M3. Bonds, census, committee_time, bitcoin
 block-hash seed. Lightning hold invoices stay M3. Finish 22, then 23–27.
 
-HARD (Daniel 2026-09-08 12:09): both committee nodes are reachable on
+HARD (2026-09-08 12:09): both committee nodes are reachable on
 Tailscale, not LAN. M2 asks for no money and distributes none.
 
-HARD (Daniel 2026-09-08 15:26): close 15 and 18 as soon as they are
+HARD (2026-09-08 15:26): close 15 and 18 as soon as they are
 unblocked. 15, 18, 26 AND 27 ARE CLOSED. 28 IS CLOSED TOO (2026-09-09):
 another player's truck is drawn where its transcript put it, on the daily.
 Nobody has LOOKED at it yet; that is a pair of eyes, not a task.
 
-HARD (Daniel 2026-09-09 07:56): spawn bays are per player seed. Two
+HARD (2026-09-09 07:56): spawn bays are per player seed. Two
 players never share START_Z. 24 doors, mixer keeps harness seed on bay 13.
 
-HARD (Daniel 2026-09-09 09:44): ghost trucks must follow while the other
+HARD (2026-09-09 09:44): ghost trucks must follow while the other
 player drives. Seeing them at spawn then losing them, or a stuttering
 picture, is not playable M2. This is letter 36, now, not M3.
 
-HARD (Daniel 2026-09-09 09:48): prove it in two real browsers. One drives
+HARD (2026-09-09 09:48): prove it in two real browsers. One drives
 past the other; the ghost must be the current pose, realtime. A test
 without two browsers is not done.
 
-HARD (Daniel 2026-09-09 09:58): the proof browsers are local Chrome with
+HARD (2026-09-09 09:58): the proof browsers are local Chrome with
 WebGL. Not browser-act, not stealth/headless. Two Chrome windows.
 
-HARD (Daniel 2026-09-09 10:26): two-Chrome proof FAILED. Put the bugs in
+HARD (2026-09-09 10:26): two-Chrome proof FAILED. Put the bugs in
 this letter so they get fixed. Screens: daniel-screens/chrome-p1-drive-a.png
 (P1 WASTED in the field) and chrome-p2-ghost-a.png (P2 still on the bay).
 
-HARD (Daniel 2026-09-09 10:30): when 36 is on Daily, SwissClaw retests with
+HARD (2026-09-09 10:30): when 36 is on Daily, SwissClaw retests with
 two local Chrome WebGL windows before 36 is closed. Claude does not self-close
 on suites alone.
 
-HARD (Daniel 2026-09-09 11:51): SwissClaw retest FAILED. P1 AUTO 86% / 8
+HARD (2026-09-09 11:51): SwissClaw retest FAILED. P1 AUTO 86% / 8
 parcels, rolled out, drove in the field (core x -100.4 → -91). P2 stayed
 in the cargo loadout on dirt. Ghost not at P1's pose. Chip: play · A up
 · 5 players (socket did not drop). Screens: daniel-screens/retest-p1-drive1.png
 retest-p1-drive2.png retest-p2-ghost1.png retest-p2-ghost2.png.
 
-HARD (Daniel 2026-09-09 21:26): when 36 is closed, start M3 immediately. In the
+HARD (2026-09-09 21:26): when 36 is closed, start M3 immediately. In the
 driver script and in every Claude prompt. Do not forget. Do not wait to be asked.
 
-HARD (Daniel 2026-09-09 21:23): yes, heat goes in too. Same shape as the hills:
+HARD (2026-09-09 21:23): yes, heat goes in too. Same shape as the hills:
 it belongs to the round, not Unity. Letter 40. 36 does not close while heat
 is a host input the transcript does not carry.
 
-HARD (Daniel 2026-09-09 17:05): ghost pose is WRONG, not missing. Photographed:
+HARD (2026-09-09 17:05): ghost pose is WRONG, not missing. Photographed:
 left tab sees the other truck on the grass at -69,-57 m; right tab is that
 truck on the yellow bay. Chip other-at disagrees. Stutters, not realtime.
 Claude fixes 36 without a WebGL test after. Then M3 immediately.
 Screen: daniel-screens/2026-09-09-1705-ghost-wrong-pose.jpg
 
-HARD (Daniel 2026-09-09 16:08): SwissClaw two-Chrome close-out FAILED again.
+HARD (2026-09-09 16:08): SwissClaw two-Chrome close-out FAILED again.
 P1 AUTO 83%/9 parcels, rolled out of the yellow bay, drove into the field
 and caught fire. P2 stayed in cargo loadout (0 parcels). Chip stayed
 play · A up · 2 players (socket did not drop). P2 chip frozen at
@@ -3821,7 +3821,7 @@ P2 ghost tick stuck at 4241. Daily index.html still ships
 was injected. 36 stays OPEN. Screens: daniel-screens/m236-p1-drive1.png
 m236-p1-drive2.png m236-p2-ghost1.png m236-p2-ghost2.png.
 
-HARD (Daniel 2026-09-09 19:31): SwissClaw two-Chrome ghost look FAILED.
+HARD (2026-09-09 19:31): SwissClaw two-Chrome ghost look FAILED.
 Do not trust 27138a8 / 19:27 done. Two local Chromes, WebGL 2.0, Funnel
 identity 200/32, curve loaded, chip A ok · B ok then play · A up ·
 2 players. P1 AUTO 83% / ROLL OUT, left the yellow bay into the tank field.
@@ -3832,7 +3832,7 @@ Screens: daniel-screens/2026-09-09-1931-p1-drive1.png
 2026-09-09-1931-p1-drive2.png 2026-09-09-1931-p2-ghost1.png
 2026-09-09-1931-p2-ghost2.png.
 
-HARD (Daniel 2026-09-09 11:53): Claude does M3 until the in-flight two-Chrome
+HARD (2026-09-09 11:53): Claude does M3 until the in-flight two-Chrome
 retest is finished. Do not wait on 36. 36 stays open.
 
 2026-09-09 (36): the C# hop is NOT the fault. `GhostField` is in no scene and
@@ -3857,22 +3857,22 @@ The nineteenth was a one-in-ninety coincidence in the seed/seats draw and now
 asks sixteen hashes. arena-client 129/129, core 88/88, protocol 440/440,
 arena-node 333/333.
 
-HARD (Daniel 2026-09-09 12:58): keep going. After Done on an open letter,
+HARD (2026-09-09 12:58): keep going. After Done on an open letter,
 the driver continues that letter. When 36 is closed, M3 is next with no wait.
 
-HARD (Daniel 2026-09-09 12:03): when the current task is done, fix M2.36.
+HARD (2026-09-09 12:03): when the current task is done, fix M2.36.
 Claude's own proof is without WebGL: `packages/arena-client/test/two-tabs.test.js`
 and `packages/arena-node/test/ghost-live.test.js` (`timeout 180` +
 `--test-timeout=120000`). Close-out on Daily is still two local Chromes.
 
-HARD (Daniel 2026-09-08 18:26): when M2 is finished, start M3
+HARD (2026-09-08 18:26): when M2 is finished, start M3
 immediately. No pause, no ask, no action=done at the M2 boundary.
 Playable M2 is 28. Then remaining queue (29 Feldman if still open),
 then M3: hold invoices, VSS, FROST, testnet sats. Lightning stays M3.
 
 2026-09-09: 29, 31 AND 32 ARE CLOSED. `entry_close_time` was closed by 27.
 M2's playable set is finished; 30 (publication lead) stays listed and is
-queued BEHIND M3 on Daniel's word. M3 is live: hold invoices, VSS, FROST,
+queued BEHIND M3 on the owner's word. M3 is live: hold invoices, VSS, FROST,
 testnet sats.
 
 2026-09-09: M3.3 ITEM 17 - A SIGNING ROUND BETWEEN DAEMONS - IS CLOSED. Five
@@ -4219,7 +4219,7 @@ IN THIS ORDER (unparked):
                                         replayed and NOT signed, and a result
                                         can no longer be signed over another
                                         player's transcript. The world secret
-                                        is on the entry (Daniel, e942580), so
+                                        is on the entry (the owner, e942580), so
                                         what a real round still waits for is
                                         the RANDOMNESS BEACON - a future
                                         Bitcoin block hash this daemon does
@@ -4374,7 +4374,7 @@ IN THIS ORDER (unparked):
                                         from their seed (24 bays, pitch 6.8 m).
                                         The harness seed stays bay 13 / START_Z.
                                         Two different seeds, two different z.
-                                        Daniel 07:56. Numbers: TASKBOOK.
+                                        the owner 07:56. Numbers: TASKBOOK.
    35  M2 page curve / two-tab ghosts M2   done — Daily fetched the round then
                                         refused the seat (no BLWP_CURVE), so two
                                         tabs were two single-player games.
@@ -4382,7 +4382,7 @@ IN THIS ORDER (unparked):
                                         loaded as blwp-curve.js. Chip on the page
                                         says 1 player waiting / 2 players.
                                         Chip also names A/B http and the play
-                                        socket (Daniel 09:26).
+                                        socket (the owner 09:26).
                                         09:33: advert verify was Ed25519 vs
                                         schnorr bond key — page now uses
                                         BLWP_CURVE.verify.
@@ -4565,7 +4565,7 @@ IN THIS ORDER (unparked):
                                         33.500 m the ground was worth. The fix
                                         is 36's, again: the core owns the map's
                                         boxes and Unity draws them.
-   M3.3-34  lobby + free play          M3   OPEN — Daniel 08:58: 1-2-3-4
+   M3.3-34  lobby + free play          M3   OPEN — the owner 08:58: 1-2-3-4
                                         infographic in the Unity lobby
                                         (Assets/Art/lobby-how-to-1-2-3-4.jpg).
                                         Was done except this how-to.
@@ -4596,7 +4596,7 @@ IN THIS ORDER (unparked):
                                         seats a player with no wallet. Screen:
                                         daniel-screens/2026-09-10-1115-free-seat-refused.png
    36  M2 live ghost pose             M2   OPEN — the ground half is done and
-                                        measured. Daniel 21:23: heat goes in
+                                        measured. the owner 21:23: heat goes in
                                         too (40), same as hills. Solids (39)
                                         still host. Two-Chrome look still due. Was marked done
                                         at ddf9e3d on the ground numbers alone,
@@ -4681,7 +4681,7 @@ IN THIS ORDER (unparked):
                                         the roll-out carried the run straight
                                         through (tick 1880 -> 1944).
                                         Was: the 17:05 split, fixed on the Daily.
-                                        Daniel 17:05: ghost on the grass at
+                                        the owner 17:05: ghost on the grass at
                                         -69,-57 m while that truck stood on its
                                         yellow bay. Screen:
                                         daniel-screens/2026-09-09-1705-ghost-wrong-pose.jpg
@@ -4749,7 +4749,7 @@ IN THIS ORDER (unparked):
                                         Still a picture (0.10), never an input.
                                         Daily must show the live pose. After the
                                         current M3.16 task: Claude fixes 36.
-                                        Claude's own proof, no WebGL (Daniel 12:03):
+                                        Claude's own proof, no WebGL (the owner 12:03):
                                         packages/arena-client/test/two-tabs.test.js
                                         (two clients, one drives, other is shown
                                         a picture) and
@@ -4783,8 +4783,8 @@ IN THIS ORDER (unparked):
                                         the chase camera's frustum.
                                         WHAT IS LEFT IS THE PAIR OF EYES.
                                         Close-out: SwissClaw two-Chrome retest
-                                        (Daniel 10:30). Not suites alone.
-   30  M2 publication lead + receipts —  queued behind M3 (Daniel 2026-09-09).
+                                        (the owner 10:30). Not suites alone.
+   30  M2 publication lead + receipts —  queued behind M3 (2026-09-09).
    29  M2 Feldman on the split        M2   done — a crooked dealer is refused at
        preimage (23.1)                    handout, before anybody reconstructs.
                                         A share must lie on the ONE polynomial
@@ -4889,12 +4889,12 @@ IN THIS ORDER (unparked):
                                         too, so this is queued behind 31.
    15/14/8 are this queue, not a later milestone.
 
-HTTPS PLAY (Daniel 2026-09-09 07:40): Safari blocks HTTP nodes from an https page (Load failed). Nodes are Funnel-proxied at /blwp-a and /blwp-b. join sourceKey counts path prefixes as two sources.\n\nHTTPS PLAY (Daniel 2026-09-09 07:34): Web Crypto (crypto.subtle.generateKey)
+HTTPS PLAY (2026-09-09 07:40): Safari blocks HTTP nodes from an https page (Load failed). Nodes are Funnel-proxied at /blwp-a and /blwp-b. join sourceKey counts path prefixes as two sources.\n\nHTTPS PLAY (2026-09-09 07:34): Web Crypto (crypto.subtle.generateKey)
 only exists in a secure context. HTTP on the Tailscale IP is not one. The
 play page must be https://btc-logistics-core.pages.dev (or another HTTPS
 origin). The local :8000 build is for same-scheme daemons, not for iPhone.
 
-DISPLAY NAME (Daniel 2026-09-08 18:55, M3): DECIDED. Default =
+DISPLAY NAME (2026-09-08 18:55, M3): DECIDED. Default =
 `adjective-animal-NNNN` from taggedHash(BLWP/v1/DISPLAY_NAME, player key),
 locked in packages/arena-protocol/src/display-name.js. Name is changeable: custom
 lives in the browser next to the secret, not on the signed final. Board rows
@@ -4902,7 +4902,7 @@ for others stay the derived default. Donations: player public key (hex) in
 the LNURL comment, not the name.
 Key stored in the browser with backup download/import. Never uploaded.
 
-HARD (Daniel 2026-09-08 10:18): deferred remainders are M2. Do not skip
+HARD (2026-09-08 10:18): deferred remainders are M2. Do not skip
 tick rate, daemon, curve, BOND_MARKER, ghost subscribe, run duration.
 
    21  M2 protocol tick rate          M2   done — the core publishes its own
@@ -4973,7 +4973,7 @@ tick rate, daemon, curve, BOND_MARKER, ghost subscribe, run duration.
                                             the board's own report, with what
                                             would fill it - pseudonym: the key
                                             is on the row, the SCHEME is
-                                            unchosen (Daniel's, like the
+                                            unchosen (the owner's, like the
                                             checkpoint); cargo statistics:
                                             replay the transcript, so M2.3's
                                             replay pool; live run status:
@@ -5010,7 +5010,7 @@ tick rate, daemon, curve, BOND_MARKER, ghost subscribe, run duration.
                                             owned elsewhere - live run status
                                             on 22, cargo statistics on M2.3's
                                             replay pool, the pseudonym scheme
-                                            on Daniel. Nothing renders a
+                                            on the owner. Nothing renders a
                                             board; that is 22, not a remainder
                                             of 20. protocol 384/384, core
                                             83/83, arena-node 71/71, blwp-
@@ -5193,7 +5193,7 @@ Numbers: TASKBOOK.
                                             audited remainder in TASKBOOK, each
                                             with what it waits on.
    15  M2.2 census from chain         M2   OPEN — next after 25
-                                            (Daniel 15:26, do not skip).
+                                            (the owner 15:26, do not skip).
                                             A contract's `censusRoot` is
                                             checked against the census it
                                             derives to at its own height, with
@@ -5312,57 +5312,57 @@ Numbers: TASKBOOK.
     3  three post office buildings    M1   done
     4  hover overlays                 -    done
     5  prune the streamed bundles     -    done
-    6  bundler: private name check    -    later (Daniel: start M2)
+    6  bundler: private name check    -    later (the owner: start M2)
     8  M2.1 checkpoints               M2   OPEN — unparked, same as item 14
     9  M1 liquidation picture         M1   done — the driving HUD is on the
                                             daily build and photographed at
                                             four sizes
 
-HARD (Daniel 2026-09-05 13:25): finish M1 before M2. Stop checkpoint
+HARD (2026-09-05 13:25): finish M1 before M2. Stop checkpoint
 work. Back to M1.a13. Do not start M2 until item 9 is closed.
 
-HARD (Daniel 2026-09-05 16:48): do not start M1.a14 until M1.a13 is
+HARD (2026-09-05 16:48): do not start M1.a14 until M1.a13 is
 closed. a13 was not finished; a14 jumped the queue. Back to a13.
 
-HARD (Daniel 2026-09-05 16:52): finish the current letter before starting
+HARD (2026-09-05 16:52): finish the current letter before starting
 a new one. Then update PRIORITIES.
 If current is a13 and a14 does not exist, the new item is a14.
 If a14 already exists, the new item becomes a14 and the old a14 slides
 to a15 (and so on). Do not start the new letter until the current one
 is closed.
 
-HARD (Daniel 2026-09-05 09:04): when M1.a13 bullets are done, stay on
+HARD (2026-09-05 09:04): when M1.a13 bullets are done, stay on
 M1 until the picture letter is closed. Then M2. Parked a8/a11/a12/d/e
 stay parked unless they block a13.
 
-HARD (Daniel 2026-09-05 09:24): every letter and every bullet is marked
+HARD (2026-09-05 09:24): every letter and every bullet is marked
 done or not done. Claude updates the mark when it changes. iOS audio
 was worked today and is still not done — he must go back to it.
 
-HARD (Daniel 2026-09-06 18:23): do not stop for Daniel to check sound.
+HARD (2026-09-06 18:23): do not stop for the owner to check sound.
 Keep going. Audio is not a wait.
 
-HARD (Daniel 2026-09-06 18:53): keep going even if Daniel does not test
+HARD (2026-09-06 18:53): keep going even if the owner does not test
 at once.
 
-HARD (Daniel 2026-09-07 07:11): when a15 is done, M2. a15 is marked
+HARD (2026-09-07 07:11): when a15 is done, M2. a15 is marked
 done. Start M2.1 checkpoints. Parked a8/a11/a12 stay parked.
 
-HARD (Daniel 2026-09-07 12:58): if PRIORITIES has no open M1 letter, do
+HARD (2026-09-07 12:58): if PRIORITIES has no open M1 letter, do
 M2. Do not idle. a16 is closed. Current letter is M2.1.
 
-HARD (Daniel 2026-09-08 08:03): keep going until M2 is finished. Do not
+HARD (2026-09-08 08:03): keep going until M2 is finished. Do not
 stop mid-milestone. A closed letter is not a halt.
 
-HARD (Daniel 2026-09-08 10:18): everything that was deferred is M2.
+HARD (2026-09-08 10:18): everything that was deferred is M2.
 Tick rate, daemon, discrete-log, BOND_MARKER, ghost spawn/subscribe,
 player_run_duration, entry_close_time. Finish 20, then 21–24. Do not
 leave them for M3.
 
-HARD (Daniel 2026-09-06 22:48): when a letter like a13 or a14 is done,
-deploy to btc-logistics-core.pages.dev. Do not wait for Daniel to ask.
+HARD (2026-09-06 22:48): when a letter like a13 or a14 is done,
+deploy to btc-logistics-core.pages.dev. Do not wait for the owner to ask.
 
-HARD (Daniel 2026-09-06 22:51): read PRIORITIES.md on every message.
+HARD (2026-09-06 22:51): read PRIORITIES.md on every message.
 Do not answer from memory of an older list.
 
 Twelve red tests: none on the deploy path. List in TASKBOOK.md.
@@ -5388,18 +5388,18 @@ M1.a8: DONE. Coin-margined liquidations pay the player.
   Doc links, the probe table, the contract sizes and the two retractions on
   the way here: TASKBOOK.
 
-M1.a11: not done — strike voice built, needs Daniel's ear.
+M1.a11: not done — strike voice built, needs the owner's ear.
 
 M1.a12: not done (parked) — five extra venues, no public stream.
 
 M1.a13: 2026-09-05 morning picture — DONE. The driving HUD is live on the daily
 and photographed at four sizes: 844x390 and 1000x360 on a player, 1024x768 and
 1920x1080 in a browser. Numbers in TASKBOOK.
-- build number — done. Reopened by Daniel 2026-09-07 07:39 and closed: the
+- build number — done. Reopened by 2026-09-07 07:39 and closed: the
   format is 0.0.xxx, it is on the LOADING screen and on the SPLASH, and both
   come from one string written at build time, so they cannot drift apart. The
   loading screen also stopped speaking German while it was open.
-- explosion sound — done (Daniel 2026-09-07 07:39).
+- explosion sound — done (2026-09-07 07:39).
 - the driving HUD speaks English — done. Two places, not one. The line under
   the price read "verbinde … (connecting)" before a price arrived and now reads
   "connecting …"; and every row of the debug panel behind the DEBUG icon was
@@ -5421,7 +5421,7 @@ not inferred from the suite. Numbers in TASKBOOK.
   nose 8.7 deg to 3.8; roll 5.4 to 0; a tap moves the view 0.00 deg where it
   moved 0.69; the look returns under 0.5 deg 3.07 s after a 2.5 s hold.
   Residual: the dead zone is one degree of aim, 2.9 px at 640 wide, and a
-  real thumb may wander further - only Daniel's tap can say. Looking while
+  real thumb may wander further - only the owner's tap can say. Looking while
   driving still needs multi-touch, which is not this bullet.
 - real mushroom mesh — done. It vanishes instead of shrinking; the old fade
   to a 5% floor left a three-metre bud where a 55 m cloud had stood.
@@ -5445,7 +5445,7 @@ not inferred from the suite. Numbers in TASKBOOK.
   where an empty one lasts 16.7 s at the line, and 8.1 s against 85.3 s fifty
   metres back. Zero until a host speaks, so an untold core still matches the
   recordings.
-- build number on the loading screen — not done. Daniel 2026-09-07 07:39: loading AND splash, format 0.0.xxx. Stamped from the commit at
+- build number on the loading screen — not done. 2026-09-07 07:39: loading AND splash, format 0.0.xxx. Stamped from the commit at
   build time, read back onto a row of its own under the title bar, and checked
   against every other box there.
 - exposure in the HUD — done. It was never removed: RunScore.Running is false
@@ -5470,7 +5470,7 @@ not inferred from the suite. Numbers in TASKBOOK.
   pair 8.2 m from t=1 s, renderer draws 24 of 24. The band is Core's own
   measured rule, 4-14 m off the seam, and 50.4% of armour stands inside
   15 m; the tail is documented give-ground and edge-walk reinforcements.
-  Left as it is on Daniel's pick - a hard line would retune the recording
+  Left as it is on the owner's pick - a hard line would retune the recording
   numbers. Distribution in TASKBOOK.
 - late-run truck/tanks not under the ground — done. Nothing is buried: 0 of
   1,379 hull-readings more than a metre down over a full round to tick 6,600,
@@ -5506,7 +5506,7 @@ with no second copy; the score the driver sees on the daily is
 BlwpCore.RunScore() and the C# formula that used to shadow it is deleted, its
 rules moved into the core suite. Numbers in TASKBOOK.
 - camera: the direction the truck drives must never leave the view unless
-  Daniel explicitly looks around — done. The
+  the owner explicitly looks around — done. The
   four cases a13's slalom never drove are fine: reversing, a handbrake spin,
   an impact and a released look all keep the road in the picture, never
   closer than a third of the way in from an edge, and five PlayMode tests
@@ -5520,7 +5520,7 @@ rules moved into the core suite. Numbers in TASKBOOK.
   480-tall frame. The floor is asserted and mutation-checked. Ladder in
   TASKBOOK.
 - camera: when the atom bomb falls, do not snap the view to the bomb.
-  View stays as it is — not done. Daniel 2026-09-07 07:39: camera still
+  View stays as it is — not done. 2026-09-07 07:39: camera still
   ripped from his hands when the bomb comes. There is no snap and no reparent: with a cloud
   raised 45 m off the road the view tilts to 25.4 degrees of its own 26
   degree clamp and the yaw the driver steers by moves 0.08 degrees in a
@@ -5552,7 +5552,7 @@ rules moved into the core suite. Numbers in TASKBOOK.
   2.1x faster if it were fed. That is a core rule and is not changed here.
 
 M1.a16: 2026-09-07 playable hunt + spectate HUD — DONE.
-Daniel: ten tries through the front, none made it; only the rim worked.
+the owner: ten tries through the front, none made it; only the rim worked.
 Stay hard; 30-40% of committed runs should deliver. Spectate: price only.
 - hunted fire leaves a rim and a punch-through chance — done in core
 - 30-40% seam/committed delivery in core sims — done (36.7% of 150 rail seam)
@@ -5580,7 +5580,7 @@ M1.a15: DONE. Wheels in the ground at the depot / on the model.
   sized off its world box, so it came out a different size on every heading.
   Fixed and deployed. — done
 
-M1.d: done — REVERSED by Daniel 2026-09-07 07:39: "when the atom bomb comes
+M1.d: done — REVERSED by 2026-09-07 07:39: "when the atom bomb comes
 the camera is still ripped from his hands. That must not happen. View stays
 unchanged." The camera no longer looks up at the mushroom, no longer pulls
 back and no longer lifts. Nothing in ChaseCamera reads the cloud. The view is
@@ -5797,7 +5797,7 @@ time. Each entry can only start when the ones above it are done, and the
 reason is given where it is not obvious - most of these dependencies are
 not preference, they are "this cannot be tested without that".
 
-Item 2 is closed. Daniel 2026-09-03: start M2. Current letter is M2.1.
+Item 2 is closed. 2026-09-03: start M2. Current letter is M2.1.
 
 ## M2.1  The node daemon                            stage 3  -  OPEN
 
@@ -6335,7 +6335,7 @@ round, which is why testnet comes first and why the order is stricter.
 
 ## M3.1  The chain, on regtest                      stage 5
 
-  Pulled into M2 for playable testnet (Daniel 11:56): items 0–6 (genesis,
+  Pulled into M2 for playable testnet (the owner 11:56): items 0–6 (genesis,
   bond construction/verify, census, eligibility, committee seed,
   committee_time). This section keeps the money-path reading. Lightning
   hold invoices, VSS, FROST stay here.

@@ -1,5 +1,5 @@
 // THE WORLD'S ENVELOPE, in one print: what the core holds, what the drawn miner occupies, and whether anything of
-// the world stands under the building (Daniel 2026-09-19 15:58, miner-entrance-still-covered-1558.jpg).
+// the world stands under the building (2026-09-19 15:58, miner-entrance-still-covered-1558.jpg).
 //
 //   node packages/nextblock/tools/measure-world.mjs
 import { readFileSync } from 'node:fs';

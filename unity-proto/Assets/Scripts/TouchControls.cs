@@ -39,7 +39,7 @@ public class TouchControls : MonoBehaviour
     /// <summary>
     /// A touch device: the pads are the controls. Otherwise a desktop (the HUD chart goes top right there).
     ///
-    /// DANIEL'S DESKTOP REPORTS ONE and draws the pads - that is what the 20:22 letter is about, and where the pads
+    /// THE OWNER'S DESKTOP REPORTS ONE and draws the pads - that is what the 20:22 letter is about, and where the pads
     /// are drawn the mouse now drives them (AMouseOnTheGasPadDrivesTheTruck presses a real mouse device on the gas
     /// pad). Drawing them on a screen that reports NO touch device is a layout question, not an input one: measured,
     /// the HUD has no room for the score column beside the pads at 1024x768. Written down in TASKBOOK.

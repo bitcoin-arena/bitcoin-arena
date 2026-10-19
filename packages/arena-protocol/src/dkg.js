@@ -116,7 +116,7 @@ function proofHolds(c, curve) {
 /**
  * WHICH COMMITTEE THIS KEY BELONGS TO, AND IT IS THE SIGNER NODES THEMSELVES.
  *
- * Daniel's rule for the lifetime: a DKG runs once per committee EPOCH, not per
+ * the owner's rule for the lifetime: a DKG runs once per committee EPOCH, not per
  * round. The pool is one P2TR output across rounds (item 13), so a per-round
  * key would mint a new pool address every round and force the funds to move.
  * When sortition signer nodes a different committee, that epoch runs a new DKG; the
@@ -146,7 +146,7 @@ export function epochId(signerNodes) {
 }
 
 /**
- * THE EPOCH OF A FEDERATION'S RESERVE KEY (§27A.9.2, kanban #397): the protocol reserves of `federationId` are locked to a
+ * THE EPOCH OF A FEDERATION'S RESERVE KEY (§27A.9.2): the protocol reserves of `federationId` are locked to a
  * k-of-n key of its guardian seats, made by the same DKG as a round's claim key - under an epoch of its own, tagged apart and
  * bound to the federation, so a round committee of the same seven nodes never makes (or is handed) the reserve key.
  */

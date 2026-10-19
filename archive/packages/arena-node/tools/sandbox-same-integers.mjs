@@ -1,4 +1,4 @@
-// SAME INTEGERS IN THE SANDBOX (kanban #328, spec §0A.6): the stored runs of a seat's store replayed by a tree's replay
+// SAME INTEGERS IN THE SANDBOX (spec §0A.6): the stored runs of a seat's store replayed by a tree's replay
 // worker, one line of JSON per run - its core, outcome, score, state hash and the worker's clock. Run once with today's
 // tree and once with the sandbox's, and the two files are compared run for run.
 //

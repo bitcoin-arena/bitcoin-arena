@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Do the on-screen driving pads drive the truck on a DESKTOP page?
 //
-// Daniel 2026-09-18 20:22 (HARD): "on desktop the mobile pads are drawn but do nothing. They must stay drawn AND they
+// 2026-09-18 20:22 (HARD): "on desktop the mobile pads are drawn but do nothing. They must stay drawn AND they
 // must drive the truck. Mouse / pointer on a pad = throttle, steer, handbrake. Measure on desktop WebGL."
 //
 // This measures the whole chain the player uses, in the page itself: a real mouse press at the pad's own rectangle,
@@ -174,7 +174,7 @@ try {
   say(`page ${PAGE}`);
   page = await browser(PORT);
 
-  // A RETINA SCREEN, WHEN ASKED FOR. Daniel's MacBook draws at devicePixelRatio 2, and the template sizes the
+  // A RETINA SCREEN, WHEN ASKED FOR. the owner's MacBook draws at devicePixelRatio 2, and the template sizes the
   // drawing buffer `innerWidth * dpr` - so Unity's Screen is twice the page's CSS pixels there and only there. If
   // the pads answer a mouse at 1 and ignore it at 2, that difference is the bug.
   if (DPR !== 1) {

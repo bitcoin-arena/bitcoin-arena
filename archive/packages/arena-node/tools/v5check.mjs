@@ -1,4 +1,4 @@
-// v5check.mjs <seat url> <round id>: kanban #312 - a protocol-5 round's RoundResult is the median of the committee's signed readings.
+// v5check.mjs <seat url> <round id>: - a protocol-5 round's RoundResult is the median of the committee's signed readings.
 // Reads the seat's GET /round-result and GET /price-samples; for the opening and closing samples and every served sample: the readings'
 // keys are distinct members of the committee, each signature verifies (BIP340 over priceReadingId), at least 5 of them, and the
 // price is their median (protocol price-sample.js priceSampleStands5). Prints a Markdown table.

@@ -7,14 +7,14 @@
 // same `chartView` words the HUD is handed - and then asks the page what it has drawn. A reader that only checked
 // that the words exist would be measuring the core twice and the client not at all.
 //
-// The page is the Daily on Daniel's MacBook (HARD 2026-09-18 19:05: live Chrome runs there, CDP 9341/9342 forwarded
+// The page is the Daily on the owner's MacBook (HARD 2026-09-18 19:05: live Chrome runs there, CDP 9341/9342 forwarded
 // by monitoring/blwp_mac_playtest.sh). With no page reachable this test FAILS rather than skipping: O4 is a red row,
 // and a silent skip would read as an answer.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { WebSocket } from 'ws';
 
-// THE BEELINK, NOT THE MACBOOK (HARD, Daniel 2026-09-20 15:12: "Live Chrome
+// THE BEELINK, NOT THE MACBOOK (HARD, 2026-09-20 15:12: "Live Chrome
 // playtests run on the Beelink only. Do not use the MacBook."). This defaulted
 // to 9341, the MacBook's forwarded port from the 2026-09-18 HARD that ruling
 // replaced, so the suite answered "no page on CDP 9341" on the machine the
@@ -109,7 +109,7 @@ test('the page draws the core\'s three objective markers', { timeout: 110000 }, 
     // INTO THE WORLD FIRST. The HUD draws no chart on the lobby, so a run that reads the line there measures the
     // splash screen: the first pass of this test did exactly that and reported "no chart line to read". SPECTATE is
     // pressed at the rectangle the splash publishes for it (window.BLWP_UNITY_LOBBY), and the chart is on in
-    // spectate by Daniel's 2026-09-17 16:38 ruling.
+    // spectate by 2026-09-17 16:38 ruling.
     for (let i = 0; i < 40; i++) {
       if (await p.evaluate('!!window.BLWP_UNITY_LOBBY') === true) break;
       await wait(2000);
@@ -117,7 +117,7 @@ test('the page draws the core\'s three objective markers', { timeout: 110000 }, 
     const view = await p.evaluate('JSON.stringify(window.BLWP_UNITY_LOBBY || null)');
     assert.ok(view && view !== 'null', 'the splash published no rectangles, so SPECTATE cannot be pressed');
     const splash = JSON.parse(view);
-    // THE SPLASH'S RECTANGLES ARE IN ITS LAYOUT UNITS, NOT THE CANVAS'S PIXELS (kanban #29, measured on the MacBook's Retina
+    // THE SPLASH'S RECTANGLES ARE IN ITS LAYOUT UNITS, NOT THE CANVAS'S PIXELS (measured on the MacBook's Retina
     // screen: screen [1280, 713] laid out over a 2560-pixel canvas 1280 CSS px wide). Scaled by css / canvas pixels (0.5) the
     // press landed at 441, 307 instead of SPECTATE's 883, 615, the lobby stayed up, the HUD drew no chart - and this test
     // read "no chart line". The page reads them the same way (index.html paintMoney: canvas css / u.screen).

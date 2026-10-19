@@ -1,4 +1,4 @@
-// THE PICTURE AGAINST THE NODE'S OWN REPLAY OF THE SAME TRANSCRIPT (Daniel 2026-09-18 13:05).
+// THE PICTURE AGAINST THE NODE'S OWN REPLAY OF THE SAME TRANSCRIPT (2026-09-18 13:05).
 //
 // The previous measurement stepped a bare core beside the run and read 0.000 m in one round and 53 m in the next,
 // growing 0.1 m at a time - a separation, not an offset. A bare core is not the world the node replays: `replay.js`

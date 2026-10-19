@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// A PUBLISHED ROUND FIRST, ITS BEACON AFTER - MEASURED ON A PRIVATE REGTEST (Daniel 2026-09-30, pick (b), the sequence):
+// A PUBLISHED ROUND FIRST, ITS BEACON AFTER - MEASURED ON A PRIVATE REGTEST (2026-09-30, pick (b), the sequence):
 //   1. publication unconfirmed: no beacon is named, and the wait does not end on it;
 //   2. only once the publication confirms is the beacon named (strictly above it);
 //   3. a confirm that lands after the beacon block - the fcb15cca shape - is not a published round: `dead`, not forced;

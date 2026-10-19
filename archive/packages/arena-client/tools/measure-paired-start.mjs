@@ -1,6 +1,6 @@
 // CAN THIS HOST START TWO PLAYERS AT ONCE, AND WHEN IT CANNOT, WHAT IS THE ONE THAT DIED HOLDING?
 //
-// Daniel 2026-09-18 08:55: one of two clients stopped at "90 % - 20.1 / 22.3 MB - Could not start", and that is why
+// 2026-09-18 08:55: one of two clients stopped at "90 % - 20.1 / 22.3 MB - Could not start", and that is why
 // no ghost label has been read out of a browser on this host. This counts the failure over N paired starts and prints
 // what the failing tab holds rather than guessing: the loading screen's own stall record (`BLWP_LOAD_STALLED`, set by
 // the page's watchdog after 90 s on one line), the stage and percentage it stopped on, that browser's resident memory,

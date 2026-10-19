@@ -1,4 +1,4 @@
-// DOES THE ASSAULT HORN ACTUALLY SOUND? (Daniel 2026-09-20 16:22: "a banner ... and a sound when it starts".)
+// DOES THE ASSAULT HORN ACTUALLY SOUND? (2026-09-20 16:22: "a banner ... and a sound when it starts".)
 //
 // The banner and the desktop log are visible on screen and were measured there. The sound cannot be seen, and
 // Unity's own audio bookkeeping is NOT reachable from the page: the framework declares `var WEBAudio = {...}`

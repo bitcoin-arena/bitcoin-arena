@@ -1,4 +1,4 @@
-// THE PAGE FOR THE PAID-PICK RUN (kanban #206), on the MacBook: the built page (round-2of2's servePage, as every live-page run
+// THE PAGE FOR THE PAID-PICK RUN, on the MacBook: the built page (round-2of2's servePage, as every live-page run
 // serves it) behind one more door - /harness-invoice?msat=N, an invoice for exactly N msat made by alice's lnd, the player's
 // own wallet here, which the page's Withdraw is handed as its invoice maker (BLWP_WITHDRAW takes a function).
 //   BUILD=<page dir> LNCLI=<lncli> ALICE_DIR=<lnddir> ALICE_RPC=<host:port> PORT=29600 node page-server.mjs
@@ -8,7 +8,7 @@ import { servePage } from '../../arena-node/tools/round-2of2.mjs';
 const env = process.env;
 const inner = await servePage(env.BUILD, { host: '127.0.0.1', port: 0 });
 const invoice = (msat) => new Promise((ok) => execFile(env.LNCLI, [`--lnddir=${env.ALICE_DIR}`, `--rpcserver=${env.ALICE_RPC}`, '--network=regtest',
-  'addinvoice', `--amt_msat=${msat}`, '--memo=blwp #206 withdraw'], { timeout: 60000 }, (e, so) => ok(e ? { error: e.message } : JSON.parse(so))));
+  'addinvoice', `--amt_msat=${msat}`, '--memo=blwp withdraw'], { timeout: 60000 }, (e, so) => ok(e ? { error: e.message } : JSON.parse(so))));
 createServer(async (req, res) => {
   const u = new URL(req.url, 'http://h');
   if (u.pathname === '/harness-invoice') {

@@ -1,4 +1,4 @@
-// item-pay-test.mjs (kanban #365 step 3): one in-game item bought for real on testnet4 - a fresh wasm wallet in the federation,
+// item-pay-test.mjs: one in-game item bought for real on testnet4 - a fresh wasm wallet in the federation,
 // funded over Lightning from lnd-testnet4, pays the 500 sat split (purchaseOutputs: 12 served nodes from every seat's merged
 // FINALs, the network's and the game's donation sets) with the lock client's paySubmit, its acceptance read back output by
 // output (lockAccepted), the buyer's record signed and checked (purchaseStands).

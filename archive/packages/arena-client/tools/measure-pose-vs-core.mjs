@@ -1,4 +1,4 @@
-// IS THE DRAWN GHOST THE OTHER CLIENT'S TRUCK? (Daniel 2026-09-18 12:02: "Drawn pose must match the other client's
+// IS THE DRAWN GHOST THE OTHER CLIENT'S TRUCK? (2026-09-18 12:02: "Drawn pose must match the other client's
 // truck", and the shots where the other truck is not where it can be seen.)
 //
 // Step two of the agreed order, after the round-boundary counts. Every picture names a TICK; this steps a core of the

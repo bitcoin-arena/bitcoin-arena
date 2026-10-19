@@ -38,7 +38,7 @@ public class GameAudio : MonoBehaviour
 
     AudioSource _engine, _tyres, _shots, _war, _rotor, _blast;
     float _overSince = -1f, _overLogAt, _engineGain = 1f;
-    // THE ONE-SHOTS ARE MADE WHEN FIRST WANTED, NOT IN AWAKE (kanban #266, measured 2026-10-08 in a named profile of production
+    // THE ONE-SHOTS ARE MADE WHEN FIRST WANTED, NOT IN AWAKE (measured 2026-10-08 in a named profile of production
     // at 10x CPU as an Android phone: GameAudio.Awake was 151 ms of the 90 -> 100 % block, synthesising every clip sample by
     // sample). Each is made on its first use, and Start makes the rest one a frame from 3 s after the start - the same clips.
     AudioClip _impactC, _explosionC, _chimeC, _blipC, _thudC;
@@ -99,7 +99,7 @@ public class GameAudio : MonoBehaviour
         _rotor.volume = 0f;
         _rotor.Play();
 
-        // THE BOMBER, on its own looping source. Daniel, 17:50: no sound for
+        // THE BOMBER, on its own looping source. the owner, 17:50: no sound for
         // the plane, the bomb drop or the explosion. The detonation existed;
         // these two did not exist at all, so there was nothing to repair -
         // they had to be made.
@@ -148,13 +148,13 @@ public class GameAudio : MonoBehaviour
         _rpm = Mathf.Lerp(_rpm, Mathf.Clamp01(wanted), 1f - Mathf.Exp(-3.5f * Time.deltaTime));
 
         _engine.pitch = Mathf.Lerp(0.55f, 2.15f, _rpm);
-        // NO DRIVE SOUND ONCE THE RUN IS OVER (Daniel 2026-09-27 13:25): the idle floor was still a running engine -
+        // NO DRIVE SOUND ONCE THE RUN IS OVER (2026-09-27 13:25): the idle floor was still a running engine -
         // measured after a MISSED run's end, rpm 0.00 and volume 0.135 - so the note fades out with the run, in about
         // half a second, and comes back with the next one
         _engineGain = Mathf.MoveTowards(_engineGain, DriveInput.RunOver ? 0f : 1f, Time.unscaledDeltaTime * 2f);
         _engine.volume = engineVolume * Mathf.Lerp(0.45f, 1f, _rpm) * _engineGain;
 
-        // AFTER THE RUN, SAID (Daniel 2026-09-27 13:25: the drive sound played after WASTED and after a delivery): for
+        // AFTER THE RUN, SAID (2026-09-27 13:25: the drive sound played after WASTED and after a delivery): for
         // twelve seconds after the end, every two, what the keys hold against what the truck is given and the engine
         if (DriveInput.RunOver)
         {
@@ -403,7 +403,7 @@ public class GameAudio : MonoBehaviour
         const float Seconds = 4.5f;
         int samples = Mathf.RoundToInt(Rate * Seconds);
         var data = new float[samples];
-        // IT HAD NOTHING A PHONE CAN MAKE. Daniel heard the plane and the
+        // IT HAD NOTHING A PHONE CAN MAKE. the owner heard the plane and the
         // bomb and not the blast, and the clip is why: the two filters here
         // were a one-pole at 0.0016 and one at 0.020, which are cutoffs of
         // 11 Hz and 140 Hz. Measured on the synthesised samples, only 5.5% of

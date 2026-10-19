@@ -1,8 +1,8 @@
 #!/bin/bash
-# SUPERSEDED (Daniel 2026-10-05, kanban #148 step 6): the testnet federation is 5 of 7 and founded by testnet4-found.mjs.
+# SUPERSEDED (2026-10-05): the testnet federation is 5 of 7 and founded by testnet4-found.mjs.
 # This 3-of-4 stock ceremony is kept for the record, untested, and is not run.
 #
-# THE TESTNET FEDERATION, FOUNDED AMONG FOUR NODES THAT ARE EACH ONE GUARDIAN (spec §23A.2; Daniel 2026-09-26 22:54 /
+# THE TESTNET FEDERATION, FOUNDED AMONG FOUR NODES THAT ARE EACH ONE GUARDIAN (spec §23A.2; 2026-09-26 22:54 /
 # 23:08: testnet is 3 of 4, one node one guardian, and a node start is the guardian start).
 #
 # Each node started its guardian itself (src/guardian.js) and knows its own endpoint; this reads them off the nodes and

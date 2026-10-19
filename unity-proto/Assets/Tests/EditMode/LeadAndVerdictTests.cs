@@ -5,7 +5,7 @@ using NUnit.Framework;
 /// <summary>
 /// WHO IS LEADING AND WHO WON, in the words §4.14 sets.
 ///
-/// Daniel's 12:55 shot (daniel-screens/hud-sideways-vs-upside-1255.png) had "$81,330 +0.00% SIDEWAYS" and nothing
+/// the owner's 12:55 shot (daniel-screens/hud-sideways-vs-upside-1255.png) had "$81,330 +0.00% SIDEWAYS" and nothing
 /// else: a percentage with no side attached, so the cab could not tell who was ahead. §4.14: "BULLS +0.42%" /
 /// "BEARS -0.17%" against the round's open while it runs, "BULLS LEADING +0.42%" on a run's end screen, and only
 /// the round's own end says "THE BULLS WIN". The three are different claims and this pins them apart.

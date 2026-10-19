@@ -6,7 +6,7 @@ using System.Linq;
 using UnityEngine;
 
 /// <summary>
-/// THE RESULT SUMMARY ON THE END CARD (Daniel 2026-10-04): who delivered and who did not, the high score, this player's
+/// THE RESULT SUMMARY ON THE END CARD (2026-10-04): who delivered and who did not, the high score, this player's
 /// win or loss, and a preliminary balance list - four lines under SCORE, above "copy game replay".
 ///
 /// Display only. Every number is the seats' own, from the round's /api/round-result as the page read it (index.html
@@ -32,7 +32,7 @@ public static class ResultSummary
 
     /// <summary>
     /// The words the outcomes are named by, in the order the names line lists them: the SIGNED result's four (protocol
-    /// result.js) - a wreck and a miss are both FAILED there, and MISSED / WRECKED never come from the seats (Daniel
+    /// result.js) - a wreck and a miss are both FAILED there, and MISSED / WRECKED never come from the seats (the owner
     /// 2026-10-04: a FAILED player was left off the names line).
     /// </summary>
     public static readonly string[] Outcomes = { "DELIVERED", "FAILED", "FORFEIT", "VOID" };

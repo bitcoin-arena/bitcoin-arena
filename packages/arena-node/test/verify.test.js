@@ -8,7 +8,7 @@
 // event. Here the close goes over the socket, the way a real one does, and
 // what is checked afterwards is what the node has WRITTEN DOWN - not anything
 // this test handed it.
-// A FREE ROUND (RULED Daniel 2026-09-25): nothing this file asserts depends on the stake, and a paying round opens only
+// A FREE ROUND (RULED 2026-09-25): nothing this file asserts depends on the stake, and a paying round opens only
 // on a signer node that reaches a federation now.
 import { CLOCK } from './block-clock.js';
 import { TEST_FEDERATION_ID } from '../../arena-protocol/src/test-federation.js';
@@ -55,7 +55,7 @@ const FUNDED = { funded: () => true };
 // The round's randomness is a future Bitcoin block hash (5A) that this daemon
 // does not read yet, so the fixture owns these 32 bytes the way it owns the
 // keys. The SEED is no longer the fixture's: it derives from this and the
-// entry's own world secret, which Daniel put on the entry in e942580.
+// entry's own world secret, which the owner put on the entry in e942580.
 const RANDOMNESS = b32(0x9b);
 // A beacon is a value AND a height: a hash on its own carries no date, and
 // "published after the round" is the whole of what makes it worth using. The
@@ -63,7 +63,7 @@ const RANDOMNESS = b32(0x9b);
 // contract can prove.
 const HEIGHT = 900001;
 const BEACON = { hash: RANDOMNESS, height: HEIGHT, timeMs: 900n };
-// THE FIXTURE'S OWN WORLD, RE-MEASURED AGAIN (Daniel 2026-09-16). These tests are about a run that
+// THE FIXTURE'S OWN WORLD, RE-MEASURED AGAIN (2026-09-16). These tests are about a run that
 // came to nothing, and the world secret is the fixture's to choose. b32(0x16) chose one where the
 // drive was WRECKED at tick 547 for a score of 128 - by armour that drove onto the truck. Armour
 // now holds about 28 m off it, so nothing rams: measured, that same drive is still LIVE at tick
@@ -212,7 +212,7 @@ async function roundThrough(node, {
   }
 
   if (objectFirst) {
-    // AN OBJECTION CARRIES ITS TRANSCRIPT AND RECEIPTS (§13A, kanban #24): an empty body is 400; a real bundle before any
+    // AN OBJECTION CARRIES ITS TRANSCRIPT AND RECEIPTS (§13A): an empty body is 400; a real bundle before any
     // result is signed has nothing to object to (422) - neither is stored. The objected flag the close reads is then the
     // store's own record, as a run objected on an earlier close carries it.
     const at = `/objection?round=${toHex(rid)}&entry=${toHex(eid)}&block=${toHex(CLOCK.tipAt(Date.now()))}`;

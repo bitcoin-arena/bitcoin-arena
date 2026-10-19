@@ -2,7 +2,7 @@
 // Copyright (c) 2026 The Bitcoin Arena authors. See LICENSE.
 // WHERE THE WORLD ENDS AT THE MINER: the numbers the code actually holds, against the building as it is modelled.
 //
-// Daniel's playtest of 2026-09-19 13:09 (daniel-screens/miner-entrance-covered-1309.jpg): "the miner model / entry
+// the owner's playtest of 2026-09-19 13:09 (daniel-screens/miner-entrance-covered-1309.jpg): "the miner model / entry
 // zone is covered by terrain, roads and candles". Spawn ruling B said the field's last slot ends "before the miner
 // face at x 108.4" - and 108.4 is where DeliveryGate places the model's ORIGIN, not where the building begins. This
 // prints both sides of that: the core's own layout, and the miner's meshes read out of the .glb through the

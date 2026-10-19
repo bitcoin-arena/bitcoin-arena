@@ -21,7 +21,7 @@ import { ed25519 } from '@noble/curves/ed25519.js';
 import { schnorr } from '@noble/curves/secp256k1.js';
 
 import { standUpRound } from '../../arena-node/tools/round-2of2.mjs';
-// #23: these are about PER-PLAYER worlds (the bridge must not fall back to the harness seed), so their rounds name the
+//: these are about PER-PLAYER worlds (the bridge must not fall back to the harness seed), so their rounds name the
 // per-player config v3; the shared world (v4) is world-shared.test.js and world-shared-door.test.js.
 import { TRUCK_V3_CONFIG_HASH } from '../../nextblock/plugin/nextblock.js';
 import { Client } from '../src/client.js';
@@ -189,7 +189,7 @@ test('a person opens the printed URL twice and the two tabs are on one round', a
 /**
  * THE CASE THE 11:51 RETEST FAILED ON: a tab that has NOT driven.
  *
- * Daniel, two Chrome windows: P1 loaded, rolled out and drove in the field;
+ * the owner, two Chrome windows: P1 loaded, rolled out and drove in the field;
  * P2 stayed in the cargo loadout on the dirt and saw only its own truck. The
  * chip read `A ok · B ok · play · A up · 5 players` - the socket did NOT drop
  * this time - so the question is no longer whether frames can be delivered but
@@ -540,7 +540,7 @@ test('the shipped bridge writes the driver\'s entry and pose in the twelve ints 
     //
     // A page that is drawing every frame almost never holds two pictures at once, so the traffic above cannot tell a
     // bridge that takes one from a bridge that takes two and drops one. This lets the queue fill first, which is what a
-    // page does whenever a frame is late - and since 628d54a (Daniel 2026-09-17 17:05 / 17:12: "the ghost must be
+    // page does whenever a frame is late - and since 628d54a (2026-09-17 17:05 / 17:12: "the ghost must be
     // REALTIME") a frame then draws each truck where its NEWEST picture puts it and the older ones are collapsed, so
     // one truck's backlog is one picture and the rest are counted.
     for (let batch = 0; batch < 3; batch++) {

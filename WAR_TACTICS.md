@@ -1,36 +1,36 @@
 # War tactics
 
-HARD (Daniel 2026-09-16). Source of truth for the **army** in the **core**: armour (part A) and infantry
-(part B). Renamed from TANK_TACTICS.md on Daniel's order (2026-09-16) when the soldiers were added.
+HARD (2026-09-16). Source of truth for the **army** in the **core**: armour (part A) and infantry
+(part B). Renamed from TANK_TACTICS.md on the owner's order (2026-09-16) when the soldiers were added.
 Deterministic. Same integers on every signer node. No live LLM. No `Math.random`.
 
 Truck rules and tank-vs-tank rules are **not the same**.
 
-Reviewed 2026-09-16 18:22 (spec review, Daniel's order): holes closed, numbers fixed, nothing of
-Daniel's HARD rules changed. Where this file **rules** something Daniel did not say, the line is marked
+Reviewed 2026-09-16 18:22 (spec review, the owner's order): holes closed, numbers fixed, nothing of
+the owner's HARD rules changed. Where this file **rules** something the owner did not say, the line is marked
 **RULED HERE** so he can overrule it. Where the code on the branch does not yet do what this file says,
 the line is marked **GAP**.
 
-Amended 2026-09-16 19:02-19:05 (Daniel's order, items 1 and 3 of his list, nothing else): **objectives**
+Amended 2026-09-16 19:02-19:05 (the owner's order, items 1 and 3 of his list, nothing else): **objectives**
 (§4.11: HIGH, LOW, OPEN of the chart - no truck is an objective, §1.2) and **infantry that hides** (§11.3-§11.5:
 cover in craters and wrecks, prone, suppression; the earlier "no cover" ruling of §11.3 is **OVERRULED**).
 Item 2 of his list (wrecks as cover for tanks, side pressure, whole-line retreat) was parked until
-2026-09-19 11:14, when Daniel sent it to this session to decide: **wrecks as cover for tanks is IN** (§4.1,
+2026-09-19 11:14, when the owner sent it to this session to decide: **wrecks as cover for tanks is IN** (§4.1,
 GAP, tank wrecks only - never the truck's); **side pressure and whole-line retreat stay OUT**, the second
 because the game already has the only whole-line movement it is allowed, §4.14's, driven by the price. No
 rule lets the truck read a wreck. Everything added by that order is **GAP** until the core does it.
 
-Revised 2026-09-16 19:20 (Daniel: *"Do we have an absolutely dynamic war? Is it immersive? What is
+Revised 2026-09-16 19:20 (the owner: *"Do we have an absolutely dynamic war? Is it immersive? What is
 missing?"*): the verdict is §0.1 - **not yet** - with the four reasons and the sections that answer them:
-supply (§3), the assault (§4.12), the tape as the general (§4.13), the client's list (§0.2). Rulings only Daniel can make are parked in §15.
+supply (§3), the assault (§4.12), the tape as the general (§4.13), the client's list (§0.2). Rulings only the owner can make are parked in §15.
 
-**RULED 2026-09-19, the five open waits, on Daniel's delegation** (*"Lies die war tactics specs und
+**RULED 2026-09-19, the five open waits, on the owner's delegation** (*"Lies die war tactics specs und
 beantworte dir die Fragen - am besten was einem dynamischen Krieg entspricht"* / *"Entscheide"*). A9, the
 hold row (H1), B3, A4a and A11a are decided below and in §0's tables. **Every one of the five went against
 the ROW, not against the rule** - and that is not a convenience: each row was measured to a specific defect
 of its own, three of them arithmetic (a window sized for a leg length the doctrine replaced; two generator
 ranges copied onto a standard deviation; a coverage bar that assumes flat ground) and two of them a
-contradiction with a rule Daniel had already ruled to keep (§4.10's give-ground, §0's own column rule).
+contradiction with a rule the owner had already ruled to keep (§4.10's give-ground, §0's own column rule).
 **No doctrine number moved**: not the 27 m slot pitch, not the 46 m gun, not the 14/26/30 m depths, not
 §2.6's 12-20 s leg, not §4.3's 20 s cool-down, not §3's respawn entry, not §11.1's standoff, not §4.10's
 gates, thresholds or ceilings. What moved is what the probe asks, and each change is written beside the
@@ -48,7 +48,7 @@ Sections 0-7 are armour (part A). Sections 8-14 are infantry (part B). §0 and �
 
 ---
 
-## 0. What the player must see (Daniel 2026-09-16, addendum)
+## 0. What the player must see (2026-09-16, addendum)
 
 The tanks - and the men, §8 on - must **not look dumb among themselves**. They must read as **smart**, an **active
 battlefield** - to the player, from the cab. This section is what "smart" means here, in numbers, so
@@ -62,7 +62,7 @@ How the rows are read (RULED HERE, after the first probe run, so two probes cann
   dz reversing between two ticks in which the tank stepped.
 - **On the line** = a living tank within 40 m (z) of its post. A hull further than that - a respawn
   walking in from the back edge - is a **column**, and rows about the line (2, 4b, 7, and the hold row)
-  do not count it. **RULED 2026-09-19 (Daniel's delegation, "whatever makes a dynamic war"):** this
+  do not count it. **RULED 2026-09-19 (the owner's delegation, "whatever makes a dynamic war"):** this
   applies to the **hold row** too, which had been counting columns, and it applies to **men**: a man
   further from the seam than §12.1's own trail clamp (40 m) cannot be standing on any legal post, so he
   is a column and the infantry line row (B3) does not count him either. A column is a reinforcement
@@ -74,7 +74,7 @@ How the rows are read (RULED HERE, after the first probe run, so two probes cann
 
 | The player sees | The rule that makes it | Probe passes when |
 |---|---|---|
-| A line of tanks, not a pile | frontage slots §2.4 | no 3 living tanks of one side all within 12 m of each other (the tank-tank minimum, §1.1), on more than 2% of tank-ticks. RULED (Daniel 2026-09-16): §2.4 puts a pair's hulls 12 m apart and neighbouring inner hulls 15 m apart, so every interior tank is in a 20 m triple by design - that is formation, not a clump. Two tanks at 12 m is a legal pair; three inside 12 m is a pile. The geometry is not spread to suit a probe. (was: groups of 9 to 20 within 20 m) |
+| A line of tanks, not a pile | frontage slots §2.4 | no 3 living tanks of one side all within 12 m of each other (the tank-tank minimum, §1.1), on more than 2% of tank-ticks. RULED (2026-09-16): §2.4 puts a pair's hulls 12 m apart and neighbouring inner hulls 15 m apart, so every interior tank is in a 20 m triple by design - that is formation, not a clump. Two tanks at 12 m is a legal pair; three inside 12 m is a pile. The geometry is not spread to suit a probe. (was: groups of 9 to 20 within 20 m) |
 | Hulls that hold still on a post, no wiggle | hold = stand, §4.1 | a tank on its post moves < 0.02 m/tick of its own step; a tank on the line reverses its own travel direction (x or z sign flip) at most once in any 2 s window - a second flip inside 2 s is a fidget, and fidgets are < 2% of all flips |
 | Nobody pressed against anybody | 12 m bubble §1.1 | the separation push undoes a tank's own step on < 5% of tank-ticks (was 42.5%) |
 | **Hold is the default** | §2.6, §4.3, §4.10 as re-ruled 20:30 | of tank-ticks with both of a pair alive **and neither of them a column** (§0's reading rule), >= 50% have the tank within 1.5 m of its post (measured before: 27.4%); the new bounding tank reaches its forward post before the leg ends on >= 80% of legs (was 56.2%). RULED 2026-09-19 (see §3): the row was counting a pair as not-holding whenever **either** hull was still walking in from the back edge, so on a bloody seed it measured attrition rather than holding - the walk-in share climbs to 44-48% and the row falls to 49.77% / 48.15% while the settled hulls never leave their posts. §0's own reading rule already excluded columns from every other line row; it now excludes them here. §3's entry is **not** moved: a replacement still walks in from the back edge, 52-87 m, because that column is the war's visible resupply. |
@@ -83,7 +83,7 @@ How the rows are read (RULED HERE, after the first probe run, so two probes cann
 | Fire, then move - cause and effect | shoot-and-scoot §4.3 | after a team's shot, that team changes slot within 1 tick unless hemmed in (§4.3) or inside its 10 s scoot cool-down |
 | A tank faces what it fights | heading rule §4.5 | a holding tank on the line points its hull at the enemy side (heading within 30 degrees of the seam normal) on > 95% of holding ticks |
 | Relocation reads as a decision, not a drift | adjacent-slot rule §4.3 | a team never crosses another team's lane while relocating; a slot change moves a team exactly 27 m in x |
-| The kill zone is covered | slots and gun range §4.2 | of the seam-metre samples (x in [-81, 81], every metre, every tick): **at full strength** (12 living tanks of that side) >= 95% are inside 46 m of at least **2** of them; **at any strength** with >= 6 alive, >= 95% are inside 46 m of at least **1**. A tank in transit counts if its gun reaches; a column walking in does not. RULED (Daniel 2026-09-16): coverage is the share of seam-metre samples, not "every metre covered on >= 95% of ticks"; that tick-union reading cannot coexist with bounding overwatch, scoot or respawn. RULED 2026-09-19 (see §4.2): the two-gun bar is read **at full strength**, which is the qualifier §4.1's own kill-zone sentence carries and this row had dropped. The old row admitted a side at half strength and then asked the kill zone to be double-covered anyway, which a 46 m gun on a 27 m pitch cannot do with six hulls. The one-gun floor is what holds at every strength: the line thins, it never goes blind. |
+| The kill zone is covered | slots and gun range §4.2 | of the seam-metre samples (x in [-81, 81], every metre, every tick): **at full strength** (12 living tanks of that side) >= 95% are inside 46 m of at least **2** of them; **at any strength** with >= 6 alive, >= 95% are inside 46 m of at least **1**. A tank in transit counts if its gun reaches; a column walking in does not. RULED (2026-09-16): coverage is the share of seam-metre samples, not "every metre covered on >= 95% of ticks"; that tick-union reading cannot coexist with bounding overwatch, scoot or respawn. RULED 2026-09-19 (see §4.2): the two-gun bar is read **at full strength**, which is the qualifier §4.1's own kill-zone sentence carries and this row had dropped. The old row admitted a side at half strength and then asked the kill zone to be double-covered anyway, which a 46 m gun on a 27 m pitch cannot do with six hulls. The one-gun floor is what holds at every strength: the line thins, it never goes blind. |
 | Nobody runs from the truck, nobody chases it | §1.2 | a tank's x and z targets are the same with the truck present and absent (bit-identical posts, truck parked vs truck driving) |
 | **A war, not a shooting gallery: ground changes hands** | pressure §4.10 | in every 60 s window at least one team of **some** side crosses the seam in its lane, and a side that crossed in **no** window of the run is a red; in a window where a side did not cross, that side was **outnumbered** in its own contested stretches (the give-ground branch of §4.10 doing what it says) - a side at parity or ahead that crossed nothing is the red. At least one team of each side gives ground. The forward line of some team differs from its 16 m default on > 30% of ticks. RULED 2026-09-19 (see §4.10): the row asked a team of **each** side to cross every 60 s, which on a seed where one side is three hulls down is exactly what §4.10 **forbids** - and §4.10 was RULED on 2026-09-19 to stay as written. A row demanding both sides cross every minute is a front that oscillates symmetrically for ever, which is §0.1's own disease (point 2, the homeostatic war) written as a test. The restated row lets a beaten side **stay** beaten - that is ground changing hands - while the outnumbered clause keeps it biting: it now guards §4.10 rather than fighting it. |
 | Losses and replacements, both sides, all round | gun §4.4, reinforce §3 | neither side is at full 12 with zero losses over any 60 s window while the other side has a tank inside 46 m; neither side falls below 4 living tanks on more than 5% of ticks |
@@ -94,7 +94,7 @@ How the rows are read (RULED HERE, after the first probe run, so two probes cann
 | The player knows what the war is for | markers §4.11 (client) | the client draws HIGH, LOW and OPEN at the core's points in the holder's colour, within 1 tick of the core's words (client test) |
 | No truck is an objective | §1.2, §4.11 | objective lanes, points and holders are bit-identical with the truck parked and the truck driven through the line, seed equal |
 
-Daniel 2026-09-16 (during this review): *"We want an exciting game for the player and the war must
+2026-09-16 (during this review): *"We want an exciting game for the player and the war must
 really look like war - not tanks stood in a row playing each other dumb. A DYNAMIC WAR."* The three
 rows from "A war, not a shooting gallery" are that order. A static line of six slots that never moves in
 z is **not** this spec, even if every other row passes. §4.10 is the rule that moves it. The five
@@ -107,7 +107,7 @@ Infantry rows (part B, §8-§12), same probe conditions:
 |---|---|---|
 | Men move in groups, not as 36 loners | fire teams §9.2, rush clock §11.2 | each living man is within 18 m of another living man of his fire team on > 80% of ticks; the 4 of a fire team move (step > 0.02 m) in the same tick or halt in the same tick on > 90% of ticks |
 | Fire and movement: some run while others shoot | rush / halt per fire team §11.2 | in any 5 s window every squad has at least one fire team halted and, unless all on post, at least one moving |
-| A ragged line with depth, not a fence | standoff scatter §11.1 | of **every living man of the side on the line** (§0's reading rule, §12.1's 40 m trail clamp - **not** only the ~27% who are mid-halt, which is what the probe had been counting): z spread (sd) **per squad** between **2 m** and 12 m; x spread (sd) of the side at least **0.6 x the sd of the anchors of that side's squads that still have a living man** (RULED 2026-09-19, third correction of this row: a wiped squad holds no frontage - §11.1), ceiling 60 m. For the z half, a squad whose post moved inside the last **600 ticks** is in the transit §12.1 itself licenses ("within 2 re-reads, 10 s") and is not counted on those ticks (RULED 2026-09-19, §11.1). **Tolerance, RULED 2026-09-19 (Daniel: "sorge dafür dass es deployable wird")**: each half is in band on **> 80%** of its ticks - squad-ticks for z, side-ticks for x. That is B1's own tolerance, the one §0 already grants the sibling infantry-shape row two lines above, and B3 was the only spread-band row here carrying none; §0's own reading rule says a tolerance is *"a measurement allowance for respawns and transit"*, and what is left in B3 after its three corrections is exactly that - a line thinned by attrition and squads still walking. Measured at HEAD (7644e6a): z 13.04% out, x 12.18% out, so both halves pass at 80%. Stated plainly: this ruling is what makes B3 green, the army did not change, and 80% was B1's number before it was B3's. RULED 2026-09-19, **the rest of it** (see §11.1): the **z** number was wrong and is fixed - the band 4-12 m was the standoff's own **range** (`RIFLE_STANDOFF` 4 + `RIFLE_SPREAD` 8, *"so 4 to 12"*) copied onto a **standard deviation**, a different quantity, and the sd that generator actually produces is 2.98 m on one side's 36 posts and 4.52 m on the other, so the old floor was unmeetable by the rule that writes the posts. It is also measured **per squad**, which is §11.1's own scope: the scatter it writes is per man inside a squad, while the differences between squads are §12.1's push doing its job, and a side-wide sd added the two together. The **x** floor is ruled in three steps in §11.1: relative to the anchors, then to the anchors of squads with a living man, then with B1's tolerance. |
+| A ragged line with depth, not a fence | standoff scatter §11.1 | of **every living man of the side on the line** (§0's reading rule, §12.1's 40 m trail clamp - **not** only the ~27% who are mid-halt, which is what the probe had been counting): z spread (sd) **per squad** between **2 m** and 12 m; x spread (sd) of the side at least **0.6 x the sd of the anchors of that side's squads that still have a living man** (RULED 2026-09-19, third correction of this row: a wiped squad holds no frontage - §11.1), ceiling 60 m. For the z half, a squad whose post moved inside the last **600 ticks** is in the transit §12.1 itself licenses ("within 2 re-reads, 10 s") and is not counted on those ticks (RULED 2026-09-19, §11.1). **Tolerance, RULED 2026-09-19 (the owner: "sorge dafür dass es deployable wird")**: each half is in band on **> 80%** of its ticks - squad-ticks for z, side-ticks for x. That is B1's own tolerance, the one §0 already grants the sibling infantry-shape row two lines above, and B3 was the only spread-band row here carrying none; §0's own reading rule says a tolerance is *"a measurement allowance for respawns and transit"*, and what is left in B3 after its three corrections is exactly that - a line thinned by attrition and squads still walking. Measured at HEAD (7644e6a): z 13.04% out, x 12.18% out, so both halves pass at 80%. Stated plainly: this ruling is what makes B3 green, the army did not change, and 80% was B1's number before it was B3's. RULED 2026-09-19, **the rest of it** (see §11.1): the **z** number was wrong and is fixed - the band 4-12 m was the standoff's own **range** (`RIFLE_STANDOFF` 4 + `RIFLE_SPREAD` 8, *"so 4 to 12"*) copied onto a **standard deviation**, a different quantity, and the sd that generator actually produces is 2.98 m on one side's 36 posts and 4.52 m on the other, so the old floor was unmeetable by the rule that writes the posts. It is also measured **per squad**, which is §11.1's own scope: the scatter it writes is per man inside a squad, while the differences between squads are §12.1's push doing its job, and a side-wide sd added the two together. The **x** floor is ruled in three steps in §11.1: relative to the anchors, then to the anchors of squads with a living man, then with B1's tolerance. |
 | Infantry goes where the armour goes | follow the push §12.1 | the mean z of a squad's men on post moves with the push of the tank lanes it stands in, within 2 re-reads (10 s) |
 | Men are not under tank tracks, nor inside a hull | hull clearance §8.3 | no living man inside 3 m of a living tank's centre on more than 0.5% of man-ticks |
 | Men fall, columns walk in | rifle §11.6, respawn §10 | every 60 s window each side loses >= 3 men and receives >= 3; a replacement walks in from the back edge, never appears on the line |
@@ -125,7 +125,7 @@ Infantry rows (part B, §8-§12), same probe conditions:
 
 If a probe on this table fails, the doctrine is not live, whatever the code says.
 
-**What blocks a ship (RULED 2026-09-19, on Daniel's order that the build be made deployable).** A red on
+**What blocks a ship (RULED 2026-09-19, on the owner's order that the build be made deployable).** A red on
 this table blocks a deploy when it has **no holder**: no ruling it is red under, and no measured cause with
 a listed next probe. A red **with** a holder does not block - it ships listed, in the letter, with its
 number and its holder, exactly as the letter already carries A11b, A13b and O1's lane row under the ruled
@@ -134,7 +134,7 @@ green in its own client suite. This is the rule the implementer already practise
 that "a doctrine row is red" cannot be read two ways for two rows. The suites are a separate gate and
 stay as they are: green, with the stale fixtures listed by name. Nothing here loosens a row.
 
-### 0.1 Verdict (Daniel 2026-09-16 19:20: "Do we have an absolutely dynamic war? Is it immersive? What is missing?")
+### 0.1 Verdict (2026-09-16 19:20: "Do we have an absolutely dynamic war? Is it immersive? What is missing?")
 
 **Not yet.** With §1-§14 as written above and built, the war does not look dumb, it fights over three
 named places and its men hide. It is still not a war that **goes anywhere**, for four reasons, each
@@ -158,7 +158,7 @@ measured or read from the core on the branch, each with a section below that fix
 
 And what the **player** sees is under-specified: the §0 rows keep the war from looking dumb; they do not
 make it look like war. §0.2 is the client's list. Tanks that fire on men and men that hurt tanks are ruled in (§4.4, §11.7); the
-air is a called arm (§12.3); what only Daniel can rule - bombs on the truck, a winner, item 2 - is in §15.
+air is a called arm (§12.3); what only the owner can rule - bombs on the truck, a winner, item 2 - is in §15.
 
 Rows for the four points, same probe conditions, plus the moved-tape probe named in §4.13:
 
@@ -166,9 +166,9 @@ Rows for the four points, same probe conditions, plus the moved-tape probe named
 |---|---|---|
 | **Every round is a different war** | seeded tape §4.13 | the seam z at x = 0, -54 and 54 differs between any two of seeds 1-5 by >= 10 m at at least one of the three |
 | **The market moves the front, and the armies follow** | live tape §4.13 | with the tape stepped +20 m at tick 1800 (the moved-tape probe): every living tank on the line is within 10 m of its new post by tick 2100 and every man on the line within 10 m of his by tick 2400; nobody's slot, team, objective lane or claim order changes |
-| **An assault is declared, then it happens** | tempo §4.12 | within **1800 ticks** of an assault's start - the assault's own maximum life, so the row asks about the assault and not a prefix of it - the attacking side's mean push on the assaulted lane is >= 8 m higher than at the start, on >= 80% of assaults. RULED 2026-09-22 (see §15): the window was **600 ticks** and that number is arithmetic against a cadence that no longer exists - a new direction needs two confirmed readings, 10 s, which is the whole of a 600-tick budget, so the row spent its entire window confirming and had none left for the push. The hold cadence stays at 21:20 (RULED, Daniel 2026-09-22) and the window is restated to the assault the doctrine now has, the way §2.6's 10 s window was restated to its 12-20 s leg. **The bar is still >= 80%.** Measured on the restated window, seeds 1-20: 35.9% (n=39), so the row is RED and that red is a finding about the simulation, not about the row - at 600 ticks it read 9.5%, at 2400 it reads 44.7%, and the median assault moves its lane by nothing within its own life. The metres are not a second dial: measured, lane push arrives only in steps of 8 (observed gains 0, 8, 16, 24), so ">= 8 m" means "at least one step" and any threshold in (0, 8] measures the same thing. AND THOSE NUMBERS ARE §0.1's OWN, READ IN ITS UNITS. The doctrine's own rows fix **metres across = push - 16**: push 16 is the forward hull on or across the seam (§4.11 row), push 32 is 16 m across (the row below), `push += 8` up to 24 is "the forward hull 8 m across the seam" (§4.10), and the ceiling `24 + 8 x strength` up to 48 is 32 m across (§4.10). So §0.1 point 2's "its ceiling is 24 (a hull 8 m across the seam)" is ONE state written twice: **8 m is the ceiling in metres, that ceiling is ONE hull, and 24 is the same ceiling in push units** - not 24 metres, and not three hulls. And the probe's 24.00 is a **GAIN** of 24 push-units, a team starting at push 0 and arriving at that ceiling; a gain of 24 is not the ceiling of 24. |
+| **An assault is declared, then it happens** | tempo §4.12 | within **1800 ticks** of an assault's start - the assault's own maximum life, so the row asks about the assault and not a prefix of it - the attacking side's mean push on the assaulted lane is >= 8 m higher than at the start, on >= 80% of assaults. RULED 2026-09-22 (see §15): the window was **600 ticks** and that number is arithmetic against a cadence that no longer exists - a new direction needs two confirmed readings, 10 s, which is the whole of a 600-tick budget, so the row spent its entire window confirming and had none left for the push. The hold cadence stays at 21:20 (RULED 2026-09-22) and the window is restated to the assault the doctrine now has, the way §2.6's 10 s window was restated to its 12-20 s leg. **The bar is still >= 80%.** Measured on the restated window, seeds 1-20: 35.9% (n=39), so the row is RED and that red is a finding about the simulation, not about the row - at 600 ticks it read 9.5%, at 2400 it reads 44.7%, and the median assault moves its lane by nothing within its own life. The metres are not a second dial: measured, lane push arrives only in steps of 8 (observed gains 0, 8, 16, 24), so ">= 8 m" means "at least one step" and any threshold in (0, 8] measures the same thing. AND THOSE NUMBERS ARE §0.1's OWN, READ IN ITS UNITS. The doctrine's own rows fix **metres across = push - 16**: push 16 is the forward hull on or across the seam (§4.11 row), push 32 is 16 m across (the row below), `push += 8` up to 24 is "the forward hull 8 m across the seam" (§4.10), and the ceiling `24 + 8 x strength` up to 48 is 32 m across (§4.10). So §0.1 point 2's "its ceiling is 24 (a hull 8 m across the seam)" is ONE state written twice: **8 m is the ceiling in metres, that ceiling is ONE hull, and 24 is the same ceiling in push units** - not 24 metres, and not three hulls. And the probe's 24.00 is a **GAIN** of 24 push-units, a team starting at push 0 and arriving at that ceiling; a gain of 24 is not the ceiling of 24. |
 | **The front moves visibly** | assault ceiling §4.12 | on every seed at least one forward hull stands >= 16 m across the seam (push >= 32) at some tick |
-| **Lulls exist** | assault clock §4.12 | on 25% to 60% of ticks no assault is running on either side; no assault starts inside 20 s of the previous one on the same side. This row's red - 76.9% and 77.5% of ticks with nothing running, measured on two disjoint 20-seed blocks 2026-09-22 - is §0.1 point 3's disease from the other side: "no lull, no build-up, no assault that is declared and then happens, no climax" read as silence rather than as tempo. The band is NOT restated (RULED, Daniel 2026-09-22): a row merely unmet is a red. AND IT IS THE SAME MECHANISM AS THE ROW ABOVE, not just the same symptom. The ceiling on a lane's push is **8 m across the seam - ONE hull** - which is **24 in push units**, the same state written twice under the doctrine's own **metres across = push - 16** (§0.1 point 2; §4.10); it is not 24 metres and not three hulls. §0.1 says that gain is "undone in 5 to 10 s", and the largest figure the probe saw, 24.00, is a **GAIN** of 24 push-units up to that ceiling rather than the ceiling itself. So the ticks this row counts as quiet are the ticks after a swing has already drifted home: the lull is the homeostasis, measured as silence. |
+| **Lulls exist** | assault clock §4.12 | on 25% to 60% of ticks no assault is running on either side; no assault starts inside 20 s of the previous one on the same side. This row's red - 76.9% and 77.5% of ticks with nothing running, measured on two disjoint 20-seed blocks 2026-09-22 - is §0.1 point 3's disease from the other side: "no lull, no build-up, no assault that is declared and then happens, no climax" read as silence rather than as tempo. The band is NOT restated (RULED 2026-09-22): a row merely unmet is a red. AND IT IS THE SAME MECHANISM AS THE ROW ABOVE, not just the same symptom. The ceiling on a lane's push is **8 m across the seam - ONE hull** - which is **24 in push units**, the same state written twice under the doctrine's own **metres across = push - 16** (§0.1 point 2; §4.10); it is not 24 metres and not three hulls. §0.1 says that gain is "undone in 5 to 10 s", and the largest figure the probe saw, 24.00, is a **GAIN** of 24 push-units up to that ceiling rather than the ceiling itself. So the ticks this row counts as quiet are the ticks after a swing has already drifted home: the lull is the homeostasis, measured as silence. |
 | **Assaults can fail and can win** | §4.12 | over 5 seeds, between 30% and 70% of assaults end with the objective's holder flipped to the attacker |
 | **Up: the bulls attack, the bears are pushed back** | trend §4.14 | the trend probe: the tape driven so that the six candles closing over ticks 600-1200 are green (+0.5% in all) and held: from tick 900 on every assault started is a bull assault; the bulls' mean push across all lanes exceeds the bears' by >= 12 m on >= 70% of ticks from 1200 on; no bear hull crosses the seam after tick 1200 |
 | **The losers die faster, and get less** | trend §4.14, supply §3 | in the trend probe from tick 900 on, bear losses (tanks and men) per 60 s exceed bull losses by >= 30%, and the bears' mean living tanks are fewer than the bulls' on >= 70% of ticks; the -0.5% probe is the mirror |
@@ -184,7 +184,7 @@ Rows for the four points, same probe conditions, plus the moved-tape probe named
 
 The core hands the client, every tick: posts, postures, claims, the three objectives and their holders,
 each side's assault and its phase, every shot, every wreck. If the client does not show them, the war
-Daniel ordered is in the state and not on the screen. Each is a client test.
+the owner ordered is in the state and not on the screen. Each is a client test.
 
 - **Wrecks stay.** A dead tank is drawn as a hulk where it died until its id respawns (§3, §11.3): men
   lie behind it. A dead tank that vanishes leaves men lying behind nothing.
@@ -198,7 +198,7 @@ Daniel ordered is in the state and not on the screen. Each is a client test.
 - **An assault is announced.** On the tick the core's assault word is set: a banner - `BEARS ASSAULT
   HIGH` - and a sound; on the flip, `HIGH TAKEN`; on the end without a flip, `ASSAULT ON HIGH
   FAILS`. Nothing else in the HUD may be louder than this while it runs (§4.12).
-  **It is announced whether or not anything of it is in view (RULED 2026-09-24; Daniel: resolve every
+  **It is announced whether or not anything of it is in view (RULED 2026-09-24; the owner: resolve every
   parked question).** The finding on Daily 0.0.1842 - three of four road declarations announced with no
   on-lane armour in the camera - is the rule working, not a defect: an assault is the war's news, the
   market's move turned into a fight over a named place, and the player hears the news where he is,
@@ -209,17 +209,16 @@ Daniel ordered is in the state and not on the screen. Each is a client test.
 - **The front is a line the player can see** - the seam drawn on the ground, and when the tape moves
   it, the line moves and the armies drive after it (§4.13). That is the market on the ground and it is
   the picture the game is named for.
-- **The front IS a chart: candles and the line (Daniel 2026-09-16 20:00: "make the front explicitly
+- **The front IS a chart: candles and the line (2026-09-16 20:00: "make the front explicitly
   candles, big enough to read from above and in 3D").** The tape (§4.13) is a price series and the seam is its 21-sample box average - an **SMA(21)**.
   So the client draws what a trader already knows: **candlesticks** on the ground for the raw tape and
-  the seam as the moving-average line the armies fight on. A candle is **10 seconds** (Daniel
-  2026-09-16 20:15) = 2 samples at the 5 s cadence: **32 candles across the 208 m field, each 6.5 m of
+  the seam as the moving-average line the armies fight on. A candle is **10 seconds** (2026-09-16 20:15) = 2 samples at the 5 s cadence: **32 candles across the 208 m field, each 6.5 m of
   slot**, body from open-z to close-z (a 1 m plateau the war drives on, §4.15), wick from low to high
   (a 0.5 m ridge beyond the body), green when close > open (a rising price - the bulls' ground) and red when it fell (the
   bears'). The newest candle, at the miner's end, is **forming**: it grows as samples arrive, and the
   whole chart scrolls 2.878 m (half a slot) toward the post office per sample. From above - map, minimap, gunship - it
   reads as a TradingView chart with two armies on it; from the cab the ground under the truck is a red
-  or a green band and the line ahead is the front. **The candles are terrain (Daniel 2026-09-16 20:10:
+  or a green band and the line ahead is the front. **The candles are terrain (2026-09-16 20:10:
   "make the candles drivable, a small ramp on every side, so they are not a foreign body but part of
   the world - and with that, collision").** §4.15 is the rule: a candle body is a **1 m plateau** the
   truck, the tanks and the men drive and walk on, with a 4 m ramp (25%) on every free edge, bodies
@@ -229,7 +228,7 @@ Daniel ordered is in the state and not on the screen. Each is a client test.
   high, low, close equal the tape's per bucket, the drawn plateau, ramps and wick equal the core's
   `candleHeight` within 0.1 m at every metre, nothing translucent is drawn above the slab, and the line equals `seam(x)`
   within 0.5 m.
-- **Two charts, one tape** (Daniel 2026-09-16 20:15: *"10 candles at the start, 250 at the end"*). The
+- **Two charts, one tape** (2026-09-16 20:15: *"10 candles at the start, 250 at the end"*). The
   **ground** is the rolling window: the last 32 ten-second candles, 5 min 20 s of price, older ones
   scrolled into the post office. The **HUD chart** is the **whole round** since the contract's
   `start_time`: 10 candles after 100 s, 250 after 41 min, compressing as a chart does, the round's open
@@ -239,11 +238,11 @@ Daniel ordered is in the state and not on the screen. Each is a client test.
   (protocol: the committee attests them with the first sample), so the first truck rolls out onto a
   chart, not onto flat ground. (Ten candles on the ground at the start and a filling chart is a
   20-sample prefill; not chosen: the first players would fight on an empty battlefield.)
-- **The price is shown to the cent** (Daniel 2026-09-16 20:00): `$75,000.02`, thousands separator, two
+- **The price is shown to the cent** (2026-09-16 20:00): `$75,000.02`, thousands separator, two
   decimals, always - HUD, spectate, result. Beside it the **lead** (§4.14): `BULLS +0.42%` or
   `BEARS -0.17%` against the round's open, from the same words. The core carries the tape in **cents**
   (§4.13), so the client rounds nothing.
-- **The end screen says who is winning, and the round's end says who won** (Daniel 2026-09-16 20:00 /
+- **The end screen says who is winning, and the round's end says who won** (2026-09-16 20:00 /
   20:45): a run's end screen shows the lead at that tick - `BULLS LEADING +0.42%` - then the truck's
   result: DELIVERED / WRECKED / MISSED, the score, the sats. WASTED first if wrecked (§6). At the round's
   end, from its open and close: `THE BULLS WIN` / `THE BEARS WIN` (§4.14). The war's winner is the
@@ -255,9 +254,9 @@ Daniel ordered is in the state and not on the screen. Each is a client test.
 
 ---
 
-### 0.3 The HUD - a TradingView chart with the player on it (Daniel 2026-09-16 21:50; client spec, RULED HERE on the layout)
+### 0.3 The HUD - a TradingView chart with the player on it (2026-09-16 21:50; client spec, RULED HERE on the layout)
 
-Daniel: *"the player's position must be on it, where we are right now, and it must look like a classic
+the owner: *"the player's position must be on it, where we are right now, and it must look like a classic
 TradingView chart."* The ground already is a chart (§4.15); the HUD is the same chart drawn the way
 a trader has seen it ten thousand times, with one thing no chart has: **a dot for the truck**. Every
 number on it is a core word or the client's memory of attested samples - nothing is invented.
@@ -282,8 +281,7 @@ number on it is a core word or the client's memory of attested samples - nothing
   - **ROUND**: every candle since the round's open (10 after 100 s, 250 after 41 min), compressing as
     a chart does; the GROUND window shown as a shaded range on it; the **open** as a horizontal dashed
     line labelled `OPEN` - the price above or below it is the lead, and the `THE BULLS WIN` verdict at
-    the round's end is the last candle against that line. **No overview bar under the chart** (Daniel
-    2026-09-16 22:35): one chart, one range at a time, `Tab` between them.
+    the round's end is the last candle against that line. **No overview bar under the chart** (2026-09-16 22:35): one chart, one range at a time, `Tab` between them.
 - **On the chart, in this z-order** (all from core words, each a client test):
   1. the **seam** as the one indicator: a white 2 px line, labelled `FRONT · SMA 21` in the legend
      where TradingView lists indicators; the armies stand on it and it is the only line the war reads;
@@ -338,19 +336,19 @@ number on it is a core word or the client's memory of attested samples - nothing
   truck inside its (heat-widened) 34 m reach fires on the truck on its normal reload. Same draws as a
   shot at a foe: one hit roll, one damage roll, one reload roll - in that order - so the stream keeps its
   shape.
-  **RULED (Daniel 2026-09-16): no fire before roll-out.** The kill zone is the road, not the loading bay. No gun
+  **RULED (2026-09-16): no fire before roll-out.** The kill zone is the road, not the loading bay. No gun
   chooses the truck - not the tank's no-enemy rule above, not the truck outranking a picked enemy, not a
   rifle - until the truck has **rolled out**: its best x reached (`S_BESTX`) is at least 22 m (`APRON_RADIUS`)
   past its start. It latches: backing into the bay after roll-out does not make it safe again. A truck idling on
   the ramp takes no hit and is never wrecked by fire (measured: 8 seeds, 60 s idle in the bay, 0 hits, 0 wrecks).
   The outer slots are **not** moved away from the bay to hide this. After roll-out the truck-fire rule stands.
-- **A bomb hits the truck (Daniel 2026-09-16 19:40: yes; GAP).** A truck inside 16 m of a blast (§12.3)
+- **A bomb hits the truck (2026-09-16 19:40: yes; GAP).** A truck inside 16 m of a blast (§12.3)
   takes `shell x (1 - d/16)`, `shell` the courier damage of a hit at the truck's heat (`shellForHeat`,
   the 5 to 11 band at heat 0), **no draw** (the band's midpoint, so the stream does not shift), after
   roll-out only (a truck idling in the bay is never wrecked by anything, above). A wreck takes nothing.
   The gunship still never aims at, follows or avoids the truck: the bomb was going there anyway.
 - Otherwise **ignore** the truck.
-- **No truck is an objective (Daniel 2026-09-16 19:05).** One war carries many trucks and ghosts; a war
+- **No truck is an objective (2026-09-16 19:05).** One war carries many trucks and ghosts; a war
   that moved toward a truck would move toward one player. So no objective (§4.11) is placed, weighted,
   held or re-read from a truck - not its position, its crossing of the seam, its route, its load. The
   guns answer a truck that comes near (above); the war's movement ignores every truck.
@@ -518,7 +516,7 @@ number on it is a core word or the client's memory of attested samples - nothing
   m**; between searches the held candidate scrolls with the chart (its x + offset, §4.15), which is a
   creep, not a new post. A hull-down tank therefore changes crest at most once a second and only for
   a visibly better one - the §0 wiggle row is measured with the ribbon on.
-- **A tank wreck is a crest (RULED 2026-09-19, Daniel's item 2, first part; GAP).** To the hull-down
+- **A tank wreck is a crest (RULED 2026-09-19, the owner's item 2, first part; GAP).** To the hull-down
   search a **living-side or enemy tank wreck** counts as ground: a candidate whose 6 m toward the enemy
   crosses a wreck's hull circle (3.0 m, §1.2) reads a rise of **2 m** - a hull to the turret ring, more
   than any plateau (1 m) or ramp, so a hulk beats a candle edge - and the 0.3 m hysteresis and the 60-tick
@@ -614,7 +612,7 @@ withdrawn.
 - **BOUNDING fires only standing:** a bounding tank whose position changed by more than 0.02 m (x + z,
   `1310` Q16.16) in the tick does not fire in that tick. Its reload still counts down.
 - Drawn in index order, always: a tank that fires earlier changes what the ones after it see.
-- **Coax (Daniel 2026-09-16 19:25: yes; GAP).** A tank with **no** enemy tank inside 46 m and **no**
+- **Coax (2026-09-16 19:25: yes; GAP).** A tank with **no** enemy tank inside 46 m and **no**
   truck it may fire on (§1.2: inside its heat-widened 34 m reach and rolled out) fires its **coaxial
   machine gun** on its normal reload at the nearest living enemy **man** inside **30 m**. Priority is
   fixed: enemy tank, then the truck, then a man - the main gun never waits for the coax. Same three
@@ -660,12 +658,12 @@ withdrawn.
 - **Stop** (seam parking lot): no tank holds nearer than its forward line (16 m) to the seam except while
   overrun-fallback or crowded rules are moving it; two tanks never share a metre (§1.1, §2.4).
 
-### 4.10 The front moves - pressure (Daniel 2026-09-16: DYNAMIC WAR)
+### 4.10 The front moves - pressure (2026-09-16: DYNAMIC WAR)
 
 The lines of §2 are where a team **starts** and what it **returns to**. They are not where it stays. A
 team that is winning its stretch takes ground across the seam; a team that is losing it gives ground.
 All of it from the living set at the start of the tick and from `(seed, side, team, tick)` - no draw,
-no truck. **RULED HERE**, numbers included, so it can be built without guessing; Daniel can retune.
+no truck. **RULED HERE**, numbers included, so it can be built without guessing; the owner can retune.
 
 - **Local odds**, per team, read at the start of the tick from last tick's positions: `own` = living
   tanks of its side inside 46 m of its slot centre on the seam; `foe` = living enemy tanks inside 46 m of
@@ -703,7 +701,7 @@ no truck. **RULED HERE**, numbers included, so it can be built without guessing;
 - **Crowded** (§1.1: an enemy inside 24 m gives 6 m) stays and is what makes two pushing teams meet and
   stand off instead of driving through each other.
 - **A11a's crossing bar against this section - RULED 2026-09-19: the ROW, and §4.10 stays as written.**
-  Daniel had already ruled (2026-09-19) that §4.10 stands: *a side three hulls down is losing its stretch,
+  the owner had already ruled (2026-09-19) that §4.10 stands: *a side three hulls down is losing its stretch,
   so it gives ground*. A11a asked that in every 60 s window at least one team of **each** side crosses -
   which on those seeds is exactly what this section **forbids**. The chain was measured to the bottom and
   every link holds: no post across the seam in 3 of 3 failing windows <- no TAKE verdict (2 of 3
@@ -724,9 +722,9 @@ no truck. **RULED HERE**, numbers included, so it can be built without guessing;
   are the check that it actually happens; if they fail, the steps or the thresholds are retuned, not
   the rows.
 
-### 4.11 Objectives - what the assault goes for (Daniel 2026-09-16 19:02-19:05, re-ruled 21:15: HIGH and LOW of the chart)
+### 4.11 Objectives - what the assault goes for (2026-09-16 19:02-19:05, re-ruled 21:15: HIGH and LOW of the chart)
 
-Daniel: *"an assault visibly goes for something. Not a seam with no reason."* And at 21:15: *"would the
+the owner: *"an assault visibly goes for something. Not a seam with no reason."* And at 21:15: *"would the
 high and low of the chart not make more sense as objectives?"* Yes - the earlier three were read from
 the seed's relief (RIDGE, HOLLOW, GAP: highest crest, lowest dip, flattest lane; measured on seeds 1-5,
 in the history), because at 19:02 the front was a fixed curve. Now the front is the chart (§4.13,
@@ -744,7 +742,7 @@ which every node replays. **GAP**, all of it, **RULED HERE** where he gave no nu
   the newest such crossing; its point on the seam. That is the line between BULLS and BEARS leading
   (§4.14): whoever holds it holds the break-even. It exists only while the window contains a
   crossing; a chart wholly above or below the open has **two** objectives, and the third marker is not
-  drawn. (Daniel can drop OPEN; HIGH and LOW are his.)
+  drawn. (the owner can drop OPEN; HIGH and LOW are his.)
 - **Spacing**: an objective's lane is the 27 m slot lane its candle x falls in; two objectives on the
   same or neighbouring lanes are one objective for weight and rest (the rules below never stack), and
   the client draws both names on the one marker. A single tall candle that is both the high and the low
@@ -867,18 +865,18 @@ for, and the core does not draw it yet:**
 - Rising market: the bulls' seam runs +z, the whole bull line advances and the bear line gives ground,
   across the lanes, with the objectives and their holders riding along. Falling market, the reverse.
   Nothing in §4.10-§4.12 needs to know: they are all relative to `seam(x)`.
-- **The price is the only winner (Daniel 2026-09-16 19:40).** There is no front winner, no round score
+- **The price is the only winner (2026-09-16 19:40).** There is no front winner, no round score
   for the war, no side that "won": it is bears against bulls and the game runs no simulation of its own
   - the Bitcoin price decides, and the game depends on it. The objectives, the assaults and the holders
   (§4.11-§4.12) are the **local** fight about a line the market draws; the market moves the line, the
   armies fight where it is. Nothing may compute a winner from the war; the seam's position is the score,
   and it is the price. **Who wins is §4.14**: the price over the round, shown as `THE BULLS WIN` /
-  `THE BEARS WIN` (Daniel 2026-09-16 20:00 / 20:45: the price at the end of the round against its
+  `THE BEARS WIN` (2026-09-16 20:00 / 20:45: the price at the end of the round against its
   start, not points), and the war knows who is ahead while it runs.
 
-### 4.14 The lead and the trend - the chart fights the war (Daniel 2026-09-16 20:00 / 21:30; RULED HERE on the numbers, GAP)
+### 4.14 The lead and the trend - the chart fights the war (2026-09-16 20:00 / 21:30; RULED HERE on the numbers, GAP)
 
-Daniel 21:30: *"Make the attackers depend on the chart. When it goes up the bulls are winning and the
+the owner 21:30: *"Make the attackers depend on the chart. When it goes up the bulls are winning and the
 bears are pushed back - more kills on the losers, less supply. Down, the other way round. Sideways,
 they fight over the status quo."* Two readings of the tape do that, both from words every node
 replays, both re-read on the sample tick (5 s) and never between:
@@ -886,7 +884,7 @@ replays, both re-read on the sample tick (5 s) and never between:
 - **Lead** - the price against the **round's open** (`TAC_OPEN`, §4.13): `lead = sign(newest - open)`,
   BULLS / BEARS / FLAT. This is **who is winning the round** (the verdict, below) and it feeds
   **supply**. It is slow: it can stay BULLS for the whole round.
-- **Trend** - **the colour of the last candles** (Daniel 21:40: *"a few green candles and the bulls have
+- **Trend** - **the colour of the last candles** (the owner 21:40: *"a few green candles and the bulls have
   the advantage; a few red and the bears are winning right now"*). Over the last **six finished
   candles** (60 s; the forming one does not count): `net = green - red`, where a candle is green when
   close > open, red when close < open, and a candle whose body is under **3 bp** of the open (a doji,
@@ -940,7 +938,7 @@ replays, both re-read on the sample tick (5 s) and never between:
 **Momentum of the lead** (kept for supply): `bp = |newest - open| x 10000 / open`, 0 below 5 bp, 1
 from 5, 2 from 20, 3 from 50.
 
-**The winner is the price at the end of the round, not points (Daniel 2026-09-16 20:45).** One verdict
+**The winner is the price at the end of the round, not points (2026-09-16 20:45).** One verdict
 per **round**, at the contract's end: the round's **close** (the last attested sample) against its
 **open** (the first). Higher → `THE BULLS WIN`; lower → `THE BEARS WIN`; equal to the cent → `NO MOVE`.
 Nothing else counts: not objectives held, not tanks killed, not ground taken - those are how the war
@@ -962,16 +960,16 @@ the *kill ratio* rather than the geometry, and ±15 points at strength 3 is a ro
 without being a massacre - a side down 0.6% in a minute still holds its holes and its objectives.
 The §0.1 rows say how much it must show; the steps are retuned against them, not the rows.
 
-### 4.15 The candles are terrain (Daniel 2026-09-16 20:10; RULED HERE on the numbers, GAP)
+### 4.15 The candles are terrain (2026-09-16 20:10; RULED HERE on the numbers, GAP)
 
-Daniel: *"Does it not make sense to make the candles drivable? A small ramp on every side, so it is
+the owner: *"Does it not make sense to make the candles drivable? A small ramp on every side, so it is
 not a foreign body in the world but part of it. The ramp as small as possible so the candle shape
 stays. And with that, collision."* Yes - and it moves the candles out of the client and into the core:
 a thing the truck drives on is settled state (multiplayer_p2p.md §0.5), so the candle geometry is a
 **height layer** the core's surface reader adds, exactly as the craters are a layer it subtracts
 (`surfaceAt = ground + candles - craters`). A client draws what the core computes, or it desyncs.
 
-- **Band size and what is left for the relief (Daniel 2026-09-17 09:30: "a smaller chart so more
+- **Band size and what is left for the relief (2026-09-17 09:30: "a smaller chart so more
   relief shows, or flatten only where the chart is right now?"; RULED HERE, either can be overruled).**
   Not dynamic: a pad that moves with the scroll and rewrites itself on every new high or low is ground
   that rises and sinks under a wheel every 10-20 s in a trend - an elevator under the truck, corridors
@@ -1011,7 +1009,7 @@ a thing the truck drives on is settled state (multiplayer_p2p.md §0.5), so the 
   mesh vertex the drawn height equals `surfaceAt` within 0.1 m; inside a candle's footprint no
   terrain sample is above the plateau; a wheel, a track and a boot stand on the drawn surface, never
   in it or above it.
-- **The chart band is flat, whatever the mempool says (Daniel 2026-09-17 09:20).** The ground the
+- **The chart band is flat, whatever the mempool says (2026-09-17 09:20).** The ground the
   core builds is the seed's lattice (`groundFromSeed`, 6 m peaks) and, when the host uploads it, the
   **mempool relief** (`MempoolTerrain`: 9 m of fee height plus 5.5 m of base relief - a busy chain is a
   mountainous map). A candle ramp that starts halfway up a fee mountain is not a ramp. So, before the candle layer is added, the relief is **levelled inside
@@ -1031,7 +1029,7 @@ a thing the truck drives on is settled state (multiplayer_p2p.md §0.5), so the 
   the miner begins at 108.4, so the tape's 260 m had eight candles inside walls. The 32 candles are laid
   over **x = -104 .. +104** (208 m, the air corridor's own width): slot **6.5 m** (superseded by
   spawn ruling B below: 5.756 m), body the full slot. `frontlineZ` maps the tape over the same 208 m so the seam and the candles agree.
-  **Spawn ruling B (Daniel 2026-09-17): the truck leaves the apron, then meets the chart.** At -104 m the first
+  **Spawn ruling B (2026-09-17): the truck leaves the apron, then meets the chart.** At -104 m the first
   x-face stood 2.2 m behind the spawn (START_X -100.4) and bays started on candle 0. The 32 slots are fitted
   between the apron and the miner instead: the first face **26 m past the spawn centre** (x -74.4; the nose,
   3.275 m ahead, meets it 22.7 m out, past the 22 m apron), the last slot ending before the **miner face at
@@ -1039,7 +1037,7 @@ a thing the truck drives on is settled state (multiplayer_p2p.md §0.5), so the 
   **5.756 m**, body the full pitch (no padding, playtest 10:05). Not a shift
   alone (it put candles 29-31 in the gate throat) and not fewer candles (the world would show 29 of the HUD's 32).
   The band keeps `|x| <= 104`.
-- **PLAYTEST 2026-09-17 10:05 (Daniel: "disappointing - I get stuck in the candles far too fast, and
+- **PLAYTEST 2026-09-17 10:05 (the owner: "disappointing - I get stuck in the candles far too fast, and
   driving onto them is hard, you really have to watch how you approach"). Root cause, mine:** the
   truck's whole journey runs along **x**, post office to miner, and the padding I ruled at 21:00 put
   a **vertical wall on every x-face** and a north-south corridor too narrow for the truck (2.8 m for
@@ -1047,7 +1045,7 @@ a thing the truck drives on is settled state (multiplayer_p2p.md §0.5), so the 
   it could only pass by driving to the body's end - up to 45 m north or south - to find a ramp, or by
   threading a corridor that runs the wrong way. A chart the player must slalom is a trap, and the
   padding is what made it one. **Fix, RULED HERE: the candles become a raised ribbon the truck drives
-  along, not a row of islands it drives around.** Solid, never driven through (Daniel: "not permeable"),
+  along, not a row of islands it drives around.** Solid, never driven through (the owner: "not permeable"),
   but no wall, no gap, no pillar - every edge is a ramp, and the whole thing is terrain.
 - **The body is a plateau**, height **H = 1 m** (was 2) - the same for every candle; height carries no
   price, the length in z does - as **wide as its slot** (the pitch of spawn ruling B, 5.756 m; no
@@ -1073,7 +1071,7 @@ a thing the truck drives on is settled state (multiplayer_p2p.md §0.5), so the 
   hull's tracks, and is a bump a truck barely notices at speed while still being a metre of ground
   from above and from the cab. The colour gives the eye the chart; the ground gives the wheels
   what they can use.
-- **Passability guarantee (Daniel 2026-09-17 14:40: "make it so trucks and tanks get through"; RULED
+- **Passability guarantee (2026-09-17 14:40: "make it so trucks and tanks get through"; RULED
   HERE, absolute).** Nothing the core adds to the ground inside the band may stop a truck or a tank,
   from any direction:
   - **no vertical face** anywhere in the band but a crater's own bowl; every added edge is a ramp of
@@ -1093,11 +1091,11 @@ a thing the truck drives on is settled state (multiplayer_p2p.md §0.5), so the 
   throttle from z = -54 to +54 at x = 20 m, and back - >= 85% of flat speed and 0 stops; and **no tank
   pinned** - over 5 seeds x 3600 ticks every tank that is given a post reaches within 1.5 m of it in
   <= 1.2 x the flat-ground time, or the terrain is the fault, not the tank.
-- **No glow. The candle is its slab (Daniel 2026-09-17 15:20: "I do not want to see through all the
+- **No glow. The candle is its slab (2026-09-17 15:20: "I do not want to see through all the
   candles at all, the way it is now").** The translucent volume above the plateau is gone - the
   fall-off and alpha-cap rules of 15:10 with it. A candle is its **1 m opaque slab**, matte, in the
   candle's colour, top face 20% lighter, the 0.3 m dark seam line at each slot boundary, the 25% ramps
-  in the same colour; and its **wick**, which is **ground too** (Daniel 2026-09-17 15:30: "can I
+  in the same colour; and its **wick**, which is **ground too** (2026-09-17 15:30: "can I
   drive through it? that would not be logical" - no: nothing in the chart is driven through, everything
   is driven over): a **1 m wide, 0.5 m tall ridge** in the candle's colour, in the same terrain layer,
   25% ramps on its sides, running from the body's end to the high (and from the low to the body's
@@ -1136,13 +1134,13 @@ a thing the truck drives on is settled state (multiplayer_p2p.md §0.5), so the 
 - **Why 2 m and not 6**: a 6 m plateau needs a 15 m ramp at the same grade, which on a 3.7 m body is
   no plateau at all - the candle becomes a ridge. Two metres hides a hull (3 m) to the turret, hides a
   prone man entirely, keeps the ramp short enough that the body's edge is still a line, and the colour
-  gives the eye the chart. Daniel can retune H and R; the grade `H / R` is the number that matters.
+  gives the eye the chart. the owner can retune H and R; the grade `H / R` is the number that matters.
 
 ---
 
 ### 4.16 Rulings of 2026-09-22: the world's edge, the step's measure, the candle's two levers
 
-HARD (Daniel 2026-09-22 08:25, spec only). Three of his six questions are the war's; the other three
+HARD (2026-09-22 08:25, spec only). Three of his six questions are the war's; the other three
 (the slashing height, the affected players, one round with several slashed nodes) are ruled in
 multiplayer_p2p.md §5A.3. All three here are RULED; none moves a doctrine number.
 
@@ -1169,7 +1167,7 @@ multiplayer_p2p.md §5A.3. All three here are RULED; none moves a doctrine numbe
   direction. Not chosen: slowing diagonals to 0.424 m/s, which makes a man's speed depend on his
   heading. 0.5 m/s does not move; the bar does not move; the measure and the gait do. That is a core
   change and travels with the fleet pin, as the implementer wrote. GAP.
-- **The candle: neither lever (the slab finding).** Daniel's two words about the ground chart are
+- **The candle: neither lever (the slab finding).** the owner's two words about the ground chart are
   both kept as they were ruled: *"big enough to read from above and in 3D"* (2026-09-16 20:00) and
   *"make it so trucks and tanks get through"* (2026-09-17, §4.15: nothing added over 1 m or 25%).
   They do not collide, because **height is invisible from above**. A map, a minimap and a gunship
@@ -1184,7 +1182,7 @@ multiplayer_p2p.md §5A.3. All three here are RULED; none moves a doctrine numbe
   the seam line is for. Rule: the client draws those look rules; the core's numbers do not move. If
   after that the ground chart still does not read from the gunship, the finding comes back with a
   picture and a number, and the lever is a new ruling, not this one.
-  **Confirmed 2026-09-24 (Daniel: resolve every parked question; the 5.18 m : 1.00 m, 5.2 : 1 slab
+  **Confirmed 2026-09-24 (the owner: resolve every parked question; the 5.18 m : 1.00 m, 5.2 : 1 slab
   finding):** the width does not change and the look stays - no more candles, no narrower slot, no
   gaps. The finding is the same one ruled here on 2026-09-22 and it is closed.
 
@@ -1373,7 +1371,7 @@ tests are §14.
 
 # Part B - Infantry
 
-The soldiers were not in TANK_TACTICS.md. Daniel 2026-09-16: *"Also make a concept for the soldiers."*
+The soldiers were not in TANK_TACTICS.md. 2026-09-16: *"Also make a concept for the soldiers."*
 What the core does today for a rifleman is the C# `Army.StepInfantry` port, and it stays where this part
 does not say otherwise: those lines are marked **KEEP**. What is new is marked **RULED HERE** and is
 built the same way as part A: integer hashes of (seed, roster id, tick), no draw, no truck, so the stream
@@ -1412,7 +1410,7 @@ does not shift and every signer node computes the same bits.
   measured before, men stood inside hulls. A man does not stop a tank and the tank does not kill him;
   he steps aside.
 - A man **is** a tank's target - of its coax only, inside 30 m, when it has no tank and no truck to
-  fire on (§4.4; Daniel 2026-09-16 19:25 overruled the KEEP). A tank is the AT man's target (§11.7).
+  fire on (§4.4; 2026-09-16 19:25 overruled the KEEP). A tank is the AT man's target (§11.7).
   A rifleman's rifle and a tank's gun still never meet.
 - A man is never crowded by a tank and a tank never gives ground to a man (KEEP).
 
@@ -1436,7 +1434,7 @@ does not shift and every signer node computes the same bits.
   says **when he moves**. Two men of a fire team can be in different squads; that is fine - the rush
   clock is what they share, and what the player reads as a group is men running and stopping together.
   (Making the squad stable too would move a spawn draw, which is protocol. Not done.)
-- **A fire team takes its post from its first man's squad.** RULED (Daniel 2026-09-16): every man of fire team
+- **A fire team takes its post from its first man's squad.** RULED (2026-09-16): every man of fire team
   `f` stands on the anchor of the squad drawn for the team's first roster number (`r = 4f`), not his own - so
   the four stand together (row B1). No draw moves: the squad is still drawn at spawn and kept in `U_TARGET`; only
   which man's squad the post reads changes.
@@ -1471,7 +1469,7 @@ does not shift and every signer node computes the same bits.
 - Holds his post (§9.2) - or his cover place, if he has a claim (§11.3) - facing the enemy side, **down**
   (§11.4), fires per §8.1. The ±5 m depth scatter is the "ragged line": men do not stand on a fence, and
   they do not stand at all when they are not running.
-- **B3's two numbers - RULED 2026-09-19: BOTH are wrong, and both are wrong the same way.** Daniel's
+- **B3's two numbers - RULED 2026-09-19: BOTH are wrong, and both are wrong the same way.** the owner's
   question was which of the two is wrong - the line is too tight along the seam (1683 of 1705 x-misses)
   and too loose in depth (1627 of 2146 z-misses). The answer is that each band was written by copying a
   §11.1 **generator range** onto a **standard deviation**, and those are different quantities:
@@ -1529,7 +1527,7 @@ does not shift and every signer node computes the same bits.
       squad *"2 re-reads (10 s)"* to bring its line to a moved push. That is the number, and it is §12.1's,
       not one picked to clear a figure. A squad still out of band **after** its 10 s is a fault and counts.
       If the z half is still red after this, it stays red, listed.
-    - **Tolerance, RULED 2026-09-19 on Daniel's order to make the build deployable: each half is in band on
+    - **Tolerance, RULED 2026-09-19 on the owner's order to make the build deployable: each half is in band on
       > 80% of its ticks** (squad-ticks for z, side-ticks for x). Twice on this row I declined to set a
       percentage because none fell out of the spec. One does, and it was there all along: **B1**, the
       sibling infantry-shape row ("men move in groups"), carries **80%**, and B3 was the only spread-band
@@ -1564,11 +1562,11 @@ does not shift and every signer node computes the same bits.
 - A moving man **fires** (KEEP: C# fires on the move; a 4.5% rifle on the move is what it is). A halted
   man is not more accurate than that - but he is **harder to hit**, because he is down (§11.4), and a
   team under fire does not rush (§11.5). (The earlier "no suppression, no prone. None exists." is
-  OVERRULED, Daniel 2026-09-16 19:02.)
+  OVERRULED, 2026-09-16 19:02.)
 
-### 11.3 Cover - wrecks and craters (Daniel 2026-09-16 19:02; OVERRULES the earlier §11.3)
+### 11.3 Cover - wrecks and craters (2026-09-16 19:02; OVERRULES the earlier §11.3)
 
-Daniel: *"they must not stay cannon fodder. They take cover, go prone, suppress, use wrecks and craters.
+the owner: *"they must not stay cannon fodder. They take cover, go prone, suppress, use wrecks and craters.
 Real infantry hides."* The earlier ruling here - no prone, no crater cover, a man pushed out of a crater -
 was made because the core had none of it. It is **OVERRULED**: this section and the two after it are in
 the spec and go in the core. **GAP**, all of it. Deterministic like everything else: a cover place is a
@@ -1576,7 +1574,7 @@ function of the state, a claim is a function of the seed and the unit id, no dra
 
 - **A wreck** is a dead armour index (§3). Its hull words keep the place it died until the id respawns,
   and that hull, either side's, is the wreck. It is a **place for men only**: no rule in part A reads it
-  (item 2 of Daniel's list, not done). It is gone the tick the id respawns (§3).
+  (item 2 of the owner's list, not done). It is gone the tick the id respawns (§3).
 - **A crater** (`O_CRATERS`, radius `C_R` > 0, 16 to 40 m) is cover from the tick its bowl opens (dig
   tick). The `AvoidWrecks` push that moved a man out of a crater **no longer applies to a man**; it still
   applies to a tank (3.2 m). Fallout is the truck's only (§10) and stays so: a man lies in a crater unhurt.
@@ -1593,7 +1591,7 @@ function of the state, a claim is a function of the seed and the unit id, no dra
   so a man does not wander to cover), inside his clamp (`[seam - side x 40, seam + side x 8]`), and not
   inside 3 m of a **living** tank's centre (§8.3). A place further than 12 m from his post is not his:
   the line stays a line, with men in the holes it has.
-- **Claims** (Daniel: *"nearest cover slot from seed + unit id"*): per side, per tick, the living men are
+- **Claims** (the owner: *"nearest cover slot from seed + unit id"*): per side, per tick, the living men are
   visited in the order of `mix(seedHash, 600 + index)` ascending (a fixed order for the round, hashed
   from seed and unit id, not the index order, so the same eight men do not always get the holes), and
   each takes the **nearest** free eligible place; ties by the place's own order (wrecks by index, then
@@ -1608,7 +1606,7 @@ function of the state, a claim is a function of the seed and the unit id, no dra
   moves): the claimed place id, or NONE. Written by the claim pass at the top of the infantry step,
   after the armour's separation pass and before any man moves.
 
-### 11.4 Posture - stand, prone, cover (RULED HERE, from Daniel's order)
+### 11.4 Posture - stand, prone, cover (RULED HERE, from the owner's order)
 
 - Three postures, derived, not chosen, and written for the renderer into the `TAC_COVER` word's high
   bits each tick (the client draws the man down or up from it, §0 "Men hide"):
@@ -1619,7 +1617,7 @@ function of the state, a claim is a function of the seed and the unit id, no dra
   - **COVER**: within 0.5 m of his claimed place, not stepping.
   - **PRONE**: everything else that did not step - a halt on the line in the open, a man on post with no
     hole, a man waiting on a post that has not moved. A halt is a firing halt, and it is fired from the
-    ground. Daniel: *"Prone when in the open under fire"* - and under fire is where the line is, so a
+    ground. the owner: *"Prone when in the open under fire"* - and under fire is where the line is, so a
     halted man in the open is prone whether a round has reached his team yet or not. Pinned men (§11.5)
     add the crawl.
 - **What it is worth** - the rifle's hit roll (§8.1) is one draw, `< 45` per mil; the threshold is what
@@ -1635,7 +1633,7 @@ function of the state, a claim is a function of the seed and the unit id, no dra
 - Posture never reads the truck: a man does not go prone for a truck, and run-over (§8.2) kills a
   prone man as it kills a standing one.
 
-### 11.5 Suppression - fire pins men down (RULED HERE, from Daniel's order)
+### 11.5 Suppression - fire pins men down (RULED HERE, from the owner's order)
 
 - **Suppression word** `TAC_SUPP`, one per fire team (18 words, appended): **+60 per round aimed at one
   of the team's living men** (a rifle round, hit or miss; a coax burst, §4.4; a suppressing round,
@@ -1676,7 +1674,7 @@ function of the state, a claim is a function of the seed and the unit id, no dra
 - §8.1 and §8.2, hit thresholds per §11.4, suppressing rounds per §11.5. Drawn in index order after the
   armour's shots of the same tick (KEEP: protocol).
 
-### 11.7 The AT man - men hurt tanks (Daniel 2026-09-16 19:25: yes; GAP)
+### 11.7 The AT man - men hurt tanks (2026-09-16 19:25: yes; GAP)
 
 - Man `j = 3` of every fire team - roster `r` with `r & 3 == 3`, nine a side, fixed for the round like
   the team itself - carries an **AT launcher** beside his rifle. He is the **AT man**. Replacement of
@@ -1690,7 +1688,7 @@ function of the state, a claim is a function of the seed and the unit id, no dra
   240 ticks). Three draws in the same order as a tank's shot - hit, damage, reload - taken from the
   round's RNG in index order with the rifles' shots (§11.6). A hit's damage is a shell's for the
   crater/heat rules: none (it is a tank being hit, not the truck).
-- **Never at the truck - RULED 2026-09-19 (Daniel sent it to this session to decide): it stays never,
+- **Never at the truck - RULED 2026-09-19 (the owner sent it to this session to decide): it stays never,
   and the reason is the balance, not caution.** The launcher is the infantry's anti-armour arm and the
   whole of its role in §0: "men are feared by tanks" is a row on AT hits as a share of tank deaths (15 to
   50%). Every gun in this game that fires at the truck does so by §1.2's **outranks** rule - the truck
@@ -1702,7 +1700,7 @@ function of the state, a claim is a function of the seed and the unit id, no dra
   makes the first crossing a countdown rather than a run: not measured, and it does not need to be, since
   the row it would break (the AT share) is measured and the line it would cross (§1.2) is ruled. **The one
   form under which it could be allowed without either**, recorded and not taken: a launcher fires at the
-  truck only when **no** enemy tank is inside 30 m - no outranking, the tank always first. Daniel can still
+  truck only when **no** enemy tank is inside 30 m - no outranking, the tank always first. the owner can still
   overrule with a word, and that is the form to use if he does.
 - Never at a man, never at a wreck (§11.3: a dead index is not a target). At an enemy **gunship** inside
   30 m when no enemy tank is inside 30 m: 15%, one hit drives it off (§12.3).
@@ -1741,7 +1739,7 @@ function of the state, a claim is a function of the seed and the unit id, no dra
   the armour's rules - it is felt in the losses, and bounding overwatch is the answer the doctrine
   already gives.
 
-### 12.3 The air arm - called, not weather (Daniel 2026-09-16 19:30: "the helicopters must act
+### 12.3 The air arm - called, not weather (2026-09-16 19:30: "the helicopters must act
 tactically and be part of the whole concept"; RULED HERE, GAP)
 
 **What the core does today** (`rules/air.js`, its own header): both sortie clocks start at zero, a
@@ -1789,7 +1787,7 @@ by the men in the holes.
   29 of a side's own men a round died under its own bombs; the §0 row below caps it at 10% of a side's
   bomb kills. A CAS gunship over an assault lane full of its own men therefore drops **ahead** of them -
   on the objective's far side - or not at all, which is what close air support is.
-- **Driven off** (RULED HERE, from Daniel's "2. yes" §11.7): the AT man's launcher fires at an enemy
+- **Driven off** (RULED HERE, from the owner's "2. yes" §11.7): the AT man's launcher fires at an enemy
   gunship inside **30 m** horizontally when **no** enemy tank is inside 30 m (tank first, always), from
   PRONE or COVER, same three draws, hit **15%**; a hit sets the gunship to **LEAVING** (`H_STATE = 2`):
   it drops nothing more, flies out on its track at 20 m/s and is gone at |x| > 104, and the side's
@@ -1797,7 +1795,7 @@ by the men in the holes.
   a gunship home, and the sky over a lane full of hidden infantry is not the bomber's. Nothing else
   touches a gunship: no rifle, no coax, no gun.
 - **A gunship reads no truck** (§1.2): not for the call, the lane, the aim, the own-troops check or the
-  release. A truck under a bomb is a truck under a bomb: it takes the blast per §1.2 (Daniel 19:40:
+  release. A truck under a bomb is a truck under a bomb: it takes the blast per §1.2 (the owner 19:40:
   yes), after roll-out; today `detonate` reads units only (GAP).
 - **What the player sees** (§0.2): the rotor is heard 3 s before the gunship enters the corridor; the
   banner names the call (`BEAR CAS - HIGH`, `BULL COUNTER - LOW`); the run-in is along the named
@@ -1922,22 +1920,22 @@ A round at a man 26 to 34 m off: never hits, pins his team.
   fired (§11.7).
 - A §0 infantry row fails.
 
-## 15. Parked rulings - Daniel's, not mine (2026-09-16 19:20)
+## 15. Parked rulings - the owner's, not mine (2026-09-16 19:20)
 
 Each one breaks a KEEP or decides what the game is; each has my recommendation so the ruling is one
 word.
 
-1. **Tanks fire on men.** RULED yes (Daniel 2026-09-16 19:25) → §4.4 coax, §8.3.
-2. **Men hurt tanks.** RULED yes (Daniel 2026-09-16 19:25) → §11.7 AT man, §8.1. Inside it, the
-   launcher at the truck: **RULED 2026-09-19 never**, on Daniel's delegation, for the balance - the
+1. **Tanks fire on men.** RULED yes (2026-09-16 19:25) → §4.4 coax, §8.3.
+2. **Men hurt tanks.** RULED yes (2026-09-16 19:25) → §11.7 AT man, §8.1. Inside it, the
+   launcher at the truck: **RULED 2026-09-19 never**, on the owner's delegation, for the balance - the
    outranks rule would make the AT line a truck-hunting line (§11.7 has the reasoning and the one form
    under which it could be allowed).
-3. **Bombs on the truck.** RULED yes (Daniel 2026-09-16 19:40) → §1.2, §12.3.
-4. **A winner.** RULED (Daniel 2026-09-16 19:40 and 20:00): **not from the war** - *"it is bears
+3. **Bombs on the truck.** RULED yes (2026-09-16 19:40) → §1.2, §12.3.
+4. **A winner.** RULED (2026-09-16 19:40 and 20:00): **not from the war** - *"it is bears
    against bulls and we start no simulation of our own. The Bitcoin price decides"* - and **yes from the
    price**: the round's open against the newest sample, `THE BULLS WIN` / `THE BEARS WIN` on the end
    screen with the truck's score and sats → §4.14, §0.2, multiplayer_p2p.md §0.5A and §13.
-   Inside it, the round's length - **RULED 2026-09-19 (Daniel's delegation): 3 minutes is right, and the
+   Inside it, the round's length - **RULED 2026-09-19 (the owner's delegation): 3 minutes is right, and the
    contract owns it.** The core had `BLOCK_TICKS = 9000` (150 s, gate.js: *"Bitcoin's ten minutes is far
    too long to wait for a score"* - which stands) against `T_run` = 3 minutes in multiplayer_p2p.md
    §0.16 and §27. The doctrine's own clocks decide it: §4.12 starts a side's first assault at 20-40 s,
@@ -1953,7 +1951,7 @@ word.
    present, the constant when none is (a SIM round, §4.13). The verdict, `sign(close - open)`, is
    unchanged by any of it.
 5. **Item 2 of the 19:02 list** - wrecks as cover for tanks, side pressure, whole-line retreat -
-   **RULED 2026-09-19 on Daniel's delegation (11:14), in three parts:**
+   **RULED 2026-09-19 on the owner's delegation (11:14), in three parts:**
    - **Wrecks as cover for tanks: IN.** §4.1: a tank wreck is a crest to the hull-down search, 2 m of
      rise, tank wrecks only, never the truck's. The one thing on the field that accumulates (§0.1, point
      2) now shapes where the armour stands, as it already shapes where the men lie. GAP.

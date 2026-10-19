@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: LicenseRef-Bitcoin-Arena-1.0
 // Copyright (c) 2026 The Bitcoin Arena authors. See LICENSE.
-// ONE HISTORY LINE PER JOIN (kanban #132, Daniel's playtest 2026-10-04 15:45, plan comment 220 accepted 2026-10-05): "One
+// ONE HISTORY LINE PER JOIN (the owner's playtest 2026-10-04 15:45, plan comment 220 accepted 2026-10-05): "One
 // line: Stake round xxx -100 sat. The 100 is the stake plus the donation. No Donation row." saveLock writes two ledger rows
 // for one join - the stake (stake + fee lock, 98 sat) and the donation paid in the same transaction (2 sat) - and the wallet
 // history panel drew each as its own line. ledgerHistory folds a donation into its round's stake line, when drawing only: the
@@ -11,7 +11,7 @@ import { readFileSync } from 'node:fs';
 import { ledgerHistory } from '../src/page-lock.js';
 
 const R1 = '848a0677' + 'a'.repeat(56), R2 = '79b298fb' + 'b'.repeat(56);
-// exactly the rows of Daniel's screenshot, as saveLock and the deposit wrote them
+// exactly the rows of the owner's screenshot, as saveLock and the deposit wrote them
 const DANIEL = [
   { atMs: 1791160000000, kind: 'deposit', msat: '250000', invoiceHash: 'ab' },
   { atMs: 1791166020000, kind: 'stake', round: R2, player: 'p1', entry: 'e2', msat: '98000' },
@@ -20,7 +20,7 @@ const DANIEL = [
   { atMs: 1791166120001, kind: 'donation', round: R1, msat: '2000' },
 ];
 
-test('a stake and its donation are one history line: Daniel\'s two rounds read -100 sat each, no Donation line', () => {
+test('a stake and its donation are one history line: the owner\'s two rounds read -100 sat each, no Donation line', () => {
   const h = ledgerHistory(DANIEL);
   assert.deepEqual(h.filter((r) => r.kind !== 'deposit').map((r) => [r.kind, r.round.slice(0, 8), r.msat]), [['stake', '79b298fb', '100000'], ['stake', '848a0677', '100000']]);
   assert.equal(h.filter((r) => r.kind === 'donation').length, 0, 'a Donation line is still drawn');

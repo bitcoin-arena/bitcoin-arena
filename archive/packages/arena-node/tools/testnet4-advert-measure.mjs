@@ -1,4 +1,4 @@
-// WHAT THE SEVEN ADVERTISEMENT UPDATES CHANGED, MEASURED ON THE TESTNET4 CHAIN (Daniel 2026-09-28, the
+// WHAT THE SEVEN ADVERTISEMENT UPDATES CHANGED, MEASURED ON THE TESTNET4 CHAIN (2026-09-28, the
 // advertisement-update letter: "measure that census and the page both show the seven current guardian keys via the
 // newest update, that the runner would select bond 0c82db59 for node 1, and that no new bond transaction was posted").
 //

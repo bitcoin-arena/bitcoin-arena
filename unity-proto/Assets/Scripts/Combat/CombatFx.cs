@@ -498,7 +498,7 @@ public class CombatFx : MonoBehaviour
         return wrapper.transform;
     }
 
-    // THE DEAD ARE NOT SKINNED (kanban #266): WebGL skins on the CPU, every visible SkinnedMeshRenderer, every frame - and a
+    // THE DEAD ARE NOT SKINNED: WebGL skins on the CPU, every visible SkinnedMeshRenderer, every frame - and a
     // body never moves. In a named profile of the 7 s after 100 % (Pixel 7a profile, 10x CPU) Unity's skinned-mesh update was
     // 590-629 ms, DeformSkinnedMesh 438-501 ms. A body is the raw soldier prefab with no controller, so each holds the same
     // stored pose: that pose is baked once per mesh, and a body draws it as an ordinary mesh with its own materials.
@@ -837,7 +837,7 @@ public class CombatFx : MonoBehaviour
     {
         if (_live.Count >= maxPieces) return;
         var t = Take(_cubes, _cube, debrisMaterial ?? blastMaterial);
-        // ONE SIZE ABOVE THE BLAST POINT, not centred on it (Daniel 2026-09-16 12:38, "black cube through
+        // ONE SIZE ABOVE THE BLAST POINT, not centred on it (2026-09-16 12:38, "black cube through
         // the road"). The blast point is on the road, so a chunk centred there started half inside it and
         // below its own resting height - measured on this rule, most chunks "landed" on their first frame,
         // right at the centre of the blast.
@@ -1318,7 +1318,7 @@ public class CombatFx : MonoBehaviour
                         BurnBeat(p.t.position, Mathf.Clamp01(1f - k * 1.15f));
                     }
 
-                    // IT STANDS, THEN IT GOES. Daniel, 17:53 on the phone:
+                    // IT STANDS, THEN IT GOES. the owner, 17:53 on the phone:
                     // a wreck must not shrink before it disappears. It used to
                     // scale to nothing over the last 15% of its life, so a
                     // burnt-out tank became a toy tank and then a speck - which
@@ -1326,7 +1326,7 @@ public class CombatFx : MonoBehaviour
                     // cleared. It keeps its size for the whole of it and is
                     // simply removed at the end.
                     //
-                    // 30 s, not 25 and not 70. Daniel asked for them to stand
+                    // 30 s, not 25 and not 70. the owner asked for them to stand
                     // longer. 70 s left 32 parts burning after a minute, and
                     // 45 s still failed `EverythingClearsEventually` and
                     // `EffectsRetireInsteadOfPilingUp`, which step 35 seconds

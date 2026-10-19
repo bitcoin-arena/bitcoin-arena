@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# DANIEL'S HOW-TO, CUT AT ITS TRUE EDGES (2026-09-14) for the loading screen.
+# THE OWNER'S HOW-TO, CUT AT ITS TRUE EDGES (2026-09-14) for the loading screen.
 #
 # The four tiles that came with it (Assets/Art/Resources/lobby-howto-1..4.png,
 # 724x543 each) were cut at the image's half height, y 543. The rows of the
@@ -8,7 +8,7 @@
 # to tile 4. In 1-2 over 3-4 the strips line up and it cannot be seen; in one
 # row it shows (measured on the live page, 1280x800).
 #
-# So each panel is taken from Daniel's WHOLE (lobby-howto.png, 1448x1086) by the
+# So each panel is taken from the owner's WHOLE (lobby-howto.png, 1448x1086) by the
 # box of its own opaque pixels, measured in each quadrant split at the gaps. His
 # files are not changed; these go beside the page. The Unity lobby draws the same
 # boxes from the whole texture (DailyLobby.PanelBoxes).

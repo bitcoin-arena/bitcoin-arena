@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using L = Blwp.Layout;
 
 /// <summary>
-/// WHAT THE WAR IS DOING, IN WORDS (Daniel 2026-09-20 16:22 and 16:26: "assaults are not perceptible. Daniel
+/// WHAT THE WAR IS DOING, IN WORDS (2026-09-20 16:22 and 16:26: "assaults are not perceptible. the owner
 /// cannot see them").
 ///
 /// THE CLOCK IS NOT THE PROBLEM. Measured over eight seeds and a whole block each, the core declared 21
@@ -79,19 +79,19 @@ public sealed class AssaultWatch
 
     public static string SideName(int side) => side == 0 ? "BULLS" : "BEARS";
 
-    // THE BANNERS, in Daniel's own words (16:22): "a banner BULLS ASSAULT HIGH and a sound when it starts ...
+    // THE BANNERS, in the owner's own words (16:22): "a banner BULLS ASSAULT HIGH and a sound when it starts ...
     // then HIGH TAKEN or ASSAULT ON HIGH FAILS".
     public static string StartBanner(int side, int objective) => SideName(side) + " ASSAULT " + ObjectiveName(objective);
     public static string TakenBanner(int objective) => ObjectiveName(objective) + " TAKEN";
     public static string FailedBanner(int objective) => "ASSAULT ON " + ObjectiveName(objective) + " FAILS";
 
     // THE LOG LINES carry the side on every line, because a log is read after the fact and "HIGH TAKEN" on its
-    // own does not say by whom. Daniel's example is "[13:00:00] Bulls attack high" / "... failed".
+    // own does not say by whom. the owner's example is "[13:00:00] Bulls attack high" / "... failed".
     public static string StartLog(int side, int objective) => SideName(side) + " ASSAULT " + ObjectiveName(objective);
     public static string TakenLog(int side, int objective) => SideName(side) + " TAKE " + ObjectiveName(objective);
     public static string FailedLog(int side, int objective) => SideName(side) + " FAIL ON " + ObjectiveName(objective);
 
-    /// <summary>"[13:00:43] BULLS FAIL ON HIGH" - the wall clock, because that is what Daniel reads it against.</summary>
+    /// <summary>"[13:00:43] BULLS FAIL ON HIGH" - the wall clock, because that is what the owner reads it against.</summary>
     public static string LogLine(DateTime wall, string words)
         => "[" + wall.ToString("HH:mm:ss") + "] " + words;
 
@@ -152,7 +152,7 @@ public sealed class AssaultWatch
     /// <summary>
     /// WHAT THE WAR SAID, for whoever measures the page - the same idea as the lobby's own `Shown`.
     ///
-    /// "Daniel cannot see them" can only be answered by asking a real browser what it drew, so the banner, the
+    /// "the owner cannot see them" can only be answered by asking a real browser what it drew, so the banner, the
     /// log and the sound count go to the page. Built by hand because these strings are the client's own words -
     /// side names, objective names, digits and colons - and carry nothing to escape.
     /// </summary>
