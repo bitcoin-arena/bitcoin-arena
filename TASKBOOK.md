@@ -842,7 +842,7 @@ paid through a connected wallet. Asked properly, the wallet panel is up and popu
 
 So the player IS told the amount, the fee, the donation, the net stake and that the seat is HELD, and there
 is a live button. The bolt11 itself is deliberately not printed on this path - §22A's breakdown and a Pay
-button are, and `#blwp-deposit` stays empty because that box belongs to the federation-lock deposit.
+button are, and `#arena-deposit` stays empty because that box belongs to the federation-lock deposit.
 
 WHAT IS ACTUALLY MISSING FOR A PAID STAKE: a connected wallet. The probe has no NWC connection, so nothing
 pays, and `/stake` keeps answering 409 - 62 times in this run. That is not a hole in the page; it is the one
@@ -877,7 +877,7 @@ WHERE IT ENDS UP IN THE PAGE:
      "depositEl":{"hidden":true,"text":""},"stageEl":"no #stage"}
 
   the bolt11 appears NOWHERE in the visible text, in NO element, and in NO window global.
-  `#blwp-deposit` - the box the federation-lock path fills through `onDeposit` - exists but is hidden and
+  `#arena-deposit` - the box the federation-lock path fills through `onDeposit` - exists but is hidden and
   empty, because this round is THRESHOLD_LN and nothing on that path renders what `/invoice` returned.
 
 SO THE PLAYER IS NEVER SHOWN THE INVOICE THEY MUST PAY. That closes the walk with a cause rather than a
@@ -33692,7 +33692,7 @@ M3 F2: THE REFUND/PAYOUT KEY FROM THE PLAYER'S SEED (§24, v4.6.2)
                     'arena.player.seed') + playerFor(round, {seed, curve});
                     entryFor derives the key itself and REFUSES a given
                     playerPubkey that is not it, or a stake whose handout names
-                    another key. index.html: #blwp-refund shows the
+                    another key. index.html: #arena-refund shows the
                     fingerprint, the round id and a <details> seed backup.
   OUTSIDE THE PAGE  node packages/arena-node/tools/refund-key.mjs <seed> <round>
                     prints player key, refund key, fingerprint (noble BIP-340,
@@ -38327,7 +38327,7 @@ M3.2 ITEM 6e: THREE PLAYER-FACING HOLES FROM THE DAILY-PAGE CHECK, CLOSED AND ME
     CODE            donation-pay.js donationNotedState (the line's state from the notes
                     alone) and notedDonationForLink (round id off the link; this tab's key
                     from its own seed, read and never minted - join.js TAB_SEED_KEY); the
-                    page's showNotedDonation paints #blwp-donation-noted on the loading
+                    page's showNotedDonation paints #arena-donation-noted on the loading
                     screen after fail(); the join also preloads BLWP_DONATION_PAID from the
                     notes, so the panel shows them before payDonation answers.
     AFTER (live)    seats and recipients closed, wallet kept up (SIGUSR2), reload: under
@@ -38421,7 +38421,7 @@ M3.2 ITEM 6e: THE POOL, MEASURED BEFORE THE LIVE SETTLEMENT RUN - AND A FORK ON 
                     custody has run). settlementBy passes both on only when every
                     seat that answered says the same number; settledLine renders
                     them; the page asks every 5 s while the hold is HELD and paints
-                    #blwp-settled in the wallet panel. No second formula: the figure
+                    #arena-settled in the wallet panel. No second formula: the figure
                     is computePayoutTable's through holdSettlement, as custody ran it.
   MEASURED (tests)  objection-window.test.js, two seats, 3 s window, a 2% donor who
                     loses against a 0% winner: after the window both seats serve the
@@ -38452,7 +38452,7 @@ M3.2 ITEM 6e: THE POOL, MEASURED BEFORE THE LIVE SETTLEMENT RUN - AND A FORK ON 
                     neither is on the settlement number's path.
 
 M3.2 ITEM 6e: PICK B LIVE ON THE DAILY PAGE - THE POOL MOVES 0 -> 98000; RULING ON WHAT CLOSES 6e (2026-09-13)
-  THE RUNS          daily page 10fa2870 (bundle 915f64c9, #blwp-settled); a paid local
+  THE RUNS          daily page 10fa2870 (bundle 915f64c9, #arena-settled); a paid local
                     round each (pool-live-launch.mjs): stake 100000 msat, closeAtEnd on
                     both seats as the Daily runs, the contract's default objection window
                     600000 ms; a scripted 2% donor D2 (net 96000) and a scripted 0% player
@@ -46347,7 +46347,7 @@ federation pool, 75/25, never burned.
 Measured first, three turns running, and the answer did not change: §24B landed at `1add4655` as SPEC
 ONLY - `FEDERATION.md` +4, `multiplayer_p2p.md` +88, no code, no C#. In the page and in every src tree:
 
-    "seed phrase" 0   "no backup" 0   "blwp-settings" 0   "blwp-balance" 0   "blwp-verify" 0
+    "seed phrase" 0   "no backup" 0   "arena-settings" 0   "blwp-balance" 0   "blwp-verify" 0
     backupVerified / verifySeed / seedPhrase / phraseVerified: 0 files
     §24B on PRIORITIES.md: 0
 
@@ -46469,7 +46469,7 @@ NOT SEEN, with the measured reason for each:
      has no federation, so it opens free rounds only - the lobby held exactly one row,
      "FREE · closes 0:59 · 2 of 2 signer nodes · 0 joined".
   2/3. THE FREE ROUND DOES NOT JOIN on this path, so nothing drives and the panel is never asked to hide.
-     The gate is NOT what stops it - `blwp-money-why` stayed empty and the flag stayed null. The page logs
+     The gate is NOT what stops it - `arena-money-why` stayed empty and the flag stayed null. The page logs
      "[blwp] no session yet: the page has named no node", then "[blwp] practice on (from scene)" and
      "[blwp] core is driving": it falls into PRACTICE with no session. That is the same symptom PRIORITIES
      already records from the playable-client letter - the page not turning its query into the globals the
@@ -46511,7 +46511,7 @@ before it posts its bonds, and carry them in each signer node's advertisement. T
 federation wiring - the live item's own letter - and it is not started inside this one.
 
 WHAT THIS DOES NOT BLOCK, and was measured last turn on this same harness: the free round does not ask
-for the phrase. `blwp-money-why` stayed empty and `arena.backup.verified` stayed null when the free row was
+for the phrase. `arena-money-why` stayed empty and `arena.backup.verified` stayed null when the free row was
 clicked - the gate is not what stops that join. It stops for "no session yet: the page has named no node",
 which is the playable-client letter's symptom and is recorded there, not here.
 
@@ -50673,7 +50673,7 @@ changed, so there is no core-vs-old engine comparison for this item.
   - Bare root: 32 of 32 samples lobby, 0 in title mode. Wallet rows hidden; Settings holds Wallet.
   - Closed round with play=1: 34 of 36 samples lobby; the 2 before 1.1 s were the run starting from the address. Then the
     lobby, with the refusal line in the red box and on the hint line; the bridge in error with no client.
-- THE REFUND LINE UNDER THE CANVAS. A joined round link builds #blwp-refund: the refund key fingerprint, "seed backup"
+- THE REFUND LINE UNDER THE CANVAS. A joined round link builds #arena-refund: the refund key fingerprint, "seed backup"
   and the "use my seed" import. After the refusal it stays in the page.
   - It sits at the top of the page, under the canvas, which is on top at the centre of every control.
   - Neither seen nor clickable, and it is in no screenshot.
@@ -51695,7 +51695,7 @@ then"; "90 seconds as soon as it's valid"): the one-off runner blwp-tn4-paid sto
 2026-10-02 00:00Z; a series posted now could not start before ~2026-10-02 05:30Z (24 h committee lead). Then k=2, k=3 by
 the series waiter. Rounds 8029f4ce and 41dcfe88 (one-off, 6 h) stay on the nodes until their entry closes, unlisted.
 PAYTRACE 5 SAT (2026-10-01 "5 sat payment"; d6b1db85 live; tab seed 1405e2d3; Settings, Custom 5): a
-MutationObserver on #blwp-deposit, installed in the page before LND-a paid, wrote the times. lncli SUCCEEDED 05:26:53.9Z;
+MutationObserver on #arena-deposit, installed in the page before LND-a paid, wrote the times. lncli SUCCEEDED 05:26:53.9Z;
 green "Payment received! 5 sat are now in your wallet." 05:26:59.488Z; modal emptied 05:27:03.074Z: close - green =
 3585 ms (performance.now) - 1085 ms later than the 2.5 s. Wallet 6 -> 10 sat, one deposit row 5000 msat. Not yet known
 what holds the page's thread past the 2.5 s timer. Same run: the lobby showed "PAID · 100 sats · closes 1113:28 · 0 of 5
@@ -52542,7 +52542,7 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 - New: btc-logistics-core.pages.dev/dashboard/ (page 0.0.2500, deploy ebb7bd57) - an index, not a combined dashboard: one row per node linking to that node's own /dashboard over the route daily.json names (renamed when a tunnel restarts), with its key, today's profit and rounds checked read from its /dashboard.json. Shown in MacBook Chrome.
 
 ### The console (the owner playtest 22:18: "covers the whole playfield ... much more compact ... A small button labeled Console opens it. Collapsed by default.")
-- The node strip (#blwp-players: node health, play socket, stake seen by N of 7) and the round's federation panel (#blwp-wallet: stake lock, donation, lock back from block) are the console. Collapsed by default: neither drawn, a small "Console" button instead; open: both drawn small (11/10 px, panel max 280 px wide and 45vh high, scrolling). The choice is kept in this browser (BLWP_BROWSER_STORE). The deposit invoice, refusals and the lobby are not the console.
+- The node strip (#blwp-players: node health, play socket, stake seen by N of 7) and the round's federation panel (#arena-wallet: stake lock, donation, lock back from block) are the console. Collapsed by default: neither drawn, a small "Console" button instead; open: both drawn small (11/10 px, panel max 280 px wide and 45vh high, scrolling). The choice is kept in this browser (BLWP_BROWSER_STORE). The deposit invoice, refusals and the lobby are not the console.
 - Measured, MacBook Chrome, paid round on 0.0.2501: closed - wallet and strip display none, the button shown; open - both shown, compact. The button sat on the settings gear and the backup banner: moved below them (0.0.2502, deploy 8de842a5). join 12/12 (the store through BLWP_BROWSER_STORE), player-copy 3, deposit-reload 6, two-tabs 5, donation-route 3, client-hash 3.
 - Unity licence renewed by the owner's sign-in on the MacBook (issued 10-03 20:29Z, to 11-02): a full WebGL build of 6cc5cafc there in ~6 min, build 0.0.2621 - the first real Unity build since 10-01.
 

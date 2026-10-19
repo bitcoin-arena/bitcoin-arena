@@ -1333,7 +1333,7 @@ collected from the browser. What follows is the record of how it got there, lett
     `BLWP_DEPOSIT` is null, so where the served invoice is put for the player is the next question.
     ANSWERED 2026-09-21: **nowhere.** The seat serves `{"amountMsat":"98000","state":"HELD","request":
     "lnbcrt980n..."}` - the net stake, held - and the bolt11 appears in no element, no visible text and no
-    global; `#blwp-deposit` is hidden and empty because that box belongs to the federation-lock path. **The
+    global; `#arena-deposit` is hidden and empty because that box belongs to the federation-lock path. **The
     player is never shown the invoice they must pay** - CORRECTED 2026-09-21, that was the wrong instrument:
     a hold round is paid through a wallet, not by copying a bolt11. The wallet panel IS up and says
     "100 sat round: 2 sat fee and 0 sat donation out of it, 98 sat staked · the wallet is asked 98 sat · HELD"

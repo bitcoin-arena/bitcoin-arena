@@ -55,7 +55,7 @@ log(`picked ${pick.id.slice(0, 8)}: started ${((Date.now() - pick.start) / 1000)
 await click(640, 459); await sleep(500); await shot('lj-lobby');
 const tPlay = Date.now(); log('PAID + PLAY'); await click(487, 614);
 let inv = null;
-for (let i = 0; i < 60 && !inv; i++) { const t = await ev(`(document.getElementById('blwp-deposit')||{}).innerText || ''`); const m = /lntb[0-9a-z]{80,}/.exec(t || ''); if (m) inv = m[0]; else await sleep(500); }
+for (let i = 0; i < 60 && !inv; i++) { const t = await ev(`(document.getElementById('arena-deposit')||{}).innerText || ''`); const m = /lntb[0-9a-z]{80,}/.exec(t || ''); if (m) inv = m[0]; else await sleep(500); }
 if (inv) {
   log(`deposit request ${((Date.now() - tPlay) / 1000).toFixed(1)} s after PLAY; paying from LND A`); await shot('lj-deposit');
   try { const out = execFileSync('/mnt/bitcoin/lnd-linux-amd64-v0.21.3-beta/lncli', ['--lnddir=/mnt/bitcoin/lnd-testnet4', '--rpcserver=127.0.0.1:11009', '--network=testnet4', 'payinvoice', '--force', '--json', inv], { timeout: 90000 }).toString();

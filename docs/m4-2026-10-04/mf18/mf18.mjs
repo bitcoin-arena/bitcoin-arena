@@ -97,10 +97,10 @@ if (CASE === 'claim-expired') {
   console.log(`+${at()} note in, window closes ${new Date(closeMs).toISOString().slice(11, 19)}`);
   let last = '';
   for (let i = 0; i < 90; i++) {
-    const s = await ev(`JSON.stringify({ pending: window.BLWP_PENDING_SATS, when: (document.getElementById('blwp-bal-pending-when')||{}).textContent, chip: (document.getElementById('blwp-lobby-pending')||{}).textContent, title: ((document.getElementById('blwp-lobby-pending')||{}).parentNode||{}).title })`);
+    const s = await ev(`JSON.stringify({ pending: window.BLWP_PENDING_SATS, when: (document.getElementById('arena-bal-pending-when')||{}).textContent, chip: (document.getElementById('arena-lobby-pending')||{}).textContent, title: ((document.getElementById('arena-lobby-pending')||{}).parentNode||{}).title })`);
     if (s !== last) { last = s; console.log(`+${at()} ${s}`); }
     if (i === 8) await shot('mf18-claim-open');
-    if (i === 30) { await ev(`document.getElementById('blwp-console-go') && document.getElementById('blwp-console-go').click(); 1`); await sleep(1200); await shot('mf18-claim-expired-console'); console.log('panel', JSON.stringify(await ev(`(document.getElementById('blwp-wallet')||document.body).innerText.slice(0,600)`))); }
+    if (i === 30) { await ev(`document.getElementById('arena-console-go') && document.getElementById('arena-console-go').click(); 1`); await sleep(1200); await shot('mf18-claim-expired-console'); console.log('panel', JSON.stringify(await ev(`(document.getElementById('arena-wallet')||document.body).innerText.slice(0,600)`))); }
     await sleep(1000);
   }
   await shot('mf18-claim-expired-75s');
@@ -126,7 +126,7 @@ if (CASE === 'budget' || CASE === 'budget-wait') {
   console.log(`+${at()} PLAY`); await click(487, 614);
   let last = '';
   for (let i = 0; i < 40; i++) {
-    const s = await ev(`JSON.stringify({ join: window.BLWP_JOIN && { state: BLWP_JOIN.state, why: String(BLWP_JOIN.why||'').slice(0,160), stage: BLWP_JOIN.stage }, deposit: (document.getElementById('blwp-deposit')||{}).innerText?.slice(0, 300) })`);
+    const s = await ev(`JSON.stringify({ join: window.BLWP_JOIN && { state: BLWP_JOIN.state, why: String(BLWP_JOIN.why||'').slice(0,160), stage: BLWP_JOIN.stage }, deposit: (document.getElementById('arena-deposit')||{}).innerText?.slice(0, 300) })`);
     if (s !== last) { last = s; console.log(`+${at()} ${s}`); }
     if (/Deposit/.test(s) && !/closed/.test(last.closedYet || '')) { await shot('mf18-budget-1-deposit'); break; }
     await sleep(500);
@@ -135,11 +135,11 @@ if (CASE === 'budget' || CASE === 'budget-wait') {
     // NEITHER PAID NOR CLOSED: watched past the round's entry close
     const closeIn = await ev(`(() => { const r = (window.BLWP_LOBBY_ROWS||[]).find(x => x.id === (window.BLWP_JOIN||{}).round); return r ? Number(r.entryCloseMs || (r.contract && r.contract.entryClose) || 0) - Date.now() : null; })()`);
     console.log('entry closes in ms', closeIn);
-    for (let i = 0; i < 300; i++) { await sleep(1000); const s = await ev(`JSON.stringify({ join: window.BLWP_JOIN && { state: BLWP_JOIN.state, why: String(BLWP_JOIN.why||'').slice(0,200), stage: BLWP_JOIN.stage }, depositUp: !!((document.getElementById('blwp-deposit')||{}).innerText||'').trim() })`); if (s !== last) { last = s; console.log(`+${at()} ${s}`); await shot('mf18-budget-wait-' + i); } if (i === Math.round(closeIn / 1000) + 30 || i === 299) { await shot('mf18-budget-wait-at' + i); console.log(`+${at()} shot at ${i}s: ${s}`); } if (i === Math.round(closeIn / 1000) + 30 || i === 299) { await shot('mf18-budget-wait-at' + i); console.log(`+${at()} shot at ${i}s: ${s}`); } if (/refused/.test(s) && i > 5) { await sleep(3000); await shot('mf18-budget-wait-end'); break; } }
+    for (let i = 0; i < 300; i++) { await sleep(1000); const s = await ev(`JSON.stringify({ join: window.BLWP_JOIN && { state: BLWP_JOIN.state, why: String(BLWP_JOIN.why||'').slice(0,200), stage: BLWP_JOIN.stage }, depositUp: !!((document.getElementById('arena-deposit')||{}).innerText||'').trim() })`); if (s !== last) { last = s; console.log(`+${at()} ${s}`); await shot('mf18-budget-wait-' + i); } if (i === Math.round(closeIn / 1000) + 30 || i === 299) { await shot('mf18-budget-wait-at' + i); console.log(`+${at()} shot at ${i}s: ${s}`); } if (i === Math.round(closeIn / 1000) + 30 || i === 299) { await shot('mf18-budget-wait-at' + i); console.log(`+${at()} shot at ${i}s: ${s}`); } if (/refused/.test(s) && i > 5) { await sleep(3000); await shot('mf18-budget-wait-end'); break; } }
     console.log('intercepted', hits); await b.call('Target.closeTarget', { targetId: tid }); process.exit(0);
   }
   // CLOSE IT, as a player who will not deposit
-  console.log('close', await ev(`(() => { const b = [...document.querySelectorAll('#blwp-deposit button')].find(x => /✕|close|cancel/i.test(x.textContent)); if (!b) return [...document.querySelectorAll('#blwp-deposit button')].map(x => x.textContent).join('|'); b.click(); return 'clicked ' + b.textContent; })()`));
+  console.log('close', await ev(`(() => { const b = [...document.querySelectorAll('#arena-deposit button')].find(x => /✕|close|cancel/i.test(x.textContent)); if (!b) return [...document.querySelectorAll('#arena-deposit button')].map(x => x.textContent).join('|'); b.click(); return 'clicked ' + b.textContent; })()`));
   for (let i = 0; i < 30; i++) { await sleep(1000); const s = await ev(`JSON.stringify({ join: window.BLWP_JOIN && { state: BLWP_JOIN.state, why: String(BLWP_JOIN.why||'').slice(0,160) } })`); if (s !== last) { last = s; console.log(`+${at()} ${s}`); } }
   await shot('mf18-budget-2-closed');
 }

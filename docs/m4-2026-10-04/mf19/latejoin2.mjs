@@ -42,7 +42,7 @@ import { execFileSync } from 'node:child_process';
 const paidRow = async () => JSON.parse(await ev(`JSON.stringify((window.BLWP_LOBBY_ROWS||[]).filter(r => !r.free).map(r => ({ id: r.id, start: Number(r.startTimeMs || (r.contract && r.contract.startTimeMs) || 0), close: Number(r.entryCloseMs || (r.contract && r.contract.entryCloseMs) || 0), joinable: r.joinable, phase: r.phase })))`) || '[]');
 
 const lnPay = (inv) => { const out = execFileSync('/mnt/bitcoin/lnd-linux-amd64-v0.21.3-beta/lncli', ['--lnddir=/mnt/bitcoin/lnd-testnet4', '--rpcserver=127.0.0.1:11009', '--network=testnet4', 'payinvoice', '--force', '--json', inv], { timeout: 90000 }).toString(); return JSON.parse(out.slice(out.indexOf('{'))); };
-const invoiceNow = async () => { const t = await ev(`(document.getElementById('blwp-deposit')||{}).innerText || ''`); const m = /lntb[0-9a-z]{80,}/.exec(t || ''); const a = /Pay (\d+) sat/.exec(t || ''); return m ? { inv: m[0], sats: a ? Number(a[1]) : null } : null; };
+const invoiceNow = async () => { const t = await ev(`(document.getElementById('arena-deposit')||{}).innerText || ''`); const m = /lntb[0-9a-z]{80,}/.exec(t || ''); const a = /Pay (\d+) sat/.exec(t || ''); return m ? { inv: m[0], sats: a ? Number(a[1]) : null } : null; };
 const playRun = async (tag) => {
   const bay = await until(`${tag}: -> cargo bay`, 300, (o) => o.bay || (o.join && o.join.state === 'refused')); if (!bay || !bay.bay) return false;
   await ev('window.BLWP_CONTINUE = false; 1');
@@ -59,7 +59,7 @@ log('build ' + await ev(`(document.getElementById('sub')||{}).textContent || ''`
 await click(640, 459); await sleep(500); log('R1: PAID + PLAY (empty wallet)'); await click(487, 614);
 let iv = null; for (let i = 0; i < 60 && !iv; i++) { iv = await invoiceNow(); if (!iv) await sleep(500); }
 if (!iv) { log('no deposit request'); process.exit(1); }
-await ev(`(() => { const b = [...document.querySelectorAll('#blwp-deposit button')].find(x => /^\s*2 rounds\s*$/.test(x.textContent)); if (b) b.click(); return !!b; })()`);
+await ev(`(() => { const b = [...document.querySelectorAll('#arena-deposit button')].find(x => /^\s*2 rounds\s*$/.test(x.textContent)); if (b) b.click(); return !!b; })()`);
 let iv2 = null; for (let i = 0; i < 40; i++) { const x = await invoiceNow(); if (x && x.inv !== iv.inv) { iv2 = x; break; } await sleep(500); }
 const pay = iv2 || iv; log(`deposit ${pay.sats} sat (${iv2 ? '2 rounds' : '1 round - the choice did not change it'})`); await shot('lj2-deposit');
 try { const j = lnPay(pay.inv); log(`paid ${j.status} ${j.value_sat} sat`); } catch (e) { log('payment failed ' + String(e.stdout || e.message).slice(0, 160)); process.exit(1); }
