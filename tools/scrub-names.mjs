@@ -11,12 +11,12 @@ import { join, extname } from 'node:path';
 const { parse } = await import(process.env.ACORN);
 const ROOT = execFileSync('git', ['rev-parse', '--show-toplevel'], { encoding: 'utf8' }).trim();
 const check = process.argv.includes('--check');
-const EXCLUDE = /(^|\/)node_modules\/|\/dist\/|^packages\/[^/]+\/plugin\/|^packages\/.*\/(plugins?|client)\/|^packages\/nextblock\/(src|frozen|config)\/|WebGLTemplates\/.*\.js$|^daniel-screens\/|^tools\/scrub-names\.mjs$/;   // the tool's own rules name what they remove
+const EXCLUDE = /(^|\/)node_modules\/|\/dist\/|^packages\/[^/]+\/plugin\/|^packages\/.*\/(plugins?|client)\/|^packages\/nextblock\/(src|frozen|config)\/|WebGLTemplates\/.*\.js$|^src\/arena-ui\/.*\.js$|^daniel-screens\/|^tools\/scrub-names\.mjs$/;   // the tool's own rules name what they remove
 
 // every file the known-good list pins (the page's money scripts, each game's assets) keeps its bytes: its hash is checked by name
 const PINNED = (() => { try { const d = JSON.parse(readFileSync(join(ROOT, 'packages/arena-client/known-good-clients.json'), 'utf8'));
   return new Set([...Object.keys(d.pinned || {}), ...Object.values(d.games || {}).flatMap((g) => Object.keys(g.pinned || {}))]); } catch { return new Set(); } })();
-const isPinned = (f) => /WebGLTemplates\//.test(f) && PINNED.has(f.split('/').pop());
+const isPinned = (f) => /WebGLTemplates\/|^src\/arena-ui\//.test(f) && PINNED.has(f.split('/').pop());
 const HASHY = new Set(['.toml', '.yml', '.yaml', '.service', '.example', '.ps1', '_headers', '_redirects', 'arena-node-setup', 'arena-node-app']);
 // patches keep their ticket markers (build-wasm.sh checks for "kanban #196" in the patched source): only the name goes, on added lines
 const nameOnly = (t) => t.replace(/\bRULED,?\s+Daniel\s+(?=\d{4}-\d{2}-\d{2})/g, 'RULED ').replace(/\bDaniel(?:'s)?\s+(?=\d{4}-\d{2}-\d{2})/g, '')
