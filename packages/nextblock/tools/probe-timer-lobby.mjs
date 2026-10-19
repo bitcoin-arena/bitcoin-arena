@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: LicenseRef-Bitcoin-Arena-1.0
+// Copyright (c) 2026 The Bitcoin Arena authors. See LICENSE.
 // THE ROUND TIMER MUST END THE ROUND (Daniel 2026-09-20 16:21), in a real player on Beelink Chrome.
 //
 // THE RIG MATTERS AND IT IS THE REASON THE FIRST ATTEMPT MEASURED NOTHING. Headless Chrome on SwiftShader draws
