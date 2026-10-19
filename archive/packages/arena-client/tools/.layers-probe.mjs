@@ -21,7 +21,7 @@ const out = await ev(`(function(){
     o[n]=pts[n].map(Math.round).join(',')+' -> '+(e?e.tagName+(e.id?'#'+e.id:'')+(e.className?'.'+String(e.className).slice(0,40):''):'NOTHING');
   });
   o.touch='maxTouchPoints='+navigator.maxTouchPoints+' ontouchstart='+('ontouchstart' in window)+' TouchEvent='+(typeof TouchEvent)+' ua='+navigator.userAgent.slice(0,60);
-  var rf=document.getElementById('blwp-refund');
+  var rf=document.getElementById('arena-refund');
   if(rf){var b=rf.getBoundingClientRect(),st=getComputedStyle(rf);
     o.refund='rect '+Math.round(b.width)+'x'+Math.round(b.height)+'@'+Math.round(b.left)+','+Math.round(b.top)
       +' opacity='+st.opacity+' bg='+st.backgroundColor+' pe='+st.pointerEvents+' vis='+st.visibility

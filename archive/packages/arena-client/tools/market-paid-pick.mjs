@@ -44,7 +44,7 @@ async function browser(name) {
 const STATE = `(() => { const f = (g) => { try { return g(); } catch (e) { return 'ERR ' + e.message; } };
   return { rows: f(() => (window.BLWP_LOBBY || []).map((r) => ({ id: r.id, line: r.line, join: !!r.join, free: !!r.free, market: !!(r.raw && (r.raw.market || r.raw.marketLike)), series: !!(r.raw && r.raw.contract && r.raw.contract.seriesId) }))),
     join: f(() => window.BLWP_JOIN ? { state: window.BLWP_JOIN.state, stage: window.BLWP_JOIN.stage, why: window.BLWP_JOIN.why } : null),
-    sheetShown: f(() => document.getElementById('blwp-pick').classList.contains('show')), sheet: f(() => window.BLWP_PICK_SHEET || null),
+    sheetShown: f(() => document.getElementById('arena-pick').classList.contains('show')), sheet: f(() => window.BLWP_PICK_SHEET || null),
     deposit: f(() => window.BLWP_DEPOSIT || null), picked: f(() => window.BLWP_PICKED || null), entry: f(() => (window.BLWP_ENTRY ? 'SET' : null)),
     unity: f(() => !!window.unityInstance), withdrawable: f(() => window.BLWP_WITHDRAW_AVAILABLE ? window.BLWP_WITHDRAW_AVAILABLE() : null),
     lines: f(() => (window.BLWP_LOBBY_VIEW ? window.BLWP_LOBBY_VIEW().collect : []).map((l) => l.text)), step: f(() => window.BLWP_WITHDRAW_STEP || null) }; })()`;
@@ -65,7 +65,7 @@ async function pickIn(b, id, pick) {
   const answered = await b.evaluate(`window.BLWP_LOBBY_ACT.join(${JSON.stringify(id)})`);
   const s2 = await until(b, 20000, (x) => x.sheetShown === true);
   say({ player: b.name, step: 'PLAY', round: id.slice(0, 12), answered, sheet: s2.sheet, shot: await b.shot('2-sheet') });
-  await b.evaluate(`document.querySelector('#blwp-pick button[data-outcome="${pick}"]').click()`);
+  await b.evaluate(`document.querySelector('#arena-pick button[data-outcome="${pick}"]').click()`);
   const s3 = await until(b, 120000, (x) => (x.deposit && x.deposit.invoice) || (x.join && ['picked', 'refused'].includes(x.join.state)));
   if (s3.deposit && s3.deposit.invoice) {
     say({ player: b.name, step: 'deposit invoice', amountMsat: s3.deposit.amountMsat, invoice: s3.deposit.invoice.slice(0, 40) });
