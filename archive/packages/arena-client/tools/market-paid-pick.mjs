@@ -42,12 +42,12 @@ async function browser(name) {
   return { name, send, evaluate, shot, logs, close: () => { ws.close(); proc.kill('SIGTERM'); } };
 }
 const STATE = `(() => { const f = (g) => { try { return g(); } catch (e) { return 'ERR ' + e.message; } };
-  return { rows: f(() => (window.BLWP_LOBBY || []).map((r) => ({ id: r.id, line: r.line, join: !!r.join, free: !!r.free, market: !!(r.raw && (r.raw.market || r.raw.marketLike)), series: !!(r.raw && r.raw.contract && r.raw.contract.seriesId) }))),
+  return { rows: f(() => (window.ARENA_LOBBY || []).map((r) => ({ id: r.id, line: r.line, join: !!r.join, free: !!r.free, market: !!(r.raw && (r.raw.market || r.raw.marketLike)), series: !!(r.raw && r.raw.contract && r.raw.contract.seriesId) }))),
     join: f(() => window.BLWP_JOIN ? { state: window.BLWP_JOIN.state, stage: window.BLWP_JOIN.stage, why: window.BLWP_JOIN.why } : null),
-    sheetShown: f(() => document.getElementById('arena-pick').classList.contains('show')), sheet: f(() => window.BLWP_PICK_SHEET || null),
-    deposit: f(() => window.BLWP_DEPOSIT || null), picked: f(() => window.BLWP_PICKED || null), entry: f(() => (window.BLWP_ENTRY ? 'SET' : null)),
-    unity: f(() => !!window.unityInstance), withdrawable: f(() => window.BLWP_WITHDRAW_AVAILABLE ? window.BLWP_WITHDRAW_AVAILABLE() : null),
-    lines: f(() => (window.BLWP_LOBBY_VIEW ? window.BLWP_LOBBY_VIEW().collect : []).map((l) => l.text)), step: f(() => window.BLWP_WITHDRAW_STEP || null) }; })()`;
+    sheetShown: f(() => document.getElementById('arena-pick').classList.contains('show')), sheet: f(() => window.ARENA_PICK_SHEET || null),
+    deposit: f(() => window.ARENA_DEPOSIT || null), picked: f(() => window.ARENA_PICKED || null), entry: f(() => (window.BLWP_ENTRY ? 'SET' : null)),
+    unity: f(() => !!window.unityInstance), withdrawable: f(() => window.ARENA_WITHDRAW_AVAILABLE ? window.ARENA_WITHDRAW_AVAILABLE() : null),
+    lines: f(() => (window.BLWP_LOBBY_VIEW ? window.BLWP_LOBBY_VIEW().collect : []).map((l) => l.text)), step: f(() => window.ARENA_WITHDRAW_STEP || null) }; })()`;
 const stateOf = (b) => b.evaluate(STATE);
 const until = async (b, ms, done) => { let s = {}; for (const stop = Date.now() + ms; Date.now() < stop; await wait(1000)) { s = await stateOf(b) || {}; if (done(s)) break; } return s; };
 const balance = async () => { const c = await lncli('channelbalance'); return c.local_balance ? Number(c.local_balance.msat) : null; };
@@ -123,11 +123,11 @@ for (const stop = Date.now() + 1200000; Date.now() < stop; await wait(10000)) { 
 const o = await (await fetch(`${seats[0]}/outcome?round=${rid}`)).json();
 say({ step: 'settlement', state: ls && ls.state, why: ls && ls.why, txid: ls && ls.txid, moved: ls && ls.moved && { claims: ls.moved.claims.map((c) => [c.kind, String(c.msat ?? c.amountMsat)]), payouts: ls.moved.payouts.map((p) => [p.kind, String(p.pk).slice(0, 10), String(p.msat)]) },
   table: o.table && o.table.rows.map((r) => [r.entryId.slice(0, 8), r.pick, r.netMsat, r.payoutMsat]) });
-// THE WINNER'S WITHDRAW, THROUGH THE PAGE: BLWP_WITHDRAW handed the player's own wallet (an invoice for the exact amount)
+// THE WINNER'S WITHDRAW, THROUGH THE PAGE: ARENA_WITHDRAW handed the player's own wallet (an invoice for the exact amount)
 await wait(15000);
 const sW0 = await stateOf(A);
 say({ player: 'A', step: 'before withdraw', withdrawable: sW0.withdrawable, lines: sW0.lines, shot: await A.shot('5-outcome') });
-const w = await A.evaluate(`window.BLWP_WITHDRAW(async (msat) => { const r = await fetch('/harness-invoice?msat=' + msat); const j = await r.json(); return j.payment_request ? { ok: true, invoice: j.payment_request } : { ok: false, why: j.error }; }).then((x) => JSON.parse(JSON.stringify(x, (k, v) => (typeof v === 'bigint' ? String(v) : v))))`);
+const w = await A.evaluate(`window.ARENA_WITHDRAW(async (msat) => { const r = await fetch('/harness-invoice?msat=' + msat); const j = await r.json(); return j.payment_request ? { ok: true, invoice: j.payment_request } : { ok: false, why: j.error }; }).then((x) => JSON.parse(JSON.stringify(x, (k, v) => (typeof v === 'bigint' ? String(v) : v))))`);
 await wait(5000);
 const after = await balance();
 const sW = await stateOf(A);

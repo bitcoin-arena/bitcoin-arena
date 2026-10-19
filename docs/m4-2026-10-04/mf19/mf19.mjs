@@ -28,7 +28,7 @@ const click = async (x, y) => { for (const type of ['mouseMoved', 'mousePressed'
 const shot = async (name) => { const s = await pg.call('Page.captureScreenshot', { format: 'png' }); writeFileSync(`${D}/${PRE}-${name}.png`, Buffer.from(s.result.data, 'base64')); log(`shot ${PRE}-${name}`); };
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const STATE = `JSON.stringify({ lobby: !!(window.BLWP_UNITY_LOBBY && BLWP_UNITY_LOBBY.showing), join: window.BLWP_JOIN && { state: BLWP_JOIN.state, why: String(BLWP_JOIN.why || '').slice(0, 160), round: String(BLWP_JOIN.round || '').slice(0, 8), free: BLWP_JOIN.free },
-  card: !!window.BLWP_CARD_UP, bay: !!(window.BLWP_HUD_CORNER && BLWP_HUD_CORNER.floor < BLWP_HUD_CORNER.h), run: (() => { try { return unityInstance.Module.blwp.st.i32[23]; } catch { return null; } })(),
+  card: !!window.ARENA_CARD_UP, bay: !!(window.BLWP_HUD_CORNER && BLWP_HUD_CORNER.floor < BLWP_HUD_CORNER.h), run: (() => { try { return unityInstance.Module.blwp.st.i32[23]; } catch { return null; } })(),
   result: window.BLWP_RESULT && { round: String(BLWP_RESULT.roundHex || '').slice(0, 8), hold: BLWP_RESULT.hold } })`;
 const until = async (name, capS, pred) => {
   const t = Date.now(); let last = '';
@@ -36,7 +36,7 @@ const until = async (name, capS, pred) => {
     if (pred(o)) { log(`${name}: ${((Date.now() - t) / 1000).toFixed(1)} s`); return o; }
     if (Date.now() - t > capS * 1000) { log(`HANG at "${name}": nothing in ${capS} s - ${s}`); await shot(`hang-${name.replace(/\W+/g, '-')}`); return null; } await sleep(500); } };
 const pickFreeAndPlay = async (tag) => {
-  for (let i = 0; i < 60; i++) { if (await ev(`(window.BLWP_LOBBY_ROWS||[]).some(x => x.free && x.joinable)`)) break; await sleep(3000); }
+  for (let i = 0; i < 60; i++) { if (await ev(`(window.ARENA_LOBBY_ROWS||[]).some(x => x.free && x.joinable)`)) break; await sleep(3000); }
   await click(640, 419); await sleep(700); await shot(`${tag}-lobby`); log(`${tag}: FREE + PLAY`); await click(487, 614);
 };
 const run = async (tag) => {

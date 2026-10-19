@@ -1,6 +1,6 @@
 // THE PAGE FOR THE PAID-PICK RUN, on the MacBook: the built page (round-2of2's servePage, as every live-page run
 // serves it) behind one more door - /harness-invoice?msat=N, an invoice for exactly N msat made by alice's lnd, the player's
-// own wallet here, which the page's Withdraw is handed as its invoice maker (BLWP_WITHDRAW takes a function).
+// own wallet here, which the page's Withdraw is handed as its invoice maker (ARENA_WITHDRAW takes a function).
 //   BUILD=<page dir> LNCLI=<lncli> ALICE_DIR=<lnddir> ALICE_RPC=<host:port> PORT=29600 node page-server.mjs
 import { createServer, request } from 'node:http';
 import { execFile } from 'node:child_process';

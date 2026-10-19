@@ -37,11 +37,11 @@ try {
   await send('Page.navigate', { url: PAGE });
   await wait(9000);
   let rows = 0;
-  for (let i = 0; i < 60 && !rows; i++) { rows = Number(await ev('(window.BLWP_LOBBY||[]).length')) || 0; if (!rows) await wait(2000); }
+  for (let i = 0; i < 60 && !rows; i++) { rows = Number(await ev('(window.ARENA_LOBBY||[]).length')) || 0; if (!rows) await wait(2000); }
   say(`lobby rows ${rows}`);
   let href = '';
   for (let i = 0; i < 40 && !href; i++) {
-    const got = await ev(`(function(){var r=(window.BLWP_LOBBY||[]).filter(function(x){return x.free&&x.join;})[0];return r?(location.origin+location.pathname+r.join+'&play=1'):'';})()`);
+    const got = await ev(`(function(){var r=(window.ARENA_LOBBY||[]).filter(function(x){return x.free&&x.join;})[0];return r?(location.origin+location.pathname+r.join+'&play=1'):'';})()`);
     if (got && String(got).includes('round=')) href = String(got); else await wait(3000);
   }
   if (!href) throw new Error('no joinable free round');

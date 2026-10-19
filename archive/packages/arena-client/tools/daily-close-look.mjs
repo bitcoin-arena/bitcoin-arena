@@ -67,7 +67,7 @@ async function browse(url) {
   return { evaluate, click, key, close };
 }
 
-const STATE = `JSON.stringify({ lobby: window.BLWP_LOBBY || null, from: window.BLWP_LOBBY_FROM || null,
+const STATE = `JSON.stringify({ lobby: window.ARENA_LOBBY || null, from: window.ARENA_LOBBY_FROM || null,
   round: window.BLWP_ROUND && typeof BLWPCLIENT !== 'undefined' ? Array.from(BLWPCLIENT.roundId(window.BLWP_ROUND), (x) => x.toString(16).padStart(2, '0')).join('') : null,
   player: window.BLWP_ENTRY && window.BLWP_ENTRY.playerPubkey ? Array.from(window.BLWP_ENTRY.playerPubkey, (x) => x.toString(16).padStart(2, '0')).join('') : null,
   unity: !!window.unityInstance, chip: (document.getElementById('blwp-players') || {}).textContent || null,

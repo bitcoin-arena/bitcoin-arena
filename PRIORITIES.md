@@ -862,7 +862,7 @@ byte mapping is guarded meanwhile. Nothing here is blocked on a decision; it is 
   the generator (appends, drops nothing): 89 -> 90 and 28 -> 29. client-hash 3 pass, was 0 pass 3 fail.
 
   ~~LATER ITEM: the daily lobby lists nothing.~~ **WRONG, measured on the live page 2026-09-22
-  (`b44442ee`).** `window.BLWP_LOBBY` on the bare Daily URL reads two rows - `a9458457bbff` PAYING and
+  (`b44442ee`).** `window.ARENA_LOBBY` on the bare Daily URL reads two rows - `a9458457bbff` PAYING and
   `cb045848e2bd` free - and `measure-cab-headline` joins one and drives 9 m. The network ids DO still
   differ (page `66f5caba`, live checkout at `595f0df3` `b07c4a09`, pin unmoved) and the lobby lists both
   kinds anyway, so the conclusion drawn from the mismatch was not what the page does. The row count moves
@@ -1330,7 +1330,7 @@ collected from the browser. What follows is the record of how it got there, lett
     AND WITH IT ANSWERED, THE SEATS TAKE THE ENTRY: `/handout` 201 at both, **`/entry` 201 at both**,
     `/invoice` 200, and `/stake` 409 x60 - the stake is simply not paid. joinState reaches "joined" and all
     four globals are objects. **The remaining gap is payment, not plumbing**: nothing pays the bolt11, and
-    `BLWP_DEPOSIT` is null, so where the served invoice is put for the player is the next question.
+    `ARENA_DEPOSIT` is null, so where the served invoice is put for the player is the next question.
     ANSWERED 2026-09-21: **nowhere.** The seat serves `{"amountMsat":"98000","state":"HELD","request":
     "lnbcrt980n..."}` - the net stake, held - and the bolt11 appears in no element, no visible text and no
     global; `#arena-deposit` is hidden and empty because that box belongs to the federation-lock path. **The
@@ -2709,7 +2709,7 @@ DONE (ef88b4d, measured in simulation, NOT live, NOT on the Daily): the page onl
 that collects and pays out, through one wallet; no invoice source, nothing collected.
 Simulated closed tab after a win: the federation still holds 978000 + 980000 msat, the
 tab 0; the old path stranded 1958000 msat in the closed tab. arena-client 328/328.
-LIVE (run A3, 22:20-22:32, real federation, the page on screen): the driver reads BLWP_OWED
+LIVE (run A3, 22:20-22:32, real federation, the page on screen): the driver reads ARENA_OWED
 only; the winner's first tab looked (owed 1958000 msat, tab 0) and was CLOSED with no
 withdraw - the federation still held the payout 978000 + the stake 980000, the tab 0; a
 fresh tab with the same seed read the same; a pasted invoice for 1958000 was refused,

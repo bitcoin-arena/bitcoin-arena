@@ -194,13 +194,13 @@ try {
   // ONE seat, joined the way a player joins: the lobby's own free-round link.
   let rows = 0;
   for (let i = 0; i < 90 && !rows; i++) {
-    rows = Number(await page.evaluate('(window.BLWP_LOBBY || []).length')) || 0;
+    rows = Number(await page.evaluate('(window.ARENA_LOBBY || []).length')) || 0;
     if (!rows) await wait(2000);
   }
   say(`lobby rows ${rows}`);
   let href = '';
   for (let i = 0; i < 60 && !href; i++) {
-    const got = await page.evaluate(`(function(){var r=(window.BLWP_LOBBY||[]).filter(function(x){return x.free&&x.join;})[0];`
+    const got = await page.evaluate(`(function(){var r=(window.ARENA_LOBBY||[]).filter(function(x){return x.free&&x.join;})[0];`
       + `return r ? (location.origin + location.pathname + r.join + '&play=1') : '';})()`);
     if (got && String(got).includes('round=')) href = String(got); else await wait(3000);
   }

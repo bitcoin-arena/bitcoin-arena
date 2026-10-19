@@ -54,13 +54,13 @@ if (CASE === 'unreachable-lobby') {
   await intercept(['*trycloudflare.com*', '*beelink.tail1723e2.ts.net/guardian-*']);
   await pg.call('Page.navigate', { url: LOBBY });
   await sleep(25000); await shot('mf18-unreachable-lobby');
-  console.log('lobby', await ev(`JSON.stringify({ rows: (window.BLWP_LOBBY_ROWS || []).length, lobby: window.BLWP_UNITY_LOBBY && { showing: window.BLWP_UNITY_LOBBY.showing }, text: [...document.querySelectorAll('div')].filter(e => e.offsetParent && e.children.length === 0 && e.textContent.trim()).map(e => e.textContent.trim().slice(0, 140)).slice(0, 12) })`));
+  console.log('lobby', await ev(`JSON.stringify({ rows: (window.ARENA_LOBBY_ROWS || []).length, lobby: window.BLWP_UNITY_LOBBY && { showing: window.BLWP_UNITY_LOBBY.showing }, text: [...document.querySelectorAll('div')].filter(e => e.offsetParent && e.children.length === 0 && e.textContent.trim()).map(e => e.textContent.trim().slice(0, 140)).slice(0, 12) })`));
 }
 if (CASE === 'unreachable-join' || CASE === 'chain-disagree') {
   await pg.call('Page.navigate', { url: LOBBY });
   await sleep(22000);
   // the FREE row, joinable (no money)
-  for (let i = 0; i < 20; i++) { const f = await ev(`JSON.stringify((window.BLWP_LOBBY_ROWS||[]).filter(x=>x.free&&x.joinable).map(x=>String(x.id).slice(0,8)))`); if (f && f !== '[]') break; await sleep(5000); }
+  for (let i = 0; i < 20; i++) { const f = await ev(`JSON.stringify((window.ARENA_LOBBY_ROWS||[]).filter(x=>x.free&&x.joinable).map(x=>String(x.id).slice(0,8)))`); if (f && f !== '[]') break; await sleep(5000); }
   await click(640, 419); await sleep(1000); await shot(`mf18-${CASE}-0-free-selected`);
   if (CASE === 'unreachable-join') rule = (u) => (NODE.test(u) ? { fail: true } : null);
   // ONE SOURCE'S HEADERS ALTERED: the real answer of the first host asked, its last header's nonce byte flipped (Response stage)
@@ -97,7 +97,7 @@ if (CASE === 'claim-expired') {
   console.log(`+${at()} note in, window closes ${new Date(closeMs).toISOString().slice(11, 19)}`);
   let last = '';
   for (let i = 0; i < 90; i++) {
-    const s = await ev(`JSON.stringify({ pending: window.BLWP_PENDING_SATS, when: (document.getElementById('arena-bal-pending-when')||{}).textContent, chip: (document.getElementById('arena-lobby-pending')||{}).textContent, title: ((document.getElementById('arena-lobby-pending')||{}).parentNode||{}).title })`);
+    const s = await ev(`JSON.stringify({ pending: window.ARENA_PENDING_SATS, when: (document.getElementById('arena-bal-pending-when')||{}).textContent, chip: (document.getElementById('arena-lobby-pending')||{}).textContent, title: ((document.getElementById('arena-lobby-pending')||{}).parentNode||{}).title })`);
     if (s !== last) { last = s; console.log(`+${at()} ${s}`); }
     if (i === 8) await shot('mf18-claim-open');
     if (i === 30) { await ev(`document.getElementById('arena-console-go') && document.getElementById('arena-console-go').click(); 1`); await sleep(1200); await shot('mf18-claim-expired-console'); console.log('panel', JSON.stringify(await ev(`(document.getElementById('arena-wallet')||document.body).innerText.slice(0,600)`))); }
@@ -111,7 +111,7 @@ if (CASE === 'committee-pending') {
   // THE ROUND LINK THE LOBBY ITSELF BUILDS for a round whose committee is not drawn yet (ARG = free | paid)
   await pg.call('Page.navigate', { url: LOBBY }); await sleep(22000);
   const [kind, pid] = ARG.split(':');
-  const join = await ev(`(() => { const r = (window.BLWP_LOBBY_ROWS||[]).find(x => !!x.free === ${kind === 'free'}); const s = r && window.BLWP_ROW_SEARCH.get(r.id); return s ? BLWPCLIENT.lobbyJoinSearch(s, '${pid}') : null; })()`);
+  const join = await ev(`(() => { const r = (window.ARENA_LOBBY_ROWS||[]).find(x => !!x.free === ${kind === 'free'}); const s = r && window.ARENA_ROW_SEARCH.get(r.id); return s ? BLWPCLIENT.lobbyJoinSearch(s, '${pid}') : null; })()`);
   console.log('link', join && join.slice(0, 400));
   if (!join) { console.log('no row of that kind to take the search from'); process.exit(1); }
   const pick = [{ join }];
@@ -121,7 +121,7 @@ if (CASE === 'committee-pending') {
 if (CASE === 'budget' || CASE === 'budget-wait') {
   // PAID PLAY WITH A 0 SAT PLAYER WALLET: no fault injected, the wallet is simply empty
   await pg.call('Page.navigate', { url: LOBBY }); await sleep(22000);
-  console.log('wallet', await ev(`JSON.stringify(window.BLWP_WALLET_BALANCE || null)`));
+  console.log('wallet', await ev(`JSON.stringify(window.ARENA_WALLET_BALANCE || null)`));
   await click(640, 459); await sleep(1000); await shot('mf18-budget-0-paid-selected');
   console.log(`+${at()} PLAY`); await click(487, 614);
   let last = '';
@@ -133,7 +133,7 @@ if (CASE === 'budget' || CASE === 'budget-wait') {
   }
   if (CASE === 'budget-wait') {
     // NEITHER PAID NOR CLOSED: watched past the round's entry close
-    const closeIn = await ev(`(() => { const r = (window.BLWP_LOBBY_ROWS||[]).find(x => x.id === (window.BLWP_JOIN||{}).round); return r ? Number(r.entryCloseMs || (r.contract && r.contract.entryClose) || 0) - Date.now() : null; })()`);
+    const closeIn = await ev(`(() => { const r = (window.ARENA_LOBBY_ROWS||[]).find(x => x.id === (window.BLWP_JOIN||{}).round); return r ? Number(r.entryCloseMs || (r.contract && r.contract.entryClose) || 0) - Date.now() : null; })()`);
     console.log('entry closes in ms', closeIn);
     for (let i = 0; i < 300; i++) { await sleep(1000); const s = await ev(`JSON.stringify({ join: window.BLWP_JOIN && { state: BLWP_JOIN.state, why: String(BLWP_JOIN.why||'').slice(0,200), stage: BLWP_JOIN.stage }, depositUp: !!((document.getElementById('arena-deposit')||{}).innerText||'').trim() })`); if (s !== last) { last = s; console.log(`+${at()} ${s}`); await shot('mf18-budget-wait-' + i); } if (i === Math.round(closeIn / 1000) + 30 || i === 299) { await shot('mf18-budget-wait-at' + i); console.log(`+${at()} shot at ${i}s: ${s}`); } if (i === Math.round(closeIn / 1000) + 30 || i === 299) { await shot('mf18-budget-wait-at' + i); console.log(`+${at()} shot at ${i}s: ${s}`); } if (/refused/.test(s) && i > 5) { await sleep(3000); await shot('mf18-budget-wait-end'); break; } }
     console.log('intercepted', hits); await b.call('Target.closeTarget', { targetId: tid }); process.exit(0);

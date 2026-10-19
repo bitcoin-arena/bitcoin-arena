@@ -909,7 +909,7 @@ dismissed (Cancel: donate nothing).
   the page after the join:
     joinState "joined", joinWhy "", joinStage ""
     BLWP_ENTRY object, BLWP_CHAIN object, BLWP_ADVERT object, BLWP_ROUND object   <- all four now DEFINED
-    BLWP_DEPOSIT null, donation {bps 0, 0 msat, kept false}, runEnded null
+    ARENA_DEPOSIT null, donation {bps 0, 0 msat, kept false}, runEnded null
 
 THE FOUR STRINGS ARE NO LONGER UNDEFINED. Every one of them is an object, `nodeUrl` therefore resolves, and
 the gate that said "the page has named no node" is satisfied - once the modal is answered.
@@ -924,7 +924,7 @@ THE WALK, AS IT NOW STANDS:
 
 SO THE REMAINING GAP IS PAYMENT, NOT PLUMBING. The browser reaches the seats, is accepted by them, and is
 served a hold invoice. What no part of this path does is pay it: a player would need a Lightning wallet, and
-`BLWP_DEPOSIT` is null, so the bolt11 is not surfaced the way the federation-lock path surfaces its deposit.
+`ARENA_DEPOSIT` is null, so the bolt11 is not surfaced the way the federation-lock path surfaces its deposit.
 WHERE THE SERVED INVOICE IS PUT FOR THE PLAYER TO PAY IS THE NEXT QUESTION - not answered here, and not
 guessed at.
 
@@ -2619,7 +2619,7 @@ happened to land. The bay is where it bites. Restored, with the measurement that
 THREE INSTRUMENTS THAT LIED, and they cost more than the code did:
   - the probe never pressed ROLL OUT, so every capture for hours sat in the BAY by accident - which is also how
     the bay case was found at all.
-  - it triggered on `BLWP_RUN_ENDED`, set by BLWP_RUN_OVER at onEnd, while C# reads `endingLine()` earlier: the
+  - it triggered on `ARENA_RUN_ENDED`, set by BLWP_RUN_OVER at onEnd, while C# reads `endingLine()` earlier: the
     hold had already run before the probe saw a word. Replaced by a rolling ring of frames.
   - 20x CPU throttle renders Unity at about 1 fps, so a 0.6 s window drew ZERO frames and produced two "absent"
     pictures that meant nothing. At 5x the page draws and the answer is unambiguous.
@@ -2679,7 +2679,7 @@ clear, THEN starve the tab.
 FOUR PROBE FAULTS IN A ROW, written down so the next one does not repeat them:
   1. polled `BLWP_LOBBY_VIEW`, which only exists while the lobby is up - every sample read "?".
   2. read `BLWP_UNITY_LOBBY.showing` at t+0, which still held TRUE from the page being replaced.
-  3. triggered on `BLWP_RUN_ENDED`, which `BLWP_RUN_OVER` sets at `onEnd` - by then the hold has already run,
+  3. triggered on `ARENA_RUN_ENDED`, which `BLWP_RUN_OVER` sets at `onEnd` - by then the hold has already run,
      because C# reads `endingLine()` earlier. Fixed by a rolling ring of frames instead of a trigger.
   4. stopped on ANY ending, so a run that merely FINISHED was taken as the before-frame for a VOID.
 
@@ -29468,7 +29468,7 @@ printed. What was ON SCREEN and what the page itself said:
 
     both, loaded     the splash (PLAY / SPECTATE), block #966346, 2:26 left; chip
                      "A ok · B ok / play · A up / 2 players in this round · other
-                     at ... · free seat"; BLWP_STAKE { free: true }, no seat
+                     at ... · free seat"; ARENA_STAKE { free: true }, no seat
                      refused, no wallet box drawn
     at rest          P1's own core (-100.400, -10.200) m, P2 shows it at
                      (-100.400, -10.200); P2's own (-100.400, 57.800), P1 shows
@@ -30714,7 +30714,7 @@ NOW:
   "stake dealt, not yet counted" - the word "held" is gone from the line.
 - `Client.watchStake`: polls every 2 s until committed, the run ends, or the
   client closes; `stakeCount`, `stakeCommitted`, `stakePolls`.
-- the page keeps the seat keys and node URLs on BLWP_STAKE, starts the watch
+- the page keeps the seat keys and node URLs on ARENA_STAKE, starts the watch
   after `payStake` succeeds, and hands `stakeCount` to the chip.
 
 MEASURED AFTER:
@@ -35797,7 +35797,7 @@ M3.3-34 THE DAILY'S BARE ROOT SHOWS THE LIVE 2-OF-2 LOBBY (2026-09-12)
                     so its own code wrote the file) and the new index. Bundle
                     sha256 cee239e1... pinned. btc-logistics-war untouched.
   MEASURED          headless Chrome on https://btc-logistics-core.pages.dev/ - the
-                    bare root; the address stayed bare; BLWP_LOBBY_FROM "daily.json";
+                    bare root; the address stayed bare; ARENA_LOBBY_FROM "daily.json";
                     Unity not loaded (a lobby is a list):
                     both up   round 92dc0073 "2 of 2 seats agree", Join; 0 errors
                     B down    (SIGUSR1, :18081 closed) "1 of 2 seats agree -
@@ -38128,7 +38128,7 @@ M3.2 ITEM 6e: IS AMOUNTS FINISHED? NOT ON THE PLAYER'S SCREEN (2026-09-13; read 
                     index.html:881's condition holds again: 1334 + 666 paid a second time
                     (2668 of 2000 on default lnd, where the 666 never routes). Nothing on
                     the recipient side dedupes - each callback is a fresh invoice.
-    3 THE RESULT IS NOT ON SCREEN  window.BLWP_DONATION_PAID {state paid|part|error,
+    3 THE RESULT IS NOT ON SCREEN  window.ARENA_DONATION_PAID {state paid|part|error,
                     paidMsat, unpaid[]} is written by the page and read by nothing: 0
                     references in unity-proto/Assets *.cs / *.jslib. §22A: clients SHOULD
                     report a failed share; the 666 ruling rests on "the client reports that
@@ -38328,7 +38328,7 @@ M3.2 ITEM 6e: THREE PLAYER-FACING HOLES FROM THE DAILY-PAGE CHECK, CLOSED AND ME
                     alone) and notedDonationForLink (round id off the link; this tab's key
                     from its own seed, read and never minted - join.js TAB_SEED_KEY); the
                     page's showNotedDonation paints #arena-donation-noted on the loading
-                    screen after fail(); the join also preloads BLWP_DONATION_PAID from the
+                    screen after fail(); the join also preloads ARENA_DONATION_PAID from the
                     notes, so the panel shows them before payDonation answers.
     AFTER (live)    seats and recipients closed, wallet kept up (SIGUSR2), reload: under
                     "That round link cannot be used: no node holds the round this URL
@@ -39045,7 +39045,7 @@ M3 W4 6d: THE PAGE COLLECTS THE WINNER'S PAYOUT; A LOSER'S FINDS NONE (2026-09-1
                     asked nothing; not settled yet - asked again; collected - kept in the
                     tab, so a reload does not try to spend a spent contract); payoutLine.
                     index.html: collectThePayout every 5 s for a lock round, painted in the
-                    wallet panel's settled line; the join keeps BLWP_LOCK_JOIN (invite,
+                    wallet panel's settled line; the join keeps ARENA_LOCK_JOIN (invite,
                     round, seed, nodes). Bundle exports settlementOf, redeemPayout,
                     payoutLine.
   TESTS             page-lock: the winner's page spends output 1 of a settlement paying a
@@ -39117,13 +39117,13 @@ M3 W4 6d: THE PAGE COLLECTS THE WINNER'S PAYOUT; A LOSER'S FINDS NONE (2026-09-1
   LEFTOVER 1: A RELOAD BEFORE THE COLLECT - A MONEY GAP, MEASURED (run 10, 11:24, 1000 sat, build
                     0.0.1234). The kept notes (payout, stake back) are written only after a
                     successful collect, so a reload AFTER it is coverage. But the only setter of
-                    the collect's state is the join's lock branch (index.html BLWP_LOCK_JOIN),
+                    the collect's state is the join's lock branch (index.html ARENA_LOCK_JOIN),
                     and a reload after the seats committed the entry does not reuse the kept
                     lock (reuse = kept && !kept.committedTo). Live: the winner's tab was
                     handed its join state before the close; its collect asked ("Payout:
                     waiting for the seats' settlement - ... NONE; NONE"); reloaded; the round
                     settled (e65e92a1..., 980000 + 2 x 20000 in, winner 978000, seats 18000):
-                      at once after the reload   BLWP_LOCK_JOIN gone, settled line empty
+                      at once after the reload   ARENA_LOCK_JOIN gone, settled line empty
                       60 s after the settlement  still nothing - no payout, no stake asked
                       federation                 the payout contract (978000) STILL HELD, the
                                                  winner's stake lock (980000) STILL HELD
@@ -39389,7 +39389,7 @@ M3 W4 6d: THE PAGE COLLECTS THE WINNER'S PAYOUT; A LOSER'S FINDS NONE (2026-09-1
                     wallet; Refunded is not final and says the money is back in the tab), withdrawLine;
                     index.html: after the collect the newest round's withdrawable is read, the wallet
                     panel says what is in the tab's wallet ("withdraw it to your own wallet before you
-                    close the tab"), and window.BLWP_WITHDRAW / the "Withdraw to my wallet" button pay it
+                    close the tab"), and window.ARENA_WITHDRAW / the "Withdraw to my wallet" button pay it
                     to the connected wallet's invoice or a pasted one. Build 0.0.1246.
     TESTS           page-lock: the whole withdrawable to one invoice (1937000 -> "Withdrawn: 1937000 msat
                     ... 1951232 -> 0 msat"); Refunded not final; an empty wallet asks for no invoice; no
@@ -39410,7 +39410,7 @@ M3 W4 6d: THE PAGE COLLECTS THE WINNER'S PAYOUT; A LOSER'S FINDS NONE (2026-09-1
                     The harness now starts the page's promise and polls short asks for its answer.
     LIVE, ON SCREEN (settle-live run 22, 17:22-17:30, build 0.0.1246, real federation): the 1000 sat
                     winner's tab, after collecting 978000 and its 980000 back (collect 239.7 s this run),
-                    withdrew with the page's own window.BLWP_WITHDRAW to an invoice on alice's lnd:
+                    withdrew with the page's own window.ARENA_WITHDRAW to an invoice on alice's lnd:
                       the page's withdrawable   1930649 msat (read by the page from its wallet)
                       result                    ok, final, state Success, invoice 1930649 msat, through
                                                 the listed gateway 127.0.0.1:30170, 90.6 s
@@ -39458,7 +39458,7 @@ M3 W4 6d: THE PAGE COLLECTS THE WINNER'S PAYOUT; A LOSER'S FINDS NONE (2026-09-1
                       mined           the guardians' count 472/472
                       after expiry    within 142 s the tab refunded 980000 msat by its own key, its wallet
                                       0 -> 975360 msat; the lock no longer held by the federation
-                      withdrawn       its own BLWP_WITHDRAW: Success 961392 msat, 975360 -> 0; alice's
+                      withdrawn       its own ARENA_WITHDRAW: Success 961392 msat, 975360 -> 0; alice's
                                       invoice SETTLED 961392
                       on screen       "... · Back by your own key after expiry: 980000 msat to this tab's
                                       wallet (stake lock; balance 0 -> 975360 msat) | Withdrawn: 961392
@@ -39529,14 +39529,14 @@ M3 W4 6d: NOTHING SPENT BEFORE THE PLAYER WITHDRAWS (2026-09-14, ef88b4d; tests,
                               held; Withdraw: refund -> redeem -> withdraw, 1957000 msat paid out,
                               tab 0; a third tab: both "no longer in the federation", final
                     index.html static check: no interval function calls a spending function; the one
-                    collectAndWithdraw call is inside BLWP_WITHDRAW.
-                    arena-client 328/328 (page-lock 23/23). wallet-nwc's paint test now drives BLWP_OWED
+                    collectAndWithdraw call is inside ARENA_WITHDRAW.
+                    arena-client 328/328 (page-lock 23/23). wallet-nwc's paint test now drives ARENA_OWED
                     (the collected-payout paint it asserted is gone from the page).
   RESIDUAL (named)  a pasted invoice larger than the withdrawable after fees fails AFTER the collect -
                     the money is then in the tab and the page says "withdraw it before you close the
                     tab". Only the newest round is looked at and withdrawn (as before).
   NOT DONE          live: settle-live-regtest.mjs and tools/page-lock.mjs read BLWP_PAYOUT /
-                    BLWP_STAKE_BACK / BLWP_REFUND, no longer set. The Daily still runs 0.0.1247.
+                    ARENA_STAKE_BACK / BLWP_REFUND, no longer set. The Daily still runs 0.0.1247.
 
 M3 W4 6d: THE PASTED INVOICE, AND THE LIVE DRIVER ON WHAT THE PAGE LOOKS AT (2026-09-14, 2a063be)
   PASTE HOLE        a pasted invoice is for a fixed amount; what the tab can pay after the federation's
@@ -39558,14 +39558,14 @@ M3 W4 6d: THE PASTED INVOICE, AND THE LIVE DRIVER ON WHAT THE PAGE LOOKS AT (202
                     pasting an invoice; it stays in the federation under their key. A Lightning address
                     (LNURL-pay, asked for the exact sum after the collect) would give them a way - not
                     built.
-  DRIVER            settle-live-regtest.mjs reads BLWP_OWED; the 1000 sat round's players: the first
+  DRIVER            settle-live-regtest.mjs reads ARENA_OWED; the 1000 sat round's players: the first
                     tab only looks (and 16 s more), is closed with no withdraw; the federation read; a
                     fresh tab handed the SAME SEED (a player's backup - the page keeps the seed and the
                     join record in sessionStorage, so a closed tab without a backup reaches nothing)
-                    looks; a pasted invoice for the owed sum is tried; then BLWP_WITHDRAW with alice's
+                    looks; a pasted invoice for the owed sum is tried; then ARENA_WITHDRAW with alice's
                     lnd handed in; that tab and a third look after. The refused player's tab: its look
                     finds the lock owed by its key after expiry, then its Withdraw. page-lock.mjs reads
-                    BLWP_OWED; its Node-side winner looks instead of collecting.
+                    ARENA_OWED; its Node-side winner looks instead of collecting.
   REMAINDER (named) only the newest round the tab keeps is looked at and withdrawn; an older round's
                     money stays in the federation under the player's key, unseen by the page.
 
@@ -39578,12 +39578,12 @@ M3 W4 6d: THE LIVE DRIVER CLOSES THE WINNER'S TAB, AND THE FEDERATION STILL HOLD
                     killed with the session ("Terminated"): the session's shells live in the driver's
                     systemd unit, whose restart kills setsid/nohup children too; A3 ran in its own unit
                     (systemd-run --user).
-  THE DRIVER        reads BLWP_OWED only (settle-live-regtest.mjs:202; tools/page-lock.mjs:248); no read
-                    of BLWP_PAYOUT / BLWP_STAKE_BACK / BLWP_REFUND is left.
+  THE DRIVER        reads ARENA_OWED only (settle-live-regtest.mjs:202; tools/page-lock.mjs:248); no read
+                    of BLWP_PAYOUT / ARENA_STAKE_BACK / BLWP_REFUND is left.
   SETTLEMENT        100 sat (Node): ACCEPTED; the winner's withdraw Success 180346 msat, alice SETTLED
                     180346. 1000 sat: 8524ec2b... ACCEPTED at both seats, 980000 + 2 x 20000 in,
                     978000 / 18000 / 18000; the winner's payout and stake lock held by the federation.
-  FIRST TAB         BLWP_OWED in 25.7 s: owed 1958000 msat (payout 978000 owed; stake 980000 owed, by
+  FIRST TAB         ARENA_OWED in 25.7 s: owed 1958000 msat (payout 978000 owed; stake 980000 owed, by
                     forfeit), in the tab 0, tab balance 0, not final; 16 s later the same. On screen: "978000
                     msat payout and your 980000 msat stake - yours in the round's federation until you
                     withdraw it; nothing is taken out before you press Withdraw". CLOSED, no withdraw.
@@ -39591,7 +39591,7 @@ M3 W4 6d: THE LIVE DRIVER CLOSES THE WINNER'S TAB, AND THE FEDERATION STILL HOLD
   FRESH TAB         same seed (the player's backup): owed 1958000 in 29.5 s; both still held.
   PASTED            an invoice from alice for the owed 1958000 msat: refused in 52.4 s, "nothing was
                     collected, it stays in the federation"; both still held; alice's invoice OPEN, paid 0.
-  WITHDRAW - RED    BLWP_WITHDRAW with alice's lnd handed in gave no answer within the driver's 180 s
+  WITHDRAW - RED    ARENA_WITHDRAW with alice's lnd handed in gave no answer within the driver's 180 s
                     (run 22's collect alone took 239.7 s, its withdraw 90.6 s). By then the payout and the
                     lock had left the federation (neither held) and alice had been asked for no invoice.
                     61 s later the page read: payout gone, stake still "owed", 959456 msat withdrawable in
@@ -39614,14 +39614,14 @@ M3 W4 6d: LIVE, THE PAGE'S OWN WITHDRAW PAYS THE PLAYER'S WALLET AFTER A CLOSED 
                     systemd unit; the driver waits up to 600 s for the page's Withdraw (A3: 180 s). exit 0.
   SETTLEMENT        100 sat (Node): ACCEPTED, alice SETTLED 180346. 1000 sat: ACCEPTED at both seats,
                     978000 / 18000 / 18000.
-  DRIVER READS      BLWP_OWED only.
+  DRIVER READS      ARENA_OWED only.
   FIRST TAB         owed 1958000 msat (payout 978000 owed, stake 980000 owed by forfeit), in the tab 0,
                     balance 0, looked in 31.3 s; 16 s later the same. CLOSED with no withdraw.
   AFTER THE CLOSE   the federation holds the payout and the stake lock; the tab 0 msat.
   FRESH TAB         same seed: owed 1958000 in 28.4 s; both held.
   PASTED            alice's invoice for 1958000 msat: refused in 52.4 s, "nothing was collected, it stays
                     in the federation"; both held; that invoice OPEN, paid 0.
-  WITHDRAW - GREEN  BLWP_WITHDRAW with alice's lnd handed in: Success, 1930649 msat, through the listed
+  WITHDRAW - GREEN  ARENA_WITHDRAW with alice's lnd handed in: Success, 1930649 msat, through the listed
                     gateway 127.0.0.1:30170; the tab's wallet 1951232 -> 0 msat; alice's invoice
                     "blwp withdraw on screen" SETTLED, amt_paid_msat 1930649 (22:48:10). 414.2 s from the
                     press: collect the payout, find the lock, the seats' forfeit, redeem, ask alice for
@@ -39647,7 +39647,7 @@ M3 W4 6d: LIVE, A REFUSED PLAYER'S OWN TAB WITHDRAWS ITS STAKE BACK BY ITS OWN K
   MINED             to the guardians' count 471/471 (expiration 464).
   AFTER EXPIRY      the look found 980000 msat owed back by the player's own key within 36.5 s; the
                     federation still held the lock while it was owed (looking spent nothing).
-  WITHDRAW - GREEN  BLWP_WITHDRAW with alice's lnd handed in: Success, 961392 msat through the listed
+  WITHDRAW - GREEN  ARENA_WITHDRAW with alice's lnd handed in: Success, 961392 msat through the listed
                     gateway; the tab 975360 -> 0 msat; alice's invoice SETTLED, amt_paid_msat 961392; the
                     lock no longer held. After: final, owed 0.
   WORDING (named)   after the withdraw the settled line reads "No stake back: no lock of yours is left in
@@ -39685,7 +39685,7 @@ M3 W4 6d: A WITHDRAWAL CLAIMED ON ANOTHER DEVICE BY THE SEED (Option A, the owne
 M3 W4 6d: LIVE, PERSIST / CLAIM LATER / ANOTHER DEVICE / UNITY'S LOBBY (runs C1 and C2, 2026-09-14)
   THE RUNS          settle-live C1 23:24-23:34 and C2 23:38-23:51, stock fedimintd 0.12.0; page = Unity
                     build 0.0.1260 + the template at dc7168c (vault, one tab per round, newest open round,
-                    /settled scan, KEY import, BLWP_FIND_OWED, the lobby's withdraw block); CLAIM_LATER=1,
+                    /settled scan, KEY import, ARENA_FIND_OWED, the lobby's withdraw block); CLAIM_LATER=1,
                     each browser closed as a browser closes. exit 0 both.
   C1 FINDING        the phone's next start read "This round's withdrawal is open in another tab of this
                     browser" for 181 s and never looked. Taken apart without a federation: headless Chrome
@@ -40700,7 +40700,7 @@ THE DAILY LOBBY LISTS ROUNDS AGAIN: SEATS UP, daily.json ON EVERY DEPLOY (the ow
                     (the page already put the core into the new round's world when that session started recording).
                     The lobby's join reads BlwpNet.Live. Page: BLWP_RUN_OVER (called at the core's word and when the run
                     ends) clears BLWP_CHAIN/BLWP_ADVERT - what tells Unity there is a session to open - and puts the
-                    lobby's own address back (BLWP_LOBBY_BACK, kept when PLAY is pressed; the bare root otherwise).
+                    lobby's own address back (ARENA_LOBBY_BACK, kept when PLAY is pressed; the bare root otherwise).
   TESTS             EditMode 204: 200 pass, 1 red (the listed CombatFxTests.RifleFire), 3 skipped -
                     RunEndsAtDeliveredTests 4/4 (+AfterARunIsOverTheNextSessionMayOpenAndTheCoreDrivesAgain). PlayMode 239:
                     216 pass, 10 red (the same documented ten), 13 skipped (ended 18:21). jslib and both inline page
@@ -47796,7 +47796,7 @@ the ones missing, and whether a paid row would join. That is the difference betw
 ## What the daily lobby actually lists: a paid row and a free one (2026-09-22)
 
 The question left open last turn - why 2 rows for 4 rounds, and whether a paid row is listed - read off
-the live page's own `window.BLWP_LOBBY`, bare URL, Beelink Chrome:
+the live page's own `window.ARENA_LOBBY`, bare URL, Beelink Chrome:
 
     [{"id":"a9458457bbff","free":false,"phase":"open"},
      {"id":"cb045848e2bd","free":true,"phase":"open"}]
@@ -47815,7 +47815,7 @@ both kinds of round anyway. Whatever that difference costs, it is not the lobby.
 
 ## The Daily's paid rows are listed and open, because they are THRESHOLD_LN (2026-09-22)
 
-Polled the live page's `window.BLWP_LOBBY` twelve times over a minute, Beelink Chrome, bare Daily URL:
+Polled the live page's `window.ARENA_LOBBY` twelve times over a minute, Beelink Chrome, bare Daily URL:
 
     t+0s   [{"id":"5d8c4ddb","free":true},{"id":"7d577647","free":false}]
     t+40s  [{"id":"7d577647","free":false},{"id":"79dc4d66","free":true}]
@@ -47908,7 +47908,7 @@ AND THE GAP IS CLOSING, read off the contracts themselves:
 So new rounds now carry the id the deployed page carries. The old ones age out as the keeper closes them;
 nothing had to be rebuilt or deployed to make that happen.
 
-The page still lists and drives: `window.BLWP_LOBBY` polled twelve times over a minute shows the same two
+The page still lists and drives: `window.ARENA_LOBBY` polled twelve times over a minute shows the same two
 rows every read - `634df84b` free and `c230bda7` PAYING - and `c230bda7` is the round on the new id.
 
 WHAT THIS DOES NOT DO: it does not retire `custody.js`, open the hold path, or add a `/round` refusal.
@@ -51643,7 +51643,7 @@ DEPOSIT-RELOAD-PAID (2026-09-30 go: one real deposit, Custom 100 sat from Settin
 gateway B, one reload while it is being claimed; the tab's player wallet, not a round; 94a56ba9 untouched).
 Holes closed first: (a) a deposit paid just before a reload had no history row - every invoice is now kept under
 arena.deposit.pending.<fed> until it ends, and the reopened wallet (warmPlayerWallet -> resumeDeposits) waits on each kept
-operation and writes its row once (by invoice hash); (b) the Confirmed/Pending boxes read BLWP_WALLET_BALANCE and nothing
+operation and writes its row once (by invoice hash); (b) the Confirmed/Pending boxes read ARENA_WALLET_BALANCE and nothing
 ever set it ("–" for every player) - the warmed wallet now sets it (balanceMsat) at open, every 10 s, after a claim and
 after a withdrawal.
 Measured (Beelink Chrome, 18994 = this commit's page, 430x900): before 0 sat, no rows. Custom "100" typed -> lntb1u
@@ -52305,8 +52305,8 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
   - R8 settled: 7 FINAL signatures on each entry; settlement ACCEPTED at 7 of 7 (04:27:04Z: 1 loser lock claimed 96000 msat, 1 qualifier paid 96000 msat, 2 fee locks 4000 msat to 7 signer nodes). A round shown loaded before its lock was accepted ran and settled as before.
 
 ### The PLAY click that answered false - BLWP_JOIN_ANSWER, no-row, busy, then V1 V2 V3 (sequence agreed 2026-10-03) - 0bab7313, page 0.0.2481/0.0.2482
-- Every lobby join answers with its reason: window.BLWP_JOIN_ANSWER { ok, why, at, round, ... }, one "[blwp] join ... not-started: <why>" line on a false; Unity still gets true/false. no-row records the lobby list's age, its row ids, and whether the round is in BLWP_LOBBY_ROWS; busy records the other join's round, state, held, next and locking flags.
-- no-row: the round is found among every round listed (BLWP_LOBBY_ROWS and the stored join link, as the next round after a run), and a lobby refresh in flight is waited for up to 3 s. busy: another join of this tab with no lock yet is replaced (and makes no lock); a click while a join holds a lock is refused by name ("finishing the join of round X").
+- Every lobby join answers with its reason: window.BLWP_JOIN_ANSWER { ok, why, at, round, ... }, one "[blwp] join ... not-started: <why>" line on a false; Unity still gets true/false. no-row records the lobby list's age, its row ids, and whether the round is in ARENA_LOBBY_ROWS; busy records the other join's round, state, held, next and locking flags.
+- no-row: the round is found among every round listed (ARENA_LOBBY_ROWS and the stored join link, as the next round after a run), and a lobby refresh in flight is waited for up to 3 s. busy: another join of this tab with no lock yet is replaced (and makes no lock); a click while a join holds a lock is refused by name ("finishing the join of round X").
 - Six PLAY clicks on fresh Beelink profiles, 0.0.2481 (three right after a lobby refresh): 903dccda, 5d615a1c, 2c34dd5b, 79d654da, 6cc31bf9, d9f32d81 - 6 of 6 true, why "started", loaded 0.68-0.96 s. The false did not come back; the logging stays.
 - The MacBook was offline (tailscale: last seen 04:16Z, ssh timed out); V1-V3 ran on the Beelink, as with R5.
 - V1, round 0675c953 (start 04:57:00Z): two profiles, PLAY 0.8 s apart, each 3 ms after its lobby's refresh - both true "started"; both shown loaded (0:48-0:49 before the start); entries e5ac7727 (lock 0a4d3f5a) and eead8e8d (lock bb169916), stake seen 7 of 7 each; 1319 ticks DELIVERED and 659 ticks FAILED at 7 of 7; 7 FINAL signatures each; settlement ACCEPTED 7 of 7 (05:09Z: 1 loser lock 96000 msat claimed, 1 qualifier paid 96000 msat); the winner's wallet 194 sat. PASS.
@@ -52501,7 +52501,7 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 - TWO RELOADS IN ONE RUN (round 13195c6d): reload 2 s in -> "resumed at tick 122 ... carried by 7"; reload again 2 s later (the page at 264, the seats held 248) -> "resumed at tick 248 ... carried by 7, 63 receipts"; the 16 unpublished ticks are simply not the run's, which goes on from 248 to WRECKED at 1001. Marks after it 11 accepted / 0 refused. All 7 seats: 1 entry, ticks 0..1000, 15 marks, last 1001, 0 refused, 0 equivocations.
 - A further mid-run resume (round 8863c96e, a harness mistake turned it into one): resumed at 276, WRECKED at 409, 1 mark accepted / 0 refused.
 - RELOAD AFTER THE RUN ENDED, round still open (round 94b830dd): the run ended WRECKED at tick 340; the page had put the lobby's address back (as designed), so the reload 3 s later opened the lobby - nothing resumed, nothing re-sent. Seats: 1 entry, 340 ticks, 5 marks, last at 340, 0 refused.
-- Harness: chain-clock.mjs RELOAD_AGAIN_S (a second reload) and AFTER_END (waits for that round's own BLWP_ENDED_RUN - BLWP_RUN_ENDED keeps the previous run's word).
+- Harness: chain-clock.mjs RELOAD_AGAIN_S (a second reload) and AFTER_END (waits for that round's own BLWP_ENDED_RUN - ARENA_RUN_ENDED keeps the previous run's word).
 
 ### Full suite at 5af08df0 + fixes (2026-10-03 17:46-18:29Z): 309 files
 - The six accepted reds, as listed: ghost-live 9, replay-solids 2, discovery 18, objective-markers, replay-page 1, bridge 1.
@@ -52542,8 +52542,8 @@ did not answer keeps its last open rows - 12 of 12 live samples showed both rows
 - New: btc-logistics-core.pages.dev/dashboard/ (page 0.0.2500, deploy ebb7bd57) - an index, not a combined dashboard: one row per node linking to that node's own /dashboard over the route daily.json names (renamed when a tunnel restarts), with its key, today's profit and rounds checked read from its /dashboard.json. Shown in MacBook Chrome.
 
 ### The console (the owner playtest 22:18: "covers the whole playfield ... much more compact ... A small button labeled Console opens it. Collapsed by default.")
-- The node strip (#blwp-players: node health, play socket, stake seen by N of 7) and the round's federation panel (#arena-wallet: stake lock, donation, lock back from block) are the console. Collapsed by default: neither drawn, a small "Console" button instead; open: both drawn small (11/10 px, panel max 280 px wide and 45vh high, scrolling). The choice is kept in this browser (BLWP_BROWSER_STORE). The deposit invoice, refusals and the lobby are not the console.
-- Measured, MacBook Chrome, paid round on 0.0.2501: closed - wallet and strip display none, the button shown; open - both shown, compact. The button sat on the settings gear and the backup banner: moved below them (0.0.2502, deploy 8de842a5). join 12/12 (the store through BLWP_BROWSER_STORE), player-copy 3, deposit-reload 6, two-tabs 5, donation-route 3, client-hash 3.
+- The node strip (#blwp-players: node health, play socket, stake seen by N of 7) and the round's federation panel (#arena-wallet: stake lock, donation, lock back from block) are the console. Collapsed by default: neither drawn, a small "Console" button instead; open: both drawn small (11/10 px, panel max 280 px wide and 45vh high, scrolling). The choice is kept in this browser (ARENA_BROWSER_STORE). The deposit invoice, refusals and the lobby are not the console.
+- Measured, MacBook Chrome, paid round on 0.0.2501: closed - wallet and strip display none, the button shown; open - both shown, compact. The button sat on the settings gear and the backup banner: moved below them (0.0.2502, deploy 8de842a5). join 12/12 (the store through ARENA_BROWSER_STORE), player-copy 3, deposit-reload 6, two-tabs 5, donation-route 3, client-hash 3.
 - Unity licence renewed by the owner's sign-in on the MacBook (issued 10-03 20:29Z, to 11-02): a full WebGL build of 6cc5cafc there in ~6 min, build 0.0.2621 - the first real Unity build since 10-01.
 
 ### The mid-run reload playthrough (2026-10-03 20:50-20:53Z), as agreed: page 0.0.2502 (8de842a5), MacBook Chrome 1280x720, real input

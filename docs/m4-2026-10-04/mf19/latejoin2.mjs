@@ -28,7 +28,7 @@ const click = async (x, y) => { for (const type of ['mouseMoved', 'mousePressed'
 const shot = async (name) => { const s = await pg.call('Page.captureScreenshot', { format: 'png' }); writeFileSync(`${D}/${PRE}-${name}.png`, Buffer.from(s.result.data, 'base64')); log(`shot ${PRE}-${name}`); };
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const STATE = `JSON.stringify({ lobby: !!(window.BLWP_UNITY_LOBBY && BLWP_UNITY_LOBBY.showing), join: window.BLWP_JOIN && { state: BLWP_JOIN.state, why: String(BLWP_JOIN.why || '').slice(0, 160), round: String(BLWP_JOIN.round || '').slice(0, 8), free: BLWP_JOIN.free },
-  card: !!window.BLWP_CARD_UP, bay: !!(window.BLWP_HUD_CORNER && BLWP_HUD_CORNER.floor < BLWP_HUD_CORNER.h), run: (() => { try { return unityInstance.Module.blwp.st.i32[23]; } catch { return null; } })(),
+  card: !!window.ARENA_CARD_UP, bay: !!(window.BLWP_HUD_CORNER && BLWP_HUD_CORNER.floor < BLWP_HUD_CORNER.h), run: (() => { try { return unityInstance.Module.blwp.st.i32[23]; } catch { return null; } })(),
   result: window.BLWP_RESULT && { round: String(BLWP_RESULT.roundHex || '').slice(0, 8), hold: BLWP_RESULT.hold } })`;
 const until = async (name, capS, pred) => {
   const t = Date.now(); let last = '';
@@ -39,7 +39,7 @@ const until = async (name, capS, pred) => {
 import { execFileSync } from 'node:child_process';
 // THE FIRST LIVE LATE JOIN (T3 b3d7c369, from 2026-10-04 08:00Z): the PAID row picked 10-25 s after its round started,
 // PLAY, the deposit request paid from LND A (one round's 100 sat stake - no bond), then the run as a player plays it.
-const paidRow = async () => JSON.parse(await ev(`JSON.stringify((window.BLWP_LOBBY_ROWS||[]).filter(r => !r.free).map(r => ({ id: r.id, start: Number(r.startTimeMs || (r.contract && r.contract.startTimeMs) || 0), close: Number(r.entryCloseMs || (r.contract && r.contract.entryCloseMs) || 0), joinable: r.joinable, phase: r.phase })))`) || '[]');
+const paidRow = async () => JSON.parse(await ev(`JSON.stringify((window.ARENA_LOBBY_ROWS||[]).filter(r => !r.free).map(r => ({ id: r.id, start: Number(r.startTimeMs || (r.contract && r.contract.startTimeMs) || 0), close: Number(r.entryCloseMs || (r.contract && r.contract.entryCloseMs) || 0), joinable: r.joinable, phase: r.phase })))`) || '[]');
 
 const lnPay = (inv) => { const out = execFileSync('/mnt/bitcoin/lnd-linux-amd64-v0.21.3-beta/lncli', ['--lnddir=/mnt/bitcoin/lnd-testnet4', '--rpcserver=127.0.0.1:11009', '--network=testnet4', 'payinvoice', '--force', '--json', inv], { timeout: 90000 }).toString(); return JSON.parse(out.slice(out.indexOf('{'))); };
 const invoiceNow = async () => { const t = await ev(`(document.getElementById('arena-deposit')||{}).innerText || ''`); const m = /lntb[0-9a-z]{80,}/.exec(t || ''); const a = /Pay (\d+) sat/.exec(t || ''); return m ? { inv: m[0], sats: a ? Number(a[1]) : null } : null; };
@@ -54,7 +54,7 @@ const playRun = async (tag) => {
 log('fresh profile, live page ' + (process.env.URL || 'https://btc-logistics-core.pages.dev/'));
 await pg.call('Page.navigate', { url: process.env.URL || 'https://btc-logistics-core.pages.dev/' });
 await until('page -> lobby', 120, (o) => o.lobby); await sleep(6000);
-log('build ' + await ev(`(document.getElementById('sub')||{}).textContent || ''`) + ' cores ' + await ev(`Object.keys(window.BLWP_CORES||{}).map(h => h.slice(0,8)).join(',')`));
+log('build ' + await ev(`(document.getElementById('sub')||{}).textContent || ''`) + ' cores ' + await ev(`Object.keys(window.ARENA_CORES||{}).map(h => h.slice(0,8)).join(',')`));
 // 1. FUND: an empty-wallet PAID PLAY, the deposit set to 2 rounds, paid; that join takes the next round (R1)
 await click(640, 459); await sleep(500); log('R1: PAID + PLAY (empty wallet)'); await click(487, 614);
 let iv = null; for (let i = 0; i < 60 && !iv; i++) { iv = await invoiceNow(); if (!iv) await sleep(500); }
@@ -66,7 +66,7 @@ try { const j = lnPay(pay.inv); log(`paid ${j.status} ${j.value_sat} sat`); } ca
 const r1 = JSON.parse(await ev(STATE)).join; log('R1 join ' + JSON.stringify(r1));
 await playRun('R1');
 await until('R1: back to the lobby', 300, (o) => o.lobby);
-log('wallet ' + await ev(`JSON.stringify(window.BLWP_WALLET_BALANCE || null)`));
+log('wallet ' + await ev(`JSON.stringify(window.ARENA_WALLET_BALANCE || null)`));
 // 2. LATE JOIN, FUNDED: PAID + PLAY 10-25 s into a running late-join round
 let pick = null;
 for (let i = 0; i < 400 && !pick; i++) { const rows = await paidRow(); const now = Date.now();

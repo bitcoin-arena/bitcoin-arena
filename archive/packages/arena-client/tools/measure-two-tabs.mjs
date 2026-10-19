@@ -142,7 +142,7 @@ try {
   for (const t of tabs) {
     let rows = 0;
     for (let i = 0; i < 90; i++) {
-      rows = Number(await t.evaluate('(window.BLWP_LOBBY || []).length')) || 0;
+      rows = Number(await t.evaluate('(window.ARENA_LOBBY || []).length')) || 0;
       if (rows > 0) break;
       await wait(2000);
     }
@@ -162,7 +162,7 @@ try {
   // in the address anyway, and what a second tab is given; opening it first is the flow that has a session.
   const link = async (t) => {
     for (let i = 0; i < 20; i++) {
-      const href = await t.evaluate(`(function(){var r=(window.BLWP_LOBBY||[]).filter(function(x){return x.free&&x.join;})[0];`
+      const href = await t.evaluate(`(function(){var r=(window.ARENA_LOBBY||[]).filter(function(x){return x.free&&x.join;})[0];`
         + `return r ? (location.origin + location.pathname + r.join + '&play=1') : '';})()`);
       if (href && String(href).includes('round=')) return String(href);
       await wait(3000);

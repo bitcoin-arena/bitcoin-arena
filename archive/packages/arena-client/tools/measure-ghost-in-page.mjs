@@ -275,7 +275,7 @@ try {
   for (const t of tabs) {
     let rows = 0;
     for (let i = 0; i < 90; i++) {
-      rows = Number(await t.evaluate('(window.BLWP_LOBBY || []).length')) || 0;
+      rows = Number(await t.evaluate('(window.ARENA_LOBBY || []).length')) || 0;
       if (rows > 0) break;
       await wait(2000);
     }
@@ -290,7 +290,7 @@ try {
   const link = async (t) => {
     // A LOBBY ROLLS OVER between rounds, and these tabs are slow to boot: waited for rather than failed on.
     for (let i = 0; i < 60; i++) {
-      const href = await t.evaluate(`(function(){var r=(window.BLWP_LOBBY||[]).filter(function(x){return x.free&&x.join;})[0];`
+      const href = await t.evaluate(`(function(){var r=(window.ARENA_LOBBY||[]).filter(function(x){return x.free&&x.join;})[0];`
         + `return r ? (location.origin + location.pathname + r.join + '&play=1') : '';})()`);
       if (href && String(href).includes('round=')) return String(href);
       await wait(3000);
@@ -369,14 +369,14 @@ try {
   // DID THE FIRST SESSION LEAVE A PROOF TO REUSE? If this is false, the next round cannot open from it however well
   // the reuse works, and that is a different fault from a chain read that is merely slow.
   for (const t of tabs) say(`${t.name} kept a proved chain after round one: `
-    + `${await t.evaluate('(function(){var p=window.BLWP_PROVED_CHAIN;return p?("yes, "+((p.headers||[]).length)+" headers"):"NO";})()')}`);
+    + `${await t.evaluate('(function(){var p=window.ARENA_PROVED_CHAIN;return p?("yes, "+((p.headers||[]).length)+" headers"):"NO";})()')}`);
   const firstRound = { tabA: await a.evaluate(ROUND), tabB: await b.evaluate(ROUND) };
   say(`round one: tabA in ${String(firstRound.tabA).slice(0, 8)}, tabB in ${String(firstRound.tabB).slice(0, 8)}`);
 
   // WAIT FOR THE FIRST RUN TO END, which is what puts the lobby back in front of the player.
   let over = false;
   for (let i = 0; i < 60 && !over; i++) {
-    over = (await a.evaluate('!!window.BLWP_RUN_ENDED')) === true && (await b.evaluate('!!window.BLWP_RUN_ENDED')) === true;
+    over = (await a.evaluate('!!window.ARENA_RUN_ENDED')) === true && (await b.evaluate('!!window.ARENA_RUN_ENDED')) === true;
     if (!over) await wait(5000);
   }
   say(over ? 'both runs are over; the lobby is back' : 'the first run did not end inside the window');
@@ -389,7 +389,7 @@ try {
 
   const playAgain = async (t) => {
     for (let i = 0; i < 40; i++) {
-      const got = await t.evaluate(`(function(){var r=(window.BLWP_LOBBY||[]).filter(function(x){return x.free&&x.join;})[0];`
+      const got = await t.evaluate(`(function(){var r=(window.ARENA_LOBBY||[]).filter(function(x){return x.free&&x.join;})[0];`
         + `if(!r) return 'no free row'; var ok=window.BLWP_LOBBY_ACT&&window.BLWP_LOBBY_ACT.join(r.id);`
         + `return (ok?'joined ':'refused ')+r.id;})()`);
       if (String(got).startsWith('joined')) return String(got).slice(7);

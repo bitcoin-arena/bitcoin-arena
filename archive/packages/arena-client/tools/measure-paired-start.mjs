@@ -2,7 +2,7 @@
 //
 // 2026-09-18 08:55: one of two clients stopped at "90 % - 20.1 / 22.3 MB - Could not start", and that is why
 // no ghost label has been read out of a browser on this host. This counts the failure over N paired starts and prints
-// what the failing tab holds rather than guessing: the loading screen's own stall record (`BLWP_LOAD_STALLED`, set by
+// what the failing tab holds rather than guessing: the loading screen's own stall record (`ARENA_LOAD_STALLED`, set by
 // the page's watchdog after 90 s on one line), the stage and percentage it stopped on, that browser's resident memory,
 // what the host had free at that moment, and any WebGL context loss or out-of-memory the browser reported.
 //
@@ -99,7 +99,7 @@ const LOADING = `(function () {
     up: !!window.unityInstance,
     stage: stage ? stage.textContent : '(no stage)',
     pct: pct ? pct.textContent.replace(/\\s+/g, ' ').trim() : '',
-    stalled: window.BLWP_LOAD_STALLED ? (window.BLWP_LOAD_STALLED.stage + ' at ' + window.BLWP_LOAD_STALLED.pct) : '',
+    stalled: window.ARENA_LOAD_STALLED ? (window.ARENA_LOAD_STALLED.stage + ' at ' + window.ARENA_LOAD_STALLED.pct) : '',
     heapMb: (performance.memory ? Math.round(performance.memory.usedJSHeapSize / 1048576) : -1),
     limitMb: (performance.memory ? Math.round(performance.memory.jsHeapSizeLimit / 1048576) : -1)
   };

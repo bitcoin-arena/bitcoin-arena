@@ -28,7 +28,7 @@ const click = async (x, y) => { for (const type of ['mouseMoved', 'mousePressed'
 const shot = async (name) => { const s = await pg.call('Page.captureScreenshot', { format: 'png' }); writeFileSync(`${D}/${PRE}-${name}.png`, Buffer.from(s.result.data, 'base64')); log(`shot ${PRE}-${name}`); };
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const STATE = `JSON.stringify({ lobby: !!(window.BLWP_UNITY_LOBBY && BLWP_UNITY_LOBBY.showing), join: window.BLWP_JOIN && { state: BLWP_JOIN.state, why: String(BLWP_JOIN.why || '').slice(0, 160), round: String(BLWP_JOIN.round || '').slice(0, 8), free: BLWP_JOIN.free },
-  card: !!window.BLWP_CARD_UP, bay: !!(window.BLWP_HUD_CORNER && BLWP_HUD_CORNER.floor < BLWP_HUD_CORNER.h), run: (() => { try { return unityInstance.Module.blwp.st.i32[23]; } catch { return null; } })(),
+  card: !!window.ARENA_CARD_UP, bay: !!(window.BLWP_HUD_CORNER && BLWP_HUD_CORNER.floor < BLWP_HUD_CORNER.h), run: (() => { try { return unityInstance.Module.blwp.st.i32[23]; } catch { return null; } })(),
   result: window.BLWP_RESULT && { round: String(BLWP_RESULT.roundHex || '').slice(0, 8), hold: BLWP_RESULT.hold } })`;
 const until = async (name, capS, pred) => {
   const t = Date.now(); let last = '';
@@ -39,7 +39,7 @@ const until = async (name, capS, pred) => {
 import { execFileSync } from 'node:child_process';
 // THE FIRST LIVE LATE JOIN (T3 b3d7c369, from 2026-10-04 08:00Z): the PAID row picked 10-25 s after its round started,
 // PLAY, the deposit request paid from LND A (one round's 100 sat stake - no bond), then the run as a player plays it.
-const paidRow = async () => JSON.parse(await ev(`JSON.stringify((window.BLWP_LOBBY_ROWS||[]).filter(r => !r.free).map(r => ({ id: r.id, start: Number(r.startTimeMs || (r.contract && r.contract.startTimeMs) || 0), close: Number(r.entryCloseMs || (r.contract && r.contract.entryCloseMs) || 0), joinable: r.joinable, phase: r.phase })))`) || '[]');
+const paidRow = async () => JSON.parse(await ev(`JSON.stringify((window.ARENA_LOBBY_ROWS||[]).filter(r => !r.free).map(r => ({ id: r.id, start: Number(r.startTimeMs || (r.contract && r.contract.startTimeMs) || 0), close: Number(r.entryCloseMs || (r.contract && r.contract.entryCloseMs) || 0), joinable: r.joinable, phase: r.phase })))`) || '[]');
 log('fresh profile, live page ' + (process.env.URL || 'https://btc-logistics-core.pages.dev/'));
 await pg.call('Page.navigate', { url: process.env.URL || 'https://btc-logistics-core.pages.dev/' });
 await until('page -> lobby', 120, (o) => o.lobby);
