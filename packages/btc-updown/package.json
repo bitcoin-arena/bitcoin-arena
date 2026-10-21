@@ -8,6 +8,6 @@
     "test": "node --test"
   },
   "dependencies": {
-    "arena-sdk": "github:george-prime/arena-sdk#v0.1.0"
+    "arena-sdk": "github:george-prime/arena-sdk#v0.1.1"
   }
 }
