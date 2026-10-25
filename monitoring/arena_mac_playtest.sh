@@ -21,7 +21,7 @@ MAC="${ARENA_MAC:-daniel@192.168.1.226}"
 LAUNCH="/Users/daniel/.blwp-playtest/start.sh"
 PORT_A="${PORT_A:-9341}"
 PORT_B="${PORT_B:-9342}"
-PAGE="${PAGE:-https://btc-logistics-core.pages.dev/}"
+PAGE="${PAGE:-https://testnet.bitcoin-arena.io/}"
 SSH=(ssh -o ConnectTimeout=10 -o BatchMode=yes "$MAC")
 
 case "${1:-status}" in
