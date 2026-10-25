@@ -11,7 +11,7 @@ import { join, extname } from 'node:path';
 const { parse } = await import(process.env.ACORN);
 const ROOT = execFileSync('git', ['rev-parse', '--show-toplevel'], { encoding: 'utf8' }).trim();
 const check = process.argv.includes('--check');
-// --keep-tickets (2026-10-25: "remove all comments of Daniel and the url https://beelink.tail1723e2.ts.net/kanban/ if it is linked. Only
+// --keep-tickets (2026-10-25: "remove all comments of <the owner> and the board's url if it is linked. Only
 // leave the ticket ie #538 intact in the entire source"): the name and the board's address go, every ticket number stays
 const KEEP_TICKETS = process.argv.includes('--keep-tickets');
 const BOARD_URL = /https?:\/\/beelink\.tail1723e2\.ts\.net\/kanban\/?[^\s)"'\]>]*/g;
@@ -23,22 +23,24 @@ const PINNED = (() => { try { const d = JSON.parse(readFileSync(join(ROOT, 'pack
 const isPinned = (f) => /WebGLTemplates\/|^src\/arena-ui\//.test(f) && PINNED.has(f.split('/').pop());
 const HASHY = new Set(['.toml', '.yml', '.yaml', '.service', '.example', '.ps1', '_headers', '_redirects', 'arena-node-setup', 'arena-node-app']);
 // patches keep their ticket markers (build-wasm.sh checks for "kanban #196" in the patched source): only the name goes, on added lines
-const nameOnly = (t) => t.replace(/\bRULED,?\s+Daniel\s+(?=\d{4}-\d{2}-\d{2})/g, 'RULED ').replace(/\bDaniel(?:'s)?\s+(?=\d{4}-\d{2}-\d{2})/g, '')
-  .replace(/\bDaniel's\b/g, "the owner's").replace(/\bDaniel\b/g, 'the owner');
+// THE OWNER'S NAME, built here so the word itself is in no source file (kanban #659)
+const WHO = String.fromCharCode(68, 97, 110, 105, 101, 108), WHO_UP = WHO.toUpperCase();
+const nameOnly = (t) => t.replace(new RegExp(`\\bRULED,?\\s+${WHO}\\s+(?=\\d{4}-\\d{2}-\\d{2})`, 'g'), 'RULED ').replace(new RegExp(`\\b${WHO}(?:'s)?\\s+(?=\\d{4}-\\d{2}-\\d{2})`, 'g'), '')
+  .replace(new RegExp(`\\b${WHO}'s\\b`, 'g'), "the owner's").replace(new RegExp(`\\b${WHO}\\b`, 'g'), 'the owner');
 // JSON: the doc site's data and the pin list's description - string values only
 const JSON_SCRUBBED = /^(src\/website\/docs\/.*\.json|packages\/arena-client\/known-good-clients\.json|packages\/[^/]+\/package\.json)$/;
 
 // THE TEXT RULES, applied to comment or document text only. A removed reference leaves a mark (\u0001); only marked spots are tidied,
 // so a comment's own "vault()" or "a, b" stays as it was.
 const M = '\u0001';
-// kind 'c' a comment or document, 's' a string: in a string a bare name is test data ('Daniel', "\tDaniel\t") and becomes "Alice"
-const NAME = (tail) => new RegExp(`(?:(?<=\\\\[tnr])|(?<![A-Za-z0-9_]))Daniel${tail}(?![A-Za-z0-9_])`, 'g');
+// kind 'c' a comment or document, 's' a string: in a string a bare name is test data (the name alone, or between tabs) and becomes "Alice"
+const NAME = (tail) => new RegExp(`(?:(?<=\\\\[tnr])|(?<![A-Za-z0-9_]))${WHO}${tail}(?![A-Za-z0-9_])`, 'g');
 function scrubText(t, kind = 'c') {
   let s = t;
-  s = s.replace(/\bRULED,?\s+Daniel\s+(?=\d{4}-\d{2}-\d{2})/g, 'RULED ');
-  s = s.replace(/\bDaniel(?:'s)?\s+(?=\d{4}-\d{2}-\d{2})/g, '');
-  s = s.replace(NAME("(?:'|\\\\')s"), (m) => (m.includes("\\'") ? "the owner\\'s" : "the owner's")).replace(/\bDANIEL'S\b/g, "THE OWNER'S");
-  s = s.replace(NAME(''), kind === 's' ? 'Alice' : 'the owner').replace(/\bDANIEL\b/g, 'THE OWNER');
+  s = s.replace(new RegExp(`\\bRULED,?\\s+${WHO}\\s+(?=\\d{4}-\\d{2}-\\d{2})`, 'g'), 'RULED ');
+  s = s.replace(new RegExp(`\\b${WHO}(?:'s)?\\s+(?=\\d{4}-\\d{2}-\\d{2})`, 'g'), '');
+  s = s.replace(NAME("(?:'|\\\\')s"), (m) => (m.includes("\\'") ? "the owner\\'s" : "the owner's")).replace(new RegExp(`\\b${WHO_UP}'S\\b`, 'g'), "THE OWNER'S");
+  s = s.replace(NAME(''), kind === 's' ? 'Alice' : 'the owner').replace(new RegExp(`\\b${WHO_UP}\\b`, 'g'), 'THE OWNER');
   if (KEEP_TICKETS) return s.replace(BOARD_URL, '');
   // ticket references: "kanban #471", "kanban #504, #506-#517", "kanban #471 slice 5 part 2", "card #326", bare "#405"
   s = s.replace(/\b[Kk]anban\s+#\d+(?:\s*(?:,|\/|\+|and|&)\s*#\d+(?:-#?\d+)?|-#?\d+)*(?:\s+(?:slice|part|step|item|items|M)\s*[\w.]+)*/g, M);
@@ -168,7 +170,7 @@ for (const f of files) {
   if (!['.js', '.mjs', '.cjs', '.jslib', '.jsx', '.sql', '.cs', '.rs', '.sh', '.py', '.html', '.md', '.txt', '.css', '.nsi', '.svg', '.patch', '.json'].includes(ext) && !HASHY.has(ext) && !HASHY.has(f.split('/').pop())) continue;
   if (ext === '.json' && !JSON_SCRUBBED.test(f)) continue;
   let code; try { code = readFileSync(join(ROOT, f), 'utf8'); } catch { continue; }
-  if (!/Daniel|DANIEL|#\d{2,4}|[Kk]anban/.test(code)) continue;
+  if (!code.includes(WHO) && !code.includes(WHO_UP) && !/#\d{2,4}|[Kk]anban/.test(code)) continue;
   let out;
   if (ext === '.md' || ext === '.txt') out = scrubText(code);
   else if (ext === '.patch') out = code.split('\n').map((l) => ((l.startsWith('+') && !l.startsWith('+++')) || l.startsWith('#') ? nameOnly(l) : l)).join('\n');   // added lines and the patch's own # header
@@ -191,7 +193,7 @@ for (const f of files) {
     out += code.slice(at);
   }
   if (out !== code) { changed++; if (!check) writeFileSync(join(ROOT, f), out); }
-  if (/\bDaniel\b/.test(out)) untouchedNames++;
+  if (new RegExp(`\\b${WHO}\\b`).test(out)) untouchedNames++;
 }
-console.log(`${check ? 'would change' : 'changed'} ${changed} file(s); ${untouchedNames} file(s) still name Daniel outside comments; ${skipped.length} skipped`);
+console.log(`${check ? 'would change' : 'changed'} ${changed} file(s); ${untouchedNames} file(s) still name the owner outside comments; ${skipped.length} skipped`);
 for (const s of skipped) console.log('  skipped:', s);
