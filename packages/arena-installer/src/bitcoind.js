@@ -99,7 +99,7 @@ export const portFree = (port) => new Promise((ok) => {
   srv.listen(port, '127.0.0.1', () => srv.close(() => ok(true)));
 });
 /**
- * THE CORE'S PORTS, FREE ONES (kanban #635, Daniel's playtest 2026-10-25: the installer's Core on his MacBook exited 26 times - "Binding
+ * THE CORE'S PORTS, FREE ONES (kanban #635, the owner's playtest 2026-10-25: the installer's Core on his MacBook exited 26 times - "Binding
  * RPC on address 127.0.0.1 port 48342 failed", another Bitcoin Core held it - and the page said "bitcoind is starting (no cookie yet)"
  * for ever): the network's pair, else the next pair 10 up, checked on this machine before the config names them.
  */
@@ -161,7 +161,7 @@ export async function syncStatus({ rpcUrl, cookiePath, samples = [], nowMs = Dat
   try {
     const info = await coreRpc({ url: rpcUrl, cookiePath, fetcher })('getblockchaininfo');
     const progress = Number(info.verificationprogress);
-    // SYNCED WHEN EVERY BLOCK IS IN (kanban #636, Daniel's playtest 2026-10-25: "bitcoin core testnet4 pruned downloads to 100% and then
+    // SYNCED WHEN EVERY BLOCK IS IN (kanban #636, the owner's playtest 2026-10-25: "bitcoin core testnet4 pruned downloads to 100% and then
     // nothing happens"): Core keeps initialblockdownload on while its tip is older than a day, so a node at the tip with all headers and
     // verification at 99.99 % counts as synced too
     const atTip = info.blocks >= info.headers - 1 && info.headers > 0;

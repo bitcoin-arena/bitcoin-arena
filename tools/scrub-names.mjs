@@ -11,6 +11,10 @@ import { join, extname } from 'node:path';
 const { parse } = await import(process.env.ACORN);
 const ROOT = execFileSync('git', ['rev-parse', '--show-toplevel'], { encoding: 'utf8' }).trim();
 const check = process.argv.includes('--check');
+// --keep-tickets (2026-10-25: "remove all comments of Daniel and the url https://beelink.tail1723e2.ts.net/kanban/ if it is linked. Only
+// leave the ticket ie #538 intact in the entire source"): the name and the board's address go, every ticket number stays
+const KEEP_TICKETS = process.argv.includes('--keep-tickets');
+const BOARD_URL = /https?:\/\/beelink\.tail1723e2\.ts\.net\/kanban\/?[^\s)"'\]>]*/g;
 const EXCLUDE = /(^|\/)node_modules\/|\/dist\/|^packages\/[^/]+\/plugin\/|^packages\/.*\/(plugins?|client)\/|^packages\/nextblock\/(src|frozen|config)\/|WebGLTemplates\/.*\.js$|^src\/arena-ui\/.*\.js$|^daniel-screens\/|^tools\/scrub-names\.mjs$/;   // the tool's own rules name what they remove
 
 // every file the known-good list pins (the page's money scripts, each game's assets) keeps its bytes: its hash is checked by name
@@ -35,6 +39,7 @@ function scrubText(t, kind = 'c') {
   s = s.replace(/\bDaniel(?:'s)?\s+(?=\d{4}-\d{2}-\d{2})/g, '');
   s = s.replace(NAME("(?:'|\\\\')s"), (m) => (m.includes("\\'") ? "the owner\\'s" : "the owner's")).replace(/\bDANIEL'S\b/g, "THE OWNER'S");
   s = s.replace(NAME(''), kind === 's' ? 'Alice' : 'the owner').replace(/\bDANIEL\b/g, 'THE OWNER');
+  if (KEEP_TICKETS) return s.replace(BOARD_URL, '');
   // ticket references: "kanban #471", "kanban #504, #506-#517", "kanban #471 slice 5 part 2", "card #326", bare "#405"
   s = s.replace(/\b[Kk]anban\s+#\d+(?:\s*(?:,|\/|\+|and|&)\s*#\d+(?:-#?\d+)?|-#?\d+)*(?:\s+(?:slice|part|step|item|items|M)\s*[\w.]+)*/g, M);
   s = s.replace(/\b([Cc]ard|[Tt]icket|[Tt]ask)(s?)\s+#\d+(?:\s*(?:,|\/|\+|and|&)\s*#\d+|-#?\d+)*/g, '$1$2');   // "the card #326 waits" -> "the card waits"
@@ -160,7 +165,7 @@ let changed = 0, untouchedNames = 0; const skipped = [];
 for (const f of files) {
   if (EXCLUDE.test(f) || isPinned(f) || /\/brand\/[^/]+\.svg$|(^|\/)nextblock-(icon|wordmark)\.svg$|-icon\.svg$/.test(f)) continue;   // a game's icon and wordmark: pinned game assets
   const ext = extname(f).toLowerCase();
-  if (!['.js', '.mjs', '.cjs', '.jslib', '.cs', '.rs', '.sh', '.py', '.html', '.md', '.txt', '.css', '.nsi', '.svg', '.patch', '.json'].includes(ext) && !HASHY.has(ext) && !HASHY.has(f.split('/').pop())) continue;
+  if (!['.js', '.mjs', '.cjs', '.jslib', '.jsx', '.sql', '.cs', '.rs', '.sh', '.py', '.html', '.md', '.txt', '.css', '.nsi', '.svg', '.patch', '.json'].includes(ext) && !HASHY.has(ext) && !HASHY.has(f.split('/').pop())) continue;
   if (ext === '.json' && !JSON_SCRUBBED.test(f)) continue;
   let code; try { code = readFileSync(join(ROOT, f), 'utf8'); } catch { continue; }
   if (!/Daniel|DANIEL|#\d{2,4}|[Kk]anban/.test(code)) continue;
@@ -171,6 +176,9 @@ for (const f of files) {
   else {
     let ranges;
     if (ext === '.html') { const h = htmlComments(code); ranges = h.ranges; if (h.unparsed) skipped.push(`${f}: ${h.unparsed} script block(s) not parsed`); }
+    // React sources (acorn reads no JSX) and SQL's -- lines: the C-like scanner, and the -- lines
+    else if (ext === '.jsx') ranges = csComments(code);
+    else if (ext === '.sql') ranges = [...code.matchAll(/--[^\n]*/g)].map((m) => [m.index, m.index + m[0].length]);
     else if (ext === '.cs' || ext === '.rs') ranges = csComments(code);   // Rust: the same C-like scanner (a lifetime only hides a comment, never shows code)
     else if (ext === '.sh' || ext === '.py') ranges = hashComments(code);
     else if (HASHY.has(ext) || HASHY.has(f.split('/').pop())) ranges = hashComments(code);

@@ -33,7 +33,7 @@ export class StepBar extends React.Component {
     const li = this.now.current, bar = li && li.parentElement;
     if (bar) bar.scrollLeft = Math.max(0, li.offsetLeft - bar.offsetLeft - 40);
   }
-  // A DONE STEP OPENS AGAIN (kanban #635, Daniel's playtest 2026-10-25: "ich kann auch nicht zurück gehen und den Zustand prüfen"):
+  // A DONE STEP OPENS AGAIN (kanban #635, the owner's playtest 2026-10-25: "ich kann auch nicht zurück gehen und den Zustand prüfen"):
   // `onPick(key)` for a done step and for the current one (`current`, which takes the wizard back); `now` is the step shown
   render() {
     const { steps, done = {}, now, current = now, onPick } = this.props;
@@ -110,7 +110,7 @@ export class RolesStep extends React.Component {
   }
 }
 
-// THE APPS (kanban #569, Daniel 2026-10-21: "The node still comes with the 3 apps pre installed, that is a step in the installer where
+// THE APPS (kanban #569, 2026-10-21: "The node still comes with the 3 apps pre installed, that is a step in the installer where
 // all apps are automatically selected"): one tile per app the release carries, every one switched on at first; the node hosts the ones
 // left on (each version still played: "N versions")
 export const APP_IC = Object.freeze({ nextblock: '⏱️', 'rock-paper-scissors': '✊', 'btc-updown': '📈' });
@@ -154,7 +154,7 @@ export class AppsStep extends React.Component {
   }
 }
 
-// HOW THIS NODE IS CONTROLLED, THEN NEW OR RESTORED (kanban #652/#654, Daniel 2026-10-25: "User first selects Operation Mode: Nostr /
+// HOW THIS NODE IS CONTROLLED, THEN NEW OR RESTORED (kanban #652/#654, 2026-10-25: "User first selects Operation Mode: Nostr /
 // New Seed (24 Words)", then new or restore; #653 "Only allow nsec then")
 export class StartStep extends React.Component {
   constructor(props) {
@@ -261,7 +261,7 @@ export class SeedStep extends React.Component {
   }
 }
 
-// THE EMERGENCY CODE, ITS OWN STEP (kanban #647, Daniel's playtest 2026-10-25: "the emergency code notice should be an overlay or a separate
+// THE EMERGENCY CODE, ITS OWN STEP (kanban #647, the owner's playtest 2026-10-25: "the emergency code notice should be an overlay or a separate
 // step ... also the description is confusing" - "extra step it is, and make the text clearer and simpler")
 export class EmergencyStep extends React.Component {
   constructor(props) { super(props); this.state = { code: null, msg: null, busy: false }; this.done = this.done.bind(this); }

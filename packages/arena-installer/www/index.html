@@ -216,14 +216,14 @@ code { font-family: ui-monospace, monospace; font-size: 13px; word-break: break-
 
   <section id="s-done"></section>
 </main>
-<!-- EVERY STEP IN REACT (kanban #564, packages/arena-web; Daniel 2026-10-21: "no fall backs"): window.ArenaWizard, loaded before this
+<!-- EVERY STEP IN REACT (kanban #564, packages/arena-web; 2026-10-21: "no fall backs"): window.ArenaWizard, loaded before this
      page's script - each step draws its whole section, the roles their list (the pictures around it stay the page's) -->
 <script src="/wizard.js"></script>
 <script>
 const $ = (id) => document.getElementById(id);
 const STEPS = [['start', 'New / Restore'], ['chain', 'Bitcoin'], ['roles', 'Roles'], ['apps', 'Apps'], ['seed', 'Seed'], ['emergency', 'Emergency code'], ['owner', 'Owner'], ['reach', 'Reach'], ['service', 'Install'], ['lightning', 'Lightning'], ['federation', 'Federation'], ['promise', 'Bond rules'], ['bond', 'Bond'], ['done', 'Done']];
 let st = null;
-// A DONE STEP OPENED AGAIN FROM THE BAR (kanban #635, Daniel's playtest 2026-10-25: "ich kann auch nicht zurück gehen und den Zustand
+// A DONE STEP OPENED AGAIN FROM THE BAR (kanban #635, the owner's playtest 2026-10-25: "ich kann auch nicht zurück gehen und den Zustand
 // prüfen"): `viewing` names it; the current step's own pill, or any save, goes back to where the wizard is
 let viewing = null;
 const pick = (k) => { viewing = k === (st && st.step) ? null : k; load(); };

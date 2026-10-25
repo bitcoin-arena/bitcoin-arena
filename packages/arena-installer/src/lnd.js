@@ -21,7 +21,7 @@ import https from 'node:https';
 import { taggedHash } from '../../arena-protocol/src/hash.js';
 
 export const LND_VERSION = 'v0.21.5-beta.rc1';
-/** The release files and their SHA-256 (manifest-v0.21.5-beta.rc1.txt, signature by roasbeef checked 2026-10-22). kanban #584 (Daniel
+/** The release files and their SHA-256 (manifest-v0.21.5-beta.rc1.txt, signature by roasbeef checked 2026-10-22). kanban #584 (the owner
  *  2026-10-22): the first LND release built with Go 1.27.3 (CVE-2026-111943, the eMudhra intermediates); 0.21.4 was built with Go 1.27.1. */
 export const LND_FILES = Object.freeze({
   'linux-x64': { file: 'lnd-linux-amd64-v0.21.5-beta.rc1.tar.gz', sha256: '258dcfa10342401bf6e443cc448c8846b64a783bff798ec2ddbb72e67f67713d' },

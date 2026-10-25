@@ -101,7 +101,7 @@ export function depositParts(s, pegInSats) {
   return parts;
 }
 
-// ONE DEPOSIT FOR ALL NODES OF A COUNT (kanban #596, Daniel 2026-10-23: "wenn mehr als 1 instance ausgewählt ist tut der User nur 1 Bond
+// ONE DEPOSIT FOR ALL NODES OF A COUNT (kanban #596, 2026-10-23: "wenn mehr als 1 instance ausgewählt ist tut der User nur 1 Bond
 // einzahlen, das wird automatisch multipliziert und aus N Instanzen auf gesplittet"): node 1 asks for its own deposit and the others' -
 // each as much as its own, plus the payment that hands it on - and each further node's bond step is paid from node 1's wallet
 export const SPLIT_FEE_SATS = 500;
@@ -119,7 +119,7 @@ export function withOtherNodes(s, parts, { further = false } = {}) {
 export const seatNeedsRestart = (before, after) => String(before || '') !== String(after || '');
 
 /**
- * A CORE WHOSE PORT ANOTHER PROGRAM HOLDS (kanban #635, Daniel's playtest 2026-10-25: his MacBook's own testnet4 Core held 48342, and
+ * A CORE WHOSE PORT ANOTHER PROGRAM HOLDS (kanban #635, the owner's playtest 2026-10-25: his MacBook's own testnet4 Core held 48342, and
  * the installer's Core exited at every start): free ports chosen, its bitcoin.conf written again, its service started again, the new
  * address kept in the state. Used by the Bitcoin step's status and by the chain-switch keeper.
  */
@@ -198,7 +198,7 @@ export function createWizard({ state, release, seatPort = reachKit.DEFAULT_NODE_
   const releaseApps = (() => { try { return appsIn(release); } catch (e) { log(`apps: ${e.message}`); return []; } })();
   const mark = (step, patch = {}) => { const s = state.read(); return state.save({ ...patch, done: { ...(s.done || {}), [step]: Date.now() } }); };
 
-  // THE SERVICE STEP'S PROGRESS (kanban #651, Daniel 2026-10-25: "this hangs alot and user doesn't know what it is doing. Provide more
+  // THE SERVICE STEP'S PROGRESS (kanban #651, 2026-10-25: "this hangs alot and user doesn't know what it is doing. Provide more
   // details and context and a progress bar"): POST /api/service moves through these stages; GET /api/service/progress tells the page
   // which is done, which runs and for how long, and - while the node is slow to answer, or after a failure - the node log's last lines
   const SERVICE_STAGES = [['settings', 'Writing your node\'s settings'], ['services', 'Installing its services'],
@@ -311,7 +311,7 @@ const serviceRun = async (b) => {
     'POST /api/chain/save': async (b) => {
       let conn = chainOf(b);
       let r = await test(conn);
-      // AN ELECTRUM SERVER THAT FAILS BETWEEN THE CHOICE AND THE SAVE (kanban #638, Daniel's playtest 2026-10-25: "sometimes the selected
+      // AN ELECTRUM SERVER THAT FAILS BETWEEN THE CHOICE AND THE SAVE (kanban #638, the owner's playtest 2026-10-25: "sometimes the selected
       // electrum node fails after selecting but before moving to the next stage"): asked once more, then the other known servers in turn;
       // the first that passes is saved, and the page says which
       let switchedFrom = null;
@@ -338,7 +338,7 @@ const serviceRun = async (b) => {
     // BITCOIN CORE, INSTALLED WHEN ASKED (ruling 8): the plan (one already here? the disk against what mainnet and testnet4 need),
     // the install (checked download, a datadir and config per network, a service each), and the sync's progress with an ETA - and once
     // testnet4 is synced, the chain step is saved with it and the wizard goes on
-    // WHERE ITS BLOCKS GO IS THE OWNER'S CHOICE (kanban #635, Daniel 2026-10-25: "Wo BTC core installiert wird sollte auswählbar
+    // WHERE ITS BLOCKS GO IS THE OWNER'S CHOICE (kanban #635, 2026-10-25: "Wo BTC core installiert wird sollte auswählbar
     // sein"): a folder on any disk - the node's own folder when none is given - checked for space before anything is written
     'POST /api/core/plan': async (b = {}) => {
       const where = coreDirOf(b);
@@ -370,7 +370,7 @@ const serviceRun = async (b) => {
       }
       const core = { bitcoind: got.bitcoind, prune, dir: where.dir, networks, startedMs: nowMs() };
       state.save({ core });
-      // THE SYNC RUNS IN THE BACKGROUND (kanban #635, Daniel 2026-10-25: "Auch der Bitcoin core nicht im Vordergrund machen lassen während
+      // THE SYNC RUNS IN THE BACKGROUND (kanban #635, 2026-10-25: "Auch der Bitcoin core nicht im Vordergrund machen lassen während
       // der synced"): a Core still syncing cannot see a fresh deposit nor take a transaction that spends one, so until it is synced the
       // node reads the chain through a public Electrum server - the first that passes the chain test - and the chain-switch keeper
       // (bin/chain-switch.mjs, installed with the service) moves it to its own Core once testnet4 is synced. With no server passing,
@@ -409,7 +409,7 @@ const serviceRun = async (b) => {
       return { ok: true, networks: out };
     },
 
-    // THE ROLES CHECKED AS THEY ARE SWITCHED ON (kanban #641, Daniel's playtest 2026-10-25: "when selecting custody role, the check of the
+    // THE ROLES CHECKED AS THEY ARE SWITCHED ON (kanban #641, the owner's playtest 2026-10-25: "when selecting custody role, the check of the
     // bitcoin node should happen at that moment, not only when moving to the next step"): the same check the save runs, nothing saved
     'POST /api/roles/check': async (b) => { const why = rolesRefusal([...new Set((b.roles || []).map(String))]); return why ? { ok: false, why } : { ok: true }; },
     'POST /api/roles': async (b) => {
@@ -432,7 +432,7 @@ const serviceRun = async (b) => {
       return { ok: true, roles };
     },
 
-    // THE APPS (kanban #569, Daniel 2026-10-21: "The node still comes with the 3 apps pre installed, that is a step in the installer
+    // THE APPS (kanban #569, 2026-10-21: "The node still comes with the 3 apps pre installed, that is a step in the installer
     // where all apps are automatically selected"): the ones the seat hosts, at least one; an app this release does not carry is refused
     'POST /api/apps': async (b) => {
       const apps = [...new Set((Array.isArray(b.apps) ? b.apps : []).map(String))];
@@ -446,7 +446,7 @@ const serviceRun = async (b) => {
       return { ok: true, apps, hostedGames };
     },
 
-    // NEW OR RESTORED, BY 24 WORDS OR BY NOSTR (kanban #652/#654, Daniel 2026-10-25: "neuer step im installer: New/Restore"; "User first
+    // NEW OR RESTORED, BY 24 WORDS OR BY NOSTR (kanban #652/#654, 2026-10-25: "neuer step im installer: New/Restore"; "User first
     // selects Operation Mode: Nostr / New Seed (24 Words)"; #653 "Only allow nsec then"): the first step.
     //   words + new      the seed step shows new words later
     //   words + restore  the 24 typed words are checked (a wrong word or checksum refused by name) and become the seed; the seed step is done
@@ -489,7 +489,7 @@ const serviceRun = async (b) => {
       const em = emergencyOf(seed);
       const now = Date.now(), done = { ...(s0.done || {}), start: now, seed: now };
       if (owner) {
-        // THE NODE RUNS ON THE NSEC ITSELF (Daniel 2026-10-25: "The node must also operate on its own with the nsec"): the Nostr key is the
+        // THE NODE RUNS ON THE NSEC ITSELF (2026-10-25: "The node must also operate on its own with the nsec"): the Nostr key is the
         // node's identity on the network - it signs its proposals and bonds with no one at the page - and its owner
         const db = openStore(state.path('node.db'));
         let own;
@@ -501,7 +501,7 @@ const serviceRun = async (b) => {
       state.save({ origin: action, control, seedOwnerPubkey: pubkey, emergencyPubkey: em.pubkey, done, ...(owner ? { owner: { mode: 'nostr', pubkey: owner } } : {}) });
       return { ok: true, control, origin: action, ownerPubkey: owner || pubkey, emergencyCode: em.code };
     },
-    // a Nostr key for someone who has none (Daniel's wallet screenshot: "New to Nostr? Create an account"): shown once, never kept here
+    // a Nostr key for someone who has none (the owner's wallet screenshot: "New to Nostr? Create an account"): shown once, never kept here
     'POST /api/start/nsec': async () => ({ ok: true, ...newNsec() }),
 
     // THE SEED: shown once (C.5), kept in memory until the user types back CONFIRM_WORDS words; only then written (0600). A node that
@@ -524,7 +524,7 @@ const serviceRun = async (b) => {
       return { ok: true, emergencyCode: em.code };
     },
 
-    // THE EMERGENCY CODE'S OWN STEP (kanban #647, Daniel's playtest 2026-10-25: "the emergency code notice should be an overlay or a separate
+    // THE EMERGENCY CODE'S OWN STEP (kanban #647, the owner's playtest 2026-10-25: "the emergency code notice should be an overlay or a separate
     // step in the installation process. also the description is confusing" - "extra step it is, and make the text clearer and simpler"):
     // shown from the seed after the words (or the Nostr key), done once the owner says it is written down
     'POST /api/emergency/written': async () => {
@@ -697,7 +697,7 @@ const serviceRun = async (b) => {
       const s = state.read();
       if (!s.gateway) return { ok: false, why: 'no gateway set up yet' };
       const t = await gwKit.testGateway(s.gateway);
-      // A GATEWAY WAITING FOR THE CHAIN IS SET UP (kanban #635, Daniel 2026-10-25: "Lnd muss nicht auf dem Bitcoin Core Testnet Sync
+      // A GATEWAY WAITING FOR THE CHAIN IS SET UP (kanban #635, 2026-10-25: "Lnd muss nicht auf dem Bitcoin Core Testnet Sync
       // warten"): gatewayd runs and says Syncing until its LND is synced - it connects by itself then, and the dashboards show it
       if (!t.ok && t.syncing) { mark('lightning', { gateway: { ...s.gateway, state: t.state, syncingMs: Date.now() } }); return { ok: true, syncing: true, state: t.state, federations: [] }; }
       if (!t.ok) return { ok: false, why: t.why, waiting: true };
@@ -772,7 +772,7 @@ const serviceRun = async (b) => {
       return { ok: true, address: w.address, tip, coins, totalSats: total, needSats, parts, fundedFrom, fundWhy, enough: total >= needSats, lock: laterCustody(s) ? null : lockOf(tip), update: laterCustody(s),
         minimum: state.read().bondMinimum || null };
     },
-    // TESTCOINS, AUTOMATICALLY (kanban #635, Daniel 2026-10-25: "Automatisch oder geführt an testcoins"): the Arena faucet sends what
+    // TESTCOINS, AUTOMATICALLY (kanban #635, 2026-10-25: "Automatisch oder geführt an testcoins"): the Arena faucet sends what
     // the bond step still lacks to this node's address; the deposit then counts as soon as it is in the mempool. The guided way (public
     // faucets) is the page's other choice, and the one it points to when the faucet says no.
     'POST /api/coins/auto': async (b) => {
@@ -928,7 +928,7 @@ const serviceRun = async (b) => {
     if (!hostOk(req)) return json(res, 421, { ok: false, why: 'this host is not the installer' });
     // THE TOKEN, ONCE: traded for a session and gone
     if (req.method === 'GET' && url.pathname === '/' && url.searchParams.has('t')) {
-      // THE LINK OPENED AGAIN IN A BROWSER THAT HOLDS ITS SESSION (kanban #635, Daniel's playtest 2026-10-25: the Mac app's "Open in
+      // THE LINK OPENED AGAIN IN A BROWSER THAT HOLDS ITS SESSION (kanban #635, the owner's playtest 2026-10-25: the Mac app's "Open in
       // browser" opened the used link, and the page said "that setup link is used or expired" in a browser already logged in)
       if (sessionOk(req)) { res.writeHead(303, { location: '/', 'cache-control': 'no-store' }); return res.end(); }
       if (!token || nowMs() > tokenUntil || !same(url.searchParams.get('t'), token)) return json(res, 403, { ok: false, why: 'This setup link was used already or is older than 30 minutes. Open the Bitcoin Arena app again (or run arena-install again) to get a new one' });

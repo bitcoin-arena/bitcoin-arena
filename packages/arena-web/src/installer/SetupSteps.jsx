@@ -4,7 +4,7 @@
 // installed here in a folder you choose, syncing in the background - kanban #635), how others reach the node (the direct test, a
 // Cloudflare login, the tunnel kinds), the install as a user service (and the Nostr login after it), and the federation explained. Each
 // gets the wizard's `st`, `post`, `get` and `reload`; a step's timers stop when the wizard leaves it (the page unmounts it).
-// THE WORDS (kanban #635, Daniel 2026-10-25: "Texte ... sollen klarer werden und weniger AI Like"): short, plain, one idea a sentence.
+// THE WORDS (kanban #635, 2026-10-25: "Texte ... sollen klarer werden und weniger AI Like"): short, plain, one idea a sentence.
 import React from 'react';
 import { Msg } from './WizardSteps.jsx';
 
@@ -101,7 +101,7 @@ export class ChainStep extends React.Component {
     if (sync) return (
       <div id="sync">
         <p className="sub">Bitcoin Core is installed and syncing.</p>
-        {/* THE INTERIM CHAIN SAID AS IT IS (kanban #635, Daniel's playtest 2026-10-25: the step, opened again, said no Electrum server had
+        {/* THE INTERIM CHAIN SAID AS IT IS (kanban #635, the owner's playtest 2026-10-25: the step, opened again, said no Electrum server had
             answered while one had) */}
         {this.props.st.coreSync && this.props.st.coreSync.interim
           ? <p className="sub">Until the sync is done, your node reads the chain from a public Electrum server ({this.props.st.chain ? `${this.props.st.chain.host}:${this.props.st.chain.port}` : 'chosen by setup'}) and switches to this Bitcoin Core by itself. Setup does not wait for it.</p>
@@ -252,7 +252,7 @@ export class ReachStep extends React.Component {
   }
 }
 
-// THE STEPS OF "INSTALL AND START", AS THEY RUN (kanban #651, Daniel 2026-10-25: "this hangs alot and user doesn't know what it is doing.
+// THE STEPS OF "INSTALL AND START", AS THEY RUN (kanban #651, 2026-10-25: "this hangs alot and user doesn't know what it is doing.
 // Provide more details and context and a progress bar"): GET /api/service/progress read every second while POST /api/service runs
 const STAGE_HINT = {
   settings: 'Your choices from the steps before go into the node\'s settings file.',

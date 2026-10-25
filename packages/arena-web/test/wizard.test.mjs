@@ -41,13 +41,14 @@ test('roles: a switch flipped, the custody picture told, Save posts the roles th
   c.toggle('custody', true);
   assert.deepEqual(custody, [false, true]);
   await c.save();
-  assert.deepEqual(posts, [['/api/roles', { roles: ['verify', 'settlement', 'custody'] }]]); assert.equal(reloaded, 1);
+  // custody switched on is checked at once (kanban #641), then Save posts the roles
+  assert.deepEqual(posts, [['/api/roles/check', { roles: ['verify', 'settlement', 'custody'] }], ['/api/roles', { roles: ['verify', 'settlement', 'custody'] }]]); assert.equal(reloaded, 1);
   const d = driven(RolesStep, { st: { roleInfo, roles: ['verify'] }, post: async () => ({ ok: false, why: 'custody needs your own Bitcoin Core' }), reload() {} });
   await d.save();
   assert.match(renderToStaticMarkup(d.render()), /class="msg bad"[^>]*>custody needs your own Bitcoin Core/);
 });
 
-test('seed: the words shown, then off the screen before three are asked back; the emergency code after; a wrong word starts again', async () => {
+test('seed: the words shown, then off the screen before three are asked back; then on to the emergency code\'s own step; a wrong word starts again', async () => {
   const words = Array.from({ length: 24 }, (_, i) => `w${i + 1}`);
   const posts = []; let reloaded = 0;
   const answer = { '/api/seed/new': { ok: true, words, positions: [3, 11, 20] }, '/api/seed/confirm': { ok: true, emergencyCode: 'ARENA-7Q2X-K9PL' } };
@@ -62,8 +63,8 @@ test('seed: the words shown, then off the screen before three are asked back; th
   c.setState({ answers: { 3: 'w3', 11: 'w11', 20: 'w20' } });
   await c.confirm();
   assert.deepEqual(posts[1], ['/api/seed/confirm', { answers: { 3: 'w3', 11: 'w11', 20: 'w20' } }]);
-  assert.match(renderToStaticMarkup(c.render()), /<p class="code">ARENA-7Q2X-K9PL<\/p>/);
-  assert.equal(reloaded, 0, 'the wizard waits until the code is written down');
+  assert.equal(reloaded, 1, 'confirmed: the wizard goes on - the emergency code has its own step (kanban #647)');
+  assert.doesNotMatch(renderToStaticMarkup(c.render()), /ARENA-7Q2X-K9PL/);
   const w = driven(SeedStep, { post: async () => ({ ok: false, why: 'word 11 is not right', wrong: true }), reload() {} });
   w.setState({ phase: 'confirm', positions: [3, 11, 20] });
   await w.confirm();
@@ -96,7 +97,7 @@ test('promise: Continue only once I UNDERSTAND is typed; posted as typed', async
   assert.match(renderToStaticMarkup(c.render()), /Your bond is slashed: you lose it/);
 });
 
-// THE APPS (kanban #569, Daniel 2026-10-21: "The node still comes with the 3 apps pre installed, that is a step in the installer where
+// THE APPS (kanban #569, 2026-10-21: "The node still comes with the 3 apps pre installed, that is a step in the installer where
 // all apps are automatically selected")
 const appInfo = [
   { id: 'nextblock', title: 'Tick Tock, Next Block', short: 'Next Block', versions: 4 },
@@ -135,7 +136,7 @@ test('the steps along the top: done ticked, the current one marked; the page\'s 
   const steps = [['chain', 'Bitcoin'], ['roles', 'Roles'], ['apps', 'Apps']];
   assert.equal(renderToStaticMarkup(React.createElement(StepBar, { steps, done: { chain: true }, now: 'roles' })),
     '<li class="done">Bitcoin</li><li class="now">Roles</li><li class="">Apps</li>');
-  // KANBAN #635 (Daniel's playtest 2026-10-25: "ich kann auch nicht zurück gehen und den Zustand prüfen"): a done step opens again
+  // KANBAN #635 (the owner's playtest 2026-10-25: "ich kann auch nicht zurück gehen und den Zustand prüfen"): a done step opens again
   const picked = [];
   const bar = new StepBar({ steps, done: { chain: true }, now: 'chain', current: 'roles', onPick: (k) => picked.push(k) }).render();
   assert.equal(renderToStaticMarkup(React.createElement(React.Fragment, null, bar)),

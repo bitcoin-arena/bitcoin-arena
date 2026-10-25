@@ -69,7 +69,7 @@ test('a block Esplora changed is never handed on', async (t) => {
   await assert.rejects(b.call('getblock', [TESTNET4_GENESIS, 0]), /does not match its header/);
 });
 
-// A FAILING SERVER IS LEFT FOR THE NEXT (kanban #639, Daniel's playtest: "if the selected electrum server errors, nothing can be done"):
+// A FAILING SERVER IS LEFT FOR THE NEXT (kanban #639, the owner's playtest: "if the selected electrum server errors, nothing can be done"):
 // the call that fails says so, the next call goes to the next known server and is answered
 test('when its Electrum server fails, the bridge goes on with the next known one', async (t) => {
   const home = mkdtempSync(join(tmpdir(), 'arena-bridge-'));

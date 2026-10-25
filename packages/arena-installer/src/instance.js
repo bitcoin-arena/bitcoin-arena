@@ -24,12 +24,12 @@ export function confAt(home) {
   try { return parseConf(readFileSync(join(resolve(home), 'arena.conf'), 'utf8')).values; } catch { return {}; }
 }
 /**
- * THE DEFAULT SERVICE NAME TAKEN BY ANOTHER NODE (kanban #635, 2026-10-25: Daniel's new install in ~/.arena-node wrote the agent
+ * THE DEFAULT SERVICE NAME TAKEN BY ANOTHER NODE (kanban #635, 2026-10-25: the owner's new install in ~/.arena-node wrote the agent
  * io.bitcoin-arena.node over the one of mactest12, another node on that MacBook, and removing his install took mactest12's seat down).
  * A new node - no arena.conf yet, no instance or port offset given - looks at the service file of each name in turn: the default, then
  * --2, --3, ... The first that does not exist, or names this node's own folder, is its name; its ports are 100 up per number. Windows
  * keeps the default (its tasks are not files). Answers { instance, offset }.
- * NOR ANOTHER NODE'S PORTS (Daniel's 2026.1.8 playtest 2026-10-25: his node took --2 and so seat port 8570, where the test node
+ * NOR ANOTHER NODE'S PORTS (the owner's 2026.1.8 playtest 2026-10-25: his node took --2 and so seat port 8570, where the test node
  * mactest16b - set up by hand with its own name and offset - already listened; the installer's owner login went to that node and was
  * refused, "that key is not this node's owner"): a name not this node's own is taken only when none of its ports is in use.
  */

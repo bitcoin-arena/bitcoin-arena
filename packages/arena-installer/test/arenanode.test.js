@@ -334,7 +334,7 @@ test('start at boot, one service at a time (kanban #563): Linux - the unit enabl
   } finally { rmSync(n.root, { recursive: true, force: true }); }
 });
 
-// BITCOIN CORE IS ASKED ON ITS OWN PORT (kanban #640, Daniel's playtest: "restarting the electrum server, marks also the bitcoin server as
+// BITCOIN CORE IS ASKED ON ITS OWN PORT (kanban #640, the owner's playtest: "restarting the electrum server, marks also the bitcoin server as
 // available and running eventho its not installed or running"): on an Electrum node the bridge answers the seat's chain address, never for Core
 test('on an Electrum node the Bitcoin Core row is not answered by the chain bridge', async () => {
   const { probeOf } = await import('../src/node-services.js');

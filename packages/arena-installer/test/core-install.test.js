@@ -80,7 +80,7 @@ test('with no Electrum server reachable, the wizard installs Bitcoin Core, watch
   assert.equal(readFileSync(join(home, 'sessions.json'), 'utf8').includes(c.cookie.split('=')[1]), false, 'the cookie itself is not on disk');
 });
 
-// KANBAN #635 (Daniel 2026-10-25: "Wo BTC core installiert wird sollte auswählbar sein", "Auch der Bitcoin core nicht im Vordergrund machen
+// KANBAN #635 (2026-10-25: "Wo BTC core installiert wird sollte auswählbar sein", "Auch der Bitcoin core nicht im Vordergrund machen
 // lassen während der synced"): the blocks go to the owner's folder, and the wizard goes on at once with an Electrum server as the chain
 // until the chain-switch keeper moves the node to its own Core
 test('Bitcoin Core goes to the chosen folder and syncs in the background: the wizard goes on with an interim Electrum chain', async (t) => {
@@ -116,7 +116,7 @@ test('Bitcoin Core goes to the chosen folder and syncs in the background: the wi
   assert.equal(st.step, 'roles', 'the wizard goes on while Core syncs');
   assert.equal(st.chain.kind, 'electrum');
   assert.deepEqual(st.coreSync, { dir: join(home, 'disk2'), interim: true, prune: true });
-  // CUSTODY ON THE CORE INSTALLED HERE (Daniel's playtest 2026-10-25: custody was refused right after "Install Bitcoin Core for me" -
+  // CUSTODY ON THE CORE INSTALLED HERE (the owner's playtest 2026-10-25: custody was refused right after "Install Bitcoin Core for me" -
   // "custody needs your own Bitcoin Core: LND cannot run on an Electrum server"): the interim chain is Electrum, the Core is this node's own
   const roles = (await c.post('/api/roles', { roles: ['verify', 'settlement', 'custody'] })).json;
   assert.equal(roles.ok, true, roles.why);
@@ -142,7 +142,7 @@ test('the ETA is said only after a few minutes of readings, from the progress ov
   } finally { rmSync(home, { recursive: true, force: true }); }
 });
 
-// THE LINK OPENED AGAIN (kanban #635, Daniel's playtest 2026-10-25: the Mac app's "Open in browser" opened the used setup link and the
+// THE LINK OPENED AGAIN (kanban #635, the owner's playtest 2026-10-25: the Mac app's "Open in browser" opened the used setup link and the
 // page said "that setup link is used or expired" in the browser that was logged in already)
 test('the used setup link in a browser that holds its session goes to the setup page; without the session it is still refused', async (t) => {
   const home = mkdtempSync(join(tmpdir(), 'arena-link-'));
@@ -159,7 +159,7 @@ test('the used setup link in a browser that holds its session goes to the setup 
   assert.equal((await stranger.get(`/?t=${token}`)).status, 403, 'another browser with the used link: refused');
 });
 
-// A PORT ANOTHER PROGRAM HOLDS (kanban #635, Daniel's playtest 2026-10-25: his MacBook's own testnet4 Core held 48342, the installer's Core
+// A PORT ANOTHER PROGRAM HOLDS (kanban #635, the owner's playtest 2026-10-25: his MacBook's own testnet4 Core held 48342, the installer's Core
 // exited 26 times - "Binding RPC on address 127.0.0.1 port 48342 failed" - and the page said "bitcoind is starting (no cookie yet)")
 test('free ports are chosen, a Core whose port is taken says so, and the status moves it to free ports and starts it again', async (t) => {
   const { freeCorePorts, coreFailure } = await import('../src/bitcoind.js');
@@ -193,7 +193,7 @@ test('free ports are chosen, a Core whose port is taken says so, and the status 
   assert.equal((await w['GET /api/core/status']()).networks.testnet4.ok, true, 'then it answers');
 });
 
-// AT THE TIP IS SYNCED (kanban #636, Daniel's playtest: "testnet4 pruned downloads to 100% and then nothing happens"): Core keeps
+// AT THE TIP IS SYNCED (kanban #636, the owner's playtest: "testnet4 pruned downloads to 100% and then nothing happens"): Core keeps
 // initialblockdownload on while its tip is older than a day; all blocks in and 99.99 % verified count as synced
 test('a Core at the tip counts as synced even while it still says initial block download', async () => {
   const { syncStatus } = await import('../src/bitcoind.js');

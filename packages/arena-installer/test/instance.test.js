@@ -56,7 +56,7 @@ test('a new node whose default service name belongs to another node folder takes
   assert.deepEqual(freeInstance(mine, opts({ [A]: other })), { instance: '2', offset: 100 }, 'the default is another node\'s: --2');
   assert.deepEqual(freeInstance(mine, opts({ [A]: other, [B]: other })), { instance: '3', offset: 200 });
   assert.deepEqual(freeInstance(mine, opts({ [A]: `<string>${mine}/arena.conf</string>` })), { instance: '', offset: 0 }, 'its own service: kept');
-  // Daniel's playtest 2026-10-25: --2's seat port 8570 belonged to mactest16b (its own name): --3; a port of the default in use: --2
+  // the owner's playtest 2026-10-25: --2's seat port 8570 belonged to mactest16b (its own name): --3; a port of the default in use: --2
   assert.deepEqual(freeInstance(mine, opts({ [A]: other }, [8570])), { instance: '3', offset: 200 }, 'another node on --2\'s seat port: --3');
   assert.deepEqual(freeInstance(mine, opts({}, [10009])), { instance: '2', offset: 100 }, 'the default\'s LND port in use: --2');
   assert.deepEqual(freeInstance(mine, opts({ [A]: `<string>${mine}/arena.conf</string>` }, [8470])), { instance: '', offset: 0 }, 'its own ports are its own');

@@ -222,7 +222,7 @@ export async function probeOf(svc, { node, fetcher, local, dnsRetries = 2, dnsPa
       return (await portOpen(p)) ? { ok: true, says: `SOCKS on port ${p}` } : { ok: false, says: `nothing listens on its SOCKS port ${p}` };
     }
     if (svc.id === 'chain-bridge' || svc.id === 'bitcoind-testnet4') {
-      // BITCOIN CORE ASKED ON ITS OWN PORT ONLY (kanban #640, Daniel's playtest 2026-10-25: "restarting the electrum server, marks also the
+      // BITCOIN CORE ASKED ON ITS OWN PORT ONLY (kanban #640, the owner's playtest 2026-10-25: "restarting the electrum server, marks also the
       // bitcoin server as available and running eventho its not installed or running"): on an Electrum node the seat's bitcoind_url is the
       // chain bridge, so asking it for Core made the bridge answer for Core
       const core = (s.core && s.core.networks && s.core.networks.testnet4) || null;
@@ -339,7 +339,7 @@ export async function followTunnelNow({ home, platform = process.platform, env =
 }
 
 /**
- * START AT BOOT, one service at a time (kanban #563, Daniel 2026-10-21): Linux - its user unit enabled (`systemctl --user is-enabled`);
+ * START AT BOOT, one service at a time (kanban #563, 2026-10-21): Linux - its user unit enabled (`systemctl --user is-enabled`);
  * macOS - its launch agent's RunAtLoad; Windows - the Arena Node launcher starts the node's services together at login, so not one by
  * one. bootOf answers { atBoot: true | false | null, settable, why }; setBoot(word, on) changes it - without starting or stopping it now.
  */

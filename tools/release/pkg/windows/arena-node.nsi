@@ -12,7 +12,7 @@ RequestExecutionLevel user
 InstallDir "$LOCALAPPDATA\ArenaNode"
 BrandingText "Bitcoin Arena ${VERSION} (testnet4)"
 
-; the brand mark (kanban #635, Daniel's playtest: "It has no logo")
+; the brand mark (kanban #635, the owner's playtest: "It has no logo")
 !define MUI_ICON "bitcoin-arena.ico"
 !define MUI_UNICON "bitcoin-arena.ico"
 !define MUI_WELCOMEPAGE_TITLE "Bitcoin Arena ${VERSION}"

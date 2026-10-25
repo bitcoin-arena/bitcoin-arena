@@ -95,7 +95,7 @@ const merkleRoot = (hashes) => {
  * `session` (an Electrum session factory), `fetcher` (Esplora). Answers { listen(port), close(), call(method, params) }.
  */
 export function createBridge({ electrum, fallbacks = [], home, esplora = ESPLORAS_TESTNET4, session = electrumSession, fetcher = fetch, cacheBytes = BLOCK_CACHE_BYTES, log = () => {} }) {
-  // THE OTHER SERVERS WHEN ONE FAILS (kanban #639, Daniel's playtest 2026-10-25: "if the selected electrum server errors, nothing can be
+  // THE OTHER SERVERS WHEN ONE FAILS (kanban #639, the owner's playtest 2026-10-25: "if the selected electrum server errors, nothing can be
   // done. there are no options besides retry"): the saved server first, then each known one in turn; a call that fails moves the next
   // call to the next server, and every block is still checked against its header, whoever serves it
   const servers = [electrum, ...fallbacks.filter((x) => !(x.host === electrum.host && x.port === electrum.port))];

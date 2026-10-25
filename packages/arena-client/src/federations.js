@@ -37,7 +37,7 @@ export const FEDERATION_ALLOWS = Object.freeze({
  */
 export async function federationStatus({ federationIdHex, nodes, census, verify, fetcher = fetch, keptMs = 0 }) {
   const fid = String(federationIdHex).toLowerCase();
-  // KEPT A WHILE WHEN ASKED (kanban #625, Daniel's log 2026-10-24 20:30Z: each order read the status of every other federation the
+  // KEPT A WHILE WHEN ASKED (kanban #625, the owner's log 2026-10-24 20:30Z: each order read the status of every other federation the
   // browser holds notes in, 52-126 s while seats restarted): a status that stood is reused for `keptMs`
   const had = keptMs > 0 ? STATUS_KEPT.get(fid) : null;
   if (had && Date.now() - had.at < keptMs) return had.status;

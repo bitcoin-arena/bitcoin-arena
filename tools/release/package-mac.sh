@@ -8,7 +8,7 @@ set -euo pipefail
 V=$1; OUT=$(cd "$2" && pwd)
 HERE=$(cd "$(dirname "$0")" && pwd)
 WORK=$(mktemp -d); trap 'rm -rf "$WORK"' EXIT
-# THE ICON (kanban #635, Daniel's playtest 2026-10-25: "It has no logo"): the site's brand mark, pkg/icon/bitcoin-arena-1024.png, as an .icns
+# THE ICON (kanban #635, the owner's playtest 2026-10-25: "It has no logo"): the site's brand mark, pkg/icon/bitcoin-arena-1024.png, as an .icns
 IS="$WORK/AppIcon.iconset"; mkdir -p "$IS"
 for s in 16 32 128 256 512; do
   sips -z $s $s "$HERE/pkg/icon/bitcoin-arena-1024.png" --out "$IS/icon_${s}x${s}.png" >/dev/null
@@ -19,7 +19,7 @@ for arch in arm64 x64; do
   R=bitcoin-arena-node-$V-darwin-$arch
   [ -f "$OUT/$R.tar.gz" ] || { echo "no $R.tar.gz: skipped"; continue; }
   D=$WORK/$arch; APP="$D/Bitcoin Arena.app"
-  # A STAY-OPEN APPLET (kanban #635, Daniel's playtest 2026-10-25: "doesn't stay open, doesn't have an icon that indicates that it is
+  # A STAY-OPEN APPLET (kanban #635, the owner's playtest 2026-10-25: "doesn't stay open, doesn't have an icon that indicates that it is
   # running"): pkg/macos/app.applescript, in the Dock while the installer runs; its steps are the helper arena-node-app in Resources
   mkdir -p "$D"
   osacompile -s -o "$APP" "$HERE/pkg/macos/app.applescript"

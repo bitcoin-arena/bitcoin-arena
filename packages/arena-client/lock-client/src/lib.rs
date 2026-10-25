@@ -804,7 +804,7 @@ impl LockClient {
         .to_string())
     }
 
-    /// AN AMOUNT AS E-CASH (kanban #614, Daniel 2026-10-24: "Kein Lightning swap, sondern übertragen in die andere federation"): the stock
+    /// AN AMOUNT AS E-CASH (kanban #614, 2026-10-24: "Kein Lightning swap, sondern übertragen in die andere federation"): the stock
     /// mint module's send of exactly `amount_msat`, as the prefixed base32 string a seat's exchange takes - the player's side of an e-cash
     /// exchange into another federation. Answers {"msat", "ecash"}; the caller keeps the string until the exchange answered.
     #[wasm_bindgen(js_name = sendEcash)]
@@ -1445,7 +1445,7 @@ impl LockClient {
     /// THE BLOCK COUNT A LOCK IS BUILT ON (2026-10-02, the join's 2-3 s): a count read in the last COUNT_KEPT_MS, else a fresh
     /// consensus read. The seats accept a lock whose lock_height (its expiration less stake_expiry_blocks) is up to 12
     /// blocks below the height they verify at (stake-lock-signer-node.js, RULED 2026-09-24 option a); a count five minutes
-    /// old is a block or two behind on any chain this runs on. (kanban #625, Daniel's log 2026-10-24 20:52Z: an order's lock
+    /// old is a block or two behind on any chain this runs on. (kanban #625, the owner's log 2026-10-24 20:52Z: an order's lock
     /// read it fresh - countMs 29018 - ten seconds after a reload, a guardian of the federation down: kept five minutes now,
     /// and the page hands a kept count in at the wallet's open, `keep_block_count`.)
     async fn count_for_lock(&self, api: &DynModuleApi) -> anyhow::Result<u64> {
