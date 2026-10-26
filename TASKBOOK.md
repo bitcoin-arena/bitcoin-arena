@@ -39685,7 +39685,7 @@ M3 W4 6d: A WITHDRAWAL CLAIMED ON ANOTHER DEVICE BY THE SEED (Option A, the owne
 M3 W4 6d: LIVE, PERSIST / CLAIM LATER / ANOTHER DEVICE / UNITY'S LOBBY (runs C1 and C2, 2026-09-14)
   THE RUNS          settle-live C1 23:24-23:34 and C2 23:38-23:51, stock fedimintd 0.12.0; page = Unity
                     build 0.0.1260 + the template at dc7168c (vault, one tab per round, newest open round,
-                    /settled scan, KEY import, ARENA_FIND_OWED, the lobby's withdraw block); CLAIM_LATER=1,
+                    /settled scan, KEY import, ARENA_FIND_OWED, the lobby's withcommittee block); CLAIM_LATER=1,
                     each browser closed as a browser closes. exit 0 both.
   C1 FINDING        the phone's next start read "This round's withdrawal is open in another tab of this
                     browser" for 181 s and never looked. Taken apart without a federation: headless Chrome
@@ -39723,7 +39723,7 @@ M3 W4 6d: ON THE DAILY - build 0.0.1265 (2026-09-14 23:57)
                     (the output passed as -buildOutput: the project's default is a macOS path and the
                     first attempt failed "Permission denied" writing /Users/...). The built page carries
                     the template at HEAD (vault, one tab per round, newest open round, /settled scan, KEY
-                    import, the Withdraw guard, the lobby's withdraw block); its arena-client.js is dist.
+                    import, the Withdraw guard, the lobby's withcommittee block); its arena-client.js is dist.
   DEPLOY            ./deploy-core.sh -> https://14086895.btc-logistics-core.pages.dev
   CHECKED           arena-client.js md5 9f04a9d946f1b6a4111c6071bd43a5ef locally, at the unique URL and
                     at btc-logistics-core.pages.dev; both index.html name 0.0.1265.
