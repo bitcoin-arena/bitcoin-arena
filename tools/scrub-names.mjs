@@ -21,7 +21,7 @@ const EXCLUDE = /(^|\/)node_modules\/|\/dist\/|^packages\/[^/]+\/plugin\/|^packa
 const PINNED = (() => { try { const d = JSON.parse(readFileSync(join(ROOT, 'packages/arena-client/known-good-clients.json'), 'utf8'));
   return new Set([...Object.keys(d.pinned || {}), ...Object.values(d.games || {}).flatMap((g) => Object.keys(g.pinned || {}))]); } catch { return new Set(); } })();
 const isPinned = (f) => /WebGLTemplates\/|^src\/arena-ui\//.test(f) && PINNED.has(f.split('/').pop());
-const HASHY = new Set(['.toml', '.yml', '.yaml', '.service', '.example', '.ps1', '_headers', '_redirects', 'arena-node-setup', 'arena-node-app']);
+const HASHY = new Set(['.toml', '.yml', '.yaml', '.service', '.example', '.ps1', '_headers', '_redirects', 'bitcoin-arena-node-setup', 'bitcoin-arena-app']);
 // patches keep their ticket markers (build-wasm.sh checks for "kanban #196" in the patched source): only the name goes, on added lines
 // THE OWNER'S NAME, built here so the word itself is in no source file (kanban #659)
 const WHO = String.fromCharCode(68, 97, 110, 105, 101, 108), WHO_UP = WHO.toUpperCase();
