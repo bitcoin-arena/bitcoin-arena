@@ -39,7 +39,7 @@ cat > "$OUT/package.json" <<'EOF'
   "name": "bitcoin-arena",
   "private": true,
   "license": "MIT",
-  "repository": "github:george-prime/bitcoin-arena",
+  "repository": "github:bitcoin-arena/bitcoin-arena",
   "description": "Bitcoin Arena: an engine for games and prediction markets played for bitcoin, and its first game, nextblock",
   "engines": { "node": ">=24" },
   "dependencies": { "@noble/curves": "2.4.0", "ws": "8.21.3", "acorn": "8.18.0", "qrcode-generator": "^1.4.4" }
@@ -72,7 +72,7 @@ earns what, a guide to programming and signing a game, and how to run a node. Th
 
 MIT licence: see `LICENSE`.
 EOF
-# THE LICENCE (2026-10-08,: george-prime/bitcoin-arena, MIT)
+# THE LICENCE (2026-10-08,: bitcoin-arena/bitcoin-arena, MIT)
 cat > "$OUT/LICENSE" <<'LICENSE_END'
 MIT License
 
